@@ -3,9 +3,7 @@
   protected int tutorialStage() { return 2; }
 </%class>
 
-<%override title>Jamon Tutorial - Dynamic Content</%override>
-
-<h2>Jamon Tutorial - Dynamic Content</h2>
+<%override tutorialName>Dynamic Content</%override>
 
 Without the ability to compute text to display, Jamon would have no more capability than HTML. Fortunately, Jamon has an expressive structure to specify what gets returned to the user.
 <p>

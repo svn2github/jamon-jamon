@@ -3,9 +3,7 @@
   protected int tutorialStage() { return 6; }
 </%class>
 
-<%override title>Jamon Tutorial - Calling Another Template From a Template</%override>
-
-<h2>Jamon Tutorial - Calling Another Template From a Template</h2>
+<%override tutorialName>Calling Another Template From a Template</%override>
 
 Jamon templates can call other templates. The semantics are exactly
 the same as a method call in Java. The only difference is the syntax.

@@ -3,9 +3,7 @@
   protected int tutorialStage() { return 7; }
 </%class>
 
-<%override title>Jamon Tutorial - Subtemplates: Functional Decomposition of Templates</%override>
-
-<h2>Jamon Tutorial - Subtemplates: Functional Decomposition of Templates</h2>
+<%override tutorialName>Subtemplates: Functional Decomposition of Templates</%override>
 
 <p> Jamon templates can define <em>subtemplates</em>. These are
 exactly analogous to methods of a class, except that they are written

@@ -3,9 +3,7 @@
   protected int tutorialStage() { return 1; }
 </%class>
 
-<%override title>Jamon Tutorial - Getting Started with Hello World</%override>
-
-<h2>Jamon Tutorial - Getting Started with Hello World</h2>
+<%override tutorialName>Getting Started with Hello World</%override>
 
 The source files mentioned in this tutorial are available individually
 where first referenced, or bundled in a <a href="JamonTutorial.zip">zip

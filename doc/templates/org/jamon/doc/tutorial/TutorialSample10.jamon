@@ -3,9 +3,7 @@
   protected int tutorialStage() { return 10; }
 </%class>
 
-<%override title>Jamon Tutorial - Template Inheritance: Overriding Inherited Methods/Subtemplates</%override>
-
-<h2>Jamon Tutorial - Template Inheritance: Overriding Inherited Methods/Subtemplates</h2>
+<%override tutorialName>Template Inheritance: Overriding Inherited Methods/Subtemplates</%override>
 
 As explained in the section on
 <a href="TutorialSample7.html">subtemplates</a>, a subtemplate can
@@ -34,10 +32,10 @@ override the subtemplate in order to replace the title.
 
 <p>
 The template that derives this template would override the <code>title</code>
-subtemplate by using the <code>&lt;%override title></code> ... <code>&lt;/%override></code> tag.
+subtemplate by using the <code>&lt;%override tutorialName></code> ... <code>&lt;/%override></code> tag.
 
 <pre class="template"><%LITERAL>
-<%override title>
+<%override tutorialName>
   <%xargs>
     name;
   &lt;/%xargs>

@@ -1,6 +1,9 @@
 <%abstract>
 <%extends _TutorialBase>
 <& tutorialNavBar &>
+
+<h2><& title &></h2>
+
 <& *CHILD &>
 <& tutorialNavBar &>
 
@@ -37,3 +40,9 @@
 <%class>
   protected abstract int tutorialStage();
 </%class>
+
+<%absmeth tutorialName></%absmeth>
+
+<%override title>
+  Jamon Tutorial - <% tutorialStage() %>. <& tutorialName &>
+</%override>

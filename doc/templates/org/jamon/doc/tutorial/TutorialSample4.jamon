@@ -3,9 +3,7 @@
   protected int tutorialStage() { return 4; }
 </%class>
 
-<%override title>Jamon Tutorial - Escaping Text</%override>
-
-<h2>Jamon Tutorial - Escaping Text</h2>
+<%override tutorialName>Escaping Text</%override>
 
 Templates usually construct text in a structured language such as HTML or XML, or even URLs. Each of these languages has restrictions on allowed characters or sequence of characters. Escaping modifies a string to adhere to the rules of the particular language in which the string will be expressed.
 

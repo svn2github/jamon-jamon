@@ -3,9 +3,7 @@
   protected int tutorialStage() { return 5; }
 </%class>
 
-<%override title>Jamon Tutorial - More Advanced Jamon Tags</%override>
-
-<h2>Jamon Tutorial - More Advanced Jamon Tags</h2>
+<%override tutorialName>More Advanced Jamon Tags</%override>
 
 Jamon templates are translated into Java classes and interfaces. Jamon
 provides several tags to give the template author more control over

@@ -3,9 +3,7 @@
   protected int tutorialStage() { return 3; }
 </%class>
 
-<%override title>Jamon Tutorial - Template Arguments</%override>
-
-<h2>Jamon Tutorial - Template Arguments</h2>
+<%override tutorialName>Template Arguments</%override>
 
 Templates do not exist in a vacuum; templates exist in order to
 display information. In a model-view-controller architecture, that

@@ -3,9 +3,7 @@
   protected int tutorialStage() { return 9; }
 </%class>
 
-<%override title>Jamon Tutorial - Template Inheritance: Composing Template Output</%override>
-
-<h2>Jamon Tutorial - Template Inheritance: Composing Template Output</h2>
+<%override tutorialName>Template Inheritance: Composing Template Output</%override>
 
 Jamon template inheritance allows a template to declare that it can
 <em>include</em> the output of a <em>child</em> template that extends it.
