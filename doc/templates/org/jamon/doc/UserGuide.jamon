@@ -66,20 +66,19 @@ import org.jamon.TemplateManagerSource;
        TemplateManagerSource.setTemplateManager(manager);
        Writer writer = new OutputStreamWriter(System.out);
        Foo foo = new Foo();
-       foo.setName("Duke & Co.").render(writer, 3, "Hello");
+       foo.setName("Duke & Co.");
+       foo.render(writer, 3, "Hello");
 
        // alternatively:
        foo = new Foo();
        foo.setName("Duke & Co.");
        org.jamon.Renderer r = foo.makeRenderer(3, "Hello");
-       ...
-       foo.renderTo(writer);
+       r.renderTo(writer);
 
        // or even:
        foo = new Foo();
        foo.setName("Duke & Co.");
        String value = foo.makeRenderer(3, "Hello").asString();
-       ...
        writer.write(value);
 </pre>
 
