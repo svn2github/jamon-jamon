@@ -21,7 +21,6 @@
 package org.jamon.codegen;
 
 import java.io.Writer;
-import java.io.PrintWriter;
 import java.io.IOException;
 import java.util.Iterator;
 
@@ -53,13 +52,6 @@ public class ImplGenerator extends AbstractGenerator
         generateEpilogue();
     }
 
-    private final static String IOEXCEPTION_CLASS =
-        IOException.class.getName();
-    private final static String RENDERER_CLASS =
-        org.jamon.Renderer.class.getName();
-    private final static String WRITER_CLASS =
-        Writer.class.getName();
-
     private final TemplateDescriber m_describer;
     private final ImplAnalyzer m_analyzer;
 
@@ -83,40 +75,39 @@ public class ImplGenerator extends AbstractGenerator
         print  ("  implements ");
         print  (getResolver().getFullyQualifiedIntfClassName(getPath()));
         println(".Intf");
-        println("{");
+        openBlock();
         println(m_analyzer.getClassContent());
     }
 
     private void generateInitialize()
         throws IOException
     {
-        println("  protected void initializeDefaultArguments()");
-        println("    throws Exception");
-        println("  {");
+        println("protected void initializeDefaultArguments()");
+        println("  throws Exception");
+        openBlock();
         for (Iterator i = m_analyzer.getOptionalArgNames(); i.hasNext(); /* */)
         {
             String name = (String) i.next();
-            print("    ");
             print(name);
             print(" = ");
             print(m_analyzer.getDefault(name));
             println(";");
         }
-        println("  }");
+        closeBlock();
         println();
     }
 
     private void generateConstructor()
         throws IOException
     {
-        print  ("  public ");
-        print  (          getClassName());
-        print  (                        "(");
-        print  ( TEMPLATE_MANAGER);
-        println(                 " p_templateManager, String p_path)");
-        println("  {");
-        println("    super(p_templateManager, p_path);");
-        println("  }");
+        print("public ");
+        print(          getClassName());
+        print(                        "(");
+        print(TEMPLATE_MANAGER);
+        println(" p_templateManager, String p_path)");
+        openBlock();
+        println("super(p_templateManager, p_path);");
+        closeBlock();
         println();
     }
 
@@ -137,11 +128,11 @@ public class ImplGenerator extends AbstractGenerator
     private void generateDefFargInterface(FargInfo p_fargInfo)
         throws IOException
     {
-        print  ("  private static interface ");
+        print  ("private static interface ");
         println(p_fargInfo.getFargInterfaceName());
-        println("    extends org.jamon.AbstractTemplateProxy.Intf");
-        println("  {");
-        print  ("    void render(");
+        println("  extends org.jamon.AbstractTemplateProxy.Intf");
+        openBlock();
+        print  ("void render(");
 
         for (Iterator a = p_fargInfo.getArgumentNames(); a.hasNext(); /* */)
         {
@@ -155,11 +146,9 @@ public class ImplGenerator extends AbstractGenerator
             }
         }
         println(")");
-        println("      throws java.io.IOException;");
+        println("  throws java.io.IOException;");
 
-        print("       public ");
-        print(RENDERER_CLASS);
-        print(" makeRenderer(");
+        print("public " + RENDERER_CLASS + " makeRenderer(");
         for (Iterator a = p_fargInfo.getArgumentNames(); a.hasNext(); /* */)
         {
             String argName = (String) a.next();
@@ -172,8 +161,7 @@ public class ImplGenerator extends AbstractGenerator
             }
         }
         println(");");
-
-        println("  }");
+        closeBlock();
         println();
     }
 
@@ -193,7 +181,7 @@ public class ImplGenerator extends AbstractGenerator
                 generateDefFargInterface(m_analyzer.getFargInfo((String)f.next()));
             }
 
-            print("  private void __jamon_def__");
+            print("private void __jamon_def__");
             print(name);
             print("(");
             int argNum = 0;
@@ -227,18 +215,17 @@ public class ImplGenerator extends AbstractGenerator
             println(")");
             print  ("    throws ");
             println(IOEXCEPTION_CLASS);
-            println("  {");
+            openBlock();
             for (Iterator i = m_analyzer.getStatements(name).iterator();
                  i.hasNext();
                  /* */)
             {
-                print("    ");
                 ((Statement)i.next()).generateSource(getWriter(),
                                                      getResolver(),
                                                      m_describer,
                                                      m_analyzer);
             }
-            println("  }");
+            closeBlock();
             println();
         }
     }
@@ -252,7 +239,7 @@ public class ImplGenerator extends AbstractGenerator
     private void generateRender()
         throws IOException
     {
-        print("  public void render(");
+        print("public void render(");
         for (Iterator i = m_analyzer.getRequiredArgNames(); i.hasNext(); /* */)
         {
             String name = (String) i.next();
@@ -267,18 +254,17 @@ public class ImplGenerator extends AbstractGenerator
         }
         println(")");
 
-        print  ("    throws ");
+        print  ("  throws ");
         println(IOEXCEPTION_CLASS);
-        println("  {");
+        openBlock();
         for (Iterator i = m_analyzer.getStatements().iterator(); i.hasNext(); /* */)
         {
-            print("    ");
             ((Statement)i.next()).generateSource(getWriter(),
                                                  getResolver(),
                                                  m_describer,
                                                  m_analyzer);
         }
-        println("  }");
+        closeBlock();
     }
 
     private void generateOptionalArgs()
@@ -288,35 +274,23 @@ public class ImplGenerator extends AbstractGenerator
         {
             println();
             String name = (String) i.next();
-            print("  public void set");
-            print(StringUtils.capitalize(name));
-            print("(");
             String type = m_analyzer.getArgType(name);
-            print(type);
-            print(" p_");
-            print(name);
-            println(")");
-            println("  {");
-            print("    ");
-            print(name);
-            print(" = p_");
-            print(name);
-            println(";");
-            println("  }");
+            println("public void set" + StringUtils.capitalize(name)
+                    + "(" + type + " p_" + name + ")");
+            openBlock();
+            println(name + " = p_" + name + ";");
+            closeBlock();
             println();
-            print("  private ");
-            print(type);
-            print(" ");
-            print(name);
-            println(";");
+            println("private " + type + " " + name + ";");
         }
     }
+
 
     private void generateEpilogue()
         throws IOException
     {
         println();
-        println("}");
+        closeBlock();
     }
 
     private void generateImports()
@@ -324,9 +298,7 @@ public class ImplGenerator extends AbstractGenerator
     {
         for (Iterator i = m_analyzer.getImports(); i.hasNext(); /* */ )
         {
-            print("import ");
-            print(i.next());
-            println(";");
+            println("import " + i.next() + ";");
         }
         println();
     }

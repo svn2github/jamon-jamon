@@ -162,14 +162,14 @@ public class ImplAnalyzer extends BaseAnalyzer
         public void caseAPartialJline(APartialJline node)
         {
             handleBody();
-            addStatement(new RawStatement(node.getExpr().getText()+"\n"));
+            addStatement(new RawStatement(node.getExpr().getText()));
         }
 
         public void caseAJlineBaseComponent(AJlineBaseComponent node)
         {
             handleBody();
             AJline jline = (AJline) node.getJline();
-            addStatement(new RawStatement(jline.getExpr().getText()+"\n"));
+            addStatement(new RawStatement(jline.getExpr().getText()));
         }
 
         public void caseAEmitBaseComponent(AEmitBaseComponent node)

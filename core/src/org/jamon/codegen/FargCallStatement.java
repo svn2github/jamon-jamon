@@ -20,7 +20,6 @@
 
 package org.jamon.codegen;
 
-import java.io.PrintWriter;
 import java.io.IOException;
 import java.util.List;
 import java.util.Iterator;
@@ -42,7 +41,7 @@ public class FargCallStatement
     private final Map m_params;
     private final FargInfo m_fargInfo;
 
-    public void generateSource(PrintWriter p_writer,
+    public void generateSource(IndentingWriter p_writer,
                                TemplateResolver p_resolver,
                                TemplateDescriber p_describer,
                                ImplAnalyzer p_analyzer)

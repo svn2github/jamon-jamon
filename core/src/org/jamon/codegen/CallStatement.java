@@ -15,12 +15,11 @@
  * created by Jay Sachs are Copyright (C) 2002 Jay Sachs.  All Rights
  * Reserved.
  *
- * Contributor(s):
+ * Contributor(s): Ian Robertson
  */
 
 package org.jamon.codegen;
 
-import java.io.PrintWriter;
 import java.io.IOException;
 import java.util.List;
 import java.util.Iterator;
@@ -61,7 +60,6 @@ public class CallStatement
     private final static String WRITER_CLASS =
         java.io.Writer.class.getName();
 
-
     private String getFargName(String p_fargName,
                                ImplAnalyzer p_analyzer,
                                TemplateDescriber p_describer)
@@ -84,7 +82,7 @@ public class CallStatement
 
     private void handleFragParam(String p_fargName,
                                  List p_statements,
-                                 PrintWriter p_writer,
+                                 IndentingWriter p_writer,
                                  TemplateResolver p_resolver,
                                  TemplateDescriber p_describer,
                                  ImplAnalyzer p_analyzer)
@@ -105,7 +103,7 @@ public class CallStatement
             throw new JamonException("Unknown fragment arg " + fargName);
         }
 
-        p_writer.print("    final ");
+        p_writer.print("final ");
 
         String fargIntf = fargInfo.getFargInterfaceName();
         if (! isDefCall(p_analyzer))
@@ -118,22 +116,17 @@ public class CallStatement
 
         String className = fargInfo.getFargInterfaceName()
             + p_analyzer.newVarName();
-        p_writer.print  ("class ");
-        p_writer.println(className);
+        p_writer.println("class " + className);
         p_writer.println("  extends org.jamon.AbstractTemplateImpl");
-        p_writer.print  ("  implements ");
-        p_writer.println(fargIntf);
-        p_writer.println("{");
-        p_writer.print  ("  ");
-        p_writer.print  (className);
-        p_writer.println("(org.jamon.TemplateManager p_manager) {");
-        p_writer.println("    super(p_manager,\"\");");
-        p_writer.println("  }");
+        p_writer.println("  implements " + fargIntf);
+        p_writer.openBlock();
+        p_writer.println(className + "(org.jamon.TemplateManager p_manager)");
+        p_writer.openBlock();
+        p_writer.println("super(p_manager,\"\");");
+        p_writer.closeBlock();
 
 
-        p_writer.print("       public ");
-        p_writer.print(RENDERER_CLASS);
-        p_writer.print(" makeRenderer(");
+        p_writer.print("public " + RENDERER_CLASS + " makeRenderer(");
         for (Iterator a = fargInfo.getArgumentNames(); a.hasNext(); /* */)
         {
             String arg = (String) a.next();
@@ -147,18 +140,17 @@ public class CallStatement
             }
         }
         p_writer.println(")");
-        p_writer.println("  {");
-        p_writer.print(  "    return new ");
-        p_writer.print(RENDERER_CLASS);
-        p_writer.println("() {");
-        p_writer.print(  "      public void renderTo(");
+        p_writer.openBlock();
+        p_writer.print(  "return new " + RENDERER_CLASS + "()");
+        p_writer.openBlock();
+        p_writer.print(  "public void renderTo(");
         p_writer.print(  WRITER_CLASS);
         p_writer.println(" p_writer)");
-        p_writer.print(  "        throws ");
+        p_writer.print(  "  throws ");
         p_writer.println(IOEXCEPTION_CLASS);
-        p_writer.println("      {");
-        p_writer.println("        writeTo(p_writer);");
-        p_writer.print  ("        render(");
+        p_writer.openBlock();
+        p_writer.println("writeTo(p_writer);");
+        p_writer.print  ("render(");
         for (Iterator a = fargInfo.getArgumentNames(); a.hasNext(); /* */)
         {
             String arg = (String) a.next();
@@ -169,12 +161,11 @@ public class CallStatement
             }
         }
         p_writer.println(");");
-        p_writer.println("      }");
-        p_writer.println("    };");
-        p_writer.println("  }");
+        p_writer.closeBlock();
+        p_writer.closeBlock(";");
+        p_writer.closeBlock();
 
-
-        p_writer.print("       public void render(");
+        p_writer.print("public void render(");
         for (Iterator a = fargInfo.getArgumentNames(); a.hasNext(); /* */)
         {
             String arg = (String) a.next();
@@ -187,8 +178,8 @@ public class CallStatement
             }
         }
         p_writer.print(") throws ");
-        p_writer.print(IOEXCEPTION_CLASS);
-        p_writer.println(" {");
+        p_writer.println(IOEXCEPTION_CLASS);
+        p_writer.openBlock();
         for (Iterator i = p_statements.iterator(); i.hasNext(); /* */)
         {
             ((Statement)i.next()).generateSource(p_writer,
@@ -197,14 +188,14 @@ public class CallStatement
                                                  p_analyzer);
             p_writer.println();
         }
-        p_writer.println("    }");
-        p_writer.println("  }");
+        p_writer.closeBlock();
+        p_writer.closeBlock();
 
         p_writer.print(className);
         p_writer.print(" ");
         p_writer.print(fragVar);
         p_writer.println(" =");
-        p_writer.print("      new ");
+        p_writer.print("  new ");
         p_writer.print(className);
         p_writer.println(" (this.getTemplateManager());");
         p_writer.print(fragVar);
@@ -214,7 +205,7 @@ public class CallStatement
         m_params.put(fargName, fragVar);
     }
 
-    public void generateSource(PrintWriter p_writer,
+    public void generateSource(IndentingWriter p_writer,
                                TemplateResolver p_resolver,
                                TemplateDescriber p_describer,
                                ImplAnalyzer p_analyzer)
@@ -222,7 +213,7 @@ public class CallStatement
     {
         if (! m_fragParams.isEmpty())
         {
-            p_writer.println("{");
+            p_writer.openBlock();
             for (Iterator f = m_fragParams.entrySet().iterator(); f.hasNext(); /* */)
             {
                 Map.Entry entry = (Map.Entry) f.next();
@@ -251,11 +242,11 @@ public class CallStatement
 
         if (! m_fragParams.isEmpty())
         {
-            p_writer.println("}");
+            p_writer.closeBlock();
         }
     }
 
-    private void generateAsDefCall(PrintWriter p_writer,
+    private void generateAsDefCall(IndentingWriter p_writer,
                                    ImplAnalyzer p_analyzer)
         throws IOException
     {
@@ -302,7 +293,7 @@ public class CallStatement
         p_writer.println(");");
     }
 
-    private void generateAsComponentCall(PrintWriter p_writer,
+    private void generateAsComponentCall(IndentingWriter p_writer,
                                          TemplateResolver p_resolver,
                                          TemplateDescriber p_describer,
                                          ImplAnalyzer p_analyzer,
@@ -313,8 +304,9 @@ public class CallStatement
         p_writer.print("new ");
         p_writer.print(intfName);
         p_writer.println("(this.getTemplateManager())");
-        p_writer.println("      .writeTo(this.getWriter())");
-        p_writer.println("      .escaping(this.getEscaping())");
+        p_writer.indent(5);
+        p_writer.println(".writeTo(this.getWriter())");
+        p_writer.println(".escaping(this.getEscaping())");
 
         List requiredArgs = p_describer.getRequiredArgNames(p_absPath);
 
@@ -323,14 +315,14 @@ public class CallStatement
             String name = (String) i.next();
             if (! requiredArgs.contains(name) )
             {
-                p_writer.print("      .set");
+                p_writer.print(".set");
                 p_writer.print(StringUtils.capitalize(name));
                 p_writer.print("(");
                 p_writer.print(m_params.get(name));
                 p_writer.println(")");
             }
         }
-        p_writer.print("      .render(");
+        p_writer.print(".render(");
         for (Iterator i = requiredArgs.iterator(); i.hasNext(); /* */)
         {
             String name = (String) i.next();
@@ -345,10 +337,11 @@ public class CallStatement
             p_writer.print(expr);
             if (i.hasNext())
             {
-                p_writer.print(",");
+                p_writer.print(", ");
             }
         }
         p_writer.println(");");
+        p_writer.outdent(5);
     }
 
     private final String getPath()

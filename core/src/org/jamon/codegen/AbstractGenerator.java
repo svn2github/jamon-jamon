@@ -21,47 +21,60 @@
 package org.jamon.codegen;
 
 import java.io.Writer;
-import java.io.PrintWriter;
 import java.io.IOException;
 import java.util.Iterator;
 
-public class AbstractGenerator
+public abstract class AbstractGenerator
 {
-    public AbstractGenerator(Writer p_writer,
-                             TemplateResolver p_resolver)
+    protected AbstractGenerator(Writer p_writer,
+                                TemplateResolver p_resolver)
     {
-        m_writer = new PrintWriter(p_writer);
+        m_writer = new IndentingWriter(p_writer);
         m_resolver = p_resolver;
     }
 
+    protected final static String IOEXCEPTION_CLASS =
+        IOException.class.getName();
+    protected final static String WRITER_CLASS =
+        Writer.class.getName();
+    protected final static String RENDERER_CLASS =
+        org.jamon.Renderer.class.getName();
+
     private final TemplateResolver m_resolver;
-    private final PrintWriter m_writer;
+    private final IndentingWriter m_writer;
 
     protected TemplateResolver getResolver()
     {
         return m_resolver;
     }
 
-    protected PrintWriter getWriter()
+    protected IndentingWriter getWriter()
     {
         return m_writer;
     }
 
     protected void print(Object p_obj)
-        throws IOException
     {
         m_writer.print(p_obj);
     }
 
     protected void println()
-        throws IOException
     {
         m_writer.println();
     }
 
     protected void println(Object p_obj)
-        throws IOException
     {
         m_writer.println(p_obj);
+    }
+
+    protected void openBlock()
+    {
+        m_writer.openBlock();
+    }
+
+    protected void closeBlock()
+    {
+        m_writer.closeBlock();
     }
 }

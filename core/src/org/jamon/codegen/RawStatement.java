@@ -20,7 +20,6 @@
 
 package org.jamon.codegen;
 
-import java.io.PrintWriter;
 import java.io.IOException;
 
 public class RawStatement
@@ -31,13 +30,13 @@ public class RawStatement
         m_code = p_code;
     }
 
-    public void generateSource(PrintWriter p_writer,
+    public void generateSource(IndentingWriter p_writer,
                                TemplateResolver p_resolver,
                                TemplateDescriber p_describer,
                                ImplAnalyzer p_analyzer)
         throws IOException
     {
-        p_writer.print(m_code);
+        p_writer.println(m_code);
     }
 
     private final String m_code;

@@ -20,8 +20,6 @@
 
 package org.jamon.codegen;
 
-import java.io.PrintWriter;
-
 public class WriteStatement
     implements Statement
 {
@@ -31,7 +29,7 @@ public class WriteStatement
         m_escapingDirective = p_escapingDirective;
     }
 
-    public void generateSource(PrintWriter p_writer,
+    public void generateSource(IndentingWriter p_writer,
                                TemplateResolver p_resolver,
                                TemplateDescriber p_describer,
                                ImplAnalyzer p_analyzer)

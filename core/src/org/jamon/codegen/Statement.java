@@ -15,12 +15,11 @@
  * created by Jay Sachs are Copyright (C) 2002 Jay Sachs.  All Rights
  * Reserved.
  *
- * Contributor(s):
+ * Contributor(s): Ian Robertson
  */
 
 package org.jamon.codegen;
 
-import java.io.PrintWriter;
 import java.io.IOException;
 
 
@@ -41,7 +40,7 @@ public interface Statement
      *
      * @exception IOException if something goes wrong
      */
-    void generateSource(PrintWriter p_writer,
+    void generateSource(IndentingWriter p_writer,
                         TemplateResolver p_resolver,
                         TemplateDescriber p_describer,
                         ImplAnalyzer p_analyzer)

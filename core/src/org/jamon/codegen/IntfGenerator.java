@@ -21,7 +21,6 @@
 package org.jamon.codegen;
 
 import java.io.Writer;
-import java.io.PrintWriter;
 import java.io.IOException;
 import java.util.Iterator;
 
@@ -66,12 +65,6 @@ public class IntfGenerator extends AbstractGenerator
         TEMPLATE + ".Intf";
     private final static String TEMPLATE_MANAGER =
         org.jamon.TemplateManager.class.getName();
-    private final static String IOEXCEPTION_CLASS =
-        IOException.class.getName();
-    private final static String WRITER_CLASS =
-        Writer.class.getName();
-    private final static String RENDERER_CLASS =
-        org.jamon.Renderer.class.getName();
 
     private final BaseAnalyzer m_analyzer;
     private final String m_path;

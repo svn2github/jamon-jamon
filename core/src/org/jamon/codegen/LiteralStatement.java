@@ -20,8 +20,6 @@
 
 package org.jamon.codegen;
 
-import java.io.PrintWriter;
-
 import org.jamon.util.StringUtils;
 
 public class LiteralStatement
@@ -32,7 +30,7 @@ public class LiteralStatement
         m_text = javaEscape(p_escapeNewline ? newlineEscape(p_text) : p_text);
     }
 
-    public void generateSource(PrintWriter p_writer,
+    public void generateSource(IndentingWriter p_writer,
                                TemplateResolver p_resolver,
                                TemplateDescriber p_describer,
                                ImplAnalyzer p_analyzer)
