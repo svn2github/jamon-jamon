@@ -43,6 +43,9 @@ Helpers
   bs = '\';
   pipe = '|';
   quoted = q ([all-[q+bs]]* | (bs all))* q;
+  sq = 39;
+  hex = [digit + [['A' .. 'F'] + ['a' .. 'f']]];
+  squoted = sq (([all-[sq+bs]]) | (bs all) | (bs 'u' hex hex hex hex)) sq;
   gt = '>';
   lt = '<';
   pct = '%';
@@ -93,8 +96,9 @@ Tokens
   {escape} escape_code = letter;
 
   {emit} emit_expr =
-      ( [all - [[q + pct] + hash]]
+      ( [all - [[[q + pct] + hash] + sq]]
       | quoted
+      | squoted
       | pct [all - gt]
       )*;
 
@@ -102,12 +106,13 @@ Tokens
   {jline -> start} outjava = hs* nl;
   {jline} expr = all_except_nl*;
    // fixme: line ending ...
-  {argexp} argexpr = ([all - [argsep+q]] | quoted)*;
+  {argexp} argexpr = ([all - [argsep+q]] | quoted | squoted)*;
   {argexp -> args,args} donearg = hs* argsep ws*;
 
   {java} java_stmts =
        ( [all - [q + lt]]
        | quoted
+       | squoted
        | '<' [all - slash]
        | '</' [all - '%']
        | '</%' [all - 'j']
@@ -119,6 +124,7 @@ Tokens
   {class} class_content =
        ( [all - [q + lt]]
        | quoted
+       | squoted
        | '<' [all - slash]
        | '</' [all - '%']
        | '</%' [all - 'c']
@@ -153,7 +159,7 @@ Tokens
   {start -> call,body -> call} call_start = '<&' ws*;
   {fargcall -> fargcallbody, call -> body} call_end = ws* '&>';
   {callexp -> call, fargcallexp -> fargcall} param_expr =
-       ([all - [argsep + [q + '&']]] | quoted | '&' [all - '>'])*;
+       ([all - [argsep + [q + '&']]] | quoted | squoted | '&' [all - '>'])*;
   {fargcall,call,imports} semi = ';';
   {fargcall,call} pathsep = slash;
 
