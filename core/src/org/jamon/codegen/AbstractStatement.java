@@ -43,4 +43,9 @@ public abstract class AbstractStatement
         return m_templateIdentifier;
     }
 
+    protected final void generateSourceLine(IndentingWriter p_writer)
+    {
+        p_writer.println("// " + m_token.getLine() + ", " + m_token.getPos());
+    }
+
 }

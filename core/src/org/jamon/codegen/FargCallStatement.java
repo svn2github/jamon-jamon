@@ -29,6 +29,7 @@ import org.jamon.util.StringUtils;
 import org.jamon.node.Token;
 
 public class FargCallStatement
+    extends AbstractStatement
     implements CallStatement
 {
     FargCallStatement(String p_path,
@@ -37,18 +38,15 @@ public class FargCallStatement
                       Token p_token,
                       String p_templateIdentifier)
     {
+        super(p_token, p_templateIdentifier);
         m_path = p_path;
         m_params = p_params;
         m_fragmentUnit = p_fragmentUnit;
-        m_token = p_token;
-        m_templateIdentifier = p_templateIdentifier;
     }
 
     private final String m_path;
     private final Map m_params;
     private final FragmentUnit m_fragmentUnit;
-    private final Token m_token;
-    private final String m_templateIdentifier;
 
     public void addFragmentImpl(FragmentUnit p_unit)
     {
@@ -59,6 +57,7 @@ public class FargCallStatement
                                TemplateDescriber p_describer)
         throws IOException
     {
+        generateSourceLine(p_writer);
         String tn = getPath();
         p_writer.println(tn + ".writeTo(this.getWriter());");
         p_writer.println(tn + ".escapeWith(this.getEscaping());");
@@ -72,8 +71,8 @@ public class FargCallStatement
             {
                 throw new AnalysisException
                     ("No value supplied for required argument " + name,
-                     m_templateIdentifier,
-                     m_token);
+                     getTemplateIdentifier(),
+                     getToken());
             }
             p_writer.print("(" + expr + ")");
             if (r.hasNext())
@@ -89,8 +88,8 @@ public class FargCallStatement
             message.append(" doesn't expect args ");
             StringUtils.commaJoin(message, m_params.keySet().iterator());
             throw new AnalysisException(message.toString(),
-                                        m_templateIdentifier,
-                                        m_token);
+                                        getTemplateIdentifier(),
+                                        getToken());
         }
     }
 

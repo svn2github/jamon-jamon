@@ -21,18 +21,23 @@
 package org.jamon.codegen;
 
 import java.io.IOException;
+import org.jamon.node.Token;
 
 public class RawStatement
-    implements Statement
+    extends AbstractStatement
 {
-    RawStatement(String p_code)
+    RawStatement(String p_code,
+                 Token p_token,
+                 String p_templateIdentifier)
     {
+        super(p_token, p_templateIdentifier);
         m_code = p_code;
     }
 
     public void generateSource(IndentingWriter p_writer,
                                TemplateDescriber p_describer)
     {
+        generateSourceLine(p_writer);
         p_writer.println(m_code);
     }
 

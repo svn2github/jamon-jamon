@@ -55,6 +55,7 @@ public abstract class AbstractInnerUnitCallStatement
                                TemplateDescriber p_describer)
         throws IOException
     {
+        generateSourceLine(p_writer);
         p_writer.openBlock();
         makeFragmentImplClasses(
             m_unit.getFragmentArgsList(), p_writer, p_describer);

@@ -20,13 +20,16 @@
 
 package org.jamon.codegen;
 
+import org.jamon.node.Token;
 import org.jamon.util.StringUtils;
 
 public class LiteralStatement
+    extends AbstractStatement
     implements Statement
 {
-    LiteralStatement(String p_text)
+    LiteralStatement(String p_text, Token p_token, String p_templateIdentifier)
     {
+        super(p_token, p_templateIdentifier);
         m_text = javaEscape(p_text);
     }
 
@@ -35,6 +38,7 @@ public class LiteralStatement
     {
         if (m_text.length() > 0)
         {
+            generateSourceLine(p_writer);
             p_writer.print("this.write(\"");
             p_writer.print(m_text);
             p_writer.println("\");");

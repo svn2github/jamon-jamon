@@ -165,6 +165,7 @@ public class Analyzer
     }
 
     private StringBuffer m_current = new StringBuffer();
+    private Token m_currentToken = null;
     private final TemplateUnit m_templateUnit;
     private Unit m_currentUnit;
     private final TemplateDescriber m_describer;
@@ -472,16 +473,26 @@ public class Analyzer
         {
             handleBody();
             addStatement
-                (new LiteralStatement(node.getLiteralText().getText()));
+                (new LiteralStatement(node.getLiteralText().getText(),
+                                      node.getLitstart(),
+                                      m_templateIdentifier));
         }
 
         public void caseABodyBaseComponent(ABodyBaseComponent node)
         {
+            if (m_currentToken == null)
+            {
+                m_currentToken = node.getText();
+            }
             m_current.append(node.getText().getText());
         }
 
         public void caseANewlineBaseComponent(ANewlineBaseComponent node)
         {
+            if (m_currentToken == null)
+            {
+                m_currentToken = node.getNewline();
+            }
             m_current.append(node.getNewline().getText());
         }
 
@@ -538,19 +549,25 @@ public class Analyzer
         public void caseAJava(AJava p_java)
         {
             handleBody();
-            addStatement(new RawStatement(p_java.getJavaStmts().getText()));
+            addStatement(new RawStatement(p_java.getJavaStmts().getText(),
+                                          p_java.getJavaStart(),
+                                          m_templateIdentifier));
         }
 
         public void caseAPartialJline(APartialJline node)
         {
             handleBody();
-            addStatement(new RawStatement(node.getExpr().getText()));
+            addStatement(new RawStatement(node.getExpr().getText(),
+                                          node.getInjava(),
+                                          m_templateIdentifier));
         }
 
         public void caseAJline(AJline p_jline)
         {
             handleBody();
-            addStatement(new RawStatement(p_jline.getExpr().getText()));
+            addStatement(new RawStatement(p_jline.getExpr().getText(),
+                                          p_jline.getInjava(),
+                                          m_templateIdentifier));
         }
 
         public void caseAEmit(AEmit p_emit)
@@ -562,7 +579,9 @@ public class Analyzer
                 ? EscapingDirective.DEFAULT
                 : EscapingDirective.get(escape.getEscapeCode().getText());
             addStatement(new WriteStatement(p_emit.getEmitExpr().getText(),
-                                            directive));
+                                            directive,
+                                            p_emit.getEmitStart(),
+                                            m_templateIdentifier));
         }
     }
 
@@ -570,8 +589,11 @@ public class Analyzer
     {
         if (m_current.length() > 0)
         {
-            addStatement(new LiteralStatement(m_current.toString()));
+            addStatement(new LiteralStatement(m_current.toString(),
+                                              m_currentToken,
+                                              m_templateIdentifier));
             m_current = new StringBuffer();
+            m_currentToken = null;
         }
     }
 

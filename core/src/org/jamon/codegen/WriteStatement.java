@@ -20,11 +20,17 @@
 
 package org.jamon.codegen;
 
+import org.jamon.node.Token;
+
 public class WriteStatement
-    implements Statement
+    extends AbstractStatement
 {
-    WriteStatement(String p_expr, EscapingDirective p_escapingDirective)
+    WriteStatement(String p_expr,
+                   EscapingDirective p_escapingDirective,
+                   Token p_token,
+                   String p_templateIdentifier)
     {
+        super(p_token, p_templateIdentifier);
         m_expr = p_expr;
         m_escapingDirective = p_escapingDirective;
     }
@@ -32,6 +38,7 @@ public class WriteStatement
     public void generateSource(IndentingWriter p_writer,
                                TemplateDescriber p_describer)
     {
+        generateSourceLine(p_writer);
         p_writer.print("this.writeEscaped(this.valueOf(");
         p_writer.print(m_expr);
         p_writer.print(")");
