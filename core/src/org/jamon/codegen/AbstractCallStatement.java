@@ -31,6 +31,7 @@ import org.jamon.node.Token;
 import org.jamon.util.StringUtils;
 
 public abstract class AbstractCallStatement
+    extends AbstractStatement
     implements CallStatement
 {
     AbstractCallStatement(String p_path,
@@ -38,10 +39,9 @@ public abstract class AbstractCallStatement
                           Token p_token,
                           String p_templateIdentifier)
     {
+        super(p_token, p_templateIdentifier);
         m_path = p_path;
         m_params = p_params;
-        m_token = p_token;
-        m_templateIdentifier = p_templateIdentifier;
     }
 
     public void addFragmentImpl(FragmentUnit p_unit)
@@ -55,8 +55,6 @@ public abstract class AbstractCallStatement
     private final static String FRAGMENT_IMPL_PREFIX = "__jamon__instanceOf__";
     private static int s_fragmentImplCounter = 0;
     private final Map m_fragmentImplNames = new HashMap();
-    private final Token m_token;
-    private final String m_templateIdentifier;
 
     protected abstract String getFragmentIntfName(
         FragmentUnit p_fragmentUnitIntf);
@@ -219,15 +217,4 @@ public abstract class AbstractCallStatement
     {
         return m_params;
     }
-
-    protected final Token getToken()
-    {
-        return m_token;
-    }
-
-    protected final String getTemplateIdentifier()
-    {
-        return m_templateIdentifier;
-    }
-
 }
