@@ -7,7 +7,7 @@ body
 {
   width: 100%;
   border-top: solid;
-  margin-bottom: -0.8em;
+  margin-bottom: 0.8em;
   clear: both;
 }
 
@@ -38,8 +38,14 @@ body
 {
   color: #777777;
   font-size: 1em;
-  float: right;
-  margin-top: 0;
+  /* use this */
+  position: absolute;
+  right: 0em;
+  top: 0em;
+  /* or this */
+  //  float: right;
+  margin-top: 0.25em;
+  margin-right: 0.25em;
   margin-bottom: 0;
   padding-bottom: 0;
   padding-top: 0em;
@@ -47,40 +53,57 @@ body
   font-style: italic;
 }
 
+#body
+{
+  padding: 0 0 0 0;
+  margin: 0em 0em 0em 0em;
+}
+
+
+#nav
+{
+  padding: 0 0em 0 0em;
+  margin: 0em 0em 0em 0em;
+  background-color: #ddd;
+  position: absolute;
+  left: 0;
+  width: 9em;
+}
+
+#main
+{
+//  background-color: #987654;
+  padding: 0 0 0 1em;
+  margin: 0 0 0 -1px;
+  border-left: 1px solid;
+  position: absolute;
+  left: 9em;
+}
+
 #nav ul
 {
+  border-right: 1px solid;
   list-style-type: none;
-  margin: 1em 0em 1em 0em;
-  border: 1px solid;
-  padding: 0.25em 0em 0.25em 0em;
   font-size: 80%;
-  background-color: #bbb;
+  background-color: #ddd;
+  padding: 0.0em 0em 0.0em 0em;
 }
 
 #nav li
 {
-  display: inline;
-//  padding-left: .0em;
+  padding-left: 1em;
+  vertical-align: top;
 }
 
 #nav li a
 {
-  text-align: center;
-  padding: 0.25em 1em 0.25em 1em;
-  background-color: #ddd;
-  border-left: 1px solid;
-  border-right: 1px solid;
+  padding: 0em 0.0em 0em 0.0em;
 }
 
 #current
 {
   background-color: #ffff70 !important;
   font-weight: bold !important;
-}
-
-#main
-{
-  padding-left: 1em;
 }
 
 pre

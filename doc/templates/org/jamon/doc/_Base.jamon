@@ -20,19 +20,21 @@
     </h3>
 
     <div id="header"></div>
-    <div id="nav">
-      <ul>
-        <& _menuItem; section => Section.HOME; href => "index" &>
-        <& _menuItem; section => Section.FEATURES; href => "Features" &>
-        <& _menuItem; section => Section.NEWS; href => "News" &>
-        <& _menuItem; section => Section.DOWNLOAD; href => "Download" &>
-        <& _menuItem; section => Section.DOCUMENTATION; href => "Documentation" &>
-        <& _menuItem; section => Section.CONTACT; href => "Contact" &>
-        <& _menuItem; section => Section.ABOUT; href => "About" &>
-      </ul>
-    </div>
-    <div id="main">
-      <& *CHILD &>
+    <div id="body">
+      <div id="nav">
+        <ul>
+          <& _menuItem; section => Section.HOME; href => "index" &>
+          <& _menuItem; section => Section.FEATURES; href => "Features" &>
+          <& _menuItem; section => Section.NEWS; href => "News" &>
+          <& _menuItem; section => Section.DOWNLOAD; href => "Download" &>
+          <& _menuItem; section => Section.DOCUMENTATION; href => "Documentation" &>
+          <& _menuItem; section => Section.CONTACT; href => "Contact" &>
+          <& _menuItem; section => Section.ABOUT; href => "About" &>
+        </ul>
+      </div>
+      <div id="main">
+        <& *CHILD &>
+      </div>
     </div>
   </body>
 </html>
@@ -47,11 +49,12 @@
     Section section;
     String href;
   </%args>
-<li>
-  <a href="<% href #u %>.html" \
+<li \
 % if (section == currentSection()) {
   id="current"\
 % }
+>
+<a href="<% href #u %>.html" \
 ><% section %></a>
 </li>
 </%def>
