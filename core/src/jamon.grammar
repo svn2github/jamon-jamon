@@ -341,7 +341,7 @@ Productions
   default = arrow argexpr;
 
   name = {simple} identifier
-       | {qualified} name dot identifier;
+       | {qualified} identifier dot name;
 
   type = name brackets*;
 
