@@ -22,12 +22,6 @@ public class JavaTest
     extends TestCase
 {
 
-    public JavaTest(String p_name)
-    {
-        super(p_name);
-    }
-
-
     public void testExercise()
         throws IOException, 
                JttException

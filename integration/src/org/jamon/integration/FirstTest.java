@@ -17,22 +17,6 @@ public class FirstTest
     extends TestCase
 {
 
-    public FirstTest(String p_name)
-    {
-        super(p_name);
-    }
-
-
-    public void setUp()
-    {
-    }
-
-
-    public void tearDown()
-    {
-    }
-
-
     public void testExercise()
         throws Exception
     {
