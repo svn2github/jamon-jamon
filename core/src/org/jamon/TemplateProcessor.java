@@ -40,7 +40,6 @@ public class TemplateProcessor
         }
 
         File pkgDir = new File(p_destdir, StringUtils.classNameToPath(pkg));
-
         File javaFile = new File(pkgDir, templateName + ".java");
 
         ImplAnalyzer analyzer =
@@ -171,7 +170,7 @@ public class TemplateProcessor
 
         TemplateResolver resolver = new TemplateResolver();
         TemplateDescriber describer =
-            new TemplateDescriber(p_srcDir + "/");
+            new TemplateDescriber(new File(p_srcDir));
 
         for (int i = 0; i < p_relativeFilenames.length; i++)
         {
@@ -181,7 +180,6 @@ public class TemplateProcessor
                                      p_relativeFilenames[i]);
         }
     }
-
 
     public static void generateInterfaces(File p_destDir,
                                           String p_srcDir,
@@ -199,7 +197,7 @@ public class TemplateProcessor
 
         TemplateResolver resolver = new TemplateResolver();
         TemplateDescriber describer =
-            new TemplateDescriber(p_srcDir + "/");
+            new TemplateDescriber(new File(p_srcDir));
 
         for (int i = 0; i < p_relativeFilenames.length; i++)
         {
@@ -211,42 +209,76 @@ public class TemplateProcessor
     }
 
 
+    private static void showHelp()
+    {
+        System.out.println("Usage: java org.jamon.TemplateProcessor <args> templatePath*");
+        System.out.println("  Arguments:");
+        System.out.println("  -h|--help         - print this help");
+        System.out.println("  -a|--all         - generate impls too");
+        System.out.println("  -a|--all         - generate impls too");
+        System.out.println("  -destDir=<path>  - path to where compiled .java files go (required)");
+        System.out.println("  -sourceDir=<path>  - path to template directory");
+    }
+
     public static void main(String [] args)
     {
         try
         {
             int arg = 0;
             boolean doBoth = false;
-            if ("-a".equals(args[arg]))
+            File sourceDir = new File(".");
+            File destDir = null;
+            while (arg<args.length && args[arg].startsWith("-"))
             {
-                doBoth = true;
+                if ("-h".equals(args[arg]) || "--help".equals(args[arg]))
+                {
+                    showHelp();
+                    System.exit(0);
+                }
+                else if ("-a".equals(args[arg]) || "--all".equals(args[arg]))
+                {
+                    doBoth = true;
+                }
+                else if (args[arg].startsWith("--destDir="))
+                {
+                    destDir = new File(args[arg].substring(10));
+                }
+                else if (args[arg].startsWith("--sourceDir="))
+                {
+                    sourceDir = new File(args[arg].substring(12));
+                }
                 arg++;
             }
+            if (destDir==null)
+            {
+                System.err.println("You must specify --destDir");
+                showHelp();
+                System.exit(1);
+            }
 
-            File destdir = new File(args[arg++]);
-            destdir.mkdirs();
-            if (! destdir.exists() || ! destdir.isDirectory())
+            destDir.mkdirs();
+            if (! destDir.exists() || ! destDir.isDirectory())
             {
                 throw new IOException("Unable to create destination dir "
-                                      + destdir);
+                                      + destDir);
             }
 
             TemplateResolver resolver = new TemplateResolver();
-            TemplateDescriber describer = new TemplateDescriber("");
+            TemplateDescriber describer = new TemplateDescriber(sourceDir);
 
             while (arg < args.length)
             {
                 String template = args[arg++];
                 if (doBoth)
                 {
-                    generateImplAndInterface(destdir,
+                    generateImplAndInterface(destDir,
                                              describer,
                                              resolver,
                                              template);
                 }
                 else
                 {
-                    generateInterface(destdir,
+                    generateInterface(destDir,
                                       describer,
                                       resolver,
                                       template);

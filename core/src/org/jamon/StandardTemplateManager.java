@@ -146,9 +146,9 @@ public class StandardTemplateManager
             }
             m_loader = new WorkDirClassLoader(m_classLoader, m_workDir);
             m_describer =
-                new TemplateDescriber(m_templateSourceDir == null
-                                      ? System.getProperty("user.dir")
-                                      : m_templateSourceDir);
+                new TemplateDescriber(new File(m_templateSourceDir == null
+                                               ? System.getProperty("user.dir")
+                                               : m_templateSourceDir));
             m_initialized = true;
         }
     }

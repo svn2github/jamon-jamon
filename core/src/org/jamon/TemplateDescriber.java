@@ -21,17 +21,12 @@ import org.jamon.lexer.LexerException;
 
 public class TemplateDescriber
 {
-    public TemplateDescriber(String p_templateSourceDir)
+    public TemplateDescriber(File p_templateSourceDir)
     {
         m_templateSourceDir = p_templateSourceDir;
     }
 
-    private String getTemplateFileName(String p_path)
-    {
-        return m_templateSourceDir + p_path;
-    }
-
-    private final String m_templateSourceDir;
+    private final File m_templateSourceDir;
 
     public FargInfo getFargInfo(String p_path, String p_fargName)
         throws IOException
@@ -95,7 +90,7 @@ public class TemplateDescriber
 
     public File getTemplateFile(String p_path)
     {
-        return new File(getTemplateFileName(p_path));
+        return new File(m_templateSourceDir, p_path);
     }
 
     public List getRequiredArgNames(final String p_path)
@@ -141,7 +136,7 @@ public class TemplateDescriber
         {
             return new Parser(new Lexer
                               (new PushbackReader
-                               (new FileReader(getTemplateFileName(p_path)),
+                               (new FileReader(getTemplateFile(p_path)),
                                 1024)))
                 .parse();
         }

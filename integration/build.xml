@@ -9,10 +9,13 @@
 
   <property name="build.dir" value="build"/>
   <property name="build.src.dir" value="${build.dir}/src"/>
+  <property name="build.src2.dir" value="${build.dir}/src2"/>
   <property name="classes.dir" value="${build.dir}/classes"/>
   <property name="src.dir" value="src"/>
   <property name="test.pkg" value="test/jamon"/>
 
+  <property name="sample.template1" value="test/jamon/TestTemplate"/>
+  <property name="sample.template2" value="test/jamon/Arguments"/>
   <property name="java.lib.jamon" value="../jamon.jar"/>
   <property name="java.lib.junit" value="/usr/local/share/java/junit.jar" />
   <property name="java.lib.gnuregexp" value="/usr/local/share/java/gnu-regexp-1.1.4.jar" />
@@ -32,6 +35,32 @@
     <jamon destdir="${build.src.dir}" generateImpls="true">
       <src path="templates"/>
     </jamon>
+  </target>
+
+  <target name="commandlineTemplates">
+    <echo message="stage 0"/>
+    <java fork="true"
+          classpath="${java.lib.jamon}"
+          classname="org.jamon.TemplateProcessor"
+          failonerror="true">
+      <arg value="--sourceDir=templates"/>
+      <arg value="--destDir=${build.src2.dir}"/>
+      <arg value="--all"/>
+      <!-- just compile a couple to make sure this works -->
+      <arg value="${sample.template1}"/>
+      <arg value="${sample.template2}"/>
+    </java>
+    <echo message="stage 1"/>
+    <exec executable="diff" failonerror="true">
+      <arg value="${build.src.dir}/${sample.template1}.java"/>
+      <arg value="${build.src2.dir}/${sample.template1}.java"/>
+    </exec>
+    <echo message="stage 2"/>
+    <exec executable="diff" failonerror="true">
+      <arg value="${build.src.dir}/${sample.template2}.java"/>
+      <arg value="${build.src2.dir}/${sample.template2}.java"/>
+    </exec>
+    <echo message="stage 3"/>
   </target>
 
   <target name="compile"
