@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.StringTokenizer;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -113,7 +114,23 @@ public class TemplateDescriber
 
     public File getTemplateFile(String p_path)
     {
-        return new File(m_templateSourceDir, p_path);
+        return new File(m_templateSourceDir,
+                        templatePathToFilePath(p_path));
+    }
+
+    private String templatePathToFilePath(String p_path)
+    {
+        StringTokenizer tokenizer = new StringTokenizer(p_path, "/");
+        StringBuffer path = new StringBuffer(p_path.length());
+        while (tokenizer.hasMoreTokens())
+        {
+            path.append(tokenizer.nextToken());
+            if (tokenizer.hasMoreTokens())
+            {
+                path.append(File.separator);
+            }
+        }
+        return path.toString();
     }
 
     public List getRequiredArgNames(final String p_path)
