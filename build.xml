@@ -78,31 +78,31 @@
     <ant dir="anttask" target="clean"/>
   </target>
 
-  <target name="release" depends="base">
-    <antcall target="_release">
+  <target name="promote-release" depends="base">
+    <antcall target="_change-version">
       <param name="jamon.version.action" value="release"/>
     </antcall>
   </target>
 
   <target name="major-release" depends="base">
-    <antcall target="_release">
+    <antcall target="_change-version">
       <param name="jamon.version.action" value="nextmajor"/>
     </antcall>
   </target>
 
   <target name="minor-release" depends="base">
-    <antcall target="_release">
+    <antcall target="_change-version">
       <param name="jamon.version.action" value="nextminor"/>
     </antcall>
   </target>
 
   <target name="bugfix-release" depends="base">
-    <antcall target="_release">
+    <antcall target="_change-version">
       <param name="jamon.version.action" value="nextsub"/>
     </antcall>
   </target>
 
-  <target name="_release">
+  <target name="_change-version">
     <exec executable="java"
           failonerror="true"
           outputproperty="jamon.version.next">
