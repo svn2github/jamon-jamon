@@ -40,7 +40,7 @@ public class WriteStatement
     {
         generateSourceLine(p_writer);
         p_writer.print("this.writeEscaped(this.valueOf(");
-        p_writer.print(m_expr);
+        p_writer.print(m_expr.trim());
         p_writer.print(")");
         if (!m_escapingDirective.isDefault())
         {
