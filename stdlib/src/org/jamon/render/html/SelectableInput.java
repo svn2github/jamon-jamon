@@ -20,26 +20,30 @@
 
 package org.jamon.render.html;
 
-public class CheckboxInput
+public class SelectableInput
     extends Input
 {
-    public CheckboxInput(String p_name)
-    {
-        this(p_name, null);
-    }
-
-    public CheckboxInput(String p_name, String p_value)
+    public SelectableInput(String p_name, String p_value)
     {
         this(p_name, p_value, false);
     }
 
-    public CheckboxInput(String p_name, String p_value, boolean p_selected)
+    public SelectableInput(String p_name,
+                           String p_value,
+                           String p_selectedValue)
+    {
+        this(p_name, p_value, p_value.equals(p_selectedValue));
+    }
+
+    public SelectableInput(String p_name,
+                           String p_value,
+                           boolean p_selected)
     {
         super(p_name, p_value);
         m_selected = p_selected;
     }
 
-    public boolean getIsSelected()
+    public boolean isSelected()
     {
         return m_selected;
     }

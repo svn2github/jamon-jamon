@@ -18,13 +18,22 @@
   Contributor(s):
 </%doc>\
 <%args>
+  String type;
   org.jamon.render.html.SelectableInput input;
   String cssClass => null;
   String style => null;
   Boolean selected => null;
 </%args>\
-<& _Selectable; type => "checkbox";
-                input => input;
-                cssClass => cssClass;
-                style => style;
-                selected => selected &>
+<input type='<% type %>'
+       name='<% input.getName() %>'
+       value='<% input.getValue() %>'
+% if (cssClass != null) {
+       class='<% cssClass %>'
+% }
+% if (style != null) {
+       style='<% style %>'
+% }
+% if (selected == null ? input.isSelected() : selected.booleanValue()) {
+      selected \
+% }
+/>

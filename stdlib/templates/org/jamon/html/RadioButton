@@ -23,7 +23,7 @@
   String style => null;
   Boolean selected => null;
 </%args>\
-<& _Selectable; type => "checkbox";
+<& _Selectable; type => "radio";
                 input => input;
                 cssClass => cssClass;
                 style => style;
