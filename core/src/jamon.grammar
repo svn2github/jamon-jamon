@@ -24,7 +24,6 @@ Package
 Helpers
   lower = ['a'..'z'];
   upper = ['A'..'Z'];
-  escaper = [[[['H' + 'h'] + 'u'] + 'n'] + 'x'];
   letter = lower | upper | '_';
   digit = ['0'..'9'];
   letter_or_digit = letter | digit;
@@ -84,15 +83,15 @@ Tokens
 
   {start -> emit,body -> emit} emit_start = '<%' ws+;
   {emit -> body} emit_end = ws* '%>';
-  {emit} escape = pipe escaper;
+  {emit} escape = pipe letter;
 
   {emit} emit_expr =
       ( [all - [[q + pct] + pipe]]
       | quoted
       | pct [all - gt]
-      | pipe [all - escaper]
-      | pipe escaper ws* [all - [pct + ws]]
-      | pipe escaper ws* pct [all - [gt + ws]] )*;
+      | pipe [all - [[lower + upper] + '_']]
+      | pipe letter ws* [all - [pct + ws]]
+      | pipe letter ws* pct [all - [gt + ws]] )*;
 
   {start -> jline} injava = pct hs*;
   {jline -> start} outjava = hs* nl;
