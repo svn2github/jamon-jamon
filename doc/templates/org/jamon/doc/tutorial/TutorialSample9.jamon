@@ -7,15 +7,24 @@
 
 <h2>Jamon Tutorial - Template Inheritance: Composing Template Output</h2>
 
-A Jamon template can extend another Jamon template. Inheritance in Jamon, however, works differently than in Java. A parent (super) template declares that it will <em>include</em> the output of a sub-template by
-<ol>
-<li>
-    declaring it is a parent template by specifying the
-    <code>&lt;%abstract></code> tag
-<li>
-    including the tag <code>&lt;&amp; *CHILD &amp;></code> in the Jamon
-    text where the output of the child template should be inserted.
-</ol>
+Jamon template inheritance allows a template to declare that it can
+<em>include</em> the output of a <em>child</em> template that extends it.
+(There are other benefits of inheritence as well, which will be explained
+in the next tutorial section.)
+
+<p>
+The benefits of template inclusion are obvious: a containing
+template, for example, can set up the header, footer, and
+navigation bar of a web page while the included
+template can provide the body of the page. Template inheritance makes
+this inclusion easy: a parent template can set up the page
+layout while the child template simply declares that it extends the
+parent in order to have its output included by the parent.
+<p>
+For a template to declare that it supports inheritance it must specify the tag
+<pre class="template"> <code>&lt;%abstract></code></pre>
+Then, where the parent template wants to include the output of a derived, or child, template, it must specify the tag
+<pre class="template"> <code>&lt;&amp;* CHILD &amp;></code></pre>
 
 <p>
 For example, the template <a href="InheritanceParent.jamon" class="file">
