@@ -1,5 +1,4 @@
-<%frag content>
-</%frag>
+<%frag content/>
 <%args>
   String href;
 </%args>
