@@ -63,6 +63,13 @@ public class EscapingTest
                       "&lt;&amp; &amp;gt; &amp;&gt;!&quot;&apos;");
     }
 
+    public void testJavascriptEscaping()
+	throws IOException
+    {
+	checkEscaping(Escaping.JAVASCRIPT,
+		      "<& &gt; &>!\\\"\\'");
+    }
+
     private void checkEscaping(Escaping p_escaping, String p_expected)
         throws IOException
     {
