@@ -175,11 +175,12 @@ public class TemplateDescriber
         throws IOException
     {
         File file = getTemplateFile(p_path);
+        FileReader reader = new FileReader(file);
         try
         {
             return new Parser(new Lexer
                               (new PushbackReader
-                               (new FileReader(file), 1024)))
+                               (reader, 1024)))
                 .parse();
         }
         catch (ParserException e)
@@ -189,6 +190,10 @@ public class TemplateDescriber
         catch (LexerException e)
         {
             throw new JamonParseException(file,e);
+        }
+        finally
+        {
+            reader.close();
         }
     }
 }
