@@ -253,13 +253,13 @@ public class StandardTemplateManager
         }
     }
 
-    public AbstractTemplateImpl getInstance(String p_path)
+    public AbstractTemplateIntf getInstance(String p_path)
         throws IOException
     {
         return getInstance(p_path, this);
     }
 
-    public void releaseInstance(AbstractTemplateImpl p_impl)
+    public void releaseInstance(AbstractTemplateIntf p_impl)
         throws IOException
     {
         if (m_autoFlush)
@@ -286,7 +286,7 @@ public class StandardTemplateManager
      *
      * @exception IOException if something goes wrong
      */
-    public AbstractTemplateImpl getInstance(String p_path,
+    public AbstractTemplateIntf getInstance(String p_path,
                                             TemplateManager p_manager)
         throws IOException
     {

@@ -27,6 +27,7 @@ import java.net.URLEncoder;
 import org.jamon.escaping.Escaping;
 
 public abstract class AbstractTemplateImpl
+    implements AbstractTemplateIntf
 {
     protected abstract class ChildFarg extends AbstractTemplateImpl
     {
@@ -111,7 +112,7 @@ public abstract class AbstractTemplateImpl
         return m_templateManager;
     }
 
-    protected Writer getWriter()
+    public Writer getWriter()
     {
         return m_writer;
     }

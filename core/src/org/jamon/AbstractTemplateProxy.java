@@ -60,7 +60,7 @@ public abstract class AbstractTemplateProxy
         {
             instance = (Intf) getTemplateManager().getInstance(p_path);
             m_instance.set(instance);
-            ((AbstractTemplateImpl)instance).initialize();
+            ((AbstractTemplateIntf)instance).initialize();
         }
         if (m_escaping != null)
         {
@@ -72,8 +72,8 @@ public abstract class AbstractTemplateProxy
     protected final void releaseInstance()
         throws IOException
     {
-        AbstractTemplateImpl instance =
-            (AbstractTemplateImpl) m_instance.get();
+        AbstractTemplateIntf instance =
+            (AbstractTemplateIntf) m_instance.get();
         getTemplateManager().releaseInstance(instance);
         m_instance.set(null);
     }
