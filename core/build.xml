@@ -66,6 +66,7 @@
         <classpath>
           <pathelement location="${java.lib.junit}"/>
         </classpath>
+        <compilerarg line="${org.jamon.jike.options}" compiler="jikes"/>
       </javac>
       <copy todir="${classes.dir}" >
         <fileset dir="${src.dir}" includes="**/*.properties" />
@@ -105,6 +106,7 @@
         <pathelement location="${classes.dir}"/>
         <pathelement location="${java.lib.junit}"/>
       </classpath>
+      <compilerarg line="${org.jamon.jike.options}" compiler="jikes"/>
     </javac>
   </target>
 
