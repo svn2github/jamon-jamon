@@ -47,6 +47,8 @@ public class Analyzer
         m_currentUnit = m_templateUnit;
         m_describer = p_describer;
         m_children = p_children;
+        m_templateIdentifier =
+            m_describer.getExternalIdentifier(p_templatePath);
     }
 
     public Analyzer(String p_templatePath, TemplateDescriber p_describer)
@@ -74,8 +76,7 @@ public class Analyzer
             else if(e.getToken() != null)
             {
                 throw new AnalysisException(e.getMessage(),
-                                            m_describer.getExternalIdentifier(
-                                                m_templateUnit.getName()),
+                                            m_templateIdentifier,
                                             e.getToken());
             }
             else
@@ -181,6 +182,7 @@ public class Analyzer
     private final LinkedList m_callStatements = new LinkedList();
     private final Map m_aliases = new HashMap();
     private final String m_templateDir;
+    private final String m_templateIdentifier;
 
     private String getAbsolutePath(String p_path)
     {
@@ -426,8 +428,9 @@ public class Analyzer
 
         public void caseACall(ACall p_call)
         {
-            addStatement
-                (makeCallStatement(p_call.getPath(), p_call.getParam()));
+            addStatement(makeCallStatement(p_call.getPath(),
+                                           p_call.getParam(),
+                                           p_call.getCallStart()));
         }
 
         public void caseAChildCall(AChildCall p_childCall)
@@ -564,7 +567,7 @@ public class Analyzer
                                                          List p_calls,
                                                          Token p_token)
     {
-        CallStatement s = makeCallStatement(p_path, p_calls);
+        CallStatement s = makeCallStatement(p_path, p_calls, p_token);
         if (s instanceof FargCallStatement)
         {
             throw new TunnelingException
@@ -573,15 +576,20 @@ public class Analyzer
         return s;
     }
 
-    private CallStatement makeCallStatement(PPath p_path, List p_calls)
+    private CallStatement makeCallStatement(PPath p_path,
+                                            List p_calls,
+                                            Token p_token)
     {
         String path = computePath(p_path);
         FragmentUnit fragmentUnit =
             getCurrentUnit().getFragmentUnitIntf(path);
         if (fragmentUnit != null)
         {
-            return new FargCallStatement
-                (path, makeParamMap(p_calls), fragmentUnit);
+            return new FargCallStatement(path,
+                                         makeParamMap(p_calls),
+                                         fragmentUnit,
+                                         p_token,
+                                         m_templateIdentifier);
         }
         else
         {

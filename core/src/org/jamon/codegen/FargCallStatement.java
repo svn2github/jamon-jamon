@@ -27,20 +27,29 @@ import java.util.Map;
 
 import org.jamon.JamonException;
 import org.jamon.util.StringUtils;
+import org.jamon.node.Token;
 
 public class FargCallStatement
     implements CallStatement
 {
-    FargCallStatement(String p_path, Map p_params, FragmentUnit p_fragmentUnit)
+    FargCallStatement(String p_path,
+                      Map p_params,
+                      FragmentUnit p_fragmentUnit,
+                      Token p_token,
+                      String p_templateIdentifier)
     {
         m_path = p_path;
         m_params = p_params;
         m_fragmentUnit = p_fragmentUnit;
+        m_token = p_token;
+        m_templateIdentifier = p_templateIdentifier;
     }
 
     private final String m_path;
     private final Map m_params;
     private final FragmentUnit m_fragmentUnit;
+    private final Token m_token;
+    private final String m_templateIdentifier;
 
     public void addFragmentImpl(FragmentUnit p_unit)
     {
@@ -62,8 +71,10 @@ public class FargCallStatement
             String expr = (String) m_params.remove(name);
             if (expr == null)
             {
-                throw new JamonException
-                    ("No value supplied for required argument " + name);
+                throw new AnalysisException
+                    ("No value supplied for required argument " + name,
+                     m_templateIdentifier,
+                     m_token);
             }
             p_writer.print("(" + expr + ")");
             if (r.hasNext())
@@ -74,11 +85,13 @@ public class FargCallStatement
         p_writer.println(");");
         if (! m_params.isEmpty())
         {
-            StringBuffer message = new StringBuffer("fragment '");
+            StringBuffer message = new StringBuffer("fragment ");
             message.append(getPath());
-            message.append("' doesn't expect args ");
+            message.append(" doesn't expect args ");
             StringUtils.commaJoin(message, m_params.keySet().iterator());
-            throw new JamonException(message.toString());
+            throw new AnalysisException(message.toString(),
+                                        m_templateIdentifier,
+                                        m_token);
         }
     }
 

@@ -44,15 +44,8 @@ public class DisallowedFragmentArgsTest
     public void testUnusedArgumentToFragment()
         throws Exception
     {
-        try
-        {
-            generateSource("test/jamon/broken/UnusedArgumentToFragment");
-            fail("No exception thrown");
-        }
-        catch(JamonException e)
-        {
-            assertEquals("fragment 'f' doesn't expect args i",
-                         e.getMessage());
-        }
+        expectTemplateException("UnusedArgumentToFragment",
+                                "fragment f doesn't expect args i",
+                                2, 1);
     }
 }

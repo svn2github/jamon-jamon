@@ -105,6 +105,14 @@ public class ParametersTest
                         "No value supplied for required argument i in call to /test/jamon/Arguments");
     }
 
+    public void testMissingRequiredArgumentForFragment()
+        throws Exception
+    {
+        expectTemplateException("MissingFragmentRequiredArgument",
+                                "No value supplied for required argument x",
+                                5, 1);
+    }
+
     public void testFictionalParentArgument()
         throws Exception
     {
