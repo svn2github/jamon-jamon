@@ -37,7 +37,8 @@ public class BrokenTestBase
             System.getProperty("org.jamon.integration.basedir");
         m_processor =
             new TemplateProcessor(new File(integrationDir + "/build/src"),
-                                  new File(integrationDir + "/templates"));
+                                  new File(integrationDir + "/templates"),
+                                  getClass().getClassLoader());
     }
 
     public void generateSource(String p_path)

@@ -41,11 +41,13 @@ import org.jamon.parser.ParserException;
 public class TemplateProcessor
 {
     public TemplateProcessor(File p_destDir,
-                             File p_sourceDir)
+                             File p_sourceDir,
+                             ClassLoader p_classLoader)
     {
         m_destDir = p_destDir;
         m_describer =
-            new TemplateDescriber(new FileTemplateSource(p_sourceDir));
+            new TemplateDescriber(new FileTemplateSource(p_sourceDir),
+                                  p_classLoader);
         m_resolver = new TemplateResolver();
     }
 
@@ -216,7 +218,9 @@ public class TemplateProcessor
             }
 
             TemplateProcessor processor =
-                new TemplateProcessor(destDir, sourceDir);
+                new TemplateProcessor(destDir,
+                                      sourceDir,
+                                      TemplateProcessor.class.getClassLoader());
 
             while (arg < args.length)
             {

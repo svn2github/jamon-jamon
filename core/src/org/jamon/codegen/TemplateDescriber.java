@@ -44,12 +44,15 @@ import org.jamon.lexer.LexerException;
 
 public class TemplateDescriber
 {
-    public TemplateDescriber(TemplateSource p_templateSource)
+    public TemplateDescriber(TemplateSource p_templateSource,
+                             ClassLoader p_classLoader)
     {
         m_templateSource = p_templateSource;
+        m_classLoader = p_classLoader;
     }
 
     private final TemplateSource m_templateSource;
+    private final ClassLoader m_classLoader;
 
     public TemplateDescription getTemplateDescription(final String p_path)
          throws IOException
@@ -71,9 +74,11 @@ public class TemplateDescriber
          {
              try
              {
-                 return new TemplateDescription(
-                     Class.forName(
-                         StringUtils.templatePathToClassName(p_path)));
+                 return new TemplateDescription
+                     (Class.forName
+                      (StringUtils.templatePathToClassName(p_path),
+                       true,
+                       m_classLoader));
              }
              catch(ClassNotFoundException e)
              {

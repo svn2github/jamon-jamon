@@ -45,7 +45,8 @@ public class TemplateDescriberTest
         File nonexistent = File.createTempFile("jamontest",null);
         nonexistent.deleteOnExit();
         m_describer =
-            new TemplateDescriber(new FileTemplateSource(nonexistent));
+            new TemplateDescriber(new FileTemplateSource(nonexistent),
+                                  getClass().getClassLoader());
     }
 
     public void testArgumentIntrospection()

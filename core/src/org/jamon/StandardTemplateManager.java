@@ -239,8 +239,9 @@ public class StandardTemplateManager
                                            : p_data.sourceDir);
             }
 
-            m_describer = new TemplateDescriber(m_templateSource);
             m_loader = new WorkDirClassLoader(m_classLoader, m_workDir);
+            m_describer = new TemplateDescriber(m_templateSource,
+                                                m_loader);
         }
         else
         {

@@ -21,6 +21,9 @@
 package org.jamon.ant;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.net.URLClassLoader;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
@@ -53,6 +56,21 @@ public class JamonTask
     {
         m_srcDir = p_srcDir;
     }
+
+
+    public void setClasspath(Path p_classpath)
+        throws IOException
+    {
+        String[] paths = p_classpath.list();
+        URL[] urls = new URL[paths.length];
+        for (int i = 0; i < urls.length; ++i)
+        {
+            urls[i] = new URL("file",null, paths[i]);
+        }
+        m_classLoader = new URLClassLoader(urls,
+                                           getClass().getClassLoader());
+    }
+
 
     public void execute()
         throws BuildException
@@ -127,7 +145,7 @@ public class JamonTask
              m);
 
         TemplateProcessor processor =
-            new TemplateProcessor(m_destDir, m_srcDir);
+            new TemplateProcessor(m_destDir, m_srcDir, m_classLoader);
 
         for (int i = 0; i < files.length; i++)
         {
@@ -173,5 +191,6 @@ public class JamonTask
     }
 
     private File m_destDir;
+    private ClassLoader m_classLoader = JamonTask.class.getClassLoader();
     private File m_srcDir;
 }
