@@ -131,8 +131,12 @@ public class InterfaceGenerator extends BaseGenerator
             println();
             String name = (String) i.next();
             print("  public ");
-            print(getPackageName());
-            print(".");
+            String pkgName = getPackageName();
+            if (pkgName != null && pkgName.length() > 0)
+            {
+                print(pkgName);
+                print(".");
+            }
             print(getClassName());
             print(" set");
             print(capitalize(name));
