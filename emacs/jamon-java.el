@@ -91,14 +91,17 @@
 (defun jj-previous-error ()
   (interactive)
   (cond (jj-error-in-process
+         (switch-to-buffer (cddr jj-error-in-process))
+         (goto-char (car jj-error-in-process))
          (setq jj-error-in-process nil)
-         (next-error 0))
+         )
         (t (previous-error))))
 
 (defun jj-next-error (&optional ARGP)
   (interactive "P")
   (cond ((and (not ARGP) (not jj-error-in-process) (jj-in-impl-p))
-         (setq jj-error-in-process t)
+         (setq jj-error-in-process
+               (cons (point) (cons (mark t) (current-buffer))))
          (jj-jump-to-source))
         (t
          (setq jj-error-in-process nil)
