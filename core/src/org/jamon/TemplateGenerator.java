@@ -20,8 +20,7 @@ public class TemplateGenerator
     private static void generateImplAndInterface(File p_destdir,
                                                  TemplateDescriber p_describer,
                                                  TemplateResolver p_resolver,
-                                                 String p_filename,
-                                                 String p_absoluteFilename)
+                                                 String p_filename)
         throws IOException,
                ParserException,
                LexerException
@@ -46,7 +45,7 @@ public class TemplateGenerator
 
         ImplAnalyzer analyzer =
             new ImplAnalyzer(p_filename,
-                             p_describer.parseTemplate(p_absoluteFilename));
+                             p_describer.parseTemplate(p_filename));
 
         pkgDir.mkdirs();
         FileWriter writer = new FileWriter(javaFile);
@@ -73,7 +72,6 @@ public class TemplateGenerator
         }
         writer.close();
 
-
         javaFile = new File(pkgDir, templateName + "Impl.java");
         writer = new FileWriter(javaFile);
         try
@@ -91,13 +89,13 @@ public class TemplateGenerator
                 writer.close();
                 javaFile.delete();
             }
-            catch (IOException e2)
+            finally
             {
+                e.printStackTrace();
                 throw e;
             }
         }
         writer.close();
-
 
     }
 
@@ -105,8 +103,7 @@ public class TemplateGenerator
     private static void generateInterface(File p_destdir,
                                           TemplateDescriber p_describer,
                                           TemplateResolver p_resolver,
-                                          String p_filename,
-                                          String p_absoluteFilename)
+                                          String p_filename)
         throws IOException,
                ParserException,
                LexerException
@@ -129,7 +126,7 @@ public class TemplateGenerator
         File javaFile = new File(pkgDir, templateName + ".java");
 
         BaseAnalyzer analyzer =
-            new BaseAnalyzer(p_describer.parseTemplate(p_absoluteFilename));
+            new BaseAnalyzer(p_describer.parseTemplate(p_filename));
 
         pkgDir.mkdirs();
         FileWriter writer = new FileWriter(javaFile);
@@ -159,18 +156,12 @@ public class TemplateGenerator
 
 
     public static void generateImplAndInterfaces(File p_destDir,
-                                                 String[] p_relativeFilenames,
-                                                 String[] p_absoluteFilenames)
+                                                 String p_srcDir,
+                                                 String[] p_relativeFilenames)
         throws IOException,
                ParserException,
                LexerException
     {
-        if (p_relativeFilenames.length != p_absoluteFilenames.length)
-        {
-            throw new IllegalArgumentException
-                ("Relative and absolute filename arrays length mismatch");
-        }
-
         p_destDir.mkdirs();
         if (! p_destDir.exists() || ! p_destDir.isDirectory())
         {
@@ -179,32 +170,26 @@ public class TemplateGenerator
         }
 
         TemplateResolver resolver = new TemplateResolver();
-        TemplateDescriber describer = new TemplateDescriber("");
+        TemplateDescriber describer =
+            new TemplateDescriber(p_srcDir + "/");
 
         for (int i = 0; i < p_relativeFilenames.length; i++)
         {
             generateImplAndInterface(p_destDir,
                                      describer,
                                      resolver,
-                                     p_relativeFilenames[i],
-                                     p_absoluteFilenames[i]);
+                                     p_relativeFilenames[i]);
         }
     }
 
 
     public static void generateInterfaces(File p_destDir,
-                                          String[] p_relativeFilenames,
-                                          String[] p_absoluteFilenames)
+                                          String p_srcDir,
+                                          String[] p_relativeFilenames)
         throws IOException,
                ParserException,
                LexerException
     {
-        if (p_relativeFilenames.length != p_absoluteFilenames.length)
-        {
-            throw new IllegalArgumentException
-                ("Relative and absolute filename arrays length mismatch");
-        }
-
         p_destDir.mkdirs();
         if (! p_destDir.exists() || ! p_destDir.isDirectory())
         {
@@ -213,15 +198,15 @@ public class TemplateGenerator
         }
 
         TemplateResolver resolver = new TemplateResolver();
-        TemplateDescriber describer = new TemplateDescriber("");
+        TemplateDescriber describer =
+            new TemplateDescriber(p_srcDir + "/");
 
         for (int i = 0; i < p_relativeFilenames.length; i++)
         {
             generateInterface(p_destDir,
                               describer,
                               resolver,
-                              p_relativeFilenames[i],
-                              p_absoluteFilenames[i]);
+                              p_relativeFilenames[i]);
         }
     }
 
@@ -257,7 +242,6 @@ public class TemplateGenerator
                     generateImplAndInterface(destdir,
                                              describer,
                                              resolver,
-                                             template,
                                              template);
                 }
                 else
@@ -265,7 +249,6 @@ public class TemplateGenerator
                     generateInterface(destdir,
                                       describer,
                                       resolver,
-                                      template,
                                       template);
                 }
             }

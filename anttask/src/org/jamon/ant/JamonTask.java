@@ -36,7 +36,7 @@ public class JamonTask
      *
      * @param p_generateImpls whether implementations should be generated
      */
-    
+
     public void setGenerateImpls(boolean p_generateImpls)
     {
         m_generateImpls = p_generateImpls;
@@ -113,11 +113,9 @@ public class JamonTask
         }
 
         String[] relativeFilenames = new String[compileList.length];
-        String[] absoluteFilenames = new String[compileList.length];
         for (int i = 0; i < compileList.length; i++)
         {
             relativeFilenames[i] = relativize(basePath, compileList[i]);
-            absoluteFilenames[i] = compileList[i].getPath();
         }
 
         try
@@ -125,14 +123,14 @@ public class JamonTask
             if (m_generateImpls)
             {
                 TemplateGenerator.generateImplAndInterfaces(m_destDir,
-                                                            relativeFilenames,
-                                                            absoluteFilenames);
+                                                            m_src.toString(),
+                                                            relativeFilenames);
             }
             else
             {
                 TemplateGenerator.generateInterfaces(m_destDir,
-                                                     relativeFilenames,
-                                                     absoluteFilenames);
+                                                     m_src.toString(),
+                                                     relativeFilenames);
             }
         }
         catch (Exception e)
