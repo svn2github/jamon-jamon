@@ -3,28 +3,21 @@
     <h2>Mailing lists</h2>
 
     <ul>
-
-      <li>
-        <& _list; name => "announce" &>. Announcements-only
-        list.
-      </li>
-
-      <li>
-        <& _list; name => "users" &>. Questions, suggestions, problems.
-      </li>
-
-      <li>
-        <& _list; name => "hackers" &>. Developers' list.
-      </li>
-
+        <&| _list; name => "announce" &>Announcements-only list.</&>
+        <&| _list; name => "users" &>Questions, suggestions, problems.</&>
+        <&| _list; name => "hackers" &>Developers' list.</&>
     </ul>
 
 </&>
 
 <%def _list>\
+  <%frag description></%frag>
   <%args>
     String name;
-  </%args>\
-jamon-<% name %>: <a href="mailman/listinfo/jamon-<% name %>">Info &amp; signup</a>
-<a href="pipermail/jamon-<% name %>">Archives</a>
+  </%args>
+<li>
+  <a href="mailman/listinfo/jamon-<% name %>">jamon-<% name %></a>:
+  <& description &>
+  <a href="pipermail/jamon-<% name %>">[archives]</a>
+</li>
 </%def>
