@@ -57,7 +57,6 @@ public abstract class TestBase
     }
 
     protected Writer getWriter()
-        throws IOException
     {
         return m_writer;
     }
