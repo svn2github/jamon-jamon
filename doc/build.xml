@@ -20,7 +20,7 @@ the documentation thus taking care of issues such as escaping.
   <property name="java.lib.diff" value="/usr/local/share/java/diff.jar"/>
   <property name="invoker.class" value="org.jamon.InvokerTool" />
 
-  <property name="web.inf.dir" value="webapp/WEB-INF"/>
+  <property name="web.inf.dir" value="./WEB-INF"/>
   <property name="build.classes.dir" value="${web.inf.dir}/classes"/>
   <property name="src.dir" value="src"/>
 
@@ -276,6 +276,7 @@ the documentation thus taking care of issues such as escaping.
   </target>
 
   <target name="servlet" depends="compile" description="Run the servlet">
+    <mkdir dir="${work.dir}" />
     <java classname="org.apache.catalina.startup.Catalina"
           failonerror="true"
           fork="yes"

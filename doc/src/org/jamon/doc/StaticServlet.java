@@ -45,9 +45,9 @@ public class StaticServlet
     {
         try
         {
-            // FIXME
             m_manager = new StandardTemplateManager(
                 new StandardTemplateManager.Data()
+                .setWorkDir("build/work")
                 .setSourceDir("templates"));
         }
         catch (IOException e)
