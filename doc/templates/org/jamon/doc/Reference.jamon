@@ -13,7 +13,7 @@
 
       In general, any characters appearing in a template are output
       literally, whitespace included.  One notable exception is that
-      if a newline is preceeded by a backslash, then neither the newline nor
+      if a newline is preceded by a backslash, then neither the newline nor
       the backslash are output.
 
     <li><span class="concept">Emit statements</span>
@@ -114,7 +114,7 @@
       means of an <code>&lt;%extends <i>pathToParent</i>&gt;</code>
       tag.  There can be multiple levels of inheritance:
       <code>/grandchild</code> can extend <code>/child</code>, which
-      in turn can extend <code>/parent</code>.  When jamon encounters
+      in turn can extend <code>/parent</code>.  When Jamon encounters
       a <code>&lt;&amp; *CHILD &amp;&gt;</code> tag, it inserts the
       results of rendering the child template.
 
@@ -246,7 +246,7 @@ Your nicknames are
       If a template inherits from another template, the arguments to
       the template's ancestors are not automatically visible to the
       child template.  They can be made visible to code in the child
-      ptemplate by declaring them in <code>&lt;%xargs&gt;</code>
+      template by declaring them in <code>&lt;%xargs&gt;</code>
       ... <code>&lt;/%xargs&gt;</code> blocks.  Unlike
       <code>&lt;%args&gt;</code> ... <code>&lt;/%args&gt;</code>
       blocks, <code>&lt;%xargs&gt;</code>
@@ -259,7 +259,7 @@ Your nicknames are
 <%args>
   String name;
   String favoriteColor => "red";
-  String favoriteFood => "jamon";
+  String favoriteFood => "Jamon";
   int luckyNumber => 7;
 </%args>
 <font color="<% favoriteColor %>">Hello <% name %></font>.
@@ -293,9 +293,9 @@ a good sign for you, <% name %>.
       <code>&lt;%xargs&gt;</code> ... <code>&lt;/%xargs&gt;</code>
       block.
 
-    <li><span class="concept">Private template methods</span>
+    <li><span class="concept">Private subtemplates</span>
 
-      Private template methods ("<def>defs</def>") can be declared via
+      Private subtemplates ("<def>defs</def>") can be declared via
       the <code>&lt;%def <i>def-name</i>&gt;</code>
       instruction. Defs may be declared to accept arguments similar to
       templates by using <code>%args</code>.
@@ -369,19 +369,20 @@ a good sign for you, <% name %>.
       directly or indirectly recursive. Arguments to defs can be
       given default values.
 
-    <li><span class="concept">Protected template methods</span>
+    <li><span class="concept">Protected subtemplates</span>
 
-      Protected template methods ("<def>methods</def>") are similar to
+      Protected subtemplates ("<def>methods</def>") are similar to
       <def>defs</def>, and can be declared via the <code>&lt;%method
       <i>method-name</i>&gt;</code> instruction. Methods may be declared to
       accept arguments similar to templates by using
       <code>%args</code>.  However, where as a def is only visible in
-      the template in which it is declared, methods are visible to all
-      descendants of a template.  Moreover, a method declared in an
-      ancestor template can be overriddden via the <code>&lt;%override
-      <i>method-name</i>&gt;</code> instruction.  Overridden methods
-      take the same arguments as the method they override, although,
-      as with template inheritance, only those args declared in an
+      the template in which it is declared, a method is visible to all
+      descendants of the declaring template.  Moreover, a method
+      declared in an ancestor template can be overriddden via the
+      <code>&lt;%override <i>method-name</i>&gt;</code> instruction.
+      Overridden methods take the same arguments as the method they
+      override, although, as with template inheritance, only those
+      args declared in an
       <code>&lt;%xargs&gt;</code> ... <code>&lt;/%xargs&gt;</code>
       block will be visible within the body of the override.
 
@@ -450,8 +451,10 @@ Now would be a poor time to go sailing.
     <li><span class="concept">Invoking other templates</span>
 
       It is also possible to invoke other templates from within a
-      template. Instead of supplying the def name, simply supply the
-      path to the template, e.g. in <code>/img/spacer</code>:
+      template. Instead of supplying the subtemplate name, simply
+      supply the path to the template, e.g. in
+      <code>/img/spacer</code>:
+
       <&| _template &><%LITERAL>
 <%args>
   int width => 1;
@@ -477,27 +480,27 @@ Now would be a poor time to go sailing.
     <li><span class="concept">Fragment arguments</span>
 
       It is possible to pass a "fragment" of a template as an argument
-      to another template (or a <code>def</code> or
-      <code>method</code>).  When passing template fragments, the
-      invocation syntax must look like <code>&lt;&amp;| <i>target</i>;
-      arg1 =&gt; ... &amp;&gt;</code>, and any template content up
-      until a closing <code>&lt;/&amp;&gt;</code> is considered the
-      fragment argument.
+      to a template or subtemplate.  When passing template fragments,
+      the invocation syntax must look like
+      <code>&lt;&amp;| <i>target</i>; arg1 =&gt; ... &amp;&gt;</code>,
+      and any template content up until a closing
+      <code>&lt;/&amp;&gt;</code> is considered the fragment argument.
 
       <p>
 
       In order to pass a fragment argument, the target template or
-      def must declare that it expects a fragment argument. This
-      is done using the
+      subtemplate must declare that it expects a fragment
+      argument. This is done using the
       <code>&lt;%frag <i>name</i>&gt;&lt;/%frag&gt;</code>
-      declaration, which declares that the template (or def) expects a
-      fragment argument.
+      declaration, which declares that the template or subtemplate
+      expects a fragment argument.
 
       <p>
 
-      The fragment can be invoked in the target template or def
-      like any other template or def invocation, simply specifying
-      the name of the fragment argument as the target
+      The fragment can be invoked in the target template or
+      subtemplate like any other template or subtemplate invocation,
+      simply specifying the name of the fragment argument as the
+      target
 
       <p>
 
@@ -543,8 +546,8 @@ Now would be a poor time to go sailing.
 
       <p>
 
-      To pass a parameterized template fragment to a <code>def</code>
-      (or another template) the fragment and its parameters must be
+      To pass a parameterized template fragment to a template or
+      subtemplate, the fragment and its parameters must be
       declared via a <code>&lt;%frag
       <i>name</i>&gt;</code> <i>parameters</i> <code>&lt;/%frag&gt;</code>,
       where each parameter is a type followed by an identifier. Thus
@@ -553,8 +556,8 @@ Now would be a poor time to go sailing.
       to a
       <code>&lt;%args&gt;</code>...<code>&lt;/%args&gt;</code> except
       it has a name and its parameters cannot have default values.
-      Inside the <code>def</code> (or template) the parameterized
-      fragment is invoked exactly like a call to a <code>def</code>
+      Inside the template or subtemplate, the parameterized
+      fragment is invoked exactly like a call to a subtemplate
       whose name is the name of the fragment.
 
       <p>
@@ -591,7 +594,7 @@ produces <pre class="tty"><&| escape//Html &>
   <li>water at 34.0 degrees
 </ul>
 </&></pre>
-      (in fact it produces the above with some extra whitsepace).
+      (in fact it produces the above with some extra whitespace).
 
   </ol>
 
