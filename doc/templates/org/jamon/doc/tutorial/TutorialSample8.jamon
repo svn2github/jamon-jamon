@@ -24,7 +24,7 @@ In this example,
     <& _TutorialTemplateInclude; fileName => "FragmentCallerTemplate" &>
 
 a block of HTML text is passed to a template that constructs a list
-item withan  HTML anchor using the fragment text as the anchor text
+item with an HTML anchor using the fragment text as the anchor text
 (the template <code>LiRef</code> is shown below).
 
 <p>
