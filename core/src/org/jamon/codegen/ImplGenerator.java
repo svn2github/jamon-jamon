@@ -18,12 +18,14 @@
  * Contributor(s): Ian Robertson
  */
 
-package org.jamon;
+package org.jamon.codegen;
 
 import java.io.Writer;
 import java.io.PrintWriter;
 import java.io.IOException;
 import java.util.Iterator;
+
+import org.jamon.util.StringUtils;
 
 public class ImplGenerator extends AbstractGenerator
 {
@@ -54,7 +56,7 @@ public class ImplGenerator extends AbstractGenerator
     private final static String IOEXCEPTION_CLASS =
         IOException.class.getName();
     private final static String RENDERER_CLASS =
-        Renderer.class.getName();
+        org.jamon.Renderer.class.getName();
     private final static String WRITER_CLASS =
         Writer.class.getName();
 
@@ -242,10 +244,10 @@ public class ImplGenerator extends AbstractGenerator
     }
 
     private static final String TEMPLATE_MANAGER =
-        TemplateManager.class.getName();
+        org.jamon.TemplateManager.class.getName();
 
     private static final String BASE_TEMPLATE =
-        AbstractTemplateImpl.class.getName();
+        org.jamon.AbstractTemplateImpl.class.getName();
 
     private void generateRender()
         throws IOException

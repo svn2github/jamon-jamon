@@ -18,7 +18,7 @@
  * Contributor(s):
  */
 
-package org.jamon;
+package org.jamon.codegen;
 
 import java.io.IOException;
 import java.util.List;
@@ -29,6 +29,8 @@ import java.util.Iterator;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+import org.jamon.util.StringUtils;
+import org.jamon.JamonException;
 import org.jamon.node.*;
 import org.jamon.analysis.*;
 

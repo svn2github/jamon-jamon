@@ -18,7 +18,7 @@
  * Contributor(s):
  */
 
-package org.jamon;
+package org.jamon.codegen;
 
 import java.util.Map;
 import java.util.HashMap;

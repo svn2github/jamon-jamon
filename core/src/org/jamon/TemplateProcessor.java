@@ -24,6 +24,14 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
+
+import org.jamon.util.StringUtils;
+import org.jamon.codegen.TemplateDescriber;
+import org.jamon.codegen.TemplateResolver;
+import org.jamon.codegen.ImplAnalyzer;
+import org.jamon.codegen.BaseAnalyzer;
+import org.jamon.codegen.ImplGenerator;
+import org.jamon.codegen.IntfGenerator;
 import org.jamon.lexer.Lexer;
 import org.jamon.lexer.LexerException;
 import org.jamon.node.Start;

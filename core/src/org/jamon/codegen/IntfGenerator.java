@@ -18,12 +18,14 @@
  * Contributor(s):
  */
 
-package org.jamon;
+package org.jamon.codegen;
 
 import java.io.Writer;
 import java.io.PrintWriter;
 import java.io.IOException;
 import java.util.Iterator;
+
+import org.jamon.util.StringUtils;
 
 public class IntfGenerator extends AbstractGenerator
 {
@@ -59,17 +61,17 @@ public class IntfGenerator extends AbstractGenerator
     }
 
     private final static String TEMPLATE =
-        AbstractTemplateProxy.class.getName();
+        org.jamon.AbstractTemplateProxy.class.getName();
     private final static String TEMPLATE_INTF =
         TEMPLATE + ".Intf";
     private final static String TEMPLATE_MANAGER =
-        TemplateManager.class.getName();
+        org.jamon.TemplateManager.class.getName();
     private final static String IOEXCEPTION_CLASS =
         IOException.class.getName();
     private final static String WRITER_CLASS =
         Writer.class.getName();
     private final static String RENDERER_CLASS =
-        Renderer.class.getName();
+        org.jamon.Renderer.class.getName();
 
     private final BaseAnalyzer m_analyzer;
     private final String m_path;

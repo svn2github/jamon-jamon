@@ -36,7 +36,16 @@ import java.util.Set;
 import java.util.HashSet;
 
 import org.jamon.escaping.Escaping;
-
+import org.jamon.util.JavaCompiler;
+import org.jamon.util.StringUtils;
+import org.jamon.util.LifoMultiCache;
+import org.jamon.util.WorkDirClassLoader;
+import org.jamon.codegen.TemplateDescriber;
+import org.jamon.codegen.ImplAnalyzer;
+import org.jamon.codegen.BaseAnalyzer;
+import org.jamon.codegen.ImplGenerator;
+import org.jamon.codegen.IntfGenerator;
+import org.jamon.codegen.TemplateResolver;
 
 /**
  * The standard implementation of the @{link TemplateManager}

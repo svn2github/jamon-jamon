@@ -18,7 +18,7 @@
  * Contributor(s):
  */
 
-package org.jamon;
+package org.jamon.codegen;
 
 import java.io.PrintWriter;
 import java.io.IOException;

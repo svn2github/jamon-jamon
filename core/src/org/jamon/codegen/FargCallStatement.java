@@ -18,13 +18,15 @@
  * Contributor(s):
  */
 
-package org.jamon;
+package org.jamon.codegen;
 
 import java.io.PrintWriter;
 import java.io.IOException;
 import java.util.List;
 import java.util.Iterator;
 import java.util.Map;
+
+import org.jamon.JamonException;
 
 public class FargCallStatement
     implements Statement

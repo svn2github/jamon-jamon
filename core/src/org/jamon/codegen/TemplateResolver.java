@@ -18,7 +18,9 @@
  * Contributor(s):
  */
 
-package org.jamon;
+package org.jamon.codegen;
+
+import org.jamon.util.StringUtils;
 
 /**
  * A <code>TemplateResolver</code> provides methods to translate

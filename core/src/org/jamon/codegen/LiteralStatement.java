@@ -18,9 +18,11 @@
  * Contributor(s):
  */
 
-package org.jamon;
+package org.jamon.codegen;
 
 import java.io.PrintWriter;
+
+import org.jamon.util.StringUtils;
 
 public class LiteralStatement
     implements Statement

@@ -18,7 +18,7 @@
  * Contributor(s):
  */
 
-package org.jamon;
+package org.jamon.codegen;
 
 import java.util.Arrays;
 import java.util.Iterator;
@@ -33,6 +33,9 @@ import java.io.IOException;
 import java.io.FileNotFoundException;
 import java.io.PushbackReader;
 
+import org.jamon.JamonException;
+import org.jamon.JamonParseException;
+import org.jamon.util.StringUtils;
 import org.jamon.node.Start;
 import org.jamon.parser.Parser;
 import org.jamon.parser.ParserException;

@@ -18,11 +18,11 @@
  * Contributor(s):
  */
 
-package org.jamon.tests;
+package org.jamon.tests.util;
 
 import junit.framework.TestCase;
 
-import org.jamon.LifoMultiCache;
+import org.jamon.util.LifoMultiCache;
 
 public class LifoMultiCacheTest
     extends TestCase

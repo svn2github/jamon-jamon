@@ -21,7 +21,7 @@
 package org.jamon.integration;
 
 import test.jamon.Recompilation;
-import org.jamon.StringUtils;
+import org.jamon.util.StringUtils;
 import java.io.FileWriter;
 import java.io.File;
 

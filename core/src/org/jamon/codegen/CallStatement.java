@@ -18,7 +18,7 @@
  * Contributor(s):
  */
 
-package org.jamon;
+package org.jamon.codegen;
 
 import java.io.PrintWriter;
 import java.io.IOException;
@@ -26,6 +26,9 @@ import java.util.List;
 import java.util.Iterator;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.jamon.JamonException;
+import org.jamon.util.StringUtils;
 
 public class CallStatement
     implements Statement
@@ -54,7 +57,7 @@ public class CallStatement
     private final static String IOEXCEPTION_CLASS =
         IOException.class.getName();
     private final static String RENDERER_CLASS =
-        Renderer.class.getName();
+        org.jamon.Renderer.class.getName();
     private final static String WRITER_CLASS =
         java.io.Writer.class.getName();
 

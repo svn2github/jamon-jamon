@@ -15,30 +15,38 @@
  * created by Jay Sachs are Copyright (C) 2002 Jay Sachs.  All Rights
  * Reserved.
  *
- * Contributor(s):
+ * Contributor(s): Luis O'Shea
  */
 
-package org.jamon;
+package org.jamon.codegen;
 
 import java.io.PrintWriter;
-import java.io.IOException;
 
-public class RawStatement
+public class WriteStatement
     implements Statement
 {
-    RawStatement(String p_code)
+    WriteStatement(String p_expr, EscapingDirective p_escapingDirective)
     {
-        m_code = p_code;
+        m_expr = p_expr;
+        m_escapingDirective = p_escapingDirective;
     }
 
     public void generateSource(PrintWriter p_writer,
                                TemplateResolver p_resolver,
                                TemplateDescriber p_describer,
                                ImplAnalyzer p_analyzer)
-        throws IOException
     {
-        p_writer.print(m_code);
+        p_writer.print("this.writeEscaped(this.valueOf(");
+        p_writer.print(m_expr);
+        p_writer.print(")");
+        if (!m_escapingDirective.isDefault())
+        {
+            p_writer.print(", ");
+            p_writer.print(m_escapingDirective.toJava());
+        }
+        p_writer.println(");");
     }
 
-    private final String m_code;
+    private final String m_expr;
+    private final EscapingDirective m_escapingDirective;
 }
