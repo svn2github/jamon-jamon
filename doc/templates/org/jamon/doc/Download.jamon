@@ -1,10 +1,3 @@
-<%args>
-  String srcTarball;
-  String srcZip;
-  String binTarball;
-  String binZip;
-  String version;
-</%args>
 <%extends _Base>
 <%override title>Getting Jamon</%override>
 <%class>
@@ -14,12 +7,12 @@
 <h2>Download</h2>
 
 <h4>Current release</h4>
-Version <% version %>:
+Version <% org.jamon.ShowVersion.getCurrentVersion() %>:
 <ul>
-  <li>Binary <a href="dist/<% binTarball %>">[tgz]</a>
-  <a href="dist/<% binZip %>">[zip]</a></li>
-  <li>Source <a href="dist/<% srcTarball %>">[tgz]</a>
-      <a href="dist/<% srcZip %>">[zip]</a></li>
+  <li>Binary <a href="dist/<& BinTgzName &>">[tgz]</a>
+  <a href="dist/<& BinZipName &>">[zip]</a></li>
+  <li>Source <a href="dist/<& SrcTgzName &>">[tgz]</a>
+      <a href="dist/<& SrcZipName &>">[zip]</a></li>
 </ul>
 
 

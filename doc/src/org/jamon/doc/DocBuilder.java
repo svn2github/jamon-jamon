@@ -49,6 +49,7 @@ public class DocBuilder
             render(new About().makeRenderer(), "About");
             render(new News().makeRenderer(), "News");
             render(new Features().makeRenderer(), "Features");
+            render(new Download().makeRenderer(), "Download");
             render(new Servlets().makeRenderer(), "Servlets");
             render(new TutorialPath().makeRenderer(), "tutorial/TutorialPath");
             render(new TutorialSample1().makeRenderer(),

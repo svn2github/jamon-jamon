@@ -35,13 +35,6 @@ the documentation thus taking care of issues such as escaping.
 
   <property name="com.sun.tools.jar" value="${java.home}/../lib/tools.jar"/>
 
-  <property file="../core/src/org/jamon/Resources.properties" />
-  <property name="tarfilebase" value="jamon-${org.jamon.version}" />
-  <property name="tarball.src" value="${tarfilebase}-src.tgz" />
-  <property name="tarball.bin" value="${tarfilebase}.tgz" />
-  <property name="zip.src" value="${tarfilebase}-src.zip" />
-  <property name="zip.bin" value="${tarfilebase}.zip" />
-
   <fileset id="build-files" dir="${build.dir}"/>
   <fileset id="servlet-build-files" dir="${build.classes.dir}"/>
 
@@ -163,18 +156,6 @@ the documentation thus taking care of issues such as escaping.
       <classpath path="${java.lib.jamon}:${work.dir}:${java.lib.diff}:${this.dir}"/>
       <arg value="${doc.dir}"/>
     </java>
-    <invoker classpath="${java.lib.jamon}"
-             workDir="${work.dir}"
-             compiler="${org.jamon.invoker.compiler}"
-             sourceDir="templates"
-             output="${doc.dir}/Download.html"
-             template="/org/jamon/doc/Download">
-      <arg name="binTarball" value="${tarball.bin}" />
-      <arg name="srcTarball" value="${tarball.src}" />
-      <arg name="binZip" value="${zip.bin}" />
-      <arg name="srcZip" value="${zip.src}" />
-      <arg name="version" value="${org.jamon.version}" />
-    </invoker>
   </target>
 
   <target name="war" depends="doc">
