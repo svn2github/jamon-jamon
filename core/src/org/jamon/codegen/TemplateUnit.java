@@ -80,6 +80,7 @@ public class TemplateUnit
         }
 
         m_callNames.addAll(p_parent.getMethodUnits().keySet());
+        m_abstractMethodNames.addAll(p_parent.getAbstractMethodNames());
     }
 
     public void addParentArg(AParentArg p_arg)
@@ -179,11 +180,17 @@ public class TemplateUnit
         return (DefUnit) m_defs.get(p_name);
     }
 
-    public void makeMethodUnit(TIdentifier p_methodName)
+    public void makeMethodUnit(TIdentifier p_methodName, boolean p_isAbstract)
     {
         checkCallName(p_methodName);
         m_methods.put(p_methodName.getText(),
-                      new DeclaredMethodUnit(p_methodName.getText(), this));
+                      new DeclaredMethodUnit(p_methodName.getText(),
+                                             this,
+                                             p_isAbstract));
+        if(p_isAbstract)
+        {
+            m_abstractMethodNames.add(p_methodName.getText());
+        }
     }
 
     public OverriddenMethodUnit makeOverridenMethodUnit(AOverride p_override)
@@ -198,6 +205,7 @@ public class TemplateUnit
                  p_override.getIdentifier());
         }
 
+        m_abstractMethodNames.remove(methodName);
         OverriddenMethodUnit override =
             new OverriddenMethodUnit(methodUnit, this);
         m_overrides.add(override);
@@ -228,6 +236,11 @@ public class TemplateUnit
     {
         return new SequentialIterator(getDeclaredMethodUnits(),
                                       m_overrides.iterator());
+    }
+
+    public Collection getAbstractMethodNames()
+    {
+        return m_abstractMethodNames;
     }
 
     public Iterator getImports()
@@ -304,6 +317,7 @@ public class TemplateUnit
     private final StringBuffer m_classContent = new StringBuffer();
     private final Set m_dependencies = new HashSet();
     private final Set m_callNames = new HashSet();
+    private final Collection m_abstractMethodNames = new HashSet();
 
     protected void printRenderBodyEnd(IndentingWriter p_writer)
     {

@@ -225,6 +225,16 @@ public class ProxyGenerator
             generateArgArrays(methodUnit,
                               "METHOD_" + methodUnit.getName() + "_");
         }
+
+        m_writer.print(
+            "public final static String[] ABSTRACT_METHOD_NAMES = ");
+        m_writer.openBlock();
+        for (Iterator i = m_templateUnit.getAbstractMethodNames().iterator();
+             i.hasNext(); )
+        {
+            printQuoted((String) i.next());
+        }
+        m_writer.closeBlock(";");
     }
 
     private void printArgNames(String p_argsType, Iterator p_args)

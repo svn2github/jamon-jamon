@@ -1,0 +1,5 @@
+<%extends ../LibAbstractMethod>\
+<%override foo>\
+<%xargs> i; f; </%xargs>\
+<% i %> <& f &>\
+</%override>

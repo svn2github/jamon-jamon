@@ -93,6 +93,12 @@ public class OverriddenMethodUnit
         }
     }
 
+    public boolean isAbstract()
+    {
+        return false;
+    }
+
+
     public void addFragmentArg(org.jamon.codegen.FragmentArgument p_arg)
     {
         throw new UnsupportedOperationException();

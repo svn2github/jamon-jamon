@@ -23,4 +23,5 @@ package org.jamon.codegen;
 public interface MethodUnit extends Unit
 {
     String getOptionalArgDefaultMethod(OptionalArgument p_arg);
+    boolean isAbstract();
 }

@@ -20,6 +20,7 @@
 
 package org.jamon.codegen;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
@@ -38,6 +39,7 @@ public class TemplateDescription
     private final List m_fragmentInterfaces;
     private final Map m_methodUnits;
     private final int m_inheritanceDepth;
+    private final Collection m_abstractMethodNames;
 
     public final static TemplateDescription EMPTY = new TemplateDescription();
 
@@ -49,6 +51,7 @@ public class TemplateDescription
         m_fragmentInterfaces = Collections.EMPTY_LIST;
         m_methodUnits = Collections.EMPTY_MAP;
         m_inheritanceDepth = -1;
+        m_abstractMethodNames = Collections.EMPTY_LIST;
     }
 
     public TemplateDescription(TemplateUnit p_templateUnit)
@@ -71,6 +74,7 @@ public class TemplateDescription
             m_methodUnits.put(methodUnit.getName(), methodUnit);
         }
         m_inheritanceDepth = p_templateUnit.getInheritanceDepth();
+        m_abstractMethodNames = p_templateUnit.getAbstractMethodNames();
     }
 
     public TemplateDescription(Class p_intf)
@@ -104,6 +108,8 @@ public class TemplateDescription
             }
             m_methodUnits.put(method.getName(), method);
         }
+        m_abstractMethodNames =
+            Arrays.asList(getStringArray(p_intf, "ABSTRACT_METHOD_NAMES"));
         m_signature = (String) p_intf.getField("SIGNATURE").get(null);
         m_inheritanceDepth =
             ((Integer) p_intf.getField("INHERITANCE_DEPTH").get(null)).intValue();
@@ -195,6 +201,11 @@ public class TemplateDescription
     public Map getMethodUnits()
     {
         return m_methodUnits;
+    }
+
+    public Collection getAbstractMethodNames()
+    {
+        return m_abstractMethodNames;
     }
 
     public int getInheritanceDepth()

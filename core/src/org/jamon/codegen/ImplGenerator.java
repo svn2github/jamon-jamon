@@ -221,13 +221,22 @@ public class ImplGenerator
     {
         //FIXME - cut'n'pasted from generateDefs
         m_writer.println();
-        m_writer.print("protected void __jamon_innerUnit__");
+        m_writer.print("protected "
+                       + (p_methodUnit.isAbstract() ? "abstract " : "")
+                       + "void __jamon_innerUnit__");
         m_writer.print(p_methodUnit.getName());
         m_writer.print("(");
         p_methodUnit.printRenderArgsDecl(m_writer);
         m_writer.println(")");
         m_writer.println("  throws " + ClassNames.IOEXCEPTION);
-        p_methodUnit.generateRenderBody(m_writer, m_describer);
+        if (p_methodUnit.isAbstract())
+        {
+            m_writer.println("  ;");
+        }
+        else
+        {
+            p_methodUnit.generateRenderBody(m_writer, m_describer);
+        }
         m_writer.println();
 
         //FIXME - only generate these for optional args we provide new

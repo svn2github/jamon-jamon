@@ -57,6 +57,7 @@ States
   body,
   def,
   method,
+  abstract_method,
   override,
   imports,
   abstract,
@@ -108,7 +109,7 @@ Tokens
   {args,imports} dot = period;
   {args -> argexp, parent_args -> parent_argexp,alias} arrow = '=>' hs*;
   {call,multifragmentcall,multifragmentcallbody,args,farginit,imports,parent_args,extends,alias} white_space = ws*;
-  {call,multifragmentcall,multifragmentcallbody,args,parent_args,farginit,imports,def,extends,method,override,alias} identifier = letter letter_or_digit*;
+  {call,multifragmentcall,multifragmentcallbody,args,parent_args,farginit,imports,def,extends,method,abstract_method,override,alias} identifier = letter letter_or_digit*;
   {call} child_call = '*CHILD';
 
   {body -> emit} emit_start = '<%' ws+;
@@ -196,10 +197,14 @@ Tokens
 
   {body -> def} def_start = '<%def' hs+;
   {body} def_end = '</%def>' ws*;
-  {def -> body, method -> body, override -> body, extends -> body} gt = hs* gt ws*;
+  {def -> body, method -> body, abstract_method -> body, override -> body, extends -> body} gt = hs* gt ws*;
+
 
   {body -> method} method_start = '<%method' hs+;
   {body} method_end = '</%method>' ws*;
+
+  {body -> abstract_method} abstract_method_start = '<%absmeth' hs+;
+  {body} abstract_method_end = '</%absmeth>' ws*;
 
   {body -> override} override_start = '<%override' hs+;
   {body} override_end = '</%override>' ws*;
@@ -248,6 +253,7 @@ Productions
             | {extends} extends_start path gt
             | {abstract} abstract_start fixed? abstract_end
             | {method} method
+            | {abstract_method} abstract_method
             | {override} override
             | {inherited_use} inherited_use
             ;
@@ -263,6 +269,9 @@ Productions
   def = def_start identifier gt base_component* def_end;
 
   method = method_start identifier gt base_component* method_end;
+
+  abstract_method = abstract_method_start identifier gt abstract_method_args* abstract_method_end;
+  abstract_method_args = {args} args | {farg} farg;
 
   override = override_start identifier gt override_component* override_end;
 

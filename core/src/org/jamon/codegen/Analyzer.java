@@ -33,6 +33,7 @@ import org.jamon.JamonTemplateException;
 import org.jamon.node.*;
 import org.jamon.analysis.AnalysisAdapter;
 import org.jamon.analysis.DepthFirstAdapter;
+import org.jamon.util.StringUtils;
 
 public class Analyzer
 {
@@ -63,6 +64,7 @@ public class Analyzer
         {
             preAnalyze(start);
             mainAnalyze(start);
+            checkForConcreteness(start);
             return m_templateUnit;
         }
         catch (TunnelingException e)
@@ -82,11 +84,11 @@ public class Analyzer
 
     private void preAnalyze(Start p_start)
     {
-        preAnalyze(p_start, new AliasAdapter());
-        preAnalyze(p_start, new PreliminaryAdapter());
+        topLevelAnalyze(p_start, new AliasAdapter());
+        topLevelAnalyze(p_start, new PreliminaryAdapter());
     }
 
-    private void preAnalyze(Start p_start, AnalysisAdapter p_adapter)
+    private void topLevelAnalyze(Start p_start, AnalysisAdapter p_adapter)
     {
         for (Iterator i = ((ATemplate) p_start.getPTemplate())
                  .getComponent().iterator();
@@ -100,6 +102,29 @@ public class Analyzer
     private void mainAnalyze(Start p_start)
     {
         p_start.apply(new Adapter());
+    }
+
+    public void checkForConcreteness(Start p_start)
+    {
+        if (! getTemplateUnit().isParent()
+            && ! getTemplateUnit().getAbstractMethodNames().isEmpty())
+        {
+            topLevelAnalyze(p_start, new AnalysisAdapter()
+                {
+                    public void caseAExtendsComponent(
+                        AExtendsComponent p_extends)
+                    {
+                        StringBuffer message =
+                            new StringBuffer("The abstract method(s) ");
+                        StringUtils.commaJoin(message,
+                                  getTemplateUnit().getAbstractMethodNames()
+                                  .iterator());
+                        message.append(" have no concrete implementation");
+                        throw new TunnelingException(
+                            message.toString(), p_extends.getExtendsStart());
+                    }
+                });
+        }
     }
 
     private void pushDefUnit(String p_defName)
@@ -340,9 +365,18 @@ public class Analyzer
 
         public void caseAMethodComponent(AMethodComponent p_method)
         {
-            getTemplateUnit().
-                makeMethodUnit(((AMethod) p_method.getMethod())
-                               .getIdentifier());
+            getTemplateUnit().makeMethodUnit(
+                ((AMethod) p_method.getMethod()).getIdentifier(),
+                false);
+        }
+
+        public void caseAAbstractMethodComponent(
+            AAbstractMethodComponent p_method)
+        {
+            getTemplateUnit().makeMethodUnit(
+                ((AAbstractMethod) p_method.getAbstractMethod())
+                .getIdentifier(),
+                true);
         }
     }
 
@@ -418,6 +452,23 @@ public class Analyzer
         public void outAMethod(AMethod p_method)
         {
             handleBody();
+            popUnit();
+        }
+
+        public void inAAbstractMethod(AAbstractMethod p_abstractMethod)
+        {
+            handleBody();
+            if (! getTemplateUnit().isParent())
+            {
+                throw new TunnelingException(
+                    "Non-abstract templates cannot have abstract methods",
+                    p_abstractMethod.getAbstractMethodStart());
+            }
+            pushMethodUnit(p_abstractMethod.getIdentifier().getText());
+        }
+
+        public void outAAbstractMethod(AAbstractMethod p_abstractMethod)
+        {
             popUnit();
         }
 
