@@ -21,8 +21,7 @@ the documentation thus taking care of issues such as escaping.
   <property name="invoker.class" value="org.jamon.InvokerTool" />
 
   <property file="../core/src/org/jamon/Resources.properties" />
-  <property name="tarfilebase"
-            value="jamon-${org.jamon.version.major}.${org.jamon.version.minor}" />
+  <property name="tarfilebase" value="jamon-${org.jamon.version}" />
   <property name="tarball.src" value="${tarfilebase}-src.tgz" />
   <property name="tarball.bin" value="${tarfilebase}.tgz" />
   <property name="zip.src" value="${tarfilebase}-src.zip" />
@@ -122,6 +121,7 @@ the documentation thus taking care of issues such as escaping.
       <arg name="srcTarball" value="${tarball.src}" />
       <arg name="binZip" value="${zip.bin}" />
       <arg name="srcZip" value="${zip.src}" />
+      <arg name="version" value="${org.jamon.version}" />
     </invoker>
     <antcall target="grind">
       <param name="template" value="Documentation" />
