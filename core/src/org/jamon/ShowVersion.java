@@ -20,7 +20,6 @@
 
 package org.jamon;
 
-import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import java.util.StringTokenizer;
 
@@ -50,67 +49,64 @@ public class ShowVersion
     private static final String CMD_NEXT_SUB = "nextsub";
     private static final String CMD_CVSTAG = "cvstag";
 
+    private static final ResourceBundle s_resources =
+        ResourceBundle.getBundle("org.jamon.Resources");
+
+    public static Version getCurrentVersion()
+    {
+        return new Version(s_resources.getString("org.jamon.version"));
+    }
+
     public static void main(String [] args)
     {
-        try
+        if (args.length > 2)
         {
-            if (args.length > 2)
-            {
-                usage();
-            }
-            String cmd = args.length == 1 ? args[0] : CMD_SHOW;
-            ResourceBundle resources =
-                ResourceBundle.getBundle("org.jamon.Resources");
-
-            Version current =
-                new Version(resources.getString("org.jamon.version"));
-
-            if ( cmd.equals(CMD_SHOW) )
-            {
-                boolean isDev =
-                    ! "true".equalsIgnoreCase(resources.getString
-                                              ("org.jamon.version.release"));
-                System.out.println( "Jamon version "
-                                    + current
-                                    + ( isDev ? "dev" : "")
-                                    + " ("
-                                    + resources.getString
-                                        ("org.jamon.version.cvs")
-                                    + ")" );
-            }
-            else if (cmd.equals(CMD_CVSTAG))
-            {
-                System.out.println(current.asCvsTag());
-            }
-            else if (cmd.equals(CMD_CURRENT))
-            {
-                System.out.println(current);
-            }
-            else if (cmd.equals(CMD_NEXT_MAJOR))
-            {
-                System.out.println(current.bumpmajor());
-            }
-            else if ( cmd.equals(CMD_NEXT_MINOR) )
-            {
-                System.out.println(current.bumpminor());
-            }
-            else if ( cmd.equals(CMD_NEXT_SUB) )
-            {
-                System.out.println(current.bumpsub());
-            }
-            else
-            {
-                usage();
-            }
+            usage();
         }
-        catch (MissingResourceException e)
+        String cmd = args.length == 1 ? args[0] : CMD_SHOW;
+
+        Version current = getCurrentVersion();
+
+        if ( cmd.equals(CMD_SHOW) )
         {
-            System.err.println( "Unable to determine version: " );
-            e.printStackTrace();
+            boolean isDev =
+                ! "true".equalsIgnoreCase(s_resources.getString
+                                          ("org.jamon.version.release"));
+            System.out.println( "Jamon version "
+                                + current
+                                + ( isDev ? "dev" : "")
+                                + " ("
+                                + s_resources.getString
+                                    ("org.jamon.version.cvs")
+                                + ")" );
+        }
+        else if (cmd.equals(CMD_CVSTAG))
+        {
+            System.out.println(current.asCvsTag());
+        }
+        else if (cmd.equals(CMD_CURRENT))
+        {
+            System.out.println(current);
+        }
+        else if (cmd.equals(CMD_NEXT_MAJOR))
+        {
+            System.out.println(current.bumpmajor());
+        }
+        else if ( cmd.equals(CMD_NEXT_MINOR) )
+        {
+            System.out.println(current.bumpminor());
+        }
+        else if ( cmd.equals(CMD_NEXT_SUB) )
+        {
+            System.out.println(current.bumpsub());
+        }
+        else
+        {
+            usage();
         }
     }
 
-    private static class Version
+    public static class Version
     {
         public Version(String p_current)
         {
