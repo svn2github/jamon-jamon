@@ -40,32 +40,27 @@ public abstract class AbstractTemplateProxy
     }
 
     private final TemplateManager m_templateManager;
-
+    private final ThreadLocal m_instance = new ThreadLocal();
 
     protected final Intf getInstance(String p_path)
         throws JamonException
     {
-        if (m_instance == null)
+        Intf instance = (Intf) m_instance.get();
+        if (instance == null)
         {
-            m_instance = (Intf) getTemplateManager().getInstance(p_path);
-            ((AbstractTemplateImpl)m_instance).initialize();
+            instance = (Intf) getTemplateManager().getInstance(p_path);
+            m_instance.set(instance);
+            ((AbstractTemplateImpl)instance).initialize();
         }
-        return m_instance;
+        return instance;
     }
 
     protected final void releaseInstance()
         throws JamonException
     {
-        getTemplateManager().releaseInstance((AbstractTemplateImpl)m_instance);
-        m_instance = null;
+        AbstractTemplateImpl instance =
+            (AbstractTemplateImpl) m_instance.get();
+        getTemplateManager().releaseInstance(instance);
+        m_instance.set(null);
     }
-
-    private Intf m_instance;
-
-    protected void finalize()
-        throws JamonException
-    {
-        releaseInstance();
-    }
-
 }
