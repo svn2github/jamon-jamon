@@ -20,4 +20,4 @@
 <% line %>
 % }
 </pre>
-<%method preAttributes></%method>
+<%absmeth preAttributes></%absmeth>
