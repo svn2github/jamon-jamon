@@ -145,7 +145,7 @@ public class InvokerTool
     {
         try
         {
-            new InvokerTool().invoke(args,null);
+            new InvokerTool().invoke(args, new Invoker.DefaultObjectParser());
         }
         catch (UsageException e)
         {
