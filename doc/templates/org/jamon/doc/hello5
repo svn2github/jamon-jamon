@@ -1,7 +1,6 @@
-<<% "%" %>args>
+<%LITERAL><%args>
   int num => 0;
-  boolean error => false;
-</%args>
+</%args></%LITERAL><% "\\" %>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
   <head>
@@ -16,7 +15,8 @@
 <% "%" %> if (error) {
       <b>The data you entered was invalid</b><br>
 <% "%" %> }
-      How many times would you like to be greeted? <input type="text" name="num" />
+      How many times would you like to be greeted? \
+<input type="text" name="<<% "%" %> HelloServlet.NUM_KEY %>" />
       <br>
       <input type="submit" value="Greet Me"/>
     </form>

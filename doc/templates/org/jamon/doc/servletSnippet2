@@ -7,7 +7,7 @@
         String numString = request.getParameter("num");
         if (numString != null)
         {
-            helloTemplate.setNum(Integer.parseInt());
+            helloTemplate.setNum(Integer.parseInt(numString));
         }
         helloTemplate.render();
     }
