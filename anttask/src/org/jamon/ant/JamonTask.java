@@ -71,6 +71,10 @@ public class JamonTask
                                            getClass().getClassLoader());
     }
 
+    public void setListFiles(boolean p_listFiles)
+    {
+        m_listFiles = p_listFiles;
+    }
 
     public void execute()
         throws BuildException
@@ -144,27 +148,39 @@ public class JamonTask
              m_destDir,
              m);
 
-        TemplateProcessor processor =
-            new TemplateProcessor(m_destDir, m_srcDir, m_classLoader);
-
-        for (int i = 0; i < files.length; i++)
+        if (files.length > 0)
         {
-            try
+            log("Processing " + files.length
+                + " template" + (files.length == 1 ? "" : "s")
+                + " to " + m_destDir);
+
+            TemplateProcessor processor =
+                new TemplateProcessor(m_destDir, m_srcDir, m_classLoader);
+
+            for (int i = 0; i < files.length; i++)
             {
-                processor.generateSource(relativize(files[i]));
-            }
-            catch (JamonTemplateException e)
-            {
-                throw new BuildException(e.getMessage(),
-                                         new JamonLocation(e.getFileName(),
-                                                           e.getLine(),
-                                                           e.getColumn()));
-            }
-            catch (Exception e)
-            {
-                throw new BuildException
-                    (e.getClass().getName() + ":" + e.getMessage(),
-                     new Location(files[i].getAbsoluteFile().toString()));
+                if (m_listFiles)
+                {
+                    log(files[i].getAbsolutePath());
+                }
+
+                try
+                {
+                    processor.generateSource(relativize(files[i]));
+                }
+                catch (JamonTemplateException e)
+                {
+                    throw new BuildException(e.getMessage(),
+                                             new JamonLocation(e.getFileName(),
+                                                               e.getLine(),
+                                                               e.getColumn()));
+                }
+                catch (Exception e)
+                {
+                    throw new BuildException
+                        (e.getClass().getName() + ":" + e.getMessage(),
+                         new Location(files[i].getAbsoluteFile().toString()));
+                }
             }
         }
     }
@@ -191,6 +207,7 @@ public class JamonTask
     }
 
     private File m_destDir;
-    private ClassLoader m_classLoader = JamonTask.class.getClassLoader();
     private File m_srcDir;
+    private boolean m_listFiles;
+    private ClassLoader m_classLoader = JamonTask.class.getClassLoader();
 }
