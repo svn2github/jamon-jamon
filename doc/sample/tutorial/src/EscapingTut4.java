@@ -10,7 +10,7 @@ public class EscapingTut4 {
        TemplateManagerSource.setTemplateManager(manager);
        new EscapingTemplate()
            .setName("Duke & Co.")
-           .render(new OutputStreamWriter(System.out), 3, "Hello");
+           .render(new OutputStreamWriter(System.out), "Hello");
     }
     catch (Exception e) {
       e.printStackTrace();

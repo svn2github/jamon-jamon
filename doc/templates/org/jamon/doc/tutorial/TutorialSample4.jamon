@@ -32,9 +32,9 @@ Templates usually construct text in a structured language such as HTML or XML, o
 
       <p>
 
-      Before a Java expression is emitted, the string that represents it
-      is <em>escaped</em>.  The default escaping mechanism is HTML, so for
-      example the following template
+      Before a Java expression is emitted, the string that represents
+      it is <em>escaped</em>.  The usual default escaping mechanism is
+      HTML, so for example the following template
 
       <&| ../_Template &><%LITERAL>this <% "&" %> that</%LITERAL></&>
 
@@ -71,11 +71,6 @@ Templates usually construct text in a structured language such as HTML or XML, o
 
       <p>
 
-      In addition the <em>default</em> escaping mechanism can also be
-      changed, however this is done from outside the template, see the
-      Jamon <a href="../UserGuide.html">user's guide</a> for further
-      details.
-
     <li><span class="concept">Setting the default escaping mechanism</span>
        The default escaping rule for a template is HTML. This default
        can be changed by the Java code that invokes the template by
@@ -94,7 +89,7 @@ import org.jamon.TemplateManager;
          new StandardTemplateManager(...);
        Writer writer = new OutputStreamWriter(System.out);
        new Foo(templateManager)
-         <b>.escaping(Escaping.NONE)</b>
+         <b>.escapeWith(Escaping.NONE)</b>
          .setName("Duke & Co.")
          .render(writer, 3, "Hello");
 </pre>
@@ -119,7 +114,7 @@ EscapingTut4.java</a>:
 <& _TutorialJavaFileInclude; fileName => "EscapingTut4" &>
 
 Then the output of the template's <code>render</code> method will be
-    <pre class="tty"><&| /org/jamon/escape/Html &><% output %></&></pre>
+    <pre class="tty"><% output %></pre>
 
 <p>
 If the default escaping on the template had been set to
@@ -128,8 +123,6 @@ If the default escaping on the template had been set to
     <pre class="tty"><&| /org/jamon/escape/Html &>
 <html>
   <body>
-    1. Hello Duke & Co.<br />
-    2. Hello Duke & Co.<br />
-    3. Hello Duke & Co.<br />
+    Hello Duke & Co.<br />
   </body>
 </html></&></pre>
