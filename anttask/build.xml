@@ -11,7 +11,6 @@
   <property name="build.src.dir" value="${build.dir}/src"/>
   <property name="classes.dir" value="${build.dir}/classes"/>
   <property name="src.dir" value="src"/>
-  <property name="jarfile" value="jamon-anttask.jar" />
 
   <property name="java.lib.ant" value="/usr/local/ant/lib/ant.jar"/>
   <property name="java.lib.jamon" value="../core/build/classes"/>
@@ -25,12 +24,6 @@
            deprecation="true">
       <src path="${src.dir}"/>
     </javac>
-  </target>
-
-  <target name="jar"
-          depends="compile"
-          description="Creates a JAR file for the ant-task">
-    <jar basedir="${classes.dir}" jarfile="${jarfile}" />
   </target>
 
   <target name="test"
@@ -47,10 +40,7 @@
   </target>
 
   <target name="cvsignores">
-    <echo file=".cvsignore">.cvsignore
-${build.dir}
-build.properties
-${jarfile}
+    <echo file=".cvsignore">.cvsignore ${build.dir} build.properties
 </echo>
     <ant dir="test" target="cvsignores"/>
   </target>
@@ -66,7 +56,6 @@ ${jarfile}
     <delete dir="${build.dir}"/>
     <ant dir="test" target="spotless"/>
     <delete file=".cvsignore" />
-    <delete file="${jarfile}" />
   </target>
 
 </project>

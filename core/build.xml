@@ -14,7 +14,6 @@
   <property name="classes.dir" value="${build.dir}/classes"/>
   <property name="tests.classes.dir" value="${build.dir}/testclasses"/>
   <property name="tests.src.dir" value="tests"/>
-  <property name="jarfile" value="jamon-core.jar" />
   <property name="java.lib.junit" value="junit.jar" />
 
   <property name="junit.fork" value="no" />
@@ -26,6 +25,8 @@
             value="/usr/local/share/java/sablecc.jar" />
   <property name="java.lib.sablecctask"
             value="/usr/local/share/java/sablecc/anttask.jar"/>
+
+  <property name="src.dir" value="src" />
 
   <target name="init">
     <mkdir dir="${build.src.dir}"/>
@@ -57,10 +58,11 @@
              debug="true"
              depend="true"
              deprecation="true">
-        <src path="src"/>
+        <src path="${src.dir}"/>
         <src path="${build.src.dir}"/>
       </javac>
       <copy todir="${classes.dir}" >
+        <fileset dir="${src.dir}" includes="**/*.properties" />
         <fileset dir="${build.src.dir}" includes="**/*.dat" />
       </copy>
   </target>
@@ -71,19 +73,12 @@
 
   <target name="spotless" depends="clean">
     <delete dir="${build.dir}"/>
-    <delete file="${jarfile}"/>
   </target>
 
   <target name="cvsignores">
-    <echo file=".cvsignore">.cvsignore ${build.dir} build.properties ${jarfile}
+    <echo file=".cvsignore">.cvsignore ${build.dir} build.properties
 </echo>
   </target>
-
-  <target name="jar" depends="compile">
-    <jar basedir="${classes.dir}" jarfile="${jarfile}" />
-  </target>
-
-
 
   <target name="testclasses" depends="compile">
     <mkdir dir="${tests.classes.dir}" />

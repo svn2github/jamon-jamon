@@ -12,8 +12,6 @@
   <property name="classes.dir" value="${build.dir}/classes"/>
   <property name="src.dir" value="src"/>
 
-  <property name="jarfile" value="jamon-stdlib.jar" />
-
   <property name="java.lib.jamon" value="../core/build/classes"/>
   <property name="java.lib.jamon-anttask" value="../anttask/build/classes"/>
   <property name="java.lib.junit" value="/usr/local/share/java/junit.jar" />
@@ -42,12 +40,8 @@
     </javac>
   </target>
 
-  <target name="jar" depends="compile">
-    <jar basedir="${classes.dir}" jarfile="${jarfile}" />
-  </target>
-
   <target name="cvsignores">
-    <echo file=".cvsignore">.cvsignore ${build.dir} build.properties ${jarfile}
+    <echo file=".cvsignore">.cvsignore ${build.dir} build.properties
 </echo>
   </target>
 
@@ -57,7 +51,6 @@
 
   <target name="spotless" depends="clean">
     <delete file=".cvsignore" />
-    <delete file="${jarfile}" />
   </target>
 
 </project>

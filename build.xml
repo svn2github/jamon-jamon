@@ -31,7 +31,8 @@
   <target name="jar"
           description="Creates a uber JAR"
           depends="compile">
-    <jar jarfile="${jarfile}">
+    <jar jarfile="${jarfile}"
+         manifest="manifest" >
       <fileset dir="core/build/classes" />
       <fileset dir="stdlib/build/classes" />
       <fileset dir="anttask/build/classes" />
@@ -43,6 +44,8 @@
     <ant dir="integration" target="cvsignores"/>
     <ant dir="anttask" target="cvsignores"/>
     <ant dir="stdlib" target="cvsignores"/>
+    <echo file=".cvsignore">.cvsignore ${jarfile}
+</echo>
   </target>
 
   <target name="spotless">
@@ -51,6 +54,7 @@
     <ant dir="anttask" target="spotless"/>
     <ant dir="stdlib" target="spotless"/>
     <delete file="${jarfile}" />
+    <delete file=".cvsignore" />
   </target>
 
   <target name="clean">

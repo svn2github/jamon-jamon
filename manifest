@@ -1,0 +1,10 @@
+Main-Class: org.jamon.ShowVersion
+
+Name: org/jamon
+Specification-Title: Jamon Classes
+Specification-Version: 1.0
+Specification-Vendor: Jay Sachs <jay@jamon.org>
+Implementation-Title: org.jamon
+Implementation-Version: 1.0  ($Name$)
+Implementation-Vendor: Jay Sachs <jay@jamon.org>
+Sealed: true
