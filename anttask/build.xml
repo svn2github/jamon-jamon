@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<project name="AntTask" default="compile">
+<project name="AntTask" default="build">
 
   <description>Ant task for Jamon</description>
 
@@ -16,7 +16,7 @@
   <property name="java.lib.ant" value="/usr/local/ant/lib/ant.jar"/>
   <property name="java.lib.jamon" value="../core/build/classes"/>
 
-  <target name="compile"
+  <target name="build"
           description="Compiles Java files">
     <mkdir dir="${classes.dir}"/>
     <javac destdir="${classes.dir}"
@@ -28,33 +28,37 @@
   </target>
 
   <target name="jar"
-          depends="compile"
+          depends="build"
           description="Creates a JAR file for the ant-task">
     <jar basedir="${classes.dir}" jarfile="${jarfile}" />
   </target>
 
   <target name="test"
-          depends="compile"
+          depends="build"
           description="Tests the anttask">
+    <echo message="java.lib.jamon=${java.lib.jamon}"/>
+    <echo message="classes.dir=${classes.dir}"/>
+<!--
     <exec dir="test" executable="ant">
       <env key="CLASSPATH" path="${java.lib.jamon}:${classes.dir}"/>
     </exec>
+-->
+    <ant dir="test"/>
   </target>
 
   <target name="cvsignores">
-    <echo file=".cvsignore">.cvsignore ${build.dir} build.properties
+    <echo file=".cvsignore">.cvsignore 
+${build.dir} 
+build.properties
+${jarfile}
 </echo>
+    <ant dir="test" target="cvsignores"/>
   </target>
 
   <target name="clean"
           description="Removes all the class files">
-    <!--
-    <exec dir="test" executable="ant">
-      <env key="CLASSPATH" path="${java.lib.jamon}:${classes.dir}"/>
-      <arg value="clean" />
-    </exec>
-     -->
     <delete dir="${classes.dir}"/>
+    <ant dir="test" target="clean"/>
   </target>
 
   <target name="spotless"
