@@ -1,0 +1,13 @@
+<%import>
+  java.math.BigDecimal
+</%import>
+
+<%args>
+  BigDecimal amount
+  int x => 3
+</%args>
+
+Here is a template. It has two arguments:
+
+x, which is <% x %>,
+and amount, which is <% amount %>.
