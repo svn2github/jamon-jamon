@@ -28,7 +28,7 @@ import org.apache.tools.ant.Location;
 
 import org.apache.tools.ant.types.Path;
 
-import org.apache.tools.ant.util.GlobPatternMapper;
+import org.apache.tools.ant.util.FileNameMapper;
 import org.apache.tools.ant.util.SourceFileScanner;
 
 import org.apache.tools.ant.taskdefs.MatchingTask;
@@ -96,9 +96,29 @@ public class JamonTask
                                      + "\" does not exist!", location);
         }
 
-        GlobPatternMapper m = new GlobPatternMapper();
-        m.setFrom("*");
-        m.setTo("*.java");
+        FileNameMapper m = new FileNameMapper()
+            {
+                private final static String SUFFIX1 = ".jamon";
+                private final static String SUFFIX2 = ".jam";
+                public void setFrom(String p_from) {}
+                public void setTo(String p_to) {}
+                public String[] mapFileName(String p_sourceName)
+                {
+                    StringBuffer target = new StringBuffer(p_sourceName);
+                    if(p_sourceName.endsWith(SUFFIX1))
+                    {
+                        target.delete(p_sourceName.length() - SUFFIX1.length(),
+                                      p_sourceName.length());
+                    }
+                    else if(p_sourceName.endsWith(SUFFIX2))
+                    {
+                        target.delete(p_sourceName.length() - SUFFIX2.length(),
+                                      p_sourceName.length());
+                    }
+                    target.append(".java");
+                    return new String[] { target.toString() };
+                }
+            };
         SourceFileScanner sfs = new SourceFileScanner(this);
         File[] files = sfs.restrictAsFiles
             (getDirectoryScanner(m_srcDir).getIncludedFiles(),
