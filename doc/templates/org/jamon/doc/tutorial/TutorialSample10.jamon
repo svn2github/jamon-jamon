@@ -34,7 +34,7 @@ InheritanceParentProtected</a> declares a <code>title</code> subtemplate
 for the expressed purpose of allowing the child template to
 override the subtemplate in order to replace the title.
 
-<& _TutorialTemplateInclude; fileName => "InheritanceParentProtected" &>
+<& ../_TemplateInclude; fileName => "tutorial/templates/InheritanceParentProtected" &>
 
 <p>
 The template that derives this template would override the <code>title</code>
@@ -67,7 +67,7 @@ InheritanceParentProtected</a> and overrides the subtemplate
 <code>InheritanceChildProtected</code> replaces the title that the
 parent template generates.
 
-<& _TutorialTemplateInclude; fileName => "InheritanceChildProtected" &>
+<& ../_TemplateInclude; fileName => "tutorial/templates/InheritanceChildProtected" &>
 
 <p>The class <a href="User2.java" class="file">
 User2.java</a> takes advantage of the fact that the
@@ -81,7 +81,7 @@ arguments required by the parent template,
 selects the actual template instance and provides the arguments
 required by that instance.
 
-<& _TutorialJavaFileInclude; fileName => "User2" &>
+<& ../_JavaInclude; fileName => "tutorial/src/User2" &>
 
 The result of executing this class and template is below.
 

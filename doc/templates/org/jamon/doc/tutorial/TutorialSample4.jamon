@@ -109,13 +109,13 @@ import org.jamon.TemplateManager;
      <a href="EscapingTemplate.jamon" class="file" type="text/plain" >
         <code>EscapingTemplate</code>
      </a>contains
-    <& _TutorialTemplateInclude; fileName => "EscapingTemplate" &>
+    <& ../_TemplateInclude; fileName => "tutorial/templates/EscapingTemplate" &>
 
 <p>
 If this template is called by the java code
 <a class="file" href="EscapingTut4.java" type="text/plain" >
 EscapingTut4.java</a>:
-<& _TutorialJavaFileInclude; fileName => "EscapingTut4" &>
+<& ../_JavaInclude; fileName => "tutorial/src/EscapingTut4" &>
 
 Then the output of the template's <code>render</code> method will be
     <pre class="tty"><% output %></pre>

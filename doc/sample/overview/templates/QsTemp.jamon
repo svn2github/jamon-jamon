@@ -1,4 +1,4 @@
-<%LITERAL><%args>
+<%args>
   java.util.Date date;
   String [] s;
 </%args>
@@ -7,4 +7,3 @@ The arguments are:
 % for (int i = 0; i < s.length; ++i) {
 <% s[i] %>
 % }
-</%LITERAL>

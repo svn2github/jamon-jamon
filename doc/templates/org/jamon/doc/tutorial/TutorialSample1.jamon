@@ -26,12 +26,12 @@ file</a>.
 
 <li>
 Create a Jamon template <a href="HelloTemplate.jamon" class="file">HelloTemplate.jamon</a>:
-<& _TutorialTemplateInclude; fileName => "HelloTemplate" &>
+<& ../_TemplateInclude; fileName => "tutorial/templates/HelloTemplate" &>
 
 
 <li>
 Create a java file <a class="file" href="HelloTut1.java">HelloTut1.java</a>:
-<& _TutorialJavaFileInclude; fileName => "HelloTut1" &>
+<& ../_JavaInclude; fileName => "tutorial/src/HelloTut1" &>
 Notice that the Java file creates a <code>StandardTemplateManager</code>,
 which is passed to the template constructor. The code then calls the
 <code>render()</code> method on the template, providing a

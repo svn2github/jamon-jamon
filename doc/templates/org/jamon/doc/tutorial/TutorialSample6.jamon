@@ -54,7 +54,7 @@ Java expression.  Multiple arguments should be separated by semicolons.
     The template below, <a href="JamonCallerTemplate.jamon" class="file">
      <code>JamonCallerTemplate</code></a>, outputs several rows
     of names and telephone numbers.
-    <& _TutorialTemplateInclude; fileName => "JamonCallerTemplate" &>
+    <& ../_TemplateInclude; fileName => "tutorial/templates/JamonCallerTemplate" &>
 
     It calls the template <a href="StdPhoneNumberFormat.jamon" class="file">
      <code>StdPhoneNumberFormat</code></a> (below) to format the telephone
@@ -64,7 +64,7 @@ Java expression.  Multiple arguments should be separated by semicolons.
     optional, so the <code>JamonCallerTemplate</code> only has to provide
     a value to override the default.
 
-    <& _TutorialTemplateInclude; fileName => "StdPhoneNumberFormat" &>
+    <& ../_TemplateInclude; fileName => "tutorial/templates/StdPhoneNumberFormat" &>
 
 <div class="note">Notice that the <code>StdPhoneNumberFormat</code>
 template adds backslashes, '\', at the end of each line that outputs
@@ -77,7 +77,7 @@ from being output, each Jamon line must end with a backslash.
     The top level template, <code>JamonCallerTemplate</code> is called
     from the Java class
      <a class="file" href="JamonCallerTut6.java">JamonCallerTut6.java</a>:
-    <& _TutorialJavaFileInclude; fileName => "JamonCallerTut6" &>
+    <& ../_JavaInclude; fileName => "tutorial/src/JamonCallerTut6" &>
 <li> To process and run the template, execute the following commands:
 <pre class="tty">
     export CLASSPATH=.:/path/to/jamon.jar

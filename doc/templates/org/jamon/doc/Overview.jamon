@@ -62,11 +62,11 @@ file</a>.
 
 <li>
 Create a Jamon template <a href="QsTemp.jamon" class="file">QsTemp.jamon</a>:
-<pre class="jamon"><&| /org/jamon/escape/Html &><& QsTemp &></&></pre>
+<& _TemplateInclude; fileName => "overview/templates/QsTemp" &>
 
 <li>
 Create a java file <a class="file" href="JamonQs.java">JamonQs.java</a>:
-<pre class="java"><&| /org/jamon/escape/Html &><& JamonQsJava &></&></pre>
+<& _JavaInclude; fileName => "overview/src/JamonQs" &>
 
 <li>
 Set your classpath:
