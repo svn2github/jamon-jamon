@@ -42,7 +42,7 @@ this file since your browser may not display it correctly) containing:
 In directory <code class="file">src/foo/bar</code> create
 a file <a href="src/foo/bar/HelloServlet.java">HelloServlet.java</a> containing:
 
-<pre class="code"><& HelloServletTemplate &></pre>
+<& ../_JavaInclude; fileName => "servlet/src/HelloServlet" &>
 
 Create the following deployment descriptor by placing the following in a file
 called <a href="web.xml">web.xml</a>:

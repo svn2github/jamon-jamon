@@ -17,7 +17,8 @@ template.
 changed</span><span class="deleted"> or deleted</span>).
 
 <pre class="code"><&|| _showDiff &>
-  <|oldContent><& HelloServletTemplate &></|>
+  <|oldContent><& ../_ReadFile;
+                  fileName => "/sample/servlet/src/HelloServlet.java" &></|>
   <|newContent><& servletSnippet &></|>
 </&></pre>
 

@@ -57,6 +57,8 @@ the documentation thus taking care of issues such as escaping.
           todir="${www.dir}/templates/foo/bar/"/>
     <copy file="sample/servlet/templates/HelloTemplate2.jamon"
           todir="${www.dir}/example2/templates/foo/bar/"/>
+    <copy file="sample/servlet/src/HelloServlet.java"
+          todir="${www.dir}/src/foo/bar"/>
     <taskdef name="invoker"
              classname="org.jamon.ant.InvokerTask"
              classpath="${java.lib.jamon}" />
@@ -222,13 +224,6 @@ the documentation thus taking care of issues such as escaping.
       <param name="template" value="Servlets" />
     </antcall>
     <!-- Generate the first servlet example -->
-    <property name="servlet.src.dir" value="${www.dir}/src/foo/bar" />
-    <invoker classpath="${java.lib.jamon}:${java.lib.diff}"
-             workDir="${work.dir}"
-             compiler="${org.jamon.invoker.compiler}"
-             sourceDir="templates"
-             output="${servlet.src.dir}/HelloServlet.java"
-             template="/org/jamon/doc/servlet/HelloServletTemplate" />
     <!-- Generate the ant script -->
     <invoker classpath="${java.lib.jamon}:${java.lib.diff}"
              workDir="${work.dir}"
