@@ -58,7 +58,9 @@
 </echo>
   </target>
 
-  <target name="spotless" depends="localclean">
+  <target name="spotless"
+          depends="localclean"
+          description="Scrub the workspace">
     <ant dir="core" target="spotless"/>
     <ant dir="integration" target="spotless"/>
     <ant dir="anttask" target="spotless"/>
@@ -76,7 +78,9 @@
     <delete dir="${stage.dir}" />
   </target>
 
-  <target name="clean" depends="localclean">
+  <target name="clean"
+          depends="localclean"
+          description="Remove build artifacts">
     <ant dir="core" target="clean"/>
     <ant dir="integration" target="clean"/>
     <ant dir="stdlib" target="clean"/>
@@ -145,11 +149,11 @@
     <cvs command="commit -m 'dev version of ${jamon.version.next}' ${file}" />
   </target>
 
-  <target name="javadoc">
+  <target name="javadoc" description="Build the javadoc">
     <ant dir="core" target="javadoc"/>
   </target>
 
-  <target name="doc" depends="jar">
+  <target name="doc" depends="jar" description="Build documentation">
     <ant dir="doc" target="build" />
   </target>
 
@@ -224,7 +228,9 @@
     </copy>
   </target>
 
-  <target name="push" depends="localstage">
+  <target name="push"
+          depends="localstage"
+          description="Push the current workspace live">
     <exec dir="${stage.dir}" executable="rsync">
       <arg value="--rsh=ssh" />
       <arg value="--verbose" />
