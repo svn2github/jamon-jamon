@@ -85,7 +85,7 @@ public class TestBase
         return m_templateManager;
     }
 
-    private String getOutput()
+    protected String getOutput()
     {
         m_writer.flush();
         return m_writer.toString();
