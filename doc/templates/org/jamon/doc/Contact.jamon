@@ -1,14 +1,16 @@
-<&| _Base; title => "Jamon Contact"; section => "Contact" &>
+<%extends _Base>
+<%override title>Jamon Contact</%override>
+<%class>
+  protected Section currentSection() { return Section.CONTACT; }
+</%class>
 
-    <h2>Mailing lists</h2>
+<h2>Mailing lists</h2>
 
-    <ul>
-        <&| _list; name => "announce" &>Announcements-only list.</&>
-        <&| _list; name => "users" &>Questions, suggestions, problems.</&>
-        <&| _list; name => "hackers" &>Developers' list.</&>
-    </ul>
-
-</&>
+<ul>
+    <&| _list; name => "announce" &>Announcements-only list.</&>
+    <&| _list; name => "users" &>Questions, suggestions, problems.</&>
+    <&| _list; name => "hackers" &>Developers' list.</&>
+</ul>
 
 <%def _list>\
   <%frag description></%frag>

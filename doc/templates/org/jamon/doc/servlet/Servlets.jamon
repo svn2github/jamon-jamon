@@ -1,33 +1,38 @@
-<&| /org/jamon/doc/_Base; title => "Servlets with Jamon"; section => "Documentation" &>
-    <h1>Servlets with Jamon</h1>
+<%extends ../_Base>
+<%override title>Servlets with Jamon</%override>
+<%class>
+  protected Section currentSection() { return Section.DOCUMENTATION; }
+</%class>
 
-    The goal of this document is to guide the reader through the
-    process of developing and deploying servlets that use Jamon to
-    generate the HTML (i.e., for their <em>view</em>, in <a
-    href="http://ootips.org/mvc-pattern.html">MVC</a> parlance).  Thus
-    the servlets will be kept simple but nevertheless representative
-    of a typical development environment.
-    <p>
-    <ol>
+<h1>Servlets with Jamon</h1>
 
-      <li><& prerequisites &></li>
+The goal of this document is to guide the reader through the
+process of developing and deploying servlets that use Jamon to
+generate the HTML (i.e., for their <em>view</em>, in <a
+href="http://ootips.org/mvc-pattern.html">MVC</a> parlance).  Thus
+the servlets will be kept simple but nevertheless representative
+of a typical development environment.
+<p>
+<ol>
 
-      <li><& helloWorld &></li>
+  <li><& prerequisites &></li>
 
-      <li><& parametersAndInput &></li>
+  <li><& helloWorld &></li>
 
-      <li><& standardLibrary &></li>
+  <li><& parametersAndInput &></li>
 
-      <h2>Appendix</h2>
+  <li><& standardLibrary &></li>
 
-      <li value="1" type="A"><& usingTomcat &></li>
+  <h2>Appendix</h2>
 
-      <li type="A"><& inputElements &></li>
+  <li value="1" type="A"><& usingTomcat &></li>
 
-      <li type="A"><& _colophon &></li>
+  <li type="A"><& inputElements &></li>
 
-    </ol>
-</&>
+  <li type="A"><& _colophon &></li>
+
+</ol>
+
 <%def _colophon><span class="concept">Colophon</span>
   This entire document was generated with the aid of Jamon.  Issues such as
   <ul>

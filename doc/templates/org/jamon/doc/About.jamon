@@ -1,4 +1,8 @@
-<&| _Base; title => "About Jamon"; section => "About" &>
+<%extends _Base>
+<%override title>About Jamon</%override>
+<%class>
+  protected Section currentSection() { return Section.ABOUT; }
+</%class>
 
 <h2>Jamon in use</h2>
 
@@ -38,6 +42,3 @@ merchantibility and fitness for a particular purpose.
 
 Jamon is licensed under the <a href="http://www.mozilla.org/MPL/">Mozilla
 Public License</a>.
-
-
-</&>

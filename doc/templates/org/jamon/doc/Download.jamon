@@ -5,25 +5,28 @@
   String binZip;
   String version;
 </%args>
-<&| _Base; title => "Getting Jamon"; section => "Download" &>
-    <h3>Download</h3>
+<%extends _Base>
+<%override title>Getting Jamon</%override>
+<%class>
+  protected Section currentSection() { return Section.DOWNLOAD; }
+</%class>
 
-    <h4>Current release</h4>
-    Version <% version %>:
-    <ul>
-      <li>Binary <a href="dist/<% binTarball %>">[tgz]</a>
-      <a href="dist/<% binZip %>">[zip]</a></li>
-      <li>Source <a href="dist/<% srcTarball %>">[tgz]</a>
-          <a href="dist/<% srcZip %>">[zip]</a></li>
-    </ul>
+<h3>Download</h3>
+
+<h4>Current release</h4>
+Version <% version %>:
+<ul>
+  <li>Binary <a href="dist/<% binTarball %>">[tgz]</a>
+  <a href="dist/<% binZip %>">[zip]</a></li>
+  <li>Source <a href="dist/<% srcTarball %>">[tgz]</a>
+      <a href="dist/<% srcZip %>">[zip]</a></li>
+</ul>
 
 
-    <h4>Older releases</h4>
-    Browse the <a href="dist">distribution directory</a>.
+<h4>Older releases</h4>
+Browse the <a href="dist">distribution directory</a>.
 
-    <h3>CVS access</h3>
+<h3>CVS access</h3>
 
-    Anonymous CVS access is not yet available. The source is viewable
-    <a href="cvs">online</a>.
-
-</&>
+Anonymous CVS access is not yet available. The source is viewable
+<a href="cvs">online</a>.

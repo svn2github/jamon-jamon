@@ -1,4 +1,8 @@
-<&| _Base; title => "Jamon Overview"; section => "Documentation" &>
+<%extends _Base>
+<%override title>Jamon Overview</%override>
+<%class>
+  protected Section currentSection() { return Section.DOCUMENTATION; }
+</%class>
 
 <h2>Overview</h2>
 
@@ -37,5 +41,3 @@ To make use of Jamon:
   </li>
 
 </ul>
-
-</&>

@@ -1,7 +1,12 @@
+<%extends _Base>
 <%args>
   String output;
 </%args>
-<&| _Base; title => "Jamon Quick Start Mini-Tutorial"; section => "Documentation" &>
+
+<%override title>Jamon Quick Start Mini-Tutorial</%override>
+<%class>
+  protected Section currentSection() { return Section.DOCUMENTATION; }
+</%class>
 
 <h2>Quick Start Mini-Tutorial</h2>
 
@@ -60,5 +65,3 @@ You should see:
 <pre class="tty"><% output %></pre>
 
 </ol>
-
-</&>

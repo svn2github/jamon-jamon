@@ -1,4 +1,8 @@
-<&| _Base; title => "Jamon Generated Templates"; section => "Documentation" &>
+<%extends _Base>
+<%override title>Jamon Generated Templates</%override>
+<%class>
+  protected Section currentSection() { return Section.DOCUMENTATION; }
+</%class>
 
 <h2>Generated Template Classes</h2>
 
@@ -73,5 +77,3 @@ generated class would be:
 
 An instantiated template is a <b>thread-safe</b> object, and may
 safely be used by concurrent threads.
-
-</&>

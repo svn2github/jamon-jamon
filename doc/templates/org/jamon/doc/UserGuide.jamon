@@ -1,4 +1,8 @@
-<&| _Base; title => "Jamon User's Guide"; section => "Documentation" &>
+<%extends _Base>
+<%override title>Jamon User's Guide</%override>
+<%class>
+  protected Section currentSection() { return Section.DOCUMENTATION; }
+</%class>
 
 <h2>User Guide</h2>
 
@@ -145,5 +149,3 @@ and <code>Escaping.XML</code>.
 
 See the <a href="Reference.html">template reference manual</a> for
 further details.
-
-</&>

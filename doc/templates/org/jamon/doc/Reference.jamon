@@ -1,4 +1,9 @@
-<&| _Base; title => "Jamon Template Reference Manual"; section => "Documentation" &>
+<%extends _Base>
+<%override title>Jamon Template Reference Manual</%override>
+<%class>
+  protected Section currentSection() { return Section.DOCUMENTATION; }
+</%class>
+
   <h2>Template Reference Manual</h2>
     <ol>
 
@@ -385,7 +390,6 @@ This component has been accessed <% pageViews++ %> times.
 
 
   </ol>
-</&>
 
 <%def _template><%frag content></%frag>
 <pre class="template"><&| /org/jamon/escape/Html &><& content &></&></pre>

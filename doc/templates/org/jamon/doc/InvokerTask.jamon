@@ -1,9 +1,11 @@
-<&| _Base; title => "Jamon and Ant: InvokerTask"; section => "Documentation" &>
+<%extends _Base>
+<%override title>Jamon and Ant: InvokerTask</%override>
+<%class>
+  protected Section currentSection() { return Section.DOCUMENTATION; }
+</%class>
 
 <h2>InvokerTask</h2>
 <h3>Description</h3>
 <p>Invokes a Jamon template</p>
 
 TDB
-
-</&>

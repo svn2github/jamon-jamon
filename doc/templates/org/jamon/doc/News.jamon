@@ -1,6 +1,9 @@
-<&| _Base; title => "Jamon News"; section => "News" &>
-  <h2>News</h2>
+<%extends _Base>
+<%override title>Jamon News</%override>
+<%class>
+  protected Section currentSection() { return Section.NEWS; }
+</%class>
 
-  2003-02-11: Jamon 1.0 released.
+<h2>News</h2>
 
-</&>
+2003-02-11: Jamon 1.0 released.

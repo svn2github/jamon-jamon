@@ -1,17 +1,20 @@
-<&| _Base; title => "Jamon Documentation"; section => "Documentation" &>
-  <h2>Documentation</h2>
-  <ul>
-    <li><a href="Overview.html">Overview</a></li>
-    <li><a href="QuickStart.html">Quick start mini-tutorial</a></li>
-    <li><a href="GeneratedTemplates.html">Generated classes description</a></li>
-    <li><a href="UserGuide.html">User's Guide</a></li>
-    <li><a href="BuildingProjects.html">Integrating Jamon and Ant</a>
-      <ul>
-        <li><a href="JamonTask.html">JamonTask</a></li>
-      </ul>
-    </li>
-    <li><a href="Servlets.html">Integrating Jamon and Servlets</a></li>
-    <li><a href="Reference.html">Template reference manual</a></li>
-    <li><a href="javadoc/index.html">Javadoc</a></li>
-  </ul>
-</&>
+<%extends _Base>
+<%override title>Jamon Documentation</%override>
+<%class>
+  protected Section currentSection() { return Section.DOCUMENTATION; }
+</%class>
+<h2>Documentation</h2>
+<ul>
+  <li><a href="Overview.html">Overview</a></li>
+  <li><a href="QuickStart.html">Quick start mini-tutorial</a></li>
+  <li><a href="GeneratedTemplates.html">Generated classes description</a></li>
+  <li><a href="UserGuide.html">User's Guide</a></li>
+  <li><a href="BuildingProjects.html">Integrating Jamon and Ant</a>
+    <ul>
+      <li><a href="JamonTask.html">JamonTask</a></li>
+    </ul>
+  </li>
+  <li><a href="Servlets.html">Integrating Jamon and Servlets</a></li>
+  <li><a href="Reference.html">Template reference manual</a></li>
+  <li><a href="javadoc/index.html">Javadoc</a></li>
+</ul>

@@ -1,4 +1,8 @@
-<&| _Base; title => "Jamon and Ant: JamonTask"; section => "Documentation" &>
+<%extends _Base>
+<%override title>Jamon and Ant: JamonTask</%override>
+<%class>
+  protected Section currentSection() { return Section.DOCUMENTATION; }
+</%class>
 
 <h2>JamonTask</h2>
 <h3>Description</h3>
@@ -56,5 +60,3 @@ into <span class="file">tsrc</span></p>
 class="file">templs</span> directory, except those in the directory
 <span class="file">templs/not/for/prod</span>. The sources are placed
 into the directory tree rooted at <span class="file">tsrc</span>.</p>
-
-</&>
