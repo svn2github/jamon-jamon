@@ -384,7 +384,7 @@ public class Analyzer
     {
         public void caseAImport(AImport p_import)
         {
-            getTemplateUnit().addImport(p_import.getName().toString());
+            getTemplateUnit().addImport(p_import);
         }
 
         public void caseAImplement(AImplement p_implement)

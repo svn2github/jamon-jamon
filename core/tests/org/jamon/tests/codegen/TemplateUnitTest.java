@@ -166,7 +166,7 @@ public class TemplateUnitTest
         unit.addFragmentArg(new FragmentArgument(g));
         checkSigIsUnique(unit, sigs);
 
-        unit.addImport("java.util.Date");
+        unit.addImport(new org.jamon.node.AImport());
         checkSigIsUnique(unit, sigs);
     }
 

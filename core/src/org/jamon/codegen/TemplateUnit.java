@@ -32,6 +32,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.jamon.node.ASimpleName;
+import org.jamon.node.AQualifiedName;
+import org.jamon.node.AImport;
 import org.jamon.node.AOverride;
 import org.jamon.node.AParentArg;
 import org.jamon.node.TIdentifier;
@@ -248,7 +251,7 @@ public class TemplateUnit
         return m_imports.iterator();
     }
 
-    public void addImport(String p_import)
+    public void addImport(AImport p_import)
     {
         m_imports.add(p_import);
     }
@@ -341,7 +344,19 @@ public class TemplateUnit
     {
         for (Iterator i = getImports(); i.hasNext(); )
         {
-            p_writer.println("import " + i.next() + ";");
+            AImport imp = (AImport) i.next();
+            if (imp.getName() instanceof ASimpleName)
+            {
+                ASimpleName name = (ASimpleName) imp.getName();
+                p_writer.printLocation(name.getIdentifier());
+                p_writer.println("import " + name + ";");
+            }
+            else
+            {
+                AQualifiedName name = (AQualifiedName) imp.getName();
+                p_writer.printLocation(name.getIdentifier());
+                p_writer.println("import " + name + ";");
+            }
         }
         p_writer.println();
     }
@@ -414,7 +429,7 @@ public class TemplateUnit
         for(Iterator i = getImports(); i.hasNext(); )
         {
             p_buf.append("import: ");
-            p_buf.append((String) i.next());
+            p_buf.append(i.next());
             p_buf.append("\n");
         }
     }

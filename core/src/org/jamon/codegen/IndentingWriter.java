@@ -22,6 +22,7 @@ package org.jamon.codegen;
 
 import java.io.PrintWriter;
 import java.io.Writer;
+import org.jamon.node.Token;
 
 public class IndentingWriter
 {
@@ -36,6 +37,12 @@ public class IndentingWriter
     private static final int BASIC_OFFSET = 2;
     private static final String SPACES =
         "                                        "; // 40 spaces
+
+
+    public void printLocation(Token p_token)
+    {
+        println("// " + p_token.getLine() + ", " + p_token.getPos());
+    }
 
     public void println()
     {

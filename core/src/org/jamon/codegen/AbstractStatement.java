@@ -45,7 +45,7 @@ public abstract class AbstractStatement
 
     protected final void generateSourceLine(IndentingWriter p_writer)
     {
-        p_writer.println("// " + m_token.getLine() + ", " + m_token.getPos());
+        p_writer.printLocation(m_token);
     }
 
 }
