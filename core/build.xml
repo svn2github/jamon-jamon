@@ -12,14 +12,8 @@
   <property name="build.dir" value="build"/>
   <property name="build.src.dir" value="${build.dir}/src"/>
   <property name="classes.dir" value="${build.dir}/classes"/>
-  <property name="test.classes.dir" value="${build.dir}/testclasses"/>
+  <property name="tests.classes.dir" value="${build.dir}/testclasses"/>
   <property name="tests.src.dir" value="tests"/>
-  <property name="test.dir" value="test" />
-  <property name="test.src.dir" value="${test.dir}/src" />
-  <property name="test.pkg" value="test/jamon"/>
-  <property name="test.src2.dir" value="${test.src.dir}/${test.pkg}" />
-  <property name="test.classes.dir" value="${test.dir}/classes" />
-  <property name="testdata.dir" value="testdata/${test.pkg}" />
   <property name="jarfile" value="jamon.jar" />
   <property name="java.lib.junit" value="junit.jar" />
 
@@ -77,51 +71,12 @@
 
   <target name="spotless" depends="clean">
     <delete dir="${build.dir}"/>
-    <delete dir="${test.dir}"/>
     <delete file="${jarfile}"/>
   </target>
 
   <target name="cvsignores">
-    <echo file=".cvsignore">.cvsignore ${build.dir} build.properties ${test.dir} ${jarfile}
+    <echo file=".cvsignore">.cvsignore ${build.dir} build.properties ${jarfile}
 </echo>
-  </target>
-
-  <target name="testdirs">
-    <delete dir="${test.dir}"/>
-    <mkdir dir="${test.src.dir}" />
-  </target>
-
-  <target name="testsrc" depends="testdirs">
-    <copy file="testdata/Test1.java" todir="${test.src2.dir}" />
-  </target>
-
-  <target name="testtemplates" depends="build,testsrc">
-    <java fork="true"
-          dir="testdata"
-          classpath="${classes.dir}:${java.lib.sablecc}"
-          classname="org.jamon.TemplateGenerator">
-      <arg value="../${test.src.dir}" />
-      <arg value="${test.pkg}/TestTemplate" />
-      <arg value="${test.pkg}/SubTemplate" />
-      <arg value="${test.pkg}/Sub2" />
-    </java>
-  </target>
-
-  <target name="testbuild" depends="testtemplates">
-    <mkdir dir="${test.classes.dir}"/>
-    <javac destdir="${test.classes.dir}"
-           debug="true"
-           classpath="${classes.dir}:{java.lib.sablecc}"
-           deprecation="true">
-      <src path="${test.src.dir}"/>
-    </javac>
-  </target>
-
-  <target name="test1" depends="testbuild"
-          description="Tests the compiler by rendering a simple template">
-    <java fork="true"
-          classpath="${classes.dir}:${java.lib.sablecc}:${test.classes.dir}"
-          classname="${test.pkg}.Test1" />
   </target>
 
   <target name="jar" depends="build">
@@ -131,9 +86,9 @@
 
 
   <target name="testclasses" depends="build">
-    <mkdir dir="${test.classes.dir}" />
+    <mkdir dir="${tests.classes.dir}" />
     <javac srcdir="${tests.src.dir}"
-           destdir="${test.classes.dir}"
+           destdir="${tests.classes.dir}"
            debug="on"
            deprecation="on"
            optimize="on" >
@@ -152,7 +107,7 @@
            fork="${junit.fork}" timeout="${junit.timeout}">
       <formatter type="${junit.formatter}" usefile="no"/>
       <classpath>
-        <pathelement location="${test.classes.dir}"/>
+        <pathelement location="${tests.classes.dir}"/>
         <pathelement location="${classes.dir}"/>
         <pathelement location="${java.lib.junit}"/>
       </classpath>
