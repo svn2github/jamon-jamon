@@ -394,6 +394,8 @@ public class StandardTemplateManager
         }
         cp.append(File.pathSeparator);
         cp.append(System.getProperty("sun.boot.class.path"));
+        cp.append(File.pathSeparator);
+        cp.append(System.getProperty("java.class.path"));
 
         if (m_includeRtJar)
         {
