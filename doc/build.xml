@@ -15,13 +15,14 @@ the documentation thus taking care of issues such as escaping.
   <property name="classes.dir" value="${www.dir}/classes"/>
   <property name="java.lib.jamon" location="../jamon.jar"/>
   <property name="java.lib.diff" value="/usr/local/share/java/diff.jar"/>
+  <property name="invoker.class" value="org.jamon.InvokerTool" />
 
   <target name="doc"
           description="Generates all the documentation">
     <mkdir dir="${www.dir}"/>
     <copy file="base.css" todir="${www.dir}" />
     <!-- Generate the big Rainbow document -->
-    <java classname="org.jamon.Invoker"
+    <java classname="${invoker.class}"
           classpath="${java.lib.jamon}:${java.lib.diff}" 
           fork="yes">
       <arg value="-s" />
@@ -34,7 +35,7 @@ the documentation thus taking care of issues such as escaping.
     </java>
     <!-- Generate the first template example -->
     <mkdir dir="${www.dir}/templates/foo/bar"/>
-    <java classname="org.jamon.Invoker"
+    <java classname="${invoker.class}"
           classpath="${java.lib.jamon}:${java.lib.diff}" 
           fork="yes">
       <arg value="-s" />
@@ -48,7 +49,7 @@ the documentation thus taking care of issues such as escaping.
     <!-- Generate the first servlet example -->
     <property name="servlet.src.dir" value="${www.dir}/src/foo/bar" />
     <mkdir dir="${servlet.src.dir}" />
-    <java classname="org.jamon.Invoker"
+    <java classname="${invoker.class}"
           classpath="${java.lib.jamon}:${java.lib.diff}" 
           fork="yes">
       <arg value="-s" />
@@ -60,7 +61,7 @@ the documentation thus taking care of issues such as escaping.
       <arg value="/org/jamon/doc/HelloServletTemplate" />
     </java>
     <!-- Generate the ant script -->
-    <java classname="org.jamon.Invoker"
+    <java classname="${invoker.class}"
           classpath="${java.lib.jamon}:${java.lib.diff}" 
           fork="yes">
       <arg value="-s" />
@@ -72,7 +73,7 @@ the documentation thus taking care of issues such as escaping.
       <arg value="/org/jamon/doc/buildxml" />
     </java>
     <!-- Generate the deployment descriptor -->
-    <java classname="org.jamon.Invoker"
+    <java classname="${invoker.class}"
           classpath="${java.lib.jamon}:${java.lib.diff}" 
           fork="yes">
       <arg value="-s" />
@@ -87,7 +88,7 @@ the documentation thus taking care of issues such as escaping.
     <!-- Generate the second servlet example -->
     <property name="servlet.src2.dir" value="${www.dir}/example2/src/foo/bar" />
     <mkdir dir="${servlet.src2.dir}" />
-    <java classname="org.jamon.Invoker"
+    <java classname="${invoker.class}"
           classpath="${java.lib.jamon}:${java.lib.diff}" 
           fork="yes">
       <arg value="-s" />
@@ -99,7 +100,7 @@ the documentation thus taking care of issues such as escaping.
       <arg value="/org/jamon/doc/HelloServlet2Template" />
     </java>
     <!-- Generate the form fields class for the second example -->
-    <java classname="org.jamon.Invoker"
+    <java classname="${invoker.class}"
           classpath="${java.lib.jamon}:${java.lib.diff}" 
           fork="yes">
       <arg value="-s" />
@@ -112,7 +113,7 @@ the documentation thus taking care of issues such as escaping.
     </java>
     <!-- Generate the second template example -->
     <mkdir dir="${www.dir}/example2/templates/foo/bar"/>
-    <java classname="org.jamon.Invoker"
+    <java classname="${invoker.class}"
           classpath="${java.lib.jamon}:${java.lib.diff}" 
           fork="yes">
       <arg value="-s" />
