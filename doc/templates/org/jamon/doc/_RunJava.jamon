@@ -2,7 +2,7 @@
   java.io.ByteArrayOutputStream;
   java.io.PrintStream;
   java.lang.reflect.InvocationTargetException;
-  org.jamon.JamonException;
+  org.jamon.JamonRuntimeException;
   org.jamon.TemplateManagerSource;
   org.jamon.TemplateManager;
   org.jamon.BasicTemplateManager;
@@ -34,23 +34,23 @@
   }
   catch (ClassNotFoundException e)
   {
-      throw new JamonException(e);
+      throw new JamonRuntimeException(e);
   }
   catch (IllegalAccessException e)
   {
-      throw new JamonException(e);
+      throw new JamonRuntimeException(e);
   }
   catch (IllegalArgumentException e)
   {
-      throw new JamonException(e);
+      throw new JamonRuntimeException(e);
   }
   catch (InvocationTargetException e)
   {
-      throw new JamonException(e);
+      throw new JamonRuntimeException(e);
   }
   catch (NoSuchMethodException e)
   {
-      throw new JamonException(e);
+      throw new JamonRuntimeException(e);
   }
   finally
   {
