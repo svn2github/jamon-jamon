@@ -18,46 +18,41 @@
  * Contributor(s):
  */
 
-package org.jamon;
+package org.jamon.render.html;
 
 import java.util.Iterator;
-import java.util.ArrayList;
 import java.util.Map;
 
-class FargInfo
+public class MapSelect
+    extends AbstractSelect
 {
-    public FargInfo(String p_name, Iterator p_argNames, Map p_args)
+    public MapSelect(String p_name, Map p_options, Object p_default)
     {
-        m_name = p_name;
-        m_args = p_args;
-        m_argNames = new ArrayList();
-        while (p_argNames.hasNext())
-        {
-            m_argNames.add(p_argNames.next());
-        }
+        super(p_name);
+        m_options = p_options;
+        m_default = p_default;
     }
 
-    public Iterator getArgumentNames()
+    public MapSelect(String p_name, Map p_options)
     {
-        return m_argNames.iterator();
+        this(p_name, p_options, null);
     }
 
-    public String getArgumentType(String p_name)
+    public Iterator getValues()
     {
-        return (String) m_args.get(p_name);
+        return m_options.keySet().iterator();
     }
 
-    public String getFargInterfaceName()
+    public Object getRenderable(Object p_value)
     {
-        return "Fragment_" + m_name;
+        return m_options.get(p_value);
     }
 
-    public String getName()
+    public boolean isSelected(Object p_value)
     {
-        return m_name;
+        return m_default != null && m_default.equals(p_value);
     }
 
-    private final String m_name;
-    private final Map m_args;
-    private final ArrayList m_argNames;
+    private final Map m_options;
+    private final Object m_default;
 }

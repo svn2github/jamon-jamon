@@ -18,22 +18,26 @@
  * Contributor(s):
  */
 
-package org.jamon.integration;
+package org.jamon.render.html;
 
-/**
- * Test Jamon's escape mechanisms.
- **/
-
-public class EscapeTest
-    extends TestBase
+public class Input
+    extends AbstractInput
 {
-    public void testExercise()
-        throws Exception
+    public Input(String p_name)
     {
-        new test.jamon.Escapes(getTemplateManager())
-            .writeTo(getWriter())
-            .render();
-        checkOutput("This is how to escape a newline in Java: \\n\nThis is how to escape a newline in Java: \\\"\nAnd this mess \\\" \\n \\\\ is on one line.\n");
+        this(p_name,null);
     }
 
+    public Input(String p_name, Object p_value)
+    {
+        super(p_name);
+        m_value = p_value == null ? null : p_value.toString();
+    }
+
+    public String getValue()
+    {
+        return m_value;
+    }
+
+    private final String m_value;
 }
