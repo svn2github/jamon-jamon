@@ -114,38 +114,26 @@ public class UrlEscaping
         // We assume p_unicode >= 0x80
         if (p_unicode < 0x800)
         {
-            percentEscape(p_writer, (char) (0xC0 | p_unicode >> 6));
-            escapeRest(p_writer, p_unicode, 6);
+            escapeRest(p_writer, p_unicode, 6, 0xC0);
         }
         else if (p_unicode < 0x10000)
         {
-            percentEscape(p_writer, (char) (0xE0 | p_unicode >> 12));
-            escapeRest(p_writer, p_unicode, 12);
+            escapeRest(p_writer, p_unicode, 12, 0xE0);
         }
-        else if (p_unicode < 0x200000)
+        else  // we may assume p_unicode < 0x200000; any greater value is ill-formed
         {
-            percentEscape(p_writer, (char) (0xF0 | p_unicode >> 20));
-            escapeRest(p_writer, p_unicode, 18);
-        }
-        else if (p_unicode < 0x4000000)
-        {
-            percentEscape(p_writer, (char) (0xF8 | p_unicode >> 24));
-            escapeRest(p_writer, p_unicode, 24);
-        }
-        else // we may assume  p_unicode < 0x80000000
-        {
-            percentEscape(p_writer, (char) (0xFC | p_unicode >> 30));
-            escapeRest(p_writer, p_unicode, 30);
+            escapeRest(p_writer, p_unicode, 18, 0xF0);
         }
     }
 
-    static private void escapeRest(Writer p_writer, long  p_long, int p_bits)
+    static private void escapeRest(Writer p_writer, long  p_unicode, int p_bits, int p_prefix)
         throws IOException
     {
+        percentEscape(p_writer, (char) (p_prefix | p_unicode >> 18));
         while(p_bits > 0)
         {
             percentEscape(p_writer,
-                          (char) (0x80 | 0x3F & (p_long >> (p_bits -= 6))));
+                          (char) (0x80 | 0x3F & (p_unicode >> (p_bits -= 6))));
         }
     }
 
