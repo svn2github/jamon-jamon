@@ -119,67 +119,16 @@ the documentation thus taking care of issues such as escaping.
         <include name="**/*.java"/>
       </fileset>
     </copy>
-    <antcall target="processTemplate">
-      <param name="template.name" value="TutorialPath" />
-    </antcall>
-    <antcall target="processTemplate">
-      <param name="template.name" value="HelloTemplate" />
-    </antcall>
-    <antcall target="processTemplate">
-      <param name="template.name" value="TimeAndTempTemplate" />
-    </antcall>
-    <antcall target="processTemplate">
-      <param name="template.name" value="AccountSummaryTemplate" />
-    </antcall>
-    <antcall target="processTemplate">
-      <param name="template.name" value="EscapingTemplate" />
-    </antcall>
-    <antcall target="processTemplate">
-      <param name="template.name" value="ClassExampleTemplate" />
-    </antcall>
-    <antcall target="processTemplate">
-      <param name="template.name" value="StdPhoneNumberFormat" />
-    </antcall>
-    <antcall target="processTemplate">
-      <param name="template.name" value="JamonCallerTemplate" />
-    </antcall>
-    <antcall target="processTemplate">
-      <param name="template.name" value="SubtemplateTemplate" />
-    </antcall>
-    <antcall target="processTemplate">
-      <param name="template.name" value="LiRef" />
-    </antcall>
-    <antcall target="processTemplate">
-      <param name="template.name" value="FragmentCallerTemplate" />
-    </antcall>
-    <antcall target="processTemplate">
-      <param name="template.name" value="AlternatingList" />
-    </antcall>
-    <antcall target="processTemplate">
-      <param name="template.name" value="FragmentExampleTemplate" />
-    </antcall>
-    <antcall target="processTemplate">
-      <param name="template.name" value="InheritanceParent" />
-    </antcall>
-    <antcall target="processTemplate">
-      <param name="template.name" value="InheritanceChild" />
-    </antcall>
-    <antcall target="processTemplate">
-      <param name="template.name" value="InheritanceParentWArgs" />
-    </antcall>
-    <antcall target="processTemplate">
-      <param name="template.name" value="InheritanceChildWArgs" />
-    </antcall>
-    <antcall target="processTemplate">
-      <param name="template.name" value="InheritanceParentProtected" />
-    </antcall>
-    <antcall target="processTemplate">
-      <param name="template.name" value="InheritanceChildProtected" />
-    </antcall>
+    <jamon destdir="${work.dir}" srcdir="templates">
+    </jamon>
+    <jamon destdir="${work.dir}" srcdir="sample/tutorial/templates">
+    </jamon>
     <javac destdir="${work.dir}"
-           srcdir="${work.dir}"
            classpath="${java.lib.jamon}"
-           includes="*.java" />
+           includes="*.java" >
+      <src path="sample/tutorial/src" />
+      <src path="${work.dir}" />
+    </javac>
     <antcall target="generateOutput">
       <param name="arg.line" value="" />
       <param name="template.name" value="HelloTut1" />
@@ -241,36 +190,22 @@ the documentation thus taking care of issues such as escaping.
          includes="*.java,*.jamon" />
   </target>
 
-  <target name="processTemplate">
-    <echo message="${template.name}"/>
-    <invoker classpath="${java.lib.jamon}"
-             workDir="${work.dir}"
-             sourceDir="templates"
-             output="${doc.dir}/${template.name}.jamon"
-             template="${tutorial.path}/${template.name}" />
-    <copy file="${doc.dir}/${template.name}.jamon" todir="${work.dir}" />
-
-    <jamon destdir="${work.dir}" srcdir="${work.dir}">
-      <include name="${template.name}.jamon"/>
-    </jamon>
-  </target>
-
   <target name="generateOutput">
-    <tempfile property="${template.name}.temp" destdir="${work.dir}"/>
+    <tempfile property="temp.file" destdir="${work.dir}"/>
     <java classname="${template.name}"
           failonerror="true"
           classpath="${work.dir}:${java.lib.jamon}"
-          output="${template.name}.temp" >
+          output="${temp.file}" >
       <arg line="${arg.line}" />
     </java>
-    <loadfile property="${page.name}.output" srcFile="${template.name}.temp" />
-    <echo message="${page.name}.output"/>
+    <loadfile property="template.output" srcFile="${temp.file}" />
+    <echo message="${page.name}"/>
     <invoker classpath="${java.lib.jamon}"
              workDir="${work.dir}"
              sourceDir="templates"
              output="${doc.dir}/${page.name}.html"
              template="${tutorial.path}/${page.name}" >
-      <arg name="output" value="${page.name}.output" />
+      <arg name="output" value="${template.output}" />
     </invoker>
   </target>
 
