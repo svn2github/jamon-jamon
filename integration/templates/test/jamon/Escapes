@@ -1,0 +1,4 @@
+This is how to escape a newline in Java: \n
+This is how to escape a newline in Java: \"
+And this mess \" \n \\ \
+is on one line.

@@ -352,6 +352,7 @@ public class ImplAnalyzer extends BaseAnalyzer
             char c = p_string.charAt(i);
             switch(c)
             {
+              case '\\': s.append("\\\\"); break;
               case '\n': s.append("\\n"); break;
               case '\t': s.append("\\t"); break;
               case '\"': s.append("\\\""); break;
