@@ -209,7 +209,7 @@
   </target>
 
 
-  <target name="stage" depends="srcdist, bindist, doc" >
+  <target name="stage" depends="srcdist,bindist,doc" >
     <mkdir dir="${stage.dir}" />
     <copy todir="${stage.dir}" >
       <fileset dir="doc/build/www" />
@@ -218,6 +218,8 @@
     <copy todir="${dist.dir}" >
       <fileset dir="." includes="${tarball.bin}" />
       <fileset dir="." includes="${tarball.src}" />
+      <fileset dir="." includes="${zip.bin}" />
+      <fileset dir="." includes="${zip.src}" />
     </copy>
   </target>
 
