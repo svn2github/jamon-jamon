@@ -96,6 +96,7 @@ the documentation thus taking care of issues such as escaping.
          basedir="${www.dir}"
          includes="JamonQs.java,QsTemp.jamon" />
     <loadfile property="quickstart.output" srcFile="${temp.file}" />
+    <delete file="${temp.file}" />
     <invoker classpath="${java.lib.jamon}"
              workDir="${work.dir}"
              sourceDir="templates"
@@ -199,6 +200,7 @@ the documentation thus taking care of issues such as escaping.
       <arg line="${arg.line}" />
     </java>
     <loadfile property="template.output" srcFile="${temp.file}" />
+    <delete file="${temp.file}" />
     <echo message="${page.name}"/>
     <invoker classpath="${java.lib.jamon}"
              workDir="${work.dir}"
