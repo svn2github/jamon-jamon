@@ -27,10 +27,17 @@ public class JavaCompiler
     public void compile(String p_javaFile)
         throws IOException
     {
-        String [] cmdline = new String [] { m_javac,
-                                            "-classpath",
-                                            m_classPath,
-                                            p_javaFile };
+        compile(new String [] { p_javaFile });
+    }
+
+    public void compile(String [] p_javaFiles)
+        throws IOException
+    {
+        String [] cmdline = new String[p_javaFiles.length + 3];
+        System.arraycopy(p_javaFiles,0,cmdline,3,p_javaFiles.length);
+        cmdline[0] = m_javac;
+        cmdline[1] = "-classpath";
+        cmdline[2] = m_classPath;
 
         Process p = Runtime.getRuntime().exec(cmdline);
         StreamConsumer stderr = new StreamConsumer(p.getErrorStream());
