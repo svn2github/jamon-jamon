@@ -88,7 +88,7 @@ public class Analyzer
         topLevelAnalyze(p_start, new PreliminaryAdapter());
         if (m_defaultEscaping == null)
         {
-            m_defaultEscaping = "h";
+            m_defaultEscaping = EscapingDirective.DEFAULT_ESCAPE_CODE;
         }
     }
 

@@ -30,6 +30,8 @@ public class EscapingDirective
         return m_java;
     }
 
+    public static final String DEFAULT_ESCAPE_CODE = "h";
+
     public static EscapingDirective get(String p_abbreviation)
     {
         EscapingDirective result =
@@ -60,7 +62,7 @@ public class EscapingDirective
     {
         s_standardDirectives.put("H",
                                  new EscapingDirective("STRICT_HTML"));
-        s_standardDirectives.put("h",
+        s_standardDirectives.put(DEFAULT_ESCAPE_CODE,
                                  new EscapingDirective("HTML"));
         s_standardDirectives.put("n",
                                  new EscapingDirective("NONE"));
