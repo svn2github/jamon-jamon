@@ -14,9 +14,7 @@
 
   <body>
     <h3 id="tagline">
-      <span class="tagline11">refactoring</span> <span class="tagline21">the</span> <span class="tagline31">view</span><br />
-      <span class="tagline12">refactoring</span> <span class="tagline22">the</span> <span class="tagline32">view</span><br />
-      <span class="tagline13">refactoring</span> <span class="tagline23">the</span> <span class="tagline33">view</span><br />
+      <span class="tagline1">refactoring</span> <span class="tagline2">the</span> <span class="tagline3">view</span><br />
     </h3>
 
     <div class="header" id="header1"><span /></div>

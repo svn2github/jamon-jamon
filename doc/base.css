@@ -62,11 +62,11 @@ body
 #tagline
 {
   color: #777777;
-  font-size: 1em;
+  font-size: 1.25em;
   position: absolute;
   right: 0em;
   top: 0em;
-  margin-top: 0.5em;
+  margin-top: 2em;
   margin-right: 1em;
   margin-bottom: 0;
   padding-bottom: 0;
@@ -192,41 +192,17 @@ li
   font-weight: bold
 }
 
-.tagline11
+.tagline1
 {
-  color: #000000;
+  color: #0f2f7f;
 }
-.tagline21
+.tagline2
 {
-  color: #000050;
+  color: #1f3f8f;
 }
-.tagline31
+.tagline3
 {
-  color: #0000A0;
-}
-.tagline12
-{
-  color: #005000;
-}
-.tagline22
-{
-  color: #005050;
-}
-.tagline32
-{
-  color: #0050A0;
-}
-.tagline13
-{
-  color: #00A000;
-}
-.tagline23
-{
-  color: #00A050;
-}
-.tagline33
-{
-  color: #00A0A0;
+  color: #2f4f9f;
 }
 
 .deleted
