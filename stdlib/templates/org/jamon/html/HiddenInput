@@ -21,5 +21,5 @@
   org.jamon.render.html.Input input;
 </%args>\
 <input type='hidden'
-       name='<% input.getName() %>'
-       value='<% input.getValue() %>' />
+       name='<% input.getName() |H %>'
+       value='<% input.getValue() |H %>' />
