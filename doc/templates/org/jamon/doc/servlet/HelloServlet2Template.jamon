@@ -30,7 +30,7 @@ public final class HelloServlet
     public void doGet(HttpServletRequest request, HttpServletResponse response)
         throws IOException {
         response.setContentType("text/html");
-        HelloTemlpate helloTemplate = new HelloTemplate();
+        HelloTemplate helloTemplate = new HelloTemplate();
         helloTemplate.writeTo(response.getWriter());
         HelloFormFields formFields = new HelloFormFields(request.getParameterMap());
         if (formFields.hasData()) {
