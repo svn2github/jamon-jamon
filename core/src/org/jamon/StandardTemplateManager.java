@@ -52,7 +52,17 @@ public class StandardTemplateManager
     public void releaseInstance(AbstractTemplateImpl p_impl)
         throws JamonException
     {
-        // noop
+        if (m_autoFlush)
+        {
+            try
+            {
+                p_impl.getWriter().flush();
+            }
+            catch (IOException e)
+            {
+                throw new JamonException(e);
+            }
+        }
     }
 
     public AbstractTemplateImpl getInstance(String p_path,
@@ -74,6 +84,11 @@ public class StandardTemplateManager
         {
             throw new JamonException(e);
         }
+    }
+
+    public void setAutoFlush(boolean p_autoFlush)
+    {
+        m_autoFlush = p_autoFlush;
     }
 
     public void setClassLoader(ClassLoader p_classLoader)
@@ -119,14 +134,15 @@ public class StandardTemplateManager
         if (! m_initialized)
         {
             System.err.println("initializing std template mgr");
-            String workDir = m_workDir;
-            if (workDir == null)
+            if (m_workDir == null)
             {
-                File tmpdir = File.createTempFile("jamon",null);
-                tmpdir.mkdirs();
-                workDir = tmpdir.toString();
+                m_workDir = System.getProperty("java.io.tmpdir")
+                    + "jamon"
+                    + (new java.util.Random().nextInt(100000000))
+                    + ".tmp";
+                new File(m_workDir).mkdirs();
             }
-            m_loader = new WorkDirClassLoader(m_classLoader, workDir);
+            m_loader = new WorkDirClassLoader(m_classLoader, m_workDir);
             m_describer =
                 new TemplateDescriber(m_templateSourceDir == null
                                       ? System.getProperty("user.dir")
@@ -226,6 +242,7 @@ public class StandardTemplateManager
     private JavaCompiler m_javaCompiler;
     private WorkDirClassLoader m_loader;
     private boolean m_initialized;
+    private boolean m_autoFlush = true;
 
     private String prefix()
     {
