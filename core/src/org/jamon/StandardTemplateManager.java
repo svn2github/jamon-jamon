@@ -23,6 +23,7 @@ package org.jamon;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Writer;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Collection;
@@ -106,7 +107,11 @@ public class StandardTemplateManager
         {
             try
             {
-                p_impl.getWriter().flush();
+                Writer writer = p_impl.getWriter();
+                if (writer != null)
+                {
+                    writer.flush();
+                }
             }
             catch (IOException e)
             {
@@ -468,6 +473,13 @@ public class StandardTemplateManager
         {
             return m_classLoader.loadClass(getClassName(p_path));
         }
+    }
+
+    protected ClassLoader getWorkClassLoader()
+        throws IOException
+    {
+        initialize();
+        return m_loader;
     }
 
     private boolean m_dynamicRecompilation = true;
