@@ -129,7 +129,7 @@ public class UrlEscaping
     static private void escapeRest(Writer p_writer, long  p_unicode, int p_bits, int p_prefix)
         throws IOException
     {
-        percentEscape(p_writer, (char) (p_prefix | p_unicode >> 18));
+        percentEscape(p_writer, (char) (p_prefix | p_unicode >> p_bits));
         while(p_bits > 0)
         {
             percentEscape(p_writer,
