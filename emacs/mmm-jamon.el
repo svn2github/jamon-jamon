@@ -12,9 +12,9 @@
 
 ; The Original Code is Jamon code, released February, 2003.
 
-; The Initial Developer of the Original Code is Ian Robertson.  Portions
-; created by Jay Sachs are Copyright (C) 2003 Ian Robertson.  All Rights
-; Reserved.
+; The Initial Developer of the Original Code is Ian Robertson.
+; Portions created by Ian Robertson are Copyright (C) 2003 Ian
+; Robertson.  All Rights Reserved.
 
 ; Contributor(s): Jay Sachs
 
