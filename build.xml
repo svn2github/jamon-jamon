@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+
+<project name="meta" default="demo">
+
+  <description>
+    Meta build script for Jamon.  From this script one can
+    compile the Jamon engine (project 'core') and the exercise it (project
+    'integration').
+  </description>
+
+  <property file="build.properties"/>
+  <property file="${user.home}/.ant.properties"/>
+
+  <target name="test1"
+          depends="compiler"
+          description="Run the demo">
+    <ant dir="integration" target="test1">
+      <property name="java.lib.jamon" value="${basedir}/core/build/classes"/>
+    </ant>
+  </target>
+
+  <target name="compiler" description="Build the compiler">
+    <ant dir="core" target="build"/>
+  </target>
+
+  <target name="spotless"
+          depends="">
+    <ant dir="core" target="spotless"/>
+    <ant dir="integration" target="spotless"/>
+  </target>
+
+</project>
