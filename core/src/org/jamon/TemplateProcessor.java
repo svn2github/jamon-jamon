@@ -21,7 +21,6 @@ public class TemplateGenerator
     private static void generateInterface(File p_destdir,
                                           TemplateDescriber p_describer,
                                           TemplateResolver p_resolver,
-                                          String p_pkgPrefix,
                                           String p_filename)
         throws IOException,
                ParserException,
@@ -30,7 +29,6 @@ public class TemplateGenerator
         generateInterface(p_destdir,
                           p_describer,
                           p_resolver,
-                          p_pkgPrefix,
                           p_filename,
                           p_filename);
     }
@@ -39,7 +37,6 @@ public class TemplateGenerator
     private static void generateInterface(File p_destdir,
                                           TemplateDescriber p_describer,
                                           TemplateResolver p_resolver,
-                                          String p_pkgPrefix,
                                           String p_filename,
                                           String p_absoluteFilename)
         throws IOException,
@@ -47,7 +44,7 @@ public class TemplateGenerator
                LexerException
     {
         String templateName = p_filename;
-        String pkg = p_pkgPrefix;
+        String pkg = "";
         int fsPos = templateName.lastIndexOf(FILESEP);
         if (fsPos == 0)
         {
@@ -55,17 +52,8 @@ public class TemplateGenerator
         }
         else if (fsPos > 0)
         {
-            pkg = p_pkgPrefix
-                + StringUtils.pathToClassName(p_filename.substring(0,fsPos));
+            pkg = StringUtils.pathToClassName(p_filename.substring(0,fsPos));
             templateName = templateName.substring(fsPos+FILESEP.length());
-        }
-        else
-        {
-            int dot = pkg.lastIndexOf('.');
-            if (dot == pkg.length() - 1)
-            {
-                pkg = pkg.substring(0,dot);
-            }
         }
 
         File pkgDir = new File(p_destdir, StringUtils.classNameToPath(pkg));
@@ -98,7 +86,6 @@ public class TemplateGenerator
 
 
     public static void generateInterfaces(File p_destDir,
-                                          String p_pkgPrefix,
                                           String[] p_relativeFilenames,
                                           String[] p_absoluteFilenames)
         throws IOException,
@@ -116,16 +103,15 @@ public class TemplateGenerator
             throw new IOException("Unable to create destination dir "
                                   + p_destDir);
         }
-        
-        TemplateResolver resolver = new TemplateResolver(p_pkgPrefix);
+
+        TemplateResolver resolver = new TemplateResolver();
         TemplateDescriber describer = new TemplateDescriber("");
-        
+
         for (int i = 0; i < p_relativeFilenames.length; i++)
         {
-            generateInterface(p_destDir, 
-                              describer, 
-                              resolver, 
-                              p_pkgPrefix, 
+            generateInterface(p_destDir,
+                              describer,
+                              resolver,
                               p_relativeFilenames[i],
                               p_absoluteFilenames[i]);
         }
@@ -145,14 +131,13 @@ public class TemplateGenerator
                                       + destdir);
             }
 
-            String pkgPrefix = args[arg++];
-            TemplateResolver resolver = new TemplateResolver(pkgPrefix);
+            TemplateResolver resolver = new TemplateResolver();
 
             TemplateDescriber describer = new TemplateDescriber("");
 
             while (arg < args.length)
             {
-                generateInterface(destdir, describer, resolver, pkgPrefix, args[arg++]);
+                generateInterface(destdir, describer, resolver, args[arg++]);
             }
         }
         catch (Throwable t)

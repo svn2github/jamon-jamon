@@ -16,7 +16,7 @@
  * Reserved.
  *
  * Contributor(s):
- */
+ **/
 
 package org.jamon;
 
@@ -24,22 +24,17 @@ package org.jamon;
  * A <code>TemplateResolver</code> provides methods to translate
  * template paths to the corresponding interface class name,
  * implementation class name, and the package name for each.
- */
+ **/
 
 public class TemplateResolver
 {
     private static final String FS = System.getProperty("file.separator");
 
     /**
-     * Construct a <code>TemplateResolver</code> specifying the prefix
-     * to prepend to the package names for both interface and
-     * implementation template classes.
-     *
-     * @param p_packagePrefix the package prefix
-     */
-    public TemplateResolver(String p_packagePrefix)
+     * Construct a <code>TemplateResolver</code>.
+     **/
+    public TemplateResolver()
     {
-        m_packagePrefix = p_packagePrefix;
     }
 
     /**
@@ -49,7 +44,7 @@ public class TemplateResolver
      * @param p_path the template path
      *
      * @return the name of the interface class
-     */
+     **/
 
     public String getIntfClassName(final String p_path)
     {
@@ -64,7 +59,7 @@ public class TemplateResolver
      * @param p_path the template path
      *
      * @return the name of the implementation class
-     */
+     **/
 
     public String getImplClassName(final String p_path)
     {
@@ -79,25 +74,19 @@ public class TemplateResolver
      * @param p_path the template path
      *
      * @return the name of the interface class package
-     */
+     **/
 
     public String getIntfPackageName(final String p_path)
     {
-        StringBuffer pkg = new StringBuffer();
-        if (! "".equals(m_packagePrefix))
-        {
-            pkg.append(m_packagePrefix);
-        }
         int i = p_path.lastIndexOf(FS);
         if (i > 0)
         {
-            pkg.append(StringUtils.pathToClassName(p_path.substring(0,i)));
+            return StringUtils.pathToClassName(p_path.substring(0,i));
         }
         else
         {
-            pkg.deleteCharAt(pkg.length()-1);
+            return "";
         }
-        return pkg.toString();
     }
 
 
@@ -108,7 +97,7 @@ public class TemplateResolver
      * @param p_path the template path
      *
      * @return the name of the implementation class package
-     */
+     **/
 
     public String getImplPackageName(final String p_path)
     {
@@ -122,7 +111,7 @@ public class TemplateResolver
      * @param p_path the template path
      *
      * @return the fully qualified name of the interface class
-     */
+     **/
 
     public String getFullyQualifiedIntfClassName(final String p_path)
     {
@@ -137,7 +126,7 @@ public class TemplateResolver
      * @param p_path the template path
      *
      * @return the fully qualified name of the implementation class
-     */
+     **/
 
     public String getFullyQualifiedImplClassName(final String p_path)
     {
@@ -152,7 +141,7 @@ public class TemplateResolver
      * @param p_className the name of the class
      *
      * @return the fully qualified name of the class
-     */
+     **/
 
     private String fullyQualify(final String p_pkgName,
                                 final String p_className)
@@ -161,7 +150,4 @@ public class TemplateResolver
             ? p_className
             : (p_pkgName + "." + p_className);
     }
-
-    /** the package prefix */
-    private final String m_packagePrefix;
 }

@@ -16,7 +16,7 @@
 
   <target name="test">
     <mkdir dir="${test.src.dir}" />
-    <jamon package="foo.bar." destdir="${test.src.dir}">
+    <jamon destdir="${test.src.dir}">
       <src path="templates"/>
     </jamon>
   </target>

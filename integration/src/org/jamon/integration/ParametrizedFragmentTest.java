@@ -10,11 +10,11 @@ import org.jamon.StandardTemplateManager;
 import org.jamon.StringUtils;
 import org.jamon.JttException;
 
-import foo.bar.test.jamon.ParametrizedFragment;
+import test.jamon.ParametrizedFragment;
 
 /************************************************************************************
  *
- * Test Jamon's parametrized template fragments.  See "Jamon User's Guide", 
+ * Test Jamon's parametrized template fragments.  See "Jamon User's Guide",
  * section 9.
  *
  ************************************************************************************/
@@ -24,14 +24,13 @@ public class ParametrizedFragmentTest
 {
 
     public void testExercise()
-        throws IOException, 
+        throws IOException,
                JttException
     {
         Writer w = new StringWriter();
         StandardTemplateManager m =
             new StandardTemplateManager("templates",
                                         "build/work");
-        m.setPackagePrefix("foo.bar.");
         ParametrizedFragment.Factory f = new ParametrizedFragment.Factory(m);
         ParametrizedFragment t = f.getInstance(w);
         t.render(new int[] { -2, 0, 15 });

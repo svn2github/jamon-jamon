@@ -16,21 +16,13 @@ import org.jamon.TemplateGenerator;
 import org.jamon.StringUtils;
 import org.jamon.parser.ParserException;
 
-/************************************************************************************
- *
+/**
  * Ant task to convert Jamon templates into Java.
- *
- ************************************************************************************/
+ **/
 
 public class JamonTask
     extends MatchingTask
 {
-
-    public void setPackage(String p_package)
-    {
-        m_package = p_package;
-    }
-
 
     public void setDestdir(File p_destDir)
     {
@@ -40,7 +32,7 @@ public class JamonTask
 
     public Path createSrc()
     {
-        if (m_src == null) 
+        if (m_src == null)
         {
             m_src = new Path(project);
         }
@@ -48,10 +40,9 @@ public class JamonTask
     }
 
 
-    public void execute() 
-        throws BuildException 
+    public void execute()
+        throws BuildException
     {
-        log("package = " + m_package);
         log("destDir = " + m_destDir);
         log("src = " + m_src);
         String[] paths = m_src.list();
@@ -68,33 +59,31 @@ public class JamonTask
 
         // first off, make sure that we've got a srcdir
 
-        if (m_src == null) 
+        if (m_src == null)
         {
             throw new BuildException("srcdir attribute must be set!", location);
         }
         String [] list = m_src.list();
-        if (list.length == 0) 
+        if (list.length == 0)
         {
             throw new BuildException("srcdir attribute must be set!", location);
         }
 
-        if (m_destDir != null && !m_destDir.isDirectory()) 
+        if (m_destDir != null && !m_destDir.isDirectory())
         {
-            throw new BuildException("destination directory \"" + 
-                                     m_destDir + 
-                                     "\" does not exist or is not a directory", 
+            throw new BuildException("destination directory \"" +
+                                     m_destDir +
+                                     "\" does not exist or is not a directory",
                                      location);
         }
 
         // scan source directories and dest directory to build up
         // compile lists
-        File destDir = new File(m_destDir, StringUtils.classNameToPath(m_package));
-        log("effective destDir = " + destDir);
         resetFileLists();
-        for (int i = 0; i < list.length; i++) 
+        for (int i = 0; i < list.length; i++)
         {
             File srcDir = (File)project.resolveFile(list[i]);
-            if (!srcDir.exists()) 
+            if (!srcDir.exists())
             {
                 throw new BuildException("srcdir \"" + srcDir.getPath() + "\" does not exist!", location);
             }
@@ -102,7 +91,7 @@ public class JamonTask
             DirectoryScanner ds = this.getDirectoryScanner(srcDir);
 
             String[] files = ds.getIncludedFiles();
-            scanDir(srcDir, destDir, files);
+            scanDir(srcDir, m_destDir, files);
         }
 
         String[] relativeFilenames = new String[compileList.length];
@@ -116,7 +105,6 @@ public class JamonTask
         try
         {
             TemplateGenerator.generateInterfaces(m_destDir,
-                                                 m_package,
                                                  relativeFilenames,
                                                  absoluteFilenames);
         }
@@ -141,7 +129,7 @@ public class JamonTask
      * The results are returned in the class variable compileList
      */
 
-    protected void scanDir(File srcDir, File destDir, String files[]) 
+    protected void scanDir(File srcDir, File destDir, String files[])
     {
         GlobPatternMapper m = new GlobPatternMapper();
         m.setFrom("*");

@@ -10,8 +10,8 @@ import org.jamon.StandardTemplateManager;
 import org.jamon.StringUtils;
 import org.jamon.JttException;
 
-import foo.bar.test.jamon.Arguments;
-import foo.bar.test.jamon.OptionalArguments;
+import test.jamon.Arguments;
+import test.jamon.OptionalArguments;
 
 /************************************************************************************
  *
@@ -24,14 +24,13 @@ public class ArgumentTest
 {
 
     public void testExercise()
-        throws IOException, 
+        throws IOException,
                JttException
     {
         Writer w = new StringWriter();
         StandardTemplateManager m =
             new StandardTemplateManager("templates",
                                         "build/work");
-        m.setPackagePrefix("foo.bar.");
         Arguments.Factory f = new Arguments.Factory(m);
         Arguments t = f.getInstance(w);
         t.render(INT, BOOLEAN, STRING);
@@ -41,14 +40,13 @@ public class ArgumentTest
 
 
     public void testOptional()
-        throws IOException, 
+        throws IOException,
                JttException
     {
         Writer w = new StringWriter();
         StandardTemplateManager m =
             new StandardTemplateManager("templates",
                                         "build/work");
-        m.setPackagePrefix("foo.bar.");
         OptionalArguments.Factory f = new OptionalArguments.Factory(m);
         OptionalArguments t = f.getInstance(w);
         t.render(BOOLEAN, STRING);
@@ -65,4 +63,3 @@ public class ArgumentTest
     private static final String STRING = "foobar";
 
 }
-

@@ -10,7 +10,7 @@ import org.jamon.StandardTemplateManager;
 import org.jamon.StringUtils;
 import org.jamon.JttException;
 
-import foo.bar.test.jamon.PrivateMethods;
+import test.jamon.PrivateMethods;
 
 /************************************************************************************
  *
@@ -23,14 +23,13 @@ public class PrivateMethodTest
 {
 
     public void testExercise()
-        throws IOException, 
+        throws IOException,
                JttException
     {
         Writer w = new StringWriter();
         StandardTemplateManager m =
             new StandardTemplateManager("templates",
                                         "build/work");
-        m.setPackagePrefix("foo.bar.");
         PrivateMethods.Factory f = new PrivateMethods.Factory(m);
         PrivateMethods t = f.getInstance(w);
         t.render();

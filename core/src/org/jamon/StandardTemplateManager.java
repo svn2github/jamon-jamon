@@ -86,14 +86,9 @@ public class StandardTemplateManager
         m_javaCompiler = null;
     }
 
-    public void setPackagePrefix(String p_packagePrefix)
-    {
-        m_packagePrefix = p_packagePrefix == null ? "" : p_packagePrefix;
-    }
-
     private String getClassName(String p_path)
     {
-        return m_packagePrefix + StringUtils.pathToClassName(p_path) + "Impl";
+        return StringUtils.pathToClassName(p_path) + "Impl";
     }
 
     private Class loadAndResolveClass(String p_path)
@@ -141,22 +136,13 @@ public class StandardTemplateManager
     private boolean m_includeRtJar = false;
     private String m_classpath = "";
     private ClassLoader m_classLoader = ClassLoader.getSystemClassLoader();
-    private String m_packagePrefix = "";
     private JavaCompiler m_javaCompiler;
     private final WorkDirClassLoader m_loader;
 
 
     private String prefix()
     {
-        if (m_packagePrefix.length() > 0
-            && m_packagePrefix.charAt(m_packagePrefix.length()-1) == '.')
-        {
-            return m_workDir + StringUtils.classNameToPath(m_packagePrefix.substring(0,m_packagePrefix.length()-1));
-        }
-        else
-        {
-            return m_workDir + StringUtils.classNameToPath(m_packagePrefix);
-        }
+        return m_workDir;
     }
 
     private String javaImpl(String p_path)
@@ -272,7 +258,7 @@ public class StandardTemplateManager
         try
         {
             new ImplGenerator(writer,
-                              new TemplateResolver(m_packagePrefix),
+                              new TemplateResolver(),
                               m_describer,
                               ia)
                 .generateSource();
@@ -299,7 +285,7 @@ public class StandardTemplateManager
         FileWriter writer = new FileWriter(javaFile);
         try
         {
-            new IntfGenerator(new TemplateResolver(m_packagePrefix),
+            new IntfGenerator(new TemplateResolver(),
                               p_path,
                               bg,
                               writer)

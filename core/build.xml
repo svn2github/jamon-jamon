@@ -99,7 +99,6 @@
           classpath="${classes.dir}:${java.lib.sablecc}"
           classname="org.jamon.TemplateGenerator">
       <arg value="../${test.src.dir}" />
-      <arg value="foo.bar." />
       <arg value="${test.pkg}/TestTemplate" />
       <arg value="${test.pkg}/SubTemplate" />
       <arg value="${test.pkg}/Sub2" />

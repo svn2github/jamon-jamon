@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 import org.jamon.StandardTemplateManager;
 import org.jamon.StringUtils;
 
-import foo.bar.test.jamon.TestTemplate;
+import test.jamon.TestTemplate;
 
 public class Test1
 {
@@ -22,7 +22,6 @@ public class Test1
         StandardTemplateManager m =
             new StandardTemplateManager("templates",
                                         "build/work");
-        m.setPackagePrefix("foo.bar.");
         TestTemplate.Factory f = new TestTemplate.Factory(m);
         TestTemplate t = f.getInstance(w);
         t.setX(57);

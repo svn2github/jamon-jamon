@@ -10,7 +10,7 @@ import org.jamon.StandardTemplateManager;
 import org.jamon.StringUtils;
 import org.jamon.JttException;
 
-import foo.bar.test.jamon.Fragment;
+import test.jamon.Fragment;
 
 /************************************************************************************
  *
@@ -23,14 +23,13 @@ public class FragmentTest
 {
 
     public void testExercise()
-        throws IOException, 
+        throws IOException,
                JttException
     {
         Writer w = new StringWriter();
         StandardTemplateManager m =
             new StandardTemplateManager("templates",
                                         "build/work");
-        m.setPackagePrefix("foo.bar.");
         Fragment.Factory f = new Fragment.Factory(m);
         Fragment t = f.getInstance(w);
         t.render(1);

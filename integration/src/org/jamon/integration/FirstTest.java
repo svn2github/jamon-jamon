@@ -11,7 +11,7 @@ import gnu.regexp.RE;
 import org.jamon.StandardTemplateManager;
 import org.jamon.StringUtils;
 
-import foo.bar.test.jamon.TestTemplate;
+import test.jamon.TestTemplate;
 
 public class FirstTest
     extends TestCase
@@ -24,7 +24,6 @@ public class FirstTest
         StandardTemplateManager m =
             new StandardTemplateManager("templates",
                                         "build/work");
-        m.setPackagePrefix("foo.bar.");
         TestTemplate.Factory f = new TestTemplate.Factory(m);
         TestTemplate t = f.getInstance(w);
         t.setX(57);

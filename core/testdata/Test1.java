@@ -1,6 +1,6 @@
 package test.jamon;
 
-import foo.bar.test.jamon.TestTemplate;
+import test.jamon.TestTemplate;
 import java.io.*;
 import java.math.*;
 import org.jamon.*;
@@ -15,7 +15,6 @@ public class Test1
             StandardTemplateManager m =
                 new StandardTemplateManager("testdata",
                                             "test/work");
-            m.setPackagePrefix("foo.bar.");
             TestTemplate.Factory f = new TestTemplate.Factory(m);
             TestTemplate t = f.getInstance(w);
             t.setX(57);
