@@ -68,14 +68,7 @@ the documentation thus taking care of issues such as escaping.
       <srcfileset file="${java.lib.jamon}"/>
       <targetfileset refid="build-files"/>
     </dependset>
-  </target>
-
-  <target name="quickstart" depends="init" >
-    <property name="build.sysclasspath" value="last" />
     <copy file="${overview.samples.dir}/src/JamonQs.java" todir="${work.dir}"/>
-    <copy file="${overview.samples.dir}/src/JamonQs.java" todir="${doc.dir}"/>
-    <copy file="${overview.samples.dir}/templates/QsTemp.jamon"
-          todir="${doc.dir}"/>
     <jamon destdir="${work.dir}" srcdir="${overview.samples.dir}/templates">
       <include name="QsTemp.jamon"/>
     </jamon>
@@ -83,27 +76,23 @@ the documentation thus taking care of issues such as escaping.
            srcdir="${work.dir}"
            classpath="${java.lib.jamon}"
            includes="JamonQs.java,QsTemp.java,QsTempImpl.java" />
-    <tempfile property="temp.file" destdir="${work.dir}"/>
-    <java classname="JamonQs"
-          failonerror="true"
-          classpath="${work.dir}:${java.lib.jamon}"
-          output="${temp.file}" >
-      <arg line="one two three" />
-    </java>
+  </target>
+
+  <target name="quickstart" depends="init" >
+    <property name="build.sysclasspath" value="last" />
+    <copy file="${overview.samples.dir}/src/JamonQs.java" todir="${doc.dir}"/>
+    <copy file="${overview.samples.dir}/templates/QsTemp.jamon"
+          todir="${doc.dir}"/>
     <zip destfile="${www.dir}/JamonQs.zip"
          basedir="${www.dir}"
          includes="JamonQs.java,QsTemp.jamon" />
-    <loadfile property="quickstart.output" srcFile="${temp.file}" />
-    <delete file="${temp.file}" />
     <dirname property="this.dir" file="build.xml" />
     <invoker classpath="${java.lib.jamon}:${this.dir}"
              workDir="${work.dir}"
              compiler="${org.jamon.invoker.compiler}"
              sourceDir="templates"
              output="${doc.dir}/Overview.html"
-             template="/org/jamon/doc/Overview" >
-      <arg name="output" value="${quickstart.output}" />
-    </invoker>
+             template="/org/jamon/doc/Overview"/>
   </target>
 
   <target name="tutorial" depends="init" description="Tutorial docs">
@@ -428,6 +417,7 @@ the documentation thus taking care of issues such as escaping.
         <fileset dir="${tomcat.common.lib}" includes="*.jar" />
         <fileset dir="${tomcat.home}/server/lib" includes="*.jar" />
         <fileset dir="${tomcat.home}/bin" includes="*.jar" />
+        <pathelement location="${work.dir}" />
         <pathelement location="${this.dir}" />
       </classpath>
       <sysproperty key="catalina.home" value="."/>

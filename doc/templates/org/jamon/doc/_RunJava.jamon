@@ -1,0 +1,58 @@
+<%import>
+  java.io.ByteArrayOutputStream;
+  java.io.PrintStream;
+  java.lang.reflect.InvocationTargetException;
+  org.jamon.JamonException;
+  org.jamon.TemplateManagerSource;
+  org.jamon.StandardTemplateManager;
+</%import>
+
+<%args>
+  String className;
+  String[] args => new String[0];
+</%args>
+
+<pre class="tty">\
+<%java>
+  PrintStream oldOut = System.out;
+  String oldUserDir = System.getProperty("user.dir");
+  try
+  {
+    ByteArrayOutputStream trap = new ByteArrayOutputStream();
+    System.setOut(new PrintStream(trap));
+
+    TemplateManagerSource.setTemplateManager(new StandardTemplateManager(
+      new StandardTemplateManager.Data().setDynamicRecompilation(false)));
+
+    getClass().getClassLoader().loadClass(className)
+      .getDeclaredMethod("main", new Class[] { args.getClass() })
+      .invoke(null, new Object[] {args});
+    write(trap.toString());
+  }
+  catch (ClassNotFoundException e)
+  {
+      throw new JamonException(e);
+  }
+  catch (IllegalAccessException e)
+  {
+      throw new JamonException(e);
+  }
+  catch (IllegalArgumentException e)
+  {
+      throw new JamonException(e);
+  }
+  catch (InvocationTargetException e)
+  {
+      throw new JamonException(e);
+  }
+  catch (NoSuchMethodException e)
+  {
+      throw new JamonException(e);
+  }
+  finally
+  {
+      System.setOut(oldOut);
+      System.setProperty("user.dir", oldUserDir);
+  }
+</%java>
+</pre>
