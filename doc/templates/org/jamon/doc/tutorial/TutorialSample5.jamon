@@ -107,6 +107,6 @@ When this template is called by the java code
 <& _TutorialJavaFileInclude; fileName => "ClassExampleTut5" &>
 
 the output of the template's <code>render</code> method will be
-    <pre class="tty"><&| /org/jamon/escape/Html &><% output %></&></pre>
+    <pre class="tty"><% output %></pre>
 
 <p>
