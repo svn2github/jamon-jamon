@@ -9,7 +9,7 @@
 
 <%override title>Jamon Tutorial - Template Fragments</%override>
 
-<h2>Jamon Tutorial - Templates Fragments</h2>
+<h2>Jamon Tutorial - Template Fragments</h2>
 
 <ol>
 <li> <span class="concept"> Passing fragment arguments</span>
