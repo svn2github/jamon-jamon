@@ -166,6 +166,39 @@ public class Invoker
     }
 
     /**
+     * Construct an <code>Invoker</code> for a template path, using a
+     * {@link DefaultObjectParser} and the default {@link
+     * TemplateManager} as determined via the {@link
+     * TemplateManagerSource}.
+     *
+     * @param p_templateName the path of the template to be rendered
+     */
+    public Invoker(String p_templateName)
+        throws IOException
+    {
+        this(p_templateName,
+             new DefaultObjectParser());
+    }
+
+    /**
+     * Construct an <code>Invoker</code> for a template path using the
+     * specified {@ObjectParser}, and the default {@link
+     * TemplateManager} as determined via the {@link
+     * TemplateManagerSource}.
+     *
+     * @param p_templateName the path of the template to be rendered
+     * @param p_objectParser the object with which to translate
+     */
+    public Invoker(String p_templateName, ObjectParser p_objectParser)
+        throws IOException
+    {
+        this(TemplateManagerSource.getTemplateManagerFor(p_templateName),
+             p_templateName,
+             p_objectParser);
+    }
+
+
+    /**
      * Construct an <code>Invoker</code> with a template manager,
      * template path and a specific <code>ObjectParser</code>.
      *
