@@ -179,77 +179,17 @@ public class BaseAnalyzer
 
     protected String getUnitName()
     {
-        return (String) m_unitNames.get(m_unitNames.size()-1);
+        return (String) m_unitNames.getLast();
     }
 
-    private UnitInfo getUnitInfo(String p_unitName)
+    public UnitInfo getUnitInfo()
     {
-        return (UnitInfo) m_unit.get(p_unitName);
+        return getUnitInfo(MAIN_UNIT_NAME);
     }
 
-    private static class UnitInfo
+    public UnitInfo getUnitInfo(String p_unitName)
     {
-        UnitInfo(String p_name)
-        {
-            m_name = p_name;
-        }
-        private final String m_name;
-
-        String getName()
-        {
-            return m_name;
-        }
-
-        void addFarg(String p_name, String p_type)
-        {
-            addArg(p_name, p_type, null);
-            m_fargs.add(p_name);
-        }
-
-        void addArg(String p_name, String p_type, ADefault p_default)
-        {
-            if (p_default == null)
-            {
-                m_requiredArgs.add(p_name);
-                m_argTypes.put(p_name, p_type);
-            }
-            else
-            {
-                m_optionalArgs.add(p_name);
-                m_argTypes.put(p_name,p_type);
-                m_default.put(p_name,
-                              p_default.getArgexpr().toString().trim());
-            }
-        }
-        String getArgType(String p_argName)
-        {
-            return (String) m_argTypes.get(p_argName);
-        }
-        String getDefault(String p_argName)
-        {
-            return (String) m_default.get(p_argName);
-        }
-        Iterator getRequiredArgNames()
-        {
-            return m_requiredArgs.iterator();
-        }
-        Iterator getOptionalArgNames()
-        {
-            return m_optionalArgs.iterator();
-        }
-        Iterator getFargNames()
-        {
-            return m_fargs.iterator();
-        }
-        Map getArgumentMap()
-        {
-            return m_argTypes;
-        }
-        private final Map m_default = new HashMap();
-        private final Map m_argTypes = new HashMap();
-        private final List m_requiredArgs = new LinkedList();
-        private final List m_optionalArgs = new LinkedList();
-        private final List m_fargs = new LinkedList();
+        return (UnitInfo)m_unit.get(p_unitName);
     }
 
     private final List m_imports = new LinkedList();
@@ -257,7 +197,6 @@ public class BaseAnalyzer
     private final List m_defNames = new LinkedList();
     private final LinkedList m_unitNames = new LinkedList();
     private MessageDigest m_md5;
-
 
 
     private String asText(PName name)

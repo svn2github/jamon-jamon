@@ -223,15 +223,7 @@ public class ImplGenerator
         throws IOException
     {
         m_writer.print("public void render(");
-        for (Iterator i = m_analyzer.getRequiredArgNames(); i.hasNext(); /* */)
-        {
-            String name = (String) i.next();
-            m_writer.print("final " + m_analyzer.getArgType(name) + " " +name);
-            if (i.hasNext())
-            {
-                m_writer.print(", ");
-            }
-        }
+        m_analyzer.getUnitInfo().printRequiredArgsDecl(m_writer);
         m_writer.println(")");
 
         m_writer.print  ("  throws " + ClassNames.IOEXCEPTION);

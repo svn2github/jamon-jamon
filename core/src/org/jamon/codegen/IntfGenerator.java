@@ -232,17 +232,7 @@ public class IntfGenerator
         throws IOException
     {
         m_writer.print("public void render(");
-        for (Iterator i = m_analyzer.getRequiredArgNames(); i.hasNext(); /* */)
-        {
-            String name = (String) i.next();
-            m_writer.print(m_analyzer.getArgType(name));
-            m_writer.print(" p_");
-            m_writer.print(name);
-            if (i.hasNext())
-            {
-                m_writer.print(", ");
-            }
-        }
+        m_analyzer.getUnitInfo().printRequiredArgsDecl(m_writer);
         m_writer.println(")");
 
         m_writer.println("  throws java.io.IOException");
@@ -250,15 +240,7 @@ public class IntfGenerator
         m_writer.println("try");
         m_writer.openBlock();
         m_writer.print  ("getInstance().render(");
-        for (Iterator i = m_analyzer.getRequiredArgNames(); i.hasNext(); /* */)
-        {
-            m_writer.print("p_");
-            m_writer.print((String) i.next());
-            if (i.hasNext())
-            {
-                m_writer.print(", ");
-            }
-        }
+        m_analyzer.getUnitInfo().printRequiredArgs(m_writer);
         m_writer.println(");");
         m_writer.closeBlock();
         m_writer.println("finally");
@@ -290,18 +272,7 @@ public class IntfGenerator
         throws IOException
     {
         m_writer.print(  "public " + ClassNames.RENDERER + " makeRenderer(");
-        for (Iterator i = m_analyzer.getRequiredArgNames(); i.hasNext(); /* */)
-        {
-            m_writer.print("final ");
-            String name = (String) i.next();
-            m_writer.print(m_analyzer.getArgType(name));
-            m_writer.print(" p_");
-            m_writer.print(name);
-            if (i.hasNext())
-            {
-                m_writer.print(", ");
-            }
-        }
+        m_analyzer.getUnitInfo().printRequiredArgsDecl(m_writer);
         m_writer.println(")");
 
         m_writer.openBlock();
@@ -313,15 +284,7 @@ public class IntfGenerator
         m_writer.openBlock();
         m_writer.println("writeTo(p_writer);");
         m_writer.print  ("render(");
-        for (Iterator i = m_analyzer.getRequiredArgNames(); i.hasNext(); /* */)
-        {
-            m_writer.print("p_");
-            m_writer.print((String) i.next());
-            if (i.hasNext())
-            {
-                m_writer.print(", ");
-            }
-        }
+        m_analyzer.getUnitInfo().printRequiredArgs(m_writer);
         m_writer.println(");");
         m_writer.closeBlock();
         m_writer.closeBlock(";");
@@ -377,15 +340,7 @@ public class IntfGenerator
         generateFargInterfaces(true);
 
         m_writer.print("void render(");
-        for (Iterator i = m_analyzer.getRequiredArgNames(); i.hasNext(); /* */)
-        {
-            String name = (String) i.next();
-            m_writer.print(m_analyzer.getArgType(name) + " p_" + name);
-            if (i.hasNext())
-            {
-                m_writer.print(", ");
-            }
-        }
+        m_analyzer.getUnitInfo().printRequiredArgsDecl(m_writer);
         m_writer.println(")");
         m_writer.println("  throws java.io.IOException;");
         m_writer.println();
@@ -395,7 +350,7 @@ public class IntfGenerator
             String name = (String) i.next();
             m_writer.println("void set" + StringUtils.capitalize(name)
                              + "("
-                             + m_analyzer.getArgType(name) + " p_" + name
+                             + m_analyzer.getArgType(name) + " " + name
                              + ");");
         }
         m_writer.closeBlock();
