@@ -11,31 +11,18 @@ the documentation thus taking care of issues such as escaping.
   <property file="${user.home}/.ant.properties"/>
 
   <property name="build.dir" value="build"/>
-  <property name="build.src.dir" value="${build.dir}/src"/>
   <property name="classes.dir" value="${build.dir}/classes"/>
   <property name="html.dir" value="${build.dir}/html"/>
   <property name="java.lib.jamon" value="../jamon.jar"/>
   <property name="java.lib.diff" value="/usr/local/share/java/diff.jar"/>
 
-  <target name="templates">
-    <mkdir dir="${build.src.dir}" />
-    <taskdef name="jamon"
-             classname="org.jamon.ant.JamonTask"
-             classpath="${java.lib.jamon}" />
-    <jamon destdir="${build.src.dir}" generateImpls="true">
-      <src path="templates"/>
-    </jamon>
-  </target>
-
-  <target name="compile"
-          depends="templates">
+  <target name="compile">
     <mkdir dir="${classes.dir}"/>
     <javac destdir="${classes.dir}"
            debug="true"
            classpath="${java.lib.jamon}:${java.lib.diff}"
            deprecation="true">
       <src path="src"/>
-      <src path="${build.src.dir}"/>
     </javac>
   </target>
 
