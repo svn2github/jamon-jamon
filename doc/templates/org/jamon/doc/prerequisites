@@ -1,9 +1,10 @@
 <span class="concept">Prerequisites</span>
+To get the examples described in this document to work you will need
 <ul>
-  <li><a href="http://java.sun.com/j2se">Java SDK 1.2</a> or later
-  <li>A <a href="http://java.sun.com/products/servlet">servlet</a> container 
-      compliant with version 2.2 (or later) of the servlet specification
+  <li><a href="http://java.sun.com/j2se">Java SDK 1.2</a> or later,
+  <li>a <a href="http://java.sun.com/products/servlet">servlet</a> container 
+      compliant with version 2.2 (or later) of the servlet specification,
   <li><a href="http://www.jamon.org">Jamon</a> version 
-       <span class="fixme">0.?</span> or later
-  <li><a href="http://jakarta.apache.org/ant">Ant</a> version 1.4 or later
+       <span class="fixme">0.?</span> or later, and
+  <li><a href="http://jakarta.apache.org/ant">Ant</a> version 1.4 or later.
 </ul>
