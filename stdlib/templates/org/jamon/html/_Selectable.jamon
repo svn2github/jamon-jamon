@@ -16,16 +16,30 @@
   Reserved.
 
   Contributor(s): Ian Robertson
-</%doc>\
-<%abstract>\
+</%doc>
+
+<%abstract>
+
 <%args>
   org.jamon.render.html.SelectableInput input;
   String cssClass => null;
   String style => null;
   Boolean selected => null;
   String onClick => null;
-</%args>\
-<%method type></%method>\
+</%args>
+
+<%method type></%method>
+
+<%def ifNotNull>
+  <%args>
+    String key;
+    String value;
+  </%args>
+% if (value != null) {
+       <% key %>='<% value #H %>'
+% }
+</%def>
+
 <input type='<& type &>'
        name='<% input.getName() #H %>'
        value='<% input.getValue() #H %>'
@@ -35,13 +49,4 @@
 <& ifNotNull; key => "class"; value => cssClass &>\
 <& ifNotNull; key => "style"; value => style &>\
 <& ifNotNull; key => "onClick"; value => onClick &>\
-/>\
-<%def ifNotNull>\
-<%args>
-  String key;
-  String value;
-</%args>\
-% if (value != null) {
-       <% key %>='<% value #H %>'
-% }
-</%def>
+/>
