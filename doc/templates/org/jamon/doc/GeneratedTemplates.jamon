@@ -71,7 +71,7 @@ generated class would be:
     public MyTmpl writeTo(java.io.Writer p_writer)
       throws java.io.IOException { ... }
 
-    public MyTmpl escaping(Escaping escaping) { ... }
+    public MyTmpl escapeWith(Escaping escaping) { ... }
 
   }</&></pre>
 
