@@ -30,13 +30,6 @@ public class EscapingDirective
         return m_java;
     }
 
-
-    private static final String PREFIX =
-        org.jamon.escaping.Escaping.class.getName() + ".";
-
-    public static final EscapingDirective NONE =
-        new EscapingDirective(PREFIX + "NONE");
-
     public static EscapingDirective get(String p_abbreviation)
     {
         EscapingDirective result =
@@ -51,27 +44,29 @@ public class EscapingDirective
     }
 
 
+    private EscapingDirective(String p_java)
+    {
+        m_java = PREFIX + p_java;
+    }
+
     private final String m_java;
 
     private static final Map s_standardDirectives = new HashMap();
 
+    private static final String PREFIX =
+        org.jamon.escaping.Escaping.class.getName() + ".";
+
     static
     {
         s_standardDirectives.put("H",
-                                 new EscapingDirective(PREFIX + "STRICT_HTML"));
+                                 new EscapingDirective("STRICT_HTML"));
         s_standardDirectives.put("h",
-                                 new EscapingDirective(PREFIX + "HTML"));
+                                 new EscapingDirective("HTML"));
         s_standardDirectives.put("n",
-                                 NONE);
+                                 new EscapingDirective("NONE"));
         s_standardDirectives.put("u",
-                                 new EscapingDirective(PREFIX + "URL"));
+                                 new EscapingDirective("URL"));
         s_standardDirectives.put("x",
-                                 new EscapingDirective(PREFIX + "XML"));
+                                 new EscapingDirective("XML"));
     }
-
-    private EscapingDirective(String p_java)
-    {
-        m_java = p_java;
-    }
-
 }
