@@ -56,7 +56,7 @@ public class BaseGenerator extends AnalysisAdapter
             {
                 m_optionalArgs.add(p_name);
                 m_argTypes.put(p_name,p_type);
-                m_default.put(p_name, p_default.getFragment().toString().trim());
+                m_default.put(p_name, p_default.getExpr().toString().trim());
             }
         }
         String getArgType(String p_argName)
@@ -178,6 +178,16 @@ public class BaseGenerator extends AnalysisAdapter
         }
     }
 
+    public void caseAComponent(AComponent node)
+    {
+        node.getUnitComponent().apply(this);
+    }
+
+    public void caseAUnitComponent(AUnitComponent node)
+    {
+        node.getBaseComponent().apply(this);
+    }
+
     public void caseATemplate(ATemplate node)
     {
         for (Iterator i = node.getComponent().iterator(); i.hasNext(); /**/ )
@@ -195,7 +205,8 @@ public class BaseGenerator extends AnalysisAdapter
 
     public void caseAImportsComponent(AImportsComponent imports)
     {
-        for (Iterator i = imports.getName().iterator(); i.hasNext(); /* */ )
+        AImports imps = (AImports) imports.getImports();
+        for (Iterator i = imps.getName().iterator(); i.hasNext(); /* */ )
         {
             m_imports.add(asText((PName) i.next()));
         }
@@ -234,9 +245,10 @@ public class BaseGenerator extends AnalysisAdapter
         return str.toString();
     }
 
-    public void caseAArgsComponent(AArgsComponent args)
+    public void caseAArgsUnitComponent(AArgsUnitComponent args)
     {
-        for (Iterator i = args.getArg().iterator(); i.hasNext(); /**/ )
+        AArgs a = (AArgs) args.getArgs();
+        for (Iterator i = a.getArg().iterator(); i.hasNext(); /**/ )
         {
             ((Node)i.next()).apply(this);
         }
@@ -252,17 +264,16 @@ public class BaseGenerator extends AnalysisAdapter
             throw new RuntimeException("Can't nest def!");
         }
 
-        m_unitName = node.getIdentifier().getText();
+        ADef def = (ADef) node.getDef();
+        m_unitName = def.getIdentifier().getText();
         m_defNames.add(m_unitName);
         m_unit.put(m_unitName,new UnitInfo(m_unitName));
-        node.getDefStart().apply(this);
-        for (Iterator i = node.getComponent().iterator();
-             i.hasNext();
-             /* */ )
+        def.getDefStart().apply(this);
+        for (Iterator i = def.getUnitComponent().iterator(); i.hasNext(); /* */ )
         {
             ((Node)i.next()).apply(this);
         }
-        node.getDefEnd().apply(this);
+        def.getDefEnd().apply(this);
         m_unitName = MAIN_UNIT_NAME;
     }
 

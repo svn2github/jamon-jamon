@@ -48,12 +48,12 @@ public class ImplGenerator extends BaseGenerator
         generateEpilogue();
     }
 
-    public void caseABodyComponent(ABodyComponent node)
+    public void caseABodyBaseComponent(ABodyBaseComponent node)
     {
         m_current.append(node.getText().getText());
     }
 
-    public void caseANewlineComponent(ANewlineComponent node)
+    public void caseANewlineBaseComponent(ANewlineBaseComponent node)
     {
         m_current.append(node.getNewline().getText());
     }
@@ -64,21 +64,23 @@ public class ImplGenerator extends BaseGenerator
         super.caseADefComponent(node);
     }
 
-    public void caseAJavaComponent(AJavaComponent node)
+    public void caseAJavaBaseComponent(AJavaBaseComponent node)
     {
         handleBody();
         StringBuffer buf = new StringBuffer();
-        for (Iterator i = node.getAny().iterator(); i.hasNext(); /* */)
+        AJava java = (AJava) node.getJava();
+        for (Iterator i = java.getAny().iterator(); i.hasNext(); /* */)
         {
             buf.append(((TAny)i.next()).getText());
         }
         addStatement(new RawStatement(buf.toString()));
     }
 
-    public void caseAJlineComponent(AJlineComponent node)
+    public void caseAJlineBaseComponent(AJlineBaseComponent node)
     {
         handleBody();
-        addStatement(new RawStatement(node.getFragment().getText()));
+        AJline jline = (AJline) node.getJline();
+        addStatement(new RawStatement(jline.getExpr().getText()));
     }
 
     private void handleBody()
@@ -94,11 +96,12 @@ public class ImplGenerator extends BaseGenerator
         }
     }
 
-    public void caseAEmitComponent(AEmitComponent node)
+    public void caseAEmitBaseComponent(AEmitBaseComponent node)
     {
         handleBody();
         StringBuffer expr = new StringBuffer();
-        TEscape escape = node.getEscape();
+        AEmit emit = (AEmit) node.getEmit();
+        TEscape escape = emit.getEscape();
         Encoding encoding = Encoding.DEFAULT;
         if (escape != null)
         {
@@ -113,19 +116,20 @@ public class ImplGenerator extends BaseGenerator
                 throw new RuntimeException("Unknown escape " + c);
             }
         }
-        for (Iterator i = node.getAny().iterator(); i.hasNext(); /* */)
+        for (Iterator i = emit.getAny().iterator(); i.hasNext(); /* */)
         {
             expr.append(((TAny)i.next()).getText());
         }
         addStatement(new WriteStatement(expr.toString(), encoding));
     }
 
-    public void caseACallComponent(ACallComponent node)
+    public void caseACallBaseComponent(ACallBaseComponent node)
     {
         handleBody();
-        String path = asText(node.getPath());
+        ACall call = (ACall) node.getCall();
+        String path = asText(call.getPath());
         m_calls.add(path);
-        addStatement(new CallStatement(path,node.getParam()));
+        addStatement(new CallStatement(path,call.getParam()));
     }
 
     private String asText(PPath node)
