@@ -15,7 +15,7 @@
  * created by Luis O'Shea are Copyright (C) 2003 Luis O'Shea.  All Rights
  * Reserved.
  *
- * Contributor(s):
+ * Contributor(s): Ian Robertson
  */
 
 package org.jamon.tests.escaping;
@@ -31,25 +31,51 @@ import org.jamon.escaping.Escaping;
 public class EscapingTest
     extends TestCase
 {
+    public void testNoEscaping()
+        throws IOException
+    {
+        checkEscaping(Escaping.NONE, "<& &gt; &>!\"'");
+    }
 
     public void testHtmlEscaping()
         throws IOException
     {
-        check(Escaping.HTML, "&lt;&gt;&amp;\"'");
+        checkEscaping(Escaping.HTML, "&lt;&amp; &amp;gt; &amp;&gt;!\"'");
     }
 
     public void testStrictHtmlEscaping()
         throws IOException
     {
-        check(Escaping.STRICT_HTML, "&lt;&gt;&amp;&quot;&#39;");
+        checkEscaping(Escaping.STRICT_HTML,
+                      "&lt;&amp; &amp;gt; &amp;&gt;!&quot;&#39;");
     }
 
-    private void check(Escaping p_escaping, String p_expected)
+    public void testUrlEscaping()
+        throws IOException
+    {
+        checkEscaping(Escaping.URL, "%3C%26+%26gt%3B+%26%3E%21%22%27");
+    }
+
+    public void testXmlEscaping()
+        throws IOException
+    {
+        checkEscaping(Escaping.XML,
+                      "&lt;&amp; &amp;gt; &amp;&gt;!&quot;&apos;");
+    }
+
+    private void checkEscaping(Escaping p_escaping, String p_expected)
+        throws IOException
+    {
+        check(p_escaping, "", "");
+        check(p_escaping, "hello", "hello");
+        check(p_escaping, "<& &gt; &>!\"'", p_expected);
+    }
+
+    private void check(Escaping p_escaping, String p_text, String p_expected)
         throws IOException
     {
         Writer writer = new StringWriter();
-        p_escaping.write("<>&\"'", writer);
+        p_escaping.write(p_text, writer);
         assertEquals(p_expected, writer.toString());
     }
-
 }
