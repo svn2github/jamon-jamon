@@ -47,6 +47,7 @@ public class ComponentCallStatement
                                TemplateDescriber p_describer)
         throws IOException
     {
+        generateSourceLine(p_writer);
         p_writer.openBlock();
         TemplateDescription desc =
             p_describer.getTemplateDescription(getPath(),
