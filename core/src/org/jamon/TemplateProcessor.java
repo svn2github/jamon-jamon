@@ -61,8 +61,9 @@ public class TemplateProcessor
                ParserException,
                LexerException
     {
-        System.out.println(p_filename);
-        String templateName = p_filename;
+        int pPos = p_filename.indexOf('.');
+        String templateName =
+            pPos < 0 ? p_filename : p_filename.substring(0,pPos);
         String pkg = "";
         int fsPos = templateName.lastIndexOf(File.separator);
         if (fsPos == 0)
