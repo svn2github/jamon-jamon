@@ -13,7 +13,8 @@ public final class HelloServlet
     extends HttpServlet {
 
     public void init() {
-        RecompilingTemplateManager.Data data = new RecompilingTemplateManager.Data();
+        RecompilingTemplateManager.Data data =
+            new RecompilingTemplateManager.Data();
         data.setSourceDir("templates");
         data.setWorkDir("build/work");
         TemplateManagerSource.setTemplateManager(

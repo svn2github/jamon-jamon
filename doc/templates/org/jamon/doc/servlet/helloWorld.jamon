@@ -61,7 +61,8 @@ and the servlet APIs.  For example, say the jamon JAR file is in
 <code>/usr/share/java/jamon.jar</code> and the servlet APIs are in
 <code>/somewhere/else/servlet.jar</code>, then you would execute it by typing:
 
-<pre class="tty">% ant -Djava.lib.jamon=/usr/share/java/jamon.jar -Djava.lib.servlet=/somewhere/else/servlet.jar</pre>
+<pre class="tty">% ant -Djava.lib.jamon=/usr/share/java/jamon.jar \ 
+     -Djava.lib.servlet=/somewhere/else/servlet.jar</pre>
 
 This will translate the Jamon source into Java, compile them and the servlet, and
 place it all into a WAR file called <code>foobar.war</code>.
