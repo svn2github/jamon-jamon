@@ -25,26 +25,32 @@ public class StandardTemplateManager
         }
         catch (ClassNotFoundException e)
         {
+            e.printStackTrace();
             throw new RuntimeException(e.getMessage());
         }
         catch (NoSuchMethodException e)
         {
+            e.printStackTrace();
             throw new RuntimeException(e.getMessage());
         }
         catch (InstantiationException e)
         {
+            e.printStackTrace();
             throw new RuntimeException(e.getMessage());
         }
         catch (IllegalAccessException e)
         {
+            e.printStackTrace();
             throw new RuntimeException(e.getMessage());
         }
         catch (IllegalArgumentException e)
         {
+            e.printStackTrace();
             throw new RuntimeException(e.getMessage());
         }
         catch (InvocationTargetException e)
         {
+            e.printStackTrace();
             throw new RuntimeException(e.getMessage());
         }
     }
