@@ -39,6 +39,58 @@ import java.util.Set;
 import java.util.HashSet;
 import org.jamon.node.Start;
 
+/**
+ * The standard implementation of the @{link TemplateManager}
+ * interface.  The <code>StandardTemplateManager</code> actually
+ * functions in both development and production environments,
+ * depending on how it is configured. In its default configuration,
+ * the <code>StandardTemplateManager</code> supports dynamic
+ * regeneration and recompilation of templates as they are changed,
+ * much as JSP does.
+ *
+ * The properties which control the behavior are:
+ * <ul>
+
+ *   <li>{@link #setSourceDir} - determines where the
+ *   <code>StandardTemplateManager</code> looks for template source
+ *   files. Default is the current directory, which is most likely
+ *   unsuitable for most situations.
+
+ *   <li>{@link #setWorkDir} - determines where the generated Java
+ *   source files corresponding to templates are placed. Default is
+ *   uniquely generated subdirectory under the directory specified by
+ *   the system property <tt>java.io.tmpdir</tt>.
+
+ *   <li>{@link #setDynamicRecompilation} - determines whether classes
+ *   corresponding to templates should be dynamically recompiled as
+ *   necessary. Default is true; set to false for production.
+
+ *   <li>{@link #setCacheSize} - used to set the maximum number of
+ *   template instances cached. Default is 50.
+
+ *   <li>{@link #setJavaCompiler} - determines what program to execute
+ *   to compile the generated Java source files. Default is
+ *   <tt>bin/javac</tt> under the directory specified by the system
+ *   property <tt>java.home</tt>.
+
+ *   <li>{@link #setJavaCompilerNeedsRtJar} - determines whether rt.jar
+ *   needs to be explicitly supplied in the classpath when compiling
+ *   generated Java source files; this is useful to enable compilation
+ *   via <code>Jikes</code>. Default is false.
+
+ *   <li>{@link #setClasspath} - used to specify additional components
+ *   to prepend to the classpath when compiling generated Java source
+ *   files. Default is null.
+
+ *   <li>{@link #setAutoFlush} - determines whether templates
+ *   automatically flush the writer after rendering. Default is true.
+
+ *   <li>{@link #setClassLoader} - used to set the class loader
+ *   explicitly. Default is use the class laoder of the
+ *   <code>StandardTemplateManager</code> instance.
+
+ * </ul>
+ */
 
 public class StandardTemplateManager
     implements TemplateManager
@@ -66,6 +118,19 @@ public class StandardTemplateManager
         }
     }
 
+    /**
+     * Provided for subclasses and composing classes. Given a template
+     * path, return an appropriate instance which corresponds to the
+     * executable code for that template.
+     *
+     * @param p_path the path to the template
+     * @param p_manager the {@link TemplateManager} to supply to the
+     * template
+     *
+     * @return a <code>Template</code> instance
+     *
+     * @exception JamonException if something goes wrong
+     */
     public AbstractTemplateImpl getInstance(String p_path,
                                             TemplateManager p_manager)
         throws JamonException
@@ -98,11 +163,30 @@ public class StandardTemplateManager
         }
     }
 
+    /**
+     * Set whether templates automatically flush the writer after
+     * rendering. Default is true.
+     *
+     * @param p_autoFlush whether template instances should flush automatically
+     *
+     * @return this
+     */
+
     public StandardTemplateManager setAutoFlush(boolean p_autoFlush)
     {
         m_autoFlush = p_autoFlush;
         return this;
     }
+
+    /**
+     * Set the parent class loader for template instances. Default is
+     * use the class laoder of the
+     * <code>StandardTemplateManager</code> instance.
+     *
+     * @param p_classLoader the <code>ClassLoader</code> to use.
+     *
+     * @return this
+     */
 
     public StandardTemplateManager setClassLoader(ClassLoader p_classLoader)
     {
@@ -111,6 +195,15 @@ public class StandardTemplateManager
         return this;
     }
 
+    /**
+     * Set the maximum number of * template instances cached. Default
+     * is 50.
+     *
+     * @param p_cacheSize the cache size
+     *
+     * @return this
+     */
+
     public StandardTemplateManager setCacheSize(int p_cacheSize)
     {
         m_cacheSize = p_cacheSize;
@@ -118,6 +211,15 @@ public class StandardTemplateManager
         return this;
     }
 
+    /**
+     * Determines where to look for template source
+     * files. Default is the current directory, which is most likely
+     * unsuitable for most situations.
+     *
+     * @param p_templateSourceDir where to look for template sources
+     *
+     * @return this
+     */
     public StandardTemplateManager setSourceDir(String p_templateSourceDir)
     {
         m_templateSourceDir = p_templateSourceDir;
@@ -125,6 +227,16 @@ public class StandardTemplateManager
         return this;
     }
 
+    /**
+     * Set where the generated Java source files corresponding to
+     * templates are placed. Default is uniquely generated subdirectory
+     * under the directory specified by the system property
+     * <tt>java.io.tmpdir</tt>.
+     *
+     * @param p_workDir where to place generated java files
+     *
+     * @return this
+     */
     public StandardTemplateManager setWorkDir(String p_workDir)
     {
         m_workDir = p_workDir;
@@ -132,6 +244,15 @@ public class StandardTemplateManager
         return this;
     }
 
+    /**
+     *  Set what program to execute to compile the generated Java
+     *  source files. Default is <tt>bin/javac</tt> under the
+     *  directory specified by the system property <tt>java.home</tt>.
+     *
+     * @param p_javac the java compiler program path
+     *
+     * @return this
+     */
     public StandardTemplateManager setJavaCompiler(String p_javac)
     {
         m_javac = p_javac;
@@ -139,6 +260,17 @@ public class StandardTemplateManager
         return this;
     }
 
+    /**
+     * Set whether rt.jar needs to be explicitly supplied in the
+     * classpath when compiling generated Java source files; this is
+     * useful to enable compilation via <code>Jikes</code>. Default is
+     * false.
+     *
+     * @param p_includertJar whether to include <code>rt.jar</code> in
+     * the classpath supplied to the java compiler
+     *
+     * @return this
+     */
     public StandardTemplateManager setJavaCompilerNeedsRtJar(boolean p_includeRtJar)
     {
         m_includeRtJar = p_includeRtJar;
@@ -146,12 +278,31 @@ public class StandardTemplateManager
         return this;
     }
 
+    /**
+     * Specify additional components to prepend to the classpath when
+     * compiling generated Java source files. Default is null.
+     *
+     * @param p_classpath classpath components prepended to the
+     * classpath supplied to the java compiler
+     *
+     * @return this
+     */
     public StandardTemplateManager setClasspath(String p_classpath)
     {
         m_classpath = p_classpath;
         m_javaCompiler = null;
         return this;
     }
+    /**
+     * Determines whether classes
+     * corresponding to templates should be dynamically recompiled as
+     * necessary. Default is true; set to false for production.
+     *
+     * @param p_dynamicRecompilation whether to dynamically regenerate
+     * and recompile changed templates
+     *
+     * @return this
+     */
 
     public StandardTemplateManager setDynamicRecompilation(boolean p_dynamicRecompilation)
     {
