@@ -1,6 +1,6 @@
 <%farg content></%farg><%args>
   Escaping escaping;
-  boolean compose => false;
+  boolean compose;
 </%args><%import>
   java.io.Writer;
   java.io.StringWriter;

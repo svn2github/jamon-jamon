@@ -1,7 +1,7 @@
 <%farg content>
 </%farg>\
 <%args>
-  boolean replace => true;
+  boolean compose => false;
 </%args>\
-<&| _escape; replace => replace; 
+<&| _escape; compose => compose;
              escaping => org.jamon.Escaping.STRICT_HTML &><& content &></&>\
