@@ -25,6 +25,7 @@
         <& _menuItem; section => "Download"; href => "Download"; current => section &>
         <& _menuItem; section => "Documentation"; href => "Documentation"; current => section &>
         <& _menuItem; section => "Contact"; href => "Contact"; current => section &>
+        <& _menuItem; section => "Credits"; href => "Credits"; current => section &>
       </ul>
     </div>
     <div id="main">
