@@ -26,8 +26,8 @@
 
       <li value="1" type="A"><& usingTomcat &></li>
 
-      <li type="A"><span class="concept">Some More Elements From the Standard Library</span>
-        TBA
+      <li type="A">
+        <& inputElements &>
       </li>
 
       <li type="A"><span class="concept">Colophon</span>
