@@ -20,18 +20,18 @@
 
 package org.jamon.codegen;
 
-import java.io.Writer;
+import java.io.OutputStream;
 import java.util.Iterator;
 import org.jamon.emit.EmitMode;
 
 public class ImplGenerator
 {
-    public ImplGenerator(Writer p_writer,
+    public ImplGenerator(OutputStream p_out,
                          TemplateDescriber p_describer,
                          TemplateUnit p_templateUnit,
                          EmitMode p_emitMode)
     {
-        m_writer = new CodeWriter(p_writer);
+        m_writer = new CodeWriter(p_out);
         m_describer = p_describer;
         m_templateUnit = p_templateUnit;
         m_emitMode = p_emitMode;

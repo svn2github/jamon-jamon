@@ -21,8 +21,7 @@
 package org.jamon;
 
 import java.io.File;
-import java.io.FilenameFilter;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Writer;
 import java.net.URL;
@@ -578,17 +577,17 @@ public class RecompilingTemplateManager
         TemplateUnit templateUnit = new Analyzer(p_path,p_describer).analyze();
 
         File javaFile = getWriteableFile(javaImpl(p_path));
-        FileWriter writer = new FileWriter(javaFile);
+        FileOutputStream out = new FileOutputStream(javaFile);
         try
         {
-            new ImplGenerator(writer, p_describer, templateUnit, m_emitMode)
+            new ImplGenerator(out, p_describer, templateUnit, m_emitMode)
                 .generateSource();
-            writer.close();
+            out.close();
             return templateUnit.getTemplateDependencies();
         }
         catch (IOException e)
         {
-            writer.close();
+            out.close();
             javaFile.delete();
             throw e;
         }
@@ -643,16 +642,16 @@ public class RecompilingTemplateManager
             trace("generating intf for " + p_path);
         }
         File javaFile = getWriteableFile(javaIntf(p_path));
-        FileWriter writer = new FileWriter(javaFile);
+        FileOutputStream out = new FileOutputStream(javaFile);
         try
         {
-            new ProxyGenerator(writer, p_describer, p_templateUnit)
+            new ProxyGenerator(out, p_describer, p_templateUnit)
                 .generateClassSource();
-            writer.close();
+            out.close();
         }
         catch (IOException e)
         {
-            writer.close();
+            out.close();
             javaFile.delete();
             throw e;
         }

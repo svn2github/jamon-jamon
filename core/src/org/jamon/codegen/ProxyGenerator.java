@@ -20,7 +20,7 @@
 
 package org.jamon.codegen;
 
-import java.io.Writer;
+import java.io.OutputStream;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -28,11 +28,11 @@ import java.util.LinkedList;
 
 public class ProxyGenerator
 {
-    public ProxyGenerator(Writer p_writer,
+    public ProxyGenerator(OutputStream p_out,
                           TemplateDescriber p_describer,
                           TemplateUnit p_templateUnit)
     {
-        m_writer = new CodeWriter(p_writer);
+        m_writer = new CodeWriter(p_out);
         m_describer = p_describer;
         m_templateUnit = p_templateUnit;
     }

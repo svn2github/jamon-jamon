@@ -21,7 +21,7 @@
 package org.jamon;
 
 import java.io.File;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
 import org.jamon.util.StringUtils;
@@ -80,18 +80,18 @@ public class TemplateProcessor
              m_describer)
             .analyze();
         pkgDir.mkdirs();
-        FileWriter writer = new FileWriter(javaFile);
+        FileOutputStream out = new FileOutputStream(javaFile);
 
         try
         {
-            new ProxyGenerator(writer, m_describer, templateUnit)
+            new ProxyGenerator(out, m_describer, templateUnit)
                 .generateClassSource();
         }
         catch (RuntimeException e)
         {
             try
             {
-                writer.close();
+                out.close();
                 javaFile.delete();
             }
             finally
@@ -103,7 +103,7 @@ public class TemplateProcessor
         {
             try
             {
-                writer.close();
+                out.close();
                 javaFile.delete();
             }
             finally
@@ -111,20 +111,20 @@ public class TemplateProcessor
                 throw e;
             }
         }
-        writer.close();
+        out.close();
 
         javaFile = new File(pkgDir, className + "Impl.java");
-        writer = new FileWriter(javaFile);
+        out = new FileOutputStream(javaFile);
         try
         {
-            new ImplGenerator(writer, m_describer, templateUnit, m_emitMode)
+            new ImplGenerator(out, m_describer, templateUnit, m_emitMode)
                 .generateSource();
         }
         catch (RuntimeException e)
         {
             try
             {
-                writer.close();
+                out.close();
                 javaFile.delete();
             }
             finally
@@ -136,7 +136,7 @@ public class TemplateProcessor
         {
             try
             {
-                writer.close();
+                out.close();
                 javaFile.delete();
             }
             finally
@@ -144,7 +144,7 @@ public class TemplateProcessor
                 throw e;
             }
         }
-        writer.close();
+        out.close();
     }
 
     private static void showHelp()

@@ -15,18 +15,39 @@
  * created by Ian Robertson are Copyright (C) 2003 Ian Robertson.  All Rights
  * Reserved.
  *
- * Contributor(s):
+ * Contributor(s): Jay Sachs
  */
 
 package org.jamon.codegen;
 
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import org.jamon.node.Token;
 
 public class CodeWriter
 {
+    static final String JAVA_SOURCE_ENCODING = "US-ASCII";
+
+    public CodeWriter(OutputStream p_stream)
+    {
+        try
+        {
+            m_writer = new PrintWriter(new OutputStreamWriter(p_stream, JAVA_SOURCE_ENCODING));
+        }
+        catch (UnsupportedEncodingException e)
+        {
+            // us-ascii is guaranteed to be available
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * @deprecated only use the Stream constructor
+     */
     public CodeWriter(Writer p_writer)
     {
         m_writer = new PrintWriter(p_writer);
