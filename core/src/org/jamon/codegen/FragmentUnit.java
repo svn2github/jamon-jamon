@@ -75,11 +75,11 @@ public class FragmentUnit extends AbstractInnerUnit
         if (! p_isCopy)
         {
             p_writer.print  ("void render(");
-            printRequiredArgsDecl(p_writer);
+            printRenderArgsDecl(p_writer);
             p_writer.println(")");
             p_writer.println("  throws java.io.IOException;");
             p_writer.print(ClassNames.RENDERER + " makeRenderer(");
-            printRequiredArgsDecl(p_writer);
+            printRenderArgsDecl(p_writer);
             p_writer.println(");");
         }
         p_writer.closeBlock();

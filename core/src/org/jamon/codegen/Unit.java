@@ -41,7 +41,7 @@ public interface Unit
     void addRequiredArg(RequiredArgument p_arg);
     void addOptionalArg(OptionalArgument p_arg);
 
-    void printRequiredArgsDecl(IndentingWriter p_writer);
+    void printRenderArgsDecl(IndentingWriter p_writer);
     void generateRenderBody(IndentingWriter p_writer,
                             TemplateDescriber p_describer)
         throws IOException;

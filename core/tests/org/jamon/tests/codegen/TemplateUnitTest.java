@@ -86,7 +86,7 @@ public class TemplateUnitTest
         checkArgList(new RequiredArgument[] {pr1, pr2, cr3},
                      child.getSignatureRequiredArgs());
         checkArgList(new RequiredArgument[] {cr3},
-                     child.getDeclaredRequiredArgs());
+                     child.getDeclaredRenderArgs());
         checkArgSet(new AbstractArgument[] {pr2, cr3, po2, co3},
                      child.getVisibleArgs());
         checkArgSet(new OptionalArgument[] {po1, po2, co3},
@@ -104,7 +104,7 @@ public class TemplateUnitTest
         checkArgList(new RequiredArgument[] {pr1, pr2, cr3},
                      grandchild.getSignatureRequiredArgs());
         checkArgList(new RequiredArgument[0],
-                     grandchild.getDeclaredRequiredArgs());
+                     grandchild.getDeclaredRenderArgs());
         checkArgSet(new AbstractArgument[] {}, grandchild.getVisibleArgs());
         checkArgSet(new OptionalArgument[] {po1, po2, co3},
                     grandchild.getSignatureOptionalArgs());

@@ -91,7 +91,7 @@ public abstract class AbstractCallStatement
         p_writer.println("super(p_manager, p_escaping);");
         p_writer.closeBlock();
         p_writer.print("public " + ClassNames.RENDERER + " makeRenderer(");
-        fragmentUnitImpl.printRequiredArgsDecl(p_writer);
+        fragmentUnitImpl.printRenderArgsDecl(p_writer);
         p_writer.println(")");
         p_writer.openBlock();
         p_writer.print(  "return new " + ClassNames.RENDERER + "()");
@@ -104,14 +104,14 @@ public abstract class AbstractCallStatement
         p_writer.openBlock();
         p_writer.println("writeTo(p_writer);");
         p_writer.print  ("render(");
-        fragmentUnitImpl.printRequiredArgs(p_writer);
+        fragmentUnitImpl.printRenderArgs(p_writer);
         p_writer.println(");");
         p_writer.closeBlock();
         p_writer.closeBlock(";");
         p_writer.closeBlock();
 
         p_writer.print("public void render(");
-        fragmentUnitImpl.printRequiredArgsDecl(p_writer);
+        fragmentUnitImpl.printRenderArgsDecl(p_writer);
         p_writer.print(") throws ");
         p_writer.println(ClassNames.IOEXCEPTION);
         fragmentUnitImpl.generateRenderBody(p_writer, p_describer);

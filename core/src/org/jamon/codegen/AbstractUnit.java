@@ -121,14 +121,14 @@ public abstract class AbstractUnit
 
 
 
-    public void printRequiredArgsDecl(IndentingWriter p_writer)
+    public void printRenderArgsDecl(IndentingWriter p_writer)
     {
         printArgsDecl(p_writer,
                       new SequentialIterator(getSignatureRequiredArgs(),
                                              getFragmentArgs()));
     }
 
-    public void printRequiredArgs(IndentingWriter p_writer)
+    public void printRenderArgs(IndentingWriter p_writer)
     {
         printArgs(p_writer, new SequentialIterator(getSignatureRequiredArgs(),
                                                    getFragmentArgs()));

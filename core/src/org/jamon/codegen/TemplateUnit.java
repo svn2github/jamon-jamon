@@ -162,10 +162,10 @@ public class TemplateUnit
     public Iterator getVisibleArgs()
     {
         return m_inheritedArgs == null
-            ? new SequentialIterator(getDeclaredRequiredArgs(),
+            ? new SequentialIterator(getDeclaredRenderArgs(),
                                      getDeclaredOptionalArgs())
             : new SequentialIterator(m_inheritedArgs.getVisibleArgs(),
-                                     getDeclaredRequiredArgs(),
+                                     getDeclaredRenderArgs(),
                                      getDeclaredOptionalArgs());
     }
 
@@ -348,30 +348,30 @@ public class TemplateUnit
         }
     }
 
-    private Iterator getParentRequiredArgs()
+    private Iterator getParentRenderArgs()
     {
         return new SequentialIterator
             (m_parentDescription.getRequiredArgs().iterator(),
              m_parentDescription.getFragmentInterfaces().iterator());
     }
 
-    public void printParentRequiredArgs(IndentingWriter p_writer)
+    public void printParentRenderArgs(IndentingWriter p_writer)
     {
-        printArgs(p_writer, getParentRequiredArgs());
+        printArgs(p_writer, getParentRenderArgs());
     }
 
-    public void printParentRequiredArgsDecl(IndentingWriter p_writer)
+    public void printParentRenderArgsDecl(IndentingWriter p_writer)
     {
-        printArgsDecl(p_writer, getParentRequiredArgs());
+        printArgsDecl(p_writer, getParentRenderArgs());
     }
 
-    public Iterator getRequiredArgs()
+    public Iterator getRenderArgs()
     {
-        return new SequentialIterator(getParentRequiredArgs(),
-                                      getDeclaredRequiredArgs());
+        return new SequentialIterator(getParentRenderArgs(),
+                                      getDeclaredRenderArgs());
     }
 
-    public Iterator getDeclaredRequiredArgs()
+    public Iterator getDeclaredRenderArgs()
     {
         return new SequentialIterator(m_declaredRequiredArgs.iterator(),
                                       m_declaredFragmentArgs.iterator());
@@ -379,18 +379,18 @@ public class TemplateUnit
 
     public Iterator getDeclaredArgs()
     {
-        return new SequentialIterator(getDeclaredRequiredArgs(),
+        return new SequentialIterator(getDeclaredRenderArgs(),
                                       m_declaredOptionalArgs.iterator());
     }
 
-    public void printDeclaredRequiredArgs(IndentingWriter p_writer)
+    public void printDeclaredRenderArgs(IndentingWriter p_writer)
     {
-        printArgs(p_writer, getDeclaredRequiredArgs());
+        printArgs(p_writer, getDeclaredRenderArgs());
     }
 
-    public void printDeclaredRequiredArgsDecl(IndentingWriter p_writer)
+    public void printDeclaredRenderArgsDecl(IndentingWriter p_writer)
     {
-        printArgsDecl(p_writer, getDeclaredRequiredArgs());
+        printArgsDecl(p_writer, getDeclaredRenderArgs());
     }
 
     public void printInterfaces(IndentingWriter p_writer)

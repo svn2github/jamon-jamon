@@ -293,13 +293,13 @@ public class ProxyGenerator
     {
         m_writer.print((m_templateUnit.isParent() ? "protected" : "public")
                        + " void render(");
-        m_templateUnit.printRequiredArgsDecl(m_writer);
+        m_templateUnit.printRenderArgsDecl(m_writer);
         m_writer.println(")");
 
         m_writer.println("  throws " + ClassNames.IOEXCEPTION);
         m_writer.openBlock();
         m_writer.println("ImplData implData = (ImplData) getImplData();");
-        for (Iterator i = m_templateUnit.getRequiredArgs(); i.hasNext(); )
+        for (Iterator i = m_templateUnit.getRenderArgs(); i.hasNext(); )
         {
             AbstractArgument arg = (AbstractArgument) i.next();
             m_writer.println("implData." + arg.getSetterName()
@@ -323,7 +323,7 @@ public class ProxyGenerator
                         ? "public "
                         : "protected " );
         m_writer.print(ClassNames.RENDERER + " makeRenderer(");
-        m_templateUnit.printRequiredArgsDecl(m_writer);
+        m_templateUnit.printRenderArgsDecl(m_writer);
         m_writer.println(")");
 
         m_writer.openBlock();
@@ -335,7 +335,7 @@ public class ProxyGenerator
         m_writer.openBlock();
         m_writer.println("writeTo(p_writer);");
         m_writer.print  ("render(");
-        m_templateUnit.printRequiredArgs(m_writer);
+        m_templateUnit.printRenderArgs(m_writer);
         m_writer.println(");");
         m_writer.closeBlock();
         m_writer.closeBlock(";");
@@ -465,12 +465,12 @@ public class ProxyGenerator
         if (! m_templateUnit.hasParentPath())
         {
             m_writer.print("public void render(");
-            m_templateUnit.printDeclaredRequiredArgsDecl(m_writer);
+            m_templateUnit.printDeclaredRenderArgsDecl(m_writer);
             m_writer.println(")");
             m_writer.print("  throws " + ClassNames.IOEXCEPTION);
             m_writer.openBlock();
             m_writer.print("renderChild(");
-            m_templateUnit.printDeclaredRequiredArgs(m_writer);
+            m_templateUnit.printDeclaredRenderArgs(m_writer);
             m_writer.println(");");
             m_writer.closeBlock();
 
@@ -486,7 +486,7 @@ public class ProxyGenerator
         }
 
         m_writer.print("protected abstract void renderChild(");
-        m_templateUnit.printRequiredArgsDecl(m_writer);
+        m_templateUnit.printRenderArgsDecl(m_writer);
         m_writer.println(")");
         m_writer.println("  throws " + ClassNames.IOEXCEPTION + ";");
 
@@ -500,13 +500,13 @@ public class ProxyGenerator
                 m_templateUnit.getParentPath()) + ".ParentRenderer";
         m_writer.print("public " + parentRendererClass
                        + " makeParentRenderer(");
-        m_templateUnit.printDeclaredRequiredArgsDecl(m_writer);
+        m_templateUnit.printDeclaredRenderArgsDecl(m_writer);
         m_writer.println(")");
         m_writer.openBlock();
         m_writer.print("return new " + parentRendererClass + "() ");
         m_writer.openBlock();
         m_writer.print("protected void renderChild(");
-        m_templateUnit.printParentRequiredArgsDecl(m_writer);
+        m_templateUnit.printParentRenderArgsDecl(m_writer);
         m_writer.println(")");
         m_writer.println("  throws " + ClassNames.IOEXCEPTION);
         m_writer.openBlock();
@@ -515,7 +515,7 @@ public class ProxyGenerator
             m_writer.print
                 (PathUtils.getFullyQualifiedIntfClassName(getClassName())
                  + ".ParentRenderer.this.renderChild(");
-            m_templateUnit.printRequiredArgs(m_writer);
+            m_templateUnit.printRenderArgs(m_writer);
             m_writer.println(");");
         }
         else
@@ -523,7 +523,7 @@ public class ProxyGenerator
             m_writer.print(
                 PathUtils.getFullyQualifiedIntfClassName(getClassName())
                 + ".this.render(");
-            m_templateUnit.printRequiredArgs(m_writer);
+            m_templateUnit.printRenderArgs(m_writer);
             m_writer.println(");");
         }
         m_writer.closeBlock();
