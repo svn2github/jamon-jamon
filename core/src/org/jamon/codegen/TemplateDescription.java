@@ -58,6 +58,10 @@ public class TemplateDescription
         addAll(m_requiredArgs, p_templateUnit.getSignatureRequiredArgs() );
         m_optionalArgs = new HashSet();
         addAll(m_optionalArgs, p_templateUnit.getSignatureOptionalArgs() );
+        for (Iterator i = m_optionalArgs.iterator(); i.hasNext(); )
+        {
+            ((OptionalArgument) i.next()).setDefault(null);
+        }
         m_signature = p_templateUnit.getSignature();
         m_fragmentInterfaces = p_templateUnit.getFragmentArgsList();
         m_methodUnits = new HashMap();
