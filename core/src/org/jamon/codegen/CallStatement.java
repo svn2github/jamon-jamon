@@ -63,7 +63,7 @@ public class CallStatement
     private String getFargName(String p_fargName,
                                ImplAnalyzer p_analyzer,
                                TemplateDescriber p_describer)
-        throws JamonException
+        throws IOException
     {
         if (p_fargName != null)
         {

@@ -30,7 +30,6 @@ import java.util.StringTokenizer;
 import java.io.File;
 import java.io.Reader;
 import java.io.IOException;
-import java.io.FileNotFoundException;
 import java.io.PushbackReader;
 
 import org.jamon.JamonException;
@@ -55,11 +54,11 @@ public class TemplateDescriber
     public FargInfo getFargInfo(String p_path, String p_fargName)
         throws IOException
     {
-        try
+        if (m_templateSource.available(p_path))
         {
             return new BaseAnalyzer(parseTemplate(p_path)).getFargInfo(p_fargName);
         }
-        catch (FileNotFoundException fnfe)
+        else
         {
             try
             {
@@ -83,14 +82,14 @@ public class TemplateDescriber
     }
 
     public Iterator getFargNames(String p_path)
-        throws JamonException
+        throws IOException
     {
-        try
+        if (m_templateSource.available(p_path))
         {
             return new BaseAnalyzer(parseTemplate(p_path))
                 .getUnitInfo().getFargNames();
         }
-        catch (FileNotFoundException fnfe)
+        else
         {
             try
             {
@@ -110,11 +109,6 @@ public class TemplateDescriber
                 throw new JamonException(e);
             }
         }
-        catch (IOException e)
-        {
-
-            throw new JamonException(e);
-        }
     }
 
     private String templatePathToFilePath(String p_path)
@@ -133,9 +127,9 @@ public class TemplateDescriber
     }
 
     public List getRequiredArgNames(final String p_path)
-        throws JamonException
+        throws IOException
     {
-        try
+        if (m_templateSource.available(p_path))
         {
             LinkedList list = new LinkedList();
             BaseAnalyzer g = new BaseAnalyzer(parseTemplate(p_path));
@@ -147,7 +141,7 @@ public class TemplateDescriber
             }
             return list;
         }
-        catch (FileNotFoundException fnfe)
+        else
         {
             try
             {
@@ -166,10 +160,6 @@ public class TemplateDescriber
                 throw new JamonException(e);
             }
         }
-        catch (IOException e)
-        {
-            throw new JamonException(e);
-        }
     }
 
     public Start parseTemplate(String p_path)
@@ -178,9 +168,7 @@ public class TemplateDescriber
         Reader reader = m_templateSource.getReaderFor(p_path);
         try
         {
-            return new Parser(new Lexer
-                              (new PushbackReader
-                               (reader, 1024)))
+            return new Parser(new Lexer(new PushbackReader(reader, 1024)))
                 .parse();
         }
         catch (ParserException e)
