@@ -34,4 +34,11 @@ public class EncodingsTest
         checkOutput("Onc\u00e9\u00f2\u00e1\n\u00e9\u00c1\u00f3\u00e9\n");
     }
 
+    public void testLatin1()
+        throws Exception
+    {
+        new test.jamon.Latin1().render(getWriter());
+        checkOutput("Onc\u00e9\u00f2\u00e1\n\u00e9\u00c1\u00f3\u00e9\n");
+    }
+
 }
