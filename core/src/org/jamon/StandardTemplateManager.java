@@ -417,9 +417,19 @@ public class StandardTemplateManager
     private String getDefaultJavac()
         throws IOException
     {
-        // FIXME: does this work on windows? mac?
+        // FIXME: does this work on windows?
+        // FIXME: should we just use the javac in the default path?
+        String bindir;
+        if( "Mac OS X".equals( System.getProperty( "os.name" ) ) )
+        {
+            bindir = "Commands";
+        }
+        else
+        {
+            bindir = "bin";
+        }
         return new File(new File(System.getProperty("java.home")).getParent(),
-                        "bin").getCanonicalPath()
+                        bindir).getCanonicalPath()
             + File.separator
             + "javac";
     }
