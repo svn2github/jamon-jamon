@@ -73,6 +73,7 @@ public class TemplateGenerator
         catch (Throwable t)
         {
             t.printStackTrace();
+            System.exit(1);
         }
     }
 }
