@@ -112,10 +112,11 @@
   </target>
 
   <target name="release" if="jamon.version.next" >
+    <property name="file" value="core/src/org/jamon/Resources.properties" />
+    <property file="${file}"/>
     <echo message="Current version: ${org.jamon.version}" />
     <echo message="Next version: ${jamon.version.next}" />
     <input message="Press enter to continue ..." />
-    <property name="file" value="core/src/org/jamon/Resources.properties" />
     <cvs command="edit ${file}"/>
     <replace file="${file}"
              token="version=${org.jamon.version}"
