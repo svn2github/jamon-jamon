@@ -40,6 +40,8 @@
       <arg value="${test.pkg}/Arguments" />
       <arg value="${test.pkg}/OptionalArguments" />
       <arg value="${test.pkg}/PrivateMethods" />
+      <arg value="${test.pkg}/Fragment" />
+      <arg value="${test.pkg}/ParametrizedFragment" />
     </java>
   </target>
 
