@@ -50,11 +50,11 @@ accessed by fragment text are
 
 <li> <span class="concept"> Accepting fragment arguments</span>
 
-A template declares that it accepts template fragments by including the
-<code>&lt;%frag argName>&lt;/%frag> </code> tag. The <code>argName</code>
-argument is the name of the variable holding the template framgent. The
-template that accepts the fragment accesses this variable to output the
-fragment contents.
+A template declares that it accepts template fragments by including
+the <code>&lt;%frag <em>fragmentName</em>/&gt;</code> tag. The
+<code><em>fragmentName</em></code> argument is the name of the
+fragment template. The template that accepts the fragment
+calls it as it would any other template to output its contents.
 <p>
 The template below, <a href="LiRef.jamon" class="file">
      <code>LiRef</code></a>,
