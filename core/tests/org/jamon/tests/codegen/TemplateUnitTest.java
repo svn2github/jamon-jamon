@@ -36,7 +36,6 @@ import org.jamon.codegen.FragmentArgument;
 import org.jamon.codegen.FragmentUnit;
 import org.jamon.codegen.AbstractArgument;
 import org.jamon.codegen.OptionalArgument;
-import org.jamon.codegen.Path;
 import org.jamon.codegen.RequiredArgument;
 import org.jamon.codegen.TemplateUnit;
 import org.jamon.codegen.TemplateDescription;
