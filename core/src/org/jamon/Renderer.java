@@ -21,6 +21,7 @@
 package org.jamon;
 
 import java.io.Writer;
+import java.io.StringWriter;
 import java.io.IOException;
 
 /**
@@ -35,7 +36,7 @@ public abstract class Renderer
      *
      * @exception IOException if writing to the Writer throws an IOException
      */
-    public void renderTo(Writer p_writer)
+    public abstract void renderTo(Writer p_writer)
         throws IOException;
 
 
