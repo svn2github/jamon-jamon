@@ -93,7 +93,7 @@
       <classpath>
         <pathelement location="${classes.dir}"/>
         <pathelement location="${java.lib.junit}"/>
-        <pathelement location="${java.lib.jamon}"/>
+        <pathelement path="${java.lib.jamon}"/>
         <pathelement location="${java.lib.gnuregexp}"/>
       </classpath>
       <batchtest>
