@@ -69,14 +69,19 @@ the documentation thus taking care of issues such as escaping.
       <srcfileset file="${java.lib.jamon}"/>
       <targetfileset refid="build-files"/>
     </dependset>
-    <copy file="${overview.samples.dir}/src/JamonQs.java" todir="${work.dir}"/>
     <jamon destdir="${work.dir}" srcdir="${overview.samples.dir}/templates">
       <include name="QsTemp.jamon"/>
     </jamon>
+    <property name="tutorial.jamon" value="${tutorial.samples.dir}/templates"/>
+    <property name="tutorial.src" value="${tutorial.samples.dir}/src"/>
+    <jamon destdir="${work.dir}" srcdir="${tutorial.jamon}"/>
     <javac destdir="${work.dir}"
-           srcdir="${work.dir}"
            classpath="${java.lib.jamon}"
-           includes="JamonQs.java,QsTemp.java,QsTempImpl.java" />
+           includes="*.java" >
+      <src path="${tutorial.src}" />
+      <src path="${overview.samples.dir}/src" />
+      <src path="${work.dir}" />
+    </javac>
   </target>
 
   <target name="quickstart" depends="init" >
@@ -97,8 +102,6 @@ the documentation thus taking care of issues such as escaping.
 
   <target name="tutorial" depends="init" description="Tutorial docs">
     <property name="build.sysclasspath" value="last"/>
-    <property name="tutorial.src" value="${tutorial.samples.dir}/src"/>
-    <property name="tutorial.jamon" value="${tutorial.samples.dir}/templates"/>
     <mkdir dir="${tutorial.dir}"/>
     <zip destfile="${tutorial.dir}/JamonTutorial.zip"
          basedir="${tutorial.samples.dir}"
@@ -111,16 +114,7 @@ the documentation thus taking care of issues such as escaping.
         <include name="**/*.jamon"/>
       </fileset>
     </copy>
-    <jamon destdir="${work.dir}" srcdir="templates">
-    </jamon>
-    <jamon destdir="${work.dir}" srcdir="${tutorial.jamon}">
-    </jamon>
-    <javac destdir="${work.dir}"
-           classpath="${java.lib.jamon}"
-           includes="*.java" >
-      <src path="${tutorial.src}" />
-      <src path="${work.dir}" />
-    </javac>
+    <jamon destdir="${work.dir}" srcdir="templates"/>
     <antcall target="generateHtmlFormat">
       <param name="tutorial.page" value="TutorialPath" />
     </antcall>
