@@ -1,3 +1,4 @@
+The very top!
 <%import>
   java.math.BigDecimal
 </%import>
@@ -18,5 +19,3 @@ and amount, which is <% amount %>.
 </%java>
 i is <% i %>.
 <%java> } </%java>
-
-% int j = 4;
