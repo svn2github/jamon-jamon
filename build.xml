@@ -14,13 +14,6 @@
   <property name="core.classes.dir" value="core/build/classes" />
   <property name="stage.dir" value="site" />
   <property name="dist.dir" value="${stage.dir}/dist" />
-  <property file="core/src/org/jamon/Resources.properties" />
-  <property name="tarfilebase"
-            value="jamon-${org.jamon.version}" />
-  <property name="tarball.src" value="${tarfilebase}-src.tgz" />
-  <property name="tarball.bin" value="${tarfilebase}.tgz" />
-  <property name="zip.src" value="${tarfilebase}-src.zip" />
-  <property name="zip.bin" value="${tarfilebase}.zip" />
   <property name="site.dir" value="" />
 
   <target name="test"
@@ -71,10 +64,8 @@
   </target>
 
   <target name="localclean">
-    <delete file="${tarball.src}" />
-    <delete file="${tarball.bin}" />
-    <delete file="${zip.src}" />
-    <delete file="${zip.bin}" />
+    <delete file="*.zip" />
+    <delete file="*.tgz" />
     <delete dir="${stage.dir}" />
   </target>
 
@@ -157,7 +148,25 @@
     <ant dir="doc" target="build" />
   </target>
 
-  <target name="bindist" depends="jar,doc,javadoc">
+  <target name="prepdist" depends="doc">
+    <taskdef name="invoker"
+             classname="org.jamon.ant.InvokerTask"
+             classpath="${jarfile}:doc/build/work" />
+    <invoker dynamicRecompilation="false"
+             template="/org/jamon/doc/SrcTgzName"
+             property="tarball.src"/>
+    <invoker dynamicRecompilation="false"
+             template="/org/jamon/doc/BinTgzName"
+             property="tarball.bin"/>
+    <invoker dynamicRecompilation="false"
+             template="/org/jamon/doc/SrcZipName"
+             property="zip.src"/>
+    <invoker dynamicRecompilation="false"
+             template="/org/jamon/doc/BinZipName"
+             property="zip.bin"/>
+  </target>
+
+  <target name="bindist" depends="javadoc, prepdist">
     <tar tarfile="${tarball.bin}" compression="gzip" >
       <tarfileset dir="."
                   prefix="${tarfilebase}"
@@ -182,7 +191,7 @@
     </zip>
   </target>
 
-  <target name="srcdist">
+  <target name="srcdist" depends="prepdist">
     <tar tarfile="${tarball.src}" compression="gzip" >
       <tarfileset dir="." prefix="${tarfilebase}" >
         <exclude name="${jarfile}" />
