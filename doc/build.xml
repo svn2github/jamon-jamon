@@ -95,7 +95,8 @@ the documentation thus taking care of issues such as escaping.
          includes="JamonQs.java,QsTemp.jamon" />
     <loadfile property="quickstart.output" srcFile="${temp.file}" />
     <delete file="${temp.file}" />
-    <invoker classpath="${java.lib.jamon}"
+    <dirname property="this.dir" file="build.xml" />
+    <invoker classpath="${java.lib.jamon}:${this.dir}"
              workDir="${work.dir}"
              compiler="${org.jamon.invoker.compiler}"
              sourceDir="templates"
@@ -192,7 +193,6 @@ the documentation thus taking care of issues such as escaping.
              sourceDir="templates"
              output="${tutorial.dir}/${tutorial.page}.html"
              template="/org/jamon/doc/tutorial/${tutorial.page}" >
-      <sysproperty key="org.jamon.doc.dir" value="${this.dir}" />
     </invoker>
   </target>
 

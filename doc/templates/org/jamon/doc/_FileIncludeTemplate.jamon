@@ -2,8 +2,7 @@
 
 <%import>
   java.io.BufferedReader;
-  java.io.FileReader;
-  java.io.File;
+  java.io.InputStreamReader;
 </%import>
 
 <%args>
@@ -15,12 +14,14 @@
 </%class>
 
 <pre <& preAttributes &>>\
-% BufferedReader reader =
-%   new BufferedReader(new FileReader(
-%     new File(System.getProperty("org.jamon.doc.dir"),
-%              getCompleteFileName(fileName))));
-% for (String line = reader.readLine(); line != null; line = reader.readLine())
-% {
+<%java>
+BufferedReader reader =
+  new BufferedReader(new InputStreamReader(
+    getClass().getResourceAsStream(
+      "/" + getCompleteFileName(fileName))));
+for (String line = reader.readLine(); line != null; line = reader.readLine())
+{
+</%java>
 <% line %>
 % }
 </pre>
