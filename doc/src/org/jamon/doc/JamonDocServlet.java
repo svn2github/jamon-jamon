@@ -57,19 +57,11 @@ public class JamonDocServlet
         m_parameters.put("version", "3.14");
         m_parameters.put("output", "whatever");
 
-        try
-        {
-            m_manager = new StandardTemplateManager
-                (new StandardTemplateManager.Data()
-                    .setCleanWorkDir(false)
-                    .setWorkDir("build/work")
-                    .setSourceDir("templates")
-                    .setJavaCompiler("jikes"));
-        }
-        catch (IOException e)
-        {
-            throw new ServletException(e);
-        }
+        m_manager = new StandardTemplateManager
+            (new StandardTemplateManager.Data()
+                .setWorkDir("build/work")
+                .setSourceDir("templates")
+                .setJavaCompiler("jikes"));
     }
 
     private void expireResponse(HttpServletResponse p_response)
