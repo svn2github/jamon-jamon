@@ -73,7 +73,8 @@
   </target>
 
   <target name="cvsignores">
-    <echo file=".cvsignore">.cvsignore build build.properties</echo>
+    <echo file=".cvsignore">.cvsignore build build.properties work
+</echo>
   </target>
 
 </project>
