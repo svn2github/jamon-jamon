@@ -98,7 +98,7 @@ public abstract class AbstractTemplateImpl
         return m_templateManager;
     }
 
-    public Writer getWriter()
+    protected Writer getWriter()
     {
         return m_writer;
     }
