@@ -77,4 +77,4 @@ which invokes <code>render()</code> on the returned object.
 
 The result of executing this class and template is below.
 
-<pre class="tty><% output %></pre>
+<pre class="tty"><% output %></pre>
