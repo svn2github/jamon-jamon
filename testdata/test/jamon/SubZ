@@ -1,0 +1,8 @@
+  <%farg f>
+    int i;
+    String s;
+  </%farg>
+An external template with a parameterized fragment parameter (farg)
+
+  <& f; i => 3; s => "yes" &>
+  <& f; i => 7; s => "no" &>

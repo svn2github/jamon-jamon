@@ -30,11 +30,9 @@ public class TemplateDescriber
     private final String m_templateSourceDir;
 
     public FargInfo getFargInfo(String p_path, String p_fargName)
+        throws IOException
     {
-        // FIXME
-        return new FargInfo(p_fargName,
-                            new LinkedList().iterator(),
-                            new HashMap());
+        return new BaseAnalyzer(parseTemplate(p_path)).getFargInfo(p_fargName);
     }
 
     public Iterator getFargNames(String p_path)

@@ -49,7 +49,7 @@ public class FragmentCallStatement
         FargInfo fargInfo =
             isDefCall(p_analyzer)
             ? p_analyzer.getFargInfo(fargName)
-            : p_describer.getFargInfo(getPath(),fargName);
+            : p_describer.getFargInfo(p_analyzer.getAbsolutePath(getPath()),fargName);
 
         p_writer.println("{");
         p_writer.print("    final ");

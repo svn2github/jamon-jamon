@@ -145,3 +145,11 @@ front<|& sub3 &>before<& f2 &>middle<&f2&>after</&>back</%def> \
   </%args>
   i is <% i %> and s is <% s %>.
 </&>
+
+<|& SubZ &>
+  <%args>
+    int i;
+    String s;
+  </%args>
+  i is <% i %> and s is <% s %>.
+</&>
