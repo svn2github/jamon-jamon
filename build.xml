@@ -133,7 +133,7 @@
       <arg value="org.jamon.Version" />
       <arg value="cvstag" />
     </exec>
-    <cvs command="tag RELEASE-${jamon.version.cvs}" />
+    <cvs command="tag ${jamon.version.cvs}" />
     <cvs command="edit ${file}"/>
     <replace file="${file}"
              token="release=true"
