@@ -127,11 +127,17 @@
     </path>
     <property name="org.jamon.integration.classpath"
               refid="org.jamon.integration.classpath"/>
+    <condition property="org.jamon.integration.compiler" value="jikes">
+      <equals arg1="${tests.compiler}" arg2="jikes"/>
+    </condition>
+    <condition property="org.jamon.integration.compiler" value="javac">
+      <not><equals arg1="${tests.compiler}" arg2="jikes"/></not>
+    </condition>
     <junit printsummary="${junit.printsummary}"
            timeout="${junit.timeout}"
            failureproperty="org.jamon.junit.failuresOccured">
       <sysproperty key="org.jamon.integration.compiler"
-                   value="${tests.compiler}"/>
+                   value="${org.jamon.integration.compiler}"/>
       <sysproperty key="org.jamon.integration.basedir"
                    value="${template.src.dir}"/>
       <sysproperty key="org.jamon.integration.classpath"
