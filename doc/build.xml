@@ -84,7 +84,7 @@ the documentation thus taking care of issues such as escaping.
     </javac>
   </target>
 
-  <target name="quickstart" depends="init" >
+  <target name="overview-files" depends="init" >
     <property name="build.sysclasspath" value="last" />
     <copy file="${overview.samples.dir}/src/JamonQs.java" todir="${doc.dir}"/>
     <copy file="${overview.samples.dir}/templates/QsTemp.jamon"
@@ -92,12 +92,6 @@ the documentation thus taking care of issues such as escaping.
     <zip destfile="${www.dir}/JamonQs.zip"
          basedir="${www.dir}"
          includes="JamonQs.java,QsTemp.jamon" />
-    <invoker classpath="${java.lib.jamon}:${this.dir}"
-             workDir="${work.dir}"
-             compiler="${org.jamon.invoker.compiler}"
-             sourceDir="templates"
-             output="${doc.dir}/Overview.html"
-             template="/org/jamon/doc/Overview"/>
   </target>
 
   <target name="tutorial" depends="init" description="Tutorial docs">
@@ -174,8 +168,11 @@ the documentation thus taking care of issues such as escaping.
       <srcfileset dir="templates/org/jamon/doc/servlet" includes="*" />
       <targetfilelist dir="${doc.dir}" files="Servlets.html" />
     </dependset>
-    <antcall target="quickstart" />
+    <antcall target="overview-files" />
     <antcall target="tutorial" />
+    <antcall target="grind">
+      <param name="template" value="Overview"/>
+    </antcall>
     <antcall target="grind">
       <param name="template" value="BuildingProjects" />
     </antcall>
@@ -300,7 +297,7 @@ the documentation thus taking care of issues such as escaping.
 
   <target name="grind" depends="checkgrind" unless="grindnotneeded">
     <echo>Generating ${doc.dir}/${template}.html</echo>
-    <invoker classpath="${java.lib.jamon}:${java.lib.diff}"
+    <invoker classpath="${java.lib.jamon}:${java.lib.diff}:${this.dir}"
              workDir="${work.dir}"
              compiler="${org.jamon.invoker.compiler}"
              sourceDir="templates"
