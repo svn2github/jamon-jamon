@@ -91,7 +91,8 @@ public class ImplGenerator
              /* */)
         {
             OptionalArgument arg = (OptionalArgument) i.next();
-            m_writer.println(arg.getName() + " = " + arg.getDefault() + ";");
+            m_writer.println(obfuscateOptionalArgName(arg.getName())
+                             + " = " + arg.getDefault() + ";");
         }
         m_writer.closeBlock();
         m_writer.println();
@@ -223,6 +224,15 @@ public class ImplGenerator
 
         m_writer.print  ("  throws " + ClassNames.IOEXCEPTION);
         m_writer.openBlock();
+        for (Iterator i = m_analyzer.getUnitInfo().getOptionalArgs();
+             i.hasNext();
+             /* */)
+        {
+            Argument arg = (Argument) i.next();
+            m_writer.println( "final " + arg.getType() + " " + arg.getName()
+                              +  " = "
+                              + obfuscateOptionalArgName(arg.getName()) + ";");
+        }
         for (Iterator i = m_analyzer.getStatements().iterator(); i.hasNext(); /* */)
         {
             ((Statement)i.next()).generateSource(m_writer,
@@ -247,11 +257,18 @@ public class ImplGenerator
             m_writer.println("public void set" + StringUtils.capitalize(name)
                              + "(" + type + " p_" + name + ")");
             m_writer.openBlock();
-            m_writer.println(name + " = p_" + name + ";");
+            m_writer.println(obfuscateOptionalArgName(name)
+                             + " = p_" + name + ";");
             m_writer.closeBlock();
             m_writer.println();
-            m_writer.println("private " + type + " " + name + ";");
+            m_writer.println("private " + type + " "
+                             + obfuscateOptionalArgName(name) + ";");
         }
+    }
+
+    private static String obfuscateOptionalArgName(String p_name)
+    {
+        return "__jamon__optional__" + p_name;
     }
 
 
