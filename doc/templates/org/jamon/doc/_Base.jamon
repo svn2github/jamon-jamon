@@ -56,7 +56,7 @@
                         href => "Servlets" &>
           <& _menuItem; section => Section.DOC_REFERENCE;
                         href => "Reference" &>
-          <li class="nav"><a href="javadoc/index.html">Javadoc</a></li>
+          <li class="nav"><a href='<& docRootUrl; href => "javadoc/index.html" &>'>Javadoc</a></li>
         </ul>
       </div>
       <div id="main">
