@@ -1,0 +1,9 @@
+<%args>
+  boolean condition;
+</%args>
+<%frag Then/>
+
+% if (condition)
+% {
+<& Then &>\
+% }
