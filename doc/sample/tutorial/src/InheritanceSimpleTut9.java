@@ -4,13 +4,8 @@ import org.jamon.TemplateManagerSource;
 
 public class InheritanceSimpleTut9
 {
-  public static void main(String[] args)
-  {
-    try {
-      TemplateManagerSource.setTemplateManager(new StandardTemplateManager());
-      new InheritanceChild().render(new OutputStreamWriter(System.out));
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
+  public static void main(String[] args) throws Exception {
+    TemplateManagerSource.setTemplateManager(new StandardTemplateManager());
+    new InheritanceChild().render(new OutputStreamWriter(System.out));
   }
 }

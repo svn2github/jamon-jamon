@@ -15,22 +15,18 @@ public class User
   public String getName() { return name; }
   public boolean isAuthorized() { return authorized; }
 
-  public static void main(String[] args) {
-    try {
-      User[] users = new User[2];
-      users[0] = new User("John Public", false);
-      users[1] = new User("John Rockerfeller", true);
+  public static void main(String[] args) throws Exception {
+    User[] users = new User[2];
+    users[0] = new User("John Public", false);
+    users[1] = new User("John Rockerfeller", true);
 
-      TemplateManagerSource.setTemplateManager(new StandardTemplateManager());
+    TemplateManagerSource.setTemplateManager(new StandardTemplateManager());
 
-      for (int i=0; i<users.length; i++) {
-          // call render() on the parent template and provide arguments
-          processUser(args.length == 0 ? null : args[0])
-              .setTitle("Jamon News")  // set optional argument in parent
-              .render(new OutputStreamWriter(System.out), users[i]);
-      }
-    } catch (Exception e) {
-      e.printStackTrace();
+    for (int i=0; i<users.length; i++) {
+      // call render() on the parent template and provide arguments
+      processUser(args.length == 0 ? null : args[0])
+        .setTitle("Jamon News")  // set optional argument in parent
+        .render(new OutputStreamWriter(System.out), users[i]);
     }
   }
 

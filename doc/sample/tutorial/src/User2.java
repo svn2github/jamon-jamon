@@ -15,21 +15,17 @@ public class User2
   public String getName() { return name; }
   public boolean isAuthorized() { return authorized; }
 
-  public static void main(String[] args) {
-    try {
-      User2[] users = new User2[2];
-      users[0] = new User2("John Public", false);
-      users[1] = new User2("John Rockerfeller", true);
+  public static void main(String[] args) throws Exception {
+    User2[] users = new User2[2];
+    users[0] = new User2("John Public", false);
+    users[1] = new User2("John Rockerfeller", true);
 
-      TemplateManagerSource.setTemplateManager(new StandardTemplateManager());
+    TemplateManagerSource.setTemplateManager(new StandardTemplateManager());
 
-      for (int i=0; i<users.length; i++) {
-        // call render() on the parent template and provide arguments
-        processUser(args.length == 0 ? null : args[0])
-          .render(new OutputStreamWriter(System.out), users[i]);
-      }
-    } catch (Exception e) {
-      e.printStackTrace();
+    for (int i=0; i<users.length; i++) {
+      // call render() on the parent template and provide arguments
+      processUser(args.length == 0 ? null : args[0])
+        .render(new OutputStreamWriter(System.out), users[i]);
     }
   }
 
@@ -40,7 +36,7 @@ public class User2
    *  @return the <code>ParentRenderer</code> of the derived template
    */
   private static InheritanceParentProtected.ParentRenderer
-        processUser(String templateName) {
+    processUser(String templateName) {
     // the default template, the special of the week
     if (templateName == null || "special".equalsIgnoreCase(templateName))
     {

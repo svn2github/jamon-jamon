@@ -21,20 +21,16 @@ public class Holiday {
   public String getName() { return  name; }
   public Date getDate() { return  date; }
 
-  public static void main(String[] argv) {
-    try {
-      List holidays = new ArrayList();
-      holidays.add(new Holiday("New Year's", format.parse("2003-1-1")));
-      holidays.add(new Holiday("July 4", format.parse("2003-7-4")));
-      holidays.add(new Holiday("Thanksgiving", format.parse("2003-11-17")));
-      holidays.add(new Holiday("Christmas", format.parse("2003-12-25")));
-      // set the template manager once for all time ...
-      TemplateManagerSource.setTemplateManager(new StandardTemplateManager());
-      // now create templates without specifying a template manager
-      new FragmentExampleTemplate()
-        .render(new OutputStreamWriter(System.out), holidays);
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
+  public static void main(String[] argv) throws Exception {
+    List holidays = new ArrayList();
+    holidays.add(new Holiday("New Year's", format.parse("2003-1-1")));
+    holidays.add(new Holiday("July 4", format.parse("2003-7-4")));
+    holidays.add(new Holiday("Thanksgiving", format.parse("2003-11-17")));
+    holidays.add(new Holiday("Christmas", format.parse("2003-12-25")));
+    // set the template manager once for all time ...
+    TemplateManagerSource.setTemplateManager(new StandardTemplateManager());
+    // now create templates without specifying a template manager
+    new FragmentExampleTemplate()
+      .render(new OutputStreamWriter(System.out), holidays);
   }
 }

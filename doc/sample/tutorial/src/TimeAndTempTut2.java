@@ -4,14 +4,10 @@ import org.jamon.StandardTemplateManager;
 import org.jamon.TemplateManagerSource;
 
 public class TimeAndTempTut2 {
-  public static void main(String[] argv) {
-    try {
-      // set the template manager once for all time ...
-      TemplateManagerSource.setTemplateManager(new StandardTemplateManager());
-      // now create templates without specifying a template manager
-      new TimeAndTempTemplate().render(new OutputStreamWriter(System.out));
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
+  public static void main(String[] argv) throws Exception {
+    // set the template manager once for all time ...
+    TemplateManagerSource.setTemplateManager(new StandardTemplateManager());
+    // now create templates without specifying a template manager
+    new TimeAndTempTemplate().render(new OutputStreamWriter(System.out));
   }
 }
