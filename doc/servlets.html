@@ -260,14 +260,72 @@ you should receive a worldly greeting by pointing a browser to
         String numString = request.getParameter(<span class="changed">NUM_KEY</span>);
         if (numString != null)
         {
-            helloTemplate.setNum(Integer.parseInt());
+            helloTemplate.setNum(Integer.parseInt(numString));
         }
         helloTemplate.render();
     }
 
     <span class="changed">public static final String NUM_KEY = "num";</span>
 </pre>
+        The next problem to address is the fact that no validation is performed on the
+        data coming from the web.  For example a user may enter "a" as the number of times
+        they want to be greeted which would cause the <span class="code">doGet</span> method
+        to throw a <span class="code">NumberFormatException</span>.  Thus we need to catch 
+        this as follows (unchanged code is omitted).  In the servlet we need:
+        <pre class="code">
+        if (numString != null)
+        {
+            <span class="changed">try
+            {</span>
+                helloTemplate.setNum(Integer.parseInt(numString));
+            <span class="changed">}
+            catch (NumberFormatException e)
+            {
+                helloTemplate.setError(true);
+            }</span>
+        }
+        helloTemplate.render();
+</pre>
+        and the template needs an additional error parameter:
+        <pre class="template">
+&lt;%args>
+  int num => 0;
+  boolean error => false;
+&lt;/%args>
+&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;title&gt;Hello World&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+% for (int i = 0; i < num; i++) {
+    Hello world!
+% }
+    &lt;hr>
+    &lt;form method="GET" action="hello">
+<span class="changed">% if (error) {
+&lt;b>The data you entered was invalid&lt;/b>&lt;br>
+% }</span>
+      How many times would you like to be greeted? &lt;input type="text" name="num" />
+      &lt;br>
+      &lt;input type="submit" value="Greet Me"/>
+    &lt;/form>
+  &lt;/body&gt;
+&lt;/html&gt;
+</pre>
+         However, in spite of all this the servlet leaves a great deal to be desired.  For example
+         invalid input should be returned to the user for editing.
+         Furthermore there are other ways the above solution seems inadequate:
+         <div class="smell">
+           <dl>
+             <dt>Smell #2</dt>
+             <dd>Catching errors seems <em>ad hoc</em> and hard to extend.</dd>
 
+             <dt>Smell #3</dt>
+             <dd>The servlet doesn't seem like the right place to be doing validation.</dd>
+           </dl>
+         </div>
+         The next section presents solutions to these problems.
 
       <li><span class="concept">Using the Standard Library</span>
         Coming soon.
