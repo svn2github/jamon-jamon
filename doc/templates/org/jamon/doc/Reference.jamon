@@ -1,8 +1,11 @@
 <%extends _Base>
+
 <%class>
   protected Section currentSection() { return Section.DOC_REFERENCE; }
 </%class>
+
 <%override title>Jamon Template Reference Manual</%override>
+
 <%aliases>
   escape => /org/jamon/escape;
 </%aliases>
@@ -12,9 +15,37 @@
     <li><span class="concept">Static content</span>
 
       In general, any characters appearing in a template are output
-      literally, whitespace included.  One notable exception is that
-      if a newline is preceded by a backslash, then neither the newline nor
-      the backslash are output.
+      literally, whitespace included.
+
+      This excludes whitespace inside <&| /org/jamon/escape/Html
+      &><%LITERAL> <%args>, <%xargs>, <%import>, <%aliases>, and
+      <%frag> declarations.  </%LITERAL></&>
+
+      Other ignored white space includes whitespace immediately after
+      the following tags:
+      <ul>
+        <li><%LITERAL><%/args></%LITERAL></li>
+        <li><%LITERAL><%/doc></%LITERAL></li>
+        <li><%LITERAL><%/frag></%LITERAL></li>
+        <li><%LITERAL><%/xargs></%LITERAL></li>
+        <li><%LITERAL><%abstract></%LITERAL></li>
+        <li><%LITERAL><%/class></%LITERAL></li>
+        <li><%LITERAL><%/import></%LITERAL></li>
+        <li><%LITERAL><%/implements></%LITERAL></li>
+        <li><%LITERAL><%/java></%LITERAL></li>
+        <li><%LITERAL><%/def></%LITERAL></li>
+        <li><%LITERAL><%/method></%LITERAL></li>
+        <li><%LITERAL><%/absmeth></%LITERAL></li>
+        <li><%LITERAL><%/override></%LITERAL></li>
+        <li><%LITERAL><%/aliases></%LITERAL></li>
+      </ul>
+
+      <br />
+      <b>Newline escape</b><br />
+
+      One other notable exception is that if a newline is preceded by
+      a backslash, then neither the newline nor the backslash are
+      output.
 
     <li><span class="concept">Emit statements</span>
 
