@@ -249,13 +249,10 @@ the documentation thus taking care of issues such as escaping.
              output="${doc.dir}/${template.name}.jamon"
              template="${tutorial.path}/${template.name}" />
     <copy file="${doc.dir}/${template.name}.jamon" todir="${work.dir}" />
-    <java classname="org.jamon.TemplateProcessor"
-          failonerror="true"
-          fork="yes"
-          dir="${work.dir}"
-          classpath="${java.lib.jamon}">
-      <arg line="--destDir=. ${template.name}" />
-    </java>
+
+    <jamon destdir="${work.dir}" srcdir="${work.dir}">
+      <include name="${template.name}.jamon"/>
+    </jamon>
   </target>
 
   <target name="generateOutput">
