@@ -22,11 +22,12 @@ file</a>.
 
 <li>
 Create a Jamon template <a href="HelloTemplate.jamon" class="file">HelloTemplate.jamon</a>:
-<pre class="jamon"><&| /org/jamon/escape/Html &><& HelloTemplate &></&></pre>
+<pre class="jamon"><& _TutorialTemplateInclude; fileName => "HelloTemplate" &>
+</pre>
 
 <li>
 Create a java file <a class="file" href="HelloTut1.java">HelloTut1.java</a>:
-<pre class="java"><&| /org/jamon/escape/Html &><& HelloTut1Java &></&></pre>
+<pre class="java"><& _TutorialJavaFileInclude; fileName => "HelloTut1" &></pre>
 Notice that the Java file creates a <code>StandardTemplateManager</code>,
 which is passed to the template constructor. The code then calls the
 <code>render()</code> method on the template, providing a

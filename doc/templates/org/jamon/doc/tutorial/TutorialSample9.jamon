@@ -18,7 +18,7 @@ HTML header as well as the header banner of the page while the child
 template simply fills in the body.
 
     <pre class="template">
-    <&| /org/jamon/escape/Html; &><& InheritanceParent; &></&></pre>
+    ><& _TutorialTemplateInclude; fileName => "InheritanceParent"; &></pre>
 <p>
 The child template declares that it extends the parent template by including the tag
 <pre class="template">
@@ -33,13 +33,13 @@ The example template below,
 <code>InheritanceChild</code></a> extends <code>InheritanceTemplate</code>
 and provides subject text that is included in the output of the parent template.
 
-    <pre class="template"><&| /org/jamon/escape/Html &><& InheritanceChild &></&></pre>
+    <pre class="template"><& _TutorialTemplateInclude; fileName => "InheritanceChild" &></pre>
 
 This template would be invoked from Java with the class
 <a href="InheritanceSimpleTut9.java" class="file">
 InheritanceSimpleTut9.java</a>
-    <pre class="java"><&| /org/jamon/escape/Html &>
-    <& InheritanceSimpleTut9Java &></&></pre>
+    <pre class="java">
+    <& _TutorialJavaFileInclude; fileName => "InheritanceSimpleTut9" &></pre>
 
 Notice that the Java code first calls <code>makeParentRenderer()</code>
 on the template to get the renderer for the <em>derived</em> template, and
@@ -62,8 +62,7 @@ For example, consider the parent template
 <code>InheritanceParentWArgs</code></a>. It defines arguments
 <code>userAccount</code> and <code>title</code>.
 
-    <pre class="template"><&| /org/jamon/escape/Html &>
-    <& InheritanceParentWArgs &></&></pre>
+    <pre class="template"><& _TutorialTemplateInclude; fileName => "InheritanceParentWArgs" &></pre>
 
 The child template can only access these arguments by including
 <pre class="template">
@@ -86,8 +85,7 @@ A complete example of a child template,
 <code>InheritanceChildWArgs</code></a>.
 is below.
 
-    <pre class="template"><&| /org/jamon/escape/Html &>
-    <& InheritanceChildWArgs &></&></pre>
+    <pre class="template"><& _TutorialTemplateInclude; fileName => "InheritanceChildWArgs" &></pre>
 
 
 <h3>Invoking a derived template</h3>
@@ -117,7 +115,7 @@ separate Java classes.
 The class <a href="User.java" class="file"><code>User</code></a> implements
 invoking the child template through the second approach described above.
 
-<pre class="java"><&| /org/jamon/escape/Html &><& UserJava &></&></pre>
+<pre class="java"><& _TutorialJavaFileInclude; fileName => "User" &></pre>
 <p>
 The output from the template is
 <pre class="tty"><% output %></pre>

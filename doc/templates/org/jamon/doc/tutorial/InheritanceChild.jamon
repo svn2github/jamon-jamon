@@ -1,8 +1,0 @@
-<%LITERAL>
-<%extends InheritanceParent>
-
-<h2>Inheritance Documentation</h2>
-To declare that a template extends a parent template, it must include
-the <code>&lt;%extends></code> tag.
-
-</%LITERAL>

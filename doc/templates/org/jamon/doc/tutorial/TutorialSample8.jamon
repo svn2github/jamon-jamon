@@ -21,8 +21,8 @@ arg1 => ... &amp;></code>, up to the closing tag,
 In this example,
 <a href="FragmentCallerTemplate.jamon" class="file">
      <code>FragmentCallerTemplate</code></a>,
-    <pre class="template"><&| /org/jamon/escape/Html &>
-    <& FragmentCallerTemplate &></&></pre>
+    <pre class="template">
+    <& _TutorialTemplateInclude; fileName => "FragmentCallerTemplate" &></pre>
 
 a block of HTML text is passed to a template that expects a fragment
 and constructs a list item and HTML anchor using the fragment text as
@@ -58,8 +58,8 @@ fragment contents.
 <p>
 The template below, <a href="LiRef.jamon" class="file">
      <code>LiRef</code></a>,
-    <pre class="template"><&| /org/jamon/escape/Html &>
-    <& LiRef &></&></pre>
+    <pre class="template">
+    <& _TutorialTemplateInclude; fileName => "LiRef" &></pre>
 
 formats the <code>content</code> fragment text as an HTML
 anchor inside a list item.
@@ -102,8 +102,8 @@ Thus
       <code>&lt;%args&gt;</code>...<code>&lt;/%args&gt;</code> except
       it has a name and its parameters cannot have default values.
 
-    <pre class="template"><&| /org/jamon/escape/Html &>
-    <& AlternatingList &></&></pre>
+    <pre class="template">
+    <& _TutorialTemplateInclude; fileName => "AlternatingList" &></pre>
 
 <li><span class="concept">A Template Fragment Example</span>
 
@@ -124,12 +124,12 @@ the fragment,
 written to display one row of table data, and that the type of the
 data object containing the data for the row cannot be known beforehand.
 <p>
-    <pre class="template"><&| /org/jamon/escape/Html &>
-    <& FragmentExampleTemplate &></&></pre>
+    <pre class="template">
+    <& _TutorialTemplateInclude; fileName => "FragmentExampleTemplate" &></pre>
 <p>
 The example template is executed by the
 <a href="Holiday.java" class="file"> <code>Holiday</code></a> Java class.
-<pre class="java"><&| /org/jamon/escape/Html &><& HolidayJava &></&></pre>
+<pre class="java"><& _TutorialJavaFileInclude; fileName => "Holiday" &></pre>
 <p>
 The output from the template is
 <pre class="tty"><% output %></pre>

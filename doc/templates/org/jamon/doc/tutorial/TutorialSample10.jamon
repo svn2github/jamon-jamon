@@ -30,7 +30,7 @@ InheritanceParentProtected</a> declares a <code>title</code> subtemplate
 for the expressed purpose of allowing the child template to
 override the subtemplate in order to replace the title.
 
-<pre class="template"><&| /org/jamon/escape/Html &><& InheritanceParentProtected &></&></pre>
+<pre class="template"><& _TutorialTemplateInclude; fileName => "InheritanceParentProtected" &></pre>
 
 <p>
 The template that derives this template would override the <code>title</code>
@@ -65,7 +65,7 @@ InheritanceParentProtected</a> and overrides the subtemplate
 <code>InheritanceChildProtected</code> replaces the title that the
 parent template generates.
 
-<pre class="template"><&| /org/jamon/escape/Html &><& InheritanceChildProtected &></&></pre>
+<pre class="template"><& _TutorialTemplateInclude; fileName => "InheritanceChildProtected" &></pre>
 
 <p>
 To invoke this template, the class <a href="User2.java" class="file">
@@ -73,7 +73,7 @@ User2.java</a> calls <code>makeParentRenderer()</code> on
 the template and then passes the object returned to a controller,
 which invokes <code>render()</code> on the returned object.
 
-<pre class="java"><&| /org/jamon/escape/Html &><& User2Java &></&></pre>
+<pre class="java"><& _TutorialJavaFileInclude; fileName => "User2" &></pre>
 
 The result of executing this class and template is below.
 

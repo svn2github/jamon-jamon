@@ -1,0 +1,17 @@
+<%abstract>\
+  <%import>
+    java.io.BufferedReader;
+    java.io.FileReader;
+  </%import>\
+  <%args>
+    String fileName;
+  </%args>\
+  <%class>
+    protected abstract String getCompleteFileName(String fileName);
+  </%class>\
+% BufferedReader reader =
+%   new BufferedReader(new FileReader(getCompleteFileName(fileName)));
+% for (String line = reader.readLine(); line != null; line = reader.readLine())
+% {
+<% line %>
+% }
