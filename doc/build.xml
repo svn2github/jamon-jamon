@@ -107,8 +107,9 @@ the documentation thus taking care of issues such as escaping.
 
   <target name="tutorial" depends="init" >
     <property name="build.sysclasspath" value="last" />
+    <property name="tutorial.path" value="/org/jamon/doc/tutorial" />
     <copy todir="${doc.dir}" >
-      <fileset dir="templates/org/jamon/doc">
+      <fileset dir="templates${tutorial.path}">
         <include name="**/*Java.jamon"/>
       </fileset>
       <mapper type="glob" from="*Java.jamon" to="*.java" />
@@ -118,6 +119,9 @@ the documentation thus taking care of issues such as escaping.
         <include name="**/*.java"/>
       </fileset>
     </copy>
+    <antcall target="processTemplate">
+      <param name="template.name" value="TutorialPath" />
+    </antcall>
     <antcall target="processTemplate">
       <param name="template.name" value="HelloTemplate" />
     </antcall>
@@ -243,7 +247,7 @@ the documentation thus taking care of issues such as escaping.
              workDir="${work.dir}"
              sourceDir="templates"
              output="${doc.dir}/${template.name}.jamon"
-             template="/org/jamon/doc/${template.name}" />
+             template="${tutorial.path}/${template.name}" />
     <copy file="${doc.dir}/${template.name}.jamon" todir="${work.dir}" />
     <java classname="org.jamon.TemplateProcessor"
           failonerror="true"
@@ -268,7 +272,7 @@ the documentation thus taking care of issues such as escaping.
              workDir="${work.dir}"
              sourceDir="templates"
              output="${doc.dir}/${page.name}.html"
-             template="/org/jamon/doc/${page.name}" >
+             template="${tutorial.path}/${page.name}" >
       <arg name="output" value="${page.name}.output" />
     </invoker>
   </target>
@@ -338,9 +342,6 @@ the documentation thus taking care of issues such as escaping.
     </antcall>
     <antcall target="grind">
       <param name="template" value="Servlets" />
-    </antcall>
-    <antcall target="grind">
-      <param name="template" value="TutorialPath" />
     </antcall>
     <!-- Generate the first template example -->
     <invoker classpath="${java.lib.jamon}:${java.lib.diff}"
