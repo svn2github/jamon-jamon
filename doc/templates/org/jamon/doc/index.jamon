@@ -1,6 +1,4 @@
 <&| _Base; title => "Jamon"; section => "Home" &>
-    <h2>What is Jamon?</h2>
-
     <b>Jamon</b> is a text template engine for <a
     href="http://java.sun.com">Java</a>, useful for generating dynamic
     HTML, XML, or any text-based content. In a typical
@@ -8,7 +6,7 @@
     architecture</a>, Jamon clearly is aimed at the View (or
     presentation) layer.
 
-    <h2>Why is Jamon?</h2>
+    <h3>Goals</h3>
 
     The inspiration for Jamon was born over dissatisfaction with
     current presentation layer technologies, including <a
@@ -19,9 +17,16 @@
     and for <a href="http://www.perl.org">Perl</a>, provided inspiration
     both conceptual and syntactic (for better or worse).
 
-    <h4 style="{margin-bottom:-0.5em}">Goals</h4>
-
     <ul>
+      <li>
+        Keep the rendering logic in the presentation layer
+        technology. Since rendering logic may be arbitrarily
+        complicated (e.g. a recursive directory structure), this logic
+        needs to be expressable in a Turing-complete language. Rather
+        than invent yet another language, use Java itself inside the
+        presentation framework.
+      </li>
+
       <li>
         Developers must pass information to the view according to a
         well-defined contract which is checkable at compile-time
@@ -81,7 +86,7 @@ t.render("hello", 3, new BigDecimal(17.5));
 
     </ul>
 
-    <h2>Features of Jamon</h2>
+    <h3>Features</h3>
 
     <ul>
 
