@@ -17,7 +17,7 @@ Jamon templates are translated into Java classes and interfaces. Jamon provides 
 
   <li><span class="concept">Import statements</span>
     The example templates shown up to this point have completely specified every Java class not in the <code>java.lang</code> package. In the tutorial section on <a href="TutorialSample3.html">Templates with arguments</a> the examples contained the declarations
-      <&| _template &>
+      <&| ../_Template &>
 <%LITERAL>
 <%args>
   java.util.Date effectiveDate;
@@ -29,7 +29,7 @@ Jamon templates are translated into Java classes and interfaces. Jamon provides 
     <p>
     Jamon provides the <code>&lt;%import></code> ... <code>&lt;/%import></code>
     tag to allow the user to import classes for the template.
-      <&| _template &>
+      <&| ../_Template &>
 <%LITERAL>
 <%import>
   java.util.Date;
@@ -50,7 +50,7 @@ Jamon templates are translated into Java classes and interfaces. Jamon provides 
     created from the template.
     <p>
     For example, the template fragment below
-      <&| _template &>
+      <&| ../_Template &>
 <%LITERAL>
 % int count = 3;
 % while (count-- > 0) {
@@ -68,7 +68,7 @@ Jamon templates are translated into Java classes and interfaces. Jamon provides 
 </pre>
     To declare a construct at the class level, use the
     <code>&lt;%class></code> ... <code>&lt;/%class></code> tag. For example, the following Jamon code
-      <&| _template &><%LITERAL>
+      <&| ../_Template &><%LITERAL>
 <%class>
   static int pageViews = 1;
 </%class>
@@ -106,9 +106,3 @@ the output of the template's <code>render</code> method will be
     <pre class="tty"><&| /org/jamon/escape/Html &><% output %></&></pre>
 
 <p>
-&nbsp;
-
-<%def _template>
-<%frag content></%frag>
-<pre class="template"><&| /org/jamon/escape/Html &><& content &></&></pre>
-</%def>

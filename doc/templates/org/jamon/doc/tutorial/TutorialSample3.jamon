@@ -20,7 +20,7 @@ parameters of a method compose the signature of a method.
 <p>
 Arguments to a Jamon template are declared between <code>&lt;%args></code>
 ... <code>&lt;%/args></code> tags:
-      <&| _template &>
+      <&| ../_Template &>
 <%LITERAL>
 <%args>
   java.util.Date effectiveDate;
@@ -45,7 +45,7 @@ method in the order specified in the
 Jamon templates can also declare <em>optional</em> arguments. These are
 declared by specifying the default value after the argument name, as below.
 
-      <&| _template &>
+      <&| ../_Template &>
 <%LITERAL>
 <%args>
   String         title => "Account Summary";
@@ -77,12 +77,12 @@ invoking the template must call <code>set</code> methods for each
 optional argument. Thus, to invoke the sample template shown above,
 the java class should contain the following code:
 
-      <&| _template; style => "java" &>
+<pre class="java">
     sampleTemplate
         .setTitle("Most Recent Account Balance);
         .render(new OutputStreamWriter(System.out),
                 new Date(), "John Public", new BigDecimal(9.99));
-</&>
+</pre>
 
 In the above example, the calling code sets the optional argument
 <code>title</code>, does not change the default value for the optional
@@ -128,12 +128,3 @@ AccountSummaryTut3.java</a>:
 </ol>
 
 <p>
-&nbsp;
-
-<%def _template>
-<%args>
-  String style => "template";
-</%args>
-<%frag content></%frag>
-<pre class="<% style %>"><&| /org/jamon/escape/Html &><& content &></&></pre>
-</%def>

@@ -23,7 +23,7 @@ Templates usually construct text in a structured language such as HTML or XML, o
 
       The value of a java expression can be emitted by enclosing the
       expression in <code>&lt;%...%&gt;</code> pairs, e.g.
-      <&| _template &><%LITERAL>
+      <&| ../_Template &><%LITERAL>
 <% person.getFirstName().substring(0,10) %>
 </%LITERAL></&>
       <p>
@@ -36,7 +36,7 @@ Templates usually construct text in a structured language such as HTML or XML, o
       is <em>escaped</em>.  The default escaping mechanism is HTML, so for
       example the following template
 
-      <&| _template &><%LITERAL>this <% "&" %> that</%LITERAL></&>
+      <&| ../_Template &><%LITERAL>this <% "&" %> that</%LITERAL></&>
 
       produces
 
@@ -46,7 +46,7 @@ Templates usually construct text in a structured language such as HTML or XML, o
       template itself.  A string can be emitted with no escaping as
       follows:
 
-      <&| _template &><%LITERAL>this <% "&" #n %> that</%LITERAL></&>
+      <&| ../_Template &><%LITERAL>this <% "&" #n %> that</%LITERAL></&>
 
       producing
 
@@ -133,8 +133,3 @@ If the default escaping on the template had been set to
     3. Hello Duke & Co.<br />
   </body>
 </html></&></pre>
-
-
-<%def _template><%frag content></%frag>
-<pre class="template"><&| /org/jamon/escape/Html &><& content &></&></pre>
-</%def>

@@ -17,7 +17,7 @@
 
       The value of a java expression can be emitted by enclosing the
       expression in <code>&lt;%...%&gt;</code> pairs, e.g.
-      <&| _template &><%LITERAL>
+      <&| _Template &><%LITERAL>
 <% person.getFirstName().substring(0,10) %>
 </%LITERAL></&>
       Note that there must be at least one whitespace character
@@ -29,7 +29,7 @@
       is <em>escaped</em>.  The default escaping mechanism is HTML, so for
       example the following template
 
-      <&| _template &><%LITERAL>this <% "&" %> that</%LITERAL></&>
+      <&| _Template &><%LITERAL>this <% "&" %> that</%LITERAL></&>
 
       produces
 
@@ -39,7 +39,7 @@
       template itself.  A string can be emitted with no escaping as
       follows:
 
-      <&| _template &><%LITERAL>this <% "&" #n %> that</%LITERAL></&>
+      <&| _Template &><%LITERAL>this <% "&" #n %> that</%LITERAL></&>
 
       producing
 
@@ -74,7 +74,7 @@
       <p>
         Arbitrary Java code can be inserted into the template using
         <code>&lt;%java&gt;...&lt;/%java&gt;</code>, e.g.
-      <&| _template &><%LITERAL>
+      <&| _Template &><%LITERAL>
 <%java>
   while (iter.hasNext()) {
     Person p = (Person) iter.next();
@@ -88,7 +88,7 @@
         Alternatively, any line beginning with '<code>%</code>' also is
         assumed to contain valid Java code. The previous example could
         be equivalently (and perhaps more clearly) written as
-        <&| _template &><%LITERAL>
+        <&| _Template &><%LITERAL>
 %  while (iter.hasNext()) {
 %    Person p = (Person) iter.next();
 %    if (p.getLastName().startsWith("S")) {
@@ -118,7 +118,7 @@
       <p>
 
       For example, suppose <code>/restaurant/Menu</code> contains:
-      <&| _template &><%LITERAL>
+      <&| _Template &><%LITERAL>
 <%abstract>
 <html>
  <body>
@@ -128,7 +128,7 @@
 </html>
 </%LITERAL></&>
       and <code>/restaurant/Lunch</code> contains:
-      <&| _template &><%LITERAL>
+      <&| _Template &><%LITERAL>
 <%extends /restaurant/Menu>
 Sandwich Jamon y Queso
 </%LITERAL></&>
@@ -156,7 +156,7 @@ Sandwich Jamon y Queso
 
       <p>
       For example:
-      <&| _template &><%LITERAL>
+      <&| _Template &><%LITERAL>
 <%class>
   static int pageViews = 1;
 </%class>
@@ -180,7 +180,7 @@ This component has been accessed <% pageViews++ %> times.
       of that template.
       <p>
       For example:
-      <&| _template &><%LITERAL>
+      <&| _Template &><%LITERAL>
 <%import>
   java.util.Iterator;
   org.modusponens.myapp.data.*;
@@ -208,7 +208,7 @@ This component has been accessed <% pageViews++ %> times.
       <p>
 
       For example:
-      <&| _template &><%LITERAL>
+      <&| _Template &><%LITERAL>
 <%args>
   String[] nicknames => new String[0];
   Address address;
@@ -254,7 +254,7 @@ Your nicknames are
       template.  Optional arguments, however, may have their default
       values redefined by the child.  For example, if
       <code>/parent</code> contains:
-      <&| _template &><%LITERAL>
+      <&| _Template &><%LITERAL>
 <%abstract>
 <%args>
   String name;
@@ -269,7 +269,7 @@ Remember, today's lucky number is <% luckyNumber %>.
 </%LITERAL></&>
 
     then <code>/child</code> might contain:
-    <&| _template &><%LITERAL>
+    <&| _Template &><%LITERAL>
 <%extends /parent>
 <%args>
   int temperature;
@@ -315,7 +315,7 @@ a good sign for you, <% name %>.
       <p>
 
       For example:
-      <&| _template &><%LITERAL>
+      <&| _Template &><%LITERAL>
 <%def _row>
   <%args>
     String name;
@@ -385,7 +385,7 @@ a good sign for you, <% name %>.
       the body of the override.
 
       For example, suppose <code>/weatherReport</code> contains:
-      <&| _template &><%LITERAL>
+      <&| _Template &><%LITERAL>
 <%abstract>
 <%method title>
   <%args>
@@ -408,7 +408,7 @@ a good sign for you, <% name %>.
 </%LITERAL></&>
 
       Then <code>/sunny</code> might contain:
-<&| _template &><%LITERAL>
+<&| _Template &><%LITERAL>
 <%extends /weatherReport>
 Head for the beach!  It's going to be sunny and beautiful.
 </%LITERAL></&>
@@ -426,7 +426,7 @@ Head for the beach!  It's going to be sunny and beautiful.
 </&></pre>
 
     However, <code>/stormWarning</code> could contain:
-      <&| _template &><%LITERAL>
+      <&| _Template &><%LITERAL>
 <%override title>
   <%xargs>
     city;
@@ -454,7 +454,7 @@ Now would be a poor time to go sailing.
       supply the path to the template.  For example, suppose
       <code>/img/spacer</code> contains:
 
-      <&| _template &><%LITERAL>
+      <&| _Template &><%LITERAL>
 <%args>
   int width => 1;
   int height => 1;
@@ -465,7 +465,7 @@ Now would be a poor time to go sailing.
      border="0">
 </%LITERAL></&>
       This can be invoked from other templates like
-      <&| _template &><%LITERAL>
+      <&| _Template &><%LITERAL>
 <table>
   <tr>
     <td align="left">Name</td>
@@ -504,7 +504,7 @@ Now would be a poor time to go sailing.
       <p>
 
       Putting this all together, the template
-      <&| _template &><%LITERAL>
+      <&| _Template &><%LITERAL>
 <%def _lilink>
   <%frag content>
   </%frag>
@@ -561,7 +561,7 @@ Now would be a poor time to go sailing.
 
       <p>
 
-      For example <&| _template &><%LITERAL>
+      For example <&| _Template &><%LITERAL>
 <%def _list>
   <%frag display>
     float temperature;
@@ -596,7 +596,3 @@ produces <pre class="tty"><&| escape//Html &>
       (in fact it produces the above with some extra whitespace).
 
   </ol>
-
-<%def _template><%frag content></%frag>
-<pre class="template"><&| escape//Html &><& content &></&></pre>
-</%def>

@@ -1,0 +1,2 @@
+<%frag content/>
+<pre class="jamon"><&| /org/jamon/escape/Html &><& content &></&></pre>

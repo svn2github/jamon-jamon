@@ -50,4 +50,3 @@ This style of creating templates is much clearer in a program that uses more tha
 If the program needs to create a template with a template manager <em>other</em> than the default template manager, then it can still provide the correct template manager to the one-argument constructor for a template.
 </ol>
 <p>
-&nbsp

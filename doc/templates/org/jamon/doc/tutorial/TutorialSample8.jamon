@@ -67,7 +67,7 @@ A template fragment is a template and can have arguments just like a template.
 <p>
 To add arguments to a fragment, simply include a <code>&lt;%args></code> ...
 <code>&lt;/%args></code> tag at the beginning of the fragment.
-<&| _template &><%LITERAL>
+<&| ../_Template &><%LITERAL>
 % DateFormat dateFormat = new SimpleDateFormat("MM/dd");
 We offer the following holidays:
 <&| alternatingList; items => holidays.iterator() &>
@@ -131,8 +131,3 @@ The output from the template is
 <pre class="tty"><% output %></pre>
 
 </ol>
-&nbsp;
-
-<%def _template><%frag content></%frag>
-<pre class="template"><&| /org/jamon/escape/Html &><& content &></&></pre>
-</%def>
