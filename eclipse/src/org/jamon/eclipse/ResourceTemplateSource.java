@@ -17,26 +17,29 @@ public class ResourceTemplateSource implements TemplateSource {
 	
 	private final IFolder m_templateFolder;
 	
-	public long lastModified(String arg0) throws IOException {
-		return m_templateFolder.findMember(new Path(arg0).addFileExtension("jamon")).getLocalTimeStamp();
+	private IFile resourceFor(String p_templatePath) {
+		return (IFile) m_templateFolder.findMember(new Path(p_templatePath).addFileExtension("jamon"));
+	}
+	
+	public long lastModified(String p_templatePath) throws IOException {
+		return resourceFor(p_templatePath).getLocalTimeStamp();
 	}
 
-	public boolean available(String arg0) throws IOException {
-		return m_templateFolder.findMember(new Path(arg0).addFileExtension("jamon")) != null;
+	public boolean available(String p_templatePath) throws IOException {
+		return resourceFor(p_templatePath) != null;
 	}
 
-	public InputStream getStreamFor(String arg0) throws IOException {
-		IFile file = (IFile) m_templateFolder.findMember(new Path(arg0).addFileExtension("jamon"));
+	public InputStream getStreamFor(String p_templatePath) throws IOException {
 		try {
-			return file.getContents(true);
+			return resourceFor(p_templatePath).getContents(true);
 		}
 		catch (CoreException e) {
 			throw new IOException(e.getMessage());
 		}
 	}
 
-	public String getExternalIdentifier(String arg0) {
-		return arg0;
+	public String getExternalIdentifier(String p_templatePath) {
+		return p_templatePath;
 	}
 
 }
