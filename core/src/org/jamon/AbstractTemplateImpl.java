@@ -20,6 +20,8 @@
 
 package org.jamon;
 
+import org.jamon.emit.StandardEmitter;
+
 public abstract class AbstractTemplateImpl
     implements AbstractTemplateProxy.Intf
 {
@@ -41,27 +43,47 @@ public abstract class AbstractTemplateImpl
 
     protected String valueOf(Object p_obj)
     {
-        return p_obj != null ? p_obj.toString() : "";
+        return StandardEmitter.valueOf(p_obj);
     }
 
     protected String valueOf(int p_int)
     {
-        return String.valueOf(p_int);
+        return StandardEmitter.valueOf(p_int);
     }
 
     protected String valueOf(double p_double)
     {
-        return String.valueOf(p_double);
+        return StandardEmitter.valueOf(p_double);
     }
 
     protected String valueOf(char p_char)
     {
-        return String.valueOf(p_char);
+        return StandardEmitter.valueOf(p_char);
     }
 
     protected String valueOf(boolean p_bool)
     {
-        return String.valueOf(p_bool);
+        return StandardEmitter.valueOf(p_bool);
+    }
+
+    protected String valueOf(byte p_byte)
+    {
+        return StandardEmitter.valueOf(p_byte);
+    }
+
+    protected String valueOf(short p_short)
+    {
+        return StandardEmitter.valueOf(p_short);
+    }
+
+    protected String valueOf(long p_long)
+    {
+        return StandardEmitter.valueOf(p_long);
+    }
+
+    protected String valueOf(float p_float)
+    {
+        return StandardEmitter.valueOf(p_float);
     }
 
     private final TemplateManager m_templateManager;
