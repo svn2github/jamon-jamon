@@ -150,6 +150,9 @@ the documentation thus taking care of issues such as escaping.
       <param name="template" value="News" />
     </antcall>
     <antcall target="grind">
+      <param name="template" value="Features" />
+    </antcall>
+    <antcall target="grind">
       <param name="template" value="Servlets" />
     </antcall>
     <!-- Generate the first template example -->
