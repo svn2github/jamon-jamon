@@ -41,16 +41,16 @@ public class JamonException
 
     private final Throwable m_rootCause;
 
-    public Throwable getRootCause()
+    public Throwable getCause()
     {
         return m_rootCause;
     }
 
     public void printStackTrace(java.io.PrintWriter p_writer)
     {
-        if (getRootCause() != null)
+        if (getCause() != null)
         {
-            getRootCause().printStackTrace(p_writer);
+            getCause().printStackTrace(p_writer);
             p_writer.print("wrapped by ");
         }
         super.printStackTrace(p_writer);
