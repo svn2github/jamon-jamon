@@ -58,9 +58,9 @@
 
     <h2>What isn't Jamon?</h2>
 
-    Jamon does not provide the functionality of a <a
-    href="http://ootips.org/mvc-pattern.html">controller</a>, nor of a
-    <a
+    Jamon provides neither the functionality of a <a
+    href="http://ootips.org/mvc-pattern.html">controller</a>, nor that
+    of a <a
     href="http://java.sun.com/products/servlet/">servlet</a>. Though
     servlets and controllers often end up generating dynamic text
     and/or html, those functions are better served by components in
