@@ -8,11 +8,11 @@
     presentation) layer.
 
     <p>
-    The inspiration for Jamon was born over dissatisfaction with
-    current presentation layer technologies, including <a
+    The motivations for Jamon came from dissatisfaction with current
+    presentation layer technologies such <a
     href="http://java.sun.com/products/jsp/">JSP</a> and
-    <a href="http://jakarta.apache.org/velocity/">Velocity</a>, and a
-    surprisingly pleasant experience with
+    <a href="http://jakarta.apache.org/velocity/">Velocity</a>. Ideas
+    was also drawn from a surprisingly pleasant experience with
     <a href="http://www.masonhq.com">Mason</a>, which though written in
     and for <a href="http://www.perl.org">Perl</a>, provided inspiration
     both conceptual and syntactic (for better or worse).
