@@ -2,6 +2,7 @@ package org.modusponens.jtt;
 
 import java.io.Writer;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
@@ -39,9 +40,17 @@ public class ImplGenerator extends BaseGenerator
         m_unitStatements.put(MAIN_UNIT_NAME,new ArrayList());
     }
 
-    public Iterator getCalledTemplateNames()
+    public Collection getCalledTemplateNames()
     {
-        return m_calls.iterator();
+        Set calls = new HashSet();
+        calls.addAll(m_calls);
+        calls.removeAll(getDefNames());
+        List absCalls = new ArrayList(calls.size());
+        for (Iterator i = calls.iterator(); i.hasNext(); /* */)
+        {
+            absCalls.add(getAbsolutePath((String) i.next()));
+        }
+        return absCalls;
     }
 
     public void generateClassSource()
@@ -552,6 +561,27 @@ public class ImplGenerator extends BaseGenerator
         }
     }
 
+    protected String getAbsolutePath(String p_path)
+    {
+        if (p_path.charAt(0) == '/')
+        {
+            return p_path;
+        }
+        else
+        {
+            String pkgName = getPackageName();
+            if (pkgName.length() > 0)
+            {
+                return "/" + pkgName.replace('.','/') + '/' + p_path;
+            }
+            else
+            {
+                return "/" + p_path;
+            }
+        }
+
+    }
+
     private class CallStatement
         implements Statement
     {
@@ -574,30 +604,9 @@ public class ImplGenerator extends BaseGenerator
             return getDefNames().contains(m_path);
         }
 
-        protected String getAbsolutePath()
-        {
-            if (m_path.charAt(0) == '/')
-            {
-                return m_path;
-            }
-            else
-            {
-                String pkgName = getPackageName();
-                if (pkgName.length() > 0)
-                {
-                    return "/" + pkgName.replace('.','/') + '/' + m_path;
-                }
-                else
-                {
-                    return "/" + m_path;
-                }
-            }
-
-        }
-
         private String getClassName()
         {
-            return PathUtils.pathToClassName(getAbsolutePath());
+            return PathUtils.pathToClassName(getAbsolutePath(m_path));
         }
 
         private String getInterfaceClassName()
@@ -696,7 +705,7 @@ public class ImplGenerator extends BaseGenerator
             s.append(" = (");
             s.append(getInterfaceClassName());
             s.append(") getTemplateManager().getInstance(\"");
-            s.append(getAbsolutePath());
+            s.append(getAbsolutePath(m_path));
             s.append("\", getWriter());\n");
 
             List requiredArgs = getRequiredArgs();

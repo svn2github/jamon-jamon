@@ -8,8 +8,14 @@ import java.io.PushbackReader;
 import java.io.Writer;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Set;
+import java.util.HashSet;
 import org.modusponens.jtt.parser.Parser;
 import org.modusponens.jtt.parser.ParserException;
 import org.modusponens.jtt.lexer.Lexer;
@@ -85,16 +91,6 @@ public class StandardTemplateManager
     {
         m_packagePrefix = p_packagePrefix;
         m_javaCompiler = null;
-    }
-
-    private String getJavaFileName(String p_path)
-    {
-        return m_workDir + p_path + "Impl.java";
-    }
-
-    private String getJavaClassFileName(String p_path)
-    {
-        return m_workDir + p_path + "Impl.class";
     }
 
     private String getTemplateFileName(String p_path)
@@ -197,11 +193,125 @@ public class StandardTemplateManager
         return m_javaCompiler;
     }
 
-    private void createJavaFile(String p_path)
+    private Class getImplementationClass(String p_path)
+        throws IOException,
+               ParserException,
+               LexerException,
+               ClassNotFoundException
+    {
+
+        ensureUpToDate(p_path);
+        return loadAndResolveClass(p_path);
+    }
+
+    private static final String PS = System.getProperty("path.separator");
+    private static final String FS = System.getProperty("file.separator");
+
+    private String m_templateSourceDir = "testdata";
+    private String m_workDir = "work";
+    private String m_javac =
+        System.getProperty("java.home") + FS + ".." + FS + "bin" + FS +"javac";
+    private boolean m_includeRtJar = false;
+    private String m_classpath = "";
+    private ClassLoader m_classLoader = ClassLoader.getSystemClassLoader();
+    private String m_packagePrefix = "";
+    private JavaCompiler m_javaCompiler;
+    private final WorkDirLoader m_loader;
+
+
+
+
+    private String javaImpl(String p_path)
+    {
+        return m_workDir + p_path + "Impl.java";
+    }
+
+    private String classImpl(String p_path)
+    {
+        return m_workDir + p_path + "Impl.class";
+    }
+
+    private String javaIntf(String p_path)
+    {
+        return m_workDir + p_path + ".java";
+    }
+
+    private String classIntf(String p_path)
+    {
+        return m_workDir + p_path + ".class";
+    }
+
+    private void ensureUpToDate(String p_path)
         throws IOException,
                ParserException,
                LexerException
     {
+        Collection seen = new HashSet();
+        Collection outOfDateJavaFiles = new HashSet();
+        List workQueue = new LinkedList();
+        workQueue.add(p_path);
+
+        while (!workQueue.isEmpty())
+        {
+            String path = (String) workQueue.remove(0);
+            System.err.println("processing " + path);
+            seen.add(path);
+
+            File tf = new File(getTemplateFileName(path));
+            if (!tf.exists())
+            {
+                throw new JttException("Missing template " + path);
+            }
+
+            File jm = new File(javaImpl(path));
+            File ji = new File(javaIntf(path));
+            long ts = Math.min(jm.lastModified(),ji.lastModified());
+            if (jm.lastModified() < tf.lastModified()
+                || ji.lastModified() < tf.lastModified())
+            {
+                generateIntf(path);
+                m_dependencyCache.put(path,
+                                      new DependencyEntry(generateImpl(path)));
+                ts = System.currentTimeMillis();
+
+            }
+            File cm = new File(classImpl(path));
+            File ci = new File(classIntf(path));
+            if (cm.lastModified() < ts || ci.lastModified() < ts)
+            {
+                outOfDateJavaFiles.add(javaImpl(path));
+                outOfDateJavaFiles.add(javaIntf(path));
+            }
+
+            DependencyEntry d = (DependencyEntry) m_dependencyCache.get(path);
+            if (d == null || d.lastUpdated() < tf.lastModified())
+            {
+                d = new DependencyEntry(computeDependencies(path));
+                m_dependencyCache.put(path, d);
+            }
+            for (Iterator y = d.getDependencies(); y.hasNext(); /* */)
+            {
+                String dp = (String) y.next();
+                if (! seen.contains(dp))
+                {
+                    workQueue.add(dp);
+                }
+            }
+        }
+
+        compile(outOfDateJavaFiles);
+    }
+
+    /**
+     * @return dependencies
+     */
+    private Collection generateImpl(String p_path)
+        throws IOException,
+               ParserException,
+               LexerException
+    {
+        System.err.println("generating impl for " + p_path);
+
         String packageName, className;
         int i = p_path.lastIndexOf(FS);
         if (i >= 1)
@@ -221,7 +331,7 @@ public class StandardTemplateManager
             className = p_path;
         }
 
-        File javaFile = new File(getJavaFileName(p_path));
+        File javaFile = new File(javaImpl(p_path));
         FileWriter writer = new FileWriter(javaFile);
 
         ImplGenerator g2 = new ImplGenerator(writer,
@@ -239,6 +349,7 @@ public class StandardTemplateManager
         {
             g2.generateClassSource();
             writer.close();
+            return g2.getCalledTemplateNames();
         }
         catch (IOException e)
         {
@@ -248,69 +359,145 @@ public class StandardTemplateManager
         }
     }
 
-    private boolean isJavaFileUpToDate(String p_path)
-        throws IOException
+    private void generateIntf(String p_path)
+        throws IOException,
+               ParserException,
+               LexerException
     {
-        File jf = new File(getJavaFileName(p_path));
-        if (jf.exists())
+        // FIXME
+        System.err.println("generating intf for " + p_path);
+
+        String packageName, className;
+        int i = p_path.lastIndexOf(FS);
+        if (i >= 1)
         {
-            File tf = new File(getTemplateFileName(p_path));
-            if (! tf.exists() )
-            {
-                throw new JttException("Template file "
-                                       + p_path
-                                       + " missing?!");
-            }
-            return tf.lastModified() < jf.lastModified();
+            new File(m_workDir + p_path.substring(0,i)).mkdirs();
+            packageName = PathUtils.pathToClassName(p_path.substring(1,i));
+            className = p_path.substring(i+1);
+        }
+        else if (i == 0)
+        {
+            packageName = "";
+            className = p_path.substring(1);
         }
         else
         {
-            return false;
+            packageName = "";
+            className = p_path;
+        }
+
+        File javaFile = new File(javaIntf(p_path));
+        FileWriter writer = new FileWriter(javaFile);
+
+        InterfaceGenerator g1 = new InterfaceGenerator(writer,
+                                                       m_packagePrefix,
+                                                       packageName,
+                                                       className);
+
+        new Parser(new Lexer(new PushbackReader
+                             (new FileReader(getTemplateFileName(p_path)),
+                              1024)))
+            .parse()
+            .apply(g1);
+
+        try
+        {
+            g1.generateClassSource();
+            writer.close();
+        }
+        catch (IOException e)
+        {
+            writer.close();
+            javaFile.delete();
+            throw e;
         }
     }
 
-    private boolean isClassFileUpToDate(String p_path)
+    private void compile(Collection p_sourceFiles)
         throws IOException
     {
-        File jf = new File(getJavaFileName(p_path));
-        if (!jf.exists())
+        if (p_sourceFiles.isEmpty())
         {
-            throw new IOException("java file disappeared!?");
+            return;
         }
-        File cf = new File(getJavaClassFileName(p_path));
-        return jf.lastModified() < cf.lastModified();
+
+        System.err.print("compiling: ");
+        for (Iterator i = p_sourceFiles.iterator(); i.hasNext(); /* */)
+        {
+            System.err.print(i.next());
+            if (i.hasNext())
+            {
+                System.err.print(", ");
+            }
+        }
+        System.err.println();
+        getJavaCompiler()
+            .compile((String []) p_sourceFiles.toArray(new String [0]));
     }
 
-    private Class getImplementationClass(String p_path)
+    private Collection computeDependencies(String p_path)
         throws IOException,
                ParserException,
-               LexerException,
-               ClassNotFoundException
+               LexerException
     {
-        if (! isJavaFileUpToDate(p_path))
+        System.err.println("computing dependencies for " + p_path);
+
+        String packageName, className;
+        int i = p_path.lastIndexOf(FS);
+        if (i >= 1)
         {
-            createJavaFile(p_path);
+            new File(m_workDir + p_path.substring(0,i)).mkdirs();
+            packageName = PathUtils.pathToClassName(p_path.substring(1,i));
+            className = p_path.substring(i+1);
+        }
+        else if (i == 0)
+        {
+            packageName = "";
+            className = p_path.substring(1);
+        }
+        else
+        {
+            packageName = "";
+            className = p_path;
         }
 
-        if (! isClassFileUpToDate(p_path) )
-        {
-            getJavaCompiler().compile(getJavaFileName(p_path));
-        }
+        ImplGenerator g2 = new ImplGenerator(null,
+                                             m_packagePrefix,
+                                             packageName,
+                                             className);
 
-        return loadAndResolveClass(p_path);
+        new Parser(new Lexer(new PushbackReader
+                             (new FileReader(getTemplateFileName(p_path)),
+                              1024)))
+            .parse()
+            .apply(g2);
+
+        return g2.getCalledTemplateNames();
     }
 
-    private static final String PS = System.getProperty("path.separator");
-    private static final String FS = System.getProperty("file.separator");
 
-    private String m_templateSourceDir = "testdata";
-    private String m_workDir = "work";
-    private String m_javac =
-        System.getProperty("java.home") + FS + ".." + FS + "bin" + FS +"javac";
-    private boolean m_includeRtJar = false;
-    private String m_classpath = "";
-    private ClassLoader m_classLoader = ClassLoader.getSystemClassLoader();
-    private String m_packagePrefix = "";
-    private JavaCompiler m_javaCompiler;
-    private final WorkDirLoader m_loader;
+    private Map m_dependencyCache = new HashMap();
+
+    private static class DependencyEntry
+    {
+        DependencyEntry(Collection p_dependencies)
+        {
+            m_dependencies = p_dependencies;
+            m_lastUpdated = System.currentTimeMillis();
+        }
+
+        Collection m_dependencies;
+        long m_lastUpdated;
+
+        Iterator getDependencies()
+        {
+            return m_dependencies.iterator();
+        }
+
+        long lastUpdated()
+        {
+            return m_lastUpdated;
+        }
+    }
+
 }
