@@ -22,8 +22,11 @@ package org.jamon;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.lang.reflect.Field;
@@ -181,11 +184,45 @@ public class Invoker
         throws InvalidTemplateException,
                IOException
     {
+        render(p_writer, p_argMap, false);
+    }
+
+    public void render(Writer p_writer,
+                       Map p_argMap,
+                       boolean p_ignoreUnusedParams)
+        throws InvalidTemplateException,
+               IOException
+    {
         try
         {
             m_writeToMethod.invoke(m_template, new Object[] { p_writer } );
             Field required = m_templateClass.getField("REQUIRED_ARG_NAMES");
+            Field optional = m_templateClass.getField("OPTIONAL_ARG_NAMES");
             String[] requiredArgNames = (String[]) required.get(null);
+            String[] optionalArgNames = (String[]) optional.get(null);
+
+            if (! p_ignoreUnusedParams)
+            {
+                Set argNames = new HashSet();
+                argNames.addAll(p_argMap.keySet());
+                argNames.removeAll(Arrays.asList(requiredArgNames));
+                argNames.removeAll(Arrays.asList(optionalArgNames));
+                if (! argNames.isEmpty())
+                {
+                    StringBuffer msg =
+                        new StringBuffer("Unknown arguments supplied: ");
+                    for (Iterator i = argNames.iterator(); i.hasNext(); )
+                    {
+                        msg.append(i.next());
+                        if (i.hasNext())
+                        {
+                            msg.append(",");
+                        }
+                    }
+                    throw new JamonException(msg.toString());
+                }
+            }
+
             Object[] actuals = new Object[requiredArgNames.length];
             Class[] paramTypes = m_renderMethod.getParameterTypes();
 
@@ -193,12 +230,15 @@ public class Invoker
             {
                 actuals[i] =
                     parse(paramTypes[i],
-                          (String) p_argMap.remove(requiredArgNames[i]));
+                          (String) p_argMap.get(requiredArgNames[i]));
             }
-            for (Iterator i = p_argMap.keySet().iterator(); i.hasNext(); /* */)
+            for (int i = 0; i < optionalArgNames.length; ++i)
             {
-                String name = (String) i.next();
-                invokeSet(name,(String) p_argMap.get(name));
+                if (p_argMap.containsKey(optionalArgNames[i]))
+                {
+                    invokeSet(optionalArgNames[i],
+                              (String) p_argMap.get(optionalArgNames[i]));
+                }
             }
             m_renderMethod.invoke(m_template, actuals);
         }
