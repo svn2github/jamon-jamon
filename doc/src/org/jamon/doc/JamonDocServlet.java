@@ -79,9 +79,13 @@ public class JamonDocServlet
 
         m_manager = new RecompilingTemplateManager
             (new RecompilingTemplateManager.Data()
-                .setWorkDir("build/work")
-                .setSourceDir("templates")
-                .setJavaCompiler("jikes"));
+                 .setWorkDir(p_config
+                              .getServletContext()
+                              .getAttribute("javax.servlet.context.tempdir")
+                              .toString())
+                 .setClassLoader(getClass().getClassLoader())
+                 .setSourceDir("templates")
+                 .setJavaCompiler("jikes"));
     }
 
     private void expireResponse(HttpServletResponse p_response)
