@@ -34,9 +34,12 @@ public class LiteralStatement
                                TemplateResolver p_resolver,
                                TemplateDescriber p_describer)
     {
-        p_writer.print("this.write(\"");
-        p_writer.print(m_text);
-        p_writer.println("\");");
+        if (m_text.length() > 0)
+        {
+            p_writer.print("this.write(\"");
+            p_writer.print(m_text);
+            p_writer.println("\");");
+        }
     }
 
     private static String javaEscape(String p_string)
