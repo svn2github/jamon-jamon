@@ -62,8 +62,11 @@ public class BaseAnalyzer
 
     public FargInfo getFargInfo(String p_unitName, String p_fargName)
     {
+
+        UnitInfo unitInfo = getUnitInfo("#PFRAG#" + p_fargName);
         return new FargInfo(p_fargName,
-                            new HashMap());
+                            unitInfo.getRequiredArgNames(),
+                            unitInfo.getArgumentMap());
     }
 
     public Iterator getFargNames()
@@ -93,9 +96,14 @@ public class BaseAnalyzer
 
     protected static final String MAIN_UNIT_NAME = "";
 
-    protected final void pushUnit(String p_unitName)
+    protected final void pushUnitName(String p_unitName)
     {
         m_unitNames.addLast(p_unitName);
+    }
+
+    protected final void pushUnit(String p_unitName)
+    {
+        pushUnitName(p_unitName);
         m_unit.put(p_unitName,new UnitInfo(p_unitName));
     }
 
@@ -167,6 +175,10 @@ public class BaseAnalyzer
         Iterator getFargNames()
         {
             return m_fargs.iterator();
+        }
+        Map getArgumentMap()
+        {
+            return m_argTypes;
         }
         private final Map m_default = new HashMap();
         private final Map m_argTypes = new HashMap();

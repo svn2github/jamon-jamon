@@ -31,7 +31,9 @@ public class TemplateDescriber
 
     public FargInfo getFargInfo(String p_path, String p_fargName)
     {
+        // FIXME
         return new FargInfo(p_fargName,
+                            new LinkedList().iterator(),
                             new HashMap());
     }
 

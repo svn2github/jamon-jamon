@@ -6,15 +6,20 @@ import java.util.Map;
 
 class FargInfo
 {
-    public FargInfo(String p_name, Map p_args)
+    public FargInfo(String p_name, Iterator p_argNames, Map p_args)
     {
         m_name = p_name;
         m_args = p_args;
+        m_argNames = new ArrayList();
+        while (p_argNames.hasNext())
+        {
+            m_argNames.add(p_argNames.next());
+        }
     }
 
     public Iterator getArgumentNames()
     {
-        return m_args.keySet().iterator();
+        return m_argNames.iterator();
     }
 
     public String getArgumentType(String p_name)
@@ -34,4 +39,5 @@ class FargInfo
 
     private final String m_name;
     private final Map m_args;
+    private final ArrayList m_argNames;
 }

@@ -41,7 +41,6 @@ States
   callexp,
   inherit,
   args,
-  content,
   farginit;
 
 Tokens
@@ -57,8 +56,8 @@ Tokens
   {java -> body} java_end = ws* '</%java>';
   {args,imports} dot = period;
   {args -> argexp} arrow = '=>' hs*;
-  {call,args,farginit,content,inherit,imports} white_space = ws*;
-  {call,args,farginit,content,imports,inherit,def} identifier = letter letter_or_digit*;
+  {call,args,farginit,inherit,imports} white_space = ws*;
+  {call,args,farginit,imports,inherit,def} identifier = letter letter_or_digit*;
 
   {start -> emit,body -> emit} emit_start = '<%' ws+;
   {emit -> body} emit_end = ws* '%>';
@@ -122,9 +121,6 @@ Tokens
               | '</%do' [all-'c']
               | '</%doc' [all-'>'])* '</%doc>';
 
-  {body -> content,start -> content} content_start = '<|';
-  {content -> body} content_end = '|>';
-
 Ignored Tokens
 
   white_space,doc;
@@ -136,7 +132,6 @@ Productions
   base_component =
               {body} text
             | {child} child
-            | {content} content
             | {newline} newline
             | {java} java
             | {jline} jline
@@ -151,8 +146,6 @@ Productions
             | {imports} imports
             | {def} def
             ;
-
-  content = content_start identifier content_end;
 
   def = def_start identifier gt base_component* def_end;
 

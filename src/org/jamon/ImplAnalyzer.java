@@ -144,27 +144,54 @@ public class ImplAnalyzer extends BaseAnalyzer
                                             encoding));
         }
 
-        public void caseAContentBaseComponent(AContentBaseComponent node)
+        private FargInfo maybeGetFargInfo(String p_path)
         {
-            handleBody();
-            AContent c = (AContent) node.getContent();
-            addStatement(new RawStatement(c.getIdentifier().getText()
-                                          + ".render();"));
+            String unitName = getUnitName();
+            for (Iterator f = getFargNames(unitName); f.hasNext(); /* */)
+            {
+                String name = (String) f.next();
+                if (p_path.equals(name))
+                {
+                    return getFargInfo(unitName,p_path);
+                }
+            }
+            if (unitName.startsWith("#fragment#"))
+            {
+                String name = popUnitName();
+                FargInfo val = maybeGetFargInfo(p_path);
+                pushUnitName(name);
+                return val;
+            }
+            else
+            {
+                return null;
+            }
         }
+
 
         public void caseACallBaseComponent(ACallBaseComponent node)
         {
             handleBody();
             ACall call = (ACall) node.getCall();
             String path = asText(call.getPath());
-            m_calls.add(path);
-            addStatement(new CallStatement(path,makeParamMap(call.getParam())));
+            FargInfo fargInfo = maybeGetFargInfo(path);
+            if (fargInfo != null)
+            {
+                addStatement(new FargCallStatement(path,
+                                                   makeParamMap(call.getParam()),
+                                                   fargInfo));
+            }
+            else
+            {
+                m_calls.add(path);
+                addStatement(new CallStatement(path,makeParamMap(call.getParam())));
+            }
         }
 
         public void caseAFragmentCallBaseComponent(AFragmentCallBaseComponent node)
         {
             handleBody();
-            pushUnit("#" + (fragments++));
+            pushUnit("#fragment#" + (fragments++));
             m_unitStatements.put(getUnitName(),new ArrayList());
             AFragmentCall call = (AFragmentCall) node.getFragmentCall();
             String path = asText(call.getPath());

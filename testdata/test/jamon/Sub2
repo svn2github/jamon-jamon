@@ -4,5 +4,5 @@
   int x;
 </%args>
 Above the content
-<|frag|>
+<& frag &>
 Below the content
