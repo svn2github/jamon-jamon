@@ -32,8 +32,22 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 
+
+/**
+ * An <code>Invoker</code> manages the reflective rendering of a
+ * template, given a template path and a <code>Map</code> of argument
+ * values as Strings.
+ *
+ * This class could certainly use some refactoring, and in fact, the
+ * public contract ought to allow reuse for multiple templates.
+ */
+
 public class Invoker
 {
+    /**
+     * An <code>ObjectParser</code> describes how to convert string
+     * values to objects.
+     */
     public static interface ObjectParser
     {
         Object parseObject(Class p_type, String p_value)
@@ -136,6 +150,13 @@ public class Invoker
         }
     }
 
+    /**
+     * Construct an <code>Invoker</code> with a template manager and
+     * template path, using a {@link DefaultObjectParser}.
+     *
+     * @param p_manager the <code>TemplateManager</code> to use
+     * @param p_templateName the path of the template to be rendered
+     */
     public Invoker(TemplateManager p_manager,
                    String p_templateName)
         throws IOException
@@ -143,6 +164,15 @@ public class Invoker
         this(p_manager, p_templateName, new DefaultObjectParser());
     }
 
+    /**
+     * Construct an <code>Invoker</code> with a template manager,
+     * template path and a specific <code>ObjectParser</code>.
+     *
+     * @param p_manager the <code>TemplateManager</code> to use
+     * @param p_templateName the path of the template to be rendered
+     * @param p_objectParser the object with which to translate
+     * strings to values.
+     */
     public Invoker(TemplateManager p_manager,
                    String p_templateName,
                    ObjectParser p_objectParser)
@@ -177,6 +207,12 @@ public class Invoker
         }
     }
 
+    /**
+     * Render the template.
+     *
+     * @param p_writer the Writer to render to
+     * @param p_argMap a Map&lt;String,String&gt; of arguments
+     */
     public void render(Writer p_writer, Map p_argMap)
         throws InvalidTemplateException,
                IOException
@@ -184,6 +220,14 @@ public class Invoker
         render(p_writer, p_argMap, false);
     }
 
+    /**
+     * Render the template.
+     *
+     * @param p_writer the Writer to render to
+     * @param p_argMap a Map&lt;String,String&gt; of arguments
+     * @param p_ignoreUnusedParams whether to throw an exception if
+     * "extra" arguments are supplied
+     */
     public void render(Writer p_writer,
                        Map p_argMap,
                        boolean p_ignoreUnusedParams)
