@@ -282,9 +282,9 @@ dt
   vertical-align: middle;
   width: 99%;
   height: 1.5em;
-  margin: 2px 2px 1em 2px;
+  margin: 0.5em 2px 1em 2px;
   border: 1px solid #0f2f7f;
-  background-color: #3f5faf;
+  background-color: #8fafff;
 }
 
 .tutorialNavNeighbor
@@ -301,10 +301,4 @@ dt
   width: 60%;
   margin: 0 0 0 0;
   padding: 0em 0 0.5em 0;
-}
-
-*.tutorialNav a
-{
-  padding: 3px;
-  color: #ffffff;
 }
