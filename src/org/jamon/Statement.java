@@ -8,6 +8,6 @@ public interface Statement
     void generateSource(PrintWriter p_writer,
                         TemplateResolver p_resolver,
                         TemplateDescriber p_describer,
-                        ImplAdapter p_adapter)
+                        ImplAnalyzer p_analyzer)
         throws IOException;
 }

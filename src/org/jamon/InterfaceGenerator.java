@@ -9,12 +9,12 @@ public class InterfaceGenerator
 {
     public InterfaceGenerator(TemplateResolver p_resolver,
                               String p_templatePath,
-                              BaseGenerator p_adapter,
+                              BaseAnalyzer p_analyzer,
                               Writer p_writer)
     {
         m_path = p_templatePath;
         m_resolver = p_resolver;
-        m_adapter = p_adapter;
+        m_analyzer = p_analyzer;
         m_writer = new PrintWriter(p_writer);
     }
 
@@ -44,7 +44,7 @@ public class InterfaceGenerator
         Writer.class.getName();
 
 
-    private final BaseGenerator m_adapter;
+    private final BaseAnalyzer m_analyzer;
     private final PrintWriter m_writer;
     private final String m_path;
     private final TemplateResolver m_resolver;
@@ -75,7 +75,7 @@ public class InterfaceGenerator
     private void generateImports()
         throws IOException
     {
-        for (Iterator i = m_adapter.getImports(); i.hasNext(); /* */ )
+        for (Iterator i = m_analyzer.getImports(); i.hasNext(); /* */ )
         {
             print("import ");
             print(i.next());
@@ -152,10 +152,10 @@ public class InterfaceGenerator
         throws IOException
     {
         print("  public void render(");
-        for (Iterator i = m_adapter.getRequiredArgNames(); i.hasNext(); /* */)
+        for (Iterator i = m_analyzer.getRequiredArgNames(); i.hasNext(); /* */)
         {
             String name = (String) i.next();
-            print(m_adapter.getArgType(name));
+            print(m_analyzer.getArgType(name));
             print(" p_");
             print(name);
             if (i.hasNext())
@@ -171,7 +171,7 @@ public class InterfaceGenerator
     private void generateOptionalArgs()
         throws IOException
     {
-        for (Iterator i = m_adapter.getOptionalArgNames(); i.hasNext(); /* */)
+        for (Iterator i = m_analyzer.getOptionalArgNames(); i.hasNext(); /* */)
         {
             println();
             String name = (String) i.next();
@@ -186,7 +186,7 @@ public class InterfaceGenerator
             print(" set");
             print(StringUtils.capitalize(name));
             print("(");
-            print(m_adapter.getArgType(name));
+            print(m_analyzer.getArgType(name));
             print(" p_");
             print(name);
             println(");");

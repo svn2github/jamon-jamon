@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.HashMap;
 import org.modusponens.jtt.node.*;
 
-public class ImplAdapter extends BaseGenerator
+public class ImplAnalyzer extends BaseAnalyzer
 {
     private final Map m_unitStatements = new HashMap();
     private StringBuffer m_current = new StringBuffer();
@@ -21,7 +21,7 @@ public class ImplAdapter extends BaseGenerator
 
     private final String m_path;
 
-    public ImplAdapter(String p_templatePath)
+    public ImplAnalyzer(String p_templatePath)
     {
         m_unitStatements.put(MAIN_UNIT_NAME,new ArrayList());
         m_path = p_templatePath;

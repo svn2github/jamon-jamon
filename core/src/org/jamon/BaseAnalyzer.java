@@ -9,7 +9,7 @@ import java.util.Iterator;
 import org.modusponens.jtt.node.*;
 import org.modusponens.jtt.analysis.*;
 
-public class BaseGenerator extends AnalysisAdapter
+public class BaseAnalyzer extends AnalysisAdapter
 {
     protected static final String MAIN_UNIT_NAME = "";
 

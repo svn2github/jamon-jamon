@@ -26,40 +26,40 @@ public class CallStatement
     private final String m_path;
     protected final Map m_params;
 
-    protected boolean isDefCall(ImplAdapter p_adapter)
+    protected boolean isDefCall(ImplAnalyzer p_analyzer)
     {
-        return p_adapter.getDefNames().contains(getPath());
+        return p_analyzer.getDefNames().contains(getPath());
     }
 
     public void generateSource(PrintWriter p_writer,
                                TemplateResolver p_resolver,
                                TemplateDescriber p_describer,
-                               ImplAdapter p_adapter)
+                               ImplAnalyzer p_analyzer)
         throws IOException
     {
-        if (isDefCall(p_adapter))
+        if (isDefCall(p_analyzer))
         {
-            generateAsDefCall(p_writer, p_adapter);
+            generateAsDefCall(p_writer, p_analyzer);
         }
         else
         {
             generateAsComponentCall(p_writer,
                                     p_resolver,
                                     p_describer,
-                                    p_adapter,
-                                    p_adapter.getAbsolutePath(m_path));
+                                    p_analyzer,
+                                    p_analyzer.getAbsolutePath(m_path));
         }
     }
 
     private void generateAsDefCall(PrintWriter p_writer,
-                                   ImplAdapter p_adapter)
+                                   ImplAnalyzer p_analyzer)
         throws IOException
     {
         p_writer.print("$def$");
         p_writer.print(getPath());
         p_writer.print("(");
         int argNum = 0;
-        for (Iterator r = p_adapter.getRequiredArgNames(getPath()); r.hasNext(); )
+        for (Iterator r = p_analyzer.getRequiredArgNames(getPath()); r.hasNext(); )
         {
             if (argNum++ > 0)
             {
@@ -76,7 +76,7 @@ public class CallStatement
             p_writer.print(expr);
             p_writer.print(")");
         }
-        for (Iterator o = p_adapter.getOptionalArgNames(getPath()); o.hasNext(); )
+        for (Iterator o = p_analyzer.getOptionalArgNames(getPath()); o.hasNext(); )
         {
             if (argNum++ > 0)
             {
@@ -87,7 +87,7 @@ public class CallStatement
             String expr = (String) m_params.get(name);
             if (expr == null)
             {
-                p_writer.print(p_adapter.getDefault(getPath(),name));
+                p_writer.print(p_analyzer.getDefault(getPath(),name));
             }
             else
             {
@@ -111,11 +111,11 @@ public class CallStatement
     private void generateAsComponentCall(PrintWriter p_writer,
                                          TemplateResolver p_resolver,
                                          TemplateDescriber p_describer,
-                                         ImplAdapter p_adapter,
+                                         ImplAnalyzer p_analyzer,
                                          String p_absPath)
         throws IOException
     {
-        String tVar = p_adapter.newVarName();
+        String tVar = p_analyzer.newVarName();
         String intfName = getInterfaceClassName(p_resolver,p_absPath);
         p_writer.println("{");
         p_writer.print("  final ");

@@ -52,7 +52,7 @@ public class TemplateGenerator
 
         System.out.println(p_filename + " => " + javaFile);
 
-        BaseGenerator bg = new BaseGenerator();
+        BaseAnalyzer bg = new BaseAnalyzer();
         new Parser(new Lexer(new PushbackReader
                              (new FileReader(p_filename),
                               1024)))

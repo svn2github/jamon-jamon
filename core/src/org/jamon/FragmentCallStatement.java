@@ -22,22 +22,22 @@ public class FragmentCallStatement
     private final static String IOEXCEPTION_CLASS =
         IOException.class.getName();
 
-    private Object getFirstArgName(ImplAdapter p_adapter,TemplateDescriber p_describer)
+    private Object getFirstArgName(ImplAnalyzer p_analyzer,TemplateDescriber p_describer)
         throws JttException
     {
-        return isDefCall(p_adapter)
-            ? p_adapter.getRequiredArgNames(getPath()).next()
-            : p_describer.getRequiredArgNames(p_adapter.getAbsolutePath(getPath())).get(0);
+        return isDefCall(p_analyzer)
+            ? p_analyzer.getRequiredArgNames(getPath()).next()
+            : p_describer.getRequiredArgNames(p_analyzer.getAbsolutePath(getPath())).get(0);
     }
 
 
     public void generateSource(PrintWriter p_writer,
                                TemplateResolver p_resolver,
                                TemplateDescriber p_describer,
-                               ImplAdapter p_adapter)
+                               ImplAnalyzer p_analyzer)
         throws IOException
     {
-        String fragVar = p_adapter.newVarName();
+        String fragVar = p_analyzer.newVarName();
         p_writer.println("{");
         p_writer.print("    final ");
         p_writer.print(FRAGMENT_CLASS);
@@ -55,15 +55,15 @@ public class FragmentCallStatement
             ((Statement)i.next()).generateSource(p_writer,
                                                  p_resolver,
                                                  p_describer,
-                                                 p_adapter);
+                                                 p_analyzer);
             p_writer.println();
         }
         p_writer.println("    }");
         p_writer.println("  };");
 
-        m_params.put(getFirstArgName(p_adapter,p_describer),fragVar);
+        m_params.put(getFirstArgName(p_analyzer,p_describer),fragVar);
 
-        super.generateSource(p_writer,p_resolver,p_describer,p_adapter);
+        super.generateSource(p_writer,p_resolver,p_describer,p_analyzer);
 
         p_writer.println("}");
     }

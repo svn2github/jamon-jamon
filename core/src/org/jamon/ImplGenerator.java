@@ -10,11 +10,11 @@ public class ImplGenerator
     public ImplGenerator(Writer p_writer,
                          TemplateResolver p_resolver,
                          TemplateDescriber p_describer,
-                         ImplAdapter p_adapter)
+                         ImplAnalyzer p_analyzer)
     {
         m_writer = new PrintWriter(p_writer);
         m_resolver = p_resolver;
-        m_adapter = p_adapter;
+        m_analyzer = p_analyzer;
         m_describer = p_describer;
     }
 
@@ -39,12 +39,12 @@ public class ImplGenerator
 
     private final TemplateResolver m_resolver;
     private final TemplateDescriber m_describer;
-    private final ImplAdapter m_adapter;
+    private final ImplAnalyzer m_analyzer;
     private final PrintWriter m_writer;
 
     private final String getPath()
     {
-        return m_adapter.getPath();
+        return m_analyzer.getPath();
     }
 
     private void print(Object p_obj)
@@ -133,7 +133,7 @@ public class ImplGenerator
     private void generateDefs()
         throws IOException
     {
-        for (Iterator d = m_adapter.getDefNames().iterator(); d.hasNext(); /* */)
+        for (Iterator d = m_analyzer.getDefNames().iterator(); d.hasNext(); /* */)
         {
             String name = (String) d.next();
             println();
@@ -141,7 +141,7 @@ public class ImplGenerator
             print(name);
             print("(");
             int argNum = 0;
-            for (Iterator a = m_adapter.getRequiredArgNames(name);
+            for (Iterator a = m_analyzer.getRequiredArgNames(name);
                  a.hasNext();
                  /* */)
             {
@@ -151,11 +151,11 @@ public class ImplGenerator
                 }
                 String arg = (String) a.next();
                 print("final ");
-                print(m_adapter.getArgType(name,arg));
+                print(m_analyzer.getArgType(name,arg));
                 print(" ");
                 print(arg);
             }
-            for (Iterator a = m_adapter.getOptionalArgNames(name);
+            for (Iterator a = m_analyzer.getOptionalArgNames(name);
                  a.hasNext();
                  /* */)
             {
@@ -164,7 +164,7 @@ public class ImplGenerator
                     print(",");
                 }
                 String arg = (String) a.next();
-                print(m_adapter.getArgType(name,arg));
+                print(m_analyzer.getArgType(name,arg));
                 print(" ");
                 print(arg);
             }
@@ -172,7 +172,7 @@ public class ImplGenerator
             print  ("    throws ");
             println(IOEXCEPTION_CLASS);
             println("  {");
-            for (Iterator i = m_adapter.getStatements(name).iterator();
+            for (Iterator i = m_analyzer.getStatements(name).iterator();
                  i.hasNext();
                  /* */)
             {
@@ -180,7 +180,7 @@ public class ImplGenerator
                 ((Statement)i.next()).generateSource(m_writer,
                                                      m_resolver,
                                                      m_describer,
-                                                     m_adapter);
+                                                     m_analyzer);
             }
             println("  }");
             println();
@@ -197,11 +197,11 @@ public class ImplGenerator
         throws IOException
     {
         print("  public void render(");
-        for (Iterator i = m_adapter.getRequiredArgNames(); i.hasNext(); /* */)
+        for (Iterator i = m_analyzer.getRequiredArgNames(); i.hasNext(); /* */)
         {
             String name = (String) i.next();
             print("final ");
-            print(m_adapter.getArgType(name));
+            print(m_analyzer.getArgType(name));
             print(" ");
             print(name);
             if (i.hasNext())
@@ -214,13 +214,13 @@ public class ImplGenerator
         print  ("    throws ");
         println(IOEXCEPTION_CLASS);
         println("  {");
-        for (Iterator i = m_adapter.getStatements().iterator(); i.hasNext(); /* */)
+        for (Iterator i = m_analyzer.getStatements().iterator(); i.hasNext(); /* */)
         {
             print("    ");
             ((Statement)i.next()).generateSource(m_writer,
                                                  m_resolver,
                                                  m_describer,
-                                                 m_adapter);
+                                                 m_analyzer);
         }
         println("  }");
     }
@@ -228,7 +228,7 @@ public class ImplGenerator
     private void generateOptionalArgs()
         throws IOException
     {
-        for (Iterator i = m_adapter.getOptionalArgNames(); i.hasNext(); /* */)
+        for (Iterator i = m_analyzer.getOptionalArgNames(); i.hasNext(); /* */)
         {
             println();
             String name = (String) i.next();
@@ -243,7 +243,7 @@ public class ImplGenerator
             print(" set");
             print(StringUtils.capitalize(name));
             print("(");
-            String type = m_adapter.getArgType(name);
+            String type = m_analyzer.getArgType(name);
             print(type);
             print(" p_");
             print(name);
@@ -262,7 +262,7 @@ public class ImplGenerator
             print(" ");
             print(name);
             print(" = ");
-            print(m_adapter.getDefault(name));
+            print(m_analyzer.getDefault(name));
             println(";");
         }
     }
@@ -277,7 +277,7 @@ public class ImplGenerator
     private void generateImports()
         throws IOException
     {
-        for (Iterator i = m_adapter.getImports(); i.hasNext(); /* */ )
+        for (Iterator i = m_analyzer.getImports(); i.hasNext(); /* */ )
         {
             print("import ");
             print(i.next());

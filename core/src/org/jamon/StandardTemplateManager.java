@@ -333,7 +333,7 @@ public class StandardTemplateManager
 
         File javaFile = new File(javaImpl(p_path));
 
-        ImplAdapter ia = new ImplAdapter(p_path);
+        ImplAnalyzer ia = new ImplAnalyzer(p_path);
 
 
         parseTemplate(p_path).apply(ia);
@@ -385,7 +385,7 @@ public class StandardTemplateManager
         {
             try
             {
-                BaseGenerator g = new BaseGenerator();
+                BaseAnalyzer g = new BaseAnalyzer();
                 parseTemplate(p_path).apply(g);
                 LinkedList list = new LinkedList();
                 for (Iterator i = g.getRequiredArgNames(); i.hasNext(); /* */)
@@ -420,7 +420,7 @@ public class StandardTemplateManager
 
         File javaFile = new File(javaIntf(p_path));
 
-        BaseGenerator bg = new BaseGenerator();
+        BaseAnalyzer bg = new BaseAnalyzer();
 
         parseTemplate(p_path).apply(bg);
 
@@ -470,7 +470,7 @@ public class StandardTemplateManager
     {
         System.err.println("computing dependencies for " + p_path);
 
-        ImplAdapter g2 = new ImplAdapter(p_path);
+        ImplAnalyzer g2 = new ImplAnalyzer(p_path);
 
         parseTemplate(p_path).apply(g2);
 
