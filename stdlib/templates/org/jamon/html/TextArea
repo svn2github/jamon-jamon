@@ -1,0 +1,21 @@
+<%farg content>
+</%farg>\
+<%args>
+  org.jamon.render.html.Input input;
+  int cols => 0;
+  int rows => 0;
+</%args>
+<textarea name="<% input.getName() %>"
+% if (cols > 0) {
+       cols="<% cols %>"
+% }
+% if (rows > 0) {
+       rows="<% rows %>"
+% }
+>\
+% if (input.getValue() == null) {
+<& content &>\
+% } else {
+<% input.getValue() %>\
+% }
+</textarea>
