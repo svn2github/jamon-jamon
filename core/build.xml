@@ -80,7 +80,7 @@
   </target>
 
   <target name="cvsignores">
-    <echo file=".cvsignore">.cvsignore ${build.dir} build.properties ${test.dir}
+    <echo file=".cvsignore">.cvsignore ${build.dir} build.properties ${test.dir} ${jarfile}
 </echo>
   </target>
 
