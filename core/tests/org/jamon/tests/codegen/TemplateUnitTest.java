@@ -166,11 +166,13 @@ public class TemplateUnitTest
     {
         TemplateUnit unit = new TemplateUnit("/foo/bar");
         unit.addCallPath("/baz");
+        unit.addCallPath("wazza");
         unit.setParentPath("balla");
         Collection dependencies = unit.getTemplateDependencies();
-        assertEquals(2, dependencies.size());
+        assertEquals(3, dependencies.size());
         assertTrue(dependencies.contains("/baz"));
         assertTrue(dependencies.contains("/foo/balla"));
+        assertTrue(dependencies.contains("/foo/wazza"));
     }
 
     private void checkSigIsUnique(TemplateUnit p_unit, Set p_set)
