@@ -140,42 +140,14 @@ public class ProxyGenerator
         }
     }
 
-    //FIXME - see same in ImplGenerator
-    private void generateFragmentInterface(FragmentUnit p_fragmentUnit,
-                                           boolean p_inner)
-    {
-        String className = p_fragmentUnit.getFragmentInterfaceName();
-        m_writer.println("public static interface " + className);
-        if (!p_inner)
-        {
-            m_writer.println("  extends " + getClassName() + ".Intf."
-                             + className + "{}");
-        }
-        else
-        {
-            m_writer.println("  extends FragmentIntf");
-            m_writer.openBlock();
-            m_writer.print  ("void render(");
-            p_fragmentUnit.printRequiredArgsDecl(m_writer);
-            m_writer.println(")");
-            m_writer.println("  throws " + ClassNames.IOEXCEPTION + ";");
-
-            m_writer.print(ClassNames.RENDERER + " makeRenderer(");
-            p_fragmentUnit.printRequiredArgsDecl(m_writer);
-            m_writer.println(");");
-            m_writer.closeBlock();
-        }
-        m_writer.println();
-    }
-
     private void generateFragmentInterfaces(boolean p_inner)
     {
         for (Iterator f = m_templateUnit.getDeclaredFragmentArgs();
              f.hasNext(); )
         {
-            generateFragmentInterface(((FragmentArgument) f.next())
-                                          .getFragmentUnit(),
-                                      p_inner);
+            ((FragmentArgument) f.next()).getFragmentUnit()
+                .printInterface(m_writer, "public", ! p_inner);
+            m_writer.println();
         }
         m_writer.println();
     }

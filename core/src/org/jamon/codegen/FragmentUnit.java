@@ -60,4 +60,29 @@ public class FragmentUnit extends AbstractInnerUnit
     {
         return getParent().getFragmentUnitIntf(p_path);
     }
+
+    public void printInterface(IndentingWriter p_writer,
+                               String p_interfaceModifiers,
+                               boolean p_isCopy)
+    {
+        p_writer.println(p_interfaceModifiers + " static interface "
+                         + getFragmentInterfaceName());
+        p_writer.println("  extends "
+                         + (p_isCopy
+                            ? ("Intf." + getFragmentInterfaceName())
+                            : ClassNames.FRAGMENT_INTF));
+        p_writer.openBlock();
+        if (! p_isCopy)
+        {
+            p_writer.print  ("void render(");
+            printRequiredArgsDecl(p_writer);
+            p_writer.println(")");
+            p_writer.println("  throws java.io.IOException;");
+            p_writer.print(ClassNames.RENDERER + " makeRenderer(");
+            printRequiredArgsDecl(p_writer);
+            p_writer.println(");");
+        }
+        p_writer.closeBlock();
+        p_writer.println();
+    }
 }
