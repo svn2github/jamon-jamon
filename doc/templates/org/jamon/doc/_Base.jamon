@@ -58,11 +58,9 @@
 </li>
 </%def>
 
-<%method docRootUrl>\
-<%args>
-    String href;
-  </%args>\
-<% href %>
+<%method docRootUrl>
+<%args>String href;</%args>\
+<% href %>\
 </%method>
 
 <%class>
