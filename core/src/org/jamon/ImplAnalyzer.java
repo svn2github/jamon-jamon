@@ -241,6 +241,9 @@ public class ImplAnalyzer extends BaseAnalyzer
             m_unitStatements.put(getUnitName(),new ArrayList());
             AFragmentCall call = (AFragmentCall) node.getFragmentCall();
             String path = asText(call.getPath());
+            CallStatement s =
+                new CallStatement(path,
+                                  makeParamMap(call.getParam()));
             m_calls.add(path);
             for (Iterator i = call.getBaseComponent().iterator(); i.hasNext(); /* */)
             {
@@ -248,11 +251,7 @@ public class ImplAnalyzer extends BaseAnalyzer
             }
 
             handleBody();
-            Statement s =
-                new FragmentCallStatement(path,
-                                          makeParamMap(call.getParam()),
-                                          getStatements(getUnitName()),
-                                          null);
+            s.addFragmentArg(null, getStatements(getUnitName()));
             popUnitName();
             addStatement(s);
 

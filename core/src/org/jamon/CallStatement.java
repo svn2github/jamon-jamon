@@ -22,6 +22,7 @@ package org.jamon;
 
 import java.io.PrintWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Iterator;
 import java.util.Map;
@@ -33,14 +34,126 @@ public class CallStatement
     {
         m_path = p_path;
         m_params = p_params;
+        m_fragParams = new ArrayList();
+    }
+
+    public void addFragmentArg(String p_name, List p_statements)
+    {
+        m_fragParams.add(new FragmentCallInfo(p_name, p_statements));
     }
 
     private final String m_path;
-    protected final Map m_params;
+    private final List m_fragParams;
+    private final Map m_params;
 
-    protected boolean isDefCall(ImplAnalyzer p_analyzer)
+    private boolean isDefCall(ImplAnalyzer p_analyzer)
     {
         return p_analyzer.getDefNames().contains(getPath());
+    }
+
+    private final static String IOEXCEPTION_CLASS =
+        IOException.class.getName();
+
+
+    private String getFargName(String p_fargName,
+                               ImplAnalyzer p_analyzer,
+                               TemplateDescriber p_describer)
+        throws JamonException
+    {
+        if (p_fargName != null)
+        {
+            return p_fargName;
+        }
+        else if (isDefCall(p_analyzer))
+        {
+            return (String) p_analyzer.getFargNames(getPath()).next();
+        }
+        else
+        {
+            return (String) p_describer
+                .getFargNames(p_analyzer.getAbsolutePath(getPath())).next();
+        }
+    }
+
+    private void handleFragParam(FragmentCallInfo p_fragCallInfo,
+                                 PrintWriter p_writer,
+                                 TemplateResolver p_resolver,
+                                 TemplateDescriber p_describer,
+                                 ImplAnalyzer p_analyzer)
+        throws IOException
+    {
+        String fragVar = p_analyzer.newVarName();
+
+        String fargName = (String) getFargName(p_fragCallInfo.getName(),
+                                               p_analyzer,
+                                               p_describer);
+        FargInfo fargInfo =
+            isDefCall(p_analyzer)
+            ? p_analyzer.getFargInfo(fargName)
+            : p_describer.getFargInfo(p_analyzer.getAbsolutePath(getPath()),fargName);
+
+        p_writer.print("    final ");
+
+        String fargIntf = fargInfo.getFargInterfaceName();
+        if (! isDefCall(p_analyzer))
+        {
+            fargIntf =
+                p_resolver.getFullyQualifiedIntfClassName
+                    (p_analyzer.getAbsolutePath(getPath()))
+                + "." + fargIntf;
+        }
+
+        String className = fargInfo.getFargInterfaceName()
+            + p_analyzer.newVarName();
+        p_writer.print  ("class ");
+        p_writer.println(className);
+        p_writer.println("  extends org.jamon.AbstractTemplateImpl");
+        p_writer.print  ("  implements ");
+        p_writer.println(fargIntf);
+        p_writer.println("{");
+        p_writer.print  ("  ");
+        p_writer.print  (className);
+        p_writer.println("(org.jamon.TemplateManager p_manager) {");
+        p_writer.println("    super(p_manager,\"\");");
+        p_writer.println("  }");
+        p_writer.print("       public void render(");
+        for (Iterator a = fargInfo.getArgumentNames(); a.hasNext(); /* */)
+        {
+            String arg = (String) a.next();
+            p_writer.print(fargInfo.getArgumentType(arg));
+            p_writer.print(" ");
+            p_writer.print(arg);
+            if (a.hasNext())
+            {
+                p_writer.print(", ");
+            }
+        }
+        p_writer.print(") throws ");
+        p_writer.print(IOEXCEPTION_CLASS);
+        p_writer.println(" {");
+        for (Iterator i = p_fragCallInfo.getStatements(); i.hasNext(); /* */)
+        {
+            ((Statement)i.next()).generateSource(p_writer,
+                                                 p_resolver,
+                                                 p_describer,
+                                                 p_analyzer);
+            p_writer.println();
+        }
+        p_writer.println("    }");
+        p_writer.println("  }");
+
+        p_writer.print(className);
+        p_writer.print(" ");
+        p_writer.print(fragVar);
+        p_writer.println(" =");
+        p_writer.print("      new ");
+        p_writer.print(className);
+        p_writer.println(" (this.getTemplateManager());");
+        p_writer.print(fragVar);
+        p_writer.println(".writeTo(this.getWriter());");
+        p_writer.print(fragVar);
+        p_writer.println(".escaping(this.getEscaping());");
+        m_params.put(fargName, fragVar);
     }
 
     public void generateSource(PrintWriter p_writer,
@@ -49,6 +162,20 @@ public class CallStatement
                                ImplAnalyzer p_analyzer)
         throws IOException
     {
+        if (! m_fragParams.isEmpty())
+        {
+            p_writer.println("{");
+            for (Iterator f = m_fragParams.iterator(); f.hasNext(); /* */)
+            {
+                handleFragParam((FragmentCallInfo) f.next(),
+                                p_writer,
+                                p_resolver,
+                                p_describer,
+                                p_analyzer);
+            }
+        }
+
+
         if (isDefCall(p_analyzer))
         {
             generateAsDefCall(p_writer, p_analyzer);
@@ -60,6 +187,11 @@ public class CallStatement
                                     p_describer,
                                     p_analyzer,
                                     p_analyzer.getAbsolutePath(m_path));
+        }
+
+        if (! m_fragParams.isEmpty())
+        {
+            p_writer.println("}");
         }
     }
 
@@ -173,7 +305,7 @@ public class CallStatement
         p_writer.print("    }");
     }
 
-    protected final String getPath()
+    private final String getPath()
     {
         return m_path;
     }
