@@ -249,7 +249,9 @@ public class StandardTemplateManager
             File tf = m_describer.getTemplateFile(path);
             if (!tf.exists())
             {
-                throw new JamonException("Missing template " + path);
+                System.err.println(path
+                                   + " source not found; assume class exists");
+                continue;
             }
 
             File jm = new File(javaImpl(path));
