@@ -24,8 +24,7 @@ public class User
       users[0] = new User("John Public", false);
       users[1] = new User("John Rockerfeller", true);
 
-      TemplateManagerSource
-          .setTemplateManager(new StandardTemplateManager());
+      TemplateManagerSource.setTemplateManager(new StandardTemplateManager());
 
       for (int i=0; i<users.length; i++)
       {
@@ -44,11 +43,10 @@ public class User
         processUser(String templateName)
   {
     // the default template, the special of the week
-    if (templateName == null
-        || "special".equalsIgnoreCase(templateName))
+    if (templateName == null || "special".equalsIgnoreCase(templateName))
     {
       return new InheritanceChildWArgs()
-        .makeParentRenderer("Jamon free this week only!");
+          .makeParentRenderer("Jamon free this week only!");
     }
     // process other derived templates here
     else
