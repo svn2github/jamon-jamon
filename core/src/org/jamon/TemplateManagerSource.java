@@ -39,7 +39,7 @@ public abstract class TemplateManagerSource
 
     public static TemplateManager getTemplateManagerFor(String p_path)
     {
-        return s_source.getTemplateManagerForPath(p_path);
+        return getTemplateManagerSource().getTemplateManagerForPath(p_path);
     }
 
     public static void setTemplateManagerSource(TemplateManagerSource p_source)
@@ -56,6 +56,21 @@ public abstract class TemplateManagerSource
                     return p_manager;
                 }
             };
+    }
+
+    private static TemplateManagerSource getTemplateManagerSource()
+    {
+        if (s_source == null)
+        {
+            synchronized (TemplateManagerSource.class)
+            {
+                if (s_source == null)
+                {
+                    setTemplateManager(new StandardTemplateManager());
+                }
+            }
+        }
+        return s_source;
     }
 
     private static TemplateManagerSource s_source;
