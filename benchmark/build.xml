@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+
+<project name="Jamon Benchmarks" default="compile">
+
+  <description>Integration Tests for the Jamon template engine</description>
+
+  <property file="build.properties"/>
+  <property file="../build.properties"/>
+  <property file="${user.home}/.ant.properties"/>
+
+  <property name="build.dir" value="build"/>
+  <property name="build.src.dir" value="${build.dir}/src"/>
+  <property name="classes.dir" value="${build.dir}/classes"/>
+  <property name="src.dir" value="src"/>
+
+  <target name="init">
+    <dirname property="jamon.top.dir" file="."/>
+    <property name="java.lib.jamon" value="${jamon.top.dir}/jamon.jar"/>
+  </target>
+
+  <target name="templates" depends="init">
+    <dependset>
+      <srcfileset file="${java.lib.jamon}"/>
+      <targetfileset dir="${build.src.dir}"/>
+    </dependset>
+    <mkdir dir="${build.src.dir}"/>
+    <taskdef name="jamon"
+             classname="org.jamon.ant.JamonTask"
+             classpath="${java.lib.jamon}"/>
+    <jamon destdir="${build.src.dir}" srcdir="templates" />
+  </target>
+
+  <target name="compile"
+          depends="templates"
+          description="Compiles Java">
+    <dependset>
+      <srcfileset dir="${src.dir}" includes="**/*.java"/>
+      <srcfileset dir="${build.src.dir}" includes="**/*.java"/>
+      <targetfileset dir="${classes.dir}" includes="**/*.class"/>
+    </dependset>
+    <mkdir dir="${classes.dir}"/>
+    <javac destdir="${classes.dir}"
+           debug="true"
+           classpath="${java.lib.jamon}"
+           deprecation="true">
+      <src path="${src.dir}"/>
+      <src path="${build.src.dir}"/>
+    </javac>
+  </target>
+
+  <target name="run"
+          depends="compile"
+          description="Run the benchmark">
+    <java fork="true"
+          classpath="${classes.dir}:${java.lib.jamon}"
+          classname="org.jamon.benchmark.Benchmark" />
+  </target>
+
+  <target name="cvsignores">
+    <echo file=".cvsignore">.cvsignore ${build.dir} build.properties
+</echo>
+  </target>
+
+  <target name="clean">
+    <delete dir="${build.dir}"/>
+  </target>
+
+  <target name="spotless" depends="clean">
+    <delete file=".cvsignore"/>
+  </target>
+
+</project>

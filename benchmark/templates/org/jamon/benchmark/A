@@ -1,0 +1,5 @@
+  <%args>
+    int i;
+    int j => 0;
+  </%args>
+<&| /org/jamon/escape/Html &>i j</&>
