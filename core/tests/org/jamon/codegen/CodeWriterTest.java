@@ -18,15 +18,13 @@
  * Contributor(s):
  */
 
-package org.jamon.tests.codegen;
+package org.jamon.codegen;
 
 import java.io.Writer;
 import java.io.StringWriter;
 import java.io.IOException;
 
 import junit.framework.TestCase;
-
-import org.jamon.codegen.CodeWriter;
 
 public class CodeWriterTest
     extends TestCase

@@ -18,7 +18,7 @@
  * Contributor(s):
  */
 
-package org.jamon.tests.codegen;
+package org.jamon.codegen;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -31,15 +31,6 @@ import java.util.Map;
 import java.util.Set;
 
 import junit.framework.TestCase;
-
-import org.jamon.codegen.FragmentArgument;
-import org.jamon.codegen.FragmentUnit;
-import org.jamon.codegen.AbstractArgument;
-import org.jamon.codegen.OptionalArgument;
-import org.jamon.codegen.RequiredArgument;
-import org.jamon.codegen.TemplateUnit;
-import org.jamon.codegen.TemplateDescription;
-import org.jamon.codegen.TunnelingException;
 
 import org.jamon.node.ADefault;
 import org.jamon.node.AParentArg;

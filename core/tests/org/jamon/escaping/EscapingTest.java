@@ -18,15 +18,13 @@
  * Contributor(s): Ian Robertson
  */
 
-package org.jamon.tests.escaping;
+package org.jamon.escaping;
 
 import java.io.Writer;
 import java.io.StringWriter;
 import java.io.IOException;
 
 import junit.framework.TestCase;
-
-import org.jamon.escaping.Escaping;
 
 public class EscapingTest
     extends TestCase

@@ -18,12 +18,11 @@
  * Contributor(s):
  */
 
-package org.jamon.tests.util;
+package org.jamon.util;
 
 import java.io.File;
 import java.util.Arrays;
 import junit.framework.TestCase;
-import org.jamon.util.StringUtils;
 
 public class StringUtilsTest
     extends TestCase

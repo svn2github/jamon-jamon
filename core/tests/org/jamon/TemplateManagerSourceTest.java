@@ -18,12 +18,9 @@
  * Contributor(s): Ian Robertson
  */
 
-package org.jamon.tests;
+package org.jamon;
 
 import junit.framework.TestCase;
-import org.jamon.TemplateManagerSource;
-import org.jamon.TemplateManager;
-import org.jamon.AbstractTemplateProxy;
 
 public class TemplateManagerSourceTest
     extends TestCase

@@ -18,7 +18,7 @@
  * Contributor(s):
  */
 
-package org.jamon.tests.codegen;
+package org.jamon.codegen;
 
 import java.io.ByteArrayInputStream;
 import java.io.BufferedReader;
@@ -27,8 +27,6 @@ import java.io.StringWriter;
 import java.io.IOException;
 
 import junit.framework.TestCase;
-
-import org.jamon.codegen.EncodingReader;
 
 public class EncodingReaderTest
     extends TestCase
