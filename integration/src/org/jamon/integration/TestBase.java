@@ -70,7 +70,8 @@ public abstract class TestBase
     protected void checkOutputContains(String p_expected)
         throws IOException
     {
-        assertTrue(getOutput().indexOf(p_expected) >= 0);
+        assertTrue("output doesn't contain: \"" + p_expected + "\"",
+                   getOutput().indexOf(p_expected) >= 0);
     }
 
     protected void checkOutput(String p_expected)
