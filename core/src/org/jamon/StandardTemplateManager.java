@@ -184,23 +184,33 @@ public class StandardTemplateManager
             ? getClass().getClassLoader()
             : p_data.classLoader;
         m_dynamicRecompilation = p_data.dynamicRecompilation;
-        m_workDir = (m_dynamicRecompilation && p_data.workDir == null)
-            ? getDefaultWorkDir()
-            : p_data.workDir;
-        m_javaCompiler =
-            new JavaCompiler(p_data.javaCompiler == null
-                             ? getDefaultJavac()
-                             : p_data.javaCompiler,
-                             getClassPath(m_workDir,
-                                          p_data.classpath,
-                                          p_data.javaCompilerNeedsRtJar,
-                                          m_classLoader));
-        m_loader = new WorkDirClassLoader(m_classLoader, m_workDir);
-        m_describer =
-            new TemplateDescriber(new File(p_data.sourceDir == null
-                                           ? System.getProperty("user.dir")
-                                           : p_data.sourceDir));
         m_cache = new LifoMultiCache(p_data.cacheSize);
+        if (m_dynamicRecompilation)
+        {
+            m_workDir = p_data.workDir == null
+                ? getDefaultWorkDir()
+                : p_data.workDir;
+            m_javaCompiler =
+                new JavaCompiler(p_data.javaCompiler == null
+                                 ? getDefaultJavac()
+                                 : p_data.javaCompiler,
+                                 getClassPath(m_workDir,
+                                              p_data.classpath,
+                                              p_data.javaCompilerNeedsRtJar,
+                                              m_classLoader));
+            m_describer =
+                new TemplateDescriber(new File(p_data.sourceDir == null
+                                               ? System.getProperty("user.dir")
+                                               : p_data.sourceDir));
+            m_loader = new WorkDirClassLoader(m_classLoader, m_workDir);
+        }
+        else
+        {
+            m_describer = null;
+            m_javaCompiler = null;
+            m_workDir = null;
+            m_loader = null;
+        }
     }
 
     public AbstractTemplateImpl getInstance(String p_path)
