@@ -21,15 +21,32 @@
     </h3>
 
     <div id="header">&nbsp;</div>
-      <div id="nav">
-        <ul>
+
+    <div id="nav">
+      <ul class="nav">
           <& _menuItem; section => Section.HOME; href => "index" &>
           <& _menuItem; section => Section.FEATURES; href => "Features" &>
           <& _menuItem; section => Section.NEWS; href => "News" &>
           <& _menuItem; section => Section.DOWNLOAD; href => "Download" &>
-          <& _menuItem; section => Section.DOCUMENTATION; href => "Documentation" &>
           <& _menuItem; section => Section.CONTACT; href => "Contact" &>
           <& _menuItem; section => Section.ABOUT; href => "About" &>
+        </ul>
+        <ul class="nav">
+          <li class="static">Documentation</li>
+          <li class="nav"><a href="Overview.html">Overview</a></li>
+<!--              <li><a href="QuickStart.html">Quick start mini-tutorial</a></li> -->
+              <li class="nav"><a href="tutorial/TutorialPath.html">10 Step Tutorial</a></li>
+              <li class="nav"><a href="GeneratedTemplates.html">Generated classes</a></li>
+              <li class="nav"><a href="UserGuide.html">User's Guide</a></li>
+              <li class="nav"><a href="BuildingProjects.html">Ant integration</a>
+                <ul class="nav">
+                  <li class="nav"><a href="JamonTask.html">JamonTask</a></li>
+                  <li class="nav"><a href="InvokerTask.html">InvokerTask</a></li>
+                </ul>
+              </li>
+              <li class="nav"><a href="Servlets.html">Servlet integration</a></li>
+              <li class="nav"><a href="Reference.html">Reference manual</a></li>
+              <li class="nav"><a href="javadoc/index.html">Javadoc</a></li>
         </ul>
       </div>
       <div id="main">
@@ -48,7 +65,7 @@
     Section section;
     String href;
   </%args>
-<li\
+<li class="nav"\
 % if (section == currentSection()) {
  id="current"\
 % }
