@@ -97,6 +97,8 @@ Tokens
   {start -> args, body -> args} args_start = '<%args>';
   {start -> imports,body -> imports} import_start = '<%import>';
   {imports -> body} import_end = '</%import>';
+  {start -> imports,body -> imports} implements_start = '<%implements>';
+  {imports -> body} implements_end = '</%implements>';
   {start ->java,body -> java} java_start = '<%java>' ws*;
   {java -> body} java_end = ws* '</%java>';
   {args,imports} dot = period;
@@ -233,6 +235,7 @@ Productions
   component = base_component
             | {alias} aliases
             | {imports} imports
+            | {implements} implements
             | {def} def
             | {class} class_tag
             | {extends} extends_start path gt
@@ -266,7 +269,11 @@ Productions
 
   imports = import_start import* import_end;
 
+  implements = implements_start implement* implements_end;
+
   import = name semi;
+
+  implement = name semi;
 
   args = args_start arg* args_end;
 

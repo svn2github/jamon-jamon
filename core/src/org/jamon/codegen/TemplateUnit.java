@@ -266,9 +266,19 @@ public class TemplateUnit
         return m_imports.iterator();
     }
 
+    public Iterator getInterfaces()
+    {
+        return m_interfaces.iterator();
+    }
+
     public void addImport(String p_import)
     {
         m_imports.add(p_import);
+    }
+
+    public void addInterface(String p_interface)
+    {
+        m_interfaces.add(p_interface);
     }
 
     public void setParentPath(String p_parentPath)
@@ -329,6 +339,7 @@ public class TemplateUnit
     private final Map m_methods = new HashMap();
     private final List m_overrides = new LinkedList();
     private final List m_imports = new LinkedList();
+    private final List m_interfaces = new LinkedList();
     private String m_parentPath;
     private boolean m_isParent = false;
     private final StringBuffer m_classContent = new StringBuffer();
@@ -383,6 +394,22 @@ public class TemplateUnit
     public void printDeclaredRequiredArgsDecl(IndentingWriter p_writer)
     {
         printArgsDecl(p_writer, getDeclaredRequiredArgs());
+    }
+
+    public void printInterfaces(IndentingWriter p_writer)
+    {
+        if (m_interfaces.size() > 0)
+        {
+            p_writer.print("  implements ");
+            for (Iterator i = m_interfaces.iterator(); i.hasNext(); )
+            {
+                p_writer.print(i.next());
+                if (i.hasNext())
+                {
+                    p_writer.print(", ");
+                }
+            }
+        }
     }
 
     protected void generateInterfaceSummary(StringBuffer p_buf)

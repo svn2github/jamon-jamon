@@ -283,6 +283,11 @@ public class Analyzer
             getTemplateUnit().addImport(p_import.getName().toString());
         }
 
+        public void caseAImplement(AImplement p_implement)
+        {
+            getTemplateUnit().addInterface(p_implement.getName().toString());
+        }
+
         public void caseAParentArg(AParentArg p_arg)
         {
             ADefault argDefault = (ADefault) p_arg.getDefault();

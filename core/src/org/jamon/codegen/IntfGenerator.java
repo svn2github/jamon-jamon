@@ -189,6 +189,7 @@ public class IntfGenerator
                             ? m_resolver.getFullyQualifiedIntfClassName(
                                 m_templateUnit.getParentPath())
                             : ClassNames.TEMPLATE));
+        m_templateUnit.printInterfaces(m_writer);
         m_writer.openBlock();
     }
 
