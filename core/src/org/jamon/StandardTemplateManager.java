@@ -150,12 +150,17 @@ public class StandardTemplateManager
         m_dynamicRecompilation = p_dynamicRecompilation;
     }
 
+    private void logInfo(String p_message)
+    {
+        System.err.println(p_message);
+    }
+
     private synchronized void initialize()
         throws IOException
     {
         if (! m_initialized)
         {
-            System.err.println("initializing std template mgr");
+            logInfo("initializing std template mgr");
             if (m_workDir == null)
             {
                 m_workDir = System.getProperty("java.io.tmpdir")
@@ -219,8 +224,7 @@ public class StandardTemplateManager
             cp.append(getRtJarPath());
         }
 
-        System.err.print("Jamon compilation CLASSPATH is ");
-        System.err.println(cp);
+        logInfo("Jamon compilation CLASSPATH is " + cp);
 
         return cp.toString();
     }
@@ -314,14 +318,13 @@ public class StandardTemplateManager
         while (!workQueue.isEmpty())
         {
             String path = (String) workQueue.remove(0);
-            System.err.println("processing " + path);
+            logInfo("processing " + path);
             seen.add(path);
 
             File tf = m_describer.getTemplateFile(path);
             if (!tf.exists())
             {
-                System.err.println(path
-                                   + " source not found; assume class exists");
+                logInfo(path + " source not found; assume class exists");
                 continue;
             }
 
@@ -401,7 +404,7 @@ public class StandardTemplateManager
     private Collection generateImpl(String p_path)
         throws IOException
     {
-        System.err.println("generating impl for " + p_path);
+        logInfo("generating impl for " + p_path);
 
         ImplAnalyzer ia =
             new ImplAnalyzer(p_path,
@@ -430,8 +433,8 @@ public class StandardTemplateManager
     private String getIntfSignatureFromClass(String p_path)
         throws IOException
     {
-        System.err.println("Looking for signature of "
-                           + StringUtils.pathToClassName(p_path));
+        logInfo("Looking for signature of "
+                + StringUtils.pathToClassName(p_path));
         try
         {
             Class c = Class.forName(StringUtils.pathToClassName(p_path));
@@ -463,7 +466,7 @@ public class StandardTemplateManager
         String oldsig = getIntfSignatureFromClass(p_path);
         if (! bg.getSignature().equals(oldsig))
         {
-            System.err.println("generating intf for " + p_path);
+            logInfo("generating intf for " + p_path);
             File javaFile = getWriteableFile(javaIntf(p_path));
             FileWriter writer = new FileWriter(javaFile);
             try
@@ -497,16 +500,17 @@ public class StandardTemplateManager
             return;
         }
 
-        System.err.print("compiling: ");
+        StringBuffer buf = new StringBuffer();
+        buf.append("compiling: ");
         for (Iterator i = p_sourceFiles.iterator(); i.hasNext(); /* */)
         {
-            System.err.print(i.next());
+            buf.append(i.next());
             if (i.hasNext())
             {
-                System.err.print(", ");
+                buf.append(", ");
             }
         }
-        System.err.println();
+        logInfo(buf.toString());
         getJavaCompiler()
             .compile((String []) p_sourceFiles.toArray(new String [0]));
     }
@@ -514,7 +518,7 @@ public class StandardTemplateManager
     private Collection computeDependencies(String p_path)
         throws IOException
     {
-        System.err.println("computing dependencies for " + p_path);
+        logInfo("computing dependencies for " + p_path);
 
         return new ImplAnalyzer(p_path,
                                 m_describer.parseTemplate(p_path))
