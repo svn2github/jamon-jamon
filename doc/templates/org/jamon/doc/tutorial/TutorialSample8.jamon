@@ -12,10 +12,10 @@
 
 In addition to template arguments, Jamon allows passing a block, or
 "fragment," of Jamon text to a template. When passing template
-fragments, the invocation syntax must look like <code>&lt;&amp;|
-target; arg1 => ... &amp;> [fragment of Jamon text] &lt;&amp;></code>,
-and any template content after the start tag, <code>&lt;&amp;| target;
-arg1 => ... &amp;></code>, up to the closing tag,
+fragments, the invocation syntax must look like <nobr><code>&lt;&amp;|
+target; arg1 => ... &amp;> [fragment of Jamon text] &lt;&amp;></code></nobr>,
+and any template content after the start tag, <nobr><code>&lt;&amp;| target;
+arg1 => ... &amp;></code></nobr>, up to the closing tag,
 <code>&lt;/&amp;></code>, is considered the fragment argument.
 <p>
 In this example,
@@ -23,9 +23,10 @@ In this example,
      <code>FragmentCallerTemplate</code></a>,
     <& _TutorialTemplateInclude; fileName => "FragmentCallerTemplate" &>
 
-a block of HTML text is passed to a template that expects a fragment
-and constructs a list item and HTML anchor using the fragment text as
-the anchor text.
+a block of HTML text is passed to a template that constructs a list
+item withan  HTML anchor using the fragment text as the anchor text
+(the template <code>LiRef</code> is shown below).
+
 <p>
 Because the content of the anchor is passed as
 a fragment, the template author can naturally describe the text
@@ -65,8 +66,9 @@ anchor inside a list item.
 <li><span class="concept">Parameterized Template Fragments</span>
 A template fragment is a template and can have arguments just like a template.
 <p>
-To add arguments to a fragment, simply include a <code>&lt;%args></code> ...
-<code>&lt;/%args></code> tag at the beginning of the fragment.
+To add arguments to a fragment, simply include a
+<nobr><code>&lt;%args></code> ... <code>&lt;/%args></code></nobr>
+tag at the beginning of the fragment.
 <&| ../_Template &><%LITERAL>
 % DateFormat dateFormat = new SimpleDateFormat("MM/dd");
 We offer the following holidays:
@@ -92,13 +94,14 @@ accepts the fragment.
 <p>
 To declare a template that expects a fragment with arguments,
 just add parameters within the
-<code>&lt;%frag name> <em> parameters </em> &lt;/%frag></code> tag.
+<nobr><code>&lt;%frag name> <em> parameters </em> &lt;/%frag></code></nobr>
+tag.
 Thus
-      a <code>&lt;%frag
-      <i>name</i>&gt;</code>...<code>&lt;/%frag&gt;</code> is similar
+      a <nobr><code>&lt;%frag
+      <i>name</i>&gt;</code>...<code>&lt;/%frag&gt;</code></nobr> is similar
       to a
-      <code>&lt;%args&gt;</code>...<code>&lt;/%args&gt;</code> except
-      it has a name and its parameters cannot have default values.
+      <nobr><code>&lt;%args&gt;</code>...<code>&lt;/%args&gt;</code></nobr>
+      except it has a name and its parameters cannot have default values.
 
     <& _TutorialTemplateInclude; fileName => "AlternatingList" &>
 
