@@ -55,12 +55,12 @@
   <li><span class="concept">Emit statements</span>
 
     The value of a java expression can be emitted by enclosing the
-    expression in <code>&lt;%...%&gt;</code> pairs, e.g.
+    expression in <code><% "<% ...%>" %></code> pairs, e.g.
     <&| _Template &><%LITERAL>
 <% person.getFirstName().substring(0,10) %>
 </%LITERAL></&>
     Note that there must be at least one whitespace character
-    following the <code>&lt;%</code>.
+    following the <code><% "<%" %></code>.
 
     <p>
 
@@ -110,7 +110,7 @@
 
     <p>
       Arbitrary Java code can be inserted into the template using
-      <code>&lt;%java&gt;...&lt;/%java&gt;</code>, e.g.
+      <code><% "<%java>...</%java>" %></code>, e.g.
     <&| _Template &><%LITERAL>
 <%java>
   while (iter.hasNext()) {
@@ -143,13 +143,13 @@
   <li><span class="concept">Inheritance</span>
 
     Templates can inherit from other templates.  A template is an
-    "abstract" template if it contains a <code>&lt;%abstract&gt;</code>
+    "abstract" template if it contains a <code><% "<%abstract>" %></code>
     tag.  A template extends another template by
-    means of an <code>&lt;%extends <var>pathToParent</var>&gt;</code>
+    means of an <code><% "<%extends " %><var>pathToParent</var><% ">" %></code>
     tag.  There can be multiple levels of inheritance:
     <code>/grandchild</code> can extend <code>/child</code>, which
     in turn can extend <code>/parent</code>.  When Jamon encounters
-    a <code>&lt;&amp; *CHILD &amp;&gt;</code> tag, it inserts the
+    a <code><% "<& *CHILD &>" %></code> tag, it inserts the
     results of rendering the child template.
 
     <p>
@@ -165,13 +165,11 @@
   <li><span class="concept">Class code</span>
 
     Any code to be included in the generated class should be placed
-    inside a <code>&lt;%class&gt;</code>
-    ... <code>&lt;/%class&gt;</code> block.  If one template
-    inherits from another, there is corresponding inheritance of
-    java classes.  As a result, protected members declared in a
-    parent template's <code>&lt;%class&gt;</code>
-    ... <code>&lt;/%class&gt;</code> block will be visible to the
-    child.
+    inside a <code><% "<%class>...</%class>" %></code> block.  If one
+    template inherits from another, there is corresponding inheritance
+    of java classes.  As a result, protected members declared in a
+    parent template's <code><% "<%class>...</%class>" %></code> block
+    will be visible to the child.
 
     <p>
     For example:
@@ -184,14 +182,14 @@ This component has been accessed <% pageViews++ %> times.
 
   <li><span class="concept">Comments</span>
 
-    Any template content between <code>&lt;%doc&gt;</code> and
-    <code>&lt;/%doc&gt;</code> is considered "documentation", and
+    Any template content between <code><% "<%doc>" %></code> and
+    <code><% "</%doc>" %></code> is considered "documentation", and
     ignored by the template processor
 
   <li><span class="concept">Imports</span>
 
     Java classes or packages to be imported and used in a template
-    should be placed inside an <code>&lt;%import&gt;</code>
+    should be placed inside an <code><% "<%import>...</%import>" %></code>
     block. Each package or class should be separated by a semicolon
     ('<code>;</code>').  Note that imports are not inherited, so if you
     use an import to aid in the declaration of an argument type in a
@@ -208,9 +206,9 @@ This component has been accessed <% pageViews++ %> times.
   <li><span class="concept">Arguments</span>
 
     Arguments to a template are specified in
-    <code>&lt;%args&gt;</code> ... <code>&lt;/%args&gt;</code>
+    <code><% "<%args>...</%args>" %></code>
     blocks. Each argument consists of a type followed by the
-    argument name, optionally followed by <code>=&gt;</code> and a
+    argument name, optionally followed by <code><% "=>" %></code> and a
     default value. Each argument must appear on a separate line, and
     each argument declaration must be terminated by a semicolon.
 
@@ -219,7 +217,7 @@ This component has been accessed <% pageViews++ %> times.
     Arguments are usable inside any java escape or java expression
     in the template, including those in subtemplates. Top-level
     visible arguments are also usable inside
-    <code>&lt;%class&gt;</code> ... <code>&lt;%/class&gt;</code>
+    <code><% "<%class>...<%/class>" %></code>
     blocks.  Technically, arguments are declared
     "<code>final</code>", so it is not possible to (re)assign a
     value to an argument.
@@ -247,8 +245,8 @@ Your nicknames are
 % }
 </%LITERAL></&>
     Note that for this template to compile, the <code>Address</code>
-    class would need to appear in an <code>&lt;%import&gt;</code>
-    block.
+    class would need to appear in an
+    <code><% "<%import>...</%import>" %></code> block.
 
     <p>
 
@@ -264,11 +262,10 @@ Your nicknames are
     If a template inherits from another template, the arguments to
     the template's ancestors are not automatically visible to the
     child template.  They can be made visible to code in the child
-    template by declaring them in <code>&lt;%xargs&gt;</code>
-    ... <code>&lt;/%xargs&gt;</code> blocks.  Unlike
-    <code>&lt;%args&gt;</code> ... <code>&lt;/%args&gt;</code>
-    blocks, <code>&lt;%xargs&gt;</code>
-    ... <code>&lt;/%xargs&gt;</code> blocks do not specify argument
+    template by declaring them in <code><% "<%xargs>...</%xargs>" %></code>
+    blocks.  Unlike
+    <code><% "<%args>...</%args>" %></code> blocks,
+    <code><% "<%xargs>...</%xargs>" %></code> blocks do not specify argument
     types, since those have already been specified by a parent
     template.  Optional arguments, however, may have their default
     values redefined by the child.  For example, if
@@ -309,24 +306,22 @@ a good sign for you, <% name %>.
     Note that it would be an error if <code>/child</code> tried
     referring to <code>favoriteFood</code>'s argument to
     <code>/parent</code> without referencing it in an
-    <code>&lt;%xargs&gt;</code> ... <code>&lt;/%xargs&gt;</code>
-    block.
+    <code><% "<%xargs>...<%/xargs>" %></code> block.
 
   <li><span class="concept">Invoking other templates</span>
 
     It is possible to invoke other templates from within a template.
     To invoke a template which takes no argument, simply write
-    <code><%LITERAL><& <var>template-name</var> &></%LITERAL></code>.
+    <code><% "<& " %><var>template-name</var><% " &>" %></code>.
     <p>
 
     There are two ways to pass arguments to templates: named
     parameters, and positional parameters. Templates can be invoked
     with named parameters via the
     <code>
-      <%LITERAL>
-        <& <var>template-name</var>;
-           <var>argument1</var> => <var>value1</var>; ... &>
-      </%LITERAL>
+      <% "<& " %><var>template-name</var>;
+                 <var>argument1</var> <% "=>" %> <var>value1</var>; ...
+      <% " &>" %>
     </code>
     construct.  All arguments without default values
     (i.e. <em>required</em> arguments) must be specified, but
@@ -335,13 +330,11 @@ a good sign for you, <% name %>.
     may be used instead.  The syntax for positional parameters is
     simply
     <code>
-      <%LITERAL>
-        <& <var>template-name</var>: <var>value1</var>; ... &>
-      </%LITERAL>
+      <% "<& " %><var>template-name</var>: <var>value1</var>; ...<% " &>" %>
     </code>
     With positional parameter syntax, arguments are passed in the
     order that they are declared in the
-    <code><%LITERAL><%args></%LITERAL></code> section of the
+    <code><% "<%args>" %></code> section of the
     template.  Note that while with named parameter syntax, the
     template name is followed by a semicolon, positional parameter
     syntax follows the template name with a colon.  In each case,
@@ -376,10 +369,9 @@ a good sign for you, <% name %>.
 
 
     Private subtemplates ("<def>defs</def>") can be declared via the
-    <code>&lt;%def <var>def-name</var>&gt;</code> instruction, and are
-    only visible within the template in which they are
-    declared.
-
+    <code><% "<%def " %><var>def-name</var><% ">" %></code>
+    instruction, and are only visible within the template in which
+    they are declared.
 
     <p>
 
@@ -390,22 +382,23 @@ a good sign for you, <% name %>.
     <p>
 
     Protected templates ("<def>methods</def>") can be declared via
-    the <code>&lt;%method <var>method-name</var>&gt;</code>
+    the <code><% "<%method "%><var>method-name</var><% ">" %></code>
     instruction.  A method is similar to a <def>def</def>, but is
     visible to all descendants of the declaring template.  Moreover,
     a method declared in an ancestor template can be overriddden via
-    the <code>&lt;%override <var>method-name</var>&gt;</code>
+    the <code><% "<%override " %><var>method-name</var><% ">" %></code>
     instruction.  Overridden methods take the same arguments as the
     method they override, although, as with template inheritance,
-    only those args declared in an <code>&lt;%xargs&gt;</code>
-    ... <code>&lt;/%xargs&gt;</code> block will be visible within
+    only those args declared in an <code><% "<%xargs>....</%xargs>" %></code>
+    block will be visible within
     the body of the override.  Finally, an ancestor template may
     declare an "abstract" protected subtemplate by using
-    <code>&lt;%absmeth <var>method-name</var>&gt;
-    ... &lt;/%absmeth&gt;</code>.  The only things allowed inside an
-    <code>&lt%absmeth&gt;</code> block are
-    <code>&lt;%args&gt;</code> blocks and <code>&lt%frag&gt</code>
-    blocks.  It is an error for a non-abstract template to extend
+    <code><% "<%absmeth " %><var>method-name</var><% ">...</%absmeth>" %>
+    </code>.  The only things allowed inside an
+    <code><% "<%absmeth ...>...<%/absmeth>" %></code> block are
+    <code><% "<%args>...</%args>" %></code> blocks and
+    <code><% "<%frag ...>...</%frag>" %></code> blocks.  It is an error
+    for a non-abstract template to extend
     (directly or indirectly) a template with an abstract method, and
     not have that method overridden by the non-abstract template, or
     one of it's intermediate ancestors.
@@ -431,16 +424,16 @@ a good sign for you, <% name %>.
     It is possible to pass a "fragment" of a template as an argument
     to a template or subtemplate.  When passing template fragments,
     the invocation syntax must look like
-    <code>&lt;&amp;| <var>target</var>; arg1 =&gt; ... &amp;&gt;</code>,
+    <code><% "<&| " %><var>target</var> ... <% " &>" %></code>,
     and any template content up until a closing
-    <code>&lt;/&amp;&gt;</code> is considered the fragment argument.
+    <code><% "</&>" %></code> is considered the fragment argument.
 
     <p>
 
     In order to pass a fragment argument, the target template or
     subtemplate must declare that it expects a fragment
     argument. This is done using the
-    <code>&lt;%frag <var>name</var>/&gt;</code>
+    <code><% "<%frag " %><var>name</var>< %"/>" %></code>
     declaration, which declares that the template or subtemplate
     expects a fragment argument.
 
@@ -464,20 +457,17 @@ a good sign for you, <% name %>.
     Template fragments can themselves take arguments.  The
     invocation syntax is similar to a regular template fragment with
     the addition of an
-    <code>&lt;%args&gt;</code>...<code>&lt;/%args&gt;</code> inside
-    the fragment.
+    <code><% "<%args>...</%args>" %></code> inside the fragment.
 
     <p>
 
     To pass a parameterized template fragment to a template or
     subtemplate, the fragment and its parameters must be
-    declared via a <code>&lt;%frag
-    <var>name</var>&gt;</code> <var>parameters</var> <code>&lt;/%frag&gt;</code>,
+    declared via a <code><% "<%frag " %><var>name</var><% "%>" %><var>parameters</var><% "</%frag>" %></code>,
     where each parameter is a type followed by an identifier. Thus
-    a <code>&lt;%frag
-    <var>name</var>&gt;</code>...<code>&lt;/%frag&gt;</code> is similar
-    to a
-    <code>&lt;%args&gt;</code>...<code>&lt;/%args&gt;</code> except
+    a <code><% "<%frag " %><var>name</var><% ">...</%frag>" %></code> block
+    is similar to a
+    <code><% "<%args>...</%args>" %></code> block, except that
     it has a name and its parameters cannot have default values.
     Inside the template or subtemplate, the parameterized
     fragment is invoked exactly like a call to a subtemplate
@@ -534,11 +524,11 @@ a good sign for you, <% name %>.
     By default, Jamon template source files are read using the default
     encoding of the running Java platform. The specific character
     encoding can be specified in the template by including an
-    &lt;%encoding ...&gt; declaration at the very beginning of the
-    template. For example, the following declaration indicates that
+    <code><% "<%encoding ...>" %></code> declaration at the very beginning
+    of the template. For example, the following declaration indicates that
     the source of the template should be parsed in UTF-8:
 
-    <&| _Template &><%LITERAL><%encoding UTF-8 ></%LITERAL></&>
+    <&| _Template &><%LITERAL><%encoding UTF-8></%LITERAL></&>
 
     The available encodings are exactly those supported by the JRE in
     use.
