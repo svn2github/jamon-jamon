@@ -20,7 +20,44 @@
 
 package org.jamon.tests.templates.escape;
 
+import java.io.IOException;
+import java.io.Writer;
+
+import org.jamon.Renderer;
+import org.jamon.AbstractTemplateImpl;
+import org.jamon.escaping.Escaping;
+import org.jamon.escape._escape;
+
 public class TestBase
     extends org.jamon.tests.templates.TestBase
 {
+    protected class Fragment
+        extends AbstractTemplateImpl
+        implements _escape.Fragment_content
+    {
+        Fragment(String p_body)
+        {
+            super(TestBase.this.getTemplateManager(), Escaping.NONE);
+            m_body = p_body;
+        }
+        private final String m_body;
+        public void render()
+            throws IOException
+        {
+            writeEscaped(m_body, Escaping.NONE);
+        }
+
+        public Renderer makeRenderer()
+        {
+            return new Renderer()
+                {
+                    public void renderTo(Writer p_writer)
+                        throws IOException
+                    {
+                        writeTo(p_writer);
+                        render();
+                    }
+                };
+        }
+    }
 }

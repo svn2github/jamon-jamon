@@ -1,14 +1,14 @@
 package org.jamon.tests.templates.escape;
 
-import org.jamon.escape.Html;
+import org.jamon.escape.StrictHtml;
 
-public class HtmlTest
+public class StrictHtmlTest
     extends TestBase
 {
     public void testEmpty()
         throws Exception
     {
-        new Html(getTemplateManager())
+        new StrictHtml(getTemplateManager())
             .render(getWriter(), new Fragment(""));
         checkOutput("");
     }
@@ -16,7 +16,7 @@ public class HtmlTest
     public void testSimple()
         throws Exception
     {
-        new Html(getTemplateManager())
+        new StrictHtml(getTemplateManager())
             .render(getWriter(), new Fragment("hello"));
         checkOutput("hello");
     }
@@ -24,9 +24,9 @@ public class HtmlTest
     public void testEscaping()
         throws Exception
     {
-        new Html(getTemplateManager())
-            .render(getWriter(), new Fragment("<& &gt; &>!\"'"));
-        checkOutput("&lt;&amp; &amp;gt; &amp;&gt;!\"'");
+        new StrictHtml(getTemplateManager())
+            .render(getWriter(), new Fragment("<& &gt; &>!'\""));
+        checkOutput("&lt;&amp; &amp;gt; &amp;&gt;!&#39;&quot;");
     }
 
 }
