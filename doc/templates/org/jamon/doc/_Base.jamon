@@ -82,8 +82,10 @@
 </%def>
 
 <%method docRootUrl>
-<%args>String href;</%args>\
-<% href %>\
+  <%args>
+    String href;
+  </%args>
+  <% href %>\
 </%method>
 
 <%class>

@@ -1,15 +1,19 @@
-<%abstract>\
+<%abstract>
+
 <%import>
   java.io.BufferedReader;
   java.io.FileReader;
   java.io.File;
-</%import>\
+</%import>
+
 <%args>
   String fileName;
-</%args>\
+</%args>
+
 <%class>
   protected abstract String getCompleteFileName(String fileName);
-</%class>\
+</%class>
+
 <pre <& preAttributes &>>\
 % BufferedReader reader =
 %   new BufferedReader(new FileReader(

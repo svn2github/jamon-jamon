@@ -3,7 +3,7 @@
   int num => 0;
   HelloFormFields formFields;
   HelloFormFields.ValidationErrors errors => new HelloFormFields.ValidationErrors();
-</%args>\
+</%args>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
   <head>

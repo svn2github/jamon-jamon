@@ -12,7 +12,7 @@
     <&| _list; name => "hackers" &>Developers' list.</&>
 </ul>
 
-<%def _list>\
+<%def _list>
   <%frag description></%frag>
   <%args>
     String name;

@@ -6,9 +6,9 @@
 
 <& *CHILD &>
 
-<%override docRootUrl>\
-<%xargs>
-   href;
- </%xargs>\
-<% href.startsWith("/") ? href : ("../" + href) %>\
+<%override docRootUrl>
+  <%xargs>
+     href;
+  </%xargs>
+  <% href.startsWith("/") ? href : ("../" + href) %>\
 </%override>

@@ -1,5 +1,5 @@
-<%frag oldContent></%frag>\
-<%frag newContent></%frag>\
+<%frag oldContent/>
+<%frag newContent/>
 <&|| /org/jamon/doc/util/HighlightChanges &>
   <|oldContent><& oldContent &></|>
   <|newContent><& newContent &></|>

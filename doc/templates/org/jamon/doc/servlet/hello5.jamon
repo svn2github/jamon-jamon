@@ -1,7 +1,7 @@
 <%LITERAL><%args>
   int num => 0;
   boolean error => false;
-</%args>\
+</%args>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
   <head>

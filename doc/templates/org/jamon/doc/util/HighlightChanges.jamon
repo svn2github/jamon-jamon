@@ -1,12 +1,14 @@
-<%frag oldContent></%frag>\
-<%frag newContent></%frag>\
-<%frag insertedRenderer>Object text;</%frag>\
-<%frag unchangedRenderer>Object text;</%frag>\
-<%frag deletedRenderer>Object text;</%frag>\
+<%frag oldContent/>
+<%frag newContent/>
+<%frag insertedRenderer>Object text;</%frag>
+<%frag unchangedRenderer>Object text;</%frag>
+<%frag deletedRenderer>Object text;</%frag>
+
 <%import>
   java.util.StringTokenizer;
   bmsi.util.Diff;
-</%import>\
+</%import>
+
 <%class>
   private static class LineToken
   {
@@ -41,7 +43,8 @@
     }
     return tokens;
   }
-</%class>\
+</%class>
+
 <%java>
   String oldText = oldContent.makeRenderer().asString();
   String newText = newContent.makeRenderer().asString();
