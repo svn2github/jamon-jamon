@@ -138,7 +138,6 @@ public class TemplateProcessor
         System.out.println("  Arguments:");
         System.out.println("  -h|--help         - print this help");
         System.out.println("  -a|--all         - generate impls too");
-        System.out.println("  -a|--all         - generate impls too");
         System.out.println("  -destDir=<path>  - path to where compiled .java files go (required)");
         System.out.println("  -sourceDir=<path>  - path to template directory");
     }
