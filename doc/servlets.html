@@ -1,0 +1,316 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!--    $Id$ -->
+<html>
+  <head>
+    <title>Servlets with Jamon</title>
+    <link rel="StyleSheet" href="base.css" type="text/css" media="screen" />
+  </head>
+
+  <body>
+    <h1>Servlets with Jamon</h1>
+    The goal of this document is to guide the reader through the process of developing and
+    deploying servlets that use Jamon to generate the HTML (i.e., for their <em>view</em>,
+    in MVC parlance).  Thus the servlets will be kept simple but nevertheless representative
+    of a typical development environment.
+    <p>
+    <ol>
+      <li><span class="concept">Prerequisites</span>
+        <ul>
+          <li><a href="http://java.sun.com/j2se">Java SDK 1.2</a> or later
+          <li>A <a href="http://java.sun.com/products/servlet">servlet</a> container 
+            compliant with version 2.2 (or later) of the servlet specification
+          <li><a href="http://www.jamon.org">Jamon</a> version 0.? or later
+          <li><a href="http://jakarta.apache.org/ant">Ant</a> version 1.4 or later
+        </ul>
+
+      <li><span class="concept">Hello World</span>
+      Create a file called <span class="file">HelloTemplate</span> in a directory 
+<span class="file">foo/bar</span>.
+        <pre class="template">
+&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;title&gt;Hello World&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    Hello world!
+  &lt;/body&gt;
+&lt;/html&gt;
+</pre>
+      Inside your code tree, in directory <span class="file">foo/bar</span> create
+      a file <span class="file">HelloServlet</span> containing:
+      <pre class="code">
+package foo.bar;
+
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.jamon.StandardTemplateManager;
+
+public final class HelloServlet
+    extends HttpServlet
+{
+
+    public void init()
+        throws ServletException
+    {
+        StandardTemplateManager manager = new StandardTemplateManager();
+        manager.setSourceDir("templates");
+        manager.setWorkDir("build/work");
+        helloTemplate = new HelloTemplate(manager);
+    }
+
+    public void doGet(HttpServletRequest request,
+                      HttpServletResponse response)
+	throws IOException
+    {
+        response.setContentType("text/html");
+        helloTemplate.writeTo(response.getWriter()).render();
+    }
+
+    private HelloTemplate helloTemplate;
+
+}
+</pre>
+      Create the following deployment descriptor by placing the following in a file
+      called <span class="file">web.xml</span>:
+      <pre class="webxml">
+&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;
+
+&lt;!DOCTYPE web-app
+    PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+    "http://java.sun.com/j2ee/dtds/web-app_2_3.dtd"&gt;
+
+&lt;web-app&gt;
+
+    &lt;servlet&gt;
+      &lt;servlet-name&gt;Hello&lt;/servlet-name&gt;
+      &lt;servlet-class&gt;com.earthaddress.ui.web.HelloServlet&lt;/servlet-class&gt;
+    &lt;/servlet&gt;
+
+    &lt;servlet-mapping&gt;
+        &lt;servlet-name&gt;Hello&lt;/servlet-name&gt;
+        &lt;url-pattern&gt;/hello&lt;/url-pattern&gt;
+    &lt;/servlet-mapping&gt;
+
+&lt;/web-app&gt;
+</pre>
+      The following Ant script will compile the Java and Jamon sources:
+      <pre class="ant">
+&lt;?xml version="1.0"?>
+
+&lt;project name="FooBar" default="build">
+
+  &lt;target name="templates"
+          description="Compiles Jamon templates into Java">
+    &lt;mkdir dir="${build.src.dir}" />
+    &lt;taskdef name="jamon" 
+             classname="org.jamon.ant.JamonTask"
+             classpath="${java.lib.dir}/jamon.jar"/>
+    &lt;jamon destdir="${build.src.dir}" generateImpls="true">
+      &lt;src path="templates"/>
+    &lt;/jamon>
+  &lt;/target>
+
+  &lt;target name="build"
+          depends="init,templates,prepare-tomcat,semperj"
+          description="Compiles all the Java files">
+    &lt;property name="classes.dir" value="${tomcat.home.dir}/webapps/${context.name}/WEB-INF/classes"/>
+    &lt;mkdir dir="${classes.dir}"/>
+    &lt;javac destdir="${classes.dir}"
+	   debug="true"
+	   deprecation="true">
+        &lt;src path="src/java"/>
+        &lt;src path="tests/src/java"/>
+        &lt;src path="${build.src.dir}"/>
+        &lt;classpath refid="class.path"/>
+    &lt;/javac>
+  &lt;/target>
+
+&lt;/project>
+</pre>
+      Finally you can compile the sources
+      <pre class="tty">
+% ant build
+</pre>
+and start the servlet container.  Assuming you deployed the above servlet into
+a context called "foobar" and that the container listens for HTTP requests on port 8080,
+you should receive a worldly greeting by pointing a browser to 
+<a href="http://localhost:8080/foobar/hello">http://localhost:8080/foobar/hello</a>.
+
+      <li><span class="concept">Passing parameters and receiving input</span>
+        In this section we elaborate on the previous example by passing the template some 
+        parameters.  Then we allow the user to submit values and have them processed by the
+        template.
+        <p>
+        Suppose we want a servlet that will print out the above message an arbitrary number
+        of times.  We can do this with the following template.
+        <pre class="template">
+&lt;%args>
+  int num;
+&lt;/%args>
+&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;title&gt;Hello World&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+% for (int i = 0; i < num; i++) {
+    Hello world!
+% }
+  &lt;/body&gt;
+&lt;/html&gt;
+</pre>
+        The above template can be invoked with code like:
+        <pre class="code">
+    public void doGet(HttpServletRequest request,
+                      HttpServletResponse response)
+	throws IOException
+    {
+        response.setContentType("text/html");
+        helloTemplate.writeTo(response.getWriter()).render(10);
+    }
+</pre>
+        (note that Java code identical to the previous example has been omitted.)  The above 
+        code will result in "Hello World!" being printed out ten times.
+        <p>
+        Suppose we want the user to be able to specify the number times the message is 
+        displayed.  We can achieve that with a template such as:
+        <pre class="template">
+&lt;%args>
+  int num => 0;
+&lt;/%args>
+&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;title&gt;Hello World&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+% for (int i = 0; i < num; i++) {
+    Hello world!
+% }
+    &lt;hr>
+    &lt;form method="GET" action="hello">
+      How many times would you like to be greeted? &lt;input type="text" name="num" />
+      &lt;br>
+      &lt;input type="submit" value="Greet Me"/>
+    &lt;/form>
+  &lt;/body&gt;
+&lt;/html&gt;
+</pre>
+        The corresponding servlet would look like:
+        <pre class="code">
+    public void doGet(HttpServletRequest request,
+                      HttpServletResponse response)
+	throws IOException
+    {
+        response.setContentType("text/html");
+        <span class="changed">helloTemplate.writeTo(response.getWriter());
+        String numString = request.getParameter("num");
+        if (numString != null)
+        {
+            helloTemplate.setNum(Integer.parseInt());
+        }
+        helloTemplate.render();</span>
+    }
+</pre>
+        (new or changed lines look like <span class="changed">this</span>).  However, there is something
+        unsatisfactory about this:
+        <div class="smell">
+          <dl>
+            <dt>Smell #1</dt>
+            <dd>The name of the CGI parameter "num" is independently specified in two places.</dd>
+          </dl>
+        </div>
+        Since the object responsible for parsing the parameter seems like the natural owner of the 
+        name of the parameter, for the moment we reduce the smell by doing this:
+        <pre class="template">
+&lt;%args>
+  int num => 0;
+&lt;/%args>
+&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;title&gt;Hello World&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+% for (int i = 0; i < num; i++) {
+    Hello world!
+% }
+    &lt;hr>
+    &lt;form method="GET" action="hello">
+      How many times would you like to be greeted? &lt;input type="text" name="<span class="changed"><% HelloServlet.NUM_KEY %></span>" />
+      &lt;br>
+      &lt;input type="submit" value="Greet Me"/>
+    &lt;/form>
+  &lt;/body&gt;
+&lt;/html&gt;
+</pre>
+        and
+        <pre class="code">
+    public void doGet(HttpServletRequest request,
+                      HttpServletResponse response)
+	throws IOException
+    {
+        response.setContentType("text/html");
+        helloTemplate.writeTo(response.getWriter());
+        String numString = request.getParameter(<span class="changed">NUM_KEY</span>);
+        if (numString != null)
+        {
+            helloTemplate.setNum(Integer.parseInt());
+        }
+        helloTemplate.render();
+    }
+
+    <span class="changed">public static final String NUM_KEY = "num";</span>
+</pre>
+
+
+      <li><span class="concept">Using the Standard Library</span>
+        Coming soon.
+
+<h2>Appendix</h2>
+
+    <li value="1" type="A"><span class="concept">Using Tomcat as your Servlet Container</span>
+    The reference implementation of Sun's servlet specification is 
+    <a href="http://jakarta.apache.org/tomcat/">Tomcat</a>.
+    You can use the following two targets from an Ant build script to start and stop your
+    container:
+    <pre class="ant">
+  &lt;target name="start-tomcat"
+          depends="init-tomcat,prepare-tomcat"
+          description="Starts the tomcat servlet container">
+    &lt;java classname="${tomcat.main.class}" fork="yes">
+      &lt;classpath>
+         &lt;pathelement location="${java.lib.tomcat}"/>
+      &lt;/classpath>
+      &lt;sysproperty key="java.endorsed.dirs" value=""/>
+      &lt;sysproperty key="catalina.base" value="${tomcat.home.dir}"/>
+      &lt;sysproperty key="catalina.home" value="${tomcat.install.dir}"/>
+      &lt;sysproperty key="java.io.tmpdir" value="${tmp.dir}"/>
+      &lt;arg value="start"/>
+    &lt;/java>
+  &lt;/target>
+
+  &lt;target name="stop-tomcat"
+          depends="init-tomcat,prepare-tomcat"
+          description="Stops the tomcat servlet container">
+    &lt;java classname="${tomcat.main.class}"
+          classpath="${java.lib.tomcat}"
+          fork="yes">
+      &lt;sysproperty key="java.endorsed.dirs" value=""/>
+      &lt;sysproperty key="catalina.base" value="${tomcat.home.dir}"/>
+      &lt;sysproperty key="catalina.home" value="${tomcat.install.dir}"/>
+      &lt;sysproperty key="java.io.tmpdir" value="${tmp.dir}"/>
+      &lt;sysproperty key="jdbc.drivers" value="org.gjt.mm.mysql.Driver"/>
+      &lt;arg value="stop"/>
+    &lt;/java>
+  &lt;/target>
+</pre>
+This will allow you to start and stop the container as an unprivileged user.
+    </ol>
+  </body>
+</html>

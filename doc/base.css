@@ -1,9 +1,71 @@
-pre { margin-left: 5em; margin-right: 5em; padding: 0.5em; border: solid; border-width: thin }
-pre.template { background-color: #efffdf }
-pre.jamon { background-color: #efffdf }
-pre.java { background-color: #ffdfdf }
-pre.code { background-color: #ffdfdf }
-pre.tty { background-color: #e0e0e0;  }
-li { padding-top: 0.5em }
-.concept { font-weight: bold; display: block; padding-bottom: 0.5em }
-.file { font-family: monospace }
+pre 
+{ 
+  margin-left: 5em; 
+  margin-right: 5em; 
+  padding: 0.5em; 
+  border: solid; 
+  border-width: thin 
+}
+
+.template, pre.jamon 
+{ 
+  background-color: #efffdf 
+}
+
+pre.java, pre.code 
+{ 
+  background-color: #ffdfdf 
+}
+
+pre.tty 
+{ 
+  background-color: #e0e0e0
+}
+
+pre.webxml
+{
+  background-color: #eef
+}
+
+pre.ant
+{
+  background-color: #fef
+}
+
+li 
+{ 
+  padding-top: 0.5em 
+}
+
+.concept 
+{ 
+  font-weight: bold; 
+  display: block; 
+  padding-bottom: 0.5em 
+}
+
+.file 
+{
+  font-family: monospace
+}
+
+.changed
+{
+  font-weight: bold
+}
+
+.smell
+{
+  border: dashed;
+  border-width: thin;
+  margin-left: 10em; 
+  margin-right: 10em;
+  margin-top: 1em;
+  margin-bottom: 1em;
+  padding: .2em; 
+}
+
+dt
+{
+  font-weight: bold
+}
