@@ -15,6 +15,7 @@ the documentation thus taking care of issues such as escaping.
   <property name="work.dir" value="${build.dir}/work"/>
   <property name="www.dir" value="${build.dir}/www"/>
   <property name="doc.dir" value="${build.dir}/www"/>
+  <property name="tutorial.dir" value="${doc.dir}/tutorial"/>
   <property name="classes.dir" value="${www.dir}/classes"/>
   <property name="java.lib.jamon" location="../jamon.jar"/>
   <property name="java.lib.diff" value="/usr/local/share/java/diff.jar"/>
@@ -120,10 +121,11 @@ the documentation thus taking care of issues such as escaping.
     <property name="build.sysclasspath" value="last" />
     <property name="tutorial.src" value="sample/tutorial/src" />
     <property name="tutorial.jamon" value="sample/tutorial/templates" />
-    <zip destfile="${doc.dir}/tutorial/JamonTutorial.zip"
+    <mkdir dir="${tutorial.dir}"/>
+    <zip destfile="${tutorial.dir}/JamonTutorial.zip"
          basedir="sample/tutorial"
          includes="**/*"/>
-    <copy todir="${doc.dir}/tutorial" >
+    <copy todir="${tutorial.dir}" >
       <fileset dir="${tutorial.src}">
         <include name="**/*.java"/>
       </fileset>
@@ -200,7 +202,7 @@ the documentation thus taking care of issues such as escaping.
              workDir="${work.dir}"
              compiler="${org.jamon.invoker.compiler}"
              sourceDir="templates"
-             output="${doc.dir}/tutorial/${tutorial.page}.html"
+             output="${tutorial.dir}/${tutorial.page}.html"
              template="/org/jamon/doc/tutorial/${tutorial.page}" >
       <sysproperty key="org.jamon.doc.dir" value="${this.dir}" />
     </invoker>
@@ -219,7 +221,7 @@ the documentation thus taking care of issues such as escaping.
              workDir="${work.dir}"
              compiler="${org.jamon.invoker.compiler}"
              sourceDir="templates"
-             output="${doc.dir}/tutorial/${tutorial.page}.html"
+             output="${tutorial.dir}/${tutorial.page}.html"
              template="/org/jamon/doc/tutorial/${tutorial.page}" >
       <arg name="output" value="${template.output}" />
     </invoker>
@@ -399,10 +401,8 @@ the documentation thus taking care of issues such as escaping.
   </target>
 
   <target name="clean">
-    <delete>
-      <fileset refid="build-files"/>
-      <fileset refid="servlet-build-files"/>
-    </delete>
+    <delete dir="${build.dir}"/>
+    <delete dir="${build.classes.dir}"/>
   </target>
 
   <target name="spotless" depends="clean">
