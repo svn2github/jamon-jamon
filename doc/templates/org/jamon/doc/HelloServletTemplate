@@ -13,11 +13,20 @@ public final class HelloServlet
     extends HttpServlet {
 
     public void init()
-        throws ServletException 
+        throws ServletException
     {
-        StandardTemplateManager manager = new StandardTemplateManager();
-        manager.setSourceDir("templates");
-        manager.setWorkDir("build/work");
+        StandardTemplateManager.Data data = new StandardTemplateManager.Data();
+        data.setSourceDir("templates");
+        data.setWorkDir("build/work");
+        StandardTemplateManager manager;
+        try
+        {
+            manager =new StandardTemplateManager(data);
+        }
+        catch (IOException e)
+        {
+            throw new ServletException(e);
+        }
         helloTemplate = new HelloTemplate(manager);
     }
 
