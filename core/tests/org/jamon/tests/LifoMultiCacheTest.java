@@ -39,6 +39,12 @@ public class LifoMultiCacheTest
         return m_cache.get(p_key);
     }
 
+    public void testEmptyCache()
+        throws Exception
+    {
+        assertEquals(null, get("A"));
+    }
+
     public void testSuccessfulGet()
         throws Exception
     {
@@ -100,4 +106,26 @@ public class LifoMultiCacheTest
         assertEquals(null, get("B"));
     }
 
+    public void testSizeZero()
+        throws Exception
+    {
+        LifoMultiCache cache = new LifoMultiCache(0);
+        cache.put("A", "Z");
+        assertEquals(null, cache.get("A"));
+    }
+
+    public void testSizeOne()
+        throws Exception
+    {
+        LifoMultiCache cache = new LifoMultiCache(1);
+        cache.put("A", "Z");
+        assertEquals("Z", cache.get("A"));
+        assertEquals(null, cache.get("A"));
+        cache = new LifoMultiCache(1);
+        cache.put("A", "Z");
+        cache.put("B", "Y");
+        assertEquals(null, cache.get("A"));
+        assertEquals("Y", cache.get("B"));
+        assertEquals(null, cache.get("B"));
+    }
 }
