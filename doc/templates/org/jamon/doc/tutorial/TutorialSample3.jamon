@@ -106,12 +106,12 @@ easier to read.
 Create a Jamon template
  <a href="AccountSummaryTemplate.jamon" class="file">
 AccountSummaryTemplate.jamon</a>:
-<pre class="template"><& _TutorialTemplateInclude; fileName => "AccountSummaryTemplate" &></pre>
+<& _TutorialTemplateInclude; fileName => "AccountSummaryTemplate" &>
 
 
 <li> Write a java class to call the template:
 <a class="file" href="AccountSummaryTut3.java">AccountSummaryTut3.java</a>:
-<pre class="java"><& _TutorialJavaFileInclude; fileName => "AccountSummaryTut3" &></pre>
+<& _TutorialJavaFileInclude; fileName => "AccountSummaryTut3" &>
 
 <li> Set the classpath, process the template, compile, and run the program:
 <pre class="tty">

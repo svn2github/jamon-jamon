@@ -78,11 +78,11 @@ To get a better forecast, please sign up for our premium service.
 <li>
 Putting this all together in a Jamon template produces
  <a href="TimeAndTempTemplate.jamon" class="file">TimeAndTempTemplate.jamon</a>:
-<pre class="template"><& _TutorialTemplateInclude; fileName => "TimeAndTempTemplate" &></pre>
+<& _TutorialTemplateInclude; fileName => "TimeAndTempTemplate" &>
 
 <li> To call the template, create a java class such as:
 <a class="file" href="TimeAndTempTut2.java">TimeAndTempTut2.java</a>:
-<pre class="java"><& _TutorialJavaFileInclude; fileName => "TimeAndTempTut2" &></pre>
+<& _TutorialJavaFileInclude; fileName => "TimeAndTempTut2" &>
 
 <li>
 Set your classpath:

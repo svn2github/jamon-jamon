@@ -43,13 +43,12 @@ same file or other top level templates.
     calls the subtemplate <code>_generateLink</code> to compose a
     URL for each user account.
 
-    <pre class="template">
-    <& _TutorialTemplateInclude; fileName => "SubtemplateTemplate" &></pre>
+    <& _TutorialTemplateInclude; fileName => "SubtemplateTemplate" &>
 
   <li>
     This template is called from the Java class
      <a class="file" href="SubtemplateTut7">SubtemplateTut7.java</a>:
-<pre class="java"><& _TutorialJavaFileInclude; fileName => "SubtemplateTut7" &></pre>.
+     <& _TutorialJavaFileInclude; fileName => "SubtemplateTut7" &>.
 
   <li>
     Process the template and Java class with the following commands.

@@ -44,7 +44,7 @@ The following code will <em>not</em> work.
 
 <li>
 The examples so far have created the template instances by providing a <code>StandardTemplateManager</code> instance as an argument to the template's constructor. It is also possible to set globally a single template manager instance that will be used to construct <em>all</em> Jamon template instances that are created with the no-argument (default) constructor. The global template manager is set by creating an instance and passing it to the static <code>TemplateManagerSource.setTemplateManager()</code> method, as shown below.
-<pre class="java"><& _TutorialJavaFileInclude; fileName => "HelloTut1Alternate" &></pre>
+<& _TutorialJavaFileInclude; fileName => "HelloTut1Alternate" &>
 This style of creating templates is much clearer in a program that uses more than a few templates.
 <p>
 If the program needs to create a template with a template manager <em>other</em> than the default template manager, then it can still provide the correct template manager to the one-argument constructor for a template.

@@ -17,8 +17,7 @@ child template's output. Notice that the parent template takes care of the
 HTML header as well as the header banner of the page while the child
 template simply fills in the body.
 
-    <pre class="template">
-    ><& _TutorialTemplateInclude; fileName => "InheritanceParent"; &></pre>
+    <& _TutorialTemplateInclude; fileName => "InheritanceParent"; &>
 <p>
 The child template declares that it extends the parent template by including the tag
 <pre class="template">
@@ -33,13 +32,12 @@ The example template below,
 <code>InheritanceChild</code></a> extends <code>InheritanceTemplate</code>
 and provides subject text that is included in the output of the parent template.
 
-    <pre class="template"><& _TutorialTemplateInclude; fileName => "InheritanceChild" &></pre>
+    <& _TutorialTemplateInclude; fileName => "InheritanceChild" &>
 
 This template would be invoked from Java with the class
 <a href="InheritanceSimpleTut9.java" class="file">
 InheritanceSimpleTut9.java</a>
-    <pre class="java">
-    <& _TutorialJavaFileInclude; fileName => "InheritanceSimpleTut9" &></pre>
+    <& _TutorialJavaFileInclude; fileName => "InheritanceSimpleTut9" &>
 
 Notice that the Java code first calls <code>makeParentRenderer()</code>
 on the template to get the renderer for the <em>derived</em> template, and
@@ -62,7 +60,7 @@ For example, consider the parent template
 <code>InheritanceParentWArgs</code></a>. It defines arguments
 <code>userAccount</code> and <code>title</code>.
 
-    <pre class="template"><& _TutorialTemplateInclude; fileName => "InheritanceParentWArgs" &></pre>
+    <& _TutorialTemplateInclude; fileName => "InheritanceParentWArgs" &>
 
 The child template can only access these arguments by including
 <pre class="template">
@@ -85,7 +83,7 @@ A complete example of a child template,
 <code>InheritanceChildWArgs</code></a>.
 is below.
 
-    <pre class="template"><& _TutorialTemplateInclude; fileName => "InheritanceChildWArgs" &></pre>
+    <& _TutorialTemplateInclude; fileName => "InheritanceChildWArgs" &>
 
 
 <h3>Invoking a derived template</h3>
@@ -115,11 +113,10 @@ separate Java classes.
 The class <a href="User.java" class="file"><code>User</code></a> implements
 invoking the child template through the second approach described above.
 
-<pre class="java"><& _TutorialJavaFileInclude; fileName => "User" &></pre>
+<& _TutorialJavaFileInclude; fileName => "User" &>
 <p>
 The output from the template is
 <pre class="tty"><% output %></pre>
 
 <p>
 &nbsp;
-

@@ -95,12 +95,12 @@ This component has been accessed <% pageViews++ %> times.
     and <code>java.text.SimpleDateFormat</code>. It also defines two
     class static fields and one method. The template code uses all of
     these fields and method to output the desired text.
-    <pre class="template"><& _TutorialTemplateInclude; fileName => "ClassExampleTemplate" &></pre>
+    <& _TutorialTemplateInclude; fileName => "ClassExampleTemplate" &>
 
 <p>
 When this template is called by the java code
 <a class="file" href="ClassExampleTut5.java">ClassExampleTut5.java</a>:
-<pre class="java"><& _TutorialJavaFileInclude; fileName => "ClassExampleTut5" &></pre>
+<& _TutorialJavaFileInclude; fileName => "ClassExampleTut5" &>
 
 the output of the template's <code>render</code> method will be
     <pre class="tty"><&| /org/jamon/escape/Html &><% output %></&></pre>

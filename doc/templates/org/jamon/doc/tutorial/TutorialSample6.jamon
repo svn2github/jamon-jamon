@@ -43,8 +43,7 @@ variable, a call to a Java method, or any Java expression.
     The template below, <a href="JamonCallerTemplate.jamon" class="file">
      <code>JamonCallerTemplate</code></a>, outputs several rows
     of names and telephone numbers.
-    <pre class="template">
-    <& _TutorialTemplateInclude; fileName => "JamonCallerTemplate" &></pre>
+    <& _TutorialTemplateInclude; fileName => "JamonCallerTemplate" &>
 
     It calls the template <a href="StdPhoneNumberFormat.jamon" class="file">
      <code>StdPhoneNumberFormat</code></a> (below) to format the telephone
@@ -53,8 +52,7 @@ variable, a call to a Java method, or any Java expression.
     optional, so the <code>JamonCallerTemplate</code> only has to provide
     a value to override the default.
 
-    <pre class="template">
-    <& _TutorialTemplateInclude; fileName => "StdPhoneNumberFormat" &></pre>
+    <& _TutorialTemplateInclude; fileName => "StdPhoneNumberFormat" &>
 
 <div class="note">Notice that the <code>StdPhoneNumberFormat</code> template
 adds backslashes, '\', at the end of each line that outputs text (the non-java code lines). The backslash at the end of the line escapes the new-line on
@@ -66,7 +64,7 @@ must end the line with a backslash.
     The top level template, <code>JamonCallerTemplate</code> is called
     from the Java class
      <a class="file" href="JamonCallerTut6.java">JamonCallerTut6.java</a>:
-<pre class="java"><& _TutorialJavaFileInclude; fileName => "JamonCallerTut6" &></pre>
+    <& _TutorialJavaFileInclude; fileName => "JamonCallerTut6" &>
 <li> To process and run the template, execute the following commands:
 <pre class="tty">
     export CLASSPATH=.:/path/to/jamon.jar
@@ -83,5 +81,3 @@ must end the line with a backslash.
 <%frag content></%frag>
 <pre class="template"><&| /org/jamon/escape/Html &><& content &></&></pre>
 </%def>
-
-
