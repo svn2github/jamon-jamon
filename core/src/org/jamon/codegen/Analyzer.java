@@ -129,7 +129,7 @@ public class Analyzer
         m_currentUnit = m_currentUnit.getParent();
     }
 
-    private void pushCallStatement(AbstractCallStatement p_callStatement)
+    private void pushCallStatement(CallStatement p_callStatement)
     {
         m_callStatements.add(p_callStatement);
     }
@@ -139,9 +139,9 @@ public class Analyzer
         m_callStatements.removeLast();
     }
 
-    private AbstractCallStatement getCurrentCallStatement()
+    private CallStatement getCurrentCallStatement()
     {
-        return (AbstractCallStatement) m_callStatements.getLast();
+        return (CallStatement) m_callStatements.getLast();
     }
 
     private String fragmentIntfKey(String p_unitName, String p_fragmentName)
@@ -176,10 +176,10 @@ public class Analyzer
             : m_templateDir + p_path;
     }
 
-    private String computePath(PPath p_node)
+    private String computePath(PPath p_path)
     {
         PathAdapter adapter = new PathAdapter();
-        p_node.apply(adapter);
+        p_path.apply(adapter);
         return adapter.getPath();
     }
 
@@ -370,20 +370,8 @@ public class Analyzer
 
         public void caseACall(ACall p_call)
         {
-            String path = computePath(p_call.getPath());
-            FragmentUnit fragmentUnit = getCurrentUnit()
-                .getFragmentUnitIntf(path);
-            if (fragmentUnit != null)
-            {
-                addStatement(new FargCallStatement
-                    (path,
-                     makeParamMap(p_call.getParam()),
-                     fragmentUnit));
-            }
-            else
-            {
-                addStatement(makeCallStatement(path, p_call.getParam()));
-            }
+            addStatement
+                (makeCallStatement(p_call.getPath(), p_call.getParam()));
         }
 
         public void caseAChildCall(AChildCall p_childCall)
@@ -435,9 +423,8 @@ public class Analyzer
         public void inAMultiFragmentCall(AMultiFragmentCall p_call)
         {
             handleBody();
-            String path = computePath(p_call.getPath());
-            AbstractCallStatement s =
-                makeCallStatement(path, p_call.getParam());
+            CallStatement s =
+                makeCallStatement(p_call.getPath(), p_call.getParam());
             addStatement(s);
             pushCallStatement(s);
         }
@@ -462,9 +449,8 @@ public class Analyzer
         public void inAFragmentCall(AFragmentCall p_call)
         {
             handleBody();
-            String path = computePath(p_call.getPath());
-            AbstractCallStatement s =
-                makeCallStatement(path, p_call.getParam());
+            CallStatement s =
+                makeCallStatement(p_call.getPath(), p_call.getParam());
             addStatement(s);
             s.addFragmentImpl(pushFragmentUnitImpl(null));
         }
@@ -521,26 +507,40 @@ public class Analyzer
     }
 
 
-    private AbstractCallStatement makeCallStatement(String p_path,
-                                                    List p_calls)
+    private CallStatement makeCallStatement(PPath p_path, List p_calls)
     {
-        DefUnit defUnit = getTemplateUnit().getDefUnit(p_path);
-        if (defUnit != null)
+        String path = computePath(p_path);
+        FragmentUnit fragmentUnit =
+            getCurrentUnit().getFragmentUnitIntf(path);
+        if (fragmentUnit != null)
         {
-            return new DefCallStatement
-                (p_path, makeParamMap(p_calls), defUnit);
+            return new FargCallStatement
+                (path, makeParamMap(p_calls), fragmentUnit);
         }
         else
         {
-            MethodUnit methodUnit = getTemplateUnit().getMethodUnit(p_path);
-            if (methodUnit != null)
+            DefUnit defUnit = getTemplateUnit().getDefUnit(path);
+            if (defUnit != null)
             {
-                return new MethodCallStatement
-                    (p_path, makeParamMap(p_calls), methodUnit);
+                return new DefCallStatement
+                    (path, makeParamMap(p_calls), defUnit);
             }
-            getTemplateUnit().addCallPath(getAbsolutePath(p_path));
-            return new ComponentCallStatement(getAbsolutePath(p_path),
-                                              makeParamMap(p_calls));
+            else
+            {
+                MethodUnit methodUnit =
+                    getTemplateUnit().getMethodUnit(path);
+                if (methodUnit != null)
+                {
+                    return new MethodCallStatement
+                        (path, makeParamMap(p_calls), methodUnit);
+                }
+                else
+                {
+                    getTemplateUnit().addCallPath(getAbsolutePath(path));
+                    return new ComponentCallStatement(getAbsolutePath(path),
+                                                      makeParamMap(p_calls));
+                }
+            }
         }
     }
 

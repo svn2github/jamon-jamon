@@ -29,7 +29,7 @@ import org.jamon.JamonException;
 import org.jamon.util.StringUtils;
 
 public class FargCallStatement
-    implements Statement
+    implements CallStatement
 {
     FargCallStatement(String p_path, Map p_params, FragmentUnit p_fragmentUnit)
     {
@@ -41,6 +41,12 @@ public class FargCallStatement
     private final String m_path;
     private final Map m_params;
     private final FragmentUnit m_fragmentUnit;
+
+    public void addFragmentImpl(FragmentUnit p_unit)
+    {
+        throw new TunnelingException
+            ("Fragment args for fragments not implemented");
+    }
 
     public void generateSource(IndentingWriter p_writer,
                                TemplateResolver p_resolver,

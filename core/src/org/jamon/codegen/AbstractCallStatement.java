@@ -30,7 +30,7 @@ import org.jamon.JamonException;
 import org.jamon.util.StringUtils;
 
 public abstract class AbstractCallStatement
-    implements Statement
+    implements CallStatement
 {
     AbstractCallStatement(String p_path, Map p_params)
     {
