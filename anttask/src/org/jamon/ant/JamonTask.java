@@ -30,6 +30,19 @@ public class JamonTask
     }
 
 
+    /**
+     * Set whether the template generator should generate implementations (in
+     * addition to interfaces).  Defaults to 'false'.
+     *
+     * @param p_generateImpls whether implementations should be generated
+     */
+    
+    public void setGenerateImpls(boolean p_generateImpls)
+    {
+        m_generateImpls = p_generateImpls;
+    }
+
+
     public Path createSrc()
     {
         if (m_src == null)
@@ -54,6 +67,11 @@ public class JamonTask
         }
         String basePath = paths[0];
         log("basepath = " + basePath);
+
+        if (m_generateImpls)
+        {
+            log("Generating implementations");
+        }
 
         // Copied from org.apache.tools.ant.taskdefs.Javac below
 
@@ -104,9 +122,18 @@ public class JamonTask
 
         try
         {
-            TemplateGenerator.generateInterfaces(m_destDir,
-                                                 relativeFilenames,
-                                                 absoluteFilenames);
+            if (m_generateImpls)
+            {
+                TemplateGenerator.generateImplAndInterfaces(m_destDir,
+                                                            relativeFilenames,
+                                                            absoluteFilenames);
+            }
+            else
+            {
+                TemplateGenerator.generateInterfaces(m_destDir,
+                                                     relativeFilenames,
+                                                     absoluteFilenames);
+            }
         }
         catch (Exception e)
         {
@@ -153,7 +180,7 @@ public class JamonTask
     {
         if (!p_file.isAbsolute())
         {
-            throw new RuntimeException("Paths must be all absolute");
+            throw new IllegalArgumentException("Paths must be all absolute");
         }
         String filePath = p_file.getPath();
         if (filePath.startsWith(p_basePath))
@@ -162,7 +189,7 @@ public class JamonTask
         }
         else
         {
-            throw new RuntimeException(p_file + " is not based at " + p_basePath);
+            throw new IllegalArgumentException(p_file + " is not based at " + p_basePath);
         }
     }
 
@@ -172,5 +199,6 @@ public class JamonTask
     private String m_package;
     private File m_destDir;
     private Path m_src;
+    private boolean m_generateImpls;
 
 }
