@@ -4,12 +4,16 @@ import java.io.Writer;
 
 public abstract class AbstractTemplateFactory
 {
-    private static TemplateManager s_templateManager =
-        new StandardTemplateManager();
+    private final TemplateManager m_templateManager;
 
     private TemplateManager getTemplateManager()
     {
-        return s_templateManager;
+        return m_templateManager;
+    }
+
+    protected AbstractTemplateFactory(TemplateManager p_templateManager)
+    {
+        m_templateManager = p_templateManager;
     }
 
     protected Template getInstance(String p_path, Writer p_writer)
