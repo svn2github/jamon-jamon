@@ -148,13 +148,9 @@ the documentation thus taking care of issues such as escaping.
   </target>
 
   <target name="generateTutorialOutput">
-    <echo message="${tutorial.page}"/>
-    <invoker classpath="${java.lib.jamon}:${this.dir}"
-             workDir="${work.dir}"
-             compiler="${org.jamon.invoker.compiler}"
-             sourceDir="templates"
-             output="${tutorial.dir}/${tutorial.page}.html"
-             template="/org/jamon/doc/tutorial/${tutorial.page}"/>
+    <antcall target="grind">
+      <param name="template" value="tutorial/${tutorial.page}"/>
+    </antcall>
   </target>
 
   <target name="doc"
