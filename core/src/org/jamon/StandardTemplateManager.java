@@ -48,7 +48,7 @@ import org.jamon.codegen.IntfGenerator;
 import org.jamon.codegen.TemplateResolver;
 
 /**
- * The standard implementation of the @{link TemplateManager}
+ * The standard implementation of the {@link TemplateManager}
  * interface.  The <code>StandardTemplateManager</code> actually
  * functions in both development and production environments,
  * depending on how it is configured. In its default configuration,
@@ -56,48 +56,56 @@ import org.jamon.codegen.TemplateResolver;
  * regeneration and recompilation of templates as they are changed,
  * much as JSP does.
  *
- * The properties which control the behavior are:
+ * <code>StandardTemplateManager</code> instances are thread-safe.  In
+ * your applications, you generally want exactly one instance of a
+ * StandardTemplateManager (i.e. a singleton).
+ *
+ * Configuration of a <code>StandardTemplateManager</code> occurs only
+ * at construction time, and is determined by the
+ * <code>StandardTemplateManager.Data</code> object passed to the
+ * constructor. The properties on the <code>Data</code> are:
+
  * <ul>
 
- *   <li>{@link #setSourceDir} - determines where the
+ *   <li><b>setSourceDir</b> - determines where the
  *   <code>StandardTemplateManager</code> looks for template source
  *   files. Default is the current directory, which is most likely
  *   unsuitable for most situations.
 
- *   <li>{@link #setWorkDir} - determines where the generated Java
+ *   <li><b>setWorkDir</b> - determines where the generated Java
  *   source files corresponding to templates are placed. Default is
  *   uniquely generated subdirectory under the directory specified by
  *   the system property <tt>java.io.tmpdir</tt>.
 
- *   <li>{@link #setDynamicRecompilation} - determines whether classes
+ *   <li><b>setDynamicRecompilation</b> - determines whether classes
  *   corresponding to templates should be dynamically recompiled as
  *   necessary. Default is true; set to false for production.
 
- *   <li>{@link #setCacheSize} - used to set the maximum number of
+ *   <li><b>setCacheSize</b> - used to set the maximum number of
  *   template instances cached. Default is 50.
 
- *   <li>{@link #setJavaCompiler} - determines what program to execute
+ *   <li><b>setJavaCompiler</b> - determines what program to execute
  *   to compile the generated Java source files. Default is
  *   <tt>bin/javac</tt> under the directory specified by the system
  *   property <tt>java.home</tt>.
 
- *   <li>{@link #setJavaCompilerNeedsRtJar} - determines whether rt.jar
+ *   <li><b>setJavaCompilerNeedsRtJar</b> - determines whether rt.jar
  *   needs to be explicitly supplied in the classpath when compiling
  *   generated Java source files; this is useful to enable compilation
  *   via <code>Jikes</code>. Default is false.
 
- *   <li>{@link #setClasspath} - used to specify additional components
+ *   <li><b>setClasspath</b> - used to specify additional components
  *   to prepend to the classpath when compiling generated Java source
  *   files. Default is null.
 
- *   <li>{@link #setAutoFlush} - determines whether templates
+ *   <li><b>setAutoFlush</b> - determines whether templates
  *   automatically flush the writer after rendering. Default is true.
 
- *   <li>{@link #setClassLoader} - used to set the class loader
+ *   <li><b>setClassLoader</b> - used to set the class loader
  *   explicitly. Default is use the class laoder of the
  *   <code>StandardTemplateManager</code> instance.
 
- *   <li>{@link #setDefaultEscaping} - used to set the default escaping
+ *   <li><b>setDefaultEscaping</b> - used to set the default escaping
  *   Default is null.
 
  * </ul>
