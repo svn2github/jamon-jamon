@@ -1,4 +1,4 @@
-<%extends ../_DocumentationBase>
+<%extends _TutorialBase>
 <%override title>Ten Step Tutorial</%override>
 
 <h2>Ten Step Tutorial</h2>

@@ -4,8 +4,8 @@
   <head>
     <title><& title &></title>
     <meta name="keywords" content="template,templates,typed,dynamic,text,java,MVC,render,model-view-controller,typesafety,typesafe"></meta>
-    <link rel="SHORTCUT ICON" href="/favicon.ico">
-    <link rel="StyleSheet" href="base.css" type="text/css" media="screen" />
+    <link rel="SHORTCUT ICON" href="<& docRootUrl; href => "/favicon.ico" &>">
+    <link rel="StyleSheet" href="<& docRootUrl; href => "base.css" &>" type="text/css" media="screen" />
   </head>
 
   <body>
@@ -53,12 +53,20 @@
  id="current"\
 % }
 >
-<a href="<% href #u %>.html" \
+<a href="<& docRootUrl; href => "" &><% href #u %>.html" \
 ><% section %></a>
 </li>
 </%def>
 
+<%method docRootUrl>\
+<%args>
+    String href;
+  </%args>\
+<% href %>
+</%method>
+
 <%class>
+
   protected static class Section
   {
     private Section(String p_name)
