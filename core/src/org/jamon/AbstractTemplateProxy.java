@@ -15,12 +15,11 @@
  * created by Jay Sachs are Copyright (C) 2003 Jay Sachs.  All Rights
  * Reserved.
  *
- * Contributor(s):
+ * Contributor(s): Ian Robertson
  */
 
 package org.jamon;
 
-import java.io.Writer;
 import java.io.IOException;
 
 public abstract class AbstractTemplateProxy
@@ -33,7 +32,7 @@ public abstract class AbstractTemplateProxy
     {
     }
 
-    protected static class ImplData //FIXME - need this at all?
+    protected static class ImplData
     {
     }
 

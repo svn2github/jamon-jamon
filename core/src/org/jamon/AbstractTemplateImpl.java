@@ -20,9 +20,7 @@
 
 package org.jamon;
 
-import java.io.Writer;
 import java.io.IOException;
-import java.net.URLEncoder;
 
 import org.jamon.escaping.Escaping;
 
