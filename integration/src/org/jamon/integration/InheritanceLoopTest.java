@@ -23,7 +23,7 @@ package org.jamon.integration;
 import org.jamon.JamonException;
 
 public class InheritanceLoopTest
-    extends BrokenTestBase
+    extends TestBase
 {
     public void testInheritanceLoop()
         throws Exception

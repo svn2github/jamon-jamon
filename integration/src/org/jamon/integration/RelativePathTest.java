@@ -22,28 +22,32 @@ package org.jamon.integration;
 
 import java.io.File;
 
+import test.jamon.subdir.RelativePath;
 import org.jamon.TemplateProcessor;
 import org.jamon.JamonException;
 
-public class BrokenTestBase
-    extends AbstractTestBase
+public class RelativePathTest
+    extends TestBase
 {
-    private TemplateProcessor m_processor = null;
-
-    public void setUp()
+    public void testRelativePath()
         throws Exception
     {
-        String integrationDir =
-            System.getProperty("org.jamon.integration.basedir");
-        m_processor =
-            new TemplateProcessor(new File(integrationDir + "/build/src"),
-                                  new File(integrationDir + "/templates"),
-                                  getClass().getClassLoader());
+        new RelativePath(getTemplateManager()).writeTo(getWriter()).render();
+        checkOutput("simple");
     }
 
-    public void generateSource(String p_path)
+    public void testToManyDotDots()
         throws Exception
     {
-        m_processor.generateSource(p_path);
+        try
+        {
+            generateSource("test/jamon/broken/TooManyDotDots");
+            fail();
+        }
+        catch(JamonException e)
+        {
+            assertEquals("Cannot reference templates above the root",
+                         e.getMessage());
+        }
     }
 }

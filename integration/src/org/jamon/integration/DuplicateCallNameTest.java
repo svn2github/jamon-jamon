@@ -23,7 +23,7 @@ package org.jamon.integration;
 import org.jamon.JamonException;
 
 public class DuplicateCallNameTest
-    extends BrokenTestBase
+    extends TestBase
 {
     public void testDefAndMethod()
         throws Exception

@@ -180,6 +180,7 @@ Tokens
        ([all - [argsep + [q + '&']]] | quoted | squoted | '&' [all - '>'])*;
   {multifragmentcall,call,imports,alias} semi = ';';
   {multifragmentcall,call,extends,alias} pathsep = slash;
+  {multifragmentcall,call,extends,alias} updir = period period slash;
 
   {start -> multifragmentcall, body -> multifragmentcall} multi_fragment_call_init = '<&||' ws*;
 
@@ -297,7 +298,7 @@ Productions
   escape = escape_delimiter escape_code;
 
   path = {alias} aliased_path
-       | {rel} relative_path
+       | {rel} updir_path* relative_path
        | {abs} absolute_path;
 
   relative_path = identifier absolute_path?;
@@ -305,6 +306,8 @@ Productions
   absolute_path = pathsep relative_path;
 
   aliased_path = identifier? pathsep absolute_path;
+
+  updir_path = updir;
 
   arg = type [name]: identifier default? donearg;
 

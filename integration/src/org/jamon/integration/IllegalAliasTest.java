@@ -23,7 +23,7 @@ package org.jamon.integration;
 import org.jamon.JamonException;
 
 public class IllegalAliasTest
-    extends BrokenTestBase
+    extends TestBase
 {
     public void testCircularAlias()
         throws Exception

@@ -192,6 +192,22 @@ public class Analyzer
             return m_path.toString();
         }
 
+        public void inAUpdirPath(AUpdirPath p_updir)
+        {
+            if (! m_path.toString().startsWith("/"))
+            {
+                m_path.append(m_templateDir);
+            }
+            int lastSlash = m_path.toString()
+                .lastIndexOf("/", m_path.toString().length() - 2 );
+            if (lastSlash == 0)
+            {
+                throw new TunnelingException
+                    ("Cannot reference templates above the root");
+            }
+            m_path.delete(lastSlash+1, m_path.length());
+        }
+
         public void inARelativePath(ARelativePath p_relativePath)
         {
             m_path.append(p_relativePath.getIdentifier().getText());

@@ -15,7 +15,7 @@
  * created by Jay Sachs are Copyright (C) 2003 Jay Sachs.  All Rights
  * Reserved.
  *
- * Contributor(s):
+ * Contributor(s): Ian Robertson
  */
 
 package org.jamon.integration;
@@ -27,9 +27,12 @@ import java.io.IOException;
 
 import org.jamon.StandardTemplateManager;
 import org.jamon.TemplateManager;
+import org.jamon.TemplateProcessor;
+
+import junit.framework.TestCase;
 
 public abstract class TestBase
-    extends AbstractTestBase
+    extends TestCase
 {
     public void setUp()
     {
@@ -138,8 +141,37 @@ public abstract class TestBase
         return removeCrs(m_writer.getBuffer());
     }
 
+    protected void generateSource(String p_path)
+        throws Exception
+    {
+        String integrationDir =
+            System.getProperty("org.jamon.integration.basedir");
+        new TemplateProcessor(new File(integrationDir + "/build/src"),
+                              new File(integrationDir + "/templates"),
+                              getClass().getClassLoader())
+            .generateSource(p_path);
+    }
+
+    public static void assertEquals(String p_first, String p_second)
+    {
+        if( showFullContextWhenStringEqualityFails() )
+        {
+            assertEquals((Object) p_first, (Object) p_second);
+        }
+        else
+        {
+            TestCase.assertEquals(p_first, p_second);
+        }
+    }
+
+    private static boolean showFullContextWhenStringEqualityFails()
+    {
+        return Boolean.valueOf
+            (System.getProperty
+             ("org.jamon.integration.verbose","false")).booleanValue();
+    }
+
     private TemplateManager m_templateManager;
     private TemplateManager m_recompilingTemplateManager;
     private StringWriter m_writer;
-
 }

@@ -23,7 +23,7 @@ package org.jamon.integration;
 import org.jamon.JamonException;
 
 public class DisallowedFragmentArgsTest
-    extends BrokenTestBase
+    extends TestBase
 {
     public void testFragmentInFragment()
         throws Exception
