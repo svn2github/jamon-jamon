@@ -3,7 +3,7 @@
 <project name="Jamon" default="build">
 
   <description>
-    A compiler that turns typed templates in Java code.
+    A compiler that turns typed templates into Java code.
   </description>
 
   <property file="build.properties"/>
