@@ -41,8 +41,14 @@ public class TestBase
             (new StandardTemplateManager.Data()
                  .setDynamicRecompilation(doDynamicRecompilation())
                  .setSourceDir(SOURCE_DIR)
+                 .setCacheSize(cacheSize())
                  .setWorkDir(WORK_DIR));
         resetWriter();
+    }
+
+    protected int cacheSize()
+    {
+        return 10;
     }
 
     protected boolean doDynamicRecompilation()
