@@ -12,7 +12,7 @@
   <property file="${user.home}/.ant.properties"/>
   <property name="jarfile" value="jamon.jar" />
   <property name="core.classes.dir" value="core/build/classes" />
-  <property name="stage.dir" value="stagesite" />
+  <property name="stage.dir" value="site" />
   <property name="doc.zip" value="jamondoc.zip" />
   <property name="tarfile.src" value="jamon-src.tar" />
   <property name="tarball.src" value="jamon-src.tgz" />
@@ -177,17 +177,17 @@
       <arg value="--delete" />
       <arg value="--compress" />
       <arg value="." />
-      <arg value="${push.dest}" />
+      <arg value="jamon@jamon.org:/home/jamon/www${push.dest}" />
     </exec>
   </target>
 
   <target name="pushstage">
-    <property name="push.dest" value="jamon.org:/home/jamon/www/stage" />
+    <property name="push.dest" value="/stage" />
     <ant target="push" />
   </target>
 
   <target name="pushlive">
-    <property name="push.dest" value="jamon.org:/home/jamon/www" />
+    <property name="push.dest" value="" />
     <ant target="push" />
   </target>
 
