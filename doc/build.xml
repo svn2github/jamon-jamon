@@ -13,7 +13,7 @@ the documentation thus taking care of issues such as escaping.
   <property name="build.dir" value="build"/>
   <property name="work.dir" value="${build.dir}/work"/>
   <property name="www.dir" value="${build.dir}/www"/>
-  <property name="doc.dir" value="${build.dir}/doc"/>
+  <property name="doc.dir" value="${build.dir}/www"/>
   <property name="classes.dir" value="${www.dir}/classes"/>
   <property name="java.lib.jamon" location="../jamon.jar"/>
   <property name="java.lib.diff" value="/usr/local/share/java/diff.jar"/>
@@ -178,7 +178,9 @@ the documentation thus taking care of issues such as escaping.
   </target>
 
   <target name="build"
-          depends="war,zip" />
+          depends="war,zip">
+    <ant dir="${www.dir}" target="clean" />
+  </target>
 
   <target name="cvsignores">
     <echo file=".cvsignore">.cvsignore ${build.dir} build.properties
