@@ -124,7 +124,7 @@ public class StandardTemplateManager
         return m_workDir + p_path + "Impl.java";
     }
 
-    private String getClassFileName(String p_path)
+    private String getImplementationClassFileName(String p_path)
     {
         return m_workDir + p_path + "Impl.class";
     }
@@ -190,112 +190,17 @@ public class StandardTemplateManager
         return cp;
     }
 
-    private void compile(String p_path)
-        throws IOException
-    {
-        String [] cmdline = new String [] { m_javac,
-                                            "-classpath",
-                                            getClassPath(),
-                                            getJavaFileName(p_path) };
-
-        Process p = Runtime.getRuntime().exec(cmdline);
-        StreamConsumer stderr = new StreamConsumer(p.getErrorStream());
-        Thread errThread = new Thread(stderr);
-        errThread.start();
-        int code = -1;
-        try
-        {
-            code = p.waitFor();
-        }
-        catch (InterruptedException e)
-        {
-            errThread.interrupt();
-        }
-
-        try
-        {
-            errThread.join();
-        }
-        catch (InterruptedException e)
-        {
-            // just ignore it
-        }
-        if (code != 0)
-        {
-            throw new JttException("Compilation failed code="
-                                   + code
-                                   + "\n"
-                                   + stderr.getContents());
-        }
-    }
-
-    private static class StreamConsumer
-        implements Runnable
-    {
-        StreamConsumer(InputStream p_stream)
-        {
-            m_stream = p_stream;
-        }
-        private final InputStream m_stream;
-        private final StringBuffer m_buffer = new StringBuffer();
-
-        synchronized String getContents()
-        {
-            return m_buffer.toString();
-        }
-
-        public void run()
-        {
-            final byte [] buf = new byte[1024];
-            boolean eof = false;
-            while (! eof)
-            {
-                try
-                {
-                    int read = m_stream.read(buf);
-                    if (read == -1)
-                    {
-                        eof = true;
-                    }
-                    else if (read == 0)
-                    {
-                        try
-                        {
-                            Thread.sleep(100);
-                        }
-                        catch (InterruptedException e)
-                        {
-                            // FIXME: really?
-                            eof = true;
-                        }
-                    }
-                    else
-                    {
-                        synchronized (m_buffer)
-                        {
-                            m_buffer.append(new String(buf,0,read));
-                        }
-                    }
-                }
-                catch (IOException e)
-                {
-                    // FIXME: what here?
-                    eof = true;
-                }
-            }
-        }
-    }
-
     private Class getImplementationClass(String p_path)
         throws IOException,
                ParserException,
                LexerException,
                ClassNotFoundException
     {
-        File cf = new File(getClassFileName(p_path));
+        File cf = new File(getImplementationClassFileName(p_path));
         if (cf.lastModified() < getLastModifiedJava(p_path))
         {
-            compile(p_path);
+            new JavaCompiler(m_javac, getClassPath())
+                .compile(getJavaFileName(p_path));
         }
         return loadAndResolveClass(p_path);
     }
