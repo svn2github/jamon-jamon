@@ -43,7 +43,7 @@ public abstract class AbstractStatement
         return m_templateIdentifier;
     }
 
-    protected final void generateSourceLine(IndentingWriter p_writer)
+    protected final void generateSourceLine(CodeWriter p_writer)
     {
         p_writer.printLocation(m_token);
     }

@@ -288,7 +288,7 @@ public class TemplateUnit
         m_isParent = true;
     }
 
-    public void printClassContent(IndentingWriter p_writer)
+    public void printClassContent(CodeWriter p_writer)
     {
         for (Iterator i = m_classContent.iterator(); i.hasNext(); )
         {
@@ -328,7 +328,7 @@ public class TemplateUnit
     private final Set m_callNames = new HashSet();
     private final Collection m_abstractMethodNames = new HashSet();
 
-    protected void printRenderBodyEnd(IndentingWriter p_writer)
+    protected void printRenderBodyEnd(CodeWriter p_writer)
     {
         if(! hasParentPath())
         {
@@ -346,7 +346,7 @@ public class TemplateUnit
              m_parentDescription.getFragmentInterfaces().iterator());
     }
 
-    public void printImports(IndentingWriter p_writer)
+    public void printImports(CodeWriter p_writer)
     {
         for (Iterator i = getImports(); i.hasNext(); )
         {
@@ -358,12 +358,12 @@ public class TemplateUnit
         p_writer.println();
     }
 
-    public void printParentRenderArgs(IndentingWriter p_writer)
+    public void printParentRenderArgs(CodeWriter p_writer)
     {
         printArgs(p_writer, getParentRenderArgs());
     }
 
-    public void printParentRenderArgsDecl(IndentingWriter p_writer)
+    public void printParentRenderArgsDecl(CodeWriter p_writer)
     {
         printArgsDecl(p_writer, getParentRenderArgs());
     }
@@ -380,17 +380,17 @@ public class TemplateUnit
                                       m_declaredOptionalArgs.iterator());
     }
 
-    public void printDeclaredRenderArgs(IndentingWriter p_writer)
+    public void printDeclaredRenderArgs(CodeWriter p_writer)
     {
         printArgs(p_writer, getDeclaredRenderArgs());
     }
 
-    public void printDeclaredRenderArgsDecl(IndentingWriter p_writer)
+    public void printDeclaredRenderArgsDecl(CodeWriter p_writer)
     {
         printArgsDecl(p_writer, getDeclaredRenderArgs());
     }
 
-    public void printInterfaces(IndentingWriter p_writer)
+    public void printInterfaces(CodeWriter p_writer)
     {
         if (m_interfaces.size() > 0)
         {

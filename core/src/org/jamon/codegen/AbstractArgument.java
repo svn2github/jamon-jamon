@@ -61,7 +61,7 @@ public abstract class AbstractArgument
         return "get" + StringUtils.capitalize(getName());
     }
 
-    public void generateImplDataCode(IndentingWriter p_writer)
+    public void generateImplDataCode(CodeWriter p_writer)
     {
         p_writer.println( "public void " + getSetterName()
                           + "(" + getType() + " " + getName() + ")");
@@ -76,7 +76,7 @@ public abstract class AbstractArgument
         p_writer.println("private " + getType() + " m_" + getName() + ";");
     }
 
-    protected void generateImplDataSetterCode(IndentingWriter p_writer)
+    protected void generateImplDataSetterCode(CodeWriter p_writer)
     {
         p_writer.println("m_" + getName() + " = " + getName() + ";");
     }

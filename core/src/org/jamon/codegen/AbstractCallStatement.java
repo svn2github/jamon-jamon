@@ -71,7 +71,7 @@ public abstract class AbstractCallStatement
     }
 
     private void makeFragmentImplClass(FragmentUnit p_fragmentUnitIntf,
-                                       IndentingWriter p_writer,
+                                       CodeWriter p_writer,
                                        TemplateDescriber p_describer)
         throws IOException
     {
@@ -126,7 +126,7 @@ public abstract class AbstractCallStatement
     }
 
     protected void makeFragmentImplClasses(List p_fragmentInterfaces,
-                                           IndentingWriter p_writer,
+                                           CodeWriter p_writer,
                                            TemplateDescriber p_describer)
         throws IOException
     {
@@ -164,7 +164,7 @@ public abstract class AbstractCallStatement
         }
     }
 
-    protected void generateFragmentParams(IndentingWriter p_writer,
+    protected void generateFragmentParams(CodeWriter p_writer,
                                           Iterator p_fragmentInterfaces)
     {
         while (p_fragmentInterfaces.hasNext())

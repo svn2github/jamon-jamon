@@ -34,7 +34,7 @@ public class RawStatement
         m_code = p_code;
     }
 
-    public void generateSource(IndentingWriter p_writer,
+    public void generateSource(CodeWriter p_writer,
                                TemplateDescriber p_describer)
     {
         generateSourceLine(p_writer);

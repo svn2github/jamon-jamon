@@ -39,7 +39,6 @@ public interface Statement
      *
      * @exception IOException if something goes wrong
      */
-    void generateSource(IndentingWriter p_writer,
-                        TemplateDescriber p_describer)
+    void generateSource(CodeWriter p_writer, TemplateDescriber p_describer)
         throws IOException;
 }

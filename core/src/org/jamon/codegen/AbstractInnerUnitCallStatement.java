@@ -51,7 +51,7 @@ public abstract class AbstractInnerUnitCallStatement
         return p_fragmentUnitIntf.getFragmentInterfaceName();
     }
 
-    public void generateSource(IndentingWriter p_writer,
+    public void generateSource(CodeWriter p_writer,
                                TemplateDescriber p_describer)
         throws IOException
     {

@@ -24,9 +24,9 @@ import java.io.PrintWriter;
 import java.io.Writer;
 import org.jamon.node.Token;
 
-public class IndentingWriter
+public class CodeWriter
 {
-    public IndentingWriter(Writer p_writer)
+    public CodeWriter(Writer p_writer)
     {
         m_writer = new PrintWriter(p_writer);
     }

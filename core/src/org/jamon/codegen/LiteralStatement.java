@@ -33,7 +33,7 @@ public class LiteralStatement
         m_text = javaEscape(p_text);
     }
 
-    public void generateSource(IndentingWriter p_writer,
+    public void generateSource(CodeWriter p_writer,
                                TemplateDescriber p_describer)
     {
         if (m_text.length() > 0)

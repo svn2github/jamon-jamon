@@ -30,7 +30,7 @@ public class ImplGenerator
                          TemplateDescriber p_describer,
                          TemplateUnit p_templateUnit)
     {
-        m_writer = new IndentingWriter(p_writer);
+        m_writer = new CodeWriter(p_writer);
         m_describer = p_describer;
         m_templateUnit = p_templateUnit;
     }
@@ -51,7 +51,7 @@ public class ImplGenerator
         m_writer.finish();
     }
 
-    private final IndentingWriter m_writer;
+    private final CodeWriter m_writer;
     private final TemplateDescriber m_describer;
     private final TemplateUnit m_templateUnit;
 

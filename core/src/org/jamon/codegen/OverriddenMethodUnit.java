@@ -77,7 +77,7 @@ public class OverriddenMethodUnit
         return m_declaredMethodUnit.getOptionalArgDefaultMethod(p_arg);
     }
 
-    public void printRenderArgsDecl(IndentingWriter p_writer)
+    public void printRenderArgsDecl(CodeWriter p_writer)
     {
         for (Iterator i = m_declaredMethodUnit.getRenderArgs(); i.hasNext(); )
         {

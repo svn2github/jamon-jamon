@@ -35,7 +35,7 @@ public class WriteStatement
         m_escapingDirective = p_escapingDirective;
     }
 
-    public void generateSource(IndentingWriter p_writer,
+    public void generateSource(CodeWriter p_writer,
                                TemplateDescriber p_describer)
     {
         generateSourceLine(p_writer);

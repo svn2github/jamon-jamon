@@ -53,7 +53,7 @@ public class FargCallStatement
         throw new UnsupportedOperationException();
     }
 
-    public void generateSource(IndentingWriter p_writer,
+    public void generateSource(CodeWriter p_writer,
                                TemplateDescriber p_describer)
         throws IOException
     {

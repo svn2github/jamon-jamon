@@ -30,7 +30,7 @@ public class ChildCallStatement
         m_depth = p_depth;
     }
 
-    public void generateSource(IndentingWriter p_writer,
+    public void generateSource(CodeWriter p_writer,
                                TemplateDescriber p_describer)
     {
         p_writer.println("child_render_" + m_depth + "();");

@@ -42,8 +42,7 @@ public interface Unit
     FragmentUnit addFragment(TIdentifier p_fragName);
     void addNonFragmentArg(AArg p_arg);
 
-    void printRenderArgsDecl(IndentingWriter p_writer);
-    void generateRenderBody(IndentingWriter p_writer,
-                            TemplateDescriber p_describer)
+    void printRenderArgsDecl(CodeWriter p_writer);
+    void generateRenderBody(CodeWriter p_writer, TemplateDescriber p_describer)
         throws IOException;
 }

@@ -33,7 +33,7 @@ public class ProxyGenerator
                           TemplateDescriber p_describer,
                           TemplateUnit p_templateUnit)
     {
-        m_writer = new IndentingWriter(p_writer);
+        m_writer = new CodeWriter(p_writer);
         m_describer = p_describer;
         m_templateUnit = p_templateUnit;
     }
@@ -75,7 +75,7 @@ public class ProxyGenerator
     }
 
     private final TemplateDescriber m_describer;
-    private IndentingWriter m_writer;
+    private CodeWriter m_writer;
     private final TemplateUnit m_templateUnit;
 
 

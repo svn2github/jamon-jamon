@@ -77,7 +77,7 @@ public abstract class AbstractUnit
         return m_statements;
     }
 
-    public void generateRenderBody(IndentingWriter p_writer,
+    public void generateRenderBody(CodeWriter p_writer,
                                    TemplateDescriber p_describer)
         throws IOException
     {
@@ -87,8 +87,8 @@ public abstract class AbstractUnit
         p_writer.closeBlock();
     }
 
-    private void printStatements(IndentingWriter p_writer,
-                                TemplateDescriber p_describer)
+    private void printStatements(CodeWriter p_writer,
+                                 TemplateDescriber p_describer)
         throws IOException
     {
         for (Iterator i = getStatements().iterator(); i.hasNext(); )
@@ -97,7 +97,7 @@ public abstract class AbstractUnit
         }
     }
 
-    protected void printRenderBodyEnd(IndentingWriter p_writer)
+    protected void printRenderBodyEnd(CodeWriter p_writer)
     {
     }
 
@@ -154,17 +154,17 @@ public abstract class AbstractUnit
                                       getFragmentArgs());
     }
 
-    public void printRenderArgsDecl(IndentingWriter p_writer)
+    public void printRenderArgsDecl(CodeWriter p_writer)
     {
         printArgsDecl(p_writer, getRenderArgs());
     }
 
-    public void printRenderArgs(IndentingWriter p_writer)
+    public void printRenderArgs(CodeWriter p_writer)
     {
         printArgs(p_writer, getRenderArgs());
     }
 
-    protected static void printArgsDecl(IndentingWriter p_writer,
+    protected static void printArgsDecl(CodeWriter p_writer,
                                         Iterator i)
     {
         while (i.hasNext())
@@ -178,7 +178,7 @@ public abstract class AbstractUnit
         }
     }
 
-    protected static void printArgs(IndentingWriter p_writer,
+    protected static void printArgs(CodeWriter p_writer,
                                     Iterator p_args)
     {
         while (p_args.hasNext())

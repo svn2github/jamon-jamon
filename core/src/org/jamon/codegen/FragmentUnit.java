@@ -84,7 +84,7 @@ public class FragmentUnit extends AbstractInnerUnit
         return getParent().getFragmentUnitIntf(p_path);
     }
 
-    public void printInterface(IndentingWriter p_writer,
+    public void printInterface(CodeWriter p_writer,
                                String p_interfaceModifiers,
                                boolean p_isCopy)
     {
