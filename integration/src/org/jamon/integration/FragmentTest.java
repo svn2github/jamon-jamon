@@ -21,6 +21,7 @@
 package org.jamon.integration;
 
 import test.jamon.Fragment;
+import test.jamon.EscapedFragment;
 import test.jamon.RenderedFragment;
 import test.jamon.RepeatedFragmentName;
 
@@ -46,11 +47,18 @@ public class FragmentTest
     {
         new RenderedFragment(getTemplateManager())
             .writeTo(getWriter())
-            .render(1);
-        checkOutput("1(2)1");
+            .render();
+        checkOutput("<");
     }
 
-
+    public void testEscaping()
+        throws Exception
+    {
+        new EscapedFragment(getTemplateManager())
+            .writeTo(getWriter())
+            .render();
+        checkOutput("<&lt;");
+    }
 
     public void testRepeatedFragmentNameExercise()
         throws Exception
