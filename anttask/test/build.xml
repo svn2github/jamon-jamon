@@ -8,16 +8,31 @@
   <property file="${user.home}/.ant.properties"/>
 
   <property name="build.dir" value="build" />
+  <property name="work.dir" value="${build.dir}/work" />
   <property name="test.src.dir" value="${build.dir}/src" />
+  <property name="classpath"
+            value="../build/classes:../../core/build/classes" />
 
-  <target name="test">
+  <target name="test" depends="test-invoker,test-jamon" />
+
+  <target name="test-jamon">
     <taskdef name="jamon"
              classname="org.jamon.ant.JamonTask"
-             classpath="../build/classes:../../core/build/classes"/>
+             classpath="${classpath}" />
     <mkdir dir="${test.src.dir}" />
     <jamon destdir="${test.src.dir}" generateImpls="true">
       <src path="templates"/>
     </jamon>
+  </target>
+
+  <target name="test-invoker">
+    <taskdef name="invoker"
+             classname="org.jamon.ant.InvokerTask"
+             classpath="${classpath}"/>
+    <!-- we only need to specify classpath here because we're bootstrapping
+         Jamon; in "normal" invocations, all Jamon classes are available -->
+    <invoker classpath="${classpath}" sourceDir="templates" workDir="${work.dir}" template="/bar/Bar" />
+    <invoker classpath="${classpath}" sourceDir="templates" workDir="${work.dir}" template="/Foo" />
   </target>
 
   <target name="cvsignores">
