@@ -20,6 +20,8 @@
 
 package org.jamon;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.Iterator;
@@ -35,15 +37,75 @@ public class Invoker
     Invoker(String[] args)
         throws UsageException,
                TemplateArgumentException,
+               IOException,
                InvalidTemplateException
     {
-        if (args.length == 0)
-        {
-            throw new UsageException();
-        }
+        int a = 0;
         try
         {
-            m_templateClass = Class.forName(args[0]);
+            StandardTemplateManager manager = new StandardTemplateManager();
+            String outFile = null;
+            while (a < args.length && args[a].startsWith("-"))
+            {
+                if (args[a].startsWith("--workdir="))
+                {
+                    manager.setWorkDir(args[a].substring(10));
+                }
+                else if (args[a].equals("-w"))
+                {
+                    a++;
+                    if (a < args.length)
+                    {
+                        manager.setWorkDir(args[a]);
+                    }
+                    else
+                    {
+                        throw new UsageException();
+                    }
+                }
+                else if (args[a].startsWith("--srcdir="))
+                {
+                    manager.setSourceDir(args[a].substring(9));
+                }
+                else if (args[a].equals("-s"))
+                {
+                    a++;
+                    if (a < args.length)
+                    {
+                        manager.setSourceDir(args[a]);
+                    }
+                    else
+                    {
+                        throw new UsageException();
+                    }
+                }
+                else if (args[a].startsWith("--output="))
+                {
+                    outFile = args[a].substring(9);
+                }
+                else if (args[a].equals("-o"))
+                {
+                    a++;
+                    if (a < args.length)
+                    {
+                        outFile = args[a];
+                    }
+                    else
+                    {
+                        throw new UsageException();
+                    }
+                }
+                else
+                {
+                    throw new UsageException();
+                }
+                a++;
+            }
+            if (a >= args.length)
+            {
+                throw new UsageException();
+            }
+            m_templateClass = Class.forName(args[a]);
             Constructor con = m_templateClass
                 .getConstructor(new Class[] { TemplateManager.class });
             Method writeToMethod =
@@ -61,41 +123,42 @@ public class Invoker
             }
             if (render == null)
             {
-                throw new InvalidTemplateException(args[0]);
+                throw new InvalidTemplateException(args[a]);
             }
             m_renderMethod = render;
             m_argMap = new HashMap();
-            for (int i = 1; i < args.length; ++i)
+            for (int i = a+1; i < args.length; ++i)
             {
                 parseArgString(args[i]);
             }
 
             m_template = (AbstractTemplateProxy)
-                con.newInstance(new Object[]{ new StandardTemplateManager() });
-            writeToMethod.invoke
-                (m_template,
-                 new Object[] { new OutputStreamWriter(System.out) });
+                con.newInstance(new Object[]{ manager });
+            Writer writer = outFile == null
+                ? new OutputStreamWriter(System.out)
+                : new FileWriter(outFile);
+            writeToMethod.invoke(m_template, new Object[] { writer } );
 
         }
         catch (ClassNotFoundException e)
         {
-            throw new InvalidTemplateException(args[0]);
+            throw new InvalidTemplateException(args[a]);
         }
         catch (IllegalAccessException e)
         {
-            throw new InvalidTemplateException(args[0]);
+            throw new InvalidTemplateException(args[a]);
         }
         catch (InvocationTargetException e)
         {
-            throw new InvalidTemplateException(args[0]);
+            throw new InvalidTemplateException(args[a]);
         }
         catch (NoSuchMethodException e)
         {
-            throw new InvalidTemplateException(args[0]);
+            throw new InvalidTemplateException(args[a]);
         }
         catch (InstantiationException e)
         {
-            throw new InvalidTemplateException(args[0]);
+            throw new InvalidTemplateException(args[a]);
         }
     }
 
@@ -313,6 +376,9 @@ public class Invoker
         {
             return "java "
                 + Invoker.class.getName()
+                + " [-o outputfile] "
+                + " [-s templatesourcedir]"
+                + " [-w workdir]"
                 + " template-name [[arg1=val1] ...]";
         }
     }
