@@ -37,6 +37,11 @@ public class StringUtils
         return pathToClassName(p_path, "/");
     }
 
+    public static String classToTemplatePath(Class p_class)
+    {
+        return filePathToTemplatePath(classNameToFilePath(p_class.getName()));
+    }
+
     private static String pathToClassName(String p_path,
                                           String p_fromSep)
     {
