@@ -53,6 +53,10 @@ the documentation thus taking care of issues such as escaping.
     <copy file="earthaddress.gif" todir="${doc.dir}" />
     <copy file="favicon.ico" todir="${doc.dir}" />
     <copy file="robots.txt" todir="${doc.dir}" />
+    <copy file="sample/servlet/templates/HelloTemplate.jamon"
+          todir="${www.dir}/templates/foo/bar/"/>
+    <copy file="sample/servlet/templates/HelloTemplate2.jamon"
+          todir="${www.dir}/example2/templates/foo/bar/"/>
     <taskdef name="invoker"
              classname="org.jamon.ant.InvokerTask"
              classpath="${java.lib.jamon}" />
@@ -217,13 +221,6 @@ the documentation thus taking care of issues such as escaping.
     <antcall target="grind">
       <param name="template" value="Servlets" />
     </antcall>
-    <!-- Generate the first template example -->
-    <invoker classpath="${java.lib.jamon}:${java.lib.diff}"
-             workDir="${work.dir}"
-             compiler="${org.jamon.invoker.compiler}"
-             sourceDir="templates"
-             output="${www.dir}/templates/foo/bar/HelloTemplate.jamon"
-             template="/org/jamon/doc/servlet/hello" />
     <!-- Generate the first servlet example -->
     <property name="servlet.src.dir" value="${www.dir}/src/foo/bar" />
     <invoker classpath="${java.lib.jamon}:${java.lib.diff}"
@@ -262,13 +259,6 @@ the documentation thus taking care of issues such as escaping.
              sourceDir="templates"
              output="${servlet.src2.dir}/HelloFormFields.java"
              template="/org/jamon/doc/servlet/FormFieldsTemplate" />
-    <!-- Generate the second template example -->
-    <invoker classpath="${java.lib.jamon}:${java.lib.diff}"
-             workDir="${work.dir}"
-             compiler="${org.jamon.invoker.compiler}"
-             sourceDir="templates"
-             output="${www.dir}/example2/templates/foo/bar/HelloTemplate"
-             template="/org/jamon/doc/servlet/Hello2TemplateTemplate" />
     <!-- To get a web.xml and build.xml for the example we just copy
          them from the first example -->
     <copy file="${www.dir}/web.xml" todir="${www.dir}/example2" />

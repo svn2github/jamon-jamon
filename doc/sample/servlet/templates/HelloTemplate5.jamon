@@ -1,4 +1,4 @@
-<%LITERAL><%args>
+<%args>
   int num => 0;
   boolean error => false;
 </%args>
@@ -22,4 +22,4 @@
       <input type="submit" value="Greet Me"/>
     </form>
   </body>
-</html></%LITERAL>
+</html>

@@ -1,4 +1,4 @@
-<%LITERAL><%args>
+<%args>
   int num;
 </%args>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -11,4 +11,4 @@
     Hello world!
 % }
   </body>
-</html></%LITERAL>
+</html>

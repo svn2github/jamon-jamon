@@ -10,12 +10,10 @@ Suppose we want a servlet that will print out the above message an
 arbitrary number of times.  We can do this with the following
 template.
 
-<pre class="template"><&|| _showDiff &>
-  <|oldContent><& hello &></|>
-  <|newContent><& hello2 &></|>
-</&></pre>
+<& _showTemplateDiff; oldName => "HelloTemplate";
+                      newName => "HelloTemplate2" &>
 
-(You should be able to distinguish lines that are <span class="changed">new or 
+(You should be able to distinguish lines that are <span class="changed">new or
 changed</span><span class="deleted"> or deleted</span>).
 
 <pre class="code"><&|| _showDiff &>
@@ -28,13 +26,11 @@ omitted.)  The above code will result in "Hello World!" being printed
 out ten times.
 
 <p>
-Suppose we want the user to be able to specify the number times the message is 
+Suppose we want the user to be able to specify the number times the message is
 displayed.  We can achieve that with a template such as:
 
-<pre class="template"><&|| _showDiff &>
-  <|oldContent><& hello2 &></|>
-  <|newContent><& hello3 &></|>
-</&></pre>
+<& _showTemplateDiff; oldName => "HelloTemplate2";
+                      newName => "HelloTemplate3" &>
 
 The corresponding servlet would look like:
 
@@ -56,10 +52,8 @@ Since the object responsible for parsing the parameter seems like the
 natural owner of the name of the parameter, for the moment we reduce
 the smell by doing this:
 
-<pre class="template"><&|| _showDiff &>
-  <|oldContent><& hello3 &></|>
-  <|newContent><& hello4 &></|>
-</&></pre>
+<& _showTemplateDiff; oldName => "HelloTemplate3";
+                      newName => "HelloTemplate4" &>
 
 and
 
@@ -82,10 +76,8 @@ as follows (unchanged code is omitted).  In the servlet we need:
 
 and the template needs an additional error parameter:
 
-<pre class="template"><&|| _showDiff &>
-  <|oldContent><& hello4 &></|>
-  <|newContent><& hello5 &></|>
-</&></pre>
+<& _showTemplateDiff; oldName => "HelloTemplate4";
+                      newName => "HelloTemplate5" &>
 
 However, in spite of all this the servlet leaves a great deal to be
 desired.  For example invalid input should be returned to the user for
@@ -102,3 +94,20 @@ inadequate:
   </dl>
 </div>
 The next section presents solutions to these problems.
+
+<%def _showTemplateDiff>
+  <%args>
+    String oldName;
+    String newName;
+  </%args>
+
+<pre class="template">\
+<&|| _showDiff &>
+  <|oldContent><& ../_ReadFile;
+                  fileName => "/sample/servlet/templates/"
+                  + oldName + ".jamon" &></|>
+  <|newContent><& ../_ReadFile;
+                  fileName => "/sample/servlet/templates/"
+                  + newName + ".jamon" &></|>
+</&></pre>
+</%def>

@@ -14,14 +14,19 @@ that
 
 <ul>
 <%def root>/home/alice/tutorial</%def>
-  <li>All paths are relative to a base directory for the tutorial.
-  For example, if you choose the base directory to be
-    <code><& root &></code>, then a reference to a directory
-    <code>templates/foo/bar</code> means
-    <code><& root &>/templates/foo/bar</code>.  A reference to
-    a file <code>web.xml</code> means <code><& root &>/web.xml</code></li>
-  <li>If you wish to avoid typing in the examples in this section all the source
-    code is available in a <a href="foobar.zip">zipfile</a>.</li>
+  <li>
+    All paths are relative to a base directory for the tutorial.  For
+    example, if you choose the base directory to be <code><& root
+    &></code>, then a reference to a directory
+    <code>templates/foo/bar</code> means <code><& root
+    &>/templates/foo/bar</code>.  A reference to a file
+    <code>web.xml</code> means <code><& root &>/web.xml</code>
+  </li>
+  <li>
+    If you wish to avoid typing in the examples in this section all
+      the source code is available in a <a href="foobar.zip">zipfile</a>.
+  </li>
+
 </ul>
 
 <p>
@@ -30,7 +35,9 @@ In directory <code class="file">templates/foo/bar</code> create a file called
 <a class="file" href="templates/foo/bar/HelloTemplate.jamon">HelloTemplate.jamon</a> (you should <em>save</em>
 this file since your browser may not display it correctly) containing:
 
-<pre class="template"><&| /org/jamon/escape/Html &><& hello &></&></pre>
+<pre class="template"><&| /org/jamon/escape/Html &>\
+<& ../_ReadFile;
+   fileName => "/sample/servlet/templates/HelloTemplate.jamon" &></&></pre>
 
 In directory <code class="file">src/foo/bar</code> create
 a file <a href="src/foo/bar/HelloServlet.java">HelloServlet.java</a> containing:

@@ -1,10 +1,5 @@
 <%abstract>
 
-<%import>
-  java.io.BufferedReader;
-  java.io.InputStreamReader;
-</%import>
-
 <%args>
   String fileName;
 </%args>
@@ -13,16 +8,8 @@
   protected abstract String getCompleteFileName(String fileName);
 </%class>
 
-<pre <& preAttributes &>>\
-<%java>
-BufferedReader reader =
-  new BufferedReader(new InputStreamReader(
-    getClass().getResourceAsStream(
-      "/" + getCompleteFileName(fileName))));
-for (String line = reader.readLine(); line != null; line = reader.readLine())
-{
-</%java>
-<% line %>
-% }
-</pre>
 <%absmeth preAttributes></%absmeth>
+
+<pre <& preAttributes &>><&| /org/jamon/escape/Html &>\
+<& _ReadFile; fileName => "/" + getCompleteFileName(fileName) &>\
+</&></pre>

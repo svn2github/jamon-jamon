@@ -42,7 +42,7 @@ Here is a servlet that will use the above class:
 
 and the corresponding template should look like:
 
-  <pre class="template"><&| /org/jamon/escape/Html &><& Hello2TemplateTemplate &></&></pre>
+  <& ../_TemplateInclude; fileName => "servlet/templates/Hello2Template" &>
 
 There are a few things to note about the above example.
 <ul>
