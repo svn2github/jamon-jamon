@@ -15,16 +15,8 @@
   created by Jay Sachs are Copyright (C) 2003 Jay Sachs.  All Rights
   Reserved.
 
-  Contributor(s):
-</%doc>\
-<%args>
-  org.jamon.render.html.SelectableInput input;
-  String cssClass => null;
-  String style => null;
-  Boolean selected => null;
-</%args>\
-<& _Selectable; type => "radio";
-                input => input;
-                cssClass => cssClass;
-                style => style;
-                selected => selected &>
+  Contributor(s): Ian Robertson
+</%doc>
+
+<%extends _Selectable>
+<%override type>radio</%override>
