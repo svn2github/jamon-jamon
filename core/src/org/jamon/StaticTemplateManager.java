@@ -129,10 +129,6 @@ public class StaticTemplateManager
                 .getConstructor(new Class [] { TemplateManager.class })
                 .newInstance(new Object [] { this });
         }
-        catch (IOException e)
-        {
-            throw e;
-        }
         catch (RuntimeException e)
         {
             throw e;
@@ -144,23 +140,9 @@ public class StaticTemplateManager
     }
 
     private Class getProxyClass(String p_path)
-        throws IOException
+        throws ClassNotFoundException
     {
-        return getTemplateClass(p_path,
-                                StringUtils.templatePathToClassName(p_path));
-    }
-
-    private Class getTemplateClass(String p_path, String p_className)
-        throws IOException
-    {
-        try
-        {
-            return Class.forName(p_className);
-        }
-        catch (ClassNotFoundException e)
-        {
-            throw new JamonException(e);
-        }
+        return Class.forName(StringUtils.templatePathToClassName(p_path));
     }
 
     private final Escaping m_escaping;
