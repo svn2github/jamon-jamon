@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+
+<project name="TestTask" default="test">
+
+  <description>Test the Ant task for Jamon</description>
+
+  <taskdef name="jamon" classname="org.jamon.ant.JamonTask"/>
+
+  <property file="build.properties"/>
+  <property file="${user.home}/.ant.properties"/>
+
+  <target name="test">
+    <jamon package="foo.bar." destdir="build/src">
+      <src path="templates"/>
+    </jamon>
+  </target>
+
+</project>

@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+
+<project name="AntTask" default="compile">
+
+  <description>Ant task for Jamon</description>
+
+  <property file="build.properties"/>
+  <property file="${user.home}/.ant.properties"/>
+
+  <property name="build.dir" value="build"/>
+  <property name="build.src.dir" value="${build.dir}/src"/>
+  <property name="classes.dir" value="${build.dir}/classes"/>
+  <property name="src.dir" value="src"/>
+
+  <property name="java.lib.ant" value="/usr/local/ant/lib/ant.jar"/>
+  <property name="java.lib.jamon" value="../core/build/classes"/>
+
+  <target name="compile"
+          description="Compiles Java files">
+    <mkdir dir="${classes.dir}"/>
+    <javac destdir="${classes.dir}"
+           debug="true"
+           classpath="${java.lib.ant}:${java.lib.jamon}"
+           deprecation="true">
+      <src path="${src.dir}"/>
+    </javac>
+  </target>
+
+  <target name="cvsignores">
+    <echo file=".cvsignore">.cvsignore ${build.dir} build.properties
+</echo>
+  </target>
+
+  <target name="clean"
+          description="Removes all the class files">
+    <delete dir="${classes.dir}"/>
+  </target>
+
+  <target name="spotless"
+          description="Restores work area to its state after checking out">
+    <delete dir="${classes.dir}"/>
+  </target>
+
+</project>
