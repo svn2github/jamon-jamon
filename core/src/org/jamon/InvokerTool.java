@@ -59,7 +59,8 @@ public class InvokerTool
         throws UsageException, IOException
     {
         int a = 0;
-        StandardTemplateManager.Data data = new StandardTemplateManager.Data();
+        RecompilingTemplateManager.Data data =
+            new RecompilingTemplateManager.Data();
         String outFile = null;
         while (a < args.length && args[a].startsWith("-"))
         {
@@ -134,7 +135,7 @@ public class InvokerTool
             ? new OutputStreamWriter(System.out)
             : new FileWriter(outFile);
 
-        new Invoker(new StandardTemplateManager(data),
+        new Invoker(new RecompilingTemplateManager(data),
                     templateName,
                     p_objectParser)
             .render(writer, argMap);

@@ -39,7 +39,9 @@ import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Environment;
 
 import org.jamon.Invoker;
-import org.jamon.StandardTemplateManager;
+import org.jamon.TemplateManager;
+import org.jamon.StaticTemplateManager;
+import org.jamon.RecompilingTemplateManager;
 import org.jamon.JamonTemplateException;
 
 /**
@@ -51,8 +53,7 @@ public class InvokerTask
 {
     public InvokerTask()
     {
-        m_templateManagerData = new StandardTemplateManager.Data();
-        m_templateManagerData.setDynamicRecompilation(true);
+        m_recompilingManagerData = new RecompilingTemplateManager.Data();
     }
 
     public void execute()
@@ -82,9 +83,11 @@ public class InvokerTask
                 }
                 writer = new FileWriter(m_output);
             }
-            new Invoker(new StandardTemplateManager(m_templateManagerData),
-                        m_path)
-                .render(writer, m_args);
+            TemplateManager manager =
+                m_dynamicRecompilation
+                ? new RecompilingTemplateManager(m_recompilingManagerData)
+                : (TemplateManager) new StaticTemplateManager();
+            new Invoker(manager, m_path).render(writer, m_args);
         }
         catch (Invoker.InvalidTemplateException e)
         {
@@ -109,11 +112,11 @@ public class InvokerTask
 
     public void setCompiler(String p_javac)
     {
-        m_templateManagerData.setJavaCompiler(p_javac);
+        m_recompilingManagerData.setJavaCompiler(p_javac);
         // slight hack but convenient
         if (p_javac.toLowerCase().endsWith("jikes"))
         {
-            m_templateManagerData.setJavaCompilerNeedsRtJar(true);
+            m_recompilingManagerData.setJavaCompilerNeedsRtJar(true);
         }
     }
 
@@ -129,20 +132,20 @@ public class InvokerTask
                 null,
                 paths[i] + (new File(paths[i]).isDirectory() ? "/" : ""));
         }
-        m_templateManagerData
+        m_recompilingManagerData
             .setClassLoader(new URLClassLoader(urls,
                                                getClass().getClassLoader()));
-        m_templateManagerData.setClasspath(p_classpath.toString());
+        m_recompilingManagerData.setClasspath(p_classpath.toString());
     }
 
     public void setWorkDir(File p_workDir)
     {
-        m_templateManagerData.setWorkDir(p_workDir.getAbsolutePath());
+        m_recompilingManagerData.setWorkDir(p_workDir.getAbsolutePath());
     }
 
     public void setSourceDir(File p_sourceDir)
     {
-        m_templateManagerData.setSourceDir(p_sourceDir.getAbsolutePath());
+        m_recompilingManagerData.setSourceDir(p_sourceDir.getAbsolutePath());
     }
 
     public void setOutput(File p_output)
@@ -158,10 +161,11 @@ public class InvokerTask
 
     public void setDynamicRecompilation(boolean p_dynamicRecompilation)
     {
-        m_templateManagerData.setDynamicRecompilation(p_dynamicRecompilation);
+        m_dynamicRecompilation = p_dynamicRecompilation;
     }
 
-    private final StandardTemplateManager.Data m_templateManagerData;
+    private final RecompilingTemplateManager.Data m_recompilingManagerData;
+    private boolean m_dynamicRecompilation = true;
     private String m_path;
     private HashMap m_args = new HashMap();
     private Collection m_sysprops = new HashSet();

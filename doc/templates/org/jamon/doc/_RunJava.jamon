@@ -4,7 +4,7 @@
   java.lang.reflect.InvocationTargetException;
   org.jamon.JamonException;
   org.jamon.TemplateManagerSource;
-  org.jamon.StandardTemplateManager;
+  org.jamon.StaticTemplateManager;
 </%import>
 
 <%args>
@@ -21,8 +21,7 @@
     ByteArrayOutputStream trap = new ByteArrayOutputStream();
     System.setOut(new PrintStream(trap));
 
-    TemplateManagerSource.setTemplateManager(new StandardTemplateManager(
-      new StandardTemplateManager.Data().setDynamicRecompilation(false)));
+    TemplateManagerSource.setTemplateManager(new StaticTemplateManager());
 
     getClass().getClassLoader().loadClass(className)
       .getDeclaredMethod("main", new Class[] { args.getClass() })

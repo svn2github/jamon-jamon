@@ -27,7 +27,8 @@ import java.io.IOException;
 
 import org.jamon.JamonException;
 import org.jamon.JamonTemplateException;
-import org.jamon.StandardTemplateManager;
+import org.jamon.StaticTemplateManager;
+import org.jamon.RecompilingTemplateManager;
 import org.jamon.TemplateManager;
 import org.jamon.TemplateProcessor;
 
@@ -103,15 +104,21 @@ public abstract class TestBase
     private TemplateManager constructTemplateManager(boolean p_recompiling)
         throws IOException
     {
-        return new StandardTemplateManager
-            (new StandardTemplateManager.Data()
-                .setDynamicRecompilation(p_recompiling)
+        if (p_recompiling)
+        {
+            return new RecompilingTemplateManager(
+                new RecompilingTemplateManager.Data()
                 .setSourceDir(SOURCE_DIR)
                 .setJavaCompiler(System.getProperty
                                  ("org.jamon.integration.compiler"))
                 .setClasspath(System.getProperty
                               ("org.jamon.integration.classpath"))
                 .setWorkDir(WORK_DIR));
+        }
+        else
+        {
+            return new StaticTemplateManager();
+        }
     }
 
     private String removeCrs(StringBuffer p_string)

@@ -26,7 +26,8 @@ import java.io.IOException;
 
 import junit.framework.TestCase;
 
-import org.jamon.StandardTemplateManager;
+import org.jamon.StaticTemplateManager;
+import org.jamon.RecompilingTemplateManager;
 import org.jamon.TemplateManager;
 
 public class TestBase
@@ -36,9 +37,7 @@ public class TestBase
     public void setUp()
         throws Exception
     {
-        m_templateManager = new StandardTemplateManager
-            (new StandardTemplateManager.Data()
-                 .setDynamicRecompilation(false));
+        m_templateManager = new StaticTemplateManager();
         m_writer = new StringWriter();
     }
 
