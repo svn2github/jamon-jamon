@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Set;
+import java.util.HashSet;
 import org.modusponens.jtt.node.*;
 import org.modusponens.jtt.analysis.*;
 
@@ -12,12 +14,18 @@ public class ImplGenerator extends BaseGenerator
 {
     private List m_body = new ArrayList();
     private StringBuffer m_current = new StringBuffer();
+    private Set m_calls = new HashSet();
 
     public ImplGenerator(Writer p_writer,
                          String p_packageName,
                          String p_className)
     {
         super(p_writer,p_packageName,p_className);
+    }
+
+    public Iterator getCalledTemplateNames()
+    {
+        return m_calls.iterator();
     }
 
     public void generateClassSource()
@@ -103,6 +111,30 @@ public class ImplGenerator extends BaseGenerator
 
     public void caseACallComponent(ACallComponent node)
     {
+        m_calls.add(asText(node.getPath()));
+    }
+
+    private String asText(PPath node)
+    {
+        if (node instanceof ASimplePath)
+        {
+            ASimplePath path = (ASimplePath) node;
+            if (path.getSlash() != null)
+            {
+                return "/" + path.getIdentifier().getText();
+            }
+            else
+            {
+                return path.getIdentifier().getText();
+            }
+        }
+        else
+        {
+            AQualifiedPath path = (AQualifiedPath) node;
+            return asText(path.getPath())
+                + "/"
+                + path.getIdentifier().getText();
+        }
     }
 
     public void caseEOF(EOF node)
