@@ -7,8 +7,10 @@ a page generated using Jamon.  To this end we will present
   <li>a deployment descriptor (i.e., the <code>web.xml</code> file), and</li>
   <li>an Ant script to build the project.</li>
 </ul>
+
 In addition the exact directory layout will be specified.  Evidently, in your
 own projects you are free to use your own layout.  Note that
+
 <ul>
 <%def root>/home/alice/tutorial</%def>
   <li>All paths are relative to some directory of your choice where you choose

@@ -16,6 +16,10 @@ parameters
   <li>the type of the input element, for example "text" or "password"
   (a string)</li>
 </ul>
+
+Other entities included in the standard library can be found in <a
+href="#appendixB">Appendix B</a>.
+
 Since it is the controller that will be receiving and parsing the data from
 the form it is natural that it decide what the name of each CGI parameter
 should be as well as the default value the input element should display.  Hence
