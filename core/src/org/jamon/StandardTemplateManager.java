@@ -1,13 +1,11 @@
 package org.modusponens.jtt;
 
 import java.io.File;
-import java.io.Writer;
-import java.io.PushbackReader;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
+import java.io.PushbackReader;
+import java.io.Writer;
 import java.net.URLClassLoader;
 import java.net.URL;
 import org.modusponens.jtt.parser.Parser;
@@ -18,20 +16,6 @@ import org.modusponens.jtt.lexer.LexerException;
 public class StandardTemplateManager
     implements TemplateManager
 {
-    private static final String PS = System.getProperty("path.separator");
-    private static final String FS = System.getProperty("file.separator");
-
-    private String m_templateSourceDir = "testdata";
-    private String m_workDir = "work";
-    private String m_javac =
-        System.getProperty("java.home") + FS + ".." + FS + "bin" + FS +"javac";
-    private boolean m_includeRtJar = false;
-    private String m_classpath = "";
-    private ClassLoader m_classLoader = ClassLoader.getSystemClassLoader();
-    private String m_packagePrefix = "";
-    private JavaCompiler m_javaCompiler;
-    private final ClassLoader m_loader;
-
     public StandardTemplateManager(ClassLoader p_parentLoader)
         throws IOException
     {
@@ -46,6 +30,27 @@ public class StandardTemplateManager
         throws IOException
     {
         this(ClassLoader.getSystemClassLoader());
+    }
+
+    public Template getInstance(String p_path, Writer p_writer)
+        throws JttException
+    {
+        try
+        {
+            return (Template)
+                getImplementationClass(p_path)
+                    .getConstructor(new Class [] { Writer.class,
+                                                   TemplateManager.class })
+                    .newInstance(new Object [] { p_writer, this });
+        }
+        catch (RuntimeException e)
+        {
+            throw e;
+        }
+        catch (Exception e)
+        {
+            throw new JttException(e);
+        }
     }
 
     public void setWorkDir(String p_workDir)
@@ -225,25 +230,17 @@ public class StandardTemplateManager
         return loadAndResolveClass(p_path);
     }
 
+    private static final String PS = System.getProperty("path.separator");
+    private static final String FS = System.getProperty("file.separator");
 
-    public Template getInstance(String p_path, Writer p_writer)
-        throws JttException
-    {
-        try
-        {
-            Class c = getImplementationClass(p_path);
-            Constructor con =
-                c.getConstructor(new Class [] { Writer.class,
-                                                TemplateManager.class });
-            return (Template) con.newInstance(new Object [] { p_writer, this });
-        }
-        catch (RuntimeException e)
-        {
-            throw e;
-        }
-        catch (Exception e)
-        {
-            throw new JttException(e);
-        }
-    }
+    private String m_templateSourceDir = "testdata";
+    private String m_workDir = "work";
+    private String m_javac =
+        System.getProperty("java.home") + FS + ".." + FS + "bin" + FS +"javac";
+    private boolean m_includeRtJar = false;
+    private String m_classpath = "";
+    private ClassLoader m_classLoader = ClassLoader.getSystemClassLoader();
+    private String m_packagePrefix = "";
+    private JavaCompiler m_javaCompiler;
+    private final ClassLoader m_loader;
 }
