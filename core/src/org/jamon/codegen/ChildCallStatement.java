@@ -20,8 +20,6 @@
 
 package org.jamon.codegen;
 
-import java.io.IOException;
-
 public class ChildCallStatement
     implements Statement
 {

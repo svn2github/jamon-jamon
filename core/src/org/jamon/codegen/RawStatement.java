@@ -20,7 +20,6 @@
 
 package org.jamon.codegen;
 
-import java.io.IOException;
 import org.jamon.node.Token;
 
 public class RawStatement
