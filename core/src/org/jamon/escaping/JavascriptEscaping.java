@@ -37,7 +37,7 @@ public class JavascriptEscaping
     {
         switch (p_char)
         {
-	    // TODO get this right
+	      // Perhaps we should escape high UNICODE
           case '\'': p_writer.write("\\\'"); break;
           case '"': p_writer.write("\\\""); break;
           case '\n': p_writer.write("\\n"); break;
