@@ -2,10 +2,10 @@
 
 <project name="Jamon dcumentation" default="build">
 
-  <description>-------------------------------------------------------------------
+  <description>----------------------------------------------------------------
 Documentation for the Jamon project.  Jamon itself is used to build
 the documentation thus taking care of issues such as escaping.
--------------------------------------------------------------------</description>
+-----------------------------------------------------------------</description>
 
   <property file="build.properties"/>
   <property file="${user.home}/.ant.properties"/>
@@ -44,15 +44,16 @@ the documentation thus taking care of issues such as escaping.
           description="Generates all the documentation">
     <mkdir dir="${html.dir}"/>
     <copy file="base.css" todir="${html.dir}" />
-    <java classname="org.jamon.doc.RenderingTool"
+    <java classname="org.jamon.Invoker"
           classpath="${java.lib.jamon}:${java.lib.diff}:${classes.dir}" 
           fork="yes">
-      <sysproperty key="org.jamon.integration.templatedir"
-                   file="templates" />
-      <sysproperty key="org.jamon.integration.workdir"
-                   file="build/work" />
-      <sysproperty key="org.jamon.integration.out"
-                   file="${html.dir}/rainbow.html" />
+      <arg value="-s" />
+      <arg value="templates" />
+      <arg value="-w" />
+      <arg value="build/work" />
+      <arg value="-o" />
+      <arg value="${html.dir}/rainbow.html" />
+      <arg value="/org/jamon/doc/RainbowTemplate" />
     </java>
   </target>
 
