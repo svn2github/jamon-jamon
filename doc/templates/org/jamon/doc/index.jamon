@@ -5,9 +5,9 @@
   protected Section currentSection() { return Section.HOME; }
 </%class>
 
-<h2>Jamon</h2>
+<h2 class="dropCapHeader">Jamon</h2>
 
-Jamon is a text template engine for <a
+is a text template engine for <a
 href="http://java.sun.com">Java</a>, useful for generating dynamic
 HTML, XML, or any text-based content. In a typical <a
 href="http://ootips.org/mvc-pattern.html">Model-View-Controller
