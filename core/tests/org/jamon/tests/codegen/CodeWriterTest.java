@@ -62,6 +62,7 @@ public class CodeWriterTest
     }
 
     public void testFinishIndentCheck()
+        throws IOException
     {
         m_codeWriter.openBlock();
         try
@@ -75,6 +76,7 @@ public class CodeWriterTest
     }
 
     public void testFinishListCheck()
+        throws IOException
     {
         m_codeWriter.openList();
         boolean exceptionThrown = false;

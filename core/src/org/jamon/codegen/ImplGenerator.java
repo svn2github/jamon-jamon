@@ -21,7 +21,6 @@
 package org.jamon.codegen;
 
 import java.io.Writer;
-import java.io.IOException;
 import java.util.Iterator;
 
 public class ImplGenerator
@@ -36,7 +35,7 @@ public class ImplGenerator
     }
 
     public void generateSource()
-        throws IOException
+        throws java.io.IOException
     {
         generateHeader();
         generatePrologue();
@@ -166,7 +165,6 @@ public class ImplGenerator
 
 
     private void generateDefs()
-        throws IOException
     {
         for (Iterator i = m_templateUnit.getDefUnits(); i.hasNext(); )
         {
@@ -193,7 +191,6 @@ public class ImplGenerator
     }
 
     private void generateMethods()
-        throws IOException
     {
         for (Iterator i = m_templateUnit.getDeclaredMethodUnits();
              i.hasNext(); )
@@ -221,7 +218,6 @@ public class ImplGenerator
 
 
     private void generateMethodImpl(MethodUnit p_methodUnit)
-        throws IOException
     {
         //FIXME - cut'n'pasted from generateDefs
         m_writer.println();
@@ -261,7 +257,6 @@ public class ImplGenerator
     }
 
     private void generateRender()
-        throws IOException
     {
         if (m_templateUnit.hasParentPath())
         {

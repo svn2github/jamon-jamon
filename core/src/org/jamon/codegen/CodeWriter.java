@@ -20,6 +20,7 @@
 
 package org.jamon.codegen;
 
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Writer;
 import org.jamon.node.Token;
@@ -133,7 +134,7 @@ public class CodeWriter
     }
 
 
-    public void finish() throws IllegalStateException
+    public void finish() throws IOException
     {
         if(m_indentation != 0)
         {
@@ -143,6 +144,17 @@ public class CodeWriter
         if(m_inList)
         {
             throw new IllegalStateException("in a list at end of file");
+        }
+        try
+        {
+            if (m_writer.checkError())
+            {
+                throw new IOException("Exception writing to stream");
+            }
+        }
+        finally
+        {
+            m_writer.close();
         }
     }
 

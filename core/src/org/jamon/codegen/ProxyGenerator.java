@@ -21,7 +21,6 @@
 package org.jamon.codegen;
 
 import java.io.Writer;
-import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -39,7 +38,7 @@ public class ProxyGenerator
     }
 
     public void generateClassSource()
-        throws IOException
+        throws java.io.IOException
     {
         generateHeader();
         generatePrologue();
@@ -440,7 +439,6 @@ public class ProxyGenerator
     }
 
     private void generateSignature()
-        throws IOException
     {
         m_writer.print("public static final String SIGNATURE = \"");
         m_writer.print(m_templateUnit.getSignature());
