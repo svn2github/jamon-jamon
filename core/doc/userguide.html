@@ -88,6 +88,18 @@
 &lt;/%import&gt;
 </pre>
 
+    <li><span class="concept">Class code</span> Any code to be
+      included in the generated class should be placed inside a
+      <code>&lt;%class&gt;</code> block.
+      <p>
+      For example:
+      <pre class="template">
+&lt;%class&gt;
+  static int pageViews = 1;
+&lt;/%class&gt;
+This component has been accessed &lt;% pageViews++ %&gt; times.
+</pre>
+
     <li><span class="concept">Arguments</span>
 
       Arguments to a template are specified in
