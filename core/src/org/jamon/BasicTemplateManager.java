@@ -20,8 +20,6 @@
 
 package org.jamon;
 
-import java.io.IOException;
-
 import org.jamon.util.StringUtils;
 
 /**
@@ -77,8 +75,6 @@ public class BasicTemplateManager
      * template
      *
      * @return a <code>Template</code> instance
-     *
-     * @exception IOException if something goes wrong
      **/
     public AbstractTemplateProxy.Intf constructImpl(
         AbstractTemplateProxy p_proxy, TemplateManager p_manager)

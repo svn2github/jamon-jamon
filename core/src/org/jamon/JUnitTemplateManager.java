@@ -22,8 +22,6 @@ package org.jamon;
 
 import org.jamon.util.StringUtils;
 
-import java.io.IOException;
-import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
 import java.lang.reflect.InvocationHandler;
@@ -189,7 +187,6 @@ public class JUnitTemplateManager
     }
 
     private AbstractTemplateProxy.Intf m_impl;
-    private Writer m_writer;
 
     private void checkArgsLength(Method p_method,
                                  Object[] p_args,

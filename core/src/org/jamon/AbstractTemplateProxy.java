@@ -20,8 +20,6 @@
 
 package org.jamon;
 
-import java.io.IOException;
-
 public abstract class AbstractTemplateProxy
 {
     public interface Intf
