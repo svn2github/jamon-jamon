@@ -55,6 +55,11 @@ public class EmitMode
         return m_name;
     }
 
+    public String getEmitterClassName()
+    {
+        return "org.jamon.emit." + m_name + "Emitter";
+    }
+
     public String toString()
     {
         return "EmitMode{" + m_name + "}";

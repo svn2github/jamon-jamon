@@ -44,8 +44,8 @@ public class WriteStatement
         {
             generateSourceLine(p_writer);
             p_writer.println(m_escapingDirective.toJava() + ".write("
-                             + "org.jamon.emit." + p_emitMode.getName()
-                             + "Emitter.valueOf(" + m_expr + ")"
+                             + p_emitMode.getEmitterClassName()
+                             + ".valueOf(" + m_expr + ")"
                              + ", " + ArgNames.WRITER + ");");
         }
     }
