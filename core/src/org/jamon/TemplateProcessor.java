@@ -63,6 +63,7 @@ public class TemplateProcessor
             pPos < 0 ? p_filename : p_filename.substring(0,pPos);
         String pkg = "";
         int fsPos = templateName.lastIndexOf(File.separator);
+        String className = templateName;
         if (fsPos == 0)
         {
             throw new IOException("Can only use relative paths");
@@ -70,25 +71,25 @@ public class TemplateProcessor
         else if (fsPos > 0)
         {
             pkg = StringUtils.filePathToClassName
-                (p_filename.substring(0,fsPos));
-            templateName =
+                (templateName.substring(0,fsPos));
+            className =
                 templateName.substring(fsPos+File.separator.length());
         }
 
         File pkgDir = new File(m_destDir,
                                StringUtils.classNameToFilePath(pkg));
-        File javaFile = new File(pkgDir, templateName + ".java");
+        File javaFile = new File(pkgDir, className + ".java");
 
         ImplAnalyzer analyzer =
-            new ImplAnalyzer(StringUtils.filePathToTemplatePath(p_filename),
-                             m_describer.parseTemplate(p_filename));
+            new ImplAnalyzer(StringUtils.filePathToTemplatePath(templateName),
+                             m_describer.parseTemplate(templateName));
         pkgDir.mkdirs();
         FileWriter writer = new FileWriter(javaFile);
 
         try
         {
             new IntfGenerator(m_resolver,
-                              StringUtils.filePathToTemplatePath("/" + p_filename),
+                              StringUtils.filePathToTemplatePath("/" + templateName),
                               analyzer,
                               writer)
                 .generateClassSource();
@@ -107,7 +108,7 @@ public class TemplateProcessor
         }
         writer.close();
 
-        javaFile = new File(pkgDir, templateName + "Impl.java");
+        javaFile = new File(pkgDir, className + "Impl.java");
         writer = new FileWriter(javaFile);
         try
         {
