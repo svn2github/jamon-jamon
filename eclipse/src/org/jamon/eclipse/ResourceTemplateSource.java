@@ -21,11 +21,11 @@ public class ResourceTemplateSource implements TemplateSource {
 		return (IFile) m_templateFolder.findMember(new Path(p_templatePath).addFileExtension("jamon"));
 	}
 	
-	public long lastModified(String p_templatePath) throws IOException {
+	public long lastModified(String p_templatePath) {
 		return resourceFor(p_templatePath).getLocalTimeStamp();
 	}
 
-	public boolean available(String p_templatePath) throws IOException {
+	public boolean available(String p_templatePath) {
 		return resourceFor(p_templatePath) != null;
 	}
 

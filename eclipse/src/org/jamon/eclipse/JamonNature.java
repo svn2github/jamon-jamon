@@ -24,7 +24,7 @@ public class JamonNature implements IProjectNature {
 		return p_project.getProject().hasNature(natureId());
 	}
 	
-	private static ArrayList naturesList(IProjectDescription p_desc) throws CoreException {
+	private static ArrayList naturesList(IProjectDescription p_desc) {
 		return new ArrayList(Arrays.asList(p_desc.getNatureIds()));
 	}
 	
@@ -80,7 +80,7 @@ public class JamonNature implements IProjectNature {
 		return (IJavaProject) (getProject().getNature(JavaCore.NATURE_ID));
 	}
 
-	public void deconfigure() throws CoreException {
+	public void deconfigure() {
 	}
 
 	public IProject getProject() {
