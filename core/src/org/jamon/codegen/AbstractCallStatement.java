@@ -32,13 +32,10 @@ import org.jamon.util.StringUtils;
 public abstract class AbstractCallStatement
     implements Statement
 {
-    AbstractCallStatement(String p_path,
-                          Map p_params,
-                          TemplateUnit p_templateUnit)
+    AbstractCallStatement(String p_path, Map p_params)
     {
         m_path = p_path;
         m_params = p_params;
-        m_templateUnit = p_templateUnit;
     }
 
     public void addFragmentImpl(FragmentUnit p_unit)
@@ -48,7 +45,6 @@ public abstract class AbstractCallStatement
 
     private final String m_path;
     private final Map m_params;
-    private final TemplateUnit m_templateUnit;
     private final Map m_fragParams = new HashMap();
 
     protected abstract String getFragmentIntfName(
@@ -183,11 +179,6 @@ public abstract class AbstractCallStatement
     protected final String getPath()
     {
         return m_path;
-    }
-
-    protected final TemplateUnit getTemplateUnit()
-    {
-        return m_templateUnit;
     }
 
     protected final Map getParams()

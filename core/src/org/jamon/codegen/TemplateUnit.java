@@ -250,9 +250,9 @@ public class TemplateUnit extends AbstractUnit
         return absCalls;
     }
 
-    public void addDefUnit(DefUnit p_unit)
+    public void makeDefUnit(String p_defName)
     {
-        m_defs.put(p_unit.getName(), p_unit);
+        m_defs.put(p_defName, new DefUnit(p_defName, this));
     }
 
     public Iterator getDefUnits()

@@ -87,9 +87,7 @@ public class BaseAnalyzer
 
     private final void pushDefUnit(String p_defName)
     {
-        DefUnit defUnit = new DefUnit(p_defName, getCurrentUnit());
-        m_currentUnit = defUnit;
-        getTemplateUnit().addDefUnit(defUnit);
+        m_currentUnit = getTemplateUnit().getDefUnit(p_defName);
     }
 
     protected final void pushFragmentUnitImpl(String p_fragName)
@@ -115,12 +113,6 @@ public class BaseAnalyzer
     protected AbstractUnit getCurrentUnit()
     {
         return m_currentUnit;
-    }
-
-    //FIXME - don't use this once the template is prepopulated with stub defs.
-    protected boolean hasDef(String p_defName)
-    {
-        return m_defNames.contains(p_defName);
     }
 
     private final TemplateUnit m_templateUnit;
@@ -162,7 +154,8 @@ public class BaseAnalyzer
 
         public void caseADefComponent(ADefComponent p_def)
         {
-            m_defNames.add(((ADef) p_def.getDef()).getIdentifier().getText());
+            getTemplateUnit().
+                makeDefUnit(((ADef) p_def.getDef()).getIdentifier().getText());
         }
     }
 

@@ -29,10 +29,13 @@ import org.jamon.JamonException;
 public class DefCallStatement
     extends AbstractCallStatement
 {
-    DefCallStatement(String p_path, Map p_params, TemplateUnit p_templateUnit)
+    DefCallStatement(String p_path, Map p_params, DefUnit p_defUnit)
     {
-        super(p_path, p_params, p_templateUnit);
+        super(p_path, p_params);
+        m_defUnit = p_defUnit;
     }
+
+    private final DefUnit m_defUnit;
 
     protected String getFragmentIntfName(FragmentUnit p_fragmentUnitIntf,
                                        TemplateResolver p_resolver)
@@ -47,11 +50,8 @@ public class DefCallStatement
     {
         p_writer.println("__jamon_def__" + getPath() + "(");
         p_writer.indent(2);
-        //FIXME - we should have this. make a proto def unit on first
-        //pass, fill it in on second pass.  Then no need for getTemplateUnit.
-        DefUnit unit = getTemplateUnit().getDefUnit(getPath());
         boolean argsAlreadyPrinted = false;
-        for (Iterator r = unit.getRequiredArgs(); r.hasNext(); /* */)
+        for (Iterator r = m_defUnit.getRequiredArgs(); r.hasNext(); /* */)
         {
             if (argsAlreadyPrinted)
             {
@@ -68,7 +68,7 @@ public class DefCallStatement
             }
             p_writer.print("(" + expr + ")");
         }
-        for (Iterator o = unit.getOptionalArgs(); o.hasNext(); /* */ )
+        for (Iterator o = m_defUnit.getOptionalArgs(); o.hasNext(); /* */ )
         {
             if (argsAlreadyPrinted)
             {
@@ -93,7 +93,7 @@ public class DefCallStatement
                 p_writer.println(",");
             }
         }
-        handleFragmentParams(unit.getFragmentArgsList(),
+        handleFragmentParams(m_defUnit.getFragmentArgsList(),
                              p_writer,
                              p_resolver,
                              p_describer,

@@ -141,12 +141,7 @@ public class ImplAnalyzer extends BaseAnalyzer
             AMultiFragmentCall call =
                 (AMultiFragmentCall) node.getMultiFragmentCall();
             String path = NodeUtils.asText(call.getPath());
-            AbstractCallStatement s = hasDef(path)
-                ? (AbstractCallStatement) new DefCallStatement
-                    (path, makeParamMap(call.getParam()), getTemplateUnit())
-                : (AbstractCallStatement) new ComponentCallStatement
-                    (path, makeParamMap(call.getParam()), getTemplateUnit());
-            getTemplateUnit().addCallPath(path);
+            AbstractCallStatement s = makeCallStatement(path, call.getParam());
             for (Iterator f = call.getNamedFarg().iterator(); f.hasNext(); )
             {
                 ANamedFarg farg = (ANamedFarg) f.next();
@@ -168,13 +163,7 @@ public class ImplAnalyzer extends BaseAnalyzer
             handleBody();
             AFragmentCall call = (AFragmentCall) node.getFragmentCall();
             String path = NodeUtils.asText(call.getPath());
-            AbstractCallStatement s = hasDef(path)
-                ? (AbstractCallStatement) new DefCallStatement
-                    (path, makeParamMap(call.getParam()), getTemplateUnit())
-                : (AbstractCallStatement) new ComponentCallStatement
-                    (path, makeParamMap(call.getParam()), getTemplateUnit());
-            getTemplateUnit().addCallPath(path);
-
+            AbstractCallStatement s = makeCallStatement(path, call.getParam());
             pushFragmentUnitImpl(null);
             for (Iterator i = call.getBaseComponent().iterator();
                  i.hasNext(); )
@@ -221,21 +210,7 @@ public class ImplAnalyzer extends BaseAnalyzer
             }
             else
             {
-                if (hasDef(path))
-                {
-                    addStatement(new DefCallStatement
-                        (path,
-                         makeParamMap(p_call.getParam()),
-                         getTemplateUnit()));
-                }
-                else
-                {
-                    getTemplateUnit().addCallPath(path);
-                    addStatement(new ComponentCallStatement
-                        (path,
-                         makeParamMap(p_call.getParam()),
-                         getTemplateUnit()));
-                }
+                addStatement(makeCallStatement(path, p_call.getParam()));
             }
         }
 
@@ -267,6 +242,24 @@ public class ImplAnalyzer extends BaseAnalyzer
         }
     }
 
+
+    private AbstractCallStatement makeCallStatement(String p_path,
+                                                    List p_calls)
+    {
+        DefUnit defUnit = getTemplateUnit().getDefUnit(p_path);
+        if (defUnit != null)
+        {
+            return new DefCallStatement
+                (p_path, makeParamMap(p_calls), defUnit);
+        }
+        else
+        {
+            getTemplateUnit().addCallPath(p_path);
+            return new ComponentCallStatement
+                (getTemplateUnit().getAbsolutePath(p_path),
+                 makeParamMap(p_calls));
+        }
+    }
 
     private Map makeParamMap(List p_paramList)
     {

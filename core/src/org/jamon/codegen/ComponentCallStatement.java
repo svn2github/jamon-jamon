@@ -30,19 +30,15 @@ import org.jamon.util.StringUtils;
 public class ComponentCallStatement
     extends AbstractCallStatement
 {
-    ComponentCallStatement(String p_path,
-                           Map p_params,
-                           TemplateUnit p_templateUnit)
+    ComponentCallStatement(String p_path, Map p_params)
     {
-        super(p_path, p_params, p_templateUnit);
+        super(p_path, p_params);
     }
 
     protected String getFragmentIntfName(FragmentUnit p_fragmentUnitIntf,
                                        TemplateResolver p_resolver)
     {
-        //FIXME - we should be given the absolute path at construcion time
-        return p_resolver.getFullyQualifiedIntfClassName
-                    (getTemplateUnit().getAbsolutePath(getPath()))
+        return p_resolver.getFullyQualifiedIntfClassName(getPath())
             + "." + p_fragmentUnitIntf.getFragmentInterfaceName();
     }
 
@@ -51,7 +47,7 @@ public class ComponentCallStatement
                                TemplateDescriber p_describer)
         throws IOException
     {
-        String componentPath = getTemplateUnit().getAbsolutePath(getPath());
+        String componentPath = getPath();
         p_writer.println("new "
                          + p_resolver.getFullyQualifiedIntfClassName
                              (componentPath)
