@@ -3,14 +3,85 @@
 
     <b>Jamon</b> is a text template engine for <a
     href="http://java.sun.com">Java</a>, useful for generating dynamic
-    HTML, XML, or any text-based content. The syntax of the templates
-    is roughly based on <a href="http://www.masonhq.com">Mason</a>,
-    which is written in and for <a
-    href="http://www.perl.org">Perl</a>.
+    HTML, XML, or any text-based content. In a typical
+    <a href="http://ootips.org/mvc-pattern.html">Model-View-Controller
+    architecture</a>, Jamon clearly is aimed at the View (or
+    presentation) layer.
 
-    <p>
-      Notable features:
-    </p>
+    <h2>Why is Jamon?</h2>
+
+    The inspiration for Jamon was born over dissatisfaction with
+    current presentation layer technologies, including <a
+    href="http://java.sun.com/products/jsp/">JSP</a> and
+    <a href="http://jakarta.apache.org/velocity/">Velocity</a>, and a
+    surprisingly pleasant experience with
+    <a href="http://www.masonhq.com">Mason</a>, which though written in
+    and for <a href="http://www.perl.org">Perl</a>, provided inspiration
+    both conceptual and syntactic (for better or worse).
+
+    <h4 style="{margin-bottom:-0.5em}">Goals</h4>
+
+    <ul>
+      <li>
+        Developers must pass information to the view according to a
+        well-defined contract which is checkable at compile-time
+        (e.g., an interface).  In other words the the
+        devoloper and the web-designer should be able to define an API
+        for the view.
+      </li>
+
+      <li>
+        Web designers must be able to check that they have not
+        violated the above contract
+      </li>
+
+      <li>
+        Web designers should be able to test the page easily aginst
+        test data with none of the developer's code present (apart,
+        perhaps from the above interface)
+      </li>
+
+      <li>
+        It should be possible to use the approach for views other than
+        web-pages.  For example, sending e-mails with the same look
+        and feel (possibly with the same HTML) as a web page
+      </li>
+
+      <li>
+        Java class(es) should be generated corresponding to each
+        template. Avoid reflection in generated code.
+      </li>
+
+      <li>
+        Use a template directly, without any (explicit)
+        compilation. For example,
+        <pre class="java">
+import org.modusponens.templates.MyTemplate;
+...
+MyTemplate t = ...;
+...
+t.render("hello", 3, new BigDecimal(17.5));
+</pre>
+      </li>
+
+      <li>
+        Facilitate development (e.g. automatic recompilation if
+        template modified)
+      </li>
+
+      <li>
+        Facilitate decomposition and reuse (e.g. public and private
+        methods)
+      </li>
+
+      <li>
+        Errors detected as early as possible. Provide good error
+        messages.
+      </li>
+
+    </ul>
+
+    <h2>Features of Jamon</h2>
 
     <ul>
 
@@ -24,7 +95,8 @@
         href="http://opensource.go.com/Tea/index.html">Tea</a> seems
         to provide this capability).  In particular, Jamon templates
         can pass arbitrary dynamic content (i.e. template fragments)
-        as parameters to other templates.
+        as parameters to other templates. In fact, Jamon allows
+        passing parameterized fragments -- higher order templates.
       </li>
 
       <li>
@@ -38,8 +110,8 @@
       </li>
 
       <li>
-        Jamon is general-use in the sense that it can produce
-        arbitrary output format (for example,
+        Jamon is general-use in the sense that it can produce any
+        arbitrary text output format (for contrast,
         <a href="http://xmlc.enhydra.org">Enhydra XMLC</a> and <a
         href="http://www.zope.org">Zope</a> are tied to HTML or
         XML). Consider generating text and / or multipart MIME email,
@@ -47,21 +119,5 @@
       </li>
 
     </ul>
-
-    <h2>What isn't Jamon?</h2>
-
-    Jamon provides neither the functionality of a <a
-    href="http://ootips.org/mvc-pattern.html">controller</a>, nor that
-    of a <a
-    href="http://java.sun.com/products/servlet/">servlet</a>. Though
-    servlets and controllers often end up generating dynamic text
-    and/or html, those functions are better served by components in
-    the <emph>view</emph>, or the <emph>presentation</emph> layer.
-
-    <h2>Why is Jamon?</h2>
-
-    The inspiration for Jamon was born over dissatisfaction with
-    current presentation layer technologies, including JSP and
-    Velocity, and a surprisingly pleasant experience with Mason.
 
 </&>
