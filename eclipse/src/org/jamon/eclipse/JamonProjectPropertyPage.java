@@ -1,8 +1,6 @@
 package org.jamon.eclipse;
 
-import org.eclipse.core.resources.ICommand;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.QualifiedName;
@@ -45,30 +43,22 @@ public class JamonProjectPropertyPage extends PropertyPage {
 	}
 	
 	private void addFirstSection(Composite parent) {
-			Composite isTomcatProjectGroup = new Composite(parent,SWT.NONE);
-			isTomcatProjectGroup.setLayout(new GridLayout(3, false));
-			isTomcatProjectGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+			Composite isJamonProjectGroup = new Composite(parent,SWT.NONE);
+			isJamonProjectGroup.setLayout(new GridLayout(3, false));
+			isJamonProjectGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
 			// project location entry field
-			isJamonProjectCheckbox = new Button(isTomcatProjectGroup, SWT.CHECK | SWT.LEFT);
+			isJamonProjectCheckbox = new Button(isJamonProjectGroup, SWT.CHECK | SWT.LEFT);
 			isJamonProjectCheckbox.setText("Is Jamon Project");
 			isJamonProjectCheckbox.setEnabled(true);
 
 			try {		
-				isJamonProjectCheckbox.setSelection(getJavaProject().getProject().hasNature(natureId()));
+				isJamonProjectCheckbox.setSelection(JamonNature.projectHasNature(getJavaProject().getProject()));
 			} catch (CoreException ex) {
 				ex.printStackTrace();
 			}
 	}
 	
-	private static String natureId() {
-		return JamonPlugin.getDefault().getBundle().getSymbolicName() + ".jamonnature";
-	}
-
-	private static String builderId() {
-		return JamonPlugin.getDefault().getBundle().getSymbolicName() + ".templateBuilder";
-	}
-
 	private void addSeparator(Composite parent) {
 		Label separator = new Label(parent, SWT.SEPARATOR | SWT.HORIZONTAL);
 		GridData gridData = new GridData();
@@ -133,70 +123,16 @@ public class JamonProjectPropertyPage extends PropertyPage {
 	}
 
 	protected void performDefaults() {
-		// Populate the owner text field with the default value
-		ownerText.setText(DEFAULT_OWNER);
 	}
-
-	private static void addNatureToProject(IProject project, String natureId) throws CoreException {
-		IProject proj = project.getProject(); // Needed if project is a IJavaProject
-		IProjectDescription description = proj.getDescription();
-		String[] prevNatures= description.getNatureIds();
-
-		int natureIndex = -1;
-		for (int i=0; i<prevNatures.length; i++) {
-			System.err.println(prevNatures[i]);
-			if(prevNatures[i].equals(natureId)) {
-				return;
-			}
-		}
-		System.err.println(natureId);
-		// Add nature only if it is not already there
-		String[] newNatures= new String[prevNatures.length + 1];
-		System.arraycopy(prevNatures, 0, newNatures, 0, prevNatures.length);
-		newNatures[prevNatures.length]= natureId;
-		description.setNatureIds(newNatures);
-		ICommand[] prevBuilders = description.getBuildSpec();
-		ICommand[] newBuilders = new ICommand[prevBuilders.length + 1];
-		ICommand builder = description.newCommand();
-		builder.setBuilderName(builderId());
-		System.arraycopy(prevBuilders, 0, newBuilders, 1, prevBuilders.length);
-		newBuilders[0] = builder;
-		description.setBuildSpec(newBuilders);
-		proj.setDescription(description, null);
-	}
-
-	private  static void removeNatureFromProject(IProject project, String natureId) throws CoreException {
-		IProject proj = project.getProject(); // Needed if project is a IJavaProject
-		IProjectDescription description = proj.getDescription();
-		String[] prevNatures= description.getNatureIds();
-
-		int natureIndex = -1;
-		for (int i=0; i<prevNatures.length; i++) {
-			if(prevNatures[i].equals(natureId)) {
-				natureIndex	= i;
-				i = prevNatures.length;
-			}
-		}
-
-		// Remove nature only if it exists...
-		if(natureIndex != -1) { 				
-			String[] newNatures= new String[prevNatures.length - 1];
-			System.arraycopy(prevNatures, 0, newNatures, 0, natureIndex);
-			System.arraycopy(prevNatures, natureIndex+1, newNatures, natureIndex, prevNatures.length - (natureIndex+1));
-			description.setNatureIds(newNatures);
-			proj.setDescription(description, null);
-		}
-	}
-
 	
 	public boolean performOk() {
 		// store the value in the owner text field
 		try {
 			if (isJamonProjectCheckbox.getSelection()) {
-				addNatureToProject(getJavaProject().getProject(), natureId());
+				JamonNature.addToProject(getJavaProject().getProject());
 			}
 			else {
-				removeNatureFromProject(getJavaProject().getProject(), natureId());
+				JamonNature.removeFromProject(getJavaProject().getProject());
 			}
 		} catch(CoreException ex) {
 			ex.printStackTrace();
