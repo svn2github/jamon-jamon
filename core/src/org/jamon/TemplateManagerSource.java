@@ -76,7 +76,7 @@ public abstract class TemplateManagerSource
     {
         if (s_source == null)
         {
-            setTemplateManager(new StaticTemplateManager());
+            setTemplateManager(new BasicTemplateManager());
         }
         return s_source;
     }

@@ -27,7 +27,7 @@ import java.io.IOException;
 
 import org.jamon.JamonException;
 import org.jamon.JamonTemplateException;
-import org.jamon.StaticTemplateManager;
+import org.jamon.BasicTemplateManager;
 import org.jamon.RecompilingTemplateManager;
 import org.jamon.TemplateManager;
 import org.jamon.TemplateProcessor;

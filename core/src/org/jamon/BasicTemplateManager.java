@@ -27,64 +27,64 @@ import org.jamon.util.StringUtils;
 
 /**
  * A standard implementation of the {@link TemplateManager} interface.
- * The <code>StaticTemplateManager</code> is geared towards production
+ * The <code>BasicTemplateManager</code> is geared towards production
  * deployment; it is designed for performance. It will <b>NOT</b>
  * dynamically examine or recompile template sources.
  *
- * <code>StaticTemplateManager</code> instances are thread-safe.  In
+ * <code>BasicTemplateManager</code> instances are thread-safe.  In
  * your applications, you generally want exactly one instance of a
- * StaticTemplateManager (i.e. a singleton), so consider using {@link
+ * BasicTemplateManager (i.e. a singleton), so consider using {@link
  * TemplateSource}
  **/
 
-public class StaticTemplateManager
+public class BasicTemplateManager
     implements TemplateManager
 {
     /**
-     * Creates a new <code>StaticTemplateManager</code> instance which
+     * Creates a new <code>BasicTemplateManager</code> instance which
      * uses {@link TemplateManager#DEFAULT_ESCAPING} as the
      * default escaping mechanism, and automatically flushes the
      * writer after rendering
      **/
-    public StaticTemplateManager()
+    public BasicTemplateManager()
     {
         this(true, DEFAULT_ESCAPING);
     }
 
     /**
-     * Creates a new <code>StaticTemplateManager</code> instance which
+     * Creates a new <code>BasicTemplateManager</code> instance which
      * uses {@link TemplateManager#DEFAULT_ESCAPING} as the default escaping
      * mechanism.
      *
      * @param p_autoFlush whether or not to automatically flush the
      * writer after renderng
      **/
-    public StaticTemplateManager(boolean p_autoFlush)
+    public BasicTemplateManager(boolean p_autoFlush)
     {
         this(p_autoFlush, DEFAULT_ESCAPING);
     }
 
     /**
-     * Creates a new <code>StaticTemplateManager</code> which
+     * Creates a new <code>BasicTemplateManager</code> which
      * automatically flushes the writer after rendering.
      *
      * @param p_escaping which escaping mechanism to use for the
      * default Escaping.
      **/
-    public StaticTemplateManager(Escaping p_escaping)
+    public BasicTemplateManager(Escaping p_escaping)
     {
         this(true, p_escaping);
     }
 
     /**
-     * Creates a new <code>StaticTemplateManager</code>.
+     * Creates a new <code>BasicTemplateManager</code>.
      *
      * @param p_autoFlush whether or not to automatically flush the
      * writer after renderng
      * @param p_escaping which escaping mechanism to use for the
      * default Escaping.
      **/
-    public StaticTemplateManager(boolean p_autoFlush, Escaping p_escaping)
+    public BasicTemplateManager(boolean p_autoFlush, Escaping p_escaping)
     {
         m_autoFlush = p_autoFlush;
         m_escaping = p_escaping;

@@ -26,7 +26,7 @@ import java.io.IOException;
 
 import junit.framework.TestCase;
 
-import org.jamon.StaticTemplateManager;
+import org.jamon.BasicTemplateManager;
 import org.jamon.RecompilingTemplateManager;
 import org.jamon.TemplateManager;
 
@@ -37,7 +37,7 @@ public class TestBase
     public void setUp()
         throws Exception
     {
-        m_templateManager = new StaticTemplateManager();
+        m_templateManager = new BasicTemplateManager();
         m_writer = new StringWriter();
     }
 

@@ -40,7 +40,7 @@ import org.apache.tools.ant.types.Environment;
 
 import org.jamon.Invoker;
 import org.jamon.TemplateManager;
-import org.jamon.StaticTemplateManager;
+import org.jamon.BasicTemplateManager;
 import org.jamon.RecompilingTemplateManager;
 import org.jamon.JamonTemplateException;
 
@@ -86,7 +86,7 @@ public class InvokerTask
             TemplateManager manager =
                 m_dynamicRecompilation
                 ? new RecompilingTemplateManager(m_recompilingManagerData)
-                : (TemplateManager) new StaticTemplateManager();
+                : (TemplateManager) new BasicTemplateManager();
             new Invoker(manager, m_path).render(writer, m_args);
         }
         catch (Invoker.InvalidTemplateException e)

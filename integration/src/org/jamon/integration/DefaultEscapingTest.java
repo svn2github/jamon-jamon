@@ -20,7 +20,7 @@
 
 package org.jamon.integration;
 
-import org.jamon.StaticTemplateManager;
+import org.jamon.BasicTemplateManager;
 import org.jamon.escaping.Escaping;
 import test.jamon.Escapable;
 
@@ -30,14 +30,14 @@ public class DefaultEscapingTest
     public void testDefaultDefault()
         throws Exception
     {
-        new Escapable(new StaticTemplateManager()).render(getWriter());
+        new Escapable(new BasicTemplateManager()).render(getWriter());
         checkOutput("it's \"quoted\" &amp;");
     }
 
     public void testHtmlDefault()
         throws Exception
     {
-        new Escapable(new StaticTemplateManager(Escaping.HTML))
+        new Escapable(new BasicTemplateManager(Escaping.HTML))
             .render(getWriter());
         checkOutput("it's \"quoted\" &amp;");
     }
@@ -45,7 +45,7 @@ public class DefaultEscapingTest
     public void testUrlDefault()
         throws Exception
     {
-        new Escapable(new StaticTemplateManager(Escaping.URL))
+        new Escapable(new BasicTemplateManager(Escaping.URL))
             .render(getWriter());
         checkOutput("it%27s+%22quoted%22+%26");
     }
