@@ -28,6 +28,15 @@ public class JUnitTemplateManager
         m_requiredArgs = p_requiredArgs;
     }
 
+    public JUnitTemplateManager(Class p_class,
+                                Map p_optionalArgs,
+                                Object[] p_requiredArgs)
+    {
+        this(StringUtils.classToTemplatePath(p_class),
+             p_optionalArgs,
+             p_requiredArgs);
+    }
+
     private final Map m_optionalArgs;
     private final Object[] m_requiredArgs;
     private final String m_path;
