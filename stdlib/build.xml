@@ -47,7 +47,6 @@
     </javac>
   </target>
 
-
   <target name="testclasses" depends="compile">
     <mkdir dir="${tests.classes.dir}" />
     <javac srcdir="${tests.src.dir}"
@@ -58,6 +57,7 @@
       <include name="**/*.java"/>
       <classpath>
         <pathelement location="${classes.dir}"/>
+        <pathelement location="${java.lib.jamon}"/>
         <pathelement location="${java.lib.junit}"/>
       </classpath>
     </javac>
@@ -71,6 +71,7 @@
       <formatter type="${junit.formatter}" usefile="no"/>
       <classpath>
         <pathelement location="${tests.classes.dir}"/>
+        <pathelement location="${java.lib.jamon}"/>
         <pathelement location="${classes.dir}"/>
         <pathelement location="${java.lib.junit}"/>
       </classpath>
