@@ -13,7 +13,7 @@
 % for (java.util.Iterator i = input.getValues(); i.hasNext(); ) {
 %   Object value = i.next();
   <option value="<% value %>" \
-% if (input.isDefault(value)) {
+% if (input.isSelected(value)) {
   selected \
 % }
   ><& renderOption; renderable => input.getRenderable(value) &>
