@@ -86,6 +86,12 @@
 
   <target name="testclasses" depends="compile">
     <mkdir dir="${tests.classes.dir}" />
+    <dependset>
+      <srcfileset dir="${src.dir}" includes="**/*.java" />
+      <srcfileset dir="${build.src.dir}" includes="**/*.java" />
+      <srcfileset dir="${tests.src.dir}" includes="**/*.java" />
+      <targetfileset dir="${tests.classes.dir}" includes="**/*.class" />
+    </dependset>
     <javac srcdir="${tests.src.dir}"
            destdir="${tests.classes.dir}"
            debug="on"
