@@ -29,7 +29,7 @@
              classpath="${classpath}"/>
     <!-- we only need to specify classpath here because we're bootstrapping
          Jamon; in "normal" invocations, all Jamon classes are available -->
-    <tempfile property="temp.file" />
+    <tempfile property="temp.file" destdir="${build.dir}" />
     <invoker classpath="${classpath}"
              sourceDir="templates"
              workDir="${work.dir}"
@@ -40,6 +40,7 @@
              workDir="${work.dir}"
              template="/Foo"
              output ="${temp.file}" />
+    <delete file="${temp.file}" />
   </target>
 
   <target name="cvsignores">
