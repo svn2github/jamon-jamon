@@ -317,7 +317,7 @@ public class TemplateUnit extends AbstractUnit
 
     public void addCallPath(String p_callPath)
     {
-        m_dependencies.add(p_callPath);
+        m_dependencies.add(getAbsolutePath(p_callPath));
     }
 
     private Set m_visibleArgs = new HashSet();
