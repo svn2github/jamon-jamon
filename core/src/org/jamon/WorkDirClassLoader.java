@@ -103,7 +103,7 @@ public class WorkDirClassLoader
 
     }
 
-    protected Class loadClass(String p_name, boolean p_resolve)
+    protected synchronized Class loadClass(String p_name, boolean p_resolve)
         throws ClassNotFoundException
     {
         if (! getFileForClass(p_name).exists())
@@ -111,26 +111,23 @@ public class WorkDirClassLoader
             return super.loadClass(p_name, p_resolve);
         }
 
-        synchronized (this)
+        Class c = (Class) m_classMap.get(p_name);
+        if (c != null)
         {
-            Class c = (Class) m_classMap.get(p_name);
-            if (c != null)
-            {
-                return c;
-            }
-            if (m_loader == null)
-            {
-                m_loader = new Loader();
-            }
-
-            c = m_loader.loadClass(p_name);
-            if (p_resolve)
-            {
-                resolveClass(c);
-            }
-            m_classMap.put(p_name,c);
             return c;
         }
+        if (m_loader == null)
+        {
+            m_loader = new Loader();
+        }
+
+        c = m_loader.loadClass(p_name);
+        if (p_resolve)
+        {
+            resolveClass(c);
+        }
+        m_classMap.put(p_name,c);
+        return c;
     }
 
     private ClassLoader m_loader;
