@@ -39,7 +39,6 @@ States
   call,
   argexp,
   callexp,
-  inherit,
   args,
   farginit;
 
@@ -56,8 +55,8 @@ Tokens
   {java -> body} java_end = ws* '</%java>';
   {args,imports} dot = period;
   {args -> argexp} arrow = '=>' hs*;
-  {call,args,farginit,inherit,imports} white_space = ws*;
-  {call,args,farginit,imports,inherit,def} identifier = letter letter_or_digit*;
+  {call,args,farginit,imports} white_space = ws*;
+  {call,args,farginit,imports,def} identifier = letter letter_or_digit*;
 
   {start -> emit,body -> emit} emit_start = '<%' ws+;
   {emit -> body} emit_end = ws* '%>';
@@ -101,16 +100,11 @@ Tokens
   {callexp -> call} param_expr =
        ([all - [argsep + [q + '&']]] | quoted | '&' [all - '>'])*;
   {call} semi = ';';
-  {call,inherit} pathsep = slash;
+  {call} pathsep = slash;
 
   {start -> def,body -> def} def_start = '<%def' hs+;
   {body,start} def_end = '</%def>';
   {def -> body} gt = hs* gt;
-
-  {start -> inherit, body -> inherit} inherit_start = ws* '<%inherit';
-  {inherit -> body} inherit_end = '%>';
-
-  {start,body} child = '<%child%>';
 
   {start -> body,body} doc =
        '<%doc>' ([all - '<']
@@ -127,11 +121,10 @@ Ignored Tokens
 
 Productions
 
-  template = inherit? component*;
+  template = component*;
 
   base_component =
               {body} text
-            | {child} child
             | {newline} newline
             | {java} java
             | {jline} jline
@@ -166,8 +159,6 @@ Productions
   jline = injava expr outjava;
 
   emit = emit_start emit_expr escape? emit_end;
-
-  inherit = inherit_start path inherit_end;
 
   path = {simple} pathsep? identifier | {qualified} path pathsep identifier;
 
