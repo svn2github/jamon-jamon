@@ -21,4 +21,13 @@ public class PathUtilsTest
         assertEquals("axy.bxy.cxyasd",
                      PathUtils.pathToClassName("/axy/bxy/cxyasd"));
     }
+
+    public void testClassNameToPath()
+        throws Exception
+    {
+        assertEquals("/a/b/c", PathUtils.classNameToPath("a.b.c"));
+        assertEquals("/a", PathUtils.classNameToPath("a"));
+        assertEquals("/axy/bxy/cxyasd",
+                     PathUtils.classNameToPath("axy.bxy.cxyasd"));
+    }
 }

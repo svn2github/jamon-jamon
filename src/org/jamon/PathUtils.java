@@ -27,4 +27,18 @@ public class PathUtils
         return sb.toString();
     }
 
+    public static String classNameToPath(String p_className)
+    {
+        StringBuffer sb = new StringBuffer(FS);
+        sb.append(p_className);
+        for (int i = FS.length(); i < sb.length(); ++i)
+        {
+            if (sb.charAt(i) == '.')
+            {
+                sb.replace(i,i+1,FS);
+            }
+        }
+        return sb.toString();
+    }
+
 }
