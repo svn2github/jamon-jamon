@@ -92,6 +92,16 @@ public class InvokerTask
         }
     }
 
+    public void setCompiler(String p_javac)
+    {
+        m_templateManagerData.setJavaCompiler(p_javac);
+        // slight hack but convenient
+        if (p_javac.toLowerCase().endsWith("jikes"))
+        {
+            m_templateManagerData.setJavaCompilerNeedsRtJar(true);
+        }
+    }
+
     public void setClasspath(Path p_classpath)
         throws IOException
     {
