@@ -12,7 +12,9 @@
     <li><span class="concept">Static content</span>
 
       In general, any characters appearing in a template are output
-      literally, whitespace included.
+      literally, whitespace included.  One notable exception is that
+      if a newline is preceeded by a backslash, then neither the newline nor
+      the backslash are output.
 
     <li><span class="concept">Emit statements</span>
 
@@ -411,7 +413,7 @@ a good sign for you, <% name %>.
 Head for the beach!  It's going to be sunny and beautiful.
 </%LITERAL></&>
 
-      resulting in (for example)
+      resulting in something like
 <pre class="tty"><&| escape//Html &>
 <html>
   <head>
@@ -433,7 +435,7 @@ Head for the beach!  It's going to be sunny and beautiful.
 </%override>
 Now would be a poor time to go sailing.
 </%LITERAL></&>
-      resulting in (for example)
+      resulting in something like
 <pre class="tty"><&| escape//Html &>
 <html>
   <head>
