@@ -21,8 +21,8 @@
 package org.jamon;
 
 import java.io.IOException;
-import java.io.Reader;
-import java.io.FileReader;
+import java.io.InputStream;
+import java.io.FileInputStream;
 import java.io.File;
 import java.util.StringTokenizer;
 
@@ -83,10 +83,10 @@ public class FileTemplateSource
         return getTemplateFile(p_templatePath).exists();
     }
 
-    public Reader getReaderFor(String p_templatePath)
+    public InputStream getStreamFor(String p_templatePath)
         throws IOException
     {
-        return new FileReader(getTemplateFile(p_templatePath));
+        return new FileInputStream(getTemplateFile(p_templatePath));
     }
 
     public String getExternalIdentifier(String p_templatePath)

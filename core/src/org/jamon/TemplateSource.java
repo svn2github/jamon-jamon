@@ -21,7 +21,7 @@
 package org.jamon;
 
 import java.io.IOException;
-import java.io.Reader;
+import java.io.InputStream;
 
 /**
  * An interface representing a "repository" of template sources. One
@@ -54,13 +54,13 @@ public interface TemplateSource
         throws IOException;
 
     /**
-     * Get a {@link Reader} for the source of the specified template.
+     * Get a {@link InputStream} for the source of the specified template.
      *
      * @param p_templatePath the path to the template
      *
-     * @return a Reader for the characters comprising the template
+     * @return an InputStream for the data comprising the template
      */
-    Reader getReaderFor(String p_templatePath)
+    InputStream getStreamFor(String p_templatePath)
         throws IOException;
 
     /**

@@ -25,7 +25,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.io.Reader;
+import java.io.InputStream;
 import java.io.IOException;
 import java.io.PushbackReader;
 
@@ -125,10 +125,12 @@ public class TemplateDescriber
     public Start parseTemplate(String p_path)
         throws IOException
     {
-        Reader reader = m_templateSource.getReaderFor(p_path);
+        InputStream stream = m_templateSource.getStreamFor(p_path);
         try
         {
-            return new Parser(new Lexer(new PushbackReader(reader, 1024)))
+            return new Parser(new Lexer
+                              (new PushbackReader(new EncodingReader(stream),
+                                                  1024)))
                 .parse();
         }
         catch (ParserException e)
@@ -141,7 +143,7 @@ public class TemplateDescriber
         }
         finally
         {
-            reader.close();
+            stream.close();
         }
     }
 
