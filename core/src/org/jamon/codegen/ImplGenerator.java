@@ -95,7 +95,7 @@ public class ImplGenerator
             m_writer.println(
                 "private final " + arg.getType() + " " + arg.getName() + ";");
         }
-        m_writer.println(m_templateUnit.getClassContent());
+        m_templateUnit.printClassContent(m_writer);
     }
 
     private void generateSetOptionalArguments()

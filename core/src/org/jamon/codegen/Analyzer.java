@@ -526,7 +526,7 @@ public class Analyzer
         public void caseTClassContent(TClassContent p_content)
         {
             handleBody();
-            getTemplateUnit().addClassContent(p_content.getText());
+            getTemplateUnit().addClassContent(p_content);
         }
 
         public void caseALiteralBaseComponent(ALiteralBaseComponent node)

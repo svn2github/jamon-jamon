@@ -37,6 +37,7 @@ import org.jamon.node.AQualifiedName;
 import org.jamon.node.AImport;
 import org.jamon.node.AOverride;
 import org.jamon.node.AParentArg;
+import org.jamon.node.TClassContent;
 import org.jamon.node.TIdentifier;
 import org.jamon.util.StringUtils;
 
@@ -287,14 +288,19 @@ public class TemplateUnit
         m_isParent = true;
     }
 
-    public String getClassContent()
+    public void printClassContent(IndentingWriter p_writer)
     {
-        return m_classContent.toString();
+        for (Iterator i = m_classContent.iterator(); i.hasNext(); )
+        {
+            TClassContent content = (TClassContent) i.next();
+            p_writer.printLocation(content);
+            p_writer.println(content.getText());
+        }
     }
 
-    public void addClassContent(String p_content)
+    public void addClassContent(TClassContent p_content)
     {
-        m_classContent.append(p_content);
+        m_classContent.add(p_content);
     }
 
     public void addCallPath(String p_callPath)
@@ -317,7 +323,7 @@ public class TemplateUnit
     private final List m_interfaces = new LinkedList();
     private String m_parentPath;
     private boolean m_isParent = false;
-    private final StringBuffer m_classContent = new StringBuffer();
+    private final List m_classContent = new LinkedList();
     private final Set m_dependencies = new HashSet();
     private final Set m_callNames = new HashSet();
     private final Collection m_abstractMethodNames = new HashSet();
