@@ -1,0 +1,18 @@
+HTML:
+<&| /org/jamon/escape/Html; compose => false
+ &>it's "quoted" & <b>bold</b>
+</&>
+XML:
+<&| /org/jamon/escape/Xml; compose => false
+ &>it's "quoted" & <b>bold</b>
+</&>
+URL:
+<&| /org/jamon/escape/Url
+ &>it's "quoted" & <b>bold</b>
+</&>
+Strict HTML:
+<&| /org/jamon/escape/StrictHtml
+ &>it's "quoted" & <b>bold</b>
+</&>
+Double HTML:
+<&| /org/jamon/escape/Html; compose => true &><&| /org/jamon/escape/Html &>it's "quoted" & <b>bold</b></&></&>
