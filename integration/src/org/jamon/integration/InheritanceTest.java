@@ -217,6 +217,15 @@ public class InheritanceTest
                                 1);
     }
 
+    public void testMultipleParents()
+        throws Exception
+    {
+        expectTemplateException("test/jamon/broken/MultipleParents",
+                                "a template cannot extend multiple templates",
+                                2,
+                                1);
+    }
+
     private void checkCompilationFailure(String p_path)
         throws IOException
     {

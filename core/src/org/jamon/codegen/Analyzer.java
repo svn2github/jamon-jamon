@@ -120,10 +120,10 @@ public class Analyzer
         m_currentUnit = getTemplateUnit().getMethodUnit(p_methodName);
     }
 
-    private void pushOverriddenMethodUnit(String p_methodName)
+    private void pushOverriddenMethodUnit(AOverride p_override)
     {
         m_currentUnit = getTemplateUnit()
-            .makeOverridenMethodUnit(p_methodName);
+            .makeOverridenMethodUnit(p_override);
     }
 
     private FragmentUnit pushFragmentUnitImpl(String p_fragName)
@@ -297,6 +297,12 @@ public class Analyzer
     {
         public void caseAExtendsComponent(AExtendsComponent p_extends)
         {
+            if(getTemplateUnit().hasParentPath())
+            {
+                throw new TunnelingException
+                    ("a template cannot extend multiple templates",
+                     p_extends.getExtendsStart());
+            }
             getTemplateUnit().setParentPath
                 (getAbsolutePath(computePath(p_extends.getPath())));
             try
@@ -317,14 +323,14 @@ public class Analyzer
         public void caseADefComponent(ADefComponent p_def)
         {
             getTemplateUnit().
-                makeDefUnit(((ADef) p_def.getDef()).getIdentifier().getText());
+                makeDefUnit(((ADef) p_def.getDef()).getIdentifier());
         }
 
         public void caseAMethodComponent(AMethodComponent p_method)
         {
             getTemplateUnit().
                 makeMethodUnit(((AMethod) p_method.getMethod())
-                               .getIdentifier().getText());
+                               .getIdentifier());
         }
     }
 
@@ -338,6 +344,17 @@ public class Analyzer
         public void caseAImplement(AImplement p_implement)
         {
             getTemplateUnit().addInterface(p_implement.getName().toString());
+        }
+
+        public void inAInheritedUse(AInheritedUse p_inheritedUse)
+        {
+            if (getCurrentUnit() instanceof TemplateUnit
+                && ! ((TemplateUnit) getCurrentUnit()).hasParentPath())
+            {
+                throw new TunnelingException
+                    ("xargs may not be declared without extending another template",
+                     p_inheritedUse.getInheritedArgsStart());
+            }
         }
 
         public void caseAParentArg(AParentArg p_arg)
@@ -411,7 +428,7 @@ public class Analyzer
         public void inAOverride(AOverride p_override)
         {
             handleBody();
-            pushOverriddenMethodUnit(p_override.getIdentifier().getText());
+            pushOverriddenMethodUnit(p_override);
         }
 
         public void outAOverride(AOverride p_override)

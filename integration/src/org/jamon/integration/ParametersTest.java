@@ -129,7 +129,10 @@ public class ParametersTest
     public void testXargsWithoutExtends()
         throws Exception
     {
-        checkForFailure("XargsWithoutExtends",
-                        "/test/jamon/broken/XargsWithoutExtends has xargs but does not extend anything");
+        expectTemplateException(
+            "test/jamon/broken/XargsWithoutExtends",
+            "xargs may not be declared without extending another template",
+            1,
+            1);
     }
 }

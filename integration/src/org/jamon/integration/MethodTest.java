@@ -54,4 +54,14 @@ public class MethodTest
         checkOutput("{ parent: " + methodsOutput + " }{ child: "
                     + methodsOutput + " }");
     }
+
+    public void testOverrideNonexistentMethod()
+        throws Exception
+    {
+        expectTemplateException(
+            "test/jamon/broken/OverrideNonexistentMethod",
+            "There is no such method noSuchMethod to override",
+            2,
+            12);
+    }
 }

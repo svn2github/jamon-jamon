@@ -33,6 +33,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.jamon.JamonException;
+import org.jamon.node.TIdentifier;
+import org.jamon.node.AOverride;
 import org.jamon.util.StringUtils;
 
 public class TemplateUnit
@@ -91,24 +93,12 @@ public class TemplateUnit
             checkArgName(((AbstractArgument) i.next()));
         }
 
-        for (Iterator i = p_parent.getMethodUnits().keySet().iterator();
-             i.hasNext(); )
-        {
-            checkCallName((String) i.next());
-        }
+        m_callNames.addAll(p_parent.getMethodUnits().keySet());
     }
 
     public void addParentArg(String p_name, String p_default)
     {
-        if(hasParentPath())
-        {
-            m_inheritedArgs.addParentArg(p_name, p_default);
-        }
-        else
-        {
-            throw new TunnelingException
-                (getName() + " has xargs but does not extend anything");
-        }
+        m_inheritedArgs.addParentArg(p_name, p_default);
     }
 
     public Iterator getFragmentArgs()
@@ -179,21 +169,21 @@ public class TemplateUnit
         return m_dependencies;
     }
 
-    private void checkCallName(String p_name)
+    private void checkCallName(TIdentifier p_name)
     {
-        if (! m_callNames.add(p_name))
+        if (! m_callNames.add(p_name.getText()))
         {
             throw new TunnelingException
-                (getName()
-                 + " has multiple defs and/or methods named "
-                 + p_name);
+                ("multiple defs and/or methods named " + p_name.getText(),
+                 p_name);
         }
     }
 
-    public void makeDefUnit(String p_defName)
+    public void makeDefUnit(TIdentifier p_defName)
     {
         checkCallName(p_defName);
-        m_defs.put(p_defName, new DefUnit(p_defName, this));
+        m_defs.put(p_defName.getText(),
+                   new DefUnit(p_defName.getText(), this));
     }
 
     public Iterator getDefUnits()
@@ -206,23 +196,23 @@ public class TemplateUnit
         return (DefUnit) m_defs.get(p_name);
     }
 
-    public void makeMethodUnit(String p_methodName)
+    public void makeMethodUnit(TIdentifier p_methodName)
     {
         checkCallName(p_methodName);
-        m_methods.put(p_methodName,
-                      new DeclaredMethodUnit(p_methodName, this));
+        m_methods.put(p_methodName.getText(),
+                      new DeclaredMethodUnit(p_methodName.getText(), this));
     }
 
-    public OverriddenMethodUnit makeOverridenMethodUnit(String p_methodName)
+    public OverriddenMethodUnit makeOverridenMethodUnit(AOverride p_override)
     {
+        String methodName = p_override.getIdentifier().getText();
         DeclaredMethodUnit methodUnit = (DeclaredMethodUnit)
-            m_parentDescription.getMethodUnits().get(p_methodName);
+            m_parentDescription.getMethodUnits().get(methodName);
         if(methodUnit == null)
         {
-            //FIXME - unit test
             throw new TunnelingException
-                (getName() + " attempts to override nonexistant method named "
-                 + p_methodName);
+                ("There is no such method " + methodName + " to override",
+                 p_override.getIdentifier());
         }
 
         OverriddenMethodUnit override =
@@ -274,11 +264,6 @@ public class TemplateUnit
 
     public void setParentPath(String p_parentPath)
     {
-        if(hasParentPath())
-        {
-            throw new TunnelingException
-                ("a template cannot extend multiple templates");
-        }
         m_parentPath = p_parentPath;
         m_dependencies.add(m_parentPath);
     }

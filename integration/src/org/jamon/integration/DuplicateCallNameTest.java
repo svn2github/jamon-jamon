@@ -28,19 +28,29 @@ public class DuplicateCallNameTest
     public void testDefAndMethod()
         throws Exception
     {
-        checkTemplate("test/jamon/broken/LikeNamedDefAndMethod");
+        expectTemplateException("test/jamon/broken/LikeNamedDefAndMethod",
+                                "multiple defs and/or methods named foo",
+                                2,
+                                10);
     }
 
     public void testDefAndDef()
         throws Exception
     {
-        checkTemplate("test/jamon/broken/LikeNamedDefAndDef");
+        expectTemplateException("test/jamon/broken/LikeNamedDefAndDef",
+                                "multiple defs and/or methods named foo",
+                                2,
+                                7);
     }
 
     public void testDefAndInheritedMethod()
         throws Exception
     {
-        checkTemplate("test/jamon/broken/LikeNamedDefAndInheritedMethod");
+        expectTemplateException(
+            "test/jamon/broken/LikeNamedDefAndInheritedMethod",
+            "multiple defs and/or methods named foo",
+            2,
+            7);
     }
 
     private void checkTemplate(String p_path)
