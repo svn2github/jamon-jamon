@@ -1,9 +1,7 @@
 package org.jamon.eclipse;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.swt.SWT;
@@ -25,8 +23,11 @@ public class JamonProjectPropertyPage extends PropertyPage {
 	private Button isJamonProjectCheckbox;
 	
 	private IJavaProject getJavaProject() throws CoreException {
-		IProject project = (IProject) (this.getElement().getAdapter(IProject.class));
-		return (IJavaProject) (project.getNature(JavaCore.NATURE_ID));
+		return (IJavaProject) getProject().getNature(JavaCore.NATURE_ID);
+	}
+	
+	private IProject getProject() {
+		return (IProject) getElement().getAdapter(IProject.class);
 	}
 	
 	private void addFirstSection(Composite parent) {
@@ -41,7 +42,8 @@ public class JamonProjectPropertyPage extends PropertyPage {
 
 			try {		
 				isJamonProjectCheckbox.setSelection(JamonNature.projectHasNature(getJavaProject().getProject()));
-			} catch (CoreException ex) {
+			}
+			catch (CoreException ex) {
 				ex.printStackTrace();
 			}
 	}
@@ -55,31 +57,20 @@ public class JamonProjectPropertyPage extends PropertyPage {
 	}
 	
 	private Text templateSourceText;
-	private static final String DEFAULT_TEMPLATE_SOURCE = "templates";
 	private static final String TEMPLATE_SOURCE_PROPERTY = "TEMPLATE_SOURCE_FOLDER";
 
 	private void addSecondSection(Composite parent) {
 		Composite composite = createDefaultComposite(parent);
 
-		// Label for owner field
 		Label templateSourceLabel = new Label(composite, SWT.NONE);
 		templateSourceLabel.setText("Template source folder:");
-		// Owner text field
 		templateSourceText = new Text(composite, SWT.SINGLE | SWT.BORDER);
 		GridData gd = new GridData();
 		gd.widthHint = convertWidthInCharsToPixels(50);
 		templateSourceText.setLayoutData(gd);
 
-		
-		// Populate owner text field
-		try {
-			String templateSourceFolder =
-				((IResource) getElement()).getPersistentProperty(
-					new QualifiedName("", TEMPLATE_SOURCE_PROPERTY));
-			templateSourceText.setText((templateSourceFolder != null) ? templateSourceFolder : DEFAULT_TEMPLATE_SOURCE);
-		} catch (CoreException e) {
-			templateSourceText.setText(DEFAULT_TEMPLATE_SOURCE);
-		}
+		String templateSourceFolder = JamonNature.templateSourceFolder(getProject());
+		templateSourceText.setText((templateSourceFolder != null) ? templateSourceFolder : JamonNature.DEFAULT_TEMPLATE_SOURCE);
 	}
 
 	protected Control createContents(Composite parent) {
@@ -116,7 +107,7 @@ public class JamonProjectPropertyPage extends PropertyPage {
 	public boolean performOk() {
 		try {
 			if (isJamonProjectCheckbox.getSelection()) {
-				JamonNature.addToProject(getJavaProject().getProject());
+				JamonNature.addToProject(getJavaProject().getProject(), templateSourceText.getText());
 			}
 			else {
 				JamonNature.removeFromProject(getJavaProject().getProject());
