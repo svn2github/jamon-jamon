@@ -5,6 +5,6 @@ To get the examples described in this document to work you will need
   <li>a <a href="http://java.sun.com/products/servlet">servlet</a> container
       compliant with version 2.2 (or later) of the servlet specification,
   <li><a href="http://www.jamon.org">Jamon</a> version
-       <span class="fixme">0.6</span> or later, and
+       1.0 or later, and
   <li><a href="http://jakarta.apache.org/ant">Ant</a> version 1.4 or later.
 </ul>
