@@ -321,11 +321,11 @@ public class StandardTemplateManager
             }
             if (m_workDir == null)
             {
-                m_workDir = System.getProperty("java.io.tmpdir")
-                    + "jamon"
-                    + (new java.util.Random().nextInt(100000000))
-                    + ".tmp";
-                File workDir = new File(m_workDir);
+                File workDir = new File(System.getProperty("java.io.tmpdir"),
+                                        "jamon"
+                                        + (new java.util.Random().nextInt(100000000))
+                                        + ".tmp");
+                m_workDir = workDir.getCanonicalPath();
                 workDir.mkdirs();
                 workDir.deleteOnExit();
             }
