@@ -107,12 +107,12 @@ public class BaseAnalyzer
 
     public UnitInfo getUnitInfo()
     {
-        return getUnitInfo(MAIN_UNIT_NAME);
+        return (UnitInfo) getUnitInfo(MAIN_UNIT_NAME);
     }
 
-    public UnitInfo getUnitInfo(String p_unitName)
+    public AbstractStandardUnitInfo getUnitInfo(String p_unitName)
     {
-        return (UnitInfo) getAbstractUnitInfo(p_unitName);
+        return (AbstractStandardUnitInfo) getAbstractUnitInfo(p_unitName);
     }
 
     public AbstractUnitInfo getAbstractUnitInfo(String p_unitName)

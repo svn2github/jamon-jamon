@@ -225,7 +225,7 @@ public class CallStatement
         p_writer.print("__jamon_def__");
         p_writer.print(getPath());
         p_writer.print("(");
-        UnitInfo unitInfo = p_analyzer.getUnitInfo(getPath());
+        AbstractStandardUnitInfo unitInfo = p_analyzer.getUnitInfo(getPath());
         for (Iterator r = unitInfo.getRequiredArgs(); r.hasNext(); /* */)
         {
             Argument arg = (Argument) r.next();

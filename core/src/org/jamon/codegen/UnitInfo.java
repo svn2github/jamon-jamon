@@ -23,43 +23,15 @@ package org.jamon.codegen;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Iterator;
-import java.util.List;
-import java.util.LinkedList;
 
 import org.jamon.JamonException;
 import org.jamon.util.StringUtils;
 
-public class UnitInfo extends AbstractUnitInfo
+public class UnitInfo extends AbstractStandardUnitInfo
 {
     public UnitInfo(String p_name)
     {
         super(p_name);
-    }
-
-    public void addFarg(String p_name, String p_type)
-    {
-        addRequiredArg(p_name, p_type);
-        m_fargs.add(p_name);
-    }
-
-    public void addOptionalArg(String p_name, String p_type, String p_default)
-    {
-        m_optionalArgs.add(new OptionalArgument(p_name, p_type, p_default));
-    }
-
-    public Iterator getOptionalArgs()
-    {
-        return m_optionalArgs.iterator();
-    }
-
-    public boolean hasOptionalArgs()
-    {
-        return !m_optionalArgs.isEmpty();
-    }
-
-    public Iterator getFargNames()
-    {
-        return m_fargs.iterator();
     }
 
     public String getSignature()
@@ -95,8 +67,4 @@ public class UnitInfo extends AbstractUnitInfo
             throw new JamonException(e);
         }
     }
-
-    private final List m_requiredArgs = new LinkedList();
-    private final List m_optionalArgs = new LinkedList();
-    private final List m_fargs = new LinkedList();
 }

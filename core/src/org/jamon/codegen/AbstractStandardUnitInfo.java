@@ -27,20 +27,40 @@ import java.util.LinkedList;
 import org.jamon.JamonException;
 import org.jamon.util.StringUtils;
 
-public class DefInfo extends AbstractStandardUnitInfo
+public abstract class AbstractStandardUnitInfo extends AbstractUnitInfo
 {
-    public DefInfo(String p_name)
+    public AbstractStandardUnitInfo(String p_name)
     {
         super(p_name);
     }
 
-    public void printAllArgsDecl(IndentingWriter p_writer)
+    public void addFarg(String p_name, String p_type)
     {
-        printRequiredArgsDecl(p_writer);
-        if(hasRequiredArgs() && hasOptionalArgs())
-        {
-            p_writer.println(", ");
-        }
-        printArgsDecl(p_writer, getOptionalArgs());
+        addRequiredArg(p_name, p_type);
+        m_fargs.add(p_name);
     }
+
+    public void addOptionalArg(String p_name, String p_type, String p_default)
+    {
+        m_optionalArgs.add(new OptionalArgument(p_name, p_type, p_default));
+    }
+
+    public Iterator getOptionalArgs()
+    {
+        return m_optionalArgs.iterator();
+    }
+
+    public boolean hasOptionalArgs()
+    {
+        return !m_optionalArgs.isEmpty();
+    }
+
+    public Iterator getFargNames()
+    {
+        return m_fargs.iterator();
+    }
+
+    private final List m_requiredArgs = new LinkedList();
+    private final List m_optionalArgs = new LinkedList();
+    private final List m_fargs = new LinkedList();
 }
