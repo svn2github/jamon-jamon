@@ -196,20 +196,6 @@ public abstract class TestBase
              ("org.jamon.integration.verbose","false")).booleanValue();
     }
 
-    protected void checkForFailure(String p_template, String p_message)
-        throws Exception
-    {
-        try
-        {
-            generateSource("test/jamon/broken/" + p_template);
-            fail("No exception thrown");
-        }
-        catch(JamonException e)
-        {
-            assertEquals(p_message, e.getMessage());
-        }
-    }
-
     private TemplateManager m_templateManager;
     private TemplateManager m_recompilingTemplateManager;
     private StringWriter m_writer;

@@ -26,83 +26,89 @@ public class ParametersTest
     public void testUnusedAnonDefFragment()
         throws Exception
     {
-        checkForFailure
-            ("UnusedAnonDefFragment",
-             "Call to foo provides a fragment, but none are expected");
+        expectTemplateException(
+            "UnusedAnonDefFragment",
+            "Call provides a fragment, but none are expected",
+            2, 1);
     }
 
     public void testUnusedAnonTemplateFragment()
         throws Exception
     {
-        checkForFailure("UnusedAnonTemplateFragment",
-                        "Call to /test/jamon/Arguments provides a fragment, but none are expected");
+        expectTemplateException(
+            "UnusedAnonTemplateFragment",
+            "Call provides a fragment, but none are expected",
+            1, 1);
     }
 
     public void testUnusedNamedTemplateFragment()
         throws Exception
     {
-        checkForFailure("UnusedNamedTemplateFragment",
-                        "Call to /test/jamon/Arguments provides unused fragments content");
+        expectTemplateException("UnusedNamedTemplateFragment",
+                                "Call provides unused fragments content",
+                                1, 1);
     }
 
     public void testUnusedNamedDefFragment()
         throws Exception
     {
-        checkForFailure("UnusedNamedDefFragment",
-                        "Call to foo provides unused fragments content");
+        expectTemplateException("UnusedNamedDefFragment",
+                                "Call provides unused fragments content",
+                                2, 1);
     }
 
     public void testSingleFragmentCallToMultiFragmentUnit()
         throws Exception
     {
-        checkForFailure("MultiFarg",
-                        "Call to foo must provide multiple fragments");
+        expectTemplateException("MultiFarg",
+                                "Call must provide multiple fragments",
+                                5, 1);
     }
 
     public void testUnusedDefArgument()
         throws Exception
     {
-        checkForFailure("UnusedDefArgument",
-                        "Call to foo provides unused arguments x");
+        expectTemplateException("UnusedDefArgument",
+                                "Call provides unused arguments x",
+                                2, 1);
     }
 
     public void testUnusedTemplateArgument()
         throws Exception
     {
-        checkForFailure
-            ("UnusedTemplateArgument",
-             "Call to /test/jamon/Arguments provides unused arguments x");
+        expectTemplateException("UnusedTemplateArgument",
+                                "Call provides unused arguments x",
+                                1, 1);
     }
 
     public void testMissingDefFragment()
         throws Exception
     {
-        checkForFailure
-            ("MissingDefFragment",
-             "Call to foo is missing fragment content");
+        expectTemplateException(
+            "MissingDefFragment", "Call is missing fragment content", 4, 1);
     }
 
     public void testMissingTemplateFragment()
         throws Exception
     {
-        checkForFailure
-            ("MissingTemplateFragment",
-             "Call to /test/jamon/SubZ is missing fragment f");
+        expectTemplateException(
+            "MissingTemplateFragment", "Call is missing fragment f", 1, 1);
     }
 
     public void testMissingRequiredArgumentForDef()
         throws Exception
     {
-        checkForFailure(
-            "MissingRequiredArgument",
-            "No value supplied for required argument x in call to foo");
+        expectTemplateException("MissingRequiredArgument",
+                                "No value supplied for required argument x",
+                                6, 1);
     }
 
     public void testMissingRequiredArgumentForTemplate()
         throws Exception
     {
-        checkForFailure("MissingTemplateRequiredArgument",
-                        "No value supplied for required argument i in call to /test/jamon/Arguments");
+        expectTemplateException("MissingTemplateRequiredArgument",
+                                "No value supplied for required argument i",
+                                1, 1);
     }
 
     public void testMissingRequiredArgumentForFragment()

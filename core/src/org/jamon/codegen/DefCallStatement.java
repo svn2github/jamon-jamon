@@ -23,18 +23,22 @@ package org.jamon.codegen;
 import java.io.IOException;
 import java.util.Map;
 
-import org.jamon.JamonException;
+import org.jamon.node.Token;
 
 public class DefCallStatement
     extends AbstractInnerUnitCallStatement
 {
-    DefCallStatement(String p_path, Map p_params, DefUnit p_defUnit)
+    DefCallStatement(String p_path,
+                     Map p_params,
+                     DefUnit p_defUnit,
+                     Token p_token,
+                     String p_templateIdentifier)
     {
-        super(p_path, p_params, p_defUnit);
+        super(p_path, p_params, p_defUnit, p_token, p_templateIdentifier);
     }
 
     protected void printDefault(IndentingWriter p_writer,
-                                         OptionalArgument p_arg)
+                                OptionalArgument p_arg)
         throws IOException
     {
         p_writer.print(p_arg.getDefault());

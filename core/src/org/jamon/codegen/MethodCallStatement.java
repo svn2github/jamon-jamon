@@ -21,17 +21,20 @@
 package org.jamon.codegen;
 
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.Map;
 
-import org.jamon.JamonException;
+import org.jamon.node.Token;
 
 public class MethodCallStatement
     extends AbstractInnerUnitCallStatement
 {
-    MethodCallStatement(String p_path, Map p_params, MethodUnit p_methodUnit)
+    MethodCallStatement(String p_path,
+                        Map p_params,
+                        MethodUnit p_methodUnit,
+                        Token p_token,
+                        String p_templateIdentifier)
     {
-        super(p_path, p_params, p_methodUnit);
+        super(p_path, p_params, p_methodUnit, p_token, p_templateIdentifier);
     }
 
     protected void printDefault(IndentingWriter p_writer,

@@ -596,8 +596,11 @@ public class Analyzer
             DefUnit defUnit = getTemplateUnit().getDefUnit(path);
             if (defUnit != null)
             {
-                return new DefCallStatement
-                    (path, makeParamMap(p_calls), defUnit);
+                return new DefCallStatement(path,
+                                            makeParamMap(p_calls),
+                                            defUnit,
+                                            p_token,
+                                            m_templateIdentifier);
             }
             else
             {
@@ -605,14 +608,19 @@ public class Analyzer
                     getTemplateUnit().getMethodUnit(path);
                 if (methodUnit != null)
                 {
-                    return new MethodCallStatement
-                        (path, makeParamMap(p_calls), methodUnit);
+                    return new MethodCallStatement(path,
+                                                   makeParamMap(p_calls),
+                                                   methodUnit,
+                                                   p_token,
+                                                   m_templateIdentifier);
                 }
                 else
                 {
                     getTemplateUnit().addCallPath(getAbsolutePath(path));
                     return new ComponentCallStatement(getAbsolutePath(path),
-                                                      makeParamMap(p_calls));
+                                                      makeParamMap(p_calls),
+                                                      p_token,
+                                                      m_templateIdentifier);
                 }
             }
         }

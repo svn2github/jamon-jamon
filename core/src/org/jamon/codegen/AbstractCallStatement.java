@@ -27,15 +27,21 @@ import java.util.Map;
 import java.util.HashMap;
 
 import org.jamon.JamonException;
+import org.jamon.node.Token;
 import org.jamon.util.StringUtils;
 
 public abstract class AbstractCallStatement
     implements CallStatement
 {
-    AbstractCallStatement(String p_path, Map p_params)
+    AbstractCallStatement(String p_path,
+                          Map p_params,
+                          Token p_token,
+                          String p_templateIdentifier)
     {
         m_path = p_path;
         m_params = p_params;
+        m_token = p_token;
+        m_templateIdentifier = p_templateIdentifier;
     }
 
     public void addFragmentImpl(FragmentUnit p_unit)
@@ -49,6 +55,8 @@ public abstract class AbstractCallStatement
     private final static String FRAGMENT_IMPL_PREFIX = "__jamon__instanceOf__";
     private static int s_fragmentImplCounter = 0;
     private final Map m_fragmentImplNames = new HashMap();
+    private final Token m_token;
+    private final String m_templateIdentifier;
 
     protected abstract String getFragmentIntfName(
         FragmentUnit p_fragmentUnitIntf);
@@ -74,9 +82,10 @@ public abstract class AbstractCallStatement
             (FragmentUnit) m_fragParams.remove(p_fragmentUnitIntf.getName());
         if (fragmentUnitImpl == null)
         {
-            throw new JamonException
-                ("Call to " + getPath()
-                 + " is missing fragment " + p_fragmentUnitIntf.getName());
+            throw new AnalysisException
+                ("Call is missing fragment " + p_fragmentUnitIntf.getName(),
+                 getTemplateIdentifier(),
+                 getToken());
         }
 
         p_writer.println("class " + getFragmentImplName(p_fragmentUnitIntf));
@@ -129,15 +138,17 @@ public abstract class AbstractCallStatement
         {
             if(p_fragmentInterfaces.size() == 0)
             {
-                throw new JamonException
-                    ("Call to " + getPath()
-                     + " provides a fragment, but none are expected");
+                throw new AnalysisException
+                    ("Call provides a fragment, but none are expected",
+                     getTemplateIdentifier(),
+                     getToken());
             }
             else if (p_fragmentInterfaces.size() > 1)
             {
-                throw new JamonException
-                    ("Call to " + getPath()
-                     + " must provide multiple fragments");
+                throw new AnalysisException
+                    ("Call must provide multiple fragments",
+                     getTemplateIdentifier(),
+                     getToken());
             }
             else
             {
@@ -189,13 +200,13 @@ public abstract class AbstractCallStatement
     {
         if (! p_params.isEmpty())
         {
-            StringBuffer message = new StringBuffer("Call to ");
-            message.append(getPath());
-            message.append(" provides unused ");
+            StringBuffer message = new StringBuffer("Call provides unused ");
             message.append(p_paramType);
             message.append(" ");
             StringUtils.commaJoin(message, p_params.keySet().iterator());
-            throw new JamonException(message.toString());
+            throw new AnalysisException(message.toString(),
+                                        getTemplateIdentifier(),
+                                        getToken());
         }
     }
 
@@ -208,4 +219,15 @@ public abstract class AbstractCallStatement
     {
         return m_params;
     }
+
+    protected final Token getToken()
+    {
+        return m_token;
+    }
+
+    protected final String getTemplateIdentifier()
+    {
+        return m_templateIdentifier;
+    }
+
 }

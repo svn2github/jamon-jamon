@@ -25,15 +25,18 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.jamon.JamonException;
+import org.jamon.node.Token;
 
 public abstract class AbstractInnerUnitCallStatement
     extends AbstractCallStatement
 {
     AbstractInnerUnitCallStatement(String p_path,
                                    Map p_params,
-                                   Unit p_unit)
+                                   Unit p_unit,
+                                   Token p_token,
+                                   String p_templateIdentifier)
     {
-        super(p_path, p_params);
+        super(p_path, p_params, p_token, p_templateIdentifier);
         m_unit = p_unit;
     }
 
@@ -71,9 +74,10 @@ public abstract class AbstractInnerUnitCallStatement
             String expr = (String) getParams().remove(name);
             if (expr == null)
             {
-                throw new JamonException
-                    ("No value supplied for required argument " + name
-                     + " in call to " + getPath());
+                throw new AnalysisException(
+                    "No value supplied for required argument " + name,
+                    getTemplateIdentifier(),
+                    getToken());
             }
             p_writer.print("(" + expr + ")");
         }
