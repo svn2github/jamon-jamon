@@ -21,7 +21,7 @@
       determines the order in the <code>render</code> method.
     </li>
     <li>
-      A <code>makeRenderable</code> method taking the same parameters as <code>render</code>
+      A <code>makeRenderer</code> method taking the same parameters as <code>render</code>
     <!-- make mention of makeRenderable -->
     <li>
       Optional arguments in the template
