@@ -15,7 +15,7 @@
  * created by Jay Sachs are Copyright (C) 2002 Jay Sachs.  All Rights
  * Reserved.
  *
- * Contributor(s):
+ * Contributor(s): Ian Robertson
  */
 
 package org.jamon.codegen;
@@ -26,7 +26,7 @@ import java.util.Iterator;
 
 import org.jamon.util.StringUtils;
 
-public class IntfGenerator extends AbstractGenerator
+public class IntfGenerator
 {
     public IntfGenerator(TemplateResolver p_resolver,
                          String p_templatePath,
@@ -34,7 +34,8 @@ public class IntfGenerator extends AbstractGenerator
                          Writer p_writer)
         throws IOException
     {
-        super(p_writer, p_resolver);
+        m_writer = new IndentingWriter(p_writer);
+        m_resolver = p_resolver;
         m_path = p_templatePath;
         m_analyzer = p_analyzer;
     }
@@ -59,13 +60,8 @@ public class IntfGenerator extends AbstractGenerator
         generateEpilogue();
     }
 
-    private final static String TEMPLATE =
-        org.jamon.AbstractTemplateProxy.class.getName();
-    private final static String TEMPLATE_INTF =
-        TEMPLATE + ".Intf";
-    private final static String TEMPLATE_MANAGER =
-        org.jamon.TemplateManager.class.getName();
-
+    private final TemplateResolver m_resolver;
+    private IndentingWriter m_writer;
     private final BaseAnalyzer m_analyzer;
     private final String m_path;
 
@@ -79,21 +75,19 @@ public class IntfGenerator extends AbstractGenerator
     {
         for (Iterator i = m_analyzer.getImports(); i.hasNext(); /* */ )
         {
-            print("import ");
-            print(i.next());
-            println(";");
+            m_writer.println("import " + i.next() + ";");
         }
-        println();
+        m_writer.println();
     }
 
     private String getClassName()
     {
-        return getResolver().getIntfClassName(getPath());
+        return m_resolver.getIntfClassName(getPath());
     }
 
     private String getPackageName()
     {
-        return getResolver().getIntfPackageName(getPath());
+        return m_resolver.getIntfPackageName(getPath());
     }
 
     private void generatePrologue()
@@ -102,10 +96,8 @@ public class IntfGenerator extends AbstractGenerator
         String pkgName = getPackageName();
         if (pkgName.length() > 0)
         {
-            print("package ");
-            print(pkgName);
-            println(";");
-            println();
+            m_writer.println("package " + pkgName + ";");
+            m_writer.println();
         }
     }
 
@@ -113,70 +105,60 @@ public class IntfGenerator extends AbstractGenerator
     private void generateConstructor()
         throws IOException
     {
-        println();
-        print  ("  public ");
-        print  (getClassName());
-        print  ("(");
-        print  (TEMPLATE_MANAGER);
-        println(" p_manager)");
-        println("  {");
-        println("    super(p_manager);");
-        println("  }");
+        m_writer.println();
+        m_writer.println("public " + getClassName()
+                         + "(" + ClassNames.TEMPLATE_MANAGER + " p_manager)");
+        m_writer.openBlock();
+        m_writer.println(" super(p_manager);");
+        m_writer.closeBlock();
     }
-
 
 
     private void generateFargInterface(FargInfo p_fargInfo, boolean p_inner)
         throws IOException
     {
-        print  ("  public static interface Fragment_");
-        println(p_fargInfo.getName());
+        m_writer.println("  public static interface Fragment_"
+                         + p_fargInfo.getName());
         if (!p_inner)
         {
-            print  (" extends ");
-            print  (getClassName());
-            print  (".Intf.Fragment_");
-            print  (p_fargInfo.getName());
-            println("{ }");
+            m_writer.println("  extends " + getClassName() + ".Intf.Fragment_"
+                           + p_fargInfo.getName());
+            m_writer.println("{ }");
         }
         else
         {
-            print  (" extends org.jamon.AbstractTemplateProxy.Intf");
-            println("  {");
-            print  ("    void render(");
+            m_writer.println(" extends " + ClassNames.TEMPLATE_INTF);
+            m_writer.openBlock();
+            m_writer.print  ("void render(");
             for (Iterator a = p_fargInfo.getArgumentNames(); a.hasNext(); /* */)
             {
                 String argName = (String) a.next();
-                print(p_fargInfo.getArgumentType(argName));
-                print(" ");
-                print(argName);
+                m_writer.print(p_fargInfo.getArgumentType(argName));
+                m_writer.print(" ");
+                m_writer.print(argName);
                 if (a.hasNext())
                 {
-                    print(", ");
+                    m_writer.print(", ");
                 }
             }
-            println(")");
-            print  ("      throws ");
-            print  (IOEXCEPTION_CLASS);
-            println(";");
-            print  ("    ");
-            print(RENDERER_CLASS);
-            print(" makeRenderer(");
+            m_writer.println(")");
+            m_writer.println("  throws " + ClassNames.IOEXCEPTION + ";");
+            m_writer.print(ClassNames.RENDERER + " makeRenderer(");
             for (Iterator a = p_fargInfo.getArgumentNames(); a.hasNext(); /* */)
             {
                 String argName = (String) a.next();
-                print(p_fargInfo.getArgumentType(argName));
-                print(" ");
-                print(argName);
+                m_writer.print(p_fargInfo.getArgumentType(argName));
+                m_writer.print(" ");
+                m_writer.print(argName);
                 if (a.hasNext())
                 {
-                    print(", ");
+                    m_writer.print(", ");
                 }
             }
-            println(");");
-            println("  }");
+            m_writer.println(");");
+            m_writer.closeBlock();
         }
-        println("");
+        m_writer.println();
     }
 
     private void generateFargInterfaces(boolean p_inner)
@@ -187,131 +169,119 @@ public class IntfGenerator extends AbstractGenerator
             generateFargInterface(m_analyzer.getFargInfo((String)f.next()),
                                   p_inner);
         }
-        println();
+        m_writer.println();
     }
 
     private void generateFargInfo()
         throws IOException
     {
-        println("  public static final String[] FARGNAMES = {");
+        m_writer.print("public static final String[] FARGNAMES = ");
+        m_writer.openBlock();
         for (Iterator f = m_analyzer.getFargNames(); f.hasNext(); /* */)
         {
-            print("    \"");
-            print((String)f.next());
-            print("\"");
+            m_writer.print("\"" + (String)f.next() + "\"");
             if (f.hasNext())
             {
-                println(",");
+                m_writer.print(",");
             }
-            else
-            {
-                println();
-            }
+            m_writer.println();
         }
-        println("  };");
-        println();
+        m_writer.closeBlock(";");
+        m_writer.println();
         for (Iterator f = m_analyzer.getFargNames(); f.hasNext(); /* */)
         {
             String name = (String)f.next();
-            print("  public static final java.util.Map FARGINFO_");
-            print(name);
-            println(" = new java.util.HashMap();");
-            print("  public static class init_");
-            print(name);
-            println(" {");
-            println("    static {");
+            m_writer.print("public static final java.util.Map FARGINFO_");
+            m_writer.print(name);
+            m_writer.println(" = new java.util.HashMap();");
+            m_writer.print("public static class init_" + name);
+            m_writer.openBlock();
+            m_writer.print("    static");
+            m_writer.openBlock();
             FargInfo info = m_analyzer.getFargInfo(name);
             for (Iterator a = info.getArgumentNames(); a.hasNext(); /* */)
             {
-                print("    FARGINFO_");
-                print(name);
+                m_writer.print("FARGINFO_");
+                m_writer.print(name);
                 String an = (String) a.next();
-                print(".put(\"");
-                print(an);
-                print("\",\"");
-                print(info.getArgumentType(an));
-                println("\");");
+                m_writer.print(".put(\"");
+                m_writer.print(an);
+                m_writer.print("\",\"");
+                m_writer.print(info.getArgumentType(an));
+                m_writer.println("\");");
             }
-            println("    }");
-            println("  }");
-            print("  public static final init_");
-            print(name);
-            print(" init2_");
-            print(name);
-            print(" = new init_");
-            print(name);
-            println("();");
+            m_writer.closeBlock();
+            m_writer.closeBlock();
+            m_writer.println("public static final init_" + name
+                             + " init2_" + name
+                             + " = new init_" + name + "();");
         }
-        println();
+        m_writer.println();
     }
 
 
     private void generateDeclaration()
         throws IOException
     {
-        print("public class ");
-        println(getClassName());
-        print("  extends ");
-        println(TEMPLATE);
-        println("{");
+        m_writer.println("public class " + getClassName());
+        m_writer.println("  extends " + ClassNames.TEMPLATE);
+        m_writer.openBlock();
     }
 
     private void generateRender()
         throws IOException
     {
-        print("  public void render(");
+        m_writer.print("public void render(");
         for (Iterator i = m_analyzer.getRequiredArgNames(); i.hasNext(); /* */)
         {
             String name = (String) i.next();
-            print(m_analyzer.getArgType(name));
-            print(" p_");
-            print(name);
+            m_writer.print(m_analyzer.getArgType(name));
+            m_writer.print(" p_");
+            m_writer.print(name);
             if (i.hasNext())
             {
-                print(", ");
+                m_writer.print(", ");
             }
         }
-        println(")");
+        m_writer.println(")");
 
-        println("    throws java.io.IOException");
-        println("  {");
-        println("    try");
-        println("    {");
-        print  ("      getInstance().render(");
+        m_writer.println("  throws java.io.IOException");
+        m_writer.openBlock();
+        m_writer.println("try");
+        m_writer.openBlock();
+        m_writer.print  ("getInstance().render(");
         for (Iterator i = m_analyzer.getRequiredArgNames(); i.hasNext(); /* */)
         {
-            print("p_");
-            print((String) i.next());
+            m_writer.print("p_");
+            m_writer.print((String) i.next());
             if (i.hasNext())
             {
-                print(", ");
+                m_writer.print(", ");
             }
         }
-        println(");");
-        println("    }");
-        println("    finally");
-        println("    {");
-        println("      releaseInstance();");
-        println("    }");
-        println("  }");
+        m_writer.println(");");
+        m_writer.closeBlock();
+        m_writer.println("finally");
+        m_writer.openBlock();
+        m_writer.println("releaseInstance();");
+        m_writer.closeBlock();
+        m_writer.closeBlock();
 
 
-        println();
-        println("  public static final String[] REQUIRED_ARGS = {");
+        m_writer.println();
+        m_writer.print("  public static final String[] REQUIRED_ARGS =");
+        m_writer.openBlock();
+
         for (Iterator i = m_analyzer.getRequiredArgNames(); i.hasNext(); /* */)
         {
-            print("    \"");
-            print((String) i.next());
+            m_writer.print("\"" + (String) i.next() + "\"");
             if (i.hasNext())
             {
-                println("\",");
+                m_writer.print(",");
             }
-            else
-            {
-                println("\"");
-            }
+            m_writer.println();
         }
-        println("  };");
+        m_writer.closeBlock(";");
     }
 
 
@@ -319,49 +289,44 @@ public class IntfGenerator extends AbstractGenerator
     private void generateMakeRenderer()
         throws IOException
     {
-        print(  "  public ");
-        print(  RENDERER_CLASS);
-        print(" makeRenderer(");
+        m_writer.print(  "public " + ClassNames.RENDERER + " makeRenderer(");
         for (Iterator i = m_analyzer.getRequiredArgNames(); i.hasNext(); /* */)
         {
-            print("final ");
+            m_writer.print("final ");
             String name = (String) i.next();
-            print(m_analyzer.getArgType(name));
-            print(" p_");
-            print(name);
+            m_writer.print(m_analyzer.getArgType(name));
+            m_writer.print(" p_");
+            m_writer.print(name);
             if (i.hasNext())
             {
-                print(", ");
+                m_writer.print(", ");
             }
         }
-        println(")");
+        m_writer.println(")");
 
-        println("  {");
-        print(  "    return new ");
-        print(RENDERER_CLASS);
-        println("() {");
-        print(  "      public void renderTo(");
-        print(  WRITER_CLASS);
-        println(" p_writer)");
-        print(  "        throws ");
-        println(IOEXCEPTION_CLASS);
-        println("      {");
-        println("        writeTo(p_writer);");
-        print  ("        render(");
+        m_writer.openBlock();
+        m_writer.print(  "return new " + ClassNames.RENDERER + "() ");
+        m_writer.openBlock();
+        m_writer.println("public void renderTo("
+                         + ClassNames.WRITER + " p_writer)");
+        m_writer.println(  "  throws " + ClassNames.IOEXCEPTION);
+        m_writer.openBlock();
+        m_writer.println("writeTo(p_writer);");
+        m_writer.print  ("render(");
         for (Iterator i = m_analyzer.getRequiredArgNames(); i.hasNext(); /* */)
         {
-            print("p_");
-            print((String) i.next());
+            m_writer.print("p_");
+            m_writer.print((String) i.next());
             if (i.hasNext())
             {
-                print(", ");
+                m_writer.print(", ");
             }
         }
-        println(");");
-        println("      }");
-        println("    };");
-        println("  }");
-        println();
+        m_writer.println(");");
+        m_writer.closeBlock();
+        m_writer.closeBlock(";");
+        m_writer.closeBlock();
+        m_writer.println();
     }
 
 
@@ -371,83 +336,69 @@ public class IntfGenerator extends AbstractGenerator
     {
         for (Iterator i = m_analyzer.getOptionalArgNames(); i.hasNext(); /* */)
         {
-            println();
+            m_writer.println();
             String name = (String) i.next();
-            print("  public ");
+            m_writer.print("public ");
             String pkgName = getPackageName();
             if (pkgName.length() > 0)
             {
-                print(pkgName);
-                print(".");
+                m_writer.print(pkgName + ".");
             }
-            print(getClassName());
-            print(" set");
-            print(StringUtils.capitalize(name));
-            print("(");
-            print(m_analyzer.getArgType(name));
-            print(" p_");
-            print(name);
-            println(")");
-            print  ("    throws ");
-            println(IOEXCEPTION_CLASS);
-            println("  {");
-            print  ("    getInstance().set");
-            print(StringUtils.capitalize(name));
-            print("(");
-            print(" p_");
-            print(name);
-            println(");");
-            println("    return this;");
-            println("  }");
+            m_writer.print(getClassName());
+            m_writer.println(" set" + StringUtils.capitalize(name)
+                             + "("
+                             + m_analyzer.getArgType(name) +" p_" + name
+                             + ")");
+            m_writer.print  ("  throws ");
+            m_writer.println(ClassNames.IOEXCEPTION);
+            m_writer.openBlock();
+            m_writer.println("getInstance().set" + StringUtils.capitalize(name)
+                             + "(" + " p_" + name + ");");
+            m_writer.println("return this;");
+            m_writer.closeBlock();
         }
     }
 
     private void generateSignature()
         throws IOException
     {
-        print("  public static final String SIGNATURE = \"");
-        print(m_analyzer.getSignature());
-        println("\";");
+        m_writer.print("public static final String SIGNATURE = \"");
+        m_writer.print(m_analyzer.getSignature());
+        m_writer.println("\";");
     }
 
     private void generateIntf()
         throws IOException
     {
-        println("  public interface Intf");
-        print  ("    extends ");
-        println(TEMPLATE_INTF);
-        println("  {");
+        m_writer.println("public interface Intf");
+        m_writer.println("  extends " + ClassNames.TEMPLATE_INTF);
+        m_writer.openBlock();
 
         generateFargInterfaces(true);
 
-        print  ("    void render(");
+        m_writer.print("void render(");
         for (Iterator i = m_analyzer.getRequiredArgNames(); i.hasNext(); /* */)
         {
             String name = (String) i.next();
-            print  (m_analyzer.getArgType(name));
-            print  (" p_");
-            print  (name);
+            m_writer.print(m_analyzer.getArgType(name) + " p_" + name);
             if (i.hasNext())
             {
-                print  (", ");
+                m_writer.print(", ");
             }
         }
-        println(")");
-        println("      throws java.io.IOException;");
-        println();
+        m_writer.println(")");
+        m_writer.println("  throws java.io.IOException;");
+        m_writer.println();
         for (Iterator i = m_analyzer.getOptionalArgNames(); i.hasNext(); /* */)
         {
-            println();
+            m_writer.println();
             String name = (String) i.next();
-            print  ("   void set");
-            print  (StringUtils.capitalize(name));
-            print  ("(");
-            print  (m_analyzer.getArgType(name));
-            print  (" p_");
-            print  (name);
-            println(");");
+            m_writer.println("void set" + StringUtils.capitalize(name)
+                             + "("
+                             + m_analyzer.getArgType(name) + " p_" + name
+                             + ");");
         }
-        println("  }");
+        m_writer.closeBlock();
 
     }
 
@@ -455,49 +406,44 @@ public class IntfGenerator extends AbstractGenerator
     private void generateGetInstance()
         throws IOException
     {
-        println();
-        println("  protected Intf getInstance()");
-        print  ("    throws ");
-        println(IOEXCEPTION_CLASS);
-        println("  {");
-        print  ("    return (Intf) getInstance(\"");
-        print  (getPath());
-        println("\");");
-        println("  }");
+        m_writer.println();
+        m_writer.println("protected Intf getInstance()");
+        m_writer.println("  throws " + ClassNames.IOEXCEPTION);
+        m_writer.openBlock();
+        m_writer.println("return (Intf) getInstance(\"" + getPath() + "\");");
+        m_writer.closeBlock();
     }
 
     private void generateSetWriter()
         throws IOException
     {
-        println();
-        print  ("  public ");
-        print  (getClassName());
-        println(" writeTo(java.io.Writer p_writer)");
-        print  ("    throws ");
-        println(IOEXCEPTION_CLASS);
-        println("  {");
-        println("    getInstance().writeTo(p_writer);");
-        println("    return this;");
-        println("  }");
+        m_writer.println();
+        m_writer.println("  public " + getClassName()
+                         + " writeTo(java.io.Writer p_writer)");
+        m_writer.print  ("  throws ");
+        m_writer.println(ClassNames.IOEXCEPTION);
+        m_writer.openBlock();
+        m_writer.println("getInstance().writeTo(p_writer);");
+        m_writer.println("return this;");
+        m_writer.closeBlock();
     }
 
     private void generateEscaping()
         throws IOException
     {
-        println();
-        print  ("  public ");
-        print  (getClassName());
-        println(" escaping(org.jamon.escaping.Escaping p_escaping)");
-        println("  {");
-        println("    escape(p_escaping);");
-        println("    return this;");
-        println("  }");
+        m_writer.println();
+        m_writer.println("public " + getClassName()
+                         + " escaping(org.jamon.escaping.Escaping p_escaping)");
+        m_writer.openBlock();
+        m_writer.println("escape(p_escaping);");
+        m_writer.println("return this;");
+        m_writer.closeBlock();
     }
 
     private void generateEpilogue()
         throws IOException
     {
-        println();
-        println("}");
+        m_writer.println();
+        m_writer.closeBlock();
     }
 }
