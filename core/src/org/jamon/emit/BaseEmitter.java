@@ -15,13 +15,15 @@
  * created by Jay Sachs are Copyright (C) 2003 Jay Sachs.  All Rights
  * Reserved.
  *
- * Contributor(s):
+ * Contributor(s): Ian Robertson
  */
 
 package org.jamon.emit;
 
 class BaseEmitter
 {
+    protected BaseEmitter() {} // avoid public instantiation
+
     public static String valueOf(int p_int)
     {
         return String.valueOf(p_int);
