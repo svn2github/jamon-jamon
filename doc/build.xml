@@ -30,6 +30,7 @@ the documentation thus taking care of issues such as escaping.
   </target>
 
   <target name="quickstart" depends="init" >
+    <property name="build.sysclasspath" value="last" />
     <copy file="templates/org/jamon/doc/JamonQsJava"
           tofile="${doc.dir}/JamonQs.java" />
     <copy file="${doc.dir}/JamonQs.java" todir="${work.dir}" />
@@ -40,6 +41,7 @@ the documentation thus taking care of issues such as escaping.
              template="/org/jamon/doc/QsTemp" />
     <copy file="${doc.dir}/QsTemp" todir="${work.dir}" />
     <java classname="org.jamon.TemplateProcessor"
+          failonerror="true"
           fork="yes"
           dir="${work.dir}"
           classpath="${java.lib.jamon}">
@@ -50,9 +52,8 @@ the documentation thus taking care of issues such as escaping.
            classpath="${java.lib.jamon}"
            includes="JamonQs.java,QsTemp.java,QsTempImpl.java" />
     <tempfile property="temp.file" destdir="${work.dir}"/>
-    <!-- why is fork needed?? -->
     <java classname="JamonQs"
-          fork="yes"
+          failonerror="true"
           classpath="${work.dir}:${java.lib.jamon}"
           output="${temp.file}" >
       <arg line="one two three" />
