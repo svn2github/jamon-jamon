@@ -20,7 +20,43 @@
 
 package org.jamon;
 
-public interface TemplateManagerSource
+/**
+   The source for obtaining a default TemplateManager.  Note that this
+   is an abstract class instead of an interface in order to allow
+   static methods.
+ */
+
+public abstract class TemplateManagerSource
 {
-    TemplateManager getTemplateManager();
+    /**
+     * Get a {@link TemplateManager} for a specified template path.
+     *
+     * @param p_path the template path
+     *
+     * @return a TemplateManager appropriate for that path
+     */
+    public abstract TemplateManager getTemplateManagerForPath(String p_path);
+
+    public static TemplateManager getTemplateManagerFor(String p_path)
+    {
+        return s_source.getTemplateManagerForPath(p_path);
+    }
+
+    public static void setTemplateManagerSource(TemplateManagerSource p_source)
+    {
+        s_source = p_source;
+    }
+
+    public static void setTemplateManager(final TemplateManager p_manager)
+    {
+        s_source = new TemplateManagerSource()
+            {
+                public TemplateManager getTemplateManagerForPath(String p_path)
+                {
+                    return p_manager;
+                }
+            };
+    }
+
+    private static TemplateManagerSource s_source;
 }

@@ -58,45 +58,16 @@ public abstract class AbstractTemplateProxy
         private boolean m_autoFlush = true;
     }
 
-    public static void setTemplateManagerSourceClassName(String p_className)
-    {
-        s_templateManagerSourceName = p_className;
-    }
-
-    private static String s_templateManagerSourceName =
-        System.getProperty("org.jamon.TemplateManagerSource",
-                           org.jamon.DefaultTemplateManagerSource.class.getName());
-
-    protected AbstractTemplateProxy()
-    {
-        TemplateManagerSource source = null;
-        try
-        {
-            Class tmsClass = getClass().getClassLoader()
-                .loadClass(s_templateManagerSourceName);
-            source = (TemplateManagerSource) tmsClass.newInstance();
-            m_templateManager = source.getTemplateManager();
-            m_implDataInstance = null;
-        }
-        catch (ClassNotFoundException e)
-        {
-            throw new JamonRuntimeException(e);
-        }
-        catch (IllegalAccessException e)
-        {
-            throw new JamonRuntimeException(e);
-        }
-        catch (InstantiationException e)
-        {
-            throw new JamonRuntimeException(e);
-        }
-    }
-
     protected AbstractTemplateProxy(TemplateManager p_templateManager,
                                     boolean p_singleThreaded)
     {
         m_templateManager = p_templateManager;
         m_implDataInstance = p_singleThreaded ? makeImplData() : null;
+    }
+
+    protected AbstractTemplateProxy(String p_path)
+    {
+        this(TemplateManagerSource.getTemplateManagerFor(p_path), false);
     }
 
     protected final TemplateManager getTemplateManager()

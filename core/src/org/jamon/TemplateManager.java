@@ -39,7 +39,7 @@ public interface TemplateManager
      *
      * @exception IOException if something goes wrong
      **/
-    public AbstractTemplateProxy.Intf constructImpl(
+    AbstractTemplateProxy.Intf constructImpl(
         AbstractTemplateProxy p_proxy)
         throws IOException;
 
@@ -53,6 +53,6 @@ public interface TemplateManager
      *
      * @exception IOException if something goes wrong
      */
-    public AbstractTemplateProxy constructProxy(String p_path)
+    AbstractTemplateProxy constructProxy(String p_path)
         throws IOException;
 }

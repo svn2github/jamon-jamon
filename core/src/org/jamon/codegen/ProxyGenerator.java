@@ -128,15 +128,28 @@ public class ProxyGenerator
              + "(" + ClassNames.TEMPLATE_MANAGER + " p_manager, "
              + " boolean p_singleThreaded)");
         m_writer.openBlock();
-        m_writer.println(" super(p_manager, p_singleThreaded);");
+        m_writer.println("super(p_manager, p_singleThreaded);");
         m_writer.closeBlock();
+        m_writer.println();
 
-        m_writer.println();
-        m_writer.println("public " + getClassName() + "()");
-        m_writer.openBlock();
-        m_writer.println(" super();");
-        m_writer.closeBlock();
-        m_writer.println();
+        if (m_templateUnit.isParent())
+        {
+            m_writer.println("protected "
+                             + getClassName()
+                             + "(String p_path)");
+            m_writer.openBlock();
+            m_writer.println("super(p_path);");
+            m_writer.closeBlock();
+            m_writer.println();
+        }
+        else
+        {
+            m_writer.println("public " + getClassName() + "()");
+            m_writer.openBlock();
+            m_writer.println(" super(\"" + m_templateUnit.getName() + "\");");
+            m_writer.closeBlock();
+            m_writer.println();
+        }
     }
 
     private void generateFragmentInterface(FragmentUnit p_fragmentUnit,
