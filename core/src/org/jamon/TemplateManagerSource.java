@@ -58,28 +58,15 @@ public abstract class TemplateManagerSource
             });
     }
 
-    /**
-       Get the template manager source, creating a default one if it
-       hasn't been set.
-
-       The reason we don't synchronize here is that no use case
-       requires it. In general, applications will be calling {@link
-       #setTemplateManager} or {@link #setTemplateManagerSource}
-       before creating any top-level templates, or at least they
-       should, otherwise some templates will be using a default
-       template manager. The providing of a default here is to allow
-       "toy" or "scratch" applications not even worry about creating
-       or setting a template manager at all -- and concurrent access
-       in a scratch application is not worth worrying about.
-     */
     private static TemplateManagerSource getTemplateManagerSource()
     {
-        if (s_source == null)
-        {
-            setTemplateManager(new BasicTemplateManager());
-        }
         return s_source;
     }
 
     private static TemplateManagerSource s_source;
+
+    static
+    {
+        setTemplateManager(new BasicTemplateManager());
+    }
 }
