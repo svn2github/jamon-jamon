@@ -1,4 +1,4 @@
-<%extends _Base>
+<%inherits _Base>
 <%override title>Jamon Generated Templates</%override>
 <%class>
   protected Section currentSection() { return Section.DOCUMENTATION; }
@@ -180,7 +180,7 @@ something like:
 Moreover, if <code>/org/foo/ChildTemplate</code> contained the
 declarations
 
-<pre><&| /org/jamon/escape/Html &><%LITERAL><%extends ParentTemplate>
+<pre><&| /org/jamon/escape/Html &><%LITERAL><%inherits ParentTemplate>
 <%args>
   long t;
   java.math.BigDecimal amount => new BigDecimal(0);

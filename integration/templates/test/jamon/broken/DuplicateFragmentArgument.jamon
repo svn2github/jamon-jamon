@@ -1,4 +1,4 @@
-<%extends /test/jamon/ParentFragment>
+<%inherits /test/jamon/ParentFragment>
 <%args>
   int f;
 </%args>

@@ -1,4 +1,4 @@
-<%extends _escape>\
+<%inherits _escape>\
 <%import>
   org.jamon.escaping.Escaping;
 </%import>\

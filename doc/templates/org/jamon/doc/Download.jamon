@@ -5,7 +5,7 @@
   String binZip;
   String version;
 </%args>
-<%extends _Base>
+<%inherits _Base>
 <%override title>Getting Jamon</%override>
 <%class>
   protected Section currentSection() { return Section.DOWNLOAD; }

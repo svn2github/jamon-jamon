@@ -1,4 +1,4 @@
-<%extends /test/jamon/Middle>\
+<%inherits /test/jamon/Middle>\
 <%xargs>
       a;
       j;

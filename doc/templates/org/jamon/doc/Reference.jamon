@@ -1,4 +1,4 @@
-<%extends _Base>
+<%inherits _Base>
 <%override title>Jamon Template Reference Manual</%override>
 <%class>
   protected Section currentSection() { return Section.DOCUMENTATION; }
@@ -110,11 +110,11 @@
 
       Templates can inherit from other templates.  A template is an
       "abstract" template if it contains a <code>&lt;&amp; *CHILD
-      &amp;&gt;</code> tag.  A template extends another template by
-      means of an <code>&lt;%extends <i>pathToParent</i>&gt;</code>
+      &amp;&gt;</code> tag.  A template inherits another template by
+      means of an <code>&lt;%inherits <i>pathToParent</i>&gt;</code>
       tag.  There can be multiple levels of inheritance:
-      <code>/grandchild</code> can extend <code>/child</code>, which
-      in turn can extend <code>/parent</code>.  When Jamon encounters
+      <code>/grandchild</code> can inherit from <code>/child</code>, which
+      in turn can inherit from <code>/parent</code>.  When Jamon encounters
       a <code>&lt;&amp; *CHILD &amp;&gt;</code> tag, it inserts the
       results of rendering the child template.
 
@@ -131,7 +131,7 @@
 </%LITERAL></&>
       and <code>/restaurant/Lunch</code> contains:
       <&| _template &><%LITERAL>
-<%extends /restaurant/Menu>
+<%inherits /restaurant/Menu>
 Sandwich Jamon y Queso
 </%LITERAL></&>
 
@@ -271,7 +271,7 @@ Remember, today's lucky number is <% luckyNumber %>.
 
     then <code>/child</code> might contain:
     <&| _template &><%LITERAL>
-<%extends /parent>
+<%inherits /parent>
 <%args>
   int temperature;
 </%args>
@@ -409,7 +409,7 @@ a good sign for you, <% name %>.
 
       Then <code>/sunny</code> might contain:
 <&| _template &><%LITERAL>
-<%extends /weatherReport>
+<%inherits /weatherReport>
 Head for the beach!  It's going to be sunny and beautiful.
 </%LITERAL></&>
 
