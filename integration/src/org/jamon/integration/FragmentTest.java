@@ -14,7 +14,7 @@ public class FragmentTest
         throws Exception
     {
         new Fragment(getTemplateManager())
-            .setWriter(getWriter())
+            .writeTo(getWriter())
             .render(1);
         checkOutput("1(2)1");
     }

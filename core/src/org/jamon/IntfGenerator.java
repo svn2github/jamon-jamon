@@ -429,11 +429,11 @@ public class IntfGenerator
         println();
         print  ("  public ");
         print  (getClassName());
-        println(" setWriter(java.io.Writer p_writer)");
+        println(" writeTo(java.io.Writer p_writer)");
         print  ("    throws ");
         println(JAMON_EXCEPTION);
         println("  {");
-        println("    getInstance().setWriter(p_writer);");
+        println("    getInstance().writeTo(p_writer);");
         println("    return this;");
         println("  }");
     }

@@ -46,8 +46,8 @@ public class Invoker
             m_templateClass = Class.forName(args[0]);
             Constructor con = m_templateClass
                 .getConstructor(new Class[] { TemplateManager.class });
-            Method setWriterMethod =
-                m_templateClass.getMethod("setWriter",
+            Method writeToMethod =
+                m_templateClass.getMethod("writeTo",
                                           new Class [] { Writer.class });
             Method[] methods = m_templateClass.getMethods();
             Method render = null;
@@ -72,7 +72,7 @@ public class Invoker
 
             m_template = (AbstractTemplateProxy)
                 con.newInstance(new Object[]{ new StandardTemplateManager() });
-            setWriterMethod.invoke
+            writeToMethod.invoke
                 (m_template,
                  new Object[] { new OutputStreamWriter(System.out) });
 

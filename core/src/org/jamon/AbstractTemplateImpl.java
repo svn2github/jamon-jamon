@@ -18,7 +18,7 @@ public abstract class AbstractTemplateImpl
         return m_path;
     }
 
-    public final void setWriter(Writer p_writer)
+    public final void writeTo(Writer p_writer)
     {
         m_writer = p_writer;
     }

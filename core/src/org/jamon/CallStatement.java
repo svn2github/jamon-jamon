@@ -109,7 +109,7 @@ public class CallStatement
         p_writer.println("(getTemplateManager());");
         p_writer.print("  ");
         p_writer.print(tVar);
-        p_writer.println(".setWriter(getWriter());");
+        p_writer.println(".writeTo(getWriter());");
 
         List requiredArgs = p_describer.getRequiredArgNames(p_absPath);
 

@@ -14,7 +14,7 @@ public class FirstTest
         throws Exception
     {
         new TestTemplate(getTemplateManager())
-            .setWriter(getWriter())
+            .writeTo(getWriter())
             .setX(57)
             .render(new BigDecimal("34.5324"));
         checkOutput(new RE(".*"

@@ -16,7 +16,7 @@ public class ArgumentTest
         throws Exception
     {
         new Arguments(getTemplateManager())
-            .setWriter(getWriter())
+            .writeTo(getWriter())
             .render(INT, BOOLEAN, STRING);
         checkOutput("" + INT + BOOLEAN + STRING);
     }
@@ -26,7 +26,7 @@ public class ArgumentTest
         throws Exception
     {
         new OptionalArguments(getTemplateManager())
-            .setWriter(getWriter())
+            .writeTo(getWriter())
             .setI(INT)
             .render(BOOLEAN, STRING);
         checkOutput("" + INT + BOOLEAN + STRING);
@@ -36,7 +36,7 @@ public class ArgumentTest
         throws Exception
     {
         new OptionalArguments(getTemplateManager())
-            .setWriter(getWriter())
+            .writeTo(getWriter())
             .render(BOOLEAN, STRING);
         checkOutput("" + 0 + BOOLEAN + STRING);
     }

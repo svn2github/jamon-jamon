@@ -26,7 +26,7 @@ public abstract class AbstractTemplateProxy
 {
     public interface Intf
     {
-        void setWriter(Writer p_writer);
+        void writeTo(Writer p_writer);
     }
 
     protected AbstractTemplateProxy(TemplateManager p_templateManager)

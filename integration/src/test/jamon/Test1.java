@@ -23,7 +23,7 @@ public class Test1
         m.setSourceDir("templates");
         m.setWorkDir("build/work");
         TestTemplate t = new TestTemplate(m);
-        t.setWriter(w);
+        t.writeTo(w);
         t.setX(57);
         t.render(new BigDecimal("34.5324"));
         w.flush();

@@ -14,7 +14,7 @@ public class PrivateMethodTest
         throws Exception
     {
         new PrivateMethods(getTemplateManager())
-            .setWriter(getWriter())
+            .writeTo(getWriter())
             .render();
         checkOutput("7=1111111");
     }

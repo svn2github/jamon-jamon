@@ -15,7 +15,7 @@ public class ParametrizedFragmentTest
         throws Exception
     {
         new ParametrizedFragment(getTemplateManager())
-            .setWriter(getWriter())
+            .writeTo(getWriter())
             .render(new int[] { -2, 0, 15 });
         checkOutput("-0+");
     }

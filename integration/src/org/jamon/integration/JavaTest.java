@@ -14,7 +14,7 @@ public class JavaTest
         throws Exception
     {
         new JavaEscape(getTemplateManager())
-            .setWriter(getWriter())
+            .writeTo(getWriter())
             .render();
         checkOutput("0\n1\n2\n");
     }
