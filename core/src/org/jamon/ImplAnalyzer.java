@@ -153,13 +153,25 @@ public class ImplAnalyzer extends BaseAnalyzer
                                       + ".render();"));
     }
 
+    private Map makeParamMap(List p_paramList)
+    {
+        Map paramMap = new HashMap();
+        for (Iterator p = p_paramList.iterator(); p.hasNext(); /* */)
+        {
+            AParam param = (AParam) p.next();
+            paramMap.put(param.getIdentifier().getText(),
+                         param.getParamExpr().getText().trim());
+        }
+        return paramMap;
+    }
+
     public void caseACallBaseComponent(ACallBaseComponent node)
     {
         handleBody();
         ACall call = (ACall) node.getCall();
         String path = asText(call.getPath());
         m_calls.add(path);
-        addStatement(new CallStatement(path,call.getParam()));
+        addStatement(new CallStatement(path,makeParamMap(call.getParam())));
     }
 
     private int fragments = 0;
@@ -179,7 +191,7 @@ public class ImplAnalyzer extends BaseAnalyzer
 
         handleBody();
         Statement s = new FragmentCallStatement(path,
-                                                call.getParam(),
+                                                makeParamMap(call.getParam()),
                                                 getStatements(getUnitName()));
         popUnitName();
         addStatement(s);

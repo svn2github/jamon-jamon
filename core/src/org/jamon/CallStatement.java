@@ -5,24 +5,16 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.HashMap;
-
-import org.modusponens.jtt.node.AParam;
 
 public class CallStatement
     implements Statement
 {
-    CallStatement(String p_path,List p_params)
+    CallStatement(String p_path,Map p_params)
     {
         m_path = p_path;
-        m_params = new HashMap();
-        for (Iterator p = p_params.iterator(); p.hasNext(); /* */)
-        {
-            AParam param = (AParam) p.next();
-            m_params.put(param.getIdentifier().getText(),
-                         param.getParamExpr().getText().trim());
-        }
+        m_params = p_params;
     }
+
     private final String m_path;
     protected final Map m_params;
 

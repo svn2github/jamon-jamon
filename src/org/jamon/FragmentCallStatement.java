@@ -3,12 +3,13 @@ package org.modusponens.jtt;
 import java.io.PrintWriter;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.Iterator;
 
 public class FragmentCallStatement
     extends CallStatement
 {
-    FragmentCallStatement(String p_path, List p_params, List p_fragment)
+    FragmentCallStatement(String p_path, Map p_params, List p_fragment)
     {
         super(p_path, p_params);
         m_fragment = p_fragment;
