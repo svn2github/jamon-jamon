@@ -29,6 +29,11 @@
     <ant dir="anttask" target="compile"/>
   </target>
 
+  <target name="jar" description="Creates a JAR for core and anttask">
+    <ant dir="core" target="jar"/>
+    <ant dir="anttask" target="jar"/>
+  </target>
+
   <target name="cvsignores" description="Generates cvsignore files">
     <ant dir="core" target="cvsignores"/>
     <ant dir="integration" target="cvsignores"/>
