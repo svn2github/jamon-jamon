@@ -52,12 +52,11 @@ public class TemplateGenerator
 
         System.out.println(p_filename + " => " + javaFile);
 
-        BaseAnalyzer bg = new BaseAnalyzer();
-        new Parser(new Lexer(new PushbackReader
-                             (new FileReader(p_filename),
-                              1024)))
-            .parse()
-            .apply(bg);
+        BaseAnalyzer bg =
+            new BaseAnalyzer(new Parser(new Lexer(new PushbackReader
+                                                  (new FileReader(p_filename),
+                                                   1024)))
+                             .parse());
 
         pkgDir.mkdirs();
         FileWriter writer = new FileWriter(javaFile);

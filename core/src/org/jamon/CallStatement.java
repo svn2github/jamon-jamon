@@ -154,27 +154,4 @@ public class CallStatement
     {
         return m_path;
     }
-
-    private String getAbsolutePath(String p_callingPath)
-    {
-        // FIXME: should use properties ...
-        if (getPath().charAt(0) == '/')
-        {
-            return getPath();
-        }
-        else
-        {
-            int i = p_callingPath.lastIndexOf('/');
-            if (i <= 0)
-            {
-                return "/" + getPath();
-            }
-            else
-            {
-                return p_callingPath.substring(0,i) + "/" + getPath();
-            }
-        }
-
-    }
-
 }

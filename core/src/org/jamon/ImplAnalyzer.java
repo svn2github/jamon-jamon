@@ -21,10 +21,11 @@ public class ImplAnalyzer extends BaseAnalyzer
 
     private final String m_path;
 
-    public ImplAnalyzer(String p_templatePath)
+    public ImplAnalyzer(String p_templatePath, Start p_start)
     {
         m_unitStatements.put(MAIN_UNIT_NAME,new ArrayList());
         m_path = p_templatePath;
+        p_start.apply(new Adapter());
     }
 
     public Collection getCalledTemplateNames()
@@ -76,38 +77,131 @@ public class ImplAnalyzer extends BaseAnalyzer
 
     }
 
-
-
-
-    public void caseABodyBaseComponent(ABodyBaseComponent node)
+    public List getStatements(String p_unitName)
     {
-        m_current.append(node.getText().getText());
+        return (List) m_unitStatements.get(p_unitName);
     }
 
-    public void caseANewlineBaseComponent(ANewlineBaseComponent node)
+    public List getStatements()
     {
-        m_current.append(node.getNewline().getText());
+        return getStatements(MAIN_UNIT_NAME);
     }
 
-    public void caseADefComponent(ADefComponent node)
+
+
+    protected class Adapter extends BaseAnalyzer.Adapter
     {
-        handleBody();
-        super.caseADefComponent(node);
+        public void caseABodyBaseComponent(ABodyBaseComponent node)
+        {
+            m_current.append(node.getText().getText());
+        }
+
+        public void caseANewlineBaseComponent(ANewlineBaseComponent node)
+        {
+            m_current.append(node.getNewline().getText());
+        }
+
+        public void caseADefComponent(ADefComponent node)
+        {
+            handleBody();
+            super.caseADefComponent(node);
+        }
+
+        public void caseAJavaBaseComponent(AJavaBaseComponent node)
+        {
+            handleBody();
+            AJava java = (AJava) node.getJava();
+            addStatement(new RawStatement(java.getJavaStmts().getText()));
+        }
+
+        public void caseAJlineBaseComponent(AJlineBaseComponent node)
+        {
+            handleBody();
+            AJline jline = (AJline) node.getJline();
+            addStatement(new RawStatement(jline.getExpr().getText()));
+        }
+
+        public void caseAEmitBaseComponent(AEmitBaseComponent node)
+        {
+            handleBody();
+            AEmit emit = (AEmit) node.getEmit();
+            TEscape escape = emit.getEscape();
+            Encoding encoding = Encoding.DEFAULT;
+            if (escape != null)
+            {
+                char c = escape.getText().trim().charAt(1);
+                switch (c)
+                {
+                  case 'h': encoding = Encoding.HTML; break;
+                  case 'u': encoding = Encoding.URL; break;
+                  case 'n': encoding = Encoding.NONE; break;
+                  case 'x': encoding = Encoding.XML; break;
+                  default:
+                    throw new RuntimeException("Unknown escape " + c);
+                }
+            }
+            addStatement(new WriteStatement(emit.getEmitExpr().getText(),
+                                            encoding));
+        }
+
+        public void caseAContentBaseComponent(AContentBaseComponent node)
+        {
+            handleBody();
+            AContent c = (AContent) node.getContent();
+            addStatement(new RawStatement(c.getIdentifier().getText()
+                                          + ".render();"));
+        }
+
+        public void caseACallBaseComponent(ACallBaseComponent node)
+        {
+            handleBody();
+            ACall call = (ACall) node.getCall();
+            String path = asText(call.getPath());
+            m_calls.add(path);
+            addStatement(new CallStatement(path,makeParamMap(call.getParam())));
+        }
+
+        public void caseAFragmentCallBaseComponent(AFragmentCallBaseComponent node)
+        {
+            handleBody();
+            pushUnitName("#" + (fragments++));
+            m_unitStatements.put(getUnitName(),new ArrayList());
+            AFragmentCall call = (AFragmentCall) node.getFragmentCall();
+            String path = asText(call.getPath());
+            m_calls.add(path);
+            for (Iterator i = call.getBaseComponent().iterator(); i.hasNext(); /* */)
+            {
+                ((Node) i.next()).apply(this);
+            }
+
+            handleBody();
+            Statement s = new FragmentCallStatement(path,
+                                                    makeParamMap(call.getParam()),
+                                                    getStatements(getUnitName()));
+            popUnitName();
+            addStatement(s);
+
+        }
+
+        public void caseEOF(EOF node)
+        {
+            handleBody();
+        }
+
+        public void caseTDefEnd(TDefEnd node)
+        {
+            handleBody();
+        }
+
+        public void caseTDefStart(TDefStart node)
+        {
+            handleBody();
+            m_unitStatements.put(getUnitName(),new ArrayList());
+        }
+
     }
 
-    public void caseAJavaBaseComponent(AJavaBaseComponent node)
-    {
-        handleBody();
-        AJava java = (AJava) node.getJava();
-        addStatement(new RawStatement(java.getJavaStmts().getText()));
-    }
-
-    public void caseAJlineBaseComponent(AJlineBaseComponent node)
-    {
-        handleBody();
-        AJline jline = (AJline) node.getJline();
-        addStatement(new RawStatement(jline.getExpr().getText()));
-    }
+    private int fragments = 0;
 
     private void handleBody()
     {
@@ -122,36 +216,6 @@ public class ImplAnalyzer extends BaseAnalyzer
         }
     }
 
-    public void caseAEmitBaseComponent(AEmitBaseComponent node)
-    {
-        handleBody();
-        AEmit emit = (AEmit) node.getEmit();
-        TEscape escape = emit.getEscape();
-        Encoding encoding = Encoding.DEFAULT;
-        if (escape != null)
-        {
-            char c = escape.getText().trim().charAt(1);
-            switch (c)
-            {
-              case 'h': encoding = Encoding.HTML; break;
-              case 'u': encoding = Encoding.URL; break;
-              case 'n': encoding = Encoding.NONE; break;
-              case 'x': encoding = Encoding.XML; break;
-              default:
-                throw new RuntimeException("Unknown escape " + c);
-            }
-        }
-        addStatement(new WriteStatement(emit.getEmitExpr().getText(),
-                                        encoding));
-    }
-
-    public void caseAContentBaseComponent(AContentBaseComponent node)
-    {
-        handleBody();
-        AContent c = (AContent) node.getContent();
-        addStatement(new RawStatement(c.getIdentifier().getText()
-                                      + ".render();"));
-    }
 
     private Map makeParamMap(List p_paramList)
     {
@@ -163,39 +227,6 @@ public class ImplAnalyzer extends BaseAnalyzer
                          param.getParamExpr().getText().trim());
         }
         return paramMap;
-    }
-
-    public void caseACallBaseComponent(ACallBaseComponent node)
-    {
-        handleBody();
-        ACall call = (ACall) node.getCall();
-        String path = asText(call.getPath());
-        m_calls.add(path);
-        addStatement(new CallStatement(path,makeParamMap(call.getParam())));
-    }
-
-    private int fragments = 0;
-
-    public void caseAFragmentCallBaseComponent(AFragmentCallBaseComponent node)
-    {
-        handleBody();
-        pushUnitName("#" + (fragments++));
-        m_unitStatements.put(getUnitName(),new ArrayList());
-        AFragmentCall call = (AFragmentCall) node.getFragmentCall();
-        String path = asText(call.getPath());
-        m_calls.add(path);
-        for (Iterator i = call.getBaseComponent().iterator(); i.hasNext(); /* */)
-        {
-            ((Node) i.next()).apply(this);
-        }
-
-        handleBody();
-        Statement s = new FragmentCallStatement(path,
-                                                makeParamMap(call.getParam()),
-                                                getStatements(getUnitName()));
-        popUnitName();
-        addStatement(s);
-
     }
 
     private String asText(PPath node)
@@ -219,22 +250,6 @@ public class ImplAnalyzer extends BaseAnalyzer
                 + "/"
                 + path.getIdentifier().getText();
         }
-    }
-
-    public void caseEOF(EOF node)
-    {
-        handleBody();
-    }
-
-    public void caseTDefEnd(TDefEnd node)
-    {
-        handleBody();
-    }
-
-    public void caseTDefStart(TDefStart node)
-    {
-        handleBody();
-        m_unitStatements.put(getUnitName(),new ArrayList());
     }
 
     private static String newlineEscape(String p_string)
@@ -273,16 +288,6 @@ public class ImplAnalyzer extends BaseAnalyzer
             }
         }
         return s.toString();
-    }
-
-    public List getStatements(String p_unitName)
-    {
-        return (List) m_unitStatements.get(p_unitName);
-    }
-
-    public List getStatements()
-    {
-        return getStatements(MAIN_UNIT_NAME);
     }
 
     private void addStatement(Statement p_statement)

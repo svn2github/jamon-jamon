@@ -9,9 +9,88 @@ import java.util.Iterator;
 import org.modusponens.jtt.node.*;
 import org.modusponens.jtt.analysis.*;
 
-public class BaseAnalyzer extends AnalysisAdapter
+public class BaseAnalyzer
 {
+    public BaseAnalyzer(Start p_start)
+    {
+        p_start.apply(new Adapter());
+    }
+
+    protected BaseAnalyzer()
+    {
+    }
+
+    public List getDefNames()
+    {
+        return m_defNames;
+    }
+
+    public Iterator getImports()
+    {
+        return m_imports.iterator();
+    }
+
+    public Iterator getRequiredArgNames()
+    {
+        return getRequiredArgNames(MAIN_UNIT_NAME);
+    }
+
+    public Iterator getRequiredArgNames(String p_unitName)
+    {
+        return getUnitInfo(p_unitName).getRequiredArgNames();
+    }
+
+    public Iterator getOptionalArgNames()
+    {
+        return getOptionalArgNames(MAIN_UNIT_NAME);
+    }
+
+    public Iterator getOptionalArgNames(String p_unitName)
+    {
+        return getUnitInfo(p_unitName).getOptionalArgNames();
+    }
+
+    public String getArgType(String p_unitName,String p_argName)
+    {
+        return getUnitInfo(p_unitName).getArgType(p_argName);
+    }
+
+    public String getDefault(String p_unitName,String p_argName)
+    {
+        return getUnitInfo(p_unitName).getDefault(p_argName);
+    }
+
+    public String getArgType(String p_argName)
+    {
+        return getArgType(MAIN_UNIT_NAME,p_argName);
+    }
+
+    public String getDefault(String p_argName)
+    {
+        return getDefault(MAIN_UNIT_NAME,p_argName);
+    }
+
     protected static final String MAIN_UNIT_NAME = "";
+
+    protected final void pushUnitName(String p_unitName)
+    {
+        m_unitNames.addLast(p_unitName);
+    }
+
+    protected final String popUnitName()
+    {
+        return (String) m_unitNames.removeLast();
+    }
+
+    protected String getUnitName()
+    {
+        return (String) m_unitNames.get(m_unitNames.size()-1);
+    }
+
+    private UnitInfo getUnitInfo(String p_unitName)
+    {
+        return (UnitInfo) m_unit.get(p_unitName);
+    }
 
     private static class UnitInfo
     {
@@ -66,124 +145,7 @@ public class BaseAnalyzer extends AnalysisAdapter
     private List m_defNames = new LinkedList();
     private final LinkedList m_unitNames = new LinkedList();
 
-    protected final void pushUnitName(String p_unitName)
-    {
-        m_unitNames.addLast(p_unitName);
-    }
 
-    protected final String popUnitName()
-    {
-        return (String) m_unitNames.removeLast();
-    }
-
-    public List getDefNames()
-    {
-        return m_defNames;
-    }
-
-    protected String getUnitName()
-    {
-        return (String) m_unitNames.get(m_unitNames.size()-1);
-    }
-
-    public Iterator getImports()
-    {
-        return m_imports.iterator();
-    }
-
-    private UnitInfo getUnitInfo(String p_unitName)
-    {
-        return (UnitInfo) m_unit.get(p_unitName);
-    }
-
-    public Iterator getRequiredArgNames()
-    {
-        return getRequiredArgNames(MAIN_UNIT_NAME);
-    }
-
-    public Iterator getRequiredArgNames(String p_unitName)
-    {
-        return getUnitInfo(p_unitName).getRequiredArgNames();
-    }
-
-    public Iterator getOptionalArgNames()
-    {
-        return getOptionalArgNames(MAIN_UNIT_NAME);
-    }
-
-    public Iterator getOptionalArgNames(String p_unitName)
-    {
-        return getUnitInfo(p_unitName).getOptionalArgNames();
-    }
-
-    public String getArgType(String p_unitName,String p_argName)
-    {
-        return getUnitInfo(p_unitName).getArgType(p_argName);
-    }
-
-    public String getDefault(String p_unitName,String p_argName)
-    {
-        return getUnitInfo(p_unitName).getDefault(p_argName);
-    }
-
-    public String getArgType(String p_argName)
-    {
-        return getArgType(MAIN_UNIT_NAME,p_argName);
-    }
-
-    public String getDefault(String p_argName)
-    {
-        return getDefault(MAIN_UNIT_NAME,p_argName);
-    }
-
-
-
-
-
-
-    // begin Adapter methods
-
-    public void caseStart(Start start)
-    {
-        m_unitNames.add(MAIN_UNIT_NAME);
-        m_unit.put(getUnitName(),new UnitInfo(getUnitName()));
-        start.getPTemplate().apply(this);
-        start.getEOF().apply(this);
-    }
-
-    public void caseAComponent(AComponent node)
-    {
-        node.getUnitComponent().apply(this);
-    }
-
-    public void caseAUnitComponent(AUnitComponent node)
-    {
-        node.getBaseComponent().apply(this);
-    }
-
-    public void caseATemplate(ATemplate node)
-    {
-        for (Iterator i = node.getComponent().iterator(); i.hasNext(); /**/ )
-        {
-            ((Node)i.next()).apply(this);
-        }
-    }
-
-    public void caseAArg(AArg arg)
-    {
-        getUnitInfo(getUnitName()).addArg(arg.getName().getText(),
-                                          asText(arg.getType()),
-                                          (ADefault)arg.getDefault());
-    }
-
-    public void caseAImportsComponent(AImportsComponent imports)
-    {
-        AImports imps = (AImports) imports.getImports();
-        for (Iterator i = imps.getName().iterator(); i.hasNext(); /* */ )
-        {
-            m_imports.add(asText((PName) i.next()));
-        }
-    }
 
     private String asText(PName name)
     {
@@ -218,42 +180,86 @@ public class BaseAnalyzer extends AnalysisAdapter
         return str.toString();
     }
 
-    public void caseAArgsUnitComponent(AArgsUnitComponent args)
-    {
-        AArgs a = (AArgs) args.getArgs();
-        PArgsStart start = a.getArgsStart();
-        if (start instanceof AArgsWithFragArgsStart)
-        {
-            // FIXME: we want to ensure that this is the first argument
-            // FIXME: this doesn't handle multiple occurrences AT ALL.
-            AArgsWithFragArgsStart farg = (AArgsWithFragArgsStart) start;
-            getUnitInfo(getUnitName()).addArg(farg.getIdentifier().getText(),
-                                              Fragment.class.getName(),
-                                              null);
 
-        }
-        for (Iterator i = a.getArg().iterator(); i.hasNext(); /**/ )
+    protected class Adapter extends AnalysisAdapter
+    {
+
+        public void caseStart(Start start)
         {
-            ((Node)i.next()).apply(this);
+            m_unitNames.add(MAIN_UNIT_NAME);
+            m_unit.put(getUnitName(),new UnitInfo(getUnitName()));
+            start.getPTemplate().apply(this);
+            start.getEOF().apply(this);
+        }
+
+        public void caseAComponent(AComponent node)
+        {
+            node.getUnitComponent().apply(this);
+        }
+
+        public void caseAUnitComponent(AUnitComponent node)
+        {
+            node.getBaseComponent().apply(this);
+        }
+
+        public void caseATemplate(ATemplate node)
+        {
+            for (Iterator i = node.getComponent().iterator(); i.hasNext(); /**/ )
+            {
+                ((Node)i.next()).apply(this);
+            }
+        }
+
+        public void caseAArg(AArg arg)
+        {
+            getUnitInfo(getUnitName()).addArg(arg.getName().getText(),
+                                              asText(arg.getType()),
+                                              (ADefault)arg.getDefault());
+        }
+
+        public void caseAImportsComponent(AImportsComponent imports)
+        {
+            AImports imps = (AImports) imports.getImports();
+            for (Iterator i = imps.getName().iterator(); i.hasNext(); /* */ )
+            {
+                m_imports.add(asText((PName) i.next()));
+            }
+        }
+
+        public void caseAArgsUnitComponent(AArgsUnitComponent args)
+        {
+            AArgs a = (AArgs) args.getArgs();
+            PArgsStart start = a.getArgsStart();
+            if (start instanceof AArgsWithFragArgsStart)
+            {
+                // FIXME: we want to ensure that this is the first argument
+                // FIXME: this doesn't handle multiple occurrences AT ALL.
+                AArgsWithFragArgsStart farg = (AArgsWithFragArgsStart) start;
+                getUnitInfo(getUnitName())
+                    .addArg(farg.getIdentifier().getText(),
+                            Fragment.class.getName(),
+                            null);
+            }
+            for (Iterator i = a.getArg().iterator(); i.hasNext(); /**/ )
+            {
+                ((Node)i.next()).apply(this);
+            }
+        }
+
+        public void caseADefComponent(ADefComponent node)
+        {
+            ADef def = (ADef) node.getDef();
+            String unitName = def.getIdentifier().getText();
+            m_defNames.add(unitName);
+            pushUnitName(unitName);
+            m_unit.put(getUnitName(),new UnitInfo(getUnitName()));
+            def.getDefStart().apply(this);
+            for (Iterator i = def.getUnitComponent().iterator(); i.hasNext(); /* */ )
+            {
+                ((Node)i.next()).apply(this);
+            }
+            def.getDefEnd().apply(this);
+            popUnitName();
         }
     }
-
-    private boolean m_inDef = false;
-
-    public void caseADefComponent(ADefComponent node)
-    {
-        ADef def = (ADef) node.getDef();
-        String unitName = def.getIdentifier().getText();
-        m_defNames.add(unitName);
-        pushUnitName(unitName);
-        m_unit.put(getUnitName(),new UnitInfo(getUnitName()));
-        def.getDefStart().apply(this);
-        for (Iterator i = def.getUnitComponent().iterator(); i.hasNext(); /* */ )
-        {
-            ((Node)i.next()).apply(this);
-        }
-        def.getDefEnd().apply(this);
-        popUnitName();
-    }
-
 }
