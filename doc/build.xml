@@ -30,6 +30,7 @@ the documentation thus taking care of issues such as escaping.
   <target name="init">
     <mkdir dir="${doc.dir}"/>
     <copy file="base.css" todir="${doc.dir}" />
+    <copy file="earthaddress.gif" todir="${doc.dir}" />
     <copy file="favicon.ico" todir="${doc.dir}" />
     <copy file="robots.txt" todir="${doc.dir}" />
     <taskdef name="invoker"

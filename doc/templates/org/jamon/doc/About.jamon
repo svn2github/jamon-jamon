@@ -1,5 +1,20 @@
 <&| _Base; title => "About Jamon"; section => "About" &>
 
+<h2>Jamon in use</h2>
+
+<ul>
+  <li><a href="http://www.earthaddress.com">www.earthaddress.com</a>
+    <br />
+    <br />
+    <a href="http://www.earthaddress.com"><img
+       alt="EarthAddress" title="EarthAddress" src="earthaddress.gif" 
+       height="34" width="141" /></a>
+  </li>
+
+<li><a href="http://www.eziba.com/StoreFront">www.eziba.com</a></li>
+
+</ul>
+
 <h2>Credits</h2>
 
 <h4>Project lead</h4>
