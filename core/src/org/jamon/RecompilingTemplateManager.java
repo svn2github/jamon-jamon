@@ -21,6 +21,7 @@
 package org.jamon;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
@@ -517,11 +518,7 @@ public class RecompilingTemplateManager
                         m_classLoader.loadClass
                             (StringUtils.templatePathToClassName(path));
                         new File(javaIntf(path)).delete();
-                        // FIXME:
-                        // we should also remove .class(es)
-                        //   corresponding to the intf
-                        // something like any file matching
-                        //   templateName\$.*\.class
+                        deleteClassFilesFor(path);
                     }
                     catch (ClassNotFoundException e)
                     {
@@ -565,6 +562,23 @@ public class RecompilingTemplateManager
         {
             compile(outOfDateJavaFiles);
             m_loader.invalidate();
+        }
+    }
+
+    private void deleteClassFilesFor(String p_path)
+    {
+        int i = p_path.lastIndexOf('/');
+        String templateName = i < 0 ? p_path : p_path.substring(i+1);
+        File dir = new File(new File(m_workDir),
+                            StringUtils.templatePathToFileDir(p_path));
+        String[] files = dir.list();
+        for (int j = 0; j < files.length; ++j)
+        {
+            if (StringUtils.isGeneratedClassFilename(templateName, files[j]))
+            {
+                new File(dir, files[j]).delete();
+                // FIXME: error checking?
+            }
         }
     }
 
