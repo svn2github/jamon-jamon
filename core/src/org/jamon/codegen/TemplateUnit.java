@@ -51,10 +51,6 @@ public class TemplateUnit
                                       Set p_children)
         throws IOException
     {
-        if (p_children.contains(getParentPath()))
-        {
-            throw new JamonException(getParentPath() + " extends itself");
-        }
         p_children.add(getParentPath());
         setParentDescription
             (p_describer.getTemplateDescription(getParentPath(),

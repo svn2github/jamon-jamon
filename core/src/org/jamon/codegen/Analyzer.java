@@ -305,13 +305,23 @@ public class Analyzer
             }
             getTemplateUnit().setParentPath
                 (getAbsolutePath(computePath(p_extends.getPath())));
-            try
+            if (m_children.contains(getTemplateUnit().getParentPath()))
             {
-                getTemplateUnit().processParent(m_describer, m_children);
+                throw new TunnelingException(
+                    "cyclic inheritance involving "
+                    + getTemplateUnit().getParentPath(),
+                    p_extends.getExtendsStart());
             }
-            catch(IOException e)
+            else
             {
-                throw new TunnelingException(e);
+                try
+                {
+                    getTemplateUnit().processParent(m_describer, m_children);
+                }
+                catch (IOException e)
+                {
+                    throw new TunnelingException(e);
+                }
             }
         }
 

@@ -28,15 +28,9 @@ public class InheritanceLoopTest
     public void testInheritanceLoop()
         throws Exception
     {
-        try
-        {
-            generateSource("test/jamon/broken/ParentLoop2");
-            fail("No exception thrown");
-        }
-        catch(JamonException e)
-        {
-            assertEquals("/test/jamon/broken/ParentLoop1 extends itself",
-                         e.getMessage());
-        }
+        expectTemplateException(
+            "ParentLoop2",
+            "cyclic inheritance involving /test/jamon/broken/ParentLoop1",
+            1, 1);
     }
 }
