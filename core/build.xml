@@ -7,6 +7,7 @@
   </description>
 
   <property file="build.properties"/>
+  <property file="../build.properties"/>
   <property file="${user.home}/.ant.properties"/>
 
   <property name="build.dir" value="build"/>
@@ -39,11 +40,11 @@
          unless="parser.uptodate"
          description="Generates parsers from the grammar file">
     <taskdef name="sablecc" classname="org.sablecc.ant.taskdef.Sablecc"
-             classpath="${java.lib.sablecctask}:${java.lib.sablecc}"/>
+             classpath="${java.lib.sablecc}:${java.lib.sablecctask}"/>
     <delete dir="${build.src.dir}"/>
     <mkdir dir="${build.src.dir}"/>
     <sablecc src="src" outputdirectory="${build.src.dir}">
-        <include name="jamon.grammar"/>
+      <include name="jamon.grammar"/>
     </sablecc>
  </target>
 

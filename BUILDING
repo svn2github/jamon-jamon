@@ -1,0 +1,35 @@
+Requirements
+------------
+In order to build Jamon from source, you need the following software:
+
+* Ant 1.5.1 or above, including the optional tasks (for JUnit)
+  http://ant.apache.org
+
+* SableCC 2.16.2 and the SableCC Ant task 1.1.0
+  http://www.sablecc.org
+
+* JDK 1.3.1 or above
+
+* JUnit 3.8 or above
+  http://www.junit.org
+
+
+Instructions
+------------
+
+1. Unpackage (tar or zip) the source distribution.
+
+2. In the top-level directory, create a build.properties file that
+   sets the following properties to point to the appropriate jar files:
+
+  java.lib.junit
+  java.lib.sablecc
+  java.lib.sablecctask
+
+3. From inside the top-level directory, execute
+
+  ant jar
+
+4. To run the integration tests:
+
+  ant test

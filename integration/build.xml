@@ -5,6 +5,7 @@
   <description>Integration Tests for the Jamon template engine</description>
 
   <property file="build.properties"/>
+  <property file="../build.properties"/>
   <property file="${user.home}/.ant.properties"/>
 
   <property name="build.dir" value="build"/>

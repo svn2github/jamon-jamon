@@ -5,6 +5,7 @@
   <description>Ant task for Jamon</description>
 
   <property file="build.properties"/>
+  <property file="../build.properties"/>
   <property file="${user.home}/.ant.properties"/>
 
   <property name="build.dir" value="build"/>
@@ -12,7 +13,6 @@
   <property name="classes.dir" value="${build.dir}/classes"/>
   <property name="src.dir" value="src"/>
 
-  <property name="java.lib.ant" value="/usr/local/ant/lib/ant.jar"/>
   <property name="java.lib.jamon" value="../core/build/classes"/>
 
   <target name="compile"
@@ -20,7 +20,7 @@
     <mkdir dir="${classes.dir}"/>
     <javac destdir="${classes.dir}"
            debug="true"
-           classpath="${java.lib.ant}:${java.lib.jamon}"
+           classpath="${java.lib.jamon}"
            deprecation="true">
       <src path="${src.dir}"/>
     </javac>
