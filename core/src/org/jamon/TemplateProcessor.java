@@ -21,10 +21,8 @@
 package org.jamon;
 
 import java.io.File;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PushbackReader;
 import java.util.List;
 import org.jamon.lexer.Lexer;
 import org.jamon.lexer.LexerException;
