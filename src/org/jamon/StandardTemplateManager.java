@@ -1,13 +1,13 @@
 package org.modusponens.jtt;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PushbackReader;
 import java.io.Writer;
-import java.net.URLClassLoader;
-import java.net.URL;
 import org.modusponens.jtt.parser.Parser;
 import org.modusponens.jtt.parser.ParserException;
 import org.modusponens.jtt.lexer.Lexer;
@@ -19,12 +19,58 @@ public class StandardTemplateManager
     public StandardTemplateManager(ClassLoader p_parentLoader)
         throws IOException
     {
-        m_loader = new URLClassLoader(new URL []
-                                      {
-                                          new URL("file:" + m_workDir + FS)
-                                      },
-                                      p_parentLoader);
+        m_loader = new WorkDirLoader(p_parentLoader);
     }
+
+    private class WorkDirLoader
+        extends ClassLoader
+    {
+        WorkDirLoader(ClassLoader p_parent)
+        {
+            super(p_parent);
+        }
+
+        private byte [] readBytesForClass(String p_name)
+            throws IOException
+        {
+            FileInputStream s =
+                new FileInputStream(getFileNameForClass(p_name));
+            ByteArrayOutputStream b = new ByteArrayOutputStream(1024);
+            final byte [] buf = new byte[1024];
+            while (true)
+            {
+                int read = s.read(buf);
+                if (read <= 0)
+                {
+                    break;
+                }
+                b.write(buf,0,read);
+            }
+            return b.toByteArray();
+        }
+
+        private String getFileNameForClass(String p_name)
+        {
+            return m_workDir
+                + PathUtils.classNameToPath(p_name.replace('.','/'))
+                + ".class";
+        }
+
+        protected Class findClass(String p_name)
+            throws ClassNotFoundException
+        {
+            try
+            {
+                byte [] bytecode = readBytesForClass(p_name);
+                return defineClass(p_name,bytecode,0,bytecode.length);
+            }
+            catch (IOException e)
+            {
+                throw new JttClassNotFoundException(e);
+            }
+        }
+    }
+
 
     public StandardTemplateManager()
         throws IOException
