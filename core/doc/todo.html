@@ -63,6 +63,15 @@
           <li>Emacs mode</li>
           <li>Intelli/J</li>
           <li>Together/J</li>
+          <li><a href="http://jakarta.apache.org/ant">Ant</a> task.  Should look like
+<pre>
+&lt;jamon package="foo.bar" destdir="/home/joe/myproject/somewhere"&gt;
+  &lt;src path="/home/joe/myproject/templates"&gt;
+&lt;/jamon&gt;
+</pre>
+which would result in all files in the given directory (and below)
+whose name matches <code>*.jmn</code> being processed.
+          </li>
         </ul>
       </li>
     </ul>
@@ -70,7 +79,7 @@
     <address><a href="mailto:jay@eziba.com">Jay Sachs</a></address>
 <!-- Created: Thu Jul  4 12:44:57 EDT 2002 -->
 <!-- hhmts start -->
-Last modified: Thu Aug  8 16:26:13 EDT 2002
+Last modified: Wed Aug 28 19:37:49 EDT 2002
 <!-- hhmts end -->
   </body>
 </html>
