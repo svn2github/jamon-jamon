@@ -129,15 +129,15 @@ public class BaseAnalyzer
             m_name = p_name;
         }
         private final String m_name;
+
         String getName()
         {
             return m_name;
         }
 
-
-        void addFarg(String p_name, String p_type, ADefault p_default)
+        void addFarg(String p_name, String p_type)
         {
-            addArg(p_name, p_type, p_default);
+            addArg(p_name, p_type, null);
             m_fargs.add(p_name);
         }
 
@@ -306,9 +306,7 @@ public class BaseAnalyzer
             // FIXME: this doesn't handle multiple occurrences AT ALL.
 
             getUnitInfo(getUnitName())
-                .addFarg(pfragName,
-                         "Fragment_" + pfragName,
-                         null);
+                .addFarg(pfragName, "Fragment_" + pfragName);
 
         }
 

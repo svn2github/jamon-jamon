@@ -24,18 +24,21 @@ public class IntfGenerator
         generatePrologue();
         generateImports();
         generateDeclaration();
-        generateFactoryClass();
-        generateFargInterfaces();
+        generateConstructor();
+        generateIntf();
+        generateFargInterfaces(false);
         generateRender();
         generateOptionalArgs();
         generateFargInfo();
+        generateGetInstance();
+        generateSetWriter();
         generateEpilogue();
     }
 
     private final static String TEMPLATE =
-        Template.class.getName();
-    private final static String BASE_FACTORY =
-        AbstractTemplateFactory.class.getName();
+        AbstractTemplateProxy.class.getName();
+    private final static String TEMPLATE_INTF =
+        TEMPLATE + ".Intf";
     private final static String TEMPLATE_MANAGER =
         TemplateManager.class.getName();
     private final static String JAMON_EXCEPTION =
@@ -110,38 +113,66 @@ public class IntfGenerator
     }
 
 
-    private void generateFargInterface(FargInfo p_fargInfo)
+    private void generateConstructor()
+        throws IOException
+    {
+        println();
+        print  ("  public ");
+        print  (getClassName());
+        print  ("(");
+        print  (TEMPLATE_MANAGER);
+        println(" p_manager)");
+        println("  {");
+        println("    super(p_manager);");
+        println("  }");
+    }
+
+
+
+    private void generateFargInterface(FargInfo p_fargInfo, boolean p_inner)
         throws IOException
     {
         print  ("  public static interface Fragment_");
         println(p_fargInfo.getName());
-        println("  {");
-        print  ("    void render(");
-        for (Iterator a = p_fargInfo.getArgumentNames(); a.hasNext(); /* */)
+        if (!p_inner)
         {
-            String argName = (String) a.next();
-            print(p_fargInfo.getArgumentType(argName));
-            print(" ");
-            print(argName);
-            if (a.hasNext())
-            {
-                print(", ");
-            }
+            print  (" extends ");
+            print  (getClassName());
+            print  (".Intf.Fragment_");
+            print  (p_fargInfo.getName());
+            println("{ }");
         }
-        println(")");
-        print  ("      throws ");
-        print  (IOEXCEPTION_CLASS);
-        println(";");
-        println("  }");
+        else
+        {
+            println("  {");
+            print  ("    void render(");
+            for (Iterator a = p_fargInfo.getArgumentNames(); a.hasNext(); /* */)
+            {
+                String argName = (String) a.next();
+                print(p_fargInfo.getArgumentType(argName));
+                print(" ");
+                print(argName);
+                if (a.hasNext())
+                {
+                    print(", ");
+                }
+            }
+            println(")");
+            print  ("      throws ");
+            print  (IOEXCEPTION_CLASS);
+            println(";");
+            println("  }");
+        }
         println("");
     }
 
-    private void generateFargInterfaces()
+    private void generateFargInterfaces(boolean p_inner)
         throws IOException
     {
         for (Iterator f = m_analyzer.getFargNames(); f.hasNext(); /* */)
         {
-            generateFargInterface(m_analyzer.getFargInfo((String)f.next()));
+            generateFargInterface(m_analyzer.getFargInfo((String)f.next()),
+                                  p_inner);
         }
         println();
     }
@@ -202,48 +233,16 @@ public class IntfGenerator
     }
 
 
-
-    private void generateFactoryClass()
-        throws IOException
-    {
-        println("  public static class Factory");
-        print  ("    extends ");
-        println(BASE_FACTORY);
-        println("  {");
-        print  ("    public Factory(");
-        print  (TEMPLATE_MANAGER);
-        println(" p_templateManager)");
-        println("    {");
-        println("      super(p_templateManager);");
-        println("    }");
-        println();
-        String className;
-        print  ("    public ");
-        print  (getClassName());
-        println(" getInstance(java.io.Writer p_writer)");
-        print  ("      throws ");
-        println(JAMON_EXCEPTION);
-        println("    {");
-        print  ("      return (");
-        print  (getClassName());
-        println(") ");
-        print  ("        getInstance(\"");
-        print  (getPath());
-        println("\", p_writer);");
-        println("    }");
-        println("  }");
-        println();
-    }
-
     private void generateDeclaration()
         throws IOException
     {
-        print("public interface ");
+        print("public class ");
         println(getClassName());
         print("  extends ");
         println(TEMPLATE);
         println("{");
     }
+
     private void generateRender()
         throws IOException
     {
@@ -261,7 +260,21 @@ public class IntfGenerator
         }
         println(")");
 
-        println("    throws java.io.IOException;");
+        println("    throws java.io.IOException");
+        println("  {");
+        print  ("    getInstance().render(");
+        for (Iterator i = m_analyzer.getRequiredArgNames(); i.hasNext(); /* */)
+        {
+            print("p_");
+            print((String) i.next());
+            if (i.hasNext())
+            {
+                print(", ");
+            }
+        }
+        println(");");
+        println("    releaseInstance();");
+        println("  }");
 
         println();
         println("  public static final String[] REQUIRED_ARGS = {");
@@ -302,8 +315,92 @@ public class IntfGenerator
             print(m_analyzer.getArgType(name));
             print(" p_");
             print(name);
+            println(")");
+            print  ("    throws ");
+            println(JAMON_EXCEPTION);
+            println("  {");
+            print  ("    getInstance().set");
+            print(StringUtils.capitalize(name));
+            print("(");
+            print(" p_");
+            print(name);
+            println(");");
+            println("    return this;");
+            println("  }");
+        }
+    }
+
+
+
+    private void generateIntf()
+        throws IOException
+    {
+        println("  public interface Intf");
+        print  ("    extends ");
+        println(TEMPLATE_INTF);
+        println("  {");
+
+        generateFargInterfaces(true);
+
+        print  ("    void render(");
+        for (Iterator i = m_analyzer.getRequiredArgNames(); i.hasNext(); /* */)
+        {
+            String name = (String) i.next();
+            print  (m_analyzer.getArgType(name));
+            print  (" p_");
+            print  (name);
+            if (i.hasNext())
+            {
+                print  (", ");
+            }
+        }
+        println(")");
+        println("      throws java.io.IOException;");
+        println();
+        for (Iterator i = m_analyzer.getOptionalArgNames(); i.hasNext(); /* */)
+        {
+            println();
+            String name = (String) i.next();
+            print  ("   void set");
+            print  (StringUtils.capitalize(name));
+            print  ("(");
+            print  (m_analyzer.getArgType(name));
+            print  (" p_");
+            print  (name);
             println(");");
         }
+        println("  }");
+
+    }
+
+
+    private void generateGetInstance()
+        throws IOException
+    {
+        println();
+        println("  protected Intf getInstance()");
+        print  ("    throws ");
+        println(JAMON_EXCEPTION);
+        println("  {");
+        print  ("    return (Intf) getInstance(\"");
+        print  (getPath());
+        println("\");");
+        println("  }");
+    }
+
+    private void generateSetWriter()
+        throws IOException
+    {
+        println();
+        print  ("  public ");
+        print  (getClassName());
+        println(" setWriter(java.io.Writer p_writer)");
+        print  ("    throws ");
+        println(JAMON_EXCEPTION);
+        println("  {");
+        println("    getInstance().setWriter(p_writer);");
+        println("    return this;");
+        println("  }");
     }
 
     private void generateEpilogue()

@@ -22,8 +22,8 @@ public class Test1
             new StandardTemplateManager();
         m.setSourceDir("templates");
         m.setWorkDir("build/work");
-        TestTemplate.Factory f = new TestTemplate.Factory(m);
-        TestTemplate t = f.getInstance(w);
+        TestTemplate t = new TestTemplate(m);
+        t.setWriter(w);
         t.setX(57);
         t.render(new BigDecimal("34.5324"));
         w.flush();

@@ -80,7 +80,8 @@ public class ImplGenerator
         print  ("  extends ");
         println(           BASE_TEMPLATE);
         print  ("  implements ");
-        println(m_resolver.getFullyQualifiedIntfClassName(getPath()));
+        print  (m_resolver.getFullyQualifiedIntfClassName(getPath()));
+        println(".Intf");
         println("{");
     }
 
@@ -281,9 +282,7 @@ public class ImplGenerator
         {
             println();
             String name = (String) i.next();
-            print("  public ");
-            print(m_resolver.getFullyQualifiedIntfClassName(getPath()));
-            print(" set");
+            print("  public void set");
             print(StringUtils.capitalize(name));
             print("(");
             String type = m_analyzer.getArgType(name);
@@ -297,7 +296,6 @@ public class ImplGenerator
             print(" = p_");
             print(name);
             println(";");
-            println("    return this;");
             println("  }");
             println();
             print("  private ");

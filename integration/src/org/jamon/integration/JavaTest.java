@@ -13,8 +13,8 @@ public class JavaTest
     public void testExercise()
         throws Exception
     {
-        new JavaEscape.Factory(getTemplateManager())
-            .getInstance(getWriter())
+        new JavaEscape(getTemplateManager())
+            .setWriter(getWriter())
             .render();
         checkOutput("0\n1\n2\n");
     }

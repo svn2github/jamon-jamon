@@ -13,8 +13,8 @@ public class FirstTest
     public void testExercise()
         throws Exception
     {
-        new TestTemplate.Factory(getTemplateManager())
-            .getInstance(getWriter())
+        new TestTemplate(getTemplateManager())
+            .setWriter(getWriter())
             .setX(57)
             .render(new BigDecimal("34.5324"));
         checkOutput(new RE(".*"

@@ -1,3 +1,23 @@
+/*
+ * The contents of this file are subject to the Mozilla Public
+ * License Version 1.1 (the "License"); you may not use this file
+ * except in compliance with the License. You may obtain a copy of
+ * the License at http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS
+ * IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
+ * implied. See the License for the specific language governing
+ * rights and limitations under the License.
+ *
+ * The Original Code is Jamon code, released ??.
+ *
+ * The Initial Developer of the Original Code is Jay Sachs.  Portions
+ * created by Jay Sachs are Copyright (C) 2002 Jay Sachs.  All Rights
+ * Reserved.
+ *
+ * Contributor(s):
+ */
+
 package org.jamon;
 
 import java.io.File;
@@ -22,26 +42,28 @@ import org.jamon.node.Start;
 public class StandardTemplateManager
     implements TemplateManager
 {
-    public Template getInstance(String p_path, Writer p_writer)
+    public AbstractTemplateImpl getInstance(String p_path)
         throws JamonException
     {
-        return getInstance(p_path, p_writer, this);
+        return getInstance(p_path, this);
     }
 
-    public Template getInstance(String p_path,
-                                Writer p_writer,
-                                TemplateManager p_manager)
+    public void releaseInstance(AbstractTemplateImpl p_impl)
+        throws JamonException
+    {
+        // noop
+    }
+
+    public AbstractTemplateImpl getInstance(String p_path,
+                                            TemplateManager p_manager)
         throws JamonException
     {
         try
         {
             initialize();
-            AbstractTemplateImpl template = (AbstractTemplateImpl)
-                getImplementationClass(p_path)
-                    .getConstructor(new Class [] { TemplateManager.class })
-                    .newInstance(new Object [] { p_manager });
-            template.initialize(p_writer);
-            return template;
+            return (AbstractTemplateImpl) getImplementationClass(p_path)
+                .getConstructor(new Class [] { TemplateManager.class })
+                .newInstance(new Object [] { p_manager });
         }
         catch (RuntimeException e)
         {

@@ -15,8 +15,8 @@ public class ArgumentTest
     public void testExercise()
         throws Exception
     {
-        new Arguments.Factory(getTemplateManager())
-            .getInstance(getWriter())
+        new Arguments(getTemplateManager())
+            .setWriter(getWriter())
             .render(INT, BOOLEAN, STRING);
         checkOutput("" + INT + BOOLEAN + STRING);
     }
@@ -25,8 +25,8 @@ public class ArgumentTest
     public void testOptional1()
         throws Exception
     {
-        new OptionalArguments.Factory(getTemplateManager())
-            .getInstance(getWriter())
+        new OptionalArguments(getTemplateManager())
+            .setWriter(getWriter())
             .setI(INT)
             .render(BOOLEAN, STRING);
         checkOutput("" + INT + BOOLEAN + STRING);
@@ -35,8 +35,8 @@ public class ArgumentTest
     public void testOptional2()
         throws Exception
     {
-        new OptionalArguments.Factory(getTemplateManager())
-            .getInstance(getWriter())
+        new OptionalArguments(getTemplateManager())
+            .setWriter(getWriter())
             .render(BOOLEAN, STRING);
         checkOutput("" + 0 + BOOLEAN + STRING);
     }

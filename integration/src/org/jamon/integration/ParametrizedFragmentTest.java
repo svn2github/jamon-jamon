@@ -14,8 +14,8 @@ public class ParametrizedFragmentTest
     public void testExercise()
         throws Exception
     {
-        new ParametrizedFragment.Factory(getTemplateManager())
-            .getInstance(getWriter())
+        new ParametrizedFragment(getTemplateManager())
+            .setWriter(getWriter())
             .render(new int[] { -2, 0, 15 });
         checkOutput("-0+");
     }

@@ -13,8 +13,8 @@ public class PrivateMethodTest
     public void testExercise()
         throws Exception
     {
-        new PrivateMethods.Factory(getTemplateManager())
-            .getInstance(getWriter())
+        new PrivateMethods(getTemplateManager())
+            .setWriter(getWriter())
             .render();
         checkOutput("7=1111111");
     }

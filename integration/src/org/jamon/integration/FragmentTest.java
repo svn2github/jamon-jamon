@@ -13,8 +13,8 @@ public class FragmentTest
     public void testExercise()
         throws Exception
     {
-        new Fragment.Factory(getTemplateManager())
-            .getInstance(getWriter())
+        new Fragment(getTemplateManager())
+            .setWriter(getWriter())
             .render(1);
         checkOutput("1(2)1");
     }

@@ -29,18 +29,27 @@ import java.io.Writer;
 public interface TemplateManager
 {
     /**
-     * Given a template path and a <code>Writer</code>, return an
-     * appropriate instance which corresponds to the executable code
-     * for that template.
+     * Given a template path, return an appropriate instance which
+     * corresponds to the executable code for that template.
      *
      * @param p_path the path to the template
-     * @param p_writer the <code>Writer</code> to where the template
-     * output should be written
      *
      * @return a <code>Template</code> instance
      *
      * @exception JamonException if something goes wrong
      */
-    public Template getInstance(String p_path, Writer p_writer)
+    public AbstractTemplateImpl getInstance(String p_path)
         throws JamonException;
+
+
+    /**
+     * Return a previously acquired template implementation.
+     *
+     * @param p_impl the template implementation instance
+     *
+     * @exception JamonException if something goes wrong
+     */
+    public void releaseInstance(AbstractTemplateImpl p_impl)
+        throws JamonException;
+
 }

@@ -5,17 +5,20 @@ import java.io.IOException;
 import java.net.URLEncoder;
 
 public abstract class AbstractTemplateImpl
-    implements Template
 {
     protected AbstractTemplateImpl(TemplateManager p_templateManager)
     {
         m_templateManager = p_templateManager;
     }
 
-    public final void initialize(Writer p_writer)
-        throws JamonException
+    public final void setWriter(Writer p_writer)
     {
         m_writer = p_writer;
+    }
+
+    public final void initialize()
+        throws JamonException
+    {
         initializeDefaultArguments();
     }
 
