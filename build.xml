@@ -76,6 +76,7 @@
     <ant dir="integration" target="clean"/>
     <ant dir="stdlib" target="clean"/>
     <ant dir="anttask" target="clean"/>
+    <ant dir="doc" target="clean"/>
   </target>
 
   <target name="promote-release" depends="base">
