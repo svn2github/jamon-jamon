@@ -11,6 +11,7 @@
   <property file="build.properties"/>
   <property file="${user.home}/.ant.properties"/>
   <property name="jarfile" value="jamon.jar" />
+  <property name="classes.dir" value="core/build/classes" />
 
   <target name="test"
           depends="jar"
@@ -65,7 +66,44 @@
   </target>
 
   <target name="release" depends="core">
-    <ant dir="core" target="release" />
+    <exec executable="java"
+          outputproperty="currentversion">
+      <arg value="-cp" />
+      <arg value="${classes.dir}" />
+      <arg value="org.jamon.ShowVersion" />
+      <arg value="minor" />
+    </exec>
+    <exec executable="java"
+          outputproperty="majorversion">
+      <arg value="-cp" />
+      <arg value="${classes.dir}" />
+      <arg value="org.jamon.ShowVersion" />
+      <arg value="major" />
+    </exec>
+    <exec executable="java"
+          outputproperty="nextversion">
+      <arg value="-cp" />
+      <arg value="${classes.dir}" />
+      <arg value="org.jamon.ShowVersion" />
+      <arg value="nextminor" />
+    </exec>
+    <echo message="Current version: ${majorversion}.${currentversion}" />
+    <echo message="Next version: ${majorversion}.${nextversion}" />
+    <property name="file" value="core/src/org/jamon/Resources.properties" />
+    <cvs command="edit ${file}"/>
+    <replace file="${file}"
+             token="minor=${currentversion}"
+             value="minor=${nextversion}" />
+    <replace file="${file}"
+             token="release=false"
+             value="release=true" />
+    <cvs command="commit -m 'minor version bump to ${currentversion}' ${file}" />
+    <cvs command="tag RELEASE-${majorversion}_${nextversion}" />
+    <cvs command="edit ${file}"/>
+    <replace file="${file}"
+             token="release=true"
+             value="release=false" />
+    <cvs command="commit -m 'dev version of ${currentversion}' ${file}" />
   </target>
 
 </project>
