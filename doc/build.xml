@@ -77,6 +77,16 @@ the documentation thus taking care of issues such as escaping.
     <copy file="sample/standardLibrary/templates/HelloTemplate.jamon"
           todir="${www.dir}/example2/templates/foo/bar/"/>
 
+    <!-- Copy the various files needed for Appendix A -->
+    <copy todir="${www.dir}">
+      <fileset dir="resources">
+        <include name="server.xml"/>
+        <include name="tomcat-users.xml"/>
+        <include name="catalina.policy"/>
+        <include name="default-web.xml"/>
+      </fileset>
+    </copy>
+
     <taskdef name="invoker"
              classname="org.jamon.ant.InvokerTask"
              classpath="${java.lib.jamon}" />
@@ -99,6 +109,7 @@ the documentation thus taking care of issues such as escaping.
     <property name="tutorial.jamon" value="${tutorial.samples.dir}/templates"/>
     <property name="tutorial.src" value="${tutorial.samples.dir}/src"/>
     <jamon destdir="${work.dir}" srcdir="${tutorial.jamon}"/>
+    <jamon destdir="${work.dir}" srcdir="templates"/>
     <javac destdir="${work.dir}"
            classpath="${java.lib.jamon}"
            includes="*.java" >
@@ -132,88 +143,26 @@ the documentation thus taking care of issues such as escaping.
         <include name="**/*.jamon"/>
       </fileset>
     </copy>
-    <jamon destdir="${work.dir}" srcdir="templates"/>
-    <antcall target="generateTutorialOutput">
-      <param name="tutorial.page" value="TutorialPath" />
-    </antcall>
-    <antcall target="generateTutorialOutput">
-      <param name="tutorial.page" value="TutorialSample1" />
-    </antcall>
-    <antcall target="generateTutorialOutput">
-      <param name="tutorial.page" value="TutorialSample2" />
-    </antcall>
-    <antcall target="generateTutorialOutput">
-      <param name="tutorial.page" value="TutorialSample3" />
-    </antcall>
-    <antcall target="generateTutorialOutput">
-      <param name="tutorial.page" value="TutorialSample4" />
-    </antcall>
-    <antcall target="generateTutorialOutput">
-      <param name="tutorial.page" value="TutorialSample5" />
-    </antcall>
-    <antcall target="generateTutorialOutput">
-      <param name="tutorial.page" value="TutorialSample6" />
-    </antcall>
-    <antcall target="generateTutorialOutput">
-      <param name="tutorial.page" value="TutorialSample7" />
-    </antcall>
-    <antcall target="generateTutorialOutput">
-      <param name="tutorial.page" value="TutorialSample8" />
-    </antcall>
-    <antcall target="generateTutorialOutput">
-      <param name="tutorial.page" value="TutorialSample9" />
-    </antcall>
-    <antcall target="generateTutorialOutput">
-      <param name="tutorial.page" value="TutorialSample10" />
-    </antcall>
     <zip destfile="${www.dir}/Tutorial.zip"
          basedir="${www.dir}"
          includes="*.java,*.jamon" />
   </target>
 
-  <target name="generateTutorialOutput">
-    <antcall target="grind">
-      <param name="template" value="tutorial/${tutorial.page}"/>
-    </antcall>
-  </target>
-
   <target name="doc"
           description="Generates all the documentation"
           depends="init" >
-    <dependset>
-      <srcfilelist dir="templates/org/jamon/doc" files="_Base" />
-      <targetfileset dir="${doc.dir}" includes="*.html" />
-    </dependset>
-    <dependset>
-      <srcfileset dir="templates/org/jamon/doc/servlet" includes="*" />
-      <targetfilelist dir="${doc.dir}" files="Servlets.html" />
-    </dependset>
     <antcall target="overview-files" />
     <antcall target="tutorial" />
-    <antcall target="grind">
-      <param name="template" value="Overview"/>
-    </antcall>
-    <antcall target="grind">
-      <param name="template" value="BuildingProjects" />
-    </antcall>
-    <antcall target="grind">
-      <param name="template" value="UserGuide" />
-    </antcall>
-    <antcall target="grind">
-      <param name="template" value="GeneratedTemplates" />
-    </antcall>
-    <antcall target="grind">
-      <param name="template" value="Reference" />
-    </antcall>
-    <antcall target="grind">
-      <param name="template" value="index" />
-    </antcall>
-    <antcall target="grind">
-      <param name="template" value="JamonTask" />
-    </antcall>
-    <antcall target="grind">
-      <param name="template" value="InvokerTask" />
-    </antcall>
+    <javac destdir="${work.dir}"
+           classpath="${java.lib.jamon}:${java.lib.diff}:${work.dir}"
+           includes="*.java" >
+      <src path="${work.dir}" />
+    </javac>
+    <antcall target="compile-docbuilder" />
+    <java className="org.jamon.doc.DocBuilder">
+      <classpath path="${java.lib.jamon}:${work.dir}:${java.lib.diff}:${this.dir}"/>
+      <arg value="${doc.dir}"/>
+    </java>
     <invoker classpath="${java.lib.jamon}"
              workDir="${work.dir}"
              compiler="${org.jamon.invoker.compiler}"
@@ -226,49 +175,6 @@ the documentation thus taking care of issues such as escaping.
       <arg name="srcZip" value="${zip.src}" />
       <arg name="version" value="${org.jamon.version}" />
     </invoker>
-    <antcall target="grind">
-      <param name="template" value="Contact" />
-    </antcall>
-    <antcall target="grind">
-      <param name="template" value="About" />
-    </antcall>
-    <antcall target="grind">
-      <param name="template" value="News" />
-    </antcall>
-    <antcall target="grind">
-      <param name="template" value="Features" />
-    </antcall>
-    <antcall target="grind">
-      <param name="template" value="Servlets" />
-    </antcall>
-    <!-- Now do the second example -->
-    <!-- Generate the second servlet example -->
-    <!-- Copy the various files needed for Appendix A -->
-    <copy todir="${www.dir}">
-      <fileset dir="resources">
-        <include name="server.xml"/>
-        <include name="tomcat-users.xml"/>
-        <include name="catalina.policy"/>
-        <include name="default-web.xml"/>
-      </fileset>
-    </copy>
-  </target>
-
-  <target name="checkgrind">
-    <echo>Checking templates/org/jamon/doc/${template}</echo>
-    <uptodate property="grindnotneeded"
-              srcfile="templates/org/jamon/doc/${template}.jamon"
-              targetfile="${doc.dir}/${template}.html" />
-  </target>
-
-  <target name="grind" depends="checkgrind" unless="grindnotneeded">
-    <echo>Generating ${doc.dir}/${template}.html</echo>
-    <invoker classpath="${java.lib.jamon}:${java.lib.diff}:${this.dir}"
-             workDir="${work.dir}"
-             compiler="${org.jamon.invoker.compiler}"
-             sourceDir="templates"
-             output="${doc.dir}/${template}.html"
-             template="/org/jamon/doc/${template}" />
   </target>
 
   <target name="war" depends="doc">
@@ -307,7 +213,7 @@ the documentation thus taking care of issues such as escaping.
     <delete file=".cvsignore"/>
   </target>
 
-  <target name="compile"
+  <target name="compile-servlet"
           description="Compile the servlet">
     <dependset>
       <srcfileset file="${java.lib.jamon}"/>
@@ -319,10 +225,23 @@ the documentation thus taking care of issues such as escaping.
            deprecation="true"
            classpath="${java.lib.jamon}:${tomcat.common.lib}/servlet.jar"
            srcdir="${src.dir}"
+           includes="**/JamonDocServlet.java"
            failonerror="true"/>
   </target>
 
-  <target name="servlet" depends="init,compile" description="Run the servlet">
+  <target name="compile-docbuilder"
+          description="Compile the DocBuilder">
+    <javac destdir="${work.dir}"
+           debug="true"
+           deprecation="true"
+           classpath="${java.lib.jamon}:${java.lib.diff}:${work.dir}:${this.dir}"
+           srcdir="${src.dir}"
+           includes="**/DocBuilder.java"
+           failonerror="true"/>
+  </target>
+
+  <target name="servlet" depends="init,compile-servlet"
+          description="Run the servlet">
     <mkdir dir="${work.dir}" />
     <java classname="org.apache.catalina.startup.Catalina"
           failonerror="true"
