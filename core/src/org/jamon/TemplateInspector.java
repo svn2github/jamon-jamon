@@ -68,7 +68,7 @@ public class TemplateInspector
      * @param p_templateName the path of the template to be rendered
      */
     public TemplateInspector(String p_templateName)
-        throws IOException, InvalidTemplateException
+        throws InvalidTemplateException
     {
         this(TemplateManagerSource.getTemplateManagerFor(p_templateName),
              p_templateName);
@@ -83,8 +83,7 @@ public class TemplateInspector
      * @param p_templateName the path of the template to be rendered
      */
     public TemplateInspector(TemplateManager p_manager, String p_templateName)
-        throws IOException,
-               InvalidTemplateException
+        throws InvalidTemplateException
     {
         m_template = p_manager.constructProxy(p_templateName);
         m_templateClass = m_template.getClass();
