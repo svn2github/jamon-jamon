@@ -1,4 +1,4 @@
-Main-Class: org.jamon.ShowVersion
+Main-Class: org.jamon.Version
 
 Name: org/jamon
 Specification-Title: Jamon Classes

@@ -83,7 +83,7 @@
           outputproperty="jamon.version.next">
       <arg value="-cp" />
       <arg value="${core.classes.dir}" />
-      <arg value="org.jamon.ShowVersion" />
+      <arg value="org.jamon.Version" />
       <arg value="nextmajor" />
     </exec>
     <antcall target="release" />
@@ -94,7 +94,7 @@
           outputproperty="jamon.version.next">
       <arg value="-cp" />
       <arg value="${core.classes.dir}" />
-      <arg value="org.jamon.ShowVersion" />
+      <arg value="org.jamon.Version" />
       <arg value="nextminor" />
     </exec>
     <antcall target="release" />
@@ -105,7 +105,7 @@
           outputproperty="jamon.version.next">
       <arg value="-cp" />
       <arg value="${core.classes.dir}" />
-      <arg value="org.jamon.ShowVersion" />
+      <arg value="org.jamon.Version" />
       <arg value="nextsub" />
     </exec>
     <antcall target="release" />
@@ -129,7 +129,7 @@
           outputproperty="jamon.version.cvs">
       <arg value="-cp" />
       <arg value="${core.classes.dir}" />
-      <arg value="org.jamon.ShowVersion" />
+      <arg value="org.jamon.Version" />
       <arg value="cvstag" />
     </exec>
     <cvs command="tag RELEASE-${jamon.version.cvs}" />

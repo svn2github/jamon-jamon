@@ -27,12 +27,12 @@ import java.util.StringTokenizer;
  * Class used during release for obtaining version information.
  */
 
-public class ShowVersion
+public class Version
 {
     private static void usage()
     {
         System.err.println( "Usage: "
-                            + ShowVersion.class.getName()
+                            + Version.class.getName()
                             + " [ " + CMD_SHOW
                             + " | " + CMD_NEXT_MINOR
                             + " | " + CMD_NEXT_MAJOR
@@ -52,10 +52,8 @@ public class ShowVersion
     private static final ResourceBundle s_resources =
         ResourceBundle.getBundle("org.jamon.Resources");
 
-    public static Version getCurrentVersion()
-    {
-        return new Version(s_resources.getString("org.jamon.version"));
-    }
+    public static Version CURRENT =
+        new Version(s_resources.getString("org.jamon.version"));
 
     public static void main(String [] args)
     {
@@ -65,15 +63,13 @@ public class ShowVersion
         }
         String cmd = args.length == 1 ? args[0] : CMD_SHOW;
 
-        Version current = getCurrentVersion();
-
         if ( cmd.equals(CMD_SHOW) )
         {
             boolean isDev =
                 ! "true".equalsIgnoreCase(s_resources.getString
                                           ("org.jamon.version.release"));
             System.out.println( "Jamon version "
-                                + current
+                                + CURRENT
                                 + ( isDev ? "dev" : "")
                                 + " ("
                                 + s_resources.getString
@@ -82,23 +78,23 @@ public class ShowVersion
         }
         else if (cmd.equals(CMD_CVSTAG))
         {
-            System.out.println(current.asCvsTag());
+            System.out.println(CURRENT.asCvsTag());
         }
         else if (cmd.equals(CMD_CURRENT))
         {
-            System.out.println(current);
+            System.out.println(CURRENT);
         }
         else if (cmd.equals(CMD_NEXT_MAJOR))
         {
-            System.out.println(current.bumpmajor());
+            System.out.println(CURRENT.bumpmajor());
         }
         else if ( cmd.equals(CMD_NEXT_MINOR) )
         {
-            System.out.println(current.bumpminor());
+            System.out.println(CURRENT.bumpminor());
         }
         else if ( cmd.equals(CMD_NEXT_SUB) )
         {
-            System.out.println(current.bumpsub());
+            System.out.println(CURRENT.bumpsub());
         }
         else
         {
@@ -106,65 +102,57 @@ public class ShowVersion
         }
     }
 
-    public static class Version
+    private Version(String p_current)
     {
-        public Version(String p_current)
-        {
-            StringTokenizer tokenizer = new StringTokenizer(p_current,".");
-            m_major = Integer.parseInt(tokenizer.nextToken());
-            m_minor = Integer.parseInt(tokenizer.nextToken());
-            m_sub = tokenizer.hasMoreTokens()
-                ? Integer.parseInt(tokenizer.nextToken())
-                : 0;
-        }
-
-        public Version(int p_major, int p_minor, int p_sub)
-        {
-            m_major = p_major;
-            m_minor = p_minor;
-            m_sub = p_sub;
-        }
-
-        private final int m_major;
-        private final int m_minor;
-        private final int m_sub;
-
-        public Version bumpmajor()
-        {
-            return new Version(m_major+1, 0, 0);
-        }
-
-        public Version bumpminor()
-        {
-            return new Version(m_major, m_minor+1, 0);
-        }
-
-        public Version bumpsub()
-        {
-            return new Version(m_major, m_minor, m_sub+1);
-        }
-
-        public String toString()
-        {
-            return makeString(".");
-        }
-
-        private String makeString(String p_delim)
-        {
-            return m_major
-                + p_delim
-                + m_minor
-                + (m_sub == 0 ? "" : (p_delim + m_sub));
-        }
-
-        public String asCvsTag()
-        {
-            return makeString("_");
-        }
+        StringTokenizer tokenizer = new StringTokenizer(p_current,".");
+        m_major = Integer.parseInt(tokenizer.nextToken());
+        m_minor = Integer.parseInt(tokenizer.nextToken());
+        m_sub = tokenizer.hasMoreTokens()
+            ? Integer.parseInt(tokenizer.nextToken())
+            : 0;
     }
 
-    private ShowVersion()
+    private Version(int p_major, int p_minor, int p_sub)
     {
-        // not instantiable
+        m_major = p_major;
+        m_minor = p_minor;
+        m_sub = p_sub;
+    }
+
+    private final int m_major;
+    private final int m_minor;
+    private final int m_sub;
+
+    public Version bumpmajor()
+    {
+        return new Version(m_major+1, 0, 0);
+    }
+
+    public Version bumpminor()
+    {
+        return new Version(m_major, m_minor+1, 0);
+    }
+
+    public Version bumpsub()
+    {
+        return new Version(m_major, m_minor, m_sub+1);
+    }
+
+    public String toString()
+    {
+        return makeString(".");
+    }
+
+    private String makeString(String p_delim)
+    {
+        return m_major
+            + p_delim
+            + m_minor
+            + (m_sub == 0 ? "" : (p_delim + m_sub));
+    }
+
+    public String asCvsTag()
+    {
+        return makeString("_");
     }
 }

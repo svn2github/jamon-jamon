@@ -7,7 +7,7 @@
 <h2>Download</h2>
 
 <h4>Current release</h4>
-Version <% org.jamon.ShowVersion.getCurrentVersion() %>:
+Version <% org.jamon.Version.CURRENT %>:
 <ul>
   <li>Binary <a href="dist/<& BinTgzName &>">[tgz]</a>
   <a href="dist/<& BinZipName &>">[zip]</a></li>

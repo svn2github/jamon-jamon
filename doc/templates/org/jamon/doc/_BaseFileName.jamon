@@ -1,7 +1,7 @@
 <%abstract>
 
 <%method baseName>
-  jamon-<% org.jamon.ShowVersion.getCurrentVersion() %>\
+  jamon-<% org.jamon.Version.CURRENT %>\
 </%method>
 
 <& *CHILD &>
