@@ -99,6 +99,7 @@ public class FragmentUnit extends AbstractInnerUnit
         {
             p_writer.print("void renderNoFlush");
             p_writer.openList();
+            p_writer.printArg(ArgNames.WRITER_DECL);
             printRenderArgsDecl(p_writer);
             p_writer.closeList();
             p_writer.println();

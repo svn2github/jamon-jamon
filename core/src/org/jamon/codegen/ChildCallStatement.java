@@ -33,7 +33,8 @@ public class ChildCallStatement
     public void generateSource(CodeWriter p_writer,
                                TemplateDescriber p_describer)
     {
-        p_writer.println("child_render_" + m_depth + "();");
+        p_writer.println(
+            "child_render_" + m_depth + "(" + ArgNames.WRITER + ");");
     }
 
     private final int m_depth;

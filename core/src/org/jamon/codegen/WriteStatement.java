@@ -39,12 +39,9 @@ public class WriteStatement
                                TemplateDescriber p_describer)
     {
         generateSourceLine(p_writer);
-        p_writer.print("this.writeEscaped(this.valueOf(");
-        p_writer.print(m_expr.trim());
-        p_writer.print(")");
-        p_writer.print(", ");
-        p_writer.print(m_escapingDirective.toJava());
-        p_writer.println(");");
+        p_writer.println(m_escapingDirective.toJava() + ".write("
+                         + "this.valueOf(" + m_expr.trim() + ")"
+                         + ", " + ArgNames.WRITER + ");");
     }
 
     private final String m_expr;

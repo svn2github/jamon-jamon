@@ -216,7 +216,7 @@ public class JUnitTemplateManager
         if ("render".equals(p_method.getName())
                  || "renderNoFlush".equals(p_method.getName()))
         {
-            checkArgsLength(p_method, p_args, 0);
+            checkArgsLength(p_method, p_args, 1);
             checkArgValues();
             m_rendered = true;
             return null;

@@ -59,9 +59,9 @@ public class FargCallStatement
     {
         generateSourceLine(p_writer);
         String tn = getPath();
-        p_writer.println(tn + ".writeTo(this.getWriter());");
         p_writer.print  (tn + ".renderNoFlush");
         p_writer.openList();
+        p_writer.printArg(ArgNames.WRITER);
         generateRequiredArgs(m_fragmentUnit.getRequiredArgs(), p_writer);
         p_writer.closeList();
         p_writer.println(";");

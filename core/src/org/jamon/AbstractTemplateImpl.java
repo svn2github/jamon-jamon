@@ -38,34 +38,11 @@ public abstract class AbstractTemplateImpl
                                    AbstractTemplateProxy.ImplData p_implData)
     {
         this(p_templateManager);
-        writeTo(p_implData.getWriter());
-    }
-
-    public final void writeTo(Writer p_writer)
-    {
-        m_writer = p_writer;
-    }
-
-    protected void write(String p_string)
-        throws IOException
-    {
-        m_writer.write(p_string);
-    }
-
-    protected void writeEscaped(String p_string, Escaping p_escaping)
-        throws IOException
-    {
-        p_escaping.write(p_string, m_writer);
     }
 
     protected TemplateManager getTemplateManager()
     {
         return m_templateManager;
-    }
-
-    protected Writer getWriter()
-    {
-        return m_writer;
     }
 
     protected String valueOf(Object p_obj)
@@ -93,6 +70,5 @@ public abstract class AbstractTemplateImpl
         return String.valueOf(p_bool);
     }
 
-    private Writer m_writer;
     private final TemplateManager m_templateManager;
 }

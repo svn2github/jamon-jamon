@@ -15,26 +15,14 @@
  * created by Jay Sachs are Copyright (C) 2003 Jay Sachs.  All Rights
  * Reserved.
  *
- * Contributor(s):
+ * Contributor(s): Ian Robertson
  */
 
-package org.jamon.integration;
+package org.jamon.codegen;
 
-import test.jamon.WriterGrab;
-
-/**
- * Test Jamon's java escapes.  See "Jamon User's Guide", section 2.
- **/
-
-public class WriterTest
-    extends TestBase
+public interface ArgNames
 {
-
-    public void testExercise()
-        throws Exception
-    {
-        new WriterGrab().render(getWriter());
-        checkOutput("SECRET MESSAGE\n");
-    }
-
+    public final static String WRITER = "p__jamon_writer";
+    public final static String WRITER_DECL =
+        "final " + ClassNames.WRITER + " " + WRITER;
 }

@@ -25,28 +25,16 @@ import java.io.IOException;
 
 public abstract class AbstractTemplateProxy
 {
-    public interface Intf
+    public interface Intf //FIXME - need this at all?
     {
     }
 
-    public interface FragmentIntf
+    public interface FragmentIntf //FIXME - need this at all?
     {
-        void writeTo(Writer p_writer);
     }
 
-    protected static class ImplData
+    protected static class ImplData //FIXME - need this at all?
     {
-        public final void setWriter(Writer p_writer)
-        {
-            m_writer = p_writer;
-        }
-
-        public final Writer getWriter()
-        {
-            return m_writer;
-        }
-
-        private Writer m_writer;
     }
 
     protected AbstractTemplateProxy(TemplateManager p_templateManager)

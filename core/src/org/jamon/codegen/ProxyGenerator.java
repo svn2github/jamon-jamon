@@ -308,7 +308,7 @@ public class ProxyGenerator
         m_writer.print((m_templateUnit.isParent() ? "protected" : "public")
                        + " void render");
         m_writer.openList();
-        m_writer.printArg(WRITER_ARG_DECL);
+        m_writer.printArg(ArgNames.WRITER_DECL);
         m_templateUnit.printRenderArgsDecl(m_writer);
         m_writer.closeList();
         m_writer.println();
@@ -317,17 +317,17 @@ public class ProxyGenerator
         m_writer.openBlock();
         m_writer.print("renderNoFlush");
         m_writer.openList();
-        m_writer.printArg(WRITER_ARG);
+        m_writer.printArg(ArgNames.WRITER);
         m_templateUnit.printRenderArgs(m_writer);
         m_writer.closeList();
         m_writer.println(";");
-        m_writer.println(WRITER_ARG + ".flush();");
+        m_writer.println(ArgNames.WRITER + ".flush();");
         m_writer.closeBlock();
 
         m_writer.print((m_templateUnit.isParent() ? "protected" : "public")
                        + " void renderNoFlush");
         m_writer.openList();
-        m_writer.printArg(WRITER_ARG_DECL);
+        m_writer.printArg(ArgNames.WRITER_DECL);
         m_templateUnit.printRenderArgsDecl(m_writer);
         m_writer.closeList();
         m_writer.println();
@@ -335,7 +335,6 @@ public class ProxyGenerator
         m_writer.println("  throws " + ClassNames.IOEXCEPTION);
         m_writer.openBlock();
         m_writer.println("ImplData implData = (ImplData) getImplData();");
-        m_writer.println("implData.setWriter(" + WRITER_ARG + ");");
         for (Iterator i = m_templateUnit.getRenderArgs(); i.hasNext(); )
         {
             AbstractArgument arg = (AbstractArgument) i.next();
@@ -347,7 +346,7 @@ public class ProxyGenerator
             "Intf instance = (Intf) getTemplateManager().constructImpl(this);"
             );
 
-        m_writer.println("instance.renderNoFlush();");
+        m_writer.println("instance.renderNoFlush(" + ArgNames.WRITER + ");");
         m_writer.println("reset();");
         m_writer.closeBlock();
         m_writer.println();
@@ -364,12 +363,12 @@ public class ProxyGenerator
         m_writer.openBlock();
         m_writer.print(  "return new " + ClassNames.RENDERER + "() ");
         m_writer.openBlock();
-        m_writer.println("public void renderTo(" + WRITER_ARG_DECL + ")");
+        m_writer.println("public void renderTo(" + ArgNames.WRITER_DECL + ")");
         m_writer.println(  "  throws " + ClassNames.IOEXCEPTION);
         m_writer.openBlock();
         m_writer.print("render");
         m_writer.openList();
-        m_writer.printArg(WRITER_ARG);
+        m_writer.printArg(ArgNames.WRITER);
         m_templateUnit.printRenderArgs(m_writer);
         m_writer.closeList();
         m_writer.println(";");
@@ -469,8 +468,8 @@ public class ProxyGenerator
 
         if(! m_templateUnit.isParent())
         {
-            m_writer.println(
-                "void renderNoFlush() throws " + ClassNames.IOEXCEPTION + ";");
+            m_writer.println("void renderNoFlush(" + ArgNames.WRITER_DECL
+                             + ") throws " + ClassNames.IOEXCEPTION + ";");
             m_writer.println();
         }
         m_writer.closeBlock();
@@ -502,7 +501,7 @@ public class ProxyGenerator
         {
             m_writer.print("public void render");
             m_writer.openList();
-            m_writer.printArg(WRITER_ARG_DECL);
+            m_writer.printArg(ArgNames.WRITER_DECL);
             m_templateUnit.printDeclaredRenderArgsDecl(m_writer);
             m_writer.closeList();
             m_writer.println();
@@ -510,16 +509,16 @@ public class ProxyGenerator
             m_writer.openBlock();
             m_writer.print("renderNoFlush");
             m_writer.openList();
-            m_writer.printArg(WRITER_ARG);
+            m_writer.printArg(ArgNames.WRITER);
             m_templateUnit.printDeclaredRenderArgs(m_writer);
             m_writer.closeList();
             m_writer.println(";");
-            m_writer.println(WRITER_ARG + ".flush();");
+            m_writer.println(ArgNames.WRITER + ".flush();");
             m_writer.closeBlock();
 
             m_writer.print("public void renderNoFlush");
             m_writer.openList();
-            m_writer.printArg(WRITER_ARG_DECL);
+            m_writer.printArg(ArgNames.WRITER_DECL);
             m_templateUnit.printDeclaredRenderArgsDecl(m_writer);
             m_writer.closeList();
             m_writer.println();
@@ -527,7 +526,7 @@ public class ProxyGenerator
             m_writer.openBlock();
             m_writer.print("renderChild");
             m_writer.openList();
-            m_writer.printArg(WRITER_ARG);
+            m_writer.printArg(ArgNames.WRITER);
             m_templateUnit.printDeclaredRenderArgs(m_writer);
             m_writer.closeList();
             m_writer.println(";");
@@ -542,7 +541,7 @@ public class ProxyGenerator
 
         m_writer.print("protected abstract void renderChild");
         m_writer.openList();
-        m_writer.printArg(WRITER_ARG_DECL);
+        m_writer.printArg(ArgNames.WRITER_DECL);
         m_templateUnit.printRenderArgsDecl(m_writer);
         m_writer.closeList();
         m_writer.println();
@@ -567,7 +566,7 @@ public class ProxyGenerator
         m_writer.openBlock();
         m_writer.print("protected void renderChild");
         m_writer.openList();
-        m_writer.printArg(WRITER_ARG_DECL);
+        m_writer.printArg(ArgNames.WRITER_DECL);
         m_templateUnit.printParentRenderArgsDecl(m_writer);
         m_writer.closeList();
         m_writer.println();
@@ -584,7 +583,7 @@ public class ProxyGenerator
             m_writer.print(".this.renderNoFlush");
         }
         m_writer.openList();
-        m_writer.printArg(WRITER_ARG);
+        m_writer.printArg(ArgNames.WRITER);
         m_templateUnit.printRenderArgs(m_writer);
         m_writer.closeList();
         m_writer.println(";");
@@ -598,8 +597,4 @@ public class ProxyGenerator
         m_writer.println();
         m_writer.closeBlock();
     }
-
-    private final static String WRITER_ARG = "p__jamon_writer";
-    private final static String WRITER_ARG_DECL =
-        ClassNames.WRITER + " " + WRITER_ARG;
 }

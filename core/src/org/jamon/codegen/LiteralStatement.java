@@ -39,7 +39,7 @@ public class LiteralStatement
         if (m_text.length() > 0)
         {
             generateSourceLine(p_writer);
-            p_writer.print("this.write(\"");
+            p_writer.print(ArgNames.WRITER + ".write(\"");
             p_writer.print(m_text);
             p_writer.println("\");");
         }
