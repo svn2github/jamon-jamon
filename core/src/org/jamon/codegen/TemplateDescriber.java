@@ -133,6 +133,10 @@ public class TemplateDescriber
                                                   1024)))
                 .parse();
         }
+        catch (EncodingReader.Exception e)
+        {
+            throw new JamonParseException(getExternalIdentifier(p_path),e);
+        }
         catch (ParserException e)
         {
             throw new JamonParseException(getExternalIdentifier(p_path),e);

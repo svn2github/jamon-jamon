@@ -41,4 +41,36 @@ public class EncodingsTest
         checkOutput("Onc\u00e9\u00f2\u00e1\n\u00e9\u00c1\u00f3\u00e9\n");
     }
 
+    public void testMalformedEncoding1()
+        throws Exception
+    {
+        expectTemplateException("BadEncoding",
+                                "Malformed encoding tag; expected '>'",
+                                1,
+                                16);
+    }
+
+    public void testMalformedEncoding2()
+        throws Exception
+    {
+        expectTemplateException("BadEncoding2",
+                                "EOF before encoding tag finished",
+                                1,
+                                12);
+    }
+
+    public void testMalformedEncoding3()
+        throws Exception
+    {
+        try
+        {
+            generateSource("test/jamon/broken/BadEncoding3");
+            fail();
+        }
+        catch(java.io.UnsupportedEncodingException e)
+        {
+            // expected
+        }
+    }
+
 }

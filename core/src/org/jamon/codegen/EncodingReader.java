@@ -32,6 +32,23 @@ import org.jamon.JamonRuntimeException;
 public class EncodingReader
     extends Reader
 {
+    public static class Exception
+        extends IOException
+    {
+        public Exception(String p_message, int p_pos)
+        {
+            super(p_message);
+            m_pos = p_pos;
+        }
+
+        public int getPos()
+        {
+            return m_pos;
+        }
+
+        private final int m_pos;
+    }
+
     public EncodingReader(InputStream p_stream)
         throws IOException
     {
@@ -68,6 +85,7 @@ public class EncodingReader
                 }
 
             }
+            m_bytesRead = len;
             return true;
         }
         p_stream.unread(data, 0, len);
@@ -105,12 +123,15 @@ public class EncodingReader
         while (true)
         {
             int c = p_stream.read();
+            m_bytesRead++;
             if (p_twoBytes)
             {
                 if (lowByte)
                 {
                     if (c != 0)
                     {
+                        throw new Exception("Malformed encoding name",
+                                            m_bytesRead / (p_twoBytes ? 2 : 1));
                     }
                     lowByte = false;
                     continue;
@@ -123,7 +144,8 @@ public class EncodingReader
 
             if (c == -1)
             {
-                throw new IOException("EOF before encoding tag finished");
+                throw new Exception("EOF before encoding tag finished",
+                                    m_bytesRead / (p_twoBytes ? 2 : 1));
             }
             else if (c == SPACE || c == TAB)
             {
@@ -155,7 +177,8 @@ public class EncodingReader
             }
             else
             {
-                throw new IOException("Malformed encoding tag");
+                throw new Exception("Malformed encoding tag; expected '>'",
+                                    m_bytesRead / (p_twoBytes ? 2 : 1));
             }
         }
         return encoding.toString();
@@ -174,6 +197,7 @@ public class EncodingReader
     }
 
     private final Reader m_reader;
+    private int m_bytesRead;
 
     private static final byte[] ONEBYTESIG;
     private static final byte[] UTF16SIG;

@@ -33,15 +33,30 @@ public class JamonParseException
 {
     private static class Details
     {
-        int line;
-        int column;
-        String description;
+        Details(int p_line, int p_column, String p_desc)
+        {
+            line = p_line;
+            column = p_column;
+            description = p_desc;
+        }
+        final int line;
+        final int column;
+        final String description;
     }
 
     private JamonParseException(String p_fileName, Details p_details)
     {
-        super(p_details.description, p_fileName,
-              p_details.line, p_details.column);
+        super(p_details.description,
+              p_fileName,
+              p_details.line,
+              p_details.column);
+    }
+
+    public JamonParseException(String p_fileName,
+                               EncodingReader.Exception p_exception)
+    {
+        this(p_fileName,
+             new Details(1, p_exception.getPos(), p_exception.getMessage()));
     }
 
     public JamonParseException(String p_fileName, LexerException p_exception)
@@ -56,25 +71,21 @@ public class JamonParseException
 
     private static Details parseLexerException(LexerException p_exception)
     {
-        Details details = new Details();
         String message = p_exception.getMessage();
         int i = message.indexOf(',');
-        details.line = Integer.parseInt(message.substring(1, i));
         int j = message.indexOf(']');
-        details.column = Integer.parseInt(message.substring(i+1,j));
-        details.description = message.substring(j+2);
-        return details;
+        return new Details(Integer.parseInt(message.substring(1, i)),
+                           Integer.parseInt(message.substring(i+1,j)),
+                           message.substring(j+2));
     }
 
     private static Details parseParserException(ParserException p_exception)
     {
-        Details details = new Details();
         Token token = p_exception.getToken();
-        details.line = token.getLine();
-        details.column = token.getPos();
         int i = p_exception.getMessage().lastIndexOf(']');
-        details.description = p_exception.getMessage().substring(i+1);
-        return details;
+        return new Details(token.getLine(),
+                           token.getPos(),
+                           p_exception.getMessage().substring(i+1));
     }
 
     public String getStandardMessage()
