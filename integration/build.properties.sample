@@ -1,0 +1,5 @@
+# where to find JUnit
+java.lib.junit=/usr/local/share/java/junit.jar
+
+# where to find GNU regexp
+/usr/local/share/java/gnu-regexp-1.1.4.jar

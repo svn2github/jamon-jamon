@@ -1,0 +1,8 @@
+# where to find JUnit
+java.lib.junit=/usr/local/share/java/classes/junit.jar
+
+# where to find SableCC (stable!)
+java.lib.sablecc=/usr/local/sablecc-2.16.2/lib/sablecc.jar
+
+# where to find the SableCC Ant task
+java.lib.sablecctask=/usr/local/sablecc-anttask-1.1.0/lib/anttask.jar
