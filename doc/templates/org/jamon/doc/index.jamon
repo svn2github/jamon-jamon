@@ -30,7 +30,7 @@ The motivations for Jamon came from dissatisfaction with current
 presentation layer technologies such as <a
 href="http://java.sun.com/products/jsp/">JSP</a> and
 <a href="http://jakarta.apache.org/velocity/">Velocity</a>. Ideas
-was also drawn from a surprisingly pleasant experience with
+were also drawn from a surprisingly pleasant experience with
 <a href="http://www.masonhq.com">Mason</a>, which though written in
 and for <a href="http://www.perl.org">Perl</a>, provided inspiration
 both conceptual and syntactic (for better or worse).
