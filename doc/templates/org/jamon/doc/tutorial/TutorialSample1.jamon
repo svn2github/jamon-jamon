@@ -68,3 +68,36 @@ You should see:
 
 </ol>
 <p>
+<h2>Template Constraints and Variations</h2>
+
+A useful variation on the Java code that invokes the template is to set a <code>TemplateManager</code> once globally and then use the no-argument constructor to create each template. To set a global <code>TemplateManager</code>, provide an instance to the <code>TemplateManagerSource.setTemplateManager()</code> method, as shown below.
+
+<pre class="java">
+  // set the template manager once for all time ...
+  TemplateManagerSource.setTemplateManager(new StandardTemplateManager());
+  // now create templates without specifying a template manager
+  new HelloTemplate()
+    .render(new OutputStreamWriter(System.out));
+</pre>
+<p>
+An important constraint on calling a Jamon template
+is that a template instance cannot have its
+<code>render()</code> method called twice. Instead, the user must
+create a new template instance (a cheap operation) each time the
+template is to be displayed.
+<pre class="java">
+    TemplateManagerSource.setTemplateManager(new StandardTemplateManager());
+    OutputWriter ouputWriter = new OutputStreamWriter(System.out);
+    new HelloTemplate().render(outputWriter);
+
+    // do more work
+
+    // create a NEW template instance
+    new HelloTemplate().render(outputWriter);
+</pre>
+<p>
+If the above code had called the <code>HelloTemplate</code> instance's
+<code>render()</code> method twice, Jamon would have generated an
+exception.
+
+

@@ -19,11 +19,6 @@ yourself!  <p>
       <li>
         <a href="TutorialSample1.html">The "Hello world" template</a>
       </li>
-        <ul>
-          <li>
-            <a href="TutorialSample1a.html">Template constraints and variations</a>
-          </li>
-        </ul>
       <li>
         <a href="TutorialSample2.html">Templates with dynamic content</a>
       </li>
