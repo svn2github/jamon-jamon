@@ -56,9 +56,9 @@ public class EncodingReaderTest
         throws Exception
     {
         StringWriter writer = new StringWriter();
-        writer.write("<%encoding ");
+        writer.write("<%encoding \t ");
         writer.write(p_encoding);
-        writer.write(">");
+        writer.write("  >    \n\t  \n");
         writer.write(p_stuff);
         EncodingReader reader =
             new EncodingReader(new ByteArrayInputStream

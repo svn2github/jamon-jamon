@@ -74,19 +74,20 @@ public class EncodingReader
         return false;
     }
 
-    private String computeUtf16Encoding(InputStream p_stream)
+    private String computeUtf16Encoding(PushbackInputStream p_stream)
         throws IOException
     {
         return computeEncoding(p_stream, true);
     }
 
-    private String computeOneByteEncoding(InputStream p_stream)
+    private String computeOneByteEncoding(PushbackInputStream p_stream)
         throws IOException
     {
         return computeEncoding(p_stream, false);
     }
 
-    private String computeEncoding(InputStream p_stream, boolean p_twoBytes)
+    private String computeEncoding(PushbackInputStream p_stream,
+                                   boolean p_twoBytes)
         throws IOException
     {
         final int SPACE = (int) ' ';
@@ -96,6 +97,7 @@ public class EncodingReader
         final int START = 0;
         final int INNAME = 1;
         final int WAITFORCLOSE = 2;
+        final int CLOSED = 3;
 
         StringBuffer encoding = new StringBuffer();
         boolean lowByte = true;
@@ -132,7 +134,19 @@ public class EncodingReader
             }
             else if (c == CLOSE)
             {
-                break;
+                state = CLOSED;
+            }
+            else if (state == CLOSED)
+            {
+                if (c != '\r' && c != '\n')
+                {
+                    p_stream.unread(c);
+                    if (p_twoBytes)
+                    {
+                        p_stream.unread(0);
+                    }
+                    break;
+                }
             }
             else if (state != WAITFORCLOSE)
             {
