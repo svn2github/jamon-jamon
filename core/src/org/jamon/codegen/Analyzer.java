@@ -473,8 +473,10 @@ public class Analyzer
         public void inAMultiFragmentCall(AMultiFragmentCall p_call)
         {
             handleBody();
-            CallStatement s =
-                makeCallStatement(p_call.getPath(), p_call.getParam());
+            CallStatement s = makeCallStatementWithFragments(
+                p_call.getPath(),
+                p_call.getParam(),
+                p_call.getMultiFragmentCallInit());
             addStatement(s);
             pushCallStatement(s);
         }
@@ -500,7 +502,9 @@ public class Analyzer
         {
             handleBody();
             CallStatement s =
-                makeCallStatement(p_call.getPath(), p_call.getParam());
+                makeCallStatementWithFragments(p_call.getPath(),
+                                               p_call.getParam(),
+                                               p_call.getFragmentCallStart());
             addStatement(s);
             s.addFragmentImpl(pushFragmentUnitImpl(null));
         }
@@ -556,6 +560,18 @@ public class Analyzer
         }
     }
 
+    private CallStatement makeCallStatementWithFragments(PPath p_path,
+                                                         List p_calls,
+                                                         Token p_token)
+    {
+        CallStatement s = makeCallStatement(p_path, p_calls);
+        if (s instanceof FargCallStatement)
+        {
+            throw new TunnelingException
+                ("Fragment args for fragments not implemented", p_token);
+        }
+        return s;
+    }
 
     private CallStatement makeCallStatement(PPath p_path, List p_calls)
     {

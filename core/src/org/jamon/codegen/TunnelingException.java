@@ -25,11 +25,6 @@ import org.jamon.node.Token;
 public class TunnelingException
     extends RuntimeException
 {
-    TunnelingException(String p_message)
-    {
-        this(p_message, null, null);
-    }
-
     private TunnelingException(String p_msg,
                                Throwable p_rootCause,
                                Token p_token)

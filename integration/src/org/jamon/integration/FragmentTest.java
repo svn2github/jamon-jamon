@@ -61,4 +61,25 @@ public class FragmentTest
         checkOutput("d1:d1,d2:d2,d3:d3 - 7");
     }
 
+    public void testFragmentArgInNamedFragmentImpl()
+        throws Exception
+    {
+        expectTemplateException(
+            "test/jamon/broken/FragmentArgInNamedFragmentImpl",
+            "Fragment args for fragments not implemented",
+            3,
+            3);
+    }
+
+    public void testFragmentArgInAnonFragmentImpl()
+        throws Exception
+    {
+        expectTemplateException(
+            "test/jamon/broken/FragmentArgInAnonFragmentImpl",
+            "Fragment args for fragments not implemented",
+            3,
+            3);
+    }
+
+
 }

@@ -44,8 +44,7 @@ public class FargCallStatement
 
     public void addFragmentImpl(FragmentUnit p_unit)
     {
-        throw new TunnelingException
-            ("Fragment args for fragments not implemented");
+        throw new UnsupportedOperationException();
     }
 
     public void generateSource(IndentingWriter p_writer,
