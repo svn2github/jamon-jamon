@@ -150,7 +150,8 @@ public class Invoker
             ? new DefaultObjectParser()
             : p_objectParser;
         m_manager = p_manager;
-        AbstractTemplateIntf impl = m_manager.acquireInstance(p_templateName);
+        AbstractTemplateProxy.Intf impl =
+            m_manager.acquireInstance(p_templateName);
         m_manager.releaseInstance(impl);
         String className = impl.getClass().getName();
         className = className.substring(0,className.length()-4);

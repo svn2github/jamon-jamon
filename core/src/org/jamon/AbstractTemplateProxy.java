@@ -33,6 +33,7 @@ public abstract class AbstractTemplateProxy
         void escaping(Escaping p_escaping);
         void initialize() throws IOException;
         void autoFlush(boolean p_autoflush);
+        String getPath();
     }
 
     protected AbstractTemplateProxy(TemplateManager p_templateManager)
@@ -76,8 +77,7 @@ public abstract class AbstractTemplateProxy
     protected final void releaseInstance()
         throws IOException
     {
-        AbstractTemplateIntf instance =
-            (AbstractTemplateIntf) m_instance.get();
+        Intf instance = (Intf) m_instance.get();
         getTemplateManager().releaseInstance(instance);
         m_instance.set(null);
     }

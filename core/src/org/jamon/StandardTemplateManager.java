@@ -253,13 +253,13 @@ public class StandardTemplateManager
         }
     }
 
-    public AbstractTemplateIntf acquireInstance(String p_path)
+    public AbstractTemplateProxy.Intf acquireInstance(String p_path)
         throws IOException
     {
         return acquireInstance(p_path, this);
     }
 
-    public void releaseInstance(AbstractTemplateIntf p_impl)
+    public void releaseInstance(AbstractTemplateProxy.Intf p_impl)
     {
         m_cache.put(p_impl.getPath(), p_impl);
     }
@@ -277,8 +277,8 @@ public class StandardTemplateManager
      *
      * @exception IOException if something goes wrong
      */
-    public AbstractTemplateIntf acquireInstance(String p_path,
-                                                TemplateManager p_manager)
+    public AbstractTemplateProxy.Intf acquireInstance(String p_path,
+                                                      TemplateManager p_manager)
         throws IOException
     {
         try

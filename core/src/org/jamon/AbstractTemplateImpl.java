@@ -27,7 +27,7 @@ import java.net.URLEncoder;
 import org.jamon.escaping.Escaping;
 
 public abstract class AbstractTemplateImpl
-    implements AbstractTemplateIntf
+    implements AbstractTemplateProxy.Intf
 {
     protected abstract class ChildFarg extends AbstractTemplateImpl
     {

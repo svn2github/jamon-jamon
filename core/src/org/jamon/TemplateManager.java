@@ -39,7 +39,7 @@ public interface TemplateManager
      *
      * @exception IOException if something goes wrong
      */
-    public AbstractTemplateIntf acquireInstance(String p_path)
+    public AbstractTemplateProxy.Intf acquireInstance(String p_path)
         throws IOException;
 
 
@@ -50,7 +50,7 @@ public interface TemplateManager
      *
      * @exception IOException if something goes wrong
      */
-    public void releaseInstance(AbstractTemplateIntf p_impl)
+    public void releaseInstance(AbstractTemplateProxy.Intf p_impl)
         throws IOException;
 
 }
