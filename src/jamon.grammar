@@ -22,6 +22,7 @@ Helpers
 States
   start,
   body,
+  def,
   imports,
   emit,
   java,
@@ -29,9 +30,11 @@ States
   call,
   argexp,
   callexp,
+  inherit,
   args;
 
 Tokens
+
   {start -> args,body -> args} args_start = '<%args>';
   {args -> body} args_end = '</%args>';
   {start ->imports,body -> imports} import_start = '<%import>';
@@ -40,9 +43,8 @@ Tokens
   {java -> body} java_end = ws* '</%java>';
   {args,imports} dot = period;
   {args -> argexp} arrow = '=>' hs*;
-  {call,args,imports} white_space = ws*;
-  {call,args,imports} identifier = letter letter_or_digit*;
-
+  {call,args,inherit,imports} white_space = ws*;
+  {call,args,imports,inherit,def} identifier = letter letter_or_digit*;
 
   {start -> emit,body -> emit} emit_start = '<%' ws*;
   {emit -> body} emit_end = ws* '%>';
@@ -64,24 +66,44 @@ Tokens
   {call -> body} call_end = ws* '&>';
   {callexp -> call} param_expr = ([all - [';' + '&']] | '&' [all-'>'])*;
   {call} semi = ';';
-  {call} slash = '/';
+  {call,inherit} slash = '/';
+
+  {start -> def,body -> def} def_start = '<%def' hs+;
+  {body,start} def_end = '</%def>';
+  {def -> body} gt = hs* '>';
+
+  {start -> inherit, body -> inherit} inherit_start = ws* '<%inherit';
+  {inherit -> body} inherit_end = '%>';
+
+  {start,body} doc = '<%doc>' all* '</%doc>';
 
 Ignored Tokens
 
-  white_space;
+  white_space,doc;
 
 Productions
 
-  template = component*;
+  template = inherit? component*;
 
-  component = {body} text | {newline} newline
+  component = {body} text | {newline} newline | {defend} def_end
             | {imports} import_start name* import_end
             | {args} args_start arg* args_end
             | {java} java_start any* java_end
             | {jline} injava fragment outjava
             | {emit} emit_start any* escape? emit_end
             | {call} call_start path param* call_end
+            | {def} def_start identifier gt def_body* def_end
             ;
+
+  inherit = inherit_start path inherit_end;
+
+  def_body = {body} text | {newline} newline
+           | {args} args_start arg* args_end
+           | {java} java_start any* java_end
+           | {jline} injava fragment outjava
+           | {emit} emit_start any* escape? emit_end
+           | {call} call_start path param* call_end
+           ;
 
   path = {simple} slash? identifier | {qualified} path slash identifier;
 
