@@ -1,0 +1,9 @@
+<%extends Report>
+<%override title>
+  <%xargs>
+    city;
+  </%xargs>
+  Storm Warning for <% city %>
+</%override>
+<%override backgroundColor>grey</%override>
+Now would be a poor time to go sailing.

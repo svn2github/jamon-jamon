@@ -1,0 +1,25 @@
+<%def _row>
+  <%args>
+    String name;
+    int age;
+  </%args>
+  <tr>
+    <td align="left"><% name %></td>
+    <td>&nbsp;</td>
+    <td align="center"
+%     if (age < 18) {
+        bgcolor="red"
+%     }
+    >
+      <% age %>
+    </td>
+  </tr>
+</%def>
+
+<table>
+<%doc>named parameter syntax</%doc>
+  <& _row; name => "Mickey"; age => 46 &>
+  <& _row; name => "Junior"; age => 8 &>
+<%doc>positional parameter syntax</%doc>
+  <& _row: "Minnie"; 25 &>
+</table>

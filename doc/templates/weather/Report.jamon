@@ -1,0 +1,21 @@
+<%abstract>
+<%method backgroundColor>white</%method>
+<%absmeth title>
+  <%args>
+    String city;
+    String dayOfWeek;
+  </%args>
+</%absmeth>
+<%args>
+  WeatherReport report;
+</%args>
+<html>
+  <head>
+    <title>
+      <& title; city => report.getCity(); dayOfWeek => report.getDay(); &>
+    </title>
+  </head>
+  <body bgcolor="<& backgroundColor &>">
+    <& *CHILD  &>
+  </body>
+</html>
