@@ -33,7 +33,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServlet;
 
-import org.jamon.Invoker;
+import org.jamon.TemplateInspector;
 import org.jamon.RecompilingTemplateManager;
 import org.jamon.TemplateManager;
 import org.jamon.JamonTemplateException;
@@ -52,7 +52,7 @@ public class JamonDocServlet
         templatePath = templatePath.substring(0,templatePath.length()-5);
         try
         {
-            new Invoker(m_manager, "/org/jamon/doc" + templatePath)
+            new TemplateInspector(m_manager, "/org/jamon/doc" + templatePath)
                 .render(writer, m_parameters, true);
         }
         catch (JamonTemplateException e)
