@@ -4,5 +4,7 @@
 <%args>
   int i;
 </%args>
+% // the next line has no characters after the %
+%
 % int j = i;
  % j is <% j %>
