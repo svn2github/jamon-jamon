@@ -21,6 +21,7 @@
   <property name="tarball.bin" value="${tarfilebase}.tgz" />
   <property name="zip.src" value="${tarfilebase}-src.zip" />
   <property name="zip.bin" value="${tarfilebase}.zip" />
+  <property name="site.dir" value="" />
 
   <target name="test"
           depends="jar"
@@ -209,7 +210,7 @@
   </target>
 
 
-  <target name="stage" depends="srcdist,bindist,doc" >
+  <target name="localstage" depends="srcdist,bindist,doc" >
     <mkdir dir="${stage.dir}" />
     <copy todir="${stage.dir}" >
       <fileset dir="doc/build/www" />
@@ -223,7 +224,7 @@
     </copy>
   </target>
 
-  <target name="push" depends="stage">
+  <target name="push" depends="localstage">
     <exec dir="${stage.dir}" executable="rsync">
       <arg value="--rsh=ssh" />
       <arg value="--verbose" />
@@ -235,7 +236,7 @@
       <arg value="--exclude" />
       <arg value="dist" />
       <arg value="." />
-      <arg value="jamon@jamon.org:/home/jamon/www" />
+      <arg value="jamon@jamon.org:/home/jamon/www${site.dir}" />
     </exec>
     <exec dir="${dist.dir}" executable="rsync">
       <arg value="--rsh=ssh" />
@@ -245,7 +246,7 @@
       <arg value="--cvs-exclude" />
       <arg value="--compress" />
       <arg value="." />
-      <arg value="jamon@jamon.org:/home/jamon/www/dist" />
+      <arg value="jamon@jamon.org:/home/jamon/www${site.dir}/dist" />
     </exec>
   </target>
 
