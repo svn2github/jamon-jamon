@@ -1,0 +1,12 @@
+<%farg body>
+</%farg>
+<%args>
+  String action;
+  org.jamon.html.Input submit;
+  String method => "GET";
+</%args>
+
+<form method='<% method %>' action='<% action %>'>
+  <& hiddenInput; input => submit &>
+  <& body &>
+</form>
