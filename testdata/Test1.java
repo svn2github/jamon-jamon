@@ -13,6 +13,7 @@ public class Test1
         {
             Writer w = new OutputStreamWriter(System.out);
             StandardTemplateManager m = new StandardTemplateManager();
+            m.setWorkDir("test/work");
             m.setPackagePrefix("foo.bar.");
             TestTemplate.Factory f = new TestTemplate.Factory(m);
             TestTemplate t = f.getInstance(w);

@@ -15,7 +15,6 @@
   <property name="test.classes.dir" value="${build.dir}/testclasses"/>
   <property name="tests.src.dir" value="tests"/>
   <property name="test.dir" value="test" />
-  <property name="work.dir" value="work" />
   <property name="test.src.dir" value="${test.dir}/src" />
   <property name="test.pkg" value="test/jtt"/>
   <property name="test.src2.dir" value="${test.src.dir}/${test.pkg}" />
@@ -81,13 +80,12 @@
   </target>
 
   <target name="cvsignores">
-    <echo file=".cvsignore">.cvsignore ${build.dir} build.properties ${work.dir} ${test.dir}
+    <echo file=".cvsignore">.cvsignore ${build.dir} build.properties ${test.dir}
 </echo>
   </target>
 
   <target name="testdirs">
     <delete dir="${test.dir}"/>
-    <delete dir="${work.dir}"/>
     <mkdir dir="${test.src.dir}" />
   </target>
 
@@ -119,7 +117,6 @@
 
   <target name="test1" depends="testbuild"
           description="Tests the compiler by rendering a simple template">
-    <mkdir dir="${work.dir}" />
     <java fork="true"
           classpath="${classes.dir}:${java.lib.sablecc}:${test.classes.dir}"
           classname="${test.pkg}.Test1" />
