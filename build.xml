@@ -10,7 +10,9 @@
 
   <property file="build.properties"/>
   <property file="${user.home}/.ant.properties"/>
-  <property name="jarfile" value="jamon.jar" />
+  <property name="jarfile.core" value="jamon.jar" />
+  <property name="jarfile.anttask" value="jamon-anttask.jar" />
+  <property name="jarfile.stdlib" value="jamon-stdlib.jar" />
   <property name="core.classes.dir" value="core/build/classes" />
   <property name="stage.dir" value="site" />
   <property name="dist.dir" value="${stage.dir}/dist" />
@@ -25,13 +27,16 @@
   </target>
 
   <target name="jar"
-          description="Creates a uber JAR"
+          description="Creates uber JARs"
           depends="base">
-    <jar jarfile="${jarfile}"
-         manifest="manifest" >
+    <jar jarfile="${jarfile.core}" manifest="manifest" >
       <fileset dir="core/build/classes" />
-      <fileset dir="stdlib/build/classes" />
+    </jar>
+    <jar jarfile="${jarfile.anttask}" manifest="manifest-anttask" >
       <fileset dir="anttask/build/classes" />
+    </jar>
+    <jar jarfile="${jarfile.stdlib}" manifest="manifest-stdlib" >
+      <fileset dir="stdlib/build/classes" />
     </jar>
   </target>
 
@@ -47,7 +52,7 @@
     <ant dir="anttask" target="cvsignores"/>
     <ant dir="stdlib" target="cvsignores"/>
     <ant dir="doc" target="cvsignores"/>
-    <echo file=".cvsignore">.cvsignore ${jarfile} build.properties
+    <echo file=".cvsignore">.cvsignore ${jarfile.core} ${jarfile.anttask} ${jarfile.stdlib} build.properties
 </echo>
   </target>
 
@@ -59,7 +64,9 @@
     <ant dir="anttask" target="spotless"/>
     <ant dir="stdlib" target="spotless"/>
     <ant dir="doc" target="spotless"/>
-    <delete file="${jarfile}" />
+    <delete file="${jarfile.core}" />
+    <delete file="${jarfile.anttask}" />
+    <delete file="${jarfile.stdlib}" />
     <delete file=".cvsignore" />
   </target>
 
@@ -152,7 +159,7 @@
   <target name="prepdist" depends="doc">
     <taskdef name="invoker"
              classname="org.jamon.ant.InvokerTask"
-             classpath="${jarfile}:doc/build/work" />
+             classpath="${jarfile.core}:${jarfile.stdlib}:${jarfile.anttask}:doc/build/work" />
     <invoker dynamicRecompilation="false"
              template="/org/jamon/doc/SrcTgzName"
              property="tarball.src"/>
@@ -174,7 +181,7 @@
     <tar tarfile="${tarball.bin}" compression="gzip" >
       <tarfileset dir="."
                   prefix="${archive.base}"
-                  includes="${jarfile},LICENSE,README" />
+                  includes="${jarfile.core},${jarfile.stdlib},${jarfile.anttask},LICENSE,README" />
       <tarfileset dir="doc/build/www"
                   prefix="${archive.base}/doc"
                   includes="**" />
@@ -185,7 +192,7 @@
     <zip zipfile="${zip.bin}" >
       <zipfileset dir="."
                   prefix="${archive.base}"
-                  includes="${jarfile},LICENSE,README" />
+                  includes="${jarfile.core},${jarfile.stdlib},${jarfile.anttask},LICENSE,README" />
       <zipfileset dir="doc/build/www"
                   prefix="${archive.base}/doc"
                   includes="**" />
@@ -198,7 +205,9 @@
   <target name="srcdist" depends="prepdist">
     <tar tarfile="${tarball.src}" compression="gzip" >
       <tarfileset dir="." prefix="${archive.base}" >
-        <exclude name="${jarfile}" />
+        <exclude name="${jarfile.core}" />
+        <exclude name="${jarfile.anttask}" />
+        <exclude name="${jarfile.stdlib}" />
         <exclude name="${stage.dir}" />
         <exclude name="${stage.dir}/**" />
         <exclude name="*.tgz" />
@@ -212,7 +221,9 @@
     </tar>
     <zip destfile="${zip.src}" >
       <zipfileset dir="." prefix="${archive.base}" >
-        <exclude name="${jarfile}" />
+        <exclude name="${jarfile.core}" />
+        <exclude name="${jarfile.anttask}" />
+        <exclude name="${jarfile.stdlib}" />
         <exclude name="${stage.dir}" />
         <exclude name="${stage.dir}/**" />
         <exclude name="*.tgz" />

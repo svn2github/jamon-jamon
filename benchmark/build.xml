@@ -16,17 +16,21 @@
   <target name="init">
     <dirname property="jamon.top.dir" file="."/>
     <property name="java.lib.jamon" value="${jamon.top.dir}/jamon.jar"/>
+    <property name="java.lib.jamon.anttask" value="${jamon.top.dir}/jamon-anttask.jar"/>
+    <property name="java.lib.jamon.stdlib" value="${jamon.top.dir}/jamon-stdlib.jar"/>
   </target>
 
   <target name="templates" depends="init">
     <dependset>
       <srcfileset file="${java.lib.jamon}"/>
+      <srcfileset file="${java.lib.jamon.anttask}"/>
+      <srcfileset file="${java.lib.jamon.stdlib}"/>
       <targetfileset dir="${build.src.dir}"/>
     </dependset>
     <mkdir dir="${build.src.dir}"/>
     <taskdef name="jamon"
              classname="org.jamon.ant.JamonTask"
-             classpath="${java.lib.jamon}"/>
+             classpath="${java.lib.jamon}:${java.lib.jamon.anttask}:${java.lib.jamon.stdlib}"/>
     <jamon destdir="${build.src.dir}" srcdir="templates" />
   </target>
 
@@ -41,7 +45,7 @@
     <mkdir dir="${classes.dir}"/>
     <javac destdir="${classes.dir}"
            debug="true"
-           classpath="${java.lib.jamon}"
+           classpath="${java.lib.jamon}:${java.lib.jamon.stdlib}"
            deprecation="true">
       <src path="${src.dir}"/>
       <src path="${build.src.dir}"/>
@@ -52,7 +56,7 @@
           depends="compile"
           description="Run the benchmark">
     <java fork="true"
-          classpath="${classes.dir}:${java.lib.jamon}"
+          classpath="${classes.dir}:${java.lib.jamon}:${java.lib.jamon.stdlib}"
           classname="org.jamon.benchmark.Benchmark" />
   </target>
 
@@ -62,7 +66,7 @@
     <property name="template.dir" value = "../doc/templates"/>
     <property name="template.file" value = "org/jamon/doc/Reference"/>
     <java fork="true"
-          classpath="${classes.dir}:${java.lib.jamon}"
+          classpath="${classes.dir}:${java.lib.jamon}:${java.lib.jamon.stdlib}"
           classname="org.jamon.benchmark.SableCcBenchmarks">
       <arg value="${template.dir}"/>
       <arg value="${template.file}"/>

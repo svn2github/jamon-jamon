@@ -7,20 +7,22 @@
   <property name="classes.dir" value="${build.dir}/classes"/>
 
   <property name="java.lib.jamon" value="jamon.jar" />
+  <property name="java.lib.jamon.anttask" value="jamon-anttask.jar" />
+  <property name="java.lib.jamon.stdlib" value="jamon-stdlib.jar" />
   <property name="java.lib.servlet" value="/usr/share/java/servlet.jar" />
 
   <target name="templates">
     <mkdir dir="${build.src.dir}" />
     <taskdef name="jamon"
              classname="org.jamon.ant.JamonTask"
-             classpath="${java.lib.jamon}" />
+             classpath="${java.lib.jamon}:${java.lib.jamon.stdlib}:${java.lib.jamon.anttask}" />
     <jamon destdir="${build.src.dir}" srcdir="templates" />
   </target>
 
   <target name="compile" depends="templates">
     <mkdir dir="${classes.dir}" />
     <javac destdir="${classes.dir}"
-           classpath="${java.lib.jamon}:${java.lib.servlet}">
+           classpath="${java.lib.jamon}:${java.lib.jamon.stdlib}:${java.lib.jamon.anttask}:${java.lib.servlet}">
         <src path="src" />
         <src path="${build.src.dir}" />
     </javac>
@@ -29,6 +31,8 @@
   <target name="war" depends="compile">
     <mkdir dir="lib" />
     <copy file="${java.lib.jamon}" todir="lib" />
+    <copy file="${java.lib.jamon.stdlib}" todir="lib" />
+    <copy file="${java.lib.jamon.anttask}" todir="lib" />
     <war destfile="foobar.war"
          webxml="web.xml">
       <classes dir="${classes.dir}" />

@@ -21,6 +21,8 @@ the documentation thus taking care of issues such as escaping.
   <property name="overview.samples.dir" value="${samples.dir}/overview"/>
   <property name="classes.dir" value="${www.dir}/classes"/>
   <property name="java.lib.jamon" location="../jamon.jar"/>
+  <property name="java.lib.jamon.stdlib" location="../jamon-stdlib.jar"/>
+  <property name="java.lib.jamon.anttask" location="../jamon-anttask.jar"/>
   <property name="java.lib.diff" value="/usr/local/share/java/diff.jar"/>
   <property name="invoker.class" value="org.jamon.InvokerTool" />
 
@@ -45,6 +47,8 @@ the documentation thus taking care of issues such as escaping.
     <mkdir dir="${www.dir}"/>
     <dependset>
       <srcfileset file="${java.lib.jamon}"/>
+      <srcfileset file="${java.lib.jamon.stdlib}"/>
+      <srcfileset file="${java.lib.jamon.anttask}"/>
       <targetfileset refid="build-files"/>
     </dependset>
     <copy file="base.css" todir="${doc.dir}" />
@@ -87,7 +91,7 @@ the documentation thus taking care of issues such as escaping.
 
     <taskdef name="invoker"
              classname="org.jamon.ant.InvokerTask"
-             classpath="${java.lib.jamon}" />
+             classpath="${java.lib.jamon}:${java.lib.jamon.stdlib}:${java.lib.jamon.anttask}" />
     <condition property="org.jamon.invoker.compiler" value="jikes">
       <equals arg1="${invoker.compiler}" arg2="jikes"/>
     </condition>
@@ -96,7 +100,7 @@ the documentation thus taking care of issues such as escaping.
     </condition>
     <taskdef name="jamon"
              classname="org.jamon.ant.JamonTask"
-             classpath="${java.lib.jamon}" />
+             classpath="${java.lib.jamon}:${java.lib.jamon.stdlib}:${java.lib.jamon.anttask}" />
     <jamon destdir="${work.dir}" srcdir="${overview.samples.dir}/templates">
       <include name="QsTemp.jamon"/>
     </jamon>
@@ -105,7 +109,7 @@ the documentation thus taking care of issues such as escaping.
     <jamon destdir="${work.dir}" srcdir="${tutorial.jamon}"/>
     <jamon destdir="${work.dir}" srcdir="templates"/>
     <javac destdir="${work.dir}"
-           classpath="${java.lib.jamon}"
+           classpath="${java.lib.jamon}:${java.lib.jamon.stdlib}:${java.lib.jamon.anttask}"
            includes="*.java" >
       <src path="${tutorial.src}" />
       <src path="${overview.samples.dir}/src" />
@@ -147,7 +151,7 @@ the documentation thus taking care of issues such as escaping.
 
   <target name="grind">
     <echo message="creating ${template}"/>
-    <invoker classpath="${work.dir}:${this.dir}:${java.lib.jamon}:${java.lib.diff}"
+    <invoker classpath="${work.dir}:${this.dir}:${java.lib.jamon}:${java.lib.jamon.stdlib}:${java.lib.jamon.anttask}:${java.lib.diff}"
              dynamicRecompilation="false"
              output="${this.dir}/${doc.dir}/${template}.html"
              template="/org/jamon/doc/${template}" />
@@ -158,7 +162,7 @@ the documentation thus taking care of issues such as escaping.
           depends="overview-files,tutorial">
     <echo message="compiling templates"/>
     <javac destdir="${work.dir}"
-           classpath="${java.lib.jamon}:${java.lib.diff}:${work.dir}"
+           classpath="${java.lib.jamon}:${java.lib.jamon.stdlib}:${java.lib.jamon.anttask}:${java.lib.diff}:${work.dir}"
            includes="**/*.java" >
       <src path="${work.dir}" />
     </javac>
@@ -286,13 +290,15 @@ the documentation thus taking care of issues such as escaping.
           description="Compile the servlet">
     <dependset>
       <srcfileset file="${java.lib.jamon}"/>
+      <srcfileset file="${java.lib.jamon.stdlib}"/>
+      <srcfileset file="${java.lib.jamon.anttask}"/>
       <targetfileset refid="servlet-build-files"/>
     </dependset>
     <mkdir dir="${build.classes.dir}"/>
     <javac destdir="${build.classes.dir}"
            debug="true"
            deprecation="true"
-           classpath="${java.lib.jamon}:${java.lib.servlet}"
+           classpath="${java.lib.jamon}:${java.lib.jamon.stdlib}:${java.lib.jamon.anttask}:${java.lib.servlet}"
            srcdir="${src.dir}"
            failonerror="true"/>
   </target>
@@ -305,7 +311,7 @@ the documentation thus taking care of issues such as escaping.
           fork="yes"
           dir=".">
       <classpath>
-        <pathelement location="${java.lib.jamon}"/>
+        <pathelement path="${java.lib.jamon}:${java.lib.jamon.stdlib}:${java.lib.jamon.anttask}"/>
         <pathelement location="${java.lib.diff}"/>
         <pathelement location="${tomcat.home}/server/lib/servlets-default.jar"/>
         <pathelement location="${com.sun.tools.jar}"/>
