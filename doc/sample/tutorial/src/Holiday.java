@@ -27,8 +27,7 @@ public class Holiday {
       List holidays = new ArrayList();
       holidays.add(new Holiday("New Year's", format.parse("2003-1-1")));
       holidays.add(new Holiday("July 4", format.parse("2003-7-4")));
-      holidays.add(
-          new Holiday("Thanks Giving", format.parse("2003-11-17")));
+      holidays.add(new Holiday("Thanksgiving", format.parse("2003-11-17")));
       holidays.add(new Holiday("Christmas", format.parse("2003-12-25")));
       // set the template manager once for all time ...
       TemplateManagerSource
