@@ -47,7 +47,7 @@ same file or other top level templates.
 
   <li>
     This template is called from the Java class
-     <a class="file" href="SubtemplateTut7">SubtemplateTut7.java</a>:
+     <a class="file" href="SubtemplateTut7.java">SubtemplateTut7.java</a>:
      <& _TutorialJavaFileInclude; fileName => "SubtemplateTut7" &>.
 
   <li>

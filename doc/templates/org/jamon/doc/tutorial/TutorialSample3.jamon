@@ -104,13 +104,14 @@ easier to read.
 <ol>
 <li>
 Create a Jamon template
- <a href="AccountSummaryTemplate.jamon" class="file">
+ <a href="AccountSummaryTemplate.jamon" type="text/plain" class="file">
 AccountSummaryTemplate.jamon</a>:
 <& _TutorialTemplateInclude; fileName => "AccountSummaryTemplate" &>
 
 
 <li> Write a java class to call the template:
-<a class="file" href="AccountSummaryTut3.java">AccountSummaryTut3.java</a>:
+<a class="file" href="AccountSummaryTut3.java" type="text/plain" >
+AccountSummaryTut3.java</a>:
 <& _TutorialJavaFileInclude; fileName => "AccountSummaryTut3" &>
 
 <li> Set the classpath, process the template, compile, and run the program:

@@ -73,7 +73,7 @@ Templates usually construct text in a structured language such as HTML or XML, o
 
       In addition the <em>default</em> escaping mechanism can also be
       changed, however this is done from outside the template, see the
-      Jamon <a href="UserGuide.html">user's guide</a> for further
+      Jamon <a href="../UserGuide.html">user's guide</a> for further
       details.
 
     <li><span class="concept">Setting the default escaping mechanism</span>
@@ -107,14 +107,15 @@ import org.jamon.TemplateManager;
     <h4>Example</h4>
 
     Suppose the template
-     <a href="EscapingTemplate.jamon" class="file">
+     <a href="EscapingTemplate.jamon" class="file" type="text/plain" >
         <code>EscapingTemplate</code>
      </a>contains
     <& _TutorialTemplateInclude; fileName => "EscapingTemplate" &>
 
 <p>
 If this template is called by the java code
-<a class="file" href="EscapingTut4.java">EscapingTut4.java</a>:
+<a class="file" href="EscapingTut4.java" type="text/plain" >
+EscapingTut4.java</a>:
 <& _TutorialJavaFileInclude; fileName => "EscapingTut4" &>
 
 Then the output of the template's <code>render</code> method will be
