@@ -98,16 +98,6 @@ public class CallStatement
         p_writer.println(");");
     }
 
-    private String getInterfaceClassName(TemplateResolver p_resolver,
-                                         String p_absPath)
-    {
-        String pkg =
-            p_resolver.getIntfPackageName(p_absPath);
-        String clsName =
-            p_resolver.getIntfClassName(p_absPath);
-        return "".equals(pkg) ? clsName : (pkg + "." + clsName);
-    }
-
     private void generateAsComponentCall(PrintWriter p_writer,
                                          TemplateResolver p_resolver,
                                          TemplateDescriber p_describer,
@@ -116,7 +106,7 @@ public class CallStatement
         throws IOException
     {
         String tVar = p_analyzer.newVarName();
-        String intfName = getInterfaceClassName(p_resolver,p_absPath);
+        String intfName = p_resolver.getFullyQualifiedIntfClassName(p_absPath);
         p_writer.println("{");
         p_writer.print("  final ");
         p_writer.print(intfName);

@@ -115,6 +115,53 @@ public class TemplateResolver
         return getIntfPackageName(p_path);
     }
 
+    /**
+     * Given a template path, return the fully qualified name of the
+     * interface class for that template.
+     *
+     * @param p_path the template path
+     *
+     * @return the fully qualified name of the interface class
+     */
+
+    public String getFullyQualifiedIntfClassName(final String p_path)
+    {
+        return fullyQualify(getIntfPackageName(p_path),
+                            getIntfClassName(p_path));
+    }
+
+    /**
+     * Given a template path, return the fully qualified name of the
+     * implementation class for that template.
+     *
+     * @param p_path the template path
+     *
+     * @return the fully qualified name of the implementation class
+     */
+
+    public String getFullyQualifiedImplClassName(final String p_path)
+    {
+        return fullyQualify(getImplPackageName(p_path),
+                            getImplClassName(p_path));
+    }
+
+    /**
+     * Fully qualify a class name given a package name and class name.
+     *
+     * @param p_pkgName the name of the package
+     * @param p_className the name of the class
+     *
+     * @return the fully qualified name of the class
+     */
+
+    private String fullyQualify(final String p_pkgName,
+                                final String p_className)
+    {
+        return "".equals(p_pkgName)
+            ? p_className
+            : (p_pkgName + "." + p_className);
+    }
+
     /** the package prefix */
     private final String m_packagePrefix;
 }

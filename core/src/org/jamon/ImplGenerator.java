@@ -66,11 +66,6 @@ public class ImplGenerator
     }
 
 
-    private String getInterfaceClassName()
-    {
-        return m_resolver.getIntfClassName(getPath());
-    }
-
     private String getClassName()
     {
         return m_resolver.getImplClassName(getPath());
@@ -84,13 +79,7 @@ public class ImplGenerator
         print  ("  extends ");
         println(           BASE_TEMPLATE);
         print  ("  implements ");
-        String pkgName = getPackageName();
-        if (pkgName.length() > 0)
-        {
-            print(pkgName);
-            print(".");
-        }
-        println(              getInterfaceClassName());
+        println(m_resolver.getFullyQualifiedIntfClassName(getPath()));
         println("{");
     }
 
@@ -112,18 +101,14 @@ public class ImplGenerator
 
     }
 
-    private String getPackageName()
-    {
-        return m_resolver.getImplPackageName(getPath());
-    }
-
     private void generatePrologue()
         throws IOException
     {
-        if (getPackageName().length() > 0)
+        String pkgName = m_resolver.getImplPackageName(getPath());
+        if (pkgName.length() > 0)
         {
             print("package ");
-            print(getPackageName());
+            print(pkgName);
             println(";");
             println();
         }
@@ -233,13 +218,7 @@ public class ImplGenerator
             println();
             String name = (String) i.next();
             print("  public ");
-            String pkgName = getPackageName();
-            if (pkgName.length() > 0)
-            {
-                print(pkgName);
-                print(".");
-            }
-            print(getInterfaceClassName());
+            print(m_resolver.getFullyQualifiedIntfClassName(getPath()));
             print(" set");
             print(StringUtils.capitalize(name));
             print("(");
