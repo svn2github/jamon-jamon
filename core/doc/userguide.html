@@ -4,10 +4,12 @@
     <title>Jamon User's Guide</title>
     <style type="text/css" media="screen">
     <!--
-      pre.template { background-color: #dfdfdf; padding: 0.5em }
-      pre.code { background-color: #ffdfdf; padding: 0.5em }
-      pre.tty { background-color: #333333; color: #ffffff; padding: 0.5em }
+      pre { margin-left: 5em; margin-right: 5em; padding: 0.5em; border: solid; border-width: thin }
+      pre.template { background-color: #efffdf }
+      pre.code { background-color: #ffdfdf }
+      pre.tty { background-color: #e0e0e0;  }
       li { padding-top: 0.5em }
+      .concept { font-weight: bold; display: block; padding-bottom: 0.5em }
     -->
     </style>
   </head>
@@ -19,12 +21,12 @@
 
     <ol>
 
-      <li>Static content<br />
+      <li><span class="concept">Static content</span>
 
         In general, any characters appearing in a template are output
         literally, whitespace included.
 
-      <li>Java escapes<br />
+      <li><span class="concept">Java escapes</span>
 
         The value of a java expression can be emitted by enclosing the
         expression in <code>&lt;%...%&gt;</code> pairs, e.g.
@@ -65,13 +67,13 @@
       method body. Thus, for example, package declarations and import
       statements are invalid.
 
-    <li>Comments<br />
+    <li><span class="concept">Comments</span>
 
       Any template content between <code>&lt;%doc&gt;</code> and
       <code>&lt;/%doc&gt;</code> is considered "documentation", and
       ignored by the template processor
 
-    <li>Imports <br />
+    <li><span class="concept">Imports</span>
 
       Java classes or packages to be imported and used in a template
       should be placed inside an <code>&lt;import&gt;</code>
@@ -86,7 +88,7 @@
 &lt;/%import&gt;
 </pre>
 
-    <li>Arguments<br />
+    <li><span class="concept">Arguments</span>
 
       Arguments to a template are specified in
       <code>&lt;%args&gt;</code> ... <code>&lt;/%args&gt;</code>
@@ -125,12 +127,115 @@ Your nicknames are
     Note that for this template to compile, the <code>Address</code>
     class would need to appear in an <code>&lt;%import&gt;</code>
     block.
+        <p>
+          Arguments with default values are optional, and need not be
+          specified when invoking a template. At the top-level
+          (i.e. the interface to "standard" java code), optional
+          arguments are implemented as "setters" on the template
+          object rather than as arguments to the <code>render</code>
+          method.
 
-    <li>Private methods <br />
+    <li><span class="concept">Private template methods</span>
 
-    <li>Calling methods and other templates <br />
+      Private template methods ("<def>defs</def>") can be declared via
+      the <code>&lt;%def <i>def-name</i>&gt;</code>
+      instruction. Defs may be declared to accept arguments similar to
+      templates by using <code>%args</code>.
+        <p>
+          Methods can be invoked via the <code>&lt;&amp;
+          <i>def-name</i>; argument1; ... &amp;&gt;</code>
+          construct.
+        <p>
+          For example:
+        <pre class="template">
+&lt;%def _row&gt;
+  &lt;%args&gt;
+    String name;
+    int age;
+  &lt;/%args&gt;
+  &lt;tr&gt;
+    &lt;td align="left"&gt;&lt;% name %&gt;&lt;/td&gt;
+    &lt;td&gt;&nbsp;&lt;/td&gt;
+    &lt;td align="center"
+%     if (age &lt; 18) {
+        bgcolor="red"
+%     }
+    &gt;
+      &lt;% age %&gt;
+    &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/%def&gt;
 
-    <li>Fragment arguments<br />
+&lt;table&gt;
+  &lt;&amp; _row; name =&gt; "Mickey"; age =&gt; 46 &amp;&gt;
+  &lt;&amp; _row; name =&gt; "Junior"; age =&gt; 8 &amp;&gt;
+  &lt;&amp; _row; name =&gt; "Minnie"; age =&gt; 25 &amp;&gt;
+&lt;/table&gt;
+</pre>
+        produces
+        <pre class="tty">
+&lt;table&gt;
+  &lt;tr&gt;
+    &lt;td align="left"&gt;Mickey&lt;/td&gt;
+    &lt;td&gt;&amp;nbsp;&lt;/td&gt;
+    &lt;td align="center"
+    &gt;
+      46
+    &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+    &lt;td align="left"&gt;Junior&lt;/td&gt;
+    &lt;td&gt;&amp;nbsp;&lt;/td&gt;
+    &lt;td align="center"
+        bgcolor="red"
+    &gt;
+      8
+    &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+    &lt;td align="left"&gt;Minnie&lt;/td&gt;
+    &lt;td&gt;&amp;nbsp;&lt;/td&gt;
+    &lt;td align="center"
+    &gt;
+      25
+    &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/table&gt;
+</pre>
+        <p>
+          Defs can invoke other defs in the same template, and can be
+          directly or indirectly recursive. Arguments to defs can be
+          given default values.
+
+      <li>
+        <span class="concept">Invoking other templates</span>
+
+        It is also possible to invoke other templates from within a
+        template. Instead of supplying the def name, simply supply the
+        path to the template, e.g. in <code>/img/spacer</code>:
+        <pre class="template">
+&lt;%args&gt;
+  int width =&gt; 1;
+  int height =&gt; 1;
+&lt;/%args&gt;
+&lt;img src="transparentpixel.gif"
+     width="&lt;% width %&gt;"
+     height="&lt;% height %&gt;"
+     border="0"&gt;
+</pre>
+        This can be invoked from other templates like
+        <pre class="template">
+&lt;table&gt;
+  &lt;tr&gt;
+    &lt;td align="left"&gt;Name&lt;/td&gt;
+    &lt;td&gt;&lt;& /img/spacer; width =&gt; 12 &&gt;&lt;/td&gt;
+    &lt;td&gt;Age&lt;/td&gt;
+  &lt;/tr&gt;
+  ...
+&lt;/table&gt;
+</pre>
+
+    <li><span class="concept">Fragment arguments</span>
 
   </ol>
 
@@ -162,19 +267,20 @@ Your nicknames are
     <pre class="template">
 &lt;%args&gt;
   int count;
+  String name => "Somebody";
   String greeting;
 &lt;/%args&gt;
 &lt;html&gt;
   &lt;body&gt;
 %   for (int i = 1; i &lt;= count; ++i) {
-    &lt;% i %&gt;. &lt; greeting &gt; &lt;br /&gt;
+    &lt;% i %&gt;. &lt; greeting &gt; &lt; name &gt; &lt;br /&gt;
 %   }
   &lt;/body&gt;
 &lt;/html&gt;
 </pre>
     This can be processed into a Java interface with the
     <code>jamon</code> command, e.g.
-    <pre class="tty">
+  <pre class="tty">
 jamon --interface --package-prefix=org.modusponens.templates --output-dir=./gensrc templates/foo
 </pre>
 which will place the generated Java source file(s) into the
@@ -191,15 +297,17 @@ import org.jamon.TemplateManager;
        ...
        Writer writer = new OutputStreamWriter(System.out);
        foo.Factory factory = new foo.Factory(templateManager);
-       factory.getInstance(writer).render(3, "Hello");
+       factory.getInstance(writer)
+         .setName("Duke")
+         .render(3, "Hello");
 </pre>
     which when executed produces the output
     <pre class="tty">
 &lt;html&gt;
   &lt;body&gt;
-    1. Hello &lt;br /&gt;
-    2. Hello &lt;br /&gt;
-    3. Hello &lt;br /&gt;
+    1. Hello Duke&lt;br /&gt;
+    2. Hello Duke&lt;br /&gt;
+    3. Hello Duke&lt;br /&gt;
   &lt;/body&gt;
 &lt;/html&gt;
 </pre>
