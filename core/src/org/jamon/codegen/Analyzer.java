@@ -67,9 +67,9 @@ public class Analyzer
         }
         catch (TunnelingException e)
         {
-            if(e.getRootCause() instanceOf JamonTemplateException)
+            if(e.getRootCause() instanceof JamonTemplateException)
             {
-                throw e.getRootCause();
+                throw (JamonTemplateException) e.getRootCause();
             }
             else if(e.getToken() != null)
             {
@@ -437,8 +437,8 @@ public class Analyzer
             if (! unit.isParent())
             {
                 throw new TunnelingException(
-                    unit.getName()
-                    + " is not a parent, and so cannot call <& *CHILD &>");
+                    "<& *CHILD &> cannot be called from a template without an <%abstract> tag",
+                    p_childCall.getCallStart());
             }
             addStatement(new ChildCallStatement(unit.getInheritanceDepth()+1));
         }

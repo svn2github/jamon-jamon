@@ -211,8 +211,10 @@ public class InheritanceTest
     public void testNonParentChildCall()
         throws Exception
     {
-        checkForFailure("NonParentChildCall",
-                        "/test/jamon/broken/NonParentChildCall is not a parent, and so cannot call <& *CHILD &>");
+        expectTemplateException("test/jamon/broken/NonParentChildCall",
+                                "<& *CHILD &> cannot be called from a template without an <%abstract> tag",
+                                1,
+                                1);
     }
 
     private void checkCompilationFailure(String p_path)
