@@ -236,7 +236,7 @@
       <arg value="--exclude" />
       <arg value="dist" />
       <arg value="." />
-      <arg value="jamon@jamon.org:/home/jamon/www${site.dir}" />
+      <arg value="jamon@www.jamon.org:/home/jamon/www${site.dir}" />
     </exec>
     <exec dir="${dist.dir}" executable="rsync">
       <arg value="--rsh=ssh" />
@@ -246,7 +246,7 @@
       <arg value="--cvs-exclude" />
       <arg value="--compress" />
       <arg value="." />
-      <arg value="jamon@jamon.org:/home/jamon/www${site.dir}/dist" />
+      <arg value="jamon@www.jamon.org:/home/jamon/www${site.dir}/dist" />
     </exec>
   </target>
 
