@@ -123,7 +123,10 @@ public class InvokerTask
         URL[] urls = new URL[paths.length];
         for (int i = 0; i < urls.length; ++i)
         {
-            urls[i] = new URL("file",null, paths[i]);
+            urls[i] = new URL(
+                "file",
+                null,
+                paths[i] + (new File(paths[i]).isDirectory() ? "/" : ""));
         }
         m_templateManagerData
             .setClassLoader(new URLClassLoader(urls,
@@ -150,6 +153,12 @@ public class InvokerTask
     public void setTemplate(String p_path)
     {
         m_path = p_path;
+    }
+
+    public void setDynamicRecompilation(boolean p_dynamicRecompilation)
+    {
+        System.out.println("settting dynamic recompilation to " + p_dynamicRecompilation);
+        m_templateManagerData.setDynamicRecompilation(p_dynamicRecompilation);
     }
 
     private final StandardTemplateManager.Data m_templateManagerData;
