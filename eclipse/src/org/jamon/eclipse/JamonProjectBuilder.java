@@ -1,6 +1,5 @@
 package org.jamon.eclipse;
 
-import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -8,12 +7,12 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
@@ -37,6 +36,9 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jdt.core.IClasspathEntry;
+import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.JavaCore;
 import org.jamon.JamonRuntimeException;
 import org.jamon.JamonTemplateException;
 import org.jamon.codegen.Analyzer;
@@ -48,36 +50,24 @@ import org.jamon.emit.EmitMode;
 import org.jamon.util.StringUtils;
 
 
-// TODO: need to remove stale dependencies
 public class JamonProjectBuilder extends IncrementalProjectBuilder {
 
-	private Map m_dependencies = null;
+	private TemplateDependencies m_dependencies = null;
 	private final Set m_changed = new HashSet();
 	
-	private IPath getWorkDir() throws CoreException {
+	private IPath getWorkDir() {
 		return getProject().getWorkingLocation(JamonPlugin.getDefault().pluginId());
 	}
 	
-	private File getDependencyFile() throws CoreException {
+	private File getDependencyFile() {
 		return new File(getWorkDir().toOSString(), "dependencies");
 	}
 	
-	private void loadDependencies() throws CoreException {
+	private void loadDependencies() {
 		FileInputStream in;
 		try {
 			in = new FileInputStream(getDependencyFile());
-			Map dependencies = new HashMap();
-			BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-			String s;
-			while ((s = reader.readLine()) != null) {
-				Set deps = new HashSet();
-				dependencies.put(new Path(s), deps);
-				String t;
-				while ((t = reader.readLine()).length() != 0) {
-					deps.add(new Path(t));
-				}
-			}
-			m_dependencies = dependencies;
+			m_dependencies = new TemplateDependencies(in);
 			in.close();
 		}
 		catch (FileNotFoundException e) {
@@ -89,28 +79,10 @@ public class JamonProjectBuilder extends IncrementalProjectBuilder {
 		}
 	}
 	
-	private void saveDependencies() throws CoreException {
-		FileOutputStream out;
+	private void saveDependencies() {
 		try {
-			out = new FileOutputStream(getDependencyFile());
-		}
-		catch (IOException e) {
-			e.printStackTrace();
-			// give up
-			return;
-		}
-		PrintWriter writer = new PrintWriter(out);
-		for (Iterator i = m_dependencies.entrySet().iterator(); i.hasNext(); ) {
-			Map.Entry entry = (Map.Entry) i.next();
-			writer.println(entry.getKey().toString());
-			Set deps = (Set) entry.getValue();
-			for (Iterator j = deps.iterator(); j.hasNext(); ) {
-				writer.println(j.next());
-			}
-			writer.println();
-		}
-		try {
-			writer.close();
+			FileOutputStream out = new FileOutputStream(getDependencyFile());
+			m_dependencies.save(out);
 			out.close();
 		}
 		catch (IOException e) {
@@ -140,7 +112,7 @@ public class JamonProjectBuilder extends IncrementalProjectBuilder {
 	}
 
 	private void fullBuild(IProgressMonitor monitor) throws CoreException {
-		m_dependencies = new HashMap();
+		m_dependencies = new TemplateDependencies();
 		getProject().accept(new BuildVisitor());
 	}
 	
@@ -151,33 +123,45 @@ public class JamonProjectBuilder extends IncrementalProjectBuilder {
 		delta.accept(visitor);
 		System.err.println("Changed templates are " + m_changed);
 		IFolder templateDir = getProject().getFolder(new Path("templates"));
-		Set stale = new HashSet();
 		for (Iterator i = m_changed.iterator(); i.hasNext(); ) {
 			IPath s = (IPath) i.next();
 			System.err.println(s  +" changed");
-			Collection c = (Collection) m_dependencies.get(s);
+			Collection c = m_dependencies.getDependenciesOf(s.toString());
 			System.err.println("Things that depend on s are " + c);
-			if (c != null) {
-				for (Iterator j = c.iterator(); j.hasNext(); ) {
-					visitor.visit(templateDir.findMember(((IPath) j.next()).addFileExtension(JAMON_EXTENSION)));
-				}
+			for (Iterator j = c.iterator(); j.hasNext(); ) {
+				visitor.visit(templateDir.findMember((new Path((String) j.next())).addFileExtension(JAMON_EXTENSION)));
 			}
 		}
 	}
+
+	private IJavaProject getJavaProject() throws CoreException {
+		return (IJavaProject) (getProject().getNature(JavaCore.NATURE_ID));
+	}
 	
 	private class BuildVisitor implements IResourceVisitor, IResourceDeltaVisitor {
-		BuildVisitor() throws CoreException {
+		BuildVisitor() throws CoreException  {
 			m_templateDir = getProject().getFolder(new Path("templates"));
 			m_source = new ResourceTemplateSource(m_templateDir);
 			m_describer = new TemplateDescriber(m_source, classLoader());
 			m_outFolder = getProject().getFolder(new Path("tsrc"));
 		}
-		
+
 		private ClassLoader classLoader() throws CoreException {
-			// TODO: this is certainly not the right class loader to use ...
-			// Instead, get the resolved IClassPath[] from the JavaProject, filter out
-			//  source entries, and then create a UrlClassLoader out of them (?)
-			return getClass().getClassLoader();
+			IClasspathEntry[] entries = getJavaProject().getResolvedClasspath(true);
+			URL[] urls = new URL[entries.length];
+			// TODO: this isn't correct. Need to pay attention to inclusion / exclusion
+			//   patterns, and probably do something special with non-binary entries.
+			//   Also probably should skip source folders.
+			for (int i = 0; i < entries.length; ++i) {
+				try {
+					urls[i] = entries[i].getPath().toFile().toURL();
+				}
+				catch (MalformedURLException e) {
+					throw new RuntimeException(e);
+				}
+			}
+			// TODO: does this have the proper parent?
+			return new URLClassLoader(urls);
 		}
 		
 		private final ResourceTemplateSource m_source;
@@ -281,15 +265,7 @@ public class JamonProjectBuilder extends IncrementalProjectBuilder {
 						TemplateUnit templateUnit = analyze(path, file);
 						if (templateUnit != null) {
 							path = path.makeAbsolute();
-							for (Iterator i = templateUnit.getTemplateDependencies().iterator(); i.hasNext(); ) {
-								IPath t = new Path((String) i.next());
-								Set deps = (Set) m_dependencies.get(t);
-								if (deps == null) {
-									deps = new HashSet();
-									m_dependencies.put(t, deps);
-								}
-								deps.add(path);
-							}
+							m_dependencies.setCalledBy(path.toString(), templateUnit.getTemplateDependencies());
 							m_changed.add(path);
 							createSourceFile(generateProxy(templateUnit, file), pFile);
 							createSourceFile(generateImpl(templateUnit, file), iFile);
