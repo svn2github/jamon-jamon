@@ -17,7 +17,7 @@ layer.
 <p>
   Because it is compiled to non-reflective Java code, and statically
   type-checked, Jamon is <b>ideally suited to supporting <a
-  href="http://www.refactoring.com">Refactoring</a></b> of
+  href="http://www.refactoring.com">refactoring</a></b> of
   template-based UI applications. See the <a href="Features.html">list
   of features</a> for more detail.
 </p>
