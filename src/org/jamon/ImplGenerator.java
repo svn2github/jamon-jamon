@@ -15,9 +15,9 @@ import org.modusponens.jtt.analysis.*;
 
 public class ImplGenerator extends BaseGenerator
 {
-    private Map m_unitStatements = new HashMap();
+    private final Map m_unitStatements = new HashMap();
     private StringBuffer m_current = new StringBuffer();
-    private Set m_calls = new HashSet();
+    private final Set m_calls = new HashSet();
     private final String m_packagePrefix;
 
     public ImplGenerator(Writer p_writer,
@@ -130,6 +130,29 @@ public class ImplGenerator extends BaseGenerator
         String path = asText(call.getPath());
         m_calls.add(path);
         addStatement(new CallStatement(path,call.getParam()));
+    }
+
+    private int fragments = 0;
+
+    public void caseACall2BaseComponent(ACall2BaseComponent node)
+    {
+        System.err.println("got a call2");
+        handleBody();
+        pushUnitName("#" + (fragments++));
+        m_unitStatements.put(getUnitName(),new ArrayList());
+        ACall2 call = (ACall2) node.getCall2();
+        String path = asText(call.getPath());
+        m_calls.add(path);
+        for (Iterator i = call.getBaseComponent().iterator(); i.hasNext(); /* */)
+        {
+            ((Node)i.next()).apply(this);
+        }
+        Statement s = new Call2Statement(path,
+                                         call.getParam(),
+                                         getStatements(getUnitName()));
+        popUnitName();
+        addStatement(s);
+
     }
 
     private String asText(PPath node)
@@ -456,6 +479,35 @@ public class ImplGenerator extends BaseGenerator
         }
     }
 
+    private class Call2Statement
+        extends CallStatement
+    {
+        Call2Statement(String p_path, List p_params, List p_fragment)
+        {
+            super(p_path, p_params);
+            m_fragment = p_fragment;
+        }
+
+        private final List m_fragment;
+
+        public String asString()
+            throws JttException
+        {
+            StringBuffer s = new StringBuffer();
+            s.append("{\n/*");
+            s.append("  call to ");
+            s.append(getAbsolutePath());
+            s.append("\n");
+            for (Iterator i = m_fragment.iterator(); i.hasNext(); /* */)
+            {
+                s.append(((Statement)i.next()).asString());
+            }
+            s.append("*/\n");
+            s.append("}\n");
+            return s.toString();
+        }
+    }
+
     private class CallStatement
         implements Statement
     {
@@ -472,7 +524,7 @@ public class ImplGenerator extends BaseGenerator
         }
         private final String m_path;
         private final Map m_params;
-        private String getAbsolutePath()
+        protected String getAbsolutePath()
         {
             if (m_path.charAt(0) == '/')
             {
@@ -511,7 +563,7 @@ public class ImplGenerator extends BaseGenerator
                 : asComponentCall();
         }
 
-        private String asDefCall()
+        protected String asDefCall()
             throws JttException
         {
             StringBuffer s = new StringBuffer();
@@ -558,7 +610,7 @@ public class ImplGenerator extends BaseGenerator
             return s.toString();
         }
 
-        private String asComponentCall()
+        protected String asComponentCall()
             throws JttException
         {
             StringBuffer s = new StringBuffer();

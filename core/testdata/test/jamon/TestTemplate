@@ -62,3 +62,10 @@ A call to a def: <& foo; qq => "yes" &>.
     int rr => 7;
   </%args>
   in def foo. <% rr %></%def>
+
+A call with a template fragment: \
+% int i = 3;
+<|& Sub2; x => 5 &>This is the body <% i %>
+<& foo; qq=>'yes'; rr => i+1 &>
+<& SubTemplate; z => 77; y => "icky" &>
+</&>

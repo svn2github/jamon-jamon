@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.io.PrintWriter;
 import java.util.List;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -78,16 +78,27 @@ public class BaseGenerator extends AnalysisAdapter
         }
         private final Map m_default = new HashMap();
         private final Map m_argTypes = new HashMap();
-        private List m_requiredArgs = new ArrayList();
-        private List m_optionalArgs = new ArrayList();
+        private List m_requiredArgs = new LinkedList();
+        private List m_optionalArgs = new LinkedList();
     }
 
-    private List m_imports = new ArrayList();
+    private List m_imports = new LinkedList();
     private Map m_unit = new HashMap();
-    private List m_defNames = new ArrayList();
+    private List m_defNames = new LinkedList();
     private final String m_className;
     private final String m_packageName;
     private final PrintWriter m_writer;
+    private final LinkedList m_unitNames = new LinkedList();
+
+    protected final void pushUnitName(String p_unitName)
+    {
+        m_unitNames.addLast(p_unitName);
+    }
+
+    protected final String popUnitName()
+    {
+        return (String) m_unitNames.removeLast();
+    }
 
     protected BaseGenerator(Writer p_writer,
                             String p_packageName,
@@ -100,8 +111,8 @@ public class BaseGenerator extends AnalysisAdapter
 
     public void caseStart(Start start)
     {
-        m_unitName = MAIN_UNIT_NAME;
-        m_unit.put(m_unitName,new UnitInfo(m_unitName));
+        m_unitNames.add(MAIN_UNIT_NAME);
+        m_unit.put(getUnitName(),new UnitInfo(getUnitName()));
         start.getPTemplate().apply(this);
         start.getEOF().apply(this);
     }
@@ -113,7 +124,7 @@ public class BaseGenerator extends AnalysisAdapter
 
     protected String getUnitName()
     {
-        return m_unitName;
+        return (String) m_unitNames.get(m_unitNames.size()-1);
     }
 
     protected Iterator getImports()
@@ -199,9 +210,9 @@ public class BaseGenerator extends AnalysisAdapter
 
     public void caseAArg(AArg arg)
     {
-        getUnitInfo(m_unitName).addArg(arg.getName().getText(),
-                                       asText(arg.getType()),
-                                       (ADefault)arg.getDefault());
+        getUnitInfo(getUnitName()).addArg(arg.getName().getText(),
+                                          asText(arg.getType()),
+                                          (ADefault)arg.getDefault());
     }
 
     public void caseAImportsComponent(AImportsComponent imports)
@@ -255,27 +266,22 @@ public class BaseGenerator extends AnalysisAdapter
         }
     }
 
-    private String m_unitName;
     private boolean m_inDef = false;
 
     public void caseADefComponent(ADefComponent node)
     {
-        if (! m_unitName.equals(MAIN_UNIT_NAME))
-        {
-            throw new RuntimeException("Can't nest def!");
-        }
-
         ADef def = (ADef) node.getDef();
-        m_unitName = def.getIdentifier().getText();
-        m_defNames.add(m_unitName);
-        m_unit.put(m_unitName,new UnitInfo(m_unitName));
+        String unitName = def.getIdentifier().getText();
+        m_defNames.add(unitName);
+        pushUnitName(unitName);
+        m_unit.put(getUnitName(),new UnitInfo(getUnitName()));
         def.getDefStart().apply(this);
         for (Iterator i = def.getUnitComponent().iterator(); i.hasNext(); /* */ )
         {
             ((Node)i.next()).apply(this);
         }
         def.getDefEnd().apply(this);
-        m_unitName = MAIN_UNIT_NAME;
+        popUnitName();
     }
 
     protected void generatePrologue()
