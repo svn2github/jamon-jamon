@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?><plugin>
+                            <extension
+                                  id="jamonnature"
+                                  name="Jamon Project Nature"
+                                  point="org.eclipse.core.resources.natures">
+                               <requires-nature id="org.eclipse.jdt.core.javanature"/>
+                               <builder id="jamonPlugin.templateBuilder"/>
+                               <runtime>
+                                  <run class="org.jamon.eclipse.JamonNature"/>
+                               </runtime>
+                            </extension>
+                            <extension
+                                  point="org.eclipse.ui.propertyPages">
+                               <page
+                                     adaptable="true"
+                                     objectClass="org.eclipse.core.resources.IProject"
+                                     class="org.jamon.eclipse.JamonProjectPropertyPage"
+                                     name="Jamon Project Properties"
+                                     id="org.jamon.eclipse.JamonProjectPropertyPage"/>
+                            </extension>
+                            <extension
+                                  id="templateBuilder"
+                                  name="Jamon Template Builder"
+                                  point="org.eclipse.core.resources.builders">
+                               <builder hasNature="true">
+                                  <run class="org.jamon.eclipse.JamonProjectBuilder"/>
+                               </builder>
+                            </extension>
+
+</plugin>
