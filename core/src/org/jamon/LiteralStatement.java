@@ -15,7 +15,7 @@
  * created by Jay Sachs are Copyright (C) 2002 Jay Sachs.  All Rights
  * Reserved.
  *
- * Contributor(s): 
+ * Contributor(s):
  */
 
 package org.jamon;
@@ -51,9 +51,10 @@ public class LiteralStatement
             {
               case '\\': s.append("\\\\"); break;
               case '\n': s.append("\\n"); break;
+              case '\r': s.append("\\r"); break;
               case '\t': s.append("\\t"); break;
               case '\"': s.append("\\\""); break;
-              default: 
+              default:
                   {
                       int ci = (int) c;
                       if (ci < 32 || ci > 127)
