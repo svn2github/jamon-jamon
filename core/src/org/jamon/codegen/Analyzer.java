@@ -484,6 +484,16 @@ public class Analyzer
             popUnit();
         }
 
+        public void caseABadBaseComponent(ABadBaseComponent node)
+        {
+            throw new TunnelingException
+                ("Unknown directive \""
+                 + node.getBadToken().getText()
+                 + node.getRestOfToken().getText()
+                 + "\"",
+                 node.getBadToken());
+        }
+
         public void inACallBaseComponent(ACallBaseComponent node)
         {
             handleBody();

@@ -55,6 +55,7 @@ Helpers
 
 States
   body,
+  bad,
   def,
   method,
   abstract_method,
@@ -221,6 +222,9 @@ Tokens
   {body -> alias} alias_start = '<%aliases>';
   {alias -> body} alias_end = '</%aliases>' ws*;
 
+  {body -> bad} bad_token = '<%' [all - ws];
+  {bad -> body} rest_of_token = [all - ws]+;
+
 Ignored Tokens
 
   white_space,doc,ignorable_newline;
@@ -231,6 +235,7 @@ Productions
 
   base_component =
               {body} text
+            | {bad} bad_token rest_of_token?
             | {newline} newline
             | {percent} percent
             | {literal} litstart literal_text litend
