@@ -22,3 +22,14 @@
   a template source file.
 
 </&>
+
+<&| change &>
+
+  It is now possible to specify what types are legally included in
+  emit (<code>&lt;% ... %&gt;</code>) directives via the <a
+  href="Reference.html#emitMode">EmitMode</a>. This is specifiable for
+  all templates only, by supplying the appropriate attribute to the <a
+  href="JamonTask.html">JamonTask</a>, and via the corresponding
+  attribute on the <code>RecompilingTemplateManager</code>.
+
+</&>

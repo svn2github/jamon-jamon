@@ -32,6 +32,11 @@ the generated Java sources in appropriate packages.</p>
     <td valign="top">the root directory for template sources.</td>
     <td align="center" valign="top">Yes</td>
   </tr>
+  <tr>
+    <td valign="top">emitMode</td>
+    <td valign="top">specifies the types allowed in emit directives.</td>
+    <td align="center" valign="top">Standard (all)</td>
+  </tr>
 </table>
 
 <h3>Parameters specified as nested elements</h3>

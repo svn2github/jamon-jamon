@@ -108,6 +108,24 @@
     Jamon <a href="UserGuide.html">user's guide</a> for further
     details.
 
+    <h4><a name="emitMode">Mode</a></h4>
+
+    It is possible to restrict the allowable types that can appear in
+    emit directives by supplying the appropriate attribute in the <a
+    href="JamonTask.html">JamonTask</a> definition, and also in the
+    corresponding attribute in the <a
+    href="javadoc/org/jamon/RecompilingTemplateManager.html"
+    >RecompilingTemplateManager</a>. The following levels are available:
+
+    <ul>
+      <li><b>Standard</b> - all types allowed
+      <li><b>Limited</b> - Strings, primitives, and boxed primitives
+      <li><b>Strict</b> - Strings only
+    </ul>
+
+    An attempt to emit a disallowed type will result in a Java
+    compilation error when the template is compiled.
+
   <li><span class="concept">Arbitrary Java code</span>
 
     <p>
