@@ -49,19 +49,14 @@ public abstract class AbstractSelect
         private AbstractSelect m_select;
     }
 
+    public Select.Item[] getItems()
+    {
+        return m_items;
+    }
+
     public interface ItemMaker
     {
         Select.Item makeItem(Object data);
-    }
-
-    private static Item[] create( Iterator p_data, ItemMaker p_maker)
-    {
-        ArrayList items = new ArrayList();
-        while( p_data.hasNext() )
-        {
-            items.add( p_maker.makeItem( p_data.next() ) );
-        }
-        return (Item[]) items.toArray(new Item[0]);
     }
 
     protected AbstractSelect(String p_name,
@@ -89,9 +84,14 @@ public abstract class AbstractSelect
         }
     }
 
-    public Select.Item[] getItems()
+    private static Item[] create( Iterator p_data, ItemMaker p_maker)
     {
-        return m_items;
+        ArrayList items = new ArrayList();
+        while( p_data.hasNext() )
+        {
+            items.add( p_maker.makeItem( p_data.next() ) );
+        }
+        return (Item[]) items.toArray(new Item[0]);
     }
 
     private final Item[] m_items;
