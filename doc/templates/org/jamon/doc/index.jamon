@@ -21,10 +21,11 @@
       <li>
         Keep the rendering logic in the presentation layer
         technology. Since rendering logic may be arbitrarily
-        complicated (e.g. a recursive directory structure), this logic
-        needs to be expressable in a Turing-complete language. Rather
-        than invent yet another language, use Java itself inside the
-        presentation framework.
+        complicated (e.g. rendering hierarchical data such as a
+        recursive directory structure), this logic needs to be
+        expressable in a Turing-complete language. Rather than invent
+        yet another language, use Java itself inside the presentation
+        framework.
       </li>
 
       <li>
