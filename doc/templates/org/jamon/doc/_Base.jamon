@@ -49,9 +49,9 @@
     Section section;
     String href;
   </%args>
-<li \
+<li\
 % if (section == currentSection()) {
-  id="current"\
+ id="current"\
 % }
 >
 <a href="<% href #u %>.html" \
