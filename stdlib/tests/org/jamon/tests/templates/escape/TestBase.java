@@ -33,7 +33,6 @@ public class TestBase
 {
     protected class Fragment
         extends AbstractTemplateImpl
-        implements AbstractTemplateProxy.FragmentIntf
     {
         Fragment(String p_body)
         {

@@ -24,11 +24,7 @@ import java.io.IOException;
 
 public abstract class AbstractTemplateProxy
 {
-    public interface Intf //FIXME - need this at all?
-    {
-    }
-
-    public interface FragmentIntf //FIXME - need this at all?
+    public interface Intf
     {
     }
 

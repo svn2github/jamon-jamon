@@ -90,10 +90,10 @@ public class FragmentUnit extends AbstractInnerUnit
     {
         p_writer.println(p_interfaceModifiers + " static interface "
                          + getFragmentInterfaceName());
-        p_writer.println("  extends "
-                         + (p_isCopy
-                            ? ("Intf." + getFragmentInterfaceName())
-                            : ClassNames.FRAGMENT_INTF));
+        if (p_isCopy)
+        {
+            p_writer.println("  extends Intf." + getFragmentInterfaceName());
+        }
         p_writer.openBlock();
         if (! p_isCopy)
         {

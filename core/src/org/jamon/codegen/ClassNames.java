@@ -36,5 +36,4 @@ public interface ClassNames
         org.jamon.TemplateManager.class.getName();
     public static final String BASE_TEMPLATE =
         org.jamon.AbstractTemplateImpl.class.getName();
-    public static final String FRAGMENT_INTF = TEMPLATE + ".FragmentIntf";
 }
