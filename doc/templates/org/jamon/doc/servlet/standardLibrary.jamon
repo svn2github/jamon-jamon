@@ -34,11 +34,11 @@ application (you can also download a
 sources from this section, or a <a href="example2/foobar.war">WAR file</a>
 ready for deployment):
 
-  <pre class="code"><& FormFieldsTemplate &></pre>
+  <& ../_JavaInclude; fileName => "standardLibrary/src/HelloFormFields" &>
 
 Here is a servlet that will use the above class:
 
-  <pre class="code"><& HelloServlet2Template &></pre>
+  <& ../_JavaInclude; fileName => "standardLibrary/src/HelloServlet" &>
 
 and the corresponding template should look like:
 

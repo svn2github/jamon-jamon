@@ -70,6 +70,13 @@ the documentation thus taking care of issues such as escaping.
           todir="${www.dir}/example2/templates/foo/bar/"/>
     <copy file="sample/servlet/src/HelloServlet.java"
           todir="${www.dir}/src/foo/bar"/>
+
+    <copy todir="${www.dir}/example2/src/foo/bar">
+      <fileset dir="sample/standardLibrary/src">
+        <include name="*.java"/>
+      </fileset>
+    </copy>
+
     <taskdef name="invoker"
              classname="org.jamon.ant.InvokerTask"
              classpath="${java.lib.jamon}" />
@@ -236,20 +243,6 @@ the documentation thus taking care of issues such as escaping.
     </antcall>
     <!-- Now do the second example -->
     <!-- Generate the second servlet example -->
-    <property name="servlet.src2.dir" value="${www.dir}/example2/src/foo/bar" />
-    <invoker classpath="${java.lib.jamon}:${java.lib.diff}"
-             workDir="${work.dir}"
-             compiler="${org.jamon.invoker.compiler}"
-             sourceDir="templates"
-             output="${servlet.src2.dir}/HelloServlet.java"
-             template="/org/jamon/doc/servlet/HelloServlet2Template" />
-    <!-- Generate the form fields class for the second example -->
-    <invoker classpath="${java.lib.jamon}:${java.lib.diff}"
-             workDir="${work.dir}"
-             compiler="${org.jamon.invoker.compiler}"
-             sourceDir="templates"
-             output="${servlet.src2.dir}/HelloFormFields.java"
-             template="/org/jamon/doc/servlet/FormFieldsTemplate" />
     <!-- Copy the various files needed for Appendix A -->
     <copy todir="${www.dir}">
       <fileset dir="resources">
