@@ -4,10 +4,10 @@ import java.io.Writer;
 import java.io.IOException;
 import java.net.URLEncoder;
 
-public abstract class AbstractTemplate
+public abstract class AbstractTemplateImpl
     implements Template
 {
-    protected AbstractTemplate(TemplateManager p_templateManager)
+    protected AbstractTemplateImpl(TemplateManager p_templateManager)
     {
         m_templateManager = p_templateManager;
     }
