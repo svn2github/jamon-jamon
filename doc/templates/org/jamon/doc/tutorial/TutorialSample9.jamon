@@ -60,21 +60,6 @@ This template would be invoked from Java with the class
 InheritanceSimpleTut9.java</a>
     <& _TutorialJavaFileInclude; fileName => "InheritanceSimpleTut9" &>
 
-To invoke a derived template, the Java class has two options:
-<ol><li>
-call the <code>render()</code> method on the derived template and
-provide <em>all</em> the arguments required by both the derived
-and parent template, or
-<li>
-call <code>makeParentRenderer()</code> on the derived template, passing
-the arguments required by the derived template only and then call
-<code>render()</code> on the object returned by
-<code>makeParentRenderer()</code>, providing the arguments expected by
-the parent template.
-</ol>
-In the above example, the code calls <code>makeParentRenderer()</code>
-and then <code>render()</code>, passing the required <code>Writer</code>
-instance to <code>render</code>.
 
 <h2>Inheritance with template arguments</h2>
 Both the parent and child templates may take arguments. To specify
@@ -112,14 +97,13 @@ the child template.
 <p>
 A complete example of a child template,
 <a href="InheritanceChildWArgs.jamon" class="file">
-<code>InheritanceChildWArgs</code></a>.
-is below.
+<code>InheritanceChildWArgs</code></a>, is below.
 
     <& _TutorialTemplateInclude; fileName => "InheritanceChildWArgs" &>
 
 
 <h3>Invoking a derived template</h3>
-The two choices for invoking a derived template, as described earlier, are
+The two choices for invoking a derived template are
 <ol>
 <li>
    the Java code can call the <code>render()</code> method on the derived

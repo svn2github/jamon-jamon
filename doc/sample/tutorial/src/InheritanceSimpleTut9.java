@@ -8,11 +8,8 @@ public class InheritanceSimpleTut9
   {
     try
     {
-      TemplateManagerSource
-          .setTemplateManager(new StandardTemplateManager());
-      new InheritanceChild()
-          .makeParentRenderer()
-          .render(new OutputStreamWriter(System.out));
+      TemplateManagerSource.setTemplateManager(new StandardTemplateManager());
+      new InheritanceChild().render(new OutputStreamWriter(System.out));
     }
     catch (Exception e) {
       e.printStackTrace();
