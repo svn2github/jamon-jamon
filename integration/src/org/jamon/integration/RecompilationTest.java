@@ -48,6 +48,9 @@ public class RecompilationTest
         w.write(STRING);
         w.close();
         resetWriter();
+        template =
+            new Recompilation(getRecompilingTemplateManager())
+            .writeTo(getWriter());
         template.writeTo(getWriter()).render();
         checkOutput(STRING);
     }

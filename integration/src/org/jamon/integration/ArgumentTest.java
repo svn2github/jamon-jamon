@@ -72,19 +72,6 @@ public class ArgumentTest
                     + "\n" + "1" + BOOLEAN + "s");
     }
 
-
-    public void testReset()
-        throws Exception
-    {
-        OptionalArguments optArgs
-            = new OptionalArguments(getTemplateManager());
-        optArgs.setI(4);
-        optArgs.reset();
-        optArgs.writeTo(getWriter()).render(BOOLEAN, STRING);
-        checkOutput("" + 0 + BOOLEAN + STRING);
-
-    }
-
     private static final int INT = 3;
     private static final boolean BOOLEAN = true;
     private static final String STRING = "foobar";

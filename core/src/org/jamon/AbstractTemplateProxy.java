@@ -58,16 +58,14 @@ public abstract class AbstractTemplateProxy
         private boolean m_autoFlush = true;
     }
 
-    protected AbstractTemplateProxy(TemplateManager p_templateManager,
-                                    boolean p_singleThreaded)
+    protected AbstractTemplateProxy(TemplateManager p_templateManager)
     {
         m_templateManager = p_templateManager;
-        m_implDataInstance = p_singleThreaded ? makeImplData() : null;
     }
 
     protected AbstractTemplateProxy(String p_path)
     {
-        this(TemplateManagerSource.getTemplateManagerFor(p_path), false);
+        this(TemplateManagerSource.getTemplateManagerFor(p_path));
     }
 
     protected final TemplateManager getTemplateManager()
@@ -77,8 +75,7 @@ public abstract class AbstractTemplateProxy
 
     private Escaping m_escaping = Escaping.DEFAULT;
     private final TemplateManager m_templateManager;
-    private final ThreadLocal m_implData = new ThreadLocal();
-    private final ImplData m_implDataInstance;
+    private ImplData m_implData = makeImplData();
 
     protected final void escape(Escaping p_escaping)
     {
@@ -100,26 +97,17 @@ public abstract class AbstractTemplateProxy
 
     protected abstract ImplData makeImplData();
 
-    protected final ImplData getImplData()
+    protected final void reset()
     {
-        if (m_implDataInstance != null)
-        {
-            return m_implDataInstance;
-        }
-        else
-        {
-            ImplData implData = (ImplData) m_implData.get();
-            if (implData == null)
-            {
-                implData = makeImplData();
-                m_implData.set(implData);
-            }
-            return implData;
-        }
+        m_implData = null;
     }
 
-    public final void reset()
+    protected final ImplData getImplData()
     {
-        m_implData.set(null);
+        if (m_implData == null)
+        {
+            throw new IllegalStateException("Template has been used");
+        }
+        return m_implData;
     }
 }

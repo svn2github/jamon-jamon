@@ -119,19 +119,10 @@ public class ProxyGenerator
             ("public " + getClassName()
              + "(" + ClassNames.TEMPLATE_MANAGER + " p_manager)");
         m_writer.openBlock();
-        m_writer.println(" super(p_manager, false);");
+        m_writer.println(" super(p_manager);");
         m_writer.closeBlock();
 
         m_writer.println();
-        m_writer.println
-            ("public " + getClassName()
-             + "(" + ClassNames.TEMPLATE_MANAGER + " p_manager, "
-             + " boolean p_singleThreaded)");
-        m_writer.openBlock();
-        m_writer.println("super(p_manager, p_singleThreaded);");
-        m_writer.closeBlock();
-        m_writer.println();
-
         if (m_templateUnit.isParent())
         {
             m_writer.println("protected "
@@ -364,14 +355,8 @@ public class ProxyGenerator
             );
 
         m_writer.println("instance.escapeWith(getEscaping());");
-        m_writer.println("try");
-        m_writer.openBlock();
-        m_writer.print  ("instance.render();");
-        m_writer.closeBlock();
-        m_writer.println("finally");
-        m_writer.openBlock();
+        m_writer.println("instance.render();");
         m_writer.println("reset();");
-        m_writer.closeBlock();
         m_writer.closeBlock();
         m_writer.println();
     }

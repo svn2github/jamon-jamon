@@ -50,7 +50,7 @@ public class ComponentCallStatement
         p_writer.println(getComponentProxyClassName(p_resolver) + " "
                          + instanceVar + " = "
                          + "new " + getComponentProxyClassName(p_resolver)
-                         +"(this.getTemplateManager(), true)");
+                         +"(this.getTemplateManager())");
         p_writer.indent(2);
         p_writer.println(".writeTo(this.getWriter())");
         p_writer.println(".escapeWith(this.getEscaping());");
