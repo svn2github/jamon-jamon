@@ -109,23 +109,25 @@ public class JamonTask
         TemplateProcessor processor =
             new TemplateProcessor(m_destDir, m_srcDir);
 
-        try
+        for (int i = 0; i < files.length; i++)
         {
-            for (int i = 0; i < files.length; i++)
+            try
             {
                 processor.generateSource(relativize(files[i]));
             }
-        }
-        catch (JamonParseException e)
-        {
-            throw new BuildException(e.getDescription(),
-                                     new Location(e.getFileName(),
-                                                  e.getLine(),
-                                                  e.getColumn()));
-        }
-        catch (Exception e)
-        {
-            throw new BuildException(e);
+            catch (JamonParseException e)
+            {
+                throw new BuildException(e.getDescription(),
+                                         new Location(e.getFileName(),
+                                                      e.getLine(),
+                                                      e.getColumn()));
+            }
+            catch (Exception e)
+            {
+                throw new BuildException
+                    (e.getMessage(),
+                     new Location(files[i].getAbsoluteFile().toString()));
+            }
         }
     }
 
