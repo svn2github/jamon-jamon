@@ -73,14 +73,11 @@ public class InvokerTask
             }
             new Invoker(new StandardTemplateManager(m_templateManagerData),
                         m_path)
-                .render(m_output == null
-                        ? new OutputStreamWriter(System.out)
-                        : new FileWriter(m_output),
-                        m_args);
+                .render(writer, m_args);
         }
         catch (Invoker.InvalidTemplateException e)
         {
-            e.printStackTrace(System.err);
+            throw new BuildException(e);
         }
         catch (JamonParseException e)
         {
