@@ -32,7 +32,7 @@
 
   <target name="check-parser">
     <uptodate property="parser.uptodate"
-              targetfile="${build.src.dir}/org/contravariant/node/Node.java">
+              targetfile="${build.src.dir}/org/modusponens/jtt/node/Node.java">
       <srcfiles dir="src" includes="jtt.grammar"/>
     </uptodate>
   </target>
@@ -59,6 +59,9 @@
         <src path="${build.src.dir}"/>
         <classpath refid="class.path"/>
       </javac>
+      <copy todir="${classes.dir}" >
+        <fileset dir="${build.src.dir}" includes="**/*.dat" />
+      </copy>
   </target>
 
   <target name="clean">

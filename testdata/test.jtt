@@ -1,0 +1,28 @@
+bar
+
+<%import>
+  a.b.c
+  d.e.f
+  j
+
+
+</%import>
+
+<%args>
+  String foo
+  Bar.Baz x
+  int [] [ ] y
+  Integer i => 3
+</%args>
+
+<% xyz %>
+
+%             x
+
+
+bar
+       yyy <& other &> zzz
+<%java>
+     trew  </%java>
+
+foo

@@ -11,7 +11,10 @@ Helpers
   ff  = 0x000c;
   cr  = 0x000d;
   sp  = ' ';
-  line_terminator = lf | cr | cr lf;
+  nl = lf | cr | cr lf;
+  hs = sp | ht;
+  ws = hs | lf | ff;
+
   percent = '%';
   all = [0x0000 .. 0xFFFF];
   all_except_nl = [all - [lf + cr]];
@@ -21,8 +24,9 @@ States
   imports,
   emit,
   java,
-  java1,
+  jline,
   call,
+  argexp,
   args;
 
 Tokens
@@ -30,21 +34,27 @@ Tokens
   {args -> body} args_end = '</%args>';
   {body -> imports} import_start = '<%import>';
   {imports -> body} import_end = '</%import>';
-  {body -> emit} emit_start = '<%';
-  {emit -> body} emit_end = '%>';
-  {body -> call} call_start = '<&';
-  {call -> body} call_end = '&>';
+  {body -> call} call_start = '<&' ws*;
+  {call -> body} call_end = ws* '&>';
   {body -> java} java_start = '<%java>';
   {java -> body} java_end = '</%java>';
-  {emit,args,java,imports} dot = period;
-  {args} arrow = '=>';
-  {emit,call,java,args,imports} white_space = (sp | ht | ff | line_terminator)*;
-  {emit,java,call,java1,args,imports} identifier = letter letter_or_digit*;
-  {body -> java1} injava = line_terminator percent;
-  {java1 -> body} outjava = line_terminator;
-  {body} any = all;
-  {java1} any1 = (sp | ht)* all_except_nl (sp | ht)*;
-  {args} brackets = '[' (sp|ht)* ']';
+  {args,imports} dot = period;
+  {args -> argexp} arrow = '=>';
+  {call,args,imports} white_space = ws*;
+  {call,args,imports} identifier = letter letter_or_digit*;
+
+
+  {body -> emit} emit_start = '<%' ws*;
+  {emit -> body} emit_end = ws* '%>';
+
+  // this isn't quite right -- it doesn't handle the first line of a file
+  {body -> jline} injava = nl percent hs*;
+  {jline -> body} outjava = hs* nl;
+  {jline,argexp} fragment = all_except_nl*;
+  {argexp -> args} donearg = hs* nl;
+
+  {body,emit,java} any = all;
+  {args} brackets = '[' (hs)* ']';
 
 Ignored Tokens
 
@@ -52,33 +62,24 @@ Ignored Tokens
 
 Productions
 
-  template = {template} component*;
+  template = component*;
 
-  component = {imports} import_start name* import_end
+  component = {body} any
+            | {imports} import_start name* import_end
             | {args} args_start arg* args_end
-            | {body} any
-            | {java} java_start statement* java_end
-            | {java1} injava fragment outjava
-            | {emit} emit_start expr emit_end
+            | {java} java_start any* java_end
+            | {jline} injava fragment outjava
+            | {emit} emit_start any* emit_end
             | {call} call_start name call_end
             ;
 
-  statement = expr;
+  arg = type [name]: identifier default?;
 
-  arg = type simple_name default?;
+  default = arrow fragment donearg;
 
-  default = arrow expr;
+  name = {simple} identifier
+       | {qualified} name dot identifier;
 
-  name = {simple_name} simple_name
-       | {qualified_name} qualified_name;
+  emit_expr = any;
 
-  simple_name = identifier;
-
-  qualified_name = name dot identifier;
-
-  fragment = any1;
-
-/* placeholders */
-  type = {class} name | {array} type brackets;
-
-  expr = name;
+  type = name brackets*;
