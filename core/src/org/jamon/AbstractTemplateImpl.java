@@ -20,10 +20,6 @@
 
 package org.jamon;
 
-import java.io.IOException;
-
-import org.jamon.escaping.Escaping;
-
 public abstract class AbstractTemplateImpl
     implements AbstractTemplateProxy.Intf
 {
