@@ -14,18 +14,18 @@
 As explained in the section on
 <a href="TutorialSample7.html">subtemplates</a>, a subtemplate can
 either be <em>private</em> or <em>protected</em>. Subtemplates defined
-with the <code>&lt;%def subTempName></code> ... <doce>&lt;/%def></code> tag are
+with the <code>&lt;%def <var>subTempName</var>></code> ... <code>&lt;/%def></code> tag are
 <em>private</em> and can be accessed <strong>only</strong> within the
 template that defined the subtemplate.
 <p>
 
 Subtemplates defined with the
-<code>&lt;%method subTempName></code> ... <code>&lt;/%method></code>
+<code>&lt;%method <var>subTempName</var>></code> ... <code>&lt;/%method></code>
 tag, however, are <em>protected</em> and can be accessed by templates
 that inherit from the template with the subtemplate definition.
 To invoke a protected subtemplate defined in a parent, a child template
 simply invokes it like any other subtemplate
-<pre class="template"><%LITERAL><& subTempName &></%LITERAL></pre>
+<pre class="template"><%LITERAL><& <var>subTempName</var> &></%LITERAL></pre>
 Usually, however, it is the parent template that invokes the subtemplate,
 and the parent makes the template protected so that the child can
 override it. For example, the template
