@@ -49,26 +49,34 @@ public abstract class TemplateManagerSource
 
     public static void setTemplateManager(final TemplateManager p_manager)
     {
-        s_source = new TemplateManagerSource()
+        setTemplateManagerSource(new TemplateManagerSource()
             {
                 public TemplateManager getTemplateManagerForPath(String p_path)
                 {
                     return p_manager;
                 }
-            };
+            });
     }
 
+    /**
+       Get the template manager source, creating a default one if it
+       hasn't been set.
+
+       The reason we don't synchronize here is that no use case
+       requires it. In general, applications will be calling {@link
+       #setTemplateManager} or {@link #setTemplateManagerSource}
+       before creating any top-level templates, or at least they
+       should, otherwise some templates will be using a default
+       template manager. The providing of a default here is to allow
+       "toy" or "scratch" applications not even worry about creating
+       or setting a template manager at all -- and concurrent access
+       in a scratch application is not worth worrying about.
+     */
     private static TemplateManagerSource getTemplateManagerSource()
     {
         if (s_source == null)
         {
-            synchronized (TemplateManagerSource.class)
-            {
-                if (s_source == null)
-                {
-                    setTemplateManager(new StandardTemplateManager());
-                }
-            }
+            setTemplateManager(new StandardTemplateManager());
         }
         return s_source;
     }
