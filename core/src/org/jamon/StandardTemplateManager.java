@@ -146,7 +146,7 @@ public class StandardTemplateManager
             dynamicRecompilation = p_dynamicRecompilation;
             return this;
         }
-        private boolean dynamicRecompilation = true;
+        private boolean dynamicRecompilation = false;
 
         public Data setJavaCompiler(String p_javaCompiler)
         {
