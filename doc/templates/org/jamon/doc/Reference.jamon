@@ -335,19 +335,88 @@ a good sign for you, <% name %>.
     <code>&lt;%xargs&gt;</code> ... <code>&lt;/%xargs&gt;</code>
     block.
 
+  <li><span class="concept">Invoking other templates</span>
+
+    It is possible to invoke other templates from within a template.
+    To invoke a template which takes no argument, simply write
+    <code><%LITERAL><& <var>template-name</var> &></%LITERAL></code>.
+    <p>
+
+    There are two ways to pass arguments to templates: named
+    parameters, and positional parameters. Templates can be invoked
+    with named parameters via the
+    <code>
+      <%LITERAL>
+        <& <var>template-name</var>;
+           <var>argument1</var> => <var>value1</var>; ... &>
+      </%LITERAL>
+    </code>
+    construct.  All arguments without default values
+    (i.e. <em>required</em> arguments) must be specified, but
+    arguments given default values are optional.  If values are only
+    being passed for required arguments, positional parameter syntax
+    may be used instead.  The syntax for positional parameters is
+    simply
+    <code>
+      <%LITERAL>
+        <& <var>template-name</var>: <var>value1</var>; ... &>
+      </%LITERAL>
+    </code>
+    With positional parameter syntax, arguments are passed in the
+    order that they are declared in the
+    <code><%LITERAL><%args></%LITERAL></code> section of the
+    template.  Note that while with named parameter syntax, the
+    template name is followed by a semicolon, positional parameter
+    syntax follows the template name with a colon.  In each case,
+    semicolons are used to separate parameters.
+
+  <p>
+
+    For example, suppose <code>/accounting/bill</code> contains
+    <&| _Template &><%LITERAL>
+<%args>
+  float amount;
+  String payee;
+  boolean overdue => false;
+</%args>
+You owe <% payee %> $<% amount %>.\
+% if (overdue) {
+  Pay now, or else!
+% }
+</%LITERAL></&>
+
+    This tempate can be called in the following ways:
+    <&| _Template &><%LITERAL>
+<& /accounting/bill; amount => 30; payee => "the phone company" &>
+<& /accounting/bill; payee => "the gas company"; amount => 35 &>
+<& /accounting/bill: 25; "The mechanic" &>
+<& /accounting/bill; amount => 400; payee => "Dad"; overdue => true &>
+</%LITERAL></&>
+
+    resulting in something like
+<pre class="tty">
+You owe the phone company $30.
+You owe the gas company $35.
+You owe the mechanic $25.
+You owe Dad $400.  Pay now, or else!
+</pre>
+
+    When using positional parameter syntax to invoke templates which
+    extend abstract templates, first pass the required arguments of the
+    parent, and then those of the child.
+
   <li><span class="concept">Subtemplates</span>
 
-    Subtemplates come in two forms, "private" and "protected".
-    Subtemplates may be declared to accept arguments similar to
-    templates by using <code>%args</code>.  Subtemplates can invoke
-    other subtemplates in the same template, and can be directly or
-    indirectly recursive. Arguments to subtemplates can be given
-    default values.  Subtemplates can be invoked via the
-    <code><%LITERAL><& <var>subtemplate-name</var>;
-                       <var>argument1</var> => <var>value1</var>; ... &>
-          </%LITERAL></code> construct.
+    In addition to calling other templates, a template can call
+    "subtemplates" defined within a template.  Subtemplates come in
+    two forms, "private" and "protected".  Subtemplates may be
+    declared to accept arguments similar to templates by using
+    <code>%args</code>.  Subtemplates can invoke other subtemplates in
+    the same template, and can be directly or indirectly
+    recursive. Arguments to subtemplates can be given default values.
 
     <p>
+
 
     Private subtemplates ("<def>defs</def>") can be declared via the
     <code>&lt;%def <var>def-name</var>&gt;</code> instruction, and are
@@ -378,9 +447,11 @@ a good sign for you, <% name %>.
 </%def>
 
 <table>
+<%doc>named parameter syntax</%doc>
   <& _row; name => "Mickey"; age => 46 &>
   <& _row; name => "Junior"; age => 8 &>
-  <& _row; name => "Minnie"; age => 25 &>
+<%doc>positional parameter syntax</%doc>
+  <& _row: "Minnie"; 25 &>
 </table>
 </%LITERAL></&>
       produces
@@ -512,35 +583,6 @@ Now would be a poor time to go sailing.
 </html>
 </&></pre>
 
-  <li><span class="concept">Invoking other templates</span>
-
-    It is also possible to invoke other templates from within a
-    template. Instead of supplying the subtemplate name, simply
-    supply the path to the template.  For example, suppose
-    <code>/img/spacer</code> contains:
-
-    <&| _Template &><%LITERAL>
-<%args>
-  int width => 1;
-  int height => 1;
-</%args>
-<img src="transparentpixel.gif"
-     width="<% width %>"
-     height="<% height %>"
-     border="0">
-</%LITERAL></&>
-    This can be invoked from other templates like
-    <&| _Template &><%LITERAL>
-<table>
-  <tr>
-    <td align="left">Name</td>
-    <td><& /img/spacer; width => 12 &></td>
-    <td>Age</td>
-  </tr>
-  ...
-</table>
-</%LITERAL></&>
-
   <li><span class="concept">Fragment arguments</span>
 
     It is possible to pass a "fragment" of a template as an argument
@@ -659,33 +701,5 @@ Now would be a poor time to go sailing.
 </ul>
 </&></pre>
     (in fact it produces the above with some extra whitespace).
-
-  <li><span class="concept">Passing unnamed parameters</span>
-
-    When making a call to a template, subtemplate or fragment in which
-    no optional arguments are being passed, there is a more compact
-    alterntaive to the named parameter style (<code>&lt;&amp;
-    <var>template-name</var>; <var>arg1</var> =&gt; <var>val1</var>;
-    <var>arg2</var> =&gt; <var>val2</var> &amp;&gt;</code>).  If the
-    name of the template, subtemplate or fragment is followed with a
-    colon instead of a semicolon, jamon expects the required
-    arguments, and only the required arguments, to follow, separated
-    by semicolons.  The arguments should appear in the order that they
-    are declared by the called template.  An example is shown below:
-
-    <&| _Template &><%LITERAL>
-<%def formatDate>
-  <%args>
-    java.util.Date date;
-    formatString format;
-  </%args>
-  <% new java.text.SimpleDateFormat(format).format(date) %>
-</%def>
-
-<%doc>Named parameter style:</%doc>
-<& formatDate; date => new Date(); format => "yyyy.MM.dd" &>
-<%doc>The same call, in unnamed parameter style:</%doc>
-<& formatDate: Date(); "yyyy.MM.dd" &>
-</%LITERAL></&>
 
 </ol>
