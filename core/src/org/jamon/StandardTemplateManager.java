@@ -26,6 +26,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PushbackReader;
 import java.io.Writer;
+import java.lang.reflect.Field;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Collection;
@@ -274,12 +275,20 @@ public class StandardTemplateManager
             }
 
             File jm = new File(javaImpl(path));
-            File ji = new File(javaIntf(path));
-            long ts = Math.min(jm.lastModified(),ji.lastModified());
-            if (jm.lastModified() < tf.lastModified()
-                || ji.lastModified() < tf.lastModified())
+            long ts = jm.lastModified();
+            if (jm.lastModified() < tf.lastModified())
             {
-                generateIntf(path);
+                if (generateIntfIfChanged(path))
+                {
+                    outOfDateJavaFiles.add(javaIntf(path));
+                }
+                else
+                {
+                    // FIXME:
+                    // should we really remove .java corresponding to intf?
+                    // should we also remove .class(es) corresponding to intf?
+                    new File(javaIntf(path)).delete();
+                }
                 m_dependencyCache.put(path,
                                       new DependencyEntry(generateImpl(path)));
                 ts = System.currentTimeMillis();
@@ -290,7 +299,6 @@ public class StandardTemplateManager
             if (cm.lastModified() < ts || ci.lastModified() < ts)
             {
                 outOfDateJavaFiles.add(javaImpl(path));
-                outOfDateJavaFiles.add(javaIntf(path));
             }
 
             DependencyEntry d = (DependencyEntry) m_dependencyCache.get(path);
@@ -361,30 +369,65 @@ public class StandardTemplateManager
         }
     }
 
-    private void generateIntf(String p_path)
+    private String getIntfSignatureFromClass(String p_path)
         throws IOException
     {
-        System.err.println("generating intf for " + p_path);
+        System.err.println("Looking for signature of "
+                           + StringUtils.pathToClassName(p_path));
+        try
+        {
+            Class c = Class.forName(StringUtils.pathToClassName(p_path));
+            Field f = c.getField("SIGNATURE");
+            return (String) f.get(null);
+        }
+        catch (ClassNotFoundException e)
+        {
+            return null;
+        }
+        catch (NoSuchFieldException e)
+        {
+            // FIXME: this really indicates an old version ...
+            return null;
+        }
+        catch (IllegalAccessException e)
+        {
+            // FIXME: this really indicates an old version ...
+            return null;
+        }
+    }
 
+    private boolean generateIntfIfChanged(String p_path)
+        throws IOException
+    {
         BaseAnalyzer bg =
             new BaseAnalyzer(m_describer.parseTemplate(p_path));
 
-        File javaFile = getWriteableFile(javaIntf(p_path));
-        FileWriter writer = new FileWriter(javaFile);
-        try
+        String oldsig = getIntfSignatureFromClass(p_path);
+        if (! bg.getSignature().equals(oldsig))
         {
-            new IntfGenerator(new TemplateResolver(),
-                              p_path,
-                              bg,
-                              writer)
-                .generateClassSource();
-            writer.close();
+            System.err.println("generating intf for " + p_path);
+            File javaFile = getWriteableFile(javaIntf(p_path));
+            FileWriter writer = new FileWriter(javaFile);
+            try
+            {
+                new IntfGenerator(new TemplateResolver(),
+                                  p_path,
+                                  bg,
+                                  writer)
+                    .generateClassSource();
+                writer.close();
+            }
+            catch (IOException e)
+            {
+                writer.close();
+                javaFile.delete();
+                throw e;
+            }
+            return true;
         }
-        catch (IOException e)
+        else
         {
-            writer.close();
-            javaFile.delete();
-            throw e;
+            return false;
         }
     }
 

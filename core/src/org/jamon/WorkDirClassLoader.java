@@ -1,11 +1,30 @@
+/*
+ * The contents of this file are subject to the Mozilla Public
+ * License Version 1.1 (the "License"); you may not use this file
+ * except in compliance with the License. You may obtain a copy of
+ * the License at http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS
+ * IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
+ * implied. See the License for the specific language governing
+ * rights and limitations under the License.
+ *
+ * The Original Code is Jamon code, released ??.
+ *
+ * The Initial Developer of the Original Code is Jay Sachs.  Portions
+ * created by Jay Sachs are Copyright (C) 2002 Jay Sachs.  All Rights
+ * Reserved.
+ *
+ * Contributor(s):
+ */
+
 package org.jamon;
 
 import java.util.Map;
 import java.util.HashMap;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.net.URL;
-import java.net.URLClassLoader;
 
 public class WorkDirClassLoader
     extends ClassLoader
@@ -14,14 +33,15 @@ public class WorkDirClassLoader
         throws IOException
     {
         super(p_parent);
-        m_workUrl = new URL("file:" + p_workDir + "/");
+        m_workDir = p_workDir;
     }
 
-    private final URL m_workUrl;
+    private final String m_workDir;
 
     private String getFileNameForClass(String p_name)
     {
-        return m_workUrl.getPath()
+        return m_workDir
+            + '/'
             + StringUtils.classNameToPath(p_name.replace('.','/'))
             + ".class";
     }
@@ -32,11 +52,62 @@ public class WorkDirClassLoader
         m_classMap.clear();
     }
 
+
+    private class Loader extends ClassLoader
+    {
+        Loader()
+        {
+            super(WorkDirClassLoader.this);
+        }
+        private byte [] readBytesForClass(String p_name)
+            throws IOException
+        {
+            FileInputStream s =
+                new FileInputStream(getFileNameForClass(p_name));
+            final byte [] buf = new byte[1024];
+            byte [] bytes = new byte[0];
+            while (true)
+            {
+                int i = s.read(buf);
+                if (i <= 0)
+                {
+                    break;
+                }
+                byte [] newbytes = new byte[bytes.length + i];
+                System.arraycopy(bytes,0,newbytes,0,bytes.length);
+                System.arraycopy(buf,0,newbytes,bytes.length,i);
+                bytes = newbytes;
+            }
+            return bytes;
+        }
+
+        protected Class loadClass(String p_name, boolean p_resolve)
+            throws ClassNotFoundException
+        {
+            if (! new File(getFileNameForClass(p_name)).exists())
+            {
+                return super.loadClass(p_name, p_resolve);
+            }
+            else
+            {
+                try
+                {
+                    byte [] bytecode = readBytesForClass(p_name);
+                    return this.defineClass(p_name,bytecode,0,bytecode.length);
+                }
+                catch (IOException e)
+                {
+                    throw new ClassNotFoundException(e.getMessage());
+                }
+            }
+        }
+
+    }
+
     protected Class loadClass(String p_name, boolean p_resolve)
         throws ClassNotFoundException
     {
-        File cf = new File(getFileNameForClass(p_name));
-        if (!cf.exists())
+        if (! new File(getFileNameForClass(p_name)).exists())
         {
             return super.loadClass(p_name, p_resolve);
         }
@@ -50,9 +121,9 @@ public class WorkDirClassLoader
             }
             if (m_loader == null)
             {
-                m_loader = new URLClassLoader(new URL[] { m_workUrl },
-                                              getParent());
+                m_loader = new Loader();
             }
+
             c = m_loader.loadClass(p_name);
             if (p_resolve)
             {
