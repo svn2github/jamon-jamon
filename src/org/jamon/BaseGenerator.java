@@ -64,19 +64,7 @@ public class BaseGenerator extends AnalysisAdapter
     private List m_imports = new LinkedList();
     private Map m_unit = new HashMap();
     private List m_defNames = new LinkedList();
-    private final String m_path;
-    private final TemplateDescriber m_describer;
     private final LinkedList m_unitNames = new LinkedList();
-
-    protected final TemplateDescriber getTemplateDescriber()
-    {
-        return m_describer;
-    }
-
-    protected final String getPath()
-    {
-        return m_path;
-    }
 
     protected final void pushUnitName(String p_unitName)
     {
@@ -86,13 +74,6 @@ public class BaseGenerator extends AnalysisAdapter
     protected final String popUnitName()
     {
         return (String) m_unitNames.removeLast();
-    }
-
-    protected BaseGenerator(TemplateDescriber p_describer,
-                            String p_path)
-    {
-        m_describer = p_describer;
-        m_path = p_path;
     }
 
     public void caseStart(Start start)

@@ -338,8 +338,10 @@ public class StandardTemplateManager
 
         File javaFile = new File(javaImpl(p_path));
 
-        ImplGenerator g2 = new ImplGenerator(getDescriber(),
-                                             p_path);
+        ImplGenerator g2 =
+            new ImplGenerator(new TemplateResolver(m_packagePrefix),
+                              getDescriber(),
+                              p_path);
 
         new Parser(new Lexer(new PushbackReader
                              (new FileReader(getTemplateFileName(p_path)),
@@ -365,44 +367,12 @@ public class StandardTemplateManager
     private class Describer
         implements TemplateDescriber
     {
-        public String getIntfClassName(final String p_path)
-        {
-            int i = p_path.lastIndexOf(FS);
-            return i < 0 ? p_path : p_path.substring(i+1);
-        }
-        public String getImplClassName(final String p_path)
-        {
-            return getIntfClassName(p_path) + "Impl";
-        }
-        public String getIntfPackageName(final String p_path)
-        {
-            StringBuffer pkg = new StringBuffer();
-            if (! "".equals(m_packagePrefix))
-            {
-                pkg.append(m_packagePrefix);
-            }
-            int i = p_path.lastIndexOf(FS);
-            if (i > 0)
-            {
-                pkg.append(PathUtils.pathToClassName(p_path.substring(0,i)));
-            }
-            else
-            {
-                pkg.deleteCharAt(pkg.length()-1);
-            }
-            return pkg.toString();
-        }
-        public String getImplPackageName(final String p_path)
-        {
-            return getIntfPackageName(p_path);
-        }
         public List getRequiredArgNames(final String p_path)
             throws JttException
         {
             try
             {
-                BaseGenerator g = new BaseGenerator(getDescriber(),
-                                                    p_path);
+                BaseGenerator g = new BaseGenerator();
 
                 new Parser(new Lexer(new PushbackReader
                                      (new FileReader(getTemplateFileName(p_path)),
@@ -447,8 +417,9 @@ public class StandardTemplateManager
         }
 
         File javaFile = new File(javaIntf(p_path));
-        InterfaceGenerator g1 = new InterfaceGenerator(getDescriber(),
-                                                       p_path);
+        InterfaceGenerator g1 =
+            new InterfaceGenerator(new TemplateResolver(m_packagePrefix),
+                                   p_path);
 
         new Parser(new Lexer(new PushbackReader
                              (new FileReader(getTemplateFileName(p_path)),
@@ -500,8 +471,10 @@ public class StandardTemplateManager
     {
         System.err.println("computing dependencies for " + p_path);
 
-        ImplGenerator g2 = new ImplGenerator(getDescriber(),
-                                             p_path);
+        ImplGenerator g2 =
+            new ImplGenerator(new TemplateResolver(m_packagePrefix),
+                              getDescriber(),
+                              p_path);
 
         new Parser(new Lexer(new PushbackReader
                              (new FileReader(getTemplateFileName(p_path)),

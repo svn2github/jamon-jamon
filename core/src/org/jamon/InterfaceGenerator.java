@@ -18,13 +18,16 @@ public class InterfaceGenerator extends BaseGenerator
     private final static String JTT_EXCEPTION =
         JttException.class.getName();
 
-    public InterfaceGenerator(TemplateDescriber p_describer,
+    public InterfaceGenerator(TemplateResolver p_resolver,
                               String p_templatePath)
     {
-        super(p_describer,p_templatePath);
+        m_path = p_templatePath;
+        m_resolver = p_resolver;
     }
 
     private PrintWriter m_writer;
+    private final String m_path;
+    private final TemplateResolver m_resolver;
 
     private void print(Object p_obj)
         throws IOException
@@ -42,6 +45,11 @@ public class InterfaceGenerator extends BaseGenerator
         throws IOException
     {
         m_writer.println(p_obj);
+    }
+
+    private String getPath()
+    {
+        return m_path;
     }
 
     private void generateImports()
@@ -71,12 +79,12 @@ public class InterfaceGenerator extends BaseGenerator
 
     private String getClassName()
     {
-        return getTemplateDescriber().getIntfClassName(getPath());
+        return m_resolver.getIntfClassName(getPath());
     }
 
     private String getPackageName()
     {
-        return getTemplateDescriber().getIntfPackageName(getPath());
+        return m_resolver.getIntfPackageName(getPath());
     }
 
     private void generatePrologue()
@@ -108,7 +116,7 @@ public class InterfaceGenerator extends BaseGenerator
         println();
         String className;
         print  ("    public ");
-        print  (getTemplateDescriber().getIntfClassName(getPath()));
+        print  (getClassName());
         println(" getInstance(java.io.Writer p_writer)");
         print  ("      throws ");
         println(JTT_EXCEPTION);
@@ -166,7 +174,7 @@ public class InterfaceGenerator extends BaseGenerator
             String name = (String) i.next();
             print("  public ");
             String pkgName = getPackageName();
-            if (pkgName != null && pkgName.length() > 0)
+            if (pkgName.length() > 0)
             {
                 print(pkgName);
                 print(".");

@@ -30,14 +30,30 @@ public class ImplGenerator extends BaseGenerator
     private final static String WRITER_CLASS =
         Writer.class.getName();
 
-    public ImplGenerator(TemplateDescriber p_describer,
+    public ImplGenerator(TemplateResolver p_resolver,
+                         TemplateDescriber p_describer,
                          String p_templatePath)
     {
-        super(p_describer,p_templatePath);
+        m_templatePath = p_templatePath;
+        m_resolver = p_resolver;
+        m_describer = p_describer;
         m_unitStatements.put(MAIN_UNIT_NAME,new ArrayList());
     }
 
+    private final String m_templatePath;
+    private final TemplateResolver m_resolver;
+    private final TemplateDescriber m_describer;
     private PrintWriter m_writer;
+
+    private final TemplateDescriber getTemplateDescriber()
+    {
+        return m_describer;
+    }
+
+    private final String getPath()
+    {
+        return m_templatePath;
+    }
 
     private void print(Object p_obj)
         throws IOException
@@ -270,12 +286,12 @@ public class ImplGenerator extends BaseGenerator
 
     private String getInterfaceClassName()
     {
-        return getTemplateDescriber().getIntfClassName(getPath());
+        return m_resolver.getIntfClassName(getPath());
     }
 
     private String getClassName()
     {
-        return getTemplateDescriber().getImplClassName(getPath());
+        return m_resolver.getImplClassName(getPath());
     }
 
     private void generateDeclaration()
@@ -316,7 +332,7 @@ public class ImplGenerator extends BaseGenerator
 
     private String getPackageName()
     {
-        return getTemplateDescriber().getImplPackageName(getPath());
+        return m_resolver.getImplPackageName(getPath());
     }
 
     private void generatePrologue()
@@ -663,10 +679,10 @@ public class ImplGenerator extends BaseGenerator
 
         private String getInterfaceClassName()
         {
-            String pkg = getTemplateDescriber()
-                .getIntfPackageName(getAbsolutePath(m_path));
-            String clsName = getTemplateDescriber()
-                .getIntfClassName(getAbsolutePath(m_path));
+            String pkg =
+                m_resolver.getIntfPackageName(getAbsolutePath(m_path));
+            String clsName =
+                m_resolver.getIntfClassName(getAbsolutePath(m_path));
             return "".equals(pkg) ? clsName : (pkg + "." + clsName);
         }
 
