@@ -46,6 +46,7 @@ the documentation thus taking care of issues such as escaping.
   <fileset id="servlet-build-files" dir="${build.classes.dir}"/>
 
   <target name="init">
+    <dirname property="this.dir" file="build.xml" />
     <mkdir dir="${doc.dir}"/>
     <mkdir dir="${build.dir}"/>
     <copy file="base.css" todir="${doc.dir}" />
@@ -86,7 +87,6 @@ the documentation thus taking care of issues such as escaping.
     <zip destfile="${www.dir}/JamonQs.zip"
          basedir="${www.dir}"
          includes="JamonQs.java,QsTemp.jamon" />
-    <dirname property="this.dir" file="build.xml" />
     <invoker classpath="${java.lib.jamon}:${this.dir}"
              workDir="${work.dir}"
              compiler="${org.jamon.invoker.compiler}"
@@ -175,7 +175,6 @@ the documentation thus taking care of issues such as escaping.
   </target>
 
   <target name="generateHtmlFormat">
-    <dirname property="this.dir" file="build.xml" />
     <invoker classpath="${java.lib.jamon}"
              workDir="${work.dir}"
              compiler="${org.jamon.invoker.compiler}"
@@ -194,7 +193,6 @@ the documentation thus taking care of issues such as escaping.
     <loadfile property="template.output" srcFile="${temp.file}" />
     <delete file="${temp.file}" />
     <echo message="${tutorial.page}"/>
-    <dirname property="this.dir" file="build.xml" />
     <invoker classpath="${java.lib.jamon}:${this.dir}"
              workDir="${work.dir}"
              compiler="${org.jamon.invoker.compiler}"
@@ -404,7 +402,6 @@ the documentation thus taking care of issues such as escaping.
 
   <target name="servlet" depends="init,compile" description="Run the servlet">
     <mkdir dir="${work.dir}" />
-    <dirname property="this.dir" file="build.xml" />
     <java classname="org.apache.catalina.startup.Catalina"
           failonerror="true"
           fork="yes"
