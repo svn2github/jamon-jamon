@@ -11,28 +11,16 @@ the documentation thus taking care of issues such as escaping.
   <property file="${user.home}/.ant.properties"/>
 
   <property name="build.dir" value="build"/>
-  <property name="classes.dir" value="${build.dir}/classes"/>
   <property name="html.dir" value="${build.dir}/html"/>
   <property name="java.lib.jamon" value="../jamon.jar"/>
   <property name="java.lib.diff" value="/usr/local/share/java/diff.jar"/>
 
-  <target name="compile">
-    <mkdir dir="${classes.dir}"/>
-    <javac destdir="${classes.dir}"
-           debug="true"
-           classpath="${java.lib.jamon}:${java.lib.diff}"
-           deprecation="true">
-      <src path="src"/>
-    </javac>
-  </target>
-
   <target name="build"
-          depends="compile"
           description="Generates all the documentation">
     <mkdir dir="${html.dir}"/>
     <copy file="base.css" todir="${html.dir}" />
     <java classname="org.jamon.Invoker"
-          classpath="${java.lib.jamon}:${java.lib.diff}:${classes.dir}" 
+          classpath="${java.lib.jamon}:${java.lib.diff}" 
           fork="yes">
       <arg value="-s" />
       <arg value="templates" />

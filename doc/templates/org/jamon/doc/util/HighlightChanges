@@ -7,10 +7,11 @@
 <%import>
   java.io.Writer;
   java.io.StringWriter;
-  org.jamon.doc.diff.DiffRenderer;
-  org.jamon.doc.diff.BracketingPrinter;
-  org.jamon.doc.diff.DiscardingPrinter;
-  org.jamon.doc.diff.TokenUtils;
+  java.io.StringReader;
+  java.io.BufferedReader;
+  java.io.IOException;
+  java.util.LinkedList;
+  bmsi.util.Diff;
 </%import>\
 <%java>
   Writer oldWriter = getWriter();
@@ -18,15 +19,45 @@
   writeTo(buffer);
 </%java>\
 <& content &>\
+<%class>
+  private Object[] getLinesFor(String p_text)
+    throws IOException
+  {
+    BufferedReader reader = new BufferedReader(new StringReader(p_text));
+    LinkedList tokenList = new LinkedList();
+    String line;
+    while ((line = reader.readLine()) != null)
+    {
+      tokenList.add(line + '\n');
+    }
+    return tokenList.toArray();
+  }
+</%class>\
 <%java>
   writeTo(oldWriter);
   String text = buffer.toString();
   int ix = text.indexOf(separator);
-  String first = text.substring(0, ix);
-  String second = text.substring(ix + separator.length());
-  DiffRenderer renderer = new DiffRenderer(TokenUtils.coarseTokenize(first), 
-                                           TokenUtils.coarseTokenize(second));
-</%java>\
-<% renderer.render(new BracketingPrinter(),
-                   new BracketingPrinter(beginInsert, endInsert),
-                   new DiscardingPrinter()) #n %>
+  Object[] first = getLinesFor(text.substring(0, ix));
+  Object[] second = getLinesFor(text.substring(ix + separator.length()));
+  Diff diff = new Diff(first,second);
+  diff.no_discards = true;
+  Diff.change change = diff.diff_2(false);
+  int last = 0;
+  while (change != null)
+  {
+    for (int i = last; i < change.line1; ++i)
+    {
+</%java><% second[i] #n %><%java>
+    }
+    for (int i = 0; i < change.inserted; ++i)
+    {
+</%java><% beginInsert #n %><% second[change.line1 + i] #n %><% endInsert #n %><%java>
+    }
+    last = change.line1 + change.inserted;
+    change = change.link;
+  }
+  for (int i = last; i < second.length; ++i)
+  {
+</%java><% second[i] #n %><%java>
+  }
+</%java>
