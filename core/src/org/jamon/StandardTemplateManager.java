@@ -269,7 +269,7 @@ public class StandardTemplateManager
         {
             try
             {
-                return p_proxy.constructImpl(getImplClass(p_proxy.getPath()),
+                return p_proxy.constructImpl(getImplClass(p_proxy.getClass()),
                                              p_manager);
             }
             catch (ClassNotFoundException e)
@@ -319,11 +319,6 @@ public class StandardTemplateManager
     private static void trace(String p_message)
     {
         System.err.println(p_message);
-    }
-
-    private static String getImplClassName(String p_path)
-    {
-        return StringUtils.templatePathToClassName(p_path) + "Impl";
     }
 
     private static String getDefaultWorkDir()
@@ -424,11 +419,12 @@ public class StandardTemplateManager
             + "javac";
     }
 
-    private Class getImplClass(String p_path)
+    private Class getImplClass(Class p_proxyClass)
         throws IOException,
                ClassNotFoundException
     {
-        return getTemplateClass(p_path, getImplClassName(p_path));
+        return getTemplateClass(StringUtils.classToTemplatePath(p_proxyClass),
+                                p_proxyClass.getName() + "Impl");
     }
 
     private Class getProxyClass(String p_path)

@@ -119,8 +119,6 @@ public abstract class AbstractTemplateProxy
         return m_escaping;
     }
 
-    protected abstract String getPath();
-
     protected abstract AbstractTemplateImpl constructImpl(
         Class p_class, TemplateManager p_manager)
         throws IOException;

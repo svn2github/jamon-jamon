@@ -159,11 +159,6 @@ public class JUnitTemplateManager
             checkArgsLength(p_method,p_args,1);
             return null;
         }
-        else if ("getPath".equals(p_method.getName()))
-        {
-            checkArgsLength(p_method,p_args,0);
-            return m_path;
-        }
 
         // from the generated template Intf
         else if ("render".equals(p_method.getName()))

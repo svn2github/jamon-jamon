@@ -51,7 +51,6 @@ public class ProxyGenerator
         generateArgArrays(m_templateUnit, "");
         generateMethodArrays();
         generateIntf();
-        generateGetPath();
         generateImplData();
         generateOptionalArgs();
         generateFragmentInterfaces(false);
@@ -572,18 +571,6 @@ public class ProxyGenerator
         m_writer.closeBlock();
         m_writer.closeBlock(";");
         m_writer.closeBlock();
-    }
-
-    private void generateGetPath()
-    {
-        if (! m_templateUnit.isParent())
-        {
-            m_writer.println();
-            m_writer.println("protected String getPath()");
-            m_writer.openBlock();
-            m_writer.println("return \"" + m_templateUnit.getName() + "\";");
-            m_writer.closeBlock();
-        }
     }
 
     private void generateSetWriter(String p_returnClassName)
