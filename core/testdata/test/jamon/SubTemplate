@@ -1,6 +1,6 @@
 <%args>
-  String y
-  int z
-  int x => 9
+  String y;
+  int z;
+  int x => 9;
 </%args>
 SubTemplate: <% z %>, <% x %>, <% y %>

@@ -56,7 +56,8 @@ public class BaseGenerator extends AnalysisAdapter
             {
                 m_optionalArgs.add(p_name);
                 m_argTypes.put(p_name,p_type);
-                m_default.put(p_name, p_default.getExpr().toString().trim());
+                m_default.put(p_name,
+                              p_default.getArgexpr().toString().trim());
             }
         }
         String getArgType(String p_argName)

@@ -6,9 +6,9 @@ is some starting doc.
 </%import>
 
 <%args>
-  BigDecimal amount
-  int x => 3
-  int y => 7
+  BigDecimal amount;
+  int x => 3;
+  int y => 7;
 </%args>
 
 Here is a template. It has two arguments:
@@ -58,7 +58,7 @@ A call to a def: <& foo; qq => "yes" &>.
 
 <%def foo>
   <%args>
-    String qq
-    int rr => 7
+    String qq;
+    int rr => 7;
   </%args>
   in def foo. <% rr %></%def>

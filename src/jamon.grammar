@@ -14,7 +14,7 @@ Helpers
   nl = lf | cr | cr lf;
   hs = sp | ht;
   ws = hs | lf | ff;
-
+  argend = ';'; // could be nl ...
   percent = '%';
   all = [0x0000 .. 0xFFFF];
   all_except_nl = [all - [lf + cr]];
@@ -52,8 +52,9 @@ Tokens
 
   {start -> jline} injava = percent hs*;
   {jline -> start} outjava = hs* nl;
-  {jline,argexp} expr = all_except_nl*;
-  {argexp -> args} donearg = hs* nl;
+  {jline} expr = all_except_nl*;
+  {argexp} argexpr = ([all - argend])*;
+  {argexp -> args,args} donearg = hs* argend ws*;
 
   {emit,java} any = all;
   {body,start -> body} text = all_except_nl;
@@ -132,11 +133,11 @@ Productions
 
   path = {simple} slash? identifier | {qualified} path slash identifier;
 
-  arg = type [name]: identifier default?;
+  arg = type [name]: identifier default? donearg;
 
   param = semi identifier carrow param_expr;
 
-  default = arrow expr donearg;
+  default = arrow argexpr;
 
   name = {simple} identifier
        | {qualified} name dot identifier;
