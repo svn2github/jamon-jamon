@@ -15,13 +15,14 @@
  * created by Jay Sachs are Copyright (C) 2002 Jay Sachs.  All Rights
  * Reserved.
  *
- * Contributor(s):
+ * Contributor(s): Ian Robertson
  */
 
 package org.jamon.integration;
 
 import test.jamon.Arguments;
 import test.jamon.OptionalArguments;
+import test.jamon.OptionalDefArguments;
 
 /**
  * Test Jamon's parameterized templates.  See "Jamon User's Guide",
@@ -59,6 +60,16 @@ public class ArgumentTest
             .writeTo(getWriter())
             .render(BOOLEAN, STRING);
         checkOutput("" + 0 + BOOLEAN + STRING);
+    }
+
+    public void testOptionalDef()
+        throws Exception
+    {
+        new OptionalDefArguments(getTemplateManager())
+            .writeTo(getWriter())
+            .render();
+        checkOutput("" + 0 + BOOLEAN + "s"
+                    + "\n" + "1" + BOOLEAN + "s");
     }
 
     private static final int INT = 3;
