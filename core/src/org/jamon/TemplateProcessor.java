@@ -27,8 +27,8 @@ public class TemplateGenerator
             {
                 String filename = args[arg++];
                 String templateName = filename;
-                int slash = templateName.lastIndexOf('/');
                 String pkg = pkgPrefix;
+                int slash = templateName.lastIndexOf('/');
                 if (slash == 0)
                 {
                     throw new IOException("Can only use relative paths");
@@ -36,7 +36,7 @@ public class TemplateGenerator
                 else if (slash > 0)
                 {
                     pkg = pkgPrefix
-                        + templateName.substring(0,slash).replace('/','.');
+                        + PathUtils.pathToClassName(filename.substring(0,slash));
                     templateName = templateName.substring(slash+1);
                 }
                 else
@@ -63,7 +63,7 @@ public class TemplateGenerator
                     new FileWriter(new File(javaFile, templateName + ".java"));
 
                 InterfaceGenerator g1 =
-                    new InterfaceGenerator(w, pkgPrefix, pkg, templateName);
+                    new InterfaceGenerator(w, filename, pkg, templateName);
 
                 tree.apply(g1);
                 g1.generateClassSource();

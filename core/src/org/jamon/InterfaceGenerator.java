@@ -18,15 +18,15 @@ public class InterfaceGenerator extends BaseGenerator
         JttException.class.getName();
 
     public InterfaceGenerator(Writer p_writer,
-                              String p_packagePrefix,
+                              String p_templatePath,
                               String p_packageName,
                               String p_className)
     {
         super(p_writer,p_packageName,p_className);
-        m_packagePrefix = p_packagePrefix;
+        m_templatePath = p_templatePath;
     }
 
-    private final String m_packagePrefix;
+    private final String m_templatePath;
 
     public void generateClassSource()
         throws IOException
@@ -58,13 +58,6 @@ public class InterfaceGenerator extends BaseGenerator
         println("  };");
     }
 
-    private String getTemplatePath()
-    {
-        String path = getFullyQualifiedClassName();
-        return path.replace('.','/').substring(m_packagePrefix.length());
-
-    }
-
     private void generateFactoryClass()
         throws IOException
     {
@@ -90,7 +83,7 @@ public class InterfaceGenerator extends BaseGenerator
         println(") ");
         print  ("        getInstance(\"");
         print  ("/");
-        print  (getTemplatePath());
+        print  (m_templatePath);
         println("\", p_writer);");
         println("    }");
         println("  }");
