@@ -141,6 +141,13 @@ public class StandardTemplateManager
         }
         private String workDir;
 
+        public Data setCleanWorkDir(boolean p_cleanWorkDir)
+        {
+            cleanWorkDir = p_cleanWorkDir;
+            return this;
+        }
+        private boolean cleanWorkDir = true;
+
         public Data setDynamicRecompilation(boolean p_dynamicRecompilation)
         {
             dynamicRecompilation = p_dynamicRecompilation;
@@ -263,6 +270,10 @@ public class StandardTemplateManager
             m_workDir = p_data.workDir == null
                 ? getDefaultWorkDir()
                 : p_data.workDir;
+            if (p_data.cleanWorkDir)
+            {
+                fullDelete(new File(m_workDir));
+            }
             m_javaCompiler = makeCompiler(p_data, m_workDir, m_classLoader);
 
             if (p_data.templateSource != null)
@@ -767,6 +778,27 @@ public class StandardTemplateManager
         {
             return m_lastUpdated;
         }
+    }
+
+
+    private static void fullDelete( File p_directory )
+    {
+        File[] files = p_directory.listFiles();
+        if( files != null )
+        {
+            for( int i = 0; i < files.length; ++i )
+            {
+                if( files[i].isDirectory() )
+                {
+                    fullDelete( files[i] );
+                }
+                else
+                {
+                    files[i].delete();
+                }
+            }
+        }
+        p_directory.delete();
     }
 
     private static final boolean TRACE =
