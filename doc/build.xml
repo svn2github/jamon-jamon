@@ -142,6 +142,7 @@ the documentation thus taking care of issues such as escaping.
   </target>
 
   <target name="grind">
+    <echo message="creating ${template}"/>
     <invoker classpath="${work.dir}:${this.dir}:${java.lib.jamon}:${java.lib.diff}"
              dynamicRecompilation="false"
              output="${this.dir}/${doc.dir}/${template}.html"
