@@ -3,9 +3,6 @@
   protected Section currentSection() { return Section.DOC_OVERVIEW; }
 </%class>
 <%override title>Jamon Overview</%override>
-<%args>
-  String output;
-</%args>
 
 <h2>Overview</h2>
 
