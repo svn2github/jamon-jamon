@@ -49,6 +49,7 @@ public class IntfGenerator
         generateIntf();
         generateSignature();
         generateFargInterfaces(false);
+        generateMakeRenderer();
         generateRender();
         generateOptionalArgs();
         generateFargInfo();
@@ -68,7 +69,8 @@ public class IntfGenerator
         IOException.class.getName();
     private final static String WRITER_CLASS =
         Writer.class.getName();
-
+    private final static String RENDERER_CLASS =
+        Renderer.class.getName();
 
     private final BaseAnalyzer m_analyzer;
     private final PrintWriter m_writer;
@@ -322,6 +324,58 @@ public class IntfGenerator
         }
         println("  };");
     }
+
+
+
+    private void generateMakeRenderer()
+        throws IOException
+    {
+        print(  "  public ");
+        print(  RENDERER_CLASS);
+        print(" makeRenderer(");
+        for (Iterator i = m_analyzer.getRequiredArgNames(); i.hasNext(); /* */)
+        {
+            print("final ");
+            String name = (String) i.next();
+            print(m_analyzer.getArgType(name));
+            print(" p_");
+            print(name);
+            if (i.hasNext())
+            {
+                print(", ");
+            }
+        }
+        println(")");
+
+        println("  {");
+        print(  "    return new ");
+        print(RENDERER_CLASS);
+        println("() {");
+        print(  "      public void renderTo(");
+        print(  WRITER_CLASS);
+        println(" p_writer)");
+        print(  "        throws ");
+        println(IOEXCEPTION_CLASS);
+        println("      {");
+        println("        writeTo(p_writer);");
+        print  ("        render(");
+        for (Iterator i = m_analyzer.getRequiredArgNames(); i.hasNext(); /* */)
+        {
+            print("p_");
+            print((String) i.next());
+            if (i.hasNext())
+            {
+                print(", ");
+            }
+        }
+        println(");");
+        println("      }");
+        println("    };");
+        println("  }");
+        println();
+    }
+
+
 
     private void generateOptionalArgs()
         throws IOException
