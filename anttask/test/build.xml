@@ -20,9 +20,7 @@
              classname="org.jamon.ant.JamonTask"
              classpath="${classpath}" />
     <mkdir dir="${test.src.dir}" />
-    <jamon destdir="${test.src.dir}">
-      <src path="templates"/>
-    </jamon>
+    <jamon destdir="${test.src.dir}" srcdir="templates" />
   </target>
 
   <target name="test-invoker">

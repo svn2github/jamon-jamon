@@ -40,9 +40,7 @@ To generate the Java sources, include the following target:
 <pre class="webxml"><&| /org/jamon/escape/Html &>
   <target name="templates">
     <mkdir dir="tempsrc" />
-    <jamon destdir="tempsrc">
-      <src path="templates"/>
-    </jamon>
+    <jamon destdir="tempsrc" srcdir="templates" />
   </target></&></pre>
 
 To compile the project:

@@ -49,46 +49,39 @@ public class JamonTask
         m_destDir = p_destDir;
     }
 
-    public Path createSrc()
+    public void setSrcdir(File p_srcDir)
     {
-        if (m_src == null)
-        {
-            m_src = new Path(project);
-        }
-        return m_src.createPath();
+        m_srcDir = p_srcDir;
     }
-
 
     public void execute()
         throws BuildException
     {
-        log("destDir = " + m_destDir);
-        log("src = " + m_src);
-        String[] paths = m_src.list();
-        // FIXME: This probably needs some coordination with the core
-        // Jamon project.
-        if (paths.length != 1)
-        {
-            throw new BuildException("Must have exactly one src!", location);
-        }
-        String basePath = paths[0];
-        log("basepath = " + basePath);
-
         // Copied from org.apache.tools.ant.taskdefs.Javac below
 
         // first off, make sure that we've got a srcdir
 
-        if (m_src == null)
+        if (m_srcDir == null)
         {
-            throw new BuildException("srcdir attribute must be set!", location);
+            throw new BuildException("srcdir attribute must be set!",
+                                     location);
         }
-        String [] list = m_src.list();
-        if (list.length == 0)
+        if (m_destDir == null)
         {
-            throw new BuildException("srcdir attribute must be set!", location);
+            throw new BuildException("destdir attribute must be set!",
+                                     location);
         }
 
-        if (m_destDir != null && !m_destDir.isDirectory())
+        if (! m_srcDir.exists() && ! m_srcDir.isDirectory())
+        {
+            throw new BuildException("source directory \"" +
+                                     m_srcDir +
+                                     "\" does not exist or is not a directory",
+                                     location);
+        }
+
+        m_destDir.mkdirs();
+        if (! m_destDir.exists() || ! m_destDir.isDirectory())
         {
             throw new BuildException("destination directory \"" +
                                      m_destDir +
@@ -96,38 +89,31 @@ public class JamonTask
                                      location);
         }
 
-        // scan source directories and dest directory to build up
-        // compile lists
-        resetFileLists();
-        for (int i = 0; i < list.length; i++)
+        if (!m_srcDir.exists())
         {
-            File srcDir = (File)project.resolveFile(list[i]);
-            if (!srcDir.exists())
-            {
-                throw new BuildException("srcdir \"" + srcDir.getPath() + "\" does not exist!", location);
-            }
-
-            DirectoryScanner ds = this.getDirectoryScanner(srcDir);
-
-            String[] files = ds.getIncludedFiles();
-            scanDir(srcDir, m_destDir, files);
+            throw new BuildException("srcdir \""
+                                     + m_srcDir
+                                     + "\" does not exist!", location);
         }
 
-        m_destDir.mkdirs();
-        if (! m_destDir.exists() || ! m_destDir.isDirectory())
-        {
-            throw new BuildException("Unable to create destination dir "
-                                     + m_destDir);
-        }
+        GlobPatternMapper m = new GlobPatternMapper();
+        m.setFrom("*");
+        m.setTo("*.java");
+        SourceFileScanner sfs = new SourceFileScanner(this);
+        File[] files = sfs.restrictAsFiles
+            (getDirectoryScanner(m_srcDir).getIncludedFiles(),
+             m_srcDir,
+             m_destDir,
+             m);
 
-        TemplateProcessor processor =  new TemplateProcessor
-            (m_destDir, new File(m_src.toString()));
+        TemplateProcessor processor =
+            new TemplateProcessor(m_destDir, m_srcDir);
 
         try
         {
-            for (int i = 0; i < compileList.length; i++)
+            for (int i = 0; i < files.length; i++)
             {
-                processor.generateSource(relativize(basePath, compileList[i]));
+                processor.generateSource(relativize(files[i]));
             }
         }
         catch (JamonParseException e)
@@ -143,63 +129,27 @@ public class JamonTask
         }
     }
 
-
-    /**
-     * Clear the list of files to be compiled and copied..
-     */
-
-    protected void resetFileLists()
-    {
-        compileList = new File[0];
-    }
-
-
-    /**
-     * Scans the directory looking for source files to be compiled.
-     * The results are returned in the class variable compileList
-     */
-
-    protected void scanDir(File srcDir, File destDir, String files[])
-    {
-        GlobPatternMapper m = new GlobPatternMapper();
-        m.setFrom("*");
-        m.setTo("*.java");
-        SourceFileScanner sfs = new SourceFileScanner(this);
-        File[] newFiles = sfs.restrictAsFiles(files, srcDir, destDir, m);
-
-        if (newFiles.length > 0) {
-            File[] newCompileList = new File[compileList.length +
-                newFiles.length];
-            System.arraycopy(compileList, 0, newCompileList, 0,
-                    compileList.length);
-            System.arraycopy(newFiles, 0, newCompileList,
-                    compileList.length, newFiles.length);
-            compileList = newCompileList;
-        }
-    }
-
-
-    private static String relativize(String p_basePath, File p_file)
+    private String relativize(File p_file)
     {
         if (!p_file.isAbsolute())
         {
             throw new IllegalArgumentException("Paths must be all absolute");
         }
         String filePath = p_file.getPath();
-        if (filePath.startsWith(p_basePath))
+        String basePath = m_srcDir.getAbsoluteFile().toString(); // FIXME !?
+
+        if (filePath.startsWith(basePath))
         {
-            return filePath.substring(p_basePath.length() + 1);
+            return filePath.substring(basePath.length() + 1);
         }
         else
         {
-            throw new IllegalArgumentException(p_file + " is not based at " + p_basePath);
+            throw new IllegalArgumentException(p_file
+                                               + " is not based at "
+                                               + basePath);
         }
     }
 
-
-    protected File[] compileList = new File[0];
-
-    private String m_package;
     private File m_destDir;
-    private Path m_src;
+    private File m_srcDir;
 }

@@ -52,9 +52,7 @@
     <taskdef name="jamon"
              classname="org.jamon.ant.JamonTask"
              classpath="${java.lib.jamon}" />
-    <jamon destdir="${build.src.dir}">
-      <src path="templates"/>
-    </jamon>
+    <jamon destdir="${build.src.dir}" srcdir="templates"/>
   </target>
 
   <target name="commandlineTemplates"
@@ -63,9 +61,8 @@
           classpath="${java.lib.jamon}"
           classname="org.jamon.TemplateProcessor"
           failonerror="true">
-      <arg value="--sourceDir=templates"/>
+      <arg value="--srcDir=templates"/>
       <arg value="--destDir=${build.src2.dir}"/>
-      <arg value="--all"/>
       <!-- just compile a couple to make sure this works -->
       <arg value="${sample.template1}"/>
       <arg value="${sample.template2}"/>

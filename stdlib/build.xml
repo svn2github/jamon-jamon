@@ -33,9 +33,7 @@
     <taskdef name="jamon"
              classname="org.jamon.ant.JamonTask"
              classpath="${java.lib.jamon-anttask}:${java.lib.jamon}" />
-    <jamon destdir="${build.src.dir}">
-      <src path="templates"/>
-    </jamon>
+    <jamon destdir="${build.src.dir}" srcdir="templates"/>
   </target>
 
   <target name="compile"

@@ -23,6 +23,11 @@ the generated Java sources in appropriate packages.</p>
     <td valign="top">the target directory for generated Java files.</td>
     <td align="center" valign="top">Yes</td>
   </tr>
+  <tr>
+    <td valign="top">srcdir</td>
+    <td valign="top">the root directory for template sources.</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
 </table>
 
 <h3>Parameters specified as nested elements</h3>
@@ -30,25 +35,20 @@ the generated Java sources in appropriate packages.</p>
 <p>This task forms an implicit <i>FileSet</i> and supports all
 attributes of <code>&lt;fileset&gt;</code> as well as the nested
 <code>&lt;include&gt;</code>, <code>&lt;exclude&gt;</code> and
-<code>&lt;patternset&gt;</code> elements.</p>
-
-<h4><code>src</code></h4>
-
-<p>a path-like structure specifying the root of the template sources
-to process. <b>Required</b>.</p>
+<code>&lt;patternset&gt;</code> elements. The files are searched for
+under the direcotry specified by the <span class="file">srcdir</span>
+attribute.</p>
 
 <h3>Examples</h3>
 
-<pre class="ant"><&| /org/jamon/escape/Html &><jamon destDir="tsrc">
-  <src path="wwwtemplates" />
-</jamon></&></pre>
+<pre class="ant"><&| /org/jamon/escape/Html &><jamon destDir="tsrc" srcdir="wwwtemplates" />
+</&></pre>
 
 <p>creates Java sources for all of the templates in the <span
 class="file">wwwtemplates</span> directory, putting generated sources
 into <span class="file">tsrc</span></p>
 
-<pre class="ant"><&| /org/jamon/escape/Html &><jamon destDir="tsrc">
-  <src path="templs" />
+<pre class="ant"><&| /org/jamon/escape/Html &><jamon destdir="tsrc" srcdir="templs">
   <exclude name="not/for/prod/**" />
 </jamon></&></pre>
 
