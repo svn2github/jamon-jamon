@@ -54,7 +54,8 @@ public class ImplGenerator
 
     private final static String IOEXCEPTION_CLASS =
         IOException.class.getName();
-
+    private final static String RENDERER_CLASS =
+        Renderer.class.getName();
     private final static String WRITER_CLASS =
         Writer.class.getName();
 
@@ -175,6 +176,23 @@ public class ImplGenerator
         }
         println(")");
         println("      throws java.io.IOException;");
+
+        print("       public ");
+        print(RENDERER_CLASS);
+        print(" makeRenderer(");
+        for (Iterator a = p_fargInfo.getArgumentNames(); a.hasNext(); /* */)
+        {
+            String argName = (String) a.next();
+            print(p_fargInfo.getArgumentType(argName));
+            print(" ");
+            print(argName);
+            if (a.hasNext())
+            {
+                print(", ");
+            }
+        }
+        println(");");
+
         println("  }");
         println();
     }

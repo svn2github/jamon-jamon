@@ -185,6 +185,21 @@ public class IntfGenerator
             print  ("      throws ");
             print  (IOEXCEPTION_CLASS);
             println(";");
+            print  ("    ");
+            print(RENDERER_CLASS);
+            print(" makeRenderer(");
+            for (Iterator a = p_fargInfo.getArgumentNames(); a.hasNext(); /* */)
+            {
+                String argName = (String) a.next();
+                print(p_fargInfo.getArgumentType(argName));
+                print(" ");
+                print(argName);
+                if (a.hasNext())
+                {
+                    print(", ");
+                }
+            }
+            println(");");
             println("  }");
         }
         println("");

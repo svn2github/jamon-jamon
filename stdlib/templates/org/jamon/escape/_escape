@@ -9,21 +9,8 @@
   org.jamon.Escaping;
 </%import>\
 <%java>
-  Escaping oldEscaping = getEscaping();
-  Writer oldWriter = getWriter();
-  StringWriter buffer = new StringWriter();
-  writeTo(buffer);
-  if (! compose)
-  {
-    escaping(escaping);
-  }
-</%java>\
-<& content &>\
-<%java>
-  writeTo(oldWriter);
+  content.escaping(compose ? escaping : getEscaping());
+  String text = content.makeRenderer().asString();
   escaping(escaping);
 </%java>\
-<% buffer.toString() %>\
-<%java>
-  escaping(oldEscaping);
-</%java>
+<% text %>

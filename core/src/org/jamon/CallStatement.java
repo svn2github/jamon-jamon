@@ -53,6 +53,10 @@ public class CallStatement
 
     private final static String IOEXCEPTION_CLASS =
         IOException.class.getName();
+    private final static String RENDERER_CLASS =
+        Renderer.class.getName();
+    private final static String WRITER_CLASS =
+        java.io.Writer.class.getName();
 
 
     private String getFargName(String p_fargName,
@@ -122,6 +126,51 @@ public class CallStatement
         p_writer.println("(org.jamon.TemplateManager p_manager) {");
         p_writer.println("    super(p_manager,\"\");");
         p_writer.println("  }");
+
+
+        p_writer.print("       public ");
+        p_writer.print(RENDERER_CLASS);
+        p_writer.print(" makeRenderer(");
+        for (Iterator a = fargInfo.getArgumentNames(); a.hasNext(); /* */)
+        {
+            String arg = (String) a.next();
+            p_writer.print("final ");
+            p_writer.print(fargInfo.getArgumentType(arg));
+            p_writer.print(" ");
+            p_writer.print(arg);
+            if (a.hasNext())
+            {
+                p_writer.print(", ");
+            }
+        }
+        p_writer.println(")");
+        p_writer.println("  {");
+        p_writer.print(  "    return new ");
+        p_writer.print(RENDERER_CLASS);
+        p_writer.println("() {");
+        p_writer.print(  "      public void renderTo(");
+        p_writer.print(  WRITER_CLASS);
+        p_writer.println(" p_writer)");
+        p_writer.print(  "        throws ");
+        p_writer.println(IOEXCEPTION_CLASS);
+        p_writer.println("      {");
+        p_writer.println("        writeTo(p_writer);");
+        p_writer.print  ("        render(");
+        for (Iterator a = fargInfo.getArgumentNames(); a.hasNext(); /* */)
+        {
+            String arg = (String) a.next();
+            p_writer.print(arg);
+            if (a.hasNext())
+            {
+                p_writer.print(", ");
+            }
+        }
+        p_writer.println(");");
+        p_writer.println("      }");
+        p_writer.println("    };");
+        p_writer.println("  }");
+
+
         p_writer.print("       public void render(");
         for (Iterator a = fargInfo.getArgumentNames(); a.hasNext(); /* */)
         {

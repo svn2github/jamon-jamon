@@ -4,8 +4,6 @@
 <%farg unchangedRenderer>Object text;</%farg>\
 <%farg deletedRenderer>Object text;</%farg>\
 <%import>
-  java.io.Writer;
-  java.io.StringWriter;
   java.util.StringTokenizer;
   bmsi.util.Diff;
 </%import>\
@@ -45,20 +43,8 @@
   }
 </%class>\
 <%java>
-  Writer oldWriter = getWriter();
-  StringWriter buffer = new StringWriter();
-  writeTo(buffer);
-</%java>\
-<& oldContent &>\
-<%java>
-  String oldText = buffer.toString();
-  buffer = new StringWriter();
-  writeTo(buffer);
-</%java>\
-<& newContent &>\
-<%java>
-  String newText = buffer.toString();
-  writeTo(oldWriter);
+  String oldText = oldContent.makeRenderer().asString();
+  String newText = newContent.makeRenderer().asString();
   Object[] first = getLinesFor(oldText);
   Object[] second = getLinesFor(newText);
   Diff diff = new Diff(first,second);
