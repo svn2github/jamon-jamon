@@ -18,7 +18,7 @@
       literally, whitespace included.
 
       This excludes whitespace inside <&| /org/jamon/escape/Html
-      &><%LITERAL> <%args>, <%xargs>, <%import>, <%aliases>, and
+      &><%LITERAL> <%args>, <%xargs>, <%import>, <%aliases>, <%/absmeth>, and
       <%frag> declarations.  </%LITERAL></&>
 
       Other ignored white space includes whitespace immediately after
@@ -33,10 +33,9 @@
         <li><%LITERAL><%/import></%LITERAL></li>
         <li><%LITERAL><%/implements></%LITERAL></li>
         <li><%LITERAL><%/java></%LITERAL></li>
-        <li><%LITERAL><%/def></%LITERAL></li>
-        <li><%LITERAL><%/method></%LITERAL></li>
-        <li><%LITERAL><%/absmeth></%LITERAL></li>
-        <li><%LITERAL><%/override></%LITERAL></li>
+        <li><%LITERAL><%def ...> and <%/def></%LITERAL></li>
+        <li><%LITERAL><%method ...> and <%/method></%LITERAL></li>
+        <li><%LITERAL><%override ...> and <%/override></%LITERAL></li>
         <li><%LITERAL><%/aliases></%LITERAL></li>
       </ul>
 
