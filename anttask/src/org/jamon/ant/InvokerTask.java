@@ -160,11 +160,6 @@ public class InvokerTask
         m_templateManagerData.setDynamicRecompilation(p_dynamicRecompilation);
     }
 
-    public void setCleanWorkDir(boolean p_cleanWorkDir)
-    {
-        m_templateManagerData.setCleanWorkDir(p_cleanWorkDir);
-    }
-
     private final StandardTemplateManager.Data m_templateManagerData;
     private String m_path;
     private HashMap m_args = new HashMap();
