@@ -262,7 +262,9 @@ public class IntfGenerator
 
         println("    throws java.io.IOException");
         println("  {");
-        print  ("    getInstance().render(");
+        println("    try");
+        println("    {");
+        print  ("      getInstance().render(");
         for (Iterator i = m_analyzer.getRequiredArgNames(); i.hasNext(); /* */)
         {
             print("p_");
@@ -273,8 +275,13 @@ public class IntfGenerator
             }
         }
         println(");");
-        println("    releaseInstance();");
+        println("    }");
+        println("    finally");
+        println("    {");
+        println("      releaseInstance();");
+        println("    }");
         println("  }");
+
 
         println();
         println("  public static final String[] REQUIRED_ARGS = {");
