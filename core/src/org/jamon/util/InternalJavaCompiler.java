@@ -21,7 +21,11 @@
 package org.jamon.util;
 
 import org.jamon.JamonException;
+import org.jamon.JamonRuntimeException;
+
 import java.io.IOException;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.lang.reflect.Method;
 import java.lang.reflect.InvocationTargetException;
 
@@ -36,13 +40,13 @@ public class InternalJavaCompiler
         throws Exception
     {
         m_classPath = p_classPath;
+
         m_compilerClass = Class.forName("com.sun.tools.javac.Main");
-        m_compilerClass.newInstance();
+        Object compiler = m_compilerClass.newInstance();
         m_compile = m_compilerClass.getMethod
             ("compile", new Class [] {(new String [0]).getClass()});
-
-        // FIXME: check for access
-        // m_compile.invoke(m_compiler, new String[0]);
+        // check if we can invoke the compile method
+        m_compile.invoke(compiler, new String[0]);
     }
 
     public void compile(String [] p_javaFiles)
@@ -53,28 +57,39 @@ public class InternalJavaCompiler
         cmdline[0] = "-classpath";
         cmdline[1] = m_classPath;
 
+        ByteArrayOutputStream err = new ByteArrayOutputStream();
+        PrintStream pErr = new PrintStream(err);
+        PrintStream oldErr = System.err;
         try
         {
             Object compiler = m_compilerClass.newInstance();
+            System.setErr(new PrintStream(err));
             int code = ((Integer) m_compile.invoke(compiler,
                                                    new Object[] { cmdline }))
                         .intValue();
             if (code != 0)
             {
-                throw new IOException("Compilation failed code=" + code);
+                pErr.close();
+                throw new IOException("Compilation failed code=" + code
+                                      + "\n"
+                                      + new String(err.toByteArray()));
             }
         }
         catch (IllegalAccessException e)
         {
-            throw new JamonException(e);
+            throw new JamonRuntimeException(e);
         }
         catch (InstantiationException e)
         {
-            throw new JamonException(e);
+            throw new JamonRuntimeException(e);
         }
         catch (InvocationTargetException e)
         {
             throw new JamonException(e.getTargetException());
+        }
+        finally
+        {
+            System.setErr(oldErr);
         }
     }
 
