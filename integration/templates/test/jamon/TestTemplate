@@ -28,7 +28,9 @@ i is <% i %>.
 Some funky emits:
 <% "\"quoted string\"" %>
 <% "<% this is an \"emit\" %>" #n %>
-
+<% '#' %>
+<% '\"' %>
+<% '\u008E' %>
 Some escaping stuff:
 
 HTML Escaped: <% "&" %> <% ">" %> <% "<" %> <% "'" %> <% "\"" %>

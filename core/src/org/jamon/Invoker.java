@@ -20,13 +20,10 @@
 
 package org.jamon;
 
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.HashMap;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.lang.reflect.Field;
@@ -34,151 +31,111 @@ import java.lang.reflect.InvocationTargetException;
 
 public class Invoker
 {
-    Invoker(String[] args)
-        throws UsageException,
-               TemplateArgumentException,
-               IOException,
-               InvalidTemplateException
+    public Invoker(StandardTemplateManager p_manager, String p_templateName)
+        throws IOException
     {
-        int a = 0;
+        m_manager = p_manager;
+        AbstractTemplateImpl impl = m_manager.getInstance(p_templateName);
+        m_manager.releaseInstance(impl);
+        String className = impl.getClass().getName();
+        className = className.substring(0,className.length()-4);
         try
         {
-            StandardTemplateManager manager = new StandardTemplateManager();
-            String outFile = null;
-            while (a < args.length && args[a].startsWith("-"))
-            {
-                if (args[a].startsWith("--workdir="))
-                {
-                    manager.setWorkDir(args[a].substring(10));
-                }
-                else if (args[a].equals("-w"))
-                {
-                    a++;
-                    if (a < args.length)
-                    {
-                        manager.setWorkDir(args[a]);
-                    }
-                    else
-                    {
-                        throw new UsageException();
-                    }
-                }
-                else if (args[a].startsWith("--srcdir="))
-                {
-                    manager.setSourceDir(args[a].substring(9));
-                }
-                else if (args[a].equals("-s"))
-                {
-                    a++;
-                    if (a < args.length)
-                    {
-                        manager.setSourceDir(args[a]);
-                    }
-                    else
-                    {
-                        throw new UsageException();
-                    }
-                }
-                else if (args[a].startsWith("--output="))
-                {
-                    outFile = args[a].substring(9);
-                }
-                else if (args[a].equals("-o"))
-                {
-                    a++;
-                    if (a < args.length)
-                    {
-                        outFile = args[a];
-                    }
-                    else
-                    {
-                        throw new UsageException();
-                    }
-                }
-                else
-                {
-                    throw new UsageException();
-                }
-                a++;
-            }
-            if (a >= args.length)
-            {
-                throw new UsageException();
-            }
-            AbstractTemplateImpl impl = manager.getInstance(args[a]);
-            manager.releaseInstance(impl);
-            String className = impl.getClass().getName();
-            className = className.substring(0,className.length()-4);
             m_templateClass =
-                manager.getWorkClassLoader().loadClass(className);
+                m_manager.getWorkClassLoader().loadClass(className);
+        }
+        catch (ClassNotFoundException e)
+        {
+            throw new InvalidTemplateException(p_templateName,e);
+        }
+
+        try
+        {
             Constructor con = m_templateClass
                 .getConstructor(new Class[] { TemplateManager.class });
-            Method writeToMethod =
+            m_writeToMethod =
                 m_templateClass.getMethod("writeTo",
                                           new Class [] { Writer.class });
             Method[] methods = m_templateClass.getMethods();
-            Method render = null;
+            Method renderMethod = null;
             for (int i = 0; i < methods.length; ++i)
             {
                 if (methods[i].getName().equals("render"))
                 {
-                    render = methods[i];
+                    renderMethod = methods[i];
                     break;
                 }
             }
-            if (render == null)
+            if (renderMethod == null)
             {
-                throw new InvalidTemplateException(args[a]);
+                throw new InvalidTemplateException(p_templateName);
             }
-            m_renderMethod = render;
-            m_argMap = new HashMap();
-            for (int i = a+1; i < args.length; ++i)
-            {
-                parseArgString(args[i]);
-            }
-
+            m_renderMethod = renderMethod;
             m_template = (AbstractTemplateProxy)
-                con.newInstance(new Object[]{ manager });
-            Writer writer = outFile == null
-                ? new OutputStreamWriter(System.out)
-                : new FileWriter(outFile);
-            writeToMethod.invoke(m_template, new Object[] { writer } );
-
-        }
-        catch (ClassNotFoundException e)
-        {
-            throw new InvalidTemplateException(args[a]);
+                con.newInstance(new Object[]{ m_manager });
         }
         catch (IllegalAccessException e)
         {
-            throw new InvalidTemplateException(args[a]);
+            throw new InvalidTemplateException(p_templateName,e);
         }
         catch (InvocationTargetException e)
         {
-            throw new InvalidTemplateException(args[a]);
+            throw new InvalidTemplateException(p_templateName,
+                                               e.getTargetException());
         }
         catch (NoSuchMethodException e)
         {
-            throw new InvalidTemplateException(args[a]);
+            throw new InvalidTemplateException(p_templateName,e);
         }
         catch (InstantiationException e)
         {
-            throw new InvalidTemplateException(args[a]);
+            throw new InvalidTemplateException(m_templateClass.getName(),e);
         }
     }
 
-    private void parseArgString(String p_arg)
-        throws UsageException
+    private final StandardTemplateManager m_manager;
+    private final Method m_writeToMethod;
+
+    public void render(Writer p_writer, Map p_argMap)
+        throws InvalidTemplateException,
+               IOException
     {
-        int i = p_arg.indexOf("=");
-        if (i <= 0)
+        try
         {
-            throw new UsageException();
+            m_writeToMethod.invoke(m_template, new Object[] { p_writer } );
+            Field required = m_templateClass.getField("REQUIRED_ARGS");
+            String[] requiredArgNames = (String[]) required.get(null);
+            Object[] actuals = new Object[requiredArgNames.length];
+            Class[] paramTypes = m_renderMethod.getParameterTypes();
+
+            for (int i = 0; i < requiredArgNames.length; ++i)
+            {
+                actuals[i] =
+                    parse(paramTypes[i],
+                          (String) p_argMap.remove(requiredArgNames[i]));
+            }
+            for (Iterator i = p_argMap.keySet().iterator(); i.hasNext(); /* */)
+            {
+                String name = (String) i.next();
+                invokeSet(name,(String) p_argMap.get(name));
+            }
+            m_renderMethod.invoke(m_template, actuals);
         }
-        m_argMap.put(p_arg.substring(0,i),p_arg.substring(i+1));
+        catch (NoSuchFieldException e)
+        {
+            throw new InvalidTemplateException(m_templateClass.getName(),e);
+        }
+        catch (IllegalAccessException e)
+        {
+            throw new InvalidTemplateException(m_templateClass.getName(),e);
+        }
+        catch (InvocationTargetException e)
+        {
+            throw new InvalidTemplateException(m_templateClass.getName(),e);
+        }
     }
 
-    private Object parse(Class p_type, String p_string)
+    protected Object parse(Class p_type, String p_string)
         throws TemplateArgumentException
     {
         try
@@ -187,11 +144,12 @@ public class Invoker
             {
                 if (p_type.isPrimitive())
                 {
-                    throw new TemplateArgumentException();
+                    throw new TemplateArgumentException
+                        ("primitive types cannot be null");
                 }
                 else
                 {
-                return null;
+                    return null;
                 }
             }
             else if (p_type == String.class)
@@ -225,32 +183,19 @@ public class Invoker
                     .newInstance(new Object[] { p_string });
             }
         }
-        catch (NumberFormatException e)
+        catch (RuntimeException e)
         {
-            throw new TemplateArgumentException();
+            throw e;
         }
-        catch (NoSuchMethodException e)
+        catch (Exception e)
         {
-            throw new TemplateArgumentException();
-        }
-        catch (InvocationTargetException e)
-        {
-            throw new TemplateArgumentException();
-        }
-        catch (InstantiationException e)
-        {
-            throw new TemplateArgumentException();
-        }
-        catch (IllegalAccessException e)
-        {
-            throw new TemplateArgumentException();
+            throw new TemplateArgumentException(e);
         }
     }
 
     private final Class m_templateClass;
     private final AbstractTemplateProxy m_template;
     private final Method m_renderMethod;
-    private final Map m_argMap;
 
 
     private void invokeSet(String p_name, String p_value)
@@ -270,12 +215,14 @@ public class Invoker
         }
         if (setMethod == null)
         {
-            throw new TemplateArgumentException();
+            throw new TemplateArgumentException("No set method for " + p_name);
         }
         Class[] paramTypes = setMethod.getParameterTypes();
         if (paramTypes.length != 1)
         {
-            throw new TemplateArgumentException();
+            throw new TemplateArgumentException("Set method "
+                                                + p_name 
+                                                + "does not take 1 arg");
         }
         try
         {
@@ -284,94 +231,43 @@ public class Invoker
         }
         catch (IllegalAccessException e)
         {
-            throw new TemplateArgumentException();
+            throw new TemplateArgumentException(e);
         }
         catch (InvocationTargetException e)
         {
-            throw new TemplateArgumentException();
+            throw new TemplateArgumentException(e);
         }
     }
 
-    void renderTemplate()
-        throws InvalidTemplateException
-    {
-        try
-        {
-            Field required = m_templateClass.getField("REQUIRED_ARGS");
-            String[] requiredArgNames = (String[]) required.get(null);
-            Object[] actuals = new Object[requiredArgNames.length];
-            Class[] paramTypes = m_renderMethod.getParameterTypes();
 
-            for (int i = 0; i < requiredArgNames.length; ++i)
-            {
-                actuals[i] =
-                    parse(paramTypes[i],
-                          (String) m_argMap.remove(requiredArgNames[i]));
-            }
-            for (Iterator i = m_argMap.keySet().iterator(); i.hasNext(); /* */)
-            {
-                String name = (String) i.next();
-                invokeSet(name,(String) m_argMap.get(name));
-            }
-            m_renderMethod.invoke(m_template, actuals);
-        }
-        catch (TemplateArgumentException e)
-        {
-            displayError("supplied arguments are not valid");
-        }
-        catch (NoSuchFieldException e)
-        {
-            throw new InvalidTemplateException(m_templateClass.getName());
-        }
-        catch (IllegalAccessException e)
-        {
-            displayError("Unable to render template");
-        }
-        catch (InvocationTargetException e)
-        {
-            displayError("Unable to render template");
-        }
-    }
-
-    private static void displayError(String p_message)
-    {
-        System.err.println(p_message);
-    }
-
-    public static void main(String[] args)
-    {
-        try
-        {
-            new Invoker(args).renderTemplate();
-        }
-        catch (UsageException e)
-        {
-            displayError("Usage: " + e.usage());
-        }
-        catch (InvalidTemplateException e)
-        {
-            e.printStackTrace();
-            displayError(e.getMessage());
-        }
-        catch (Throwable t)
-        {
-            t.printStackTrace(System.err);
-        }
-    }
-
-    private static class InvalidTemplateException
-        extends Exception
+    public static class InvalidTemplateException
+        extends JamonException
     {
         InvalidTemplateException(String p_templateName)
         {
+            this(p_templateName, null);
+        }
+
+        InvalidTemplateException(String p_templateName,Throwable t)
+        {
             super(p_templateName
-                  + " does not appear to be a valid template class");
+                  + " does not appear to be a valid template class",
+                  t);
         }
     }
 
-    private static class TemplateArgumentException
-        extends Exception
+    public static class TemplateArgumentException
+        extends JamonException
     {
+        TemplateArgumentException(Throwable t)
+        {
+            super(t);
+        }
+
+        TemplateArgumentException(String p_msg)
+        {
+            super(p_msg);
+        }
     }
 
 
