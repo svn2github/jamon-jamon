@@ -49,7 +49,7 @@ public class EncodingReaderTest
     public void testUtf16()
         throws Exception
     {
-        doTest("utf16", "abcdefg12345!@#$%^\u00B2\u00EC\u3092");
+        doTest("utf-16", "abcdefg12345!@#$%^\u00B2\u00EC\u3092");
     }
 
     private void doTest(final String p_encoding, final String p_stuff)
