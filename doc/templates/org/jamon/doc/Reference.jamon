@@ -18,25 +18,30 @@
       literally, whitespace included.
 
       This excludes whitespace inside <&| /org/jamon/escape/Html
-      &><%LITERAL> <%args>, <%xargs>, <%import>, <%alias>, <%/absmeth>, and
+      &><%LITERAL> <%args>, <%xargs>, <%import>, <%alias>, <%absmeth>, and
       <%frag> declarations.  </%LITERAL></&>
 
       Other ignored white space includes whitespace immediately after
       the following tags:
       <ul>
-        <li><%LITERAL><%/args></%LITERAL></li>
-        <li><%LITERAL><%/doc></%LITERAL></li>
-        <li><%LITERAL><%/frag></%LITERAL></li>
-        <li><%LITERAL><%/xargs></%LITERAL></li>
-        <li><%LITERAL><%abstract></%LITERAL></li>
-        <li><%LITERAL><%/class></%LITERAL></li>
-        <li><%LITERAL><%/import></%LITERAL></li>
-        <li><%LITERAL><%/implements></%LITERAL></li>
-        <li><%LITERAL><%/java></%LITERAL></li>
-        <li><%LITERAL><%def ...> and <%/def></%LITERAL></li>
-        <li><%LITERAL><%method ...> and <%/method></%LITERAL></li>
-        <li><%LITERAL><%override ...> and <%/override></%LITERAL></li>
-        <li><%LITERAL><%/alias></%LITERAL></li>
+        <li><&| escape//Html &><%LITERAL></%args></%LITERAL></&></li>
+        <li><&| escape//Html &><%LITERAL></%doc></%LITERAL></&></li>
+        <li><&| escape//Html &><%LITERAL></%frag></%LITERAL></&></li>
+        <li><&| escape//Html &><%LITERAL></%xargs></%LITERAL></&></li>
+        <li><&| escape//Html &><%LITERAL><%abstract></%LITERAL></&></li>
+        <li><&| escape//Html &><%LITERAL></%class></%LITERAL></&></li>
+        <li><&| escape//Html &><%LITERAL></%import></%LITERAL></&></li>
+        <li><&| escape//Html &><%LITERAL></%implements></%LITERAL></&></li>
+        <li><&| escape//Html &><%LITERAL></%java></%LITERAL></&></li>
+        <li><&| escape//Html &>
+              <%LITERAL><%def ...> and </%def></%LITERAL>
+            </&></li>
+        <li><&| escape//Html &><%LITERAL></%absmeth></%LITERAL></&></li>
+        <li><&| escape//Html &>
+              <%LITERAL><%method ...> and </%method></%LITERAL></&></li>
+        <li><&| escape//Html &>
+              <%LITERAL><%override ...> and </%override></%LITERAL></&></li>
+        <li><&| escape//Html &><%LITERAL></%alias></%LITERAL></&></li>
       </ul>
 
       If you would like to force whitespace to appear after one of the
