@@ -124,6 +124,18 @@ public class StringUtils
 	return buffer.toString();
     }
 
+    public static String hexify4(int p_int)
+    {
+        int i = p_int;
+        String s = Integer.toHexString(i);
+        int pad = 3;
+        while (i > 16)
+        {
+            pad--;
+            i /= 16;
+        }
+        return "000".substring(0,pad) + s;
+    }
 
 
 }

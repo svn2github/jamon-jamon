@@ -75,4 +75,16 @@ public class StringUtilsTest
         assertEquals("1234abcde", StringUtils.capitalize("1234abcde"));
         assertEquals(null, StringUtils.capitalize(null));
     }
+
+    public void testHexify()
+        throws Exception
+    {
+        assertEquals("0045", StringUtils.hexify4(0x45));
+        assertEquals("fe32", StringUtils.hexify4(0xFE32));
+        assertEquals("0003", StringUtils.hexify4(3));
+        assertEquals("0000", StringUtils.hexify4(0));
+        assertEquals("ffff", StringUtils.hexify4(0xffff));
+        assertEquals("03b8", StringUtils.hexify4(0x03b8));
+    }
+        
 }

@@ -53,7 +53,19 @@ public class LiteralStatement
               case '\n': s.append("\\n"); break;
               case '\t': s.append("\\t"); break;
               case '\"': s.append("\\\""); break;
-              default: s.append(c);
+              default: 
+                  {
+                      int ci = (int) c;
+                      if (ci < 32 || ci > 127)
+                      {
+                          s.append("\\u");
+                          s.append(StringUtils.hexify4(ci));
+                      }
+                      else
+                      {
+                          s.append(c);
+                      }
+                  }
             }
         }
         return s.toString();
