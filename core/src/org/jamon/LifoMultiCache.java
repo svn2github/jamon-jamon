@@ -76,6 +76,10 @@ public class LifoMultiCache
      */
     public void put(Object p_key, Object p_value)
     {
+        if (m_maxSize == 0)
+        {
+            return;
+        }
         if (isFull())
         {
             bumpElement();
