@@ -1,1 +1,6 @@
-Bla
+<%args>
+  int i;
+  boolean b;
+</%args>
+
+Bla<% i %><% b %>

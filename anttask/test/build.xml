@@ -58,16 +58,22 @@
              workDir="${work.dir}"
              compiler="${org.jamon.invoker.compiler}"
              template="/Foo"
-             output ="${temp.file}" />
+             output ="${temp.file}">
+      <arg name="i" value="3"/>
+      <arg name="b" value="true"/>
+    </invoker>
     <property name="test.output" value="" />
     <invoker classpath="${classpath}"
              sourceDir="templates"
              workDir="${work.dir}"
              compiler="${org.jamon.invoker.compiler}"
              template="/Foo"
-             property="test.output"/>
+             property="test.output">
+      <arg name="i" value="3"/>
+      <arg name="b" value="true"/>
+    </invoker>
     <condition property="test.ok">
-      <equals arg1="${test.output}" arg2="Bla"/>
+      <equals arg1="${test.output}" arg2="Bla3true"/>
     </condition>
     <fail unless="test.ok" message="output was ${test.output}"/>
   </target>

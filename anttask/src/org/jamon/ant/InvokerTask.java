@@ -32,6 +32,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Properties;
 
 import org.apache.tools.ant.BuildException;
@@ -39,7 +40,8 @@ import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Environment;
 
-import org.jamon.Invoker;
+import org.jamon.TemplateInspector;
+import org.jamon.InvokerTool;
 import org.jamon.TemplateManager;
 import org.jamon.BasicTemplateManager;
 import org.jamon.RecompilingTemplateManager;
@@ -97,14 +99,27 @@ public class InvokerTask
                 m_dynamicRecompilation
                 ? new RecompilingTemplateManager(m_recompilingManagerData)
                 : (TemplateManager) new BasicTemplateManager(m_classLoader);
-            new Invoker(manager, m_path).render(writer, m_args);
+
+            TemplateInspector inspector =
+                new TemplateInspector(manager, m_path);
+
+            InvokerTool.ObjectParser parser =
+                new InvokerTool.DefaultObjectParser();
+            for (Iterator i = m_args.entrySet().iterator(); i.hasNext(); )
+            {
+                Map.Entry entry = (Map.Entry) i.next();
+                entry.setValue(parser.parseObject(inspector.getArgumentType((String) entry.getKey()),
+                                                  (String)entry.getValue()));
+            }
+
+            inspector.render(writer, m_args);
             if (m_outputPropertyName != null)
             {
                 getProject().setProperty(m_outputPropertyName,
                                          writer.toString());
             }
         }
-        catch (Invoker.InvalidTemplateException e)
+        catch (TemplateInspector.InvalidTemplateException e)
         {
             throw new BuildException(e);
         }
