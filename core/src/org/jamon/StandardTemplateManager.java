@@ -192,13 +192,11 @@ public class StandardTemplateManager
     }
 
     public StandardTemplateManager()
-        throws IOException
     {
         this(new Data());
     }
 
     private static String getDefaultJavac()
-        throws IOException
     {
         // FIXME: does this work on windows?
         // FIXME: should we just use the javac in the default path?
@@ -212,7 +210,7 @@ public class StandardTemplateManager
             bindir = "bin";
         }
         return new File(new File(System.getProperty("java.home")).getParent(),
-                        bindir).getCanonicalPath()
+                        bindir)
             + File.separator
             + "javac";
     }
@@ -226,7 +224,6 @@ public class StandardTemplateManager
     private static JavaCompiler makeCompiler(Data p_data,
                                              String p_workDir,
                                              ClassLoader p_classLoader)
-        throws IOException
     {
         String javac = p_data.javaCompiler;
         if (javac == null)
@@ -255,7 +252,6 @@ public class StandardTemplateManager
     }
 
     public StandardTemplateManager(Data p_data)
-        throws IOException
     {
         m_autoFlush = p_data.autoFlush;
         m_escaping = p_data.escaping == null
@@ -373,7 +369,6 @@ public class StandardTemplateManager
     }
 
     private static String getDefaultWorkDir()
-        throws IOException
     {
         File workDir =
             new File(System.getProperty("java.io.tmpdir"),
@@ -382,11 +377,11 @@ public class StandardTemplateManager
                      + ".tmp");
         if (! workDir.mkdirs())
         {
-            throw new JamonException("Unable to create default work directory "
-                                     + workDir);
+            throw new JamonRuntimeException
+                ("Unable to create default work directory " + workDir);
         }
         workDir.deleteOnExit();
-        return workDir.getCanonicalPath();
+        return workDir.toString();
     }
 
 
