@@ -40,7 +40,6 @@ public interface Statement
      * @exception IOException if something goes wrong
      */
     void generateSource(IndentingWriter p_writer,
-                        TemplateResolver p_resolver,
                         TemplateDescriber p_describer)
         throws IOException;
 }

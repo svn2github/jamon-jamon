@@ -27,12 +27,10 @@ import java.util.Iterator;
 public class ImplGenerator
 {
     public ImplGenerator(Writer p_writer,
-                         TemplateResolver p_resolver,
                          TemplateDescriber p_describer,
                          TemplateUnit p_templateUnit)
     {
         m_writer = new IndentingWriter(p_writer);
-        m_resolver = p_resolver;
         m_describer = p_describer;
         m_templateUnit = p_templateUnit;
     }
@@ -52,7 +50,6 @@ public class ImplGenerator
         m_writer.finish();
     }
 
-    private final TemplateResolver m_resolver;
     private final IndentingWriter m_writer;
     private final TemplateDescriber m_describer;
     private final TemplateUnit m_templateUnit;
@@ -64,7 +61,7 @@ public class ImplGenerator
 
     private String getClassName()
     {
-        return m_resolver.getImplClassName(getPath());
+        return PathUtils.getImplClassName(getPath());
     }
 
     private void generateDeclaration()
@@ -77,7 +74,7 @@ public class ImplGenerator
         m_writer.println(" class " + getClassName());
         m_writer.println("  extends "
                          + (m_templateUnit.hasParentPath()
-                            ? m_resolver.getFullyQualifiedImplClassName(
+                            ? PathUtils.getFullyQualifiedImplClassName(
                                 m_templateUnit.getParentPath())
                             : ClassNames.BASE_TEMPLATE));
         m_writer.println("  implements " + getProxyClassName() + ".Intf");
@@ -141,7 +138,7 @@ public class ImplGenerator
 
     private void generatePrologue()
     {
-        String pkgName = m_resolver.getImplPackageName(getPath());
+        String pkgName = PathUtils.getImplPackageName(getPath());
         if (pkgName.length() > 0)
         {
             m_writer.println("package " + pkgName + ";");
@@ -201,7 +198,7 @@ public class ImplGenerator
             defUnit.printAllArgsDecl(m_writer);
             m_writer.println(")");
             m_writer.println("  throws " + ClassNames.IOEXCEPTION);
-            defUnit.generateRenderBody(m_writer, m_resolver, m_describer);
+            defUnit.generateRenderBody(m_writer, m_describer);
             m_writer.println();
         }
     }
@@ -245,7 +242,7 @@ public class ImplGenerator
         p_methodUnit.printAllArgsDecl(m_writer);
         m_writer.println(")");
         m_writer.println("  throws " + ClassNames.IOEXCEPTION);
-        p_methodUnit.generateRenderBody(m_writer, m_resolver, m_describer);
+        p_methodUnit.generateRenderBody(m_writer, m_describer);
         m_writer.println();
 
         //FIXME - only generate these for optional args we provide new
@@ -279,10 +276,7 @@ public class ImplGenerator
             m_writer.println("public void render() throws "
                              + ClassNames.IOEXCEPTION);
         }
-        m_templateUnit.generateRenderBody(m_writer,
-                                          m_resolver,
-                                          m_describer);
-
+        m_templateUnit.generateRenderBody(m_writer, m_describer);
 
         m_writer.println();
         if (m_templateUnit.isParent())
@@ -314,7 +308,7 @@ public class ImplGenerator
 
     private String getProxyClassName()
     {
-        return m_resolver.getFullyQualifiedIntfClassName(getPath());
+        return PathUtils.getFullyQualifiedIntfClassName(getPath());
     }
 
     private String getImplDataClassName()
@@ -324,7 +318,7 @@ public class ImplGenerator
 
     private String getParentImplClassName()
     {
-        return m_resolver.getFullyQualifiedImplClassName(
+        return PathUtils.getFullyQualifiedImplClassName(
             m_templateUnit.getParentPath());
     }
 

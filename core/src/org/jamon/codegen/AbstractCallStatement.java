@@ -48,11 +48,10 @@ public abstract class AbstractCallStatement
     private final Map m_fragParams = new HashMap();
 
     protected abstract String getFragmentIntfName(
-        FragmentUnit p_fragmentUnitIntf, TemplateResolver p_resolver);
+        FragmentUnit p_fragmentUnitIntf);
 
     private void handleFragmentParam(FragmentUnit p_fragmentUnitIntf,
                                      IndentingWriter p_writer,
-                                     TemplateResolver p_resolver,
                                      TemplateDescriber p_describer)
         throws IOException
     {
@@ -66,7 +65,7 @@ public abstract class AbstractCallStatement
         }
 
         p_writer.print("new "
-                       + getFragmentIntfName(p_fragmentUnitIntf, p_resolver)
+                       + getFragmentIntfName(p_fragmentUnitIntf)
                        + "(this.getTemplateManager(), this.getEscaping()) ");
         p_writer.openBlock();
 
@@ -94,14 +93,13 @@ public abstract class AbstractCallStatement
         fragmentUnitImpl.printRequiredArgsDecl(p_writer);
         p_writer.print(") throws ");
         p_writer.println(ClassNames.IOEXCEPTION);
-        fragmentUnitImpl.generateRenderBody(p_writer, p_resolver, p_describer);
+        fragmentUnitImpl.generateRenderBody(p_writer, p_describer);
 
         p_writer.closeBlock();
     }
 
     protected void handleFragmentParams(List p_fragmentInterfaces,
                                       IndentingWriter p_writer,
-                                      TemplateResolver p_resolver,
                                       TemplateDescriber p_describer,
                                       boolean p_argsAlreadyPrinted)
         throws IOException
@@ -139,7 +137,6 @@ public abstract class AbstractCallStatement
             handleFragmentParam
                 (((FragmentArgument) i.next()).getFragmentUnit(),
                  p_writer,
-                 p_resolver,
                  p_describer);
         }
     }

@@ -27,7 +27,6 @@ import java.util.List;
 
 import org.jamon.util.StringUtils;
 import org.jamon.codegen.TemplateDescriber;
-import org.jamon.codegen.TemplateResolver;
 import org.jamon.codegen.Analyzer;
 import org.jamon.codegen.ImplGenerator;
 import org.jamon.codegen.ProxyGenerator;
@@ -48,12 +47,10 @@ public class TemplateProcessor
         m_describer =
             new TemplateDescriber(new FileTemplateSource(p_sourceDir),
                                   p_classLoader);
-        m_resolver = new TemplateResolver();
     }
 
     private File m_destDir;
     private TemplateDescriber m_describer;
-    private TemplateResolver m_resolver;
 
     public void generateSource(String p_filename)
         throws IOException,
@@ -91,7 +88,7 @@ public class TemplateProcessor
 
         try
         {
-            new ProxyGenerator(writer, m_resolver, m_describer, templateUnit)
+            new ProxyGenerator(writer, m_describer, templateUnit)
                 .generateClassSource();
         }
         catch (RuntimeException e)
@@ -124,10 +121,7 @@ public class TemplateProcessor
         writer = new FileWriter(javaFile);
         try
         {
-            new ImplGenerator(writer,
-                              m_resolver,
-                              m_describer,
-                              templateUnit)
+            new ImplGenerator(writer, m_describer, templateUnit)
                 .generateSource();
         }
         catch (RuntimeException e)

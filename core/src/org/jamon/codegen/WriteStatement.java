@@ -30,7 +30,6 @@ public class WriteStatement
     }
 
     public void generateSource(IndentingWriter p_writer,
-                               TemplateResolver p_resolver,
                                TemplateDescriber p_describer)
     {
         p_writer.print("this.writeEscaped(this.valueOf(");

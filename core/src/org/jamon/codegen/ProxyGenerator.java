@@ -30,12 +30,10 @@ import java.util.LinkedList;
 public class ProxyGenerator
 {
     public ProxyGenerator(Writer p_writer,
-                          TemplateResolver p_resolver,
                           TemplateDescriber p_describer,
                           TemplateUnit p_templateUnit)
     {
         m_writer = new IndentingWriter(p_writer);
-        m_resolver = p_resolver;
         m_describer = p_describer;
         m_templateUnit = p_templateUnit;
     }
@@ -76,7 +74,6 @@ public class ProxyGenerator
         m_writer.finish();
     }
 
-    private final TemplateResolver m_resolver;
     private final TemplateDescriber m_describer;
     private IndentingWriter m_writer;
     private final TemplateUnit m_templateUnit;
@@ -93,12 +90,12 @@ public class ProxyGenerator
 
     private String getClassName()
     {
-        return m_resolver.getIntfClassName(m_templateUnit.getName());
+        return PathUtils.getIntfClassName(m_templateUnit.getName());
     }
 
     private String getPackageName()
     {
-        return m_resolver.getIntfPackageName(m_templateUnit.getName());
+        return PathUtils.getIntfPackageName(m_templateUnit.getName());
     }
 
     private void generatePrologue()
@@ -207,7 +204,7 @@ public class ProxyGenerator
         m_writer.println("class " + getClassName());
         m_writer.println("  extends "
                          + (m_templateUnit.hasParentPath()
-                            ? m_resolver.getFullyQualifiedIntfClassName(
+                            ? PathUtils.getFullyQualifiedIntfClassName(
                                 m_templateUnit.getParentPath())
                             : ClassNames.TEMPLATE));
         m_templateUnit.printInterfaces(m_writer);
@@ -329,7 +326,7 @@ public class ProxyGenerator
         m_writer.openBlock();
         m_writer.println(
             "return new "
-            + m_resolver.getImplClassName(m_templateUnit.getName())
+            + PathUtils.getImplClassName(m_templateUnit.getName())
             + "(p_manager, (ImplData) getImplData());");
         m_writer.closeBlock();
     }
@@ -394,7 +391,7 @@ public class ProxyGenerator
         m_writer.println("  extends ");
         if(m_templateUnit.hasParentPath())
         {
-            m_writer.println(m_resolver.getFullyQualifiedIntfClassName(
+            m_writer.println(PathUtils.getFullyQualifiedIntfClassName(
                 m_templateUnit.getParentPath())
                              + ".ImplData");
         }
@@ -469,7 +466,7 @@ public class ProxyGenerator
         m_writer.println("protected interface Intf");
         m_writer.print("  extends "
                        + (m_templateUnit.hasParentPath()
-                          ? m_resolver.getFullyQualifiedIntfClassName(
+                          ? PathUtils.getFullyQualifiedIntfClassName(
                               m_templateUnit.getParentPath()) + ".Intf"
                           : ClassNames.TEMPLATE_INTF));
         m_writer.openBlock();
@@ -541,7 +538,7 @@ public class ProxyGenerator
     private void generateMakeParentRenderer()
     {
         String parentRendererClass =
-            m_resolver.getFullyQualifiedIntfClassName(
+            PathUtils.getFullyQualifiedIntfClassName(
                 m_templateUnit.getParentPath()) + ".ParentRenderer";
         m_writer.print("public " + parentRendererClass
                        + " makeParentRenderer(");
@@ -558,7 +555,7 @@ public class ProxyGenerator
         if (m_templateUnit.isParent())
         {
             m_writer.print
-                (m_resolver.getFullyQualifiedIntfClassName(getClassName())
+                (PathUtils.getFullyQualifiedIntfClassName(getClassName())
                  + ".ParentRenderer.this.renderChild(");
             m_templateUnit.printRequiredArgs(m_writer);
             m_writer.println(");");
@@ -566,7 +563,7 @@ public class ProxyGenerator
         else
         {
             m_writer.print(
-                m_resolver.getFullyQualifiedIntfClassName(getClassName())
+                PathUtils.getFullyQualifiedIntfClassName(getClassName())
                 + ".this.render(");
             m_templateUnit.printRequiredArgs(m_writer);
             m_writer.println(");");

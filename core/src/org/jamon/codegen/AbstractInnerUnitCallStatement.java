@@ -38,20 +38,18 @@ public abstract class AbstractInnerUnitCallStatement
     }
 
     private final Unit m_unit;
-    
+
     protected Unit getUnit()
     {
         return m_unit;
     }
 
-    protected String getFragmentIntfName(FragmentUnit p_fragmentUnitIntf,
-                                         TemplateResolver p_resolver)
+    protected String getFragmentIntfName(FragmentUnit p_fragmentUnitIntf)
     {
         return p_fragmentUnitIntf.getFragmentInterfaceName();
     }
 
     public void generateSource(IndentingWriter p_writer,
-                               TemplateResolver p_resolver,
                                TemplateDescriber p_describer)
         throws IOException
     {
@@ -103,7 +101,6 @@ public abstract class AbstractInnerUnitCallStatement
         }
         handleFragmentParams(m_unit.getFragmentArgsList(),
                              p_writer,
-                             p_resolver,
                              p_describer,
                              argsAlreadyPrinted);
         p_writer.outdent(2);

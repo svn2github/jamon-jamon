@@ -75,26 +75,22 @@ public abstract class AbstractUnit
     }
 
     public void generateRenderBody(IndentingWriter p_writer,
-                                   TemplateResolver p_resolver,
                                    TemplateDescriber p_describer)
         throws IOException
     {
         p_writer.openBlock();
-        printStatements(p_writer, p_resolver, p_describer);
+        printStatements(p_writer, p_describer);
         printRenderBodyEnd(p_writer);
         p_writer.closeBlock();
     }
 
     private void printStatements(IndentingWriter p_writer,
-                                TemplateResolver p_resolver,
                                 TemplateDescriber p_describer)
         throws IOException
     {
         for (Iterator i = getStatements().iterator(); i.hasNext(); )
         {
-            ((Statement)i.next()).generateSource(p_writer,
-                                                 p_resolver,
-                                                 p_describer);
+            ((Statement)i.next()).generateSource(p_writer, p_describer);
         }
     }
 

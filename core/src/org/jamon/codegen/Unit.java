@@ -43,7 +43,6 @@ public interface Unit
 
     void printRequiredArgsDecl(IndentingWriter p_writer);
     void generateRenderBody(IndentingWriter p_writer,
-                            TemplateResolver p_resolver,
                             TemplateDescriber p_describer)
         throws IOException;
 }

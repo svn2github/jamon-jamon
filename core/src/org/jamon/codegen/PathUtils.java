@@ -23,19 +23,14 @@ package org.jamon.codegen;
 import org.jamon.util.StringUtils;
 
 /**
- * A <code>TemplateResolver</code> provides methods to translate
- * template paths to the corresponding interface class name,
- * implementation class name, and the package name for each.
+ * Provides methods to translate template paths to the corresponding
+ * interface class name, implementation class name, and the package
+ * name for each.
  **/
 
-public class TemplateResolver
+public class PathUtils
 {
-    /**
-     * Construct a <code>TemplateResolver</code>.
-     **/
-    public TemplateResolver()
-    {
-    }
+    private PathUtils() {}
 
     /**
      * Given a template path, return the name of the interface class
@@ -46,7 +41,7 @@ public class TemplateResolver
      * @return the name of the interface class
      **/
 
-    public String getIntfClassName(final String p_path)
+    public static String getIntfClassName(final String p_path)
     {
         int i = p_path.lastIndexOf('/');
         return i < 0 ? p_path : p_path.substring(i+1);
@@ -61,7 +56,7 @@ public class TemplateResolver
      * @return the name of the implementation class
      **/
 
-    public String getImplClassName(final String p_path)
+    public static String getImplClassName(final String p_path)
     {
         return getIntfClassName(p_path) + "Impl";
     }
@@ -76,7 +71,7 @@ public class TemplateResolver
      * @return the name of the interface class package
      **/
 
-    public String getIntfPackageName(final String p_path)
+    public static String getIntfPackageName(final String p_path)
     {
         int i = p_path.lastIndexOf('/');
         if (i > 0)
@@ -100,7 +95,7 @@ public class TemplateResolver
      * @return the name of the implementation class package
      **/
 
-    public String getImplPackageName(final String p_path)
+    public static String getImplPackageName(final String p_path)
     {
         return getIntfPackageName(p_path);
     }
@@ -114,7 +109,7 @@ public class TemplateResolver
      * @return the fully qualified name of the interface class
      **/
 
-    public String getFullyQualifiedIntfClassName(final String p_path)
+    public static String getFullyQualifiedIntfClassName(final String p_path)
     {
         return fullyQualify(getIntfPackageName(p_path),
                             getIntfClassName(p_path));
@@ -129,7 +124,7 @@ public class TemplateResolver
      * @return the fully qualified name of the implementation class
      **/
 
-    public String getFullyQualifiedImplClassName(final String p_path)
+    public static String getFullyQualifiedImplClassName(final String p_path)
     {
         return fullyQualify(getImplPackageName(p_path),
                             getImplClassName(p_path));
@@ -144,8 +139,8 @@ public class TemplateResolver
      * @return the fully qualified name of the class
      **/
 
-    private String fullyQualify(final String p_pkgName,
-                                final String p_className)
+    private static String fullyQualify(final String p_pkgName,
+                                       final String p_className)
     {
         return "".equals(p_pkgName)
             ? p_className

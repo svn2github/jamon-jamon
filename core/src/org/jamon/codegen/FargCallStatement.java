@@ -49,7 +49,6 @@ public class FargCallStatement
     }
 
     public void generateSource(IndentingWriter p_writer,
-                               TemplateResolver p_resolver,
                                TemplateDescriber p_describer)
         throws IOException
     {

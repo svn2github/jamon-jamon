@@ -45,7 +45,6 @@ import org.jamon.codegen.TemplateDescriber;
 import org.jamon.codegen.Analyzer;
 import org.jamon.codegen.ImplGenerator;
 import org.jamon.codegen.ProxyGenerator;
-import org.jamon.codegen.TemplateResolver;
 import org.jamon.codegen.TemplateUnit;
 
 /**
@@ -624,10 +623,7 @@ public class StandardTemplateManager
         FileWriter writer = new FileWriter(javaFile);
         try
         {
-            new ImplGenerator(writer,
-                              new TemplateResolver(),
-                              m_describer,
-                              templateUnit)
+            new ImplGenerator(writer, m_describer, templateUnit) 
                 .generateSource();
             writer.close();
             return templateUnit.getTemplateDependencies();
@@ -688,10 +684,7 @@ public class StandardTemplateManager
             FileWriter writer = new FileWriter(javaFile);
             try
             {
-                new ProxyGenerator(writer,
-                                   new TemplateResolver(),
-                                   m_describer,
-                                   templateUnit)
+                new ProxyGenerator(writer, m_describer, templateUnit)
                     .generateClassSource();
                 writer.close();
             }

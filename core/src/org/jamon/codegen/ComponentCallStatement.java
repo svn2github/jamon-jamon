@@ -34,22 +34,20 @@ public class ComponentCallStatement
         super(p_path, p_params);
     }
 
-    protected String getFragmentIntfName(FragmentUnit p_fragmentUnitIntf,
-                                         TemplateResolver p_resolver)
+    protected String getFragmentIntfName(FragmentUnit p_fragmentUnitIntf)
     {
-        return getComponentProxyClassName(p_resolver)
+        return getComponentProxyClassName()
             + "." + p_fragmentUnitIntf.getFragmentInterfaceName();
     }
 
     public void generateSource(IndentingWriter p_writer,
-                               TemplateResolver p_resolver,
                                TemplateDescriber p_describer)
         throws IOException
     {
         String instanceVar = getUniqueName();
-        p_writer.println(getComponentProxyClassName(p_resolver) + " "
+        p_writer.println(getComponentProxyClassName() + " "
                          + instanceVar + " = "
-                         + "new " + getComponentProxyClassName(p_resolver)
+                         + "new " + getComponentProxyClassName()
                          +"(this.getTemplateManager())");
         p_writer.indent(2);
         p_writer.println(".writeTo(this.getWriter())");
@@ -91,16 +89,15 @@ public class ComponentCallStatement
         }
         handleFragmentParams(desc.getFragmentInterfaces(),
                              p_writer,
-                             p_resolver,
                              p_describer,
                              argsAlreadyPrinted);
         p_writer.println(");");
         checkSuppliedParams();
     }
 
-    private String getComponentProxyClassName(TemplateResolver p_resolver)
+    private String getComponentProxyClassName()
     {
-        return p_resolver.getFullyQualifiedIntfClassName(getPath());
+        return PathUtils.getFullyQualifiedIntfClassName(getPath());
     }
 
     private static String getUniqueName()

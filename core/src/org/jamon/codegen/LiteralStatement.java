@@ -31,7 +31,6 @@ public class LiteralStatement
     }
 
     public void generateSource(IndentingWriter p_writer,
-                               TemplateResolver p_resolver,
                                TemplateDescriber p_describer)
     {
         if (m_text.length() > 0)
