@@ -98,56 +98,65 @@ public class StandardTemplateManager
         }
     }
 
-    public void setAutoFlush(boolean p_autoFlush)
+    public StandardTemplateManager setAutoFlush(boolean p_autoFlush)
     {
         m_autoFlush = p_autoFlush;
+        return this;
     }
 
-    public void setClassLoader(ClassLoader p_classLoader)
+    public StandardTemplateManager setClassLoader(ClassLoader p_classLoader)
     {
         m_classLoader = p_classLoader;
         m_initialized = false;
+        return this;
     }
 
-    public void setCacheSize(int p_cacheSize)
+    public StandardTemplateManager setCacheSize(int p_cacheSize)
     {
         m_cacheSize = p_cacheSize;
         m_initialized = false;
+        return this;
     }
 
-    public void setSourceDir(String p_templateSourceDir)
+    public StandardTemplateManager setSourceDir(String p_templateSourceDir)
     {
         m_templateSourceDir = p_templateSourceDir;
         m_initialized = false;
+        return this;
     }
 
-    public void setWorkDir(String p_workDir)
+    public StandardTemplateManager setWorkDir(String p_workDir)
     {
         m_workDir = p_workDir;
         m_initialized = false;
+        return this;
     }
 
-    public void setJavaCompiler(String p_javac)
+    public StandardTemplateManager setJavaCompiler(String p_javac)
     {
         m_javac = p_javac;
         m_javaCompiler = null;
+        return this;
     }
 
-    public void setJavaCompilerNeedsRtJar(boolean p_includeRtJar)
+    public StandardTemplateManager setJavaCompilerNeedsRtJar(boolean p_includeRtJar)
     {
         m_includeRtJar = p_includeRtJar;
         m_javaCompiler = null;
+        return this;
     }
 
-    public void setClasspath(String p_classpath)
+    public StandardTemplateManager setClasspath(String p_classpath)
     {
         m_classpath = p_classpath;
         m_javaCompiler = null;
+        return this;
     }
 
-    public void setDynamicRecompilation(boolean p_dynamicRecompilation)
+    public StandardTemplateManager setDynamicRecompilation(boolean p_dynamicRecompilation)
     {
         m_dynamicRecompilation = p_dynamicRecompilation;
+        return this;
     }
 
     private void trace(String p_message)
