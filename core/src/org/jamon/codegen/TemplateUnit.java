@@ -110,41 +110,6 @@ public class TemplateUnit
         }
     }
 
-    private Map m_aliases = new HashMap();
-
-    public void addAlias(String p_name, String p_path)
-    {
-        if (m_aliases.containsKey(p_name))
-        {
-            throw new TunnelingException("Duplicate alias " + p_name);
-        }
-        else
-        {
-            m_aliases.put(p_name, p_path);
-        }
-    }
-
-    public String computePath(Path p_path)
-    {
-        String alias = p_path.getAlias();
-        if (alias == null)
-        {
-            return p_path.getPath();
-        }
-        else
-        {
-            String prefix = (String) m_aliases.get(alias);
-            if (prefix == null)
-            {
-                throw new TunnelingException("Unknown alias " + alias);
-            }
-            else
-            {
-                return prefix + p_path.getPath();
-            }
-        }
-    }
-
     public void addParentArg(String p_name, String p_default)
     {
         if(hasParentPath())

@@ -167,8 +167,40 @@ public class Analyzer
 
     private String computePath(PPath p_node)
     {
-        return getTemplateUnit().computePath(makePath(p_node));
+        Path path = makePath(p_node);
+        String alias = path.getAlias();
+        if (alias == null)
+        {
+            return path.getPath();
+        }
+        else
+        {
+            String prefix = (String) m_aliases.get(alias);
+            if (prefix == null)
+            {
+                throw new TunnelingException("Unknown alias " + alias);
+            }
+            else
+            {
+                return prefix + path.getPath();
+            }
+        }
     }
+
+    private Map m_aliases = new HashMap();
+
+    private void addAlias(String p_name, String p_path)
+    {
+        if (m_aliases.containsKey(p_name))
+        {
+            throw new TunnelingException("Duplicate alias " + p_name);
+        }
+        else
+        {
+            m_aliases.put(p_name, p_path);
+        }
+    }
+
 
     private String aliasNameToString(PAliasName p_aliasName)
     {
@@ -191,7 +223,7 @@ public class Analyzer
                  a.hasNext(); )
             {
                 AAlias alias = (AAlias) a.next();
-                getTemplateUnit().addAlias
+                addAlias
                     (aliasNameToString(alias.getAliasName()),
                      computePath(alias.getPath()));
             }

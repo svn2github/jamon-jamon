@@ -178,25 +178,6 @@ public class TemplateUnitTest
         assertTrue(dependencies.contains("/foo/wazza"));
     }
 
-    public void testAliases()
-        throws Exception
-    {
-        TemplateUnit unit = new TemplateUnit("/foo/bar");
-        unit.addAlias("a","/b");
-        try
-        {
-            unit.addAlias("a","/c");
-            fail("successfully added duplicate alias");
-        }
-        catch (TunnelingException e)
-        {
-        }
-        unit.addAlias("","/c");
-        assertEquals("/b/c", unit.computePath(new Path(null,"/b/c")));
-        assertEquals("/b/c", unit.computePath(new Path("a","/c")));
-        assertEquals("/c/d/e", unit.computePath(new Path("","/d/e")));
-    }
-
     private void checkSigIsUnique(TemplateUnit p_unit, Set p_set)
         throws Exception
     {
