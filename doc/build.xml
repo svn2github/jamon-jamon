@@ -49,6 +49,9 @@ the documentation thus taking care of issues such as escaping.
     <taskdef name="invoker"
              classname="org.jamon.ant.InvokerTask"
              classpath="${java.lib.jamon}" />
+    <taskdef name="jamon"
+             classname="org.jamon.ant.JamonTask"
+             classpath="${java.lib.jamon}" />
     <dependset>
       <srcfileset file="${java.lib.jamon}"/>
       <targetfileset refid="build-files"/>
@@ -67,11 +70,9 @@ the documentation thus taking care of issues such as escaping.
              output="${doc.dir}/QsTemp.jamon"
              template="/org/jamon/doc/QsTemp" />
     <copy file="${doc.dir}/QsTemp.jamon" todir="${work.dir}" />
-    <java classname="org.jamon.TemplateProcessor"
-          failonerror="true"
-          classpath="${java.lib.jamon}">
-      <arg line="--srcDir=${work.dir} --destDir=. QsTemp" />
-    </java>
+    <jamon destdir="${work.dir}" srcdir="${work.dir}">
+      <include name="QsTemp.jamon"/>
+    </jamon>
     <javac destdir="${work.dir}"
            srcdir="${work.dir}"
            classpath="${java.lib.jamon}"
