@@ -1,0 +1,4 @@
+<%aliases>
+  bar => /test/jamon;
+</%aliases>\
+<& foo//Simple &>

@@ -22,10 +22,14 @@ package org.jamon.codegen;
 
 import java.util.Iterator;
 
+import org.jamon.node.AAliasPath;
+import org.jamon.node.AAliasedPath;
 import org.jamon.node.ASimpleName;
-import org.jamon.node.ASimplePath;
+import org.jamon.node.ARelPath;
+import org.jamon.node.ARelativePath;
 import org.jamon.node.AQualifiedName;
-import org.jamon.node.AQualifiedPath;
+import org.jamon.node.AAbsPath;
+import org.jamon.node.AAbsolutePath;
 import org.jamon.node.AType;
 import org.jamon.node.PName;
 import org.jamon.node.PPath;
@@ -35,27 +39,45 @@ public class NodeUtils
 {
     private NodeUtils() {}
 
-    public static String asText(PPath node)
+    public static Path asText(PPath node)
     {
-        if (node instanceof ASimplePath)
+        if (node instanceof ARelPath)
         {
-            ASimplePath path = (ASimplePath) node;
-            if (path.getPathsep() != null)
-            {
-                return "/" + path.getIdentifier().getText();
-            }
-            else
-            {
-                return path.getIdentifier().getText();
-            }
+            return new Path(null,
+                            asText((ARelativePath) ((ARelPath) node).getRelativePath()));
+        }
+        else if (node instanceof AAbsPath)
+        {
+            return new Path(null,
+                            asText((AAbsolutePath) ((AAbsPath)node).getAbsolutePath()));
         }
         else
         {
-            AQualifiedPath path = (AQualifiedPath) node;
-            return asText(path.getPath())
-                + "/"
-                + path.getIdentifier().getText();
+            AAliasedPath path =
+                (AAliasedPath) ((AAliasPath)node).getAliasedPath();
+            return new Path(path.getIdentifier() == null
+                            ? ""
+                            : path.getIdentifier().getText(),
+                            asText((AAbsolutePath) path.getAbsolutePath()));
         }
+    }
+
+    private static String asText(AAbsolutePath p_path)
+    {
+        if (p_path == null)
+        {
+            return "";
+        }
+        else
+        {
+            return "/" + asText((ARelativePath) p_path.getRelativePath());
+        }
+    }
+
+    private static String asText(ARelativePath p_path)
+    {
+        return p_path.getIdentifier().getText()
+            + asText((AAbsolutePath) p_path.getAbsolutePath());
     }
 
     public static String asText(PName name)

@@ -1,0 +1,6 @@
+<%aliases>
+  jamon => /test/jamon;
+  / => /test;
+  j2 => //jamon;
+</%aliases>\
+<& jamon//Simple &> <& //jamon/Simple &> <& j2//Simple &>

@@ -75,6 +75,7 @@ States
   parent_argexp,
   escape,
   literal,
+  alias,
   farginit;
 
 Tokens
@@ -99,9 +100,9 @@ Tokens
   {start ->java,body -> java} java_start = '<%java>' ws*;
   {java -> body} java_end = ws* '</%java>';
   {args,imports} dot = period;
-  {args -> argexp, parent_args -> parent_argexp} arrow = '=>' hs*;
-  {call,multifragmentcall,multifragmentcallbody,args,farginit,imports,parent_args,extends} white_space = ws*;
-  {call,multifragmentcall,multifragmentcallbody,args,parent_args,farginit,imports,def,extends,method,override} identifier = letter letter_or_digit*;
+  {args -> argexp, parent_args -> parent_argexp,alias} arrow = '=>' hs*;
+  {call,multifragmentcall,multifragmentcallbody,args,farginit,imports,parent_args,extends,alias} white_space = ws*;
+  {call,multifragmentcall,multifragmentcallbody,args,parent_args,farginit,imports,def,extends,method,override,alias} identifier = letter letter_or_digit*;
   {call} child_call = '*CHILD';
 
   {start -> emit,body -> emit} emit_start = '<%' ws+;
@@ -175,8 +176,8 @@ Tokens
   {multifragmentcall -> multifragmentcallbody, call -> body} call_end = ws* '&>';
   {callexp -> call, multifragmentcallexp -> multifragmentcall} param_expr =
        ([all - [argsep + [q + '&']]] | quoted | squoted | '&' [all - '>'])*;
-  {multifragmentcall,call,imports} semi = ';';
-  {multifragmentcall,call,extends} pathsep = slash;
+  {multifragmentcall,call,imports,alias} semi = ';';
+  {multifragmentcall,call,extends,alias} pathsep = slash;
 
   {start -> multifragmentcall, body -> multifragmentcall} multi_fragment_call_init = '<&||' ws*;
 
@@ -204,6 +205,9 @@ Tokens
               | '</%do' [all-'c']
               | '</%doc' [all-'>'])* '</%doc>';
 
+  {start -> alias, body -> alias} alias_start = '<%aliases>';
+  {alias -> body} alias_end = '</%aliases>';
+
 Ignored Tokens
 
   white_space,doc;
@@ -227,6 +231,7 @@ Productions
             ;
 
   component = base_component
+            | {alias} aliases
             | {imports} imports
             | {def} def
             | {class} class_tag
@@ -235,6 +240,12 @@ Productions
             | {override} override
             | {inherited_use} inherited_use
             ;
+
+  aliases = alias_start alias* alias_end;
+
+  alias = alias_name arrow path semi;
+
+  alias_name = {root} pathsep | {id} identifier;
 
   override_component = {base} base_component | {inherited_use} inherited_use;
 
@@ -278,7 +289,15 @@ Productions
 
   escape = escape_delimiter escape_code;
 
-  path = {simple} pathsep? identifier | {qualified} path pathsep identifier;
+  path = {alias} aliased_path
+       | {rel} relative_path
+       | {abs} absolute_path;
+
+  relative_path = identifier absolute_path?;
+
+  absolute_path = pathsep relative_path;
+
+  aliased_path = identifier? pathsep absolute_path;
 
   arg = type [name]: identifier default? donearg;
 

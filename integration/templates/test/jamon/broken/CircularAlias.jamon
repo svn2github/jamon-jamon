@@ -1,0 +1,4 @@
+<%aliases>
+  foo => bar//test;
+  bar => foo//jamon;
+</%aliases>

@@ -158,12 +158,40 @@ public class Analyzer
     private final Set m_defNames = new HashSet();
     private final LinkedList m_callStatements = new LinkedList();
 
+    private String computePath(PPath p_node)
+    {
+        return getTemplateUnit().computePath(NodeUtils.asText(p_node));
+    }
+
+    private String asText(PAliasName p_aliasName)
+    {
+        if (p_aliasName instanceof ARootAliasName)
+        {
+            return "";
+        }
+        else
+        {
+            return p_aliasName.toString().trim();
+        }
+    }
+
     private class PreliminaryAdapter extends AnalysisAdapter
     {
+        public void caseAAliasComponent(AAliasComponent p_alias)
+        {
+            for (Iterator a = ((AAliases)p_alias.getAliases()).getAlias().iterator();
+                 a.hasNext(); )
+            {
+                AAlias alias = (AAlias) a.next();
+                getTemplateUnit().addAlias
+                    (asText(alias.getAliasName()),
+                     computePath(alias.getPath()));
+            }
+        }
+
         public void caseAExtendsComponent(AExtendsComponent p_extends)
         {
-            getTemplateUnit().setParentPath
-                (NodeUtils.asText(p_extends.getPath()));
+            getTemplateUnit().setParentPath(computePath(p_extends.getPath()));
             try
             {
                 getTemplateUnit().processParent(m_describer, m_children);
@@ -282,7 +310,7 @@ public class Analyzer
 
         public void caseACall(ACall p_call)
         {
-            String path = NodeUtils.asText(p_call.getPath());
+            String path = computePath(p_call.getPath());
             FragmentUnit fragmentUnit = getCurrentUnit()
                 .getFragmentUnitIntf(path);
             if (fragmentUnit != null)
@@ -347,7 +375,7 @@ public class Analyzer
         public void inAMultiFragmentCall(AMultiFragmentCall p_call)
         {
             handleBody();
-            String path = NodeUtils.asText(p_call.getPath());
+            String path = computePath(p_call.getPath());
             AbstractCallStatement s =
                 makeCallStatement(path, p_call.getParam());
             addStatement(s);
@@ -374,7 +402,7 @@ public class Analyzer
         public void inAFragmentCall(AFragmentCall p_call)
         {
             handleBody();
-            String path = NodeUtils.asText(p_call.getPath());
+            String path = computePath(p_call.getPath());
             AbstractCallStatement s =
                 makeCallStatement(path, p_call.getParam());
             addStatement(s);
