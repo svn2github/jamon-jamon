@@ -43,6 +43,11 @@ public abstract class AbstractTemplateImpl
         m_writer = p_writer;
     }
 
+    public final void encoding(Encoding p_encoding)
+    {
+        m_encoding = p_encoding;
+    }
+
     public final void initialize()
         throws JamonException
     {
@@ -73,10 +78,27 @@ public abstract class AbstractTemplateImpl
     protected void writeEscaped(String p_string)
         throws IOException
     {
-        // FIXME: need to set default escaping
-        writeHtmlEscaped(p_string);
+        if (getEncoding().equals(Encoding.HTML))
+        {
+            writeHtmlEscaped(p_string);
+        }
+        else if (getEncoding().equals(Encoding.NONE))
+        {
+            writeUnEscaped(p_string);
+        }
+        else if (getEncoding().equals(Encoding.XML))
+        {
+            writeXmlEscaped(p_string);
+        }
+        else if (getEncoding().equals(Encoding.URL))
+        {
+            writeUrlEscaped(p_string);
+        }
+        else
+        {
+            throw new JamonException("Encoding " + getEncoding() + " is not supported");
+        }
     }
-
 
     protected TemplateManager getTemplateManager()
     {
@@ -86,6 +108,11 @@ public abstract class AbstractTemplateImpl
     protected Writer getWriter()
     {
         return m_writer;
+    }
+
+    protected Encoding getEncoding()
+    {
+        return m_encoding;
     }
 
     protected void writeHtmlEscaped(String p_string)
@@ -167,6 +194,7 @@ public abstract class AbstractTemplateImpl
     }
 
     private Writer m_writer;
+    private Encoding m_encoding = Encoding.HTML;
     private final TemplateManager m_templateManager;
     private final String m_path;
 }
