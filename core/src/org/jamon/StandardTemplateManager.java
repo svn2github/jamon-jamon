@@ -84,6 +84,9 @@ import java.util.HashSet;
  *   explicitly. Default is use the class laoder of the
  *   <code>StandardTemplateManager</code> instance.
 
+ *   <li>{@link #setDefaultEscaping} - used to set the default escaping
+ *   Default is null.
+
  * </ul>
  */
 
@@ -146,6 +149,7 @@ public class StandardTemplateManager
                                                    String.class })
                     .newInstance(new Object [] { p_manager, p_path });
             }
+            impl.escaping(m_escaping);
             return impl;
         }
         catch (RuntimeException e)
@@ -170,6 +174,20 @@ public class StandardTemplateManager
     public StandardTemplateManager setAutoFlush(boolean p_autoFlush)
     {
         m_autoFlush = p_autoFlush;
+        return this;
+    }
+
+    /**
+     * Set default escaping. Default is null.
+     *
+     * @param p_escaping the default escaping
+     *
+     * @return this
+     */
+
+    public StandardTemplateManager setDefaultEscaping(Escaping p_escaping)
+    {
+        m_escaping = p_escaping;
         return this;
     }
 
@@ -452,6 +470,7 @@ public class StandardTemplateManager
 
     private boolean m_dynamicRecompilation = true;
     private TemplateDescriber m_describer;
+    private Escaping m_escaping = Escaping.NONE;
     private String m_workDir;
     private String m_templateSourceDir;
     private String m_javac;
