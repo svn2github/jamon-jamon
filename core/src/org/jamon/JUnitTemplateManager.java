@@ -226,7 +226,8 @@ public class JUnitTemplateManager
         }
 
         // from the generated template Intf
-        else if ("render".equals(p_method.getName()))
+        else if ("render".equals(p_method.getName())
+                 || "renderNoFlush".equals(p_method.getName()))
         {
             checkArgsLength(p_method, p_args, 0);
             checkArgValues();

@@ -54,14 +54,12 @@ public class JUnitTemplateManagerTest
         m_template = new JUnitTemplate(m_manager);
         m_writer = new StringWriter();
         m_template
-            .autoFlush(false)
             .escapeWith(Escaping.NONE);
     }
 
     private void checkSuccess()
         throws Exception
     {
-        m_writer.flush();
         assertTrue(m_manager.getWasRendered());
         assertEquals("", m_writer.toString());
     }

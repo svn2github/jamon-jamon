@@ -76,7 +76,7 @@ public class ComponentCallStatement
                                  + "(" + value + ");");
             }
         }
-        p_writer.print(instanceVar + ".render");
+        p_writer.print(instanceVar + ".renderNoFlush");
         p_writer.openList();
         p_writer.printArg("this.getWriter()");
         generateRequiredArgs(desc.getRequiredArgs().iterator(), p_writer);

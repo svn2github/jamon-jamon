@@ -48,20 +48,7 @@ public class BasicTemplateManager
      **/
     public BasicTemplateManager()
     {
-        this(true, DEFAULT_ESCAPING, null);
-    }
-
-    /**
-     * Creates a new <code>BasicTemplateManager</code> instance which
-     * uses {@link TemplateManager#DEFAULT_ESCAPING} as the default escaping
-     * mechanism.
-     *
-     * @param p_autoFlush whether or not to automatically flush the
-     * writer after renderng
-     **/
-    public BasicTemplateManager(boolean p_autoFlush)
-    {
-        this(p_autoFlush, DEFAULT_ESCAPING, null);
+        this(DEFAULT_ESCAPING);
     }
 
     /**
@@ -73,7 +60,7 @@ public class BasicTemplateManager
      **/
     public BasicTemplateManager(Escaping p_escaping)
     {
-        this(true, p_escaping, null);
+        this(p_escaping, null);
     }
 
     /**
@@ -84,24 +71,20 @@ public class BasicTemplateManager
      **/
     public BasicTemplateManager(ClassLoader p_classLoader)
     {
-        this(true, DEFAULT_ESCAPING, p_classLoader);
+        this(DEFAULT_ESCAPING, p_classLoader);
     }
 
     /**
      * Creates a new <code>BasicTemplateManager</code>.
      *
-     * @param p_autoFlush whether or not to automatically flush the
-     * writer after renderng
      * @param p_escaping which escaping mechanism to use for the
      * default Escaping.
      * @param p_classLoader the <code>ClassLoader</code> to use to
      * load templates.
      **/
-    public BasicTemplateManager(boolean p_autoFlush,
-                                Escaping p_escaping,
+    public BasicTemplateManager(Escaping p_escaping,
                                 ClassLoader p_classLoader)
     {
-        m_autoFlush = p_autoFlush;
         m_escaping = p_escaping;
         m_classLoader = p_classLoader == null
             ? getClass().getClassLoader()
@@ -176,6 +159,5 @@ public class BasicTemplateManager
     }
 
     private final Escaping m_escaping;
-    private final boolean m_autoFlush;
     private final ClassLoader m_classLoader;
 }

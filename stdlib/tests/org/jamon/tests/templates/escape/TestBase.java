@@ -41,7 +41,7 @@ public class TestBase
             m_body = p_body;
         }
         private final String m_body;
-        public void render()
+        public void renderNoFlush()
             throws IOException
         {
             writeEscaped(m_body, Escaping.NONE);
@@ -55,7 +55,7 @@ public class TestBase
                         throws IOException
                     {
                         writeTo(p_writer);
-                        render();
+                        renderNoFlush();
                     }
                 };
         }

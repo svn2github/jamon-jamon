@@ -128,14 +128,14 @@ public abstract class AbstractCallStatement
         p_writer.println(ClassNames.IOEXCEPTION);
         p_writer.openBlock();
         p_writer.println("writeTo(p_writer);");
-        p_writer.print  ("render(");
+        p_writer.print  ("renderNoFlush(");
         fragmentUnitImpl.printRenderArgs(p_writer);
         p_writer.println(");");
         p_writer.closeBlock();
         p_writer.closeBlock(";");
         p_writer.closeBlock();
 
-        p_writer.print("public void render(");
+        p_writer.print("public void renderNoFlush(");
         fragmentUnitImpl.printRenderArgsDecl(p_writer);
         p_writer.print(") throws ");
         p_writer.println(ClassNames.IOEXCEPTION);

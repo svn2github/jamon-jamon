@@ -57,17 +57,11 @@ public abstract class AbstractTemplateImpl
     {
         this(p_templateManager);
         writeTo(p_implData.getWriter());
-        autoFlush(p_implData.getAutoFlush());
     }
 
     public final void writeTo(Writer p_writer)
     {
         m_writer = p_writer;
-    }
-
-    public final void autoFlush(boolean p_autoFlush)
-    {
-        m_autoFlush = p_autoFlush;
     }
 
     public void escapeWith(Escaping p_escaping)
@@ -133,13 +127,7 @@ public abstract class AbstractTemplateImpl
         return String.valueOf(p_bool);
     }
 
-    protected final boolean isAutoFlushEnabled()
-    {
-        return m_autoFlush;
-    }
-
     private Writer m_writer;
     private Escaping m_escaping;
     private final TemplateManager m_templateManager;
-    private boolean m_autoFlush = true;
 }

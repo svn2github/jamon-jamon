@@ -88,9 +88,6 @@ import org.jamon.codegen.TemplateUnit;
  *   to prepend to the classpath when compiling generated Java source
  *   files. Default is null.
 
- *   <li><b>setAutoFlush</b> - determines whether templates
- *   automatically flush the writer after rendering. Default is true.
-
  *   <li><b>setClassLoader</b> - used to set the class loader
  *   explicitly. Default is use the class loader of the
  *   <code>RecompilingTemplateManager</code> instance.
@@ -106,13 +103,6 @@ public class RecompilingTemplateManager
 {
     public static class Data
     {
-        public Data setAutoFlush(boolean p_autoFlush)
-        {
-            autoFlush = p_autoFlush;
-            return this;
-        }
-        private boolean autoFlush = true;
-
         public Data setSourceDir(String p_sourceDir)
         {
             sourceDir = p_sourceDir;
@@ -232,7 +222,6 @@ public class RecompilingTemplateManager
 
     public RecompilingTemplateManager(Data p_data)
     {
-        m_autoFlush = p_data.autoFlush;
         m_escaping = p_data.escaping;
         m_classLoader = p_data.classLoader == null
             ? getClass().getClassLoader()
@@ -446,7 +435,6 @@ public class RecompilingTemplateManager
     private final ClassLoader m_classLoader;
     private final JavaCompiler m_javaCompiler;
     private final WorkDirClassLoader m_loader;
-    private final boolean m_autoFlush;
 
     private String prefix()
     {

@@ -328,17 +328,6 @@ public class TemplateUnit
     private final Set m_callNames = new HashSet();
     private final Collection m_abstractMethodNames = new HashSet();
 
-    protected void printRenderBodyEnd(CodeWriter p_writer)
-    {
-        if(! hasParentPath())
-        {
-            p_writer.println("if (isAutoFlushEnabled())");
-            p_writer.openBlock();
-            p_writer.println("getWriter().flush();");
-            p_writer.closeBlock();
-        }
-    }
-
     public Iterator getParentRenderArgs()
     {
         return new SequentialIterator

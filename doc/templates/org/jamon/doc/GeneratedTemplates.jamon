@@ -75,9 +75,6 @@ generated class would be:
     public MyTemplate setSomeNumber(java.math.BigDecimal someNumber) { ... }
 
     public MyTemplate escapeWith(Escaping escaping) { ... }
-
-    public MyTemplate autoFlush(boolean autoFlush) { ... }
-
   }</&></pre>
 
 If one template inherits from another, then:
@@ -169,8 +166,6 @@ something like:
         throws java.io.IOException { ... }
 
       public ParentRenderer escapeWith(Escaping escaping) { ... }
-
-      public ParentRenderer autoFlush(boolean autoFlush) { ... }
     }
   }</&></pre>
 
@@ -209,8 +204,6 @@ something like:
     public ChildTemplate setAmount(java.math.BigDecimal amount) { ... }
 
     public ChildTemplate escapeWith(Escaping escaping) { ... }
-
-    public ChildTemplate autoFlush(boolean autoFlush) { ... }
 
     public ParentTemplate.ParentRenderer makeParentRenderer(long t, double x)
       throws java.io.IOException { ... }

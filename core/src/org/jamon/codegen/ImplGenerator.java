@@ -269,7 +269,7 @@ public class ImplGenerator
         }
         else
         {
-            m_writer.println("public void render() throws "
+            m_writer.println("public void renderNoFlush() throws "
                              + ClassNames.IOEXCEPTION);
         }
         m_templateUnit.generateRenderBody(m_writer, m_describer);

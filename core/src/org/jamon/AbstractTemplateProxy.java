@@ -50,18 +50,7 @@ public abstract class AbstractTemplateProxy
             return m_writer;
         }
 
-        public final void setAutoFlush(boolean p_autoFlush)
-        {
-            m_autoFlush = p_autoFlush;
-        }
-
-        public final boolean getAutoFlush()
-        {
-            return m_autoFlush;
-        }
-
         private Writer m_writer;
-        private boolean m_autoFlush = true;
     }
 
     protected AbstractTemplateProxy(TemplateManager p_templateManager)

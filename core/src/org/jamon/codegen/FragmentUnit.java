@@ -97,7 +97,7 @@ public class FragmentUnit extends AbstractInnerUnit
         p_writer.openBlock();
         if (! p_isCopy)
         {
-            p_writer.print  ("void render(");
+            p_writer.print  ("void renderNoFlush(");
             printRenderArgsDecl(p_writer);
             p_writer.println(")");
             p_writer.println("  throws java.io.IOException;");
