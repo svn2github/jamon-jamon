@@ -8,6 +8,7 @@ the documentation thus taking care of issues such as escaping.
 -----------------------------------------------------------------</description>
 
   <property file="build.properties"/>
+  <property file="../build.properties"/>
   <property file="${user.home}/.ant.properties"/>
 
   <property name="build.dir" value="build"/>
@@ -69,7 +70,6 @@ the documentation thus taking care of issues such as escaping.
   <target name="doc"
           description="Generates all the documentation"
           depends="init" >
-    <copy file="index.html" todir="${doc.dir}" />
     <antcall target="quickstart" />
     <antcall target="grind">
       <param name="template" value="BuildingProjects" />
@@ -79,6 +79,9 @@ the documentation thus taking care of issues such as escaping.
     </antcall>
     <antcall target="grind">
       <param name="template" value="Reference" />
+    </antcall>
+    <antcall target="grind">
+      <param name="template" value="index" />
     </antcall>
     <!-- Generate the Servlets document -->
     <antcall target="grind">

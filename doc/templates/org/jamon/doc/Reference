@@ -1,4 +1,4 @@
-<&| _Base; title => "Jamon Template Reference Manual" &>
+<&| _Base; title => "Jamon Template Reference Manual"; section => "Documentation" &>
     <ol>
 
       <li><span class="concept">Static content</span>

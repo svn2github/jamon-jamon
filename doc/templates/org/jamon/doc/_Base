@@ -1,6 +1,7 @@
 <%farg body></%farg>\
 <%args>
   String title;
+  String section;
 </%args>\
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
@@ -10,7 +11,35 @@
   </head>
 
   <body>
-    <h1><% title %></h1>
-    <& body &>
+    <h1 id="logo">Jamon</h1>
+    <h3 id="tagline">a powerful typed template engine for Java</h3>
+    <div id="header"></div>
+    <div id="nav">
+      <ul id="navul">
+        <& _menuItem; section => "Home"; href => "index"; current => section &>
+        <& _menuItem; section => "News"; href => "News"; current => section &>
+        <& _menuItem; section => "Download"; href => "Download"; current => section &>
+        <& _menuItem; section => "Documentation"; href => "Documentation"; current => section &>
+        <& _menuItem; section => "Get involved"; href => "GetInvolved"; current => section &>
+      </ul>
+    </div>
+    <div id="main">
+      <& body &>
+    </div>
   </body>
 </html>
+
+<%def _menuItem>
+  <%args>
+    String section;
+    String current;
+    String href;
+  </%args>
+<li class="nav">
+% if (section.equals(current)) {
+  <span id="current"><% section %></span>
+% } else {
+  <a href="<% href #u %>.html"><% section %></a>
+% }
+</li>
+</%def>

@@ -1,4 +1,4 @@
-<&| _Base; title => "Jamon User's Guide" &>
+<&| _Base; title => "Jamon User's Guide"; section => "Documentation" &>
     <h2>Invoking templates from Java</h2>
 
     <ol>

@@ -1,24 +1,115 @@
-pre 
-{ 
-  margin-left: 5em; 
-  margin-right: 5em; 
-  padding: 0.5em; 
-  border: solid; 
-  border-width: thin 
+#header
+{
+  width: 100%;
+  border-top: solid;
+  margin-bottom: -0.8em;
+  clear: both;
 }
 
-.template, pre.jamon 
-{ 
-  background-color: #efffdf 
+#logo
+{
+  font-size: 2em;
+  float: left;
+  padding-top: 0;
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
-.java, .code 
-{ 
-  background-color: #ffdfdf 
+#tagline
+{
+  font-size: 1em;
+  float: right;
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-bottom: 0;
+  padding-top: 1em;
 }
 
-pre.tty 
-{ 
+/*
+#navul
+{
+  list-style-type: none;
+  padding-left: 1em;
+  padding-right: 1em;
+  background: #a2a2aa;
+  margin-left: 0;
+  margin-right: 0;
+  position: relative;
+}
+
+#nav
+{
+  margin-top: 0;
+  border-right: solid;
+  border-width: 1px;
+  background: #aaaa22;
+  width: 150px;
+  position: absolute;
+}
+
+#main
+{
+  position: absolute;
+  left: 150px;
+  padding-left: 1em;
+}
+*/
+
+#navul
+{
+  text-align: center;
+  list-style-type: none;
+  border-bottom: 1px solid;
+  padding: 0.5em 0 0.5em 0;
+  font-size: 80%;
+  background-color: #bbbbbb;
+}
+
+li.nav
+{
+  display: inline;
+}
+
+li.nav *
+{
+  padding: 0 1em 0 1em;
+  background-color: #ffff77;
+  border: 1px solid;
+}
+
+#current
+{
+  background-color: #ffffff;
+  border: 1px solid;
+  text-weight: bold;
+}
+
+#main
+{
+  padding-left: 1em;
+}
+
+pre
+{
+  margin-left: 5em;
+  margin-right: 5em;
+  padding: 0.5em;
+  border: solid;
+  border-width: thin
+}
+
+.template, pre.jamon
+{
+  background-color: #efffdf
+}
+
+.java, .code
+{
+  background-color: #ffdfdf
+}
+
+pre.tty
+{
   background-color: #e0e0e0
 }
 
@@ -32,19 +123,19 @@ pre.ant
   background-color: #fef
 }
 
-li 
-{ 
-  padding-top: 0.5em 
+li
+{
+  padding-top: 0.5em
 }
 
-.concept 
-{ 
-  font-weight: bold; 
-  display: block; 
-  padding-bottom: 0.5em 
+.concept
+{
+  font-weight: bold;
+  display: block;
+  padding-bottom: 0.5em
 }
 
-.file 
+.file
 {
   font-family: monospace
 }
@@ -66,11 +157,11 @@ li
 {
   border: dashed;
   border-width: thin;
-  margin-left: 10em; 
+  margin-left: 10em;
   margin-right: 10em;
   margin-top: 1em;
   margin-bottom: 1em;
-  padding: .2em; 
+  padding: .2em;
 }
 
 dt
