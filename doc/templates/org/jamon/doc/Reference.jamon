@@ -150,7 +150,7 @@
       Templates can inherit from other templates.  A template is an
       "abstract" template if it contains a <code>&lt;%abstract&gt;</code>
       tag.  A template extends another template by
-      means of an <code>&lt;%extends <i>pathToParent</i>&gt;</code>
+      means of an <code>&lt;%extends <var>pathToParent</var>&gt;</code>
       tag.  There can be multiple levels of inheritance:
       <code>/grandchild</code> can extend <code>/child</code>, which
       in turn can extend <code>/parent</code>.  When Jamon encounters
@@ -343,13 +343,13 @@ a good sign for you, <% name %>.
       other subtemplates in the same template, and can be directly or
       indirectly recursive. Arguments to subtemplates can be given
       default values.  Subtemplates can be invoked via the
-      <code>&lt;&amp; <i>subtemplate-name</i>; argument1;
+      <code>&lt;&amp; <var>subtemplate-name</var>; argument1;
       ... &amp;&gt;</code> construct.
 
       <p>
 
       Private subtemplates ("<def>defs</def>") can be declared via the
-      <code>&lt;%def <i>def-name</i>&gt;</code> instruction, and are
+      <code>&lt;%def <var>def-name</var>&gt;</code> instruction, and are
       only visible within the template in which they are
       declared.
 
@@ -415,11 +415,11 @@ a good sign for you, <% name %>.
       <p>
 
       Protected templates ("<def>methods</def>") can be declared via
-      the <code>&lt;%method <i>method-name</i>&gt;</code> instruction.
+      the <code>&lt;%method <var>method-name</var>&gt;</code> instruction.
       A method is similar to a <def>def</def>, but is visible to all
       descendants of the declaring template.  Moreover, a method
       declared in an ancestor template can be overriddden via the
-      <code>&lt;%override <i>method-name</i>&gt;</code> instruction.
+      <code>&lt;%override <var>method-name</var>&gt;</code> instruction.
       Overridden methods take the same arguments as the method they
       override, although, as with template inheritance, only those
       args declared in an <code>&lt;%xargs&gt;</code>
@@ -523,7 +523,7 @@ Now would be a poor time to go sailing.
       It is possible to pass a "fragment" of a template as an argument
       to a template or subtemplate.  When passing template fragments,
       the invocation syntax must look like
-      <code>&lt;&amp;| <i>target</i>; arg1 =&gt; ... &amp;&gt;</code>,
+      <code>&lt;&amp;| <var>target</var>; arg1 =&gt; ... &amp;&gt;</code>,
       and any template content up until a closing
       <code>&lt;/&amp;&gt;</code> is considered the fragment argument.
 
@@ -532,7 +532,7 @@ Now would be a poor time to go sailing.
       In order to pass a fragment argument, the target template or
       subtemplate must declare that it expects a fragment
       argument. This is done using the
-      <code>&lt;%frag <i>name</i>&gt;&lt;/%frag&gt;</code>
+      <code>&lt;%frag <var>name</var>&gt;&lt;/%frag&gt;</code>
       declaration, which declares that the template or subtemplate
       expects a fragment argument.
 
@@ -590,10 +590,10 @@ Now would be a poor time to go sailing.
       To pass a parameterized template fragment to a template or
       subtemplate, the fragment and its parameters must be
       declared via a <code>&lt;%frag
-      <i>name</i>&gt;</code> <i>parameters</i> <code>&lt;/%frag&gt;</code>,
+      <var>name</var>&gt;</code> <var>parameters</var> <code>&lt;/%frag&gt;</code>,
       where each parameter is a type followed by an identifier. Thus
       a <code>&lt;%frag
-      <i>name</i>&gt;</code>...<code>&lt;/%frag&gt;</code> is similar
+      <var>name</var>&gt;</code>...<code>&lt;/%frag&gt;</code> is similar
       to a
       <code>&lt;%args&gt;</code>...<code>&lt;/%args&gt;</code> except
       it has a name and its parameters cannot have default values.
