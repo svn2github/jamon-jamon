@@ -1,7 +1,5 @@
 package org.jamon.benchmark;
 
-import org.jamon.StandardTemplateManager;
-import org.jamon.TemplateManagerSource;
 import java.io.IOException;
 import java.io.StringWriter;
 
@@ -78,13 +76,7 @@ public class Benchmark
     private static void setup()
         throws IOException
     {
-        TemplateManagerSource.setTemplateManager
-            (new StandardTemplateManager
-             (new StandardTemplateManager.Data()
-              .setDynamicRecompilation(false)));
         s_expected = renderTop(null);
-        int i = s_expected.indexOf('\n');
-        s_expected = s_expected.substring(i);
     }
 
 

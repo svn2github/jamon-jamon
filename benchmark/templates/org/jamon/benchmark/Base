@@ -1,4 +1,7 @@
-<%abstract>\
+<%abstract>
+
 <%args>
   int k => 0;
-</%args><& *CHILD &>
+</%args>
+
+<& *CHILD &>
