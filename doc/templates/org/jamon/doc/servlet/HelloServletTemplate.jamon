@@ -2,7 +2,6 @@ package foo.bar;
 
 import java.io.IOException;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -13,18 +12,12 @@ import org.jamon.TemplateManagerSource;
 public final class HelloServlet
     extends HttpServlet {
 
-    public void init()
-        throws ServletException {
+    public void init() {
         StandardTemplateManager.Data data = new StandardTemplateManager.Data();
         data.setSourceDir("templates");
         data.setWorkDir("build/work");
-        try {
-            TemplateManagerSource.setTemplateManager(
-                new StandardTemplateManager(data));
-        }
-        catch (IOException e) {
-            throw new ServletException(e);
-        }
+        TemplateManagerSource.setTemplateManager(
+            new StandardTemplateManager(data));
     }
 
     public void doGet(HttpServletRequest request, HttpServletResponse response)
