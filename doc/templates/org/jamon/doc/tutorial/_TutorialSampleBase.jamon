@@ -6,19 +6,19 @@
 
 <%def tutorialNavBar>
   <div class="tutorialNav">
-    <div class="tutorialNavNeighbor">
+    <span class="tutorialNavNeighbor">
       <&| if; condition => tutorialStage() > 1 &>
         <a href="TutorialSample<% tutorialStage() - 1 %>.html">Previous</a>
       </&>
-    </div>
-    <div class="tutorialNavContents">
+    </span>
+    <span class="tutorialNavContents">
       <a href="TutorialPath.html">Tutorial contents</a>
-    </div>
-    <div class="tutorialNavNeighbor">
+    </span>
+    <span class="tutorialNavNeighbor">
       <&| if; condition => tutorialStage() < 10 &>
         <a href="TutorialSample<% tutorialStage() + 1 %>.html">Next</a>
       </&>
-    </div>
+    </span>
   </div>
 </%def>
 
