@@ -20,9 +20,6 @@
 
 package org.jamon;
 
-import java.io.Writer;
-import java.io.IOException;
-
 /**
  * A <code>TemplateManager</code> is the entry point to obtaining
  * instances of template objects.
@@ -37,9 +34,7 @@ public interface TemplateManager
      *
      * @return a <code>Template</code> instance
      **/
-    AbstractTemplateProxy.Intf constructImpl(
-        AbstractTemplateProxy p_proxy);
-
+    AbstractTemplateProxy.Intf constructImpl(AbstractTemplateProxy p_proxy);
 
     /**
      * Given a template path, return a proxy for that template.
