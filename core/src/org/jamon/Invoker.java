@@ -341,7 +341,7 @@ public class Invoker
             }
             else
             {
-                return m_renderMethod.getParameterTypes()[i];
+                return m_renderMethod.getParameterTypes()[i+1];
             }
         }
     }
