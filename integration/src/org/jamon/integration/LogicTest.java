@@ -20,6 +20,8 @@
 
 package org.jamon.integration;
 
+import java.util.ArrayList;
+import test.jamon.IterateTest;
 import test.jamon.IfTest;
 import test.jamon.IfElseTest;
 
@@ -30,6 +32,24 @@ import test.jamon.IfElseTest;
 public class LogicTest
     extends TestBase
 {
+    public void testIterateEmpty()
+        throws Exception
+    {
+        new IterateTest().render(getWriter(), new ArrayList().iterator());
+        checkOutput("");
+    }
+
+    public void testIterateNotEmpty()
+        throws Exception
+    {
+        ArrayList list = new ArrayList();
+        list.add("a");
+        list.add("b");
+        list.add("c");
+        new IterateTest().render(getWriter(), list.iterator());
+        checkOutput("aabbcc");
+    }
+
     public void testIfTrue()
         throws Exception
     {
