@@ -1,2 +1,2 @@
 <%extends _BaseFileName>
-<& baseName &>.zip
+.zip

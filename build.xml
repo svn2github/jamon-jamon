@@ -164,36 +164,39 @@
     <invoker dynamicRecompilation="false"
              template="/org/jamon/doc/BinZipName"
              property="zip.bin"/>
+    <invoker dynamicRecompilation="false"
+             template="/org/jamon/doc/DistName"
+             property="archive.base"/>
   </target>
 
   <target name="bindist" depends="javadoc, prepdist">
     <tar tarfile="${tarball.bin}" compression="gzip" >
       <tarfileset dir="."
-                  prefix="${tarfilebase}"
+                  prefix="${archive.base}"
                   includes="${jarfile},LICENSE,README" />
       <tarfileset dir="doc/build/www"
-                  prefix="${tarfilebase}/doc"
+                  prefix="${archive.base}/doc"
                   includes="**" />
       <tarfileset dir="core/build"
-                  prefix="${tarfilebase}"
+                  prefix="${archive.base}"
                   includes="javadoc/**" />
     </tar>
     <zip zipfile="${zip.bin}" >
       <zipfileset dir="."
-                  prefix="${tarfilebase}"
+                  prefix="${archive.base}"
                   includes="${jarfile},LICENSE,README" />
       <zipfileset dir="doc/build/www"
-                  prefix="${tarfilebase}/doc"
+                  prefix="${archive.base}/doc"
                   includes="**" />
       <zipfileset dir="core/build"
-                  prefix="${tarfilebase}"
+                  prefix="${archive.base}"
                   includes="javadoc/**" />
     </zip>
   </target>
 
   <target name="srcdist" depends="prepdist">
     <tar tarfile="${tarball.src}" compression="gzip" >
-      <tarfileset dir="." prefix="${tarfilebase}" >
+      <tarfileset dir="." prefix="${archive.base}" >
         <exclude name="${jarfile}" />
         <exclude name="${stage.dir}" />
         <exclude name="${stage.dir}/**" />
@@ -207,7 +210,7 @@
       </tarfileset>
     </tar>
     <zip destfile="${zip.src}" >
-      <zipfileset dir="." prefix="${tarfilebase}" >
+      <zipfileset dir="." prefix="${archive.base}" >
         <exclude name="${jarfile}" />
         <exclude name="${stage.dir}" />
         <exclude name="${stage.dir}/**" />
@@ -223,7 +226,9 @@
   </target>
 
 
-  <target name="localstage" depends="srcdist,bindist,doc" >
+  <target name="dist" depends="srcdist,bindist"/>
+
+  <target name="localstage" depends="dist,doc" >
     <mkdir dir="${stage.dir}" />
     <copy todir="${stage.dir}" >
       <fileset dir="doc/build/www" />
