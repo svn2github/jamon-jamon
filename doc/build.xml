@@ -28,7 +28,7 @@ the documentation thus taking care of issues such as escaping.
   <property name="build.classes.dir" value="${web.inf.dir}/classes"/>
   <property name="src.dir" value="src"/>
 
-  <property name="tomcat.home" value="env.TOMCAT_HOME"/>
+  <property name="tomcat.home" value="${env.TOMCAT_HOME}"/>
   <property name="tomcat.common.lib" value="${tomcat.home}/common/lib"/>
   <property name="java.lib.servlet" value="${tomcat.common.lib}/servlet.jar"/>
 
