@@ -144,7 +144,6 @@ public class EncodingReader
                 throw new IOException("Malformed encoding tag");
             }
         }
-        System.err.println("Encoding is " + encoding);
         return encoding.toString();
     }
 
