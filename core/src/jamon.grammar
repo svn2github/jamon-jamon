@@ -220,8 +220,8 @@ Tokens
               | '</%do' [all-'c']
               | '</%doc' [all-'>'])* '</%doc>' ws*;
 
-  {body -> alias} alias_start = '<%aliases>';
-  {alias -> body} alias_end = '</%aliases>' ws*;
+  {body -> alias} alias_start = '<%alias>';
+  {alias -> body} alias_end = '</%alias>' ws*;
 
   {body -> bad} bad_token = '<%' [[all - ws] - gt];
   {bad -> body} rest_of_token = [all - ws]+ gt;

@@ -1,4 +1,4 @@
-<%aliases>
+<%alias>
   foo => /test;
   foo => /bar;
-</%aliases>
+</%alias>

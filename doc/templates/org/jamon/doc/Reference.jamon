@@ -6,9 +6,9 @@
 
 <%override title>Jamon Template Reference Manual</%override>
 
-<%aliases>
+<%alias>
   escape => /org/jamon/escape;
-</%aliases>
+</%alias>
 
 <h2>Template Reference Manual</h2>
   <ol>
@@ -18,7 +18,7 @@
       literally, whitespace included.
 
       This excludes whitespace inside <&| /org/jamon/escape/Html
-      &><%LITERAL> <%args>, <%xargs>, <%import>, <%aliases>, <%/absmeth>, and
+      &><%LITERAL> <%args>, <%xargs>, <%import>, <%alias>, <%/absmeth>, and
       <%frag> declarations.  </%LITERAL></&>
 
       Other ignored white space includes whitespace immediately after
@@ -36,7 +36,7 @@
         <li><%LITERAL><%def ...> and <%/def></%LITERAL></li>
         <li><%LITERAL><%method ...> and <%/method></%LITERAL></li>
         <li><%LITERAL><%override ...> and <%/override></%LITERAL></li>
-        <li><%LITERAL><%/aliases></%LITERAL></li>
+        <li><%LITERAL><%/alias></%LITERAL></li>
       </ul>
 
       If you would like to force whitespace to appear after one of the
