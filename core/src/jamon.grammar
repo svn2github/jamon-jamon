@@ -18,27 +18,6 @@
  * Contributor(s):
  */
 
-/*
-<&|| /some/Component; arg1 => "foo"; &>
-  <|farg1>This is content to the first farg</|>
-  <|farg2><%args>String bar;</%args>This is bar: <% bar %></|>
-</&>
-
-States:
-  fargcall (for line 1)
-    has to duplicate all call stuff, unfortunately
-  fargcallbody (lines 2, 3)
-
-Tokens:
-  farg_call_init = <&||
-  (unnamed) = &>        to end call
-  farg_call_end = /&>
-
-  named_farg_init = <|
-  (unnamed) = >
-  named_farg_end = </|>
-*/
-
 Package
   org.jamon;
 
