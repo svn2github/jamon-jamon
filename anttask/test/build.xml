@@ -41,7 +41,7 @@
       <equals arg1="${invoker.compiler}" arg2="jikes"/>
     </condition>
     <condition property="org.jamon.invoker.compiler" value="javac">
-      <not><equals arg1="${invoker.compiler}" arg2="jikes"/></not>
+      <equals arg1="${invoker.compiler}" arg2="extJavac"/>
     </condition>
     <invoker classpath="${classpath}"
              sourceDir="templates"
