@@ -29,7 +29,7 @@ public class JamonDocServlet
         p_response.setContentType("text/html");
         String templatePath = p_request.getServletPath();
         templatePath = templatePath.substring(0,templatePath.length()-5);
-        new Invoker(m_manager, "/org/jamon/doc" + templatePathInfo)
+        new Invoker(m_manager, "/org/jamon/doc" + templatePath)
             .render(writer, makeParameters(templatePath));
         writer.close();
     }
