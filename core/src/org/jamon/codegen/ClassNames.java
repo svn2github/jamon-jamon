@@ -20,27 +20,17 @@
 
 package org.jamon.codegen;
 
-import java.io.Writer;
-import java.io.IOException;
-import org.jamon.Renderer;
-import org.jamon.AbstractTemplateProxy;
-import org.jamon.AbstractTemplateImpl;
-
 public interface ClassNames
 {
     public final static String IOEXCEPTION =
-        IOException.class.getName();
-    public final static String WRITER =
-        Writer.class.getName();
-    public final static String RENDERER =
-        org.jamon.Renderer.class.getName();
+        java.io.IOException.class.getName();
+    public final static String WRITER = java.io.Writer.class.getName();
+    public final static String RENDERER = org.jamon.Renderer.class.getName();
     public final static String TEMPLATE =
-         org.jamon.AbstractTemplateProxy.class.getName();
+        org.jamon.AbstractTemplateProxy.class.getName();
     public final static String TEMPLATE_INTF = TEMPLATE + ".Intf";
     public final static String TEMPLATE_MANAGER =
         org.jamon.TemplateManager.class.getName();
     public static final String BASE_TEMPLATE =
         org.jamon.AbstractTemplateImpl.class.getName();
-
-
 }
