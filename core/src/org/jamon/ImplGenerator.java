@@ -380,7 +380,7 @@ public class ImplGenerator extends BaseGenerator
         }
         public boolean equals(Object p_obj)
         {
-            return (p_obj instanceof Encoding) ? p_obj == this : false;
+            return p_obj == this;
         }
 
         private final String m_name;
