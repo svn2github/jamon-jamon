@@ -23,9 +23,13 @@
   <property name="junit.printsummary" value="off" />
   <property name="junit.formatter" value="brief" />
 
+  <target name="template-src">
+    <echo file="templates/test/jamon/Recompilation"
+          append="false">This is the template</echo>
+    <echo>File created</echo>
+  </target>
 
-
-  <target name="templates">
+  <target name="templates" depends="template-src">
     <mkdir dir="${build.src.dir}" />
     <taskdef name="jamon"
              classname="org.jamon.ant.JamonTask"
@@ -86,8 +90,11 @@
   <target name="test"
           depends="compile"
           description="Run the unit tests">
+    <dirname property="template.src.dir" file="${ant.file}" />
     <junit printsummary="${junit.printsummary}"
            fork="${junit.fork}" timeout="${junit.timeout}">
+      <sysproperty key="org.jamon.integration.basedir"
+                   value="${template.src.dir}" />
       <formatter type="${junit.formatter}" usefile="no"/>
       <classpath>
         <pathelement location="${classes.dir}"/>

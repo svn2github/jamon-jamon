@@ -20,6 +20,7 @@
 
 package org.jamon.integration;
 
+import java.io.File;
 import java.io.Writer;
 import java.io.StringWriter;
 import java.io.IOException;
@@ -37,8 +38,21 @@ public class TestBase
         throws Exception
     {
         m_templateManager = new StandardTemplateManager()
-            .setSourceDir("templates")
-            .setWorkDir("build/work");
+            .setSourceDir(SOURCE_DIR)
+            .setWorkDir(WORK_DIR);
+        resetWriter();
+    }
+
+
+    private static final String BASEDIR =
+        System.getProperty("org.jamon.integration.basedir");
+    protected static final String SOURCE_DIR =
+        BASEDIR + File.separator + "templates";
+    protected static final String WORK_DIR =
+        BASEDIR + File.separator + "build/work";
+
+    protected void resetWriter()
+    {
         m_writer = new StringWriter();
     }
 
