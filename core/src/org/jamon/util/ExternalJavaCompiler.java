@@ -37,7 +37,6 @@ public class ExternalJavaCompiler
     }
 
     public String compile(String [] p_javaFiles)
-        throws IOException
     {
         String [] cmdline = new String[p_javaFiles.length + 3];
         System.arraycopy(p_javaFiles,0,cmdline,3,p_javaFiles.length);
@@ -45,7 +44,15 @@ public class ExternalJavaCompiler
         cmdline[1] = "-classpath";
         cmdline[2] = m_classPath;
 
-        Process p = Runtime.getRuntime().exec(cmdline);
+        Process p;
+        try
+        {
+            p = Runtime.getRuntime().exec(cmdline);
+        }
+        catch (IOException e)
+        {
+            return e.getMessage();
+        }
         StreamConsumer stderr = new StreamConsumer(p.getErrorStream());
         try
         {
@@ -73,7 +80,14 @@ public class ExternalJavaCompiler
         }
         finally
         {
-            stderr.close();
+            try
+            {
+                stderr.close();
+            }
+            catch (IOException e)
+            {
+                return e.getMessage();
+            }
         }
     }
 

@@ -668,7 +668,6 @@ public class RecompilingTemplateManager
     }
 
     private String compile(Collection p_sourceFiles)
-        throws IOException
     {
         if (p_sourceFiles.isEmpty())
         {

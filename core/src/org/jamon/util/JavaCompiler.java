@@ -20,8 +20,6 @@
 
 package org.jamon.util;
 
-import java.io.IOException;
-
 /**
  * A <code>JavaCompiler</code> is an object which knows how to compile
  * Java source files.
@@ -36,6 +34,5 @@ public interface JavaCompiler
      * @return null if the compilation was successful, otherwise a
      * description of the failure
      */
-    String compile(String [] p_javaFiles)
-        throws IOException;
+    String compile(String [] p_javaFiles);
 }
