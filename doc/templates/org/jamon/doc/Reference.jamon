@@ -17,28 +17,30 @@
     In general, any characters appearing in a template are output
     literally, whitespace included.
 
-    This excludes whitespace inside <&| escape//Html &>
-    <%LITERAL><%args>, <%xargs>, <%import>, <%alias>, <%absmeth>, and
-    <%frag> declarations.</%LITERAL></&>
+    <%def code><%args>String code;</%args><code><% code %></code></%def>
+
+    This excludes whitespace inside <& code: "<%args>" &>,
+    <& code: "<%xargs>" &>, <& code: "<%import>" &>, <& code: "<%alias>" &>,
+     <& code: "<%absmeth>" &>, and <& code: "<%frag>" &> declarations.
 
     Other ignored white space includes whitespace immediately after
     the following tags:
     <ul class="referenceTagList">
-      <li><% "</%args>" %></li>
-      <li><% "</%doc>" %></li>
-      <li><% "</%frag>" %></li>
-      <li><% "</%xargs>" %></li>
-      <li><% "<%abstract>" %></li>
-      <li><% "</%class>" %></li>
-      <li><% "</%import>" %></li>
-      <li><% "</%implements>" %></li>
-      <li><% "</%java>" %></li>
-      <li><% "<%def ...>" %> and <% "</%def>" %></li>
-      <li><% "</%absmeth>" %></li>
-      <li><% "<%method ...>" %> and <% "</%method>" %></li>
-      <li><% "<%override ...>" %> and <% "</%override>" %></li>
-      <li><% "</%alias>" %></li>
-      <li><% "<%encoding ...>" %></li>
+      <li><& code: "</%args>" &></li>
+      <li><& code: "</%doc>" &></li>
+      <li><& code: "</%frag>" &></li>
+      <li><& code: "</%xargs>" &></li>
+      <li><& code: "<%abstract>" &></li>
+      <li><& code: "</%class>" &></li>
+      <li><& code: "</%import>" &></li>
+      <li><& code: "</%implements>" &></li>
+      <li><& code: "</%java>" &></li>
+      <li><& code: "<%def ...>" &> and <& code: "</%def>" &></li>
+      <li><& code: "</%absmeth>" &></li>
+      <li><& code: "<%method ...>" &> and <& code: "</%method>" &></li>
+      <li><& code: "<%override ...>" &> and <& code: "</%override>" &></li>
+      <li><& code: "</%alias>" &></li>
+      <li><& code: "<%encoding ...>" &></li>
     </ul>
 
     If you would like to force whitespace to appear after one of the
