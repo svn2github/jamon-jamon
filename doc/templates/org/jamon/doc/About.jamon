@@ -3,15 +3,15 @@
 <h2>Jamon in use</h2>
 
 <ul>
-  <li><a href="http://www.earthaddress.com">www.earthaddress.com</a>
+  <li><a target="_new" href="http://www.earthaddress.com">www.earthaddress.com</a>
     <br />
     <br />
-    <a href="http://www.earthaddress.com"><img
-       alt="EarthAddress" title="EarthAddress" src="earthaddress.gif" 
+    <a target="_new" href="http://www.earthaddress.com"><img
+       alt="EarthAddress" title="EarthAddress" src="earthaddress.gif"
        height="34" width="141" /></a>
   </li>
 
-<li><a href="http://www.eziba.com/StoreFront">www.eziba.com</a></li>
+<li><a target="_new" href="http://www.eziba.com/StoreFront">www.eziba.com</a></li>
 
 </ul>
 
