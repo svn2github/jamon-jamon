@@ -138,7 +138,7 @@ public class InheritanceTest
         new ChildFragmentCaller(getTemplateManager())
             .writeTo(getWriter())
             .render();
-        checkOutput("0{1}2");
+        checkOutput("s0{s - 1 - g t}2");
     }
 
     public void testIntfArgs()

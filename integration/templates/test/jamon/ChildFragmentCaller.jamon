@@ -1,1 +1,4 @@
-<&| ChildFragment &><%args>int j;</%args><% j %></&>
+<&|| ChildFragment; s => "s"; t => "t" &>
+  <|f><%args>int j;</%args><% j %></|>
+  <|g>g</|>
+</&>

@@ -1,4 +1,7 @@
+<%args>
+  String s;
+</%args>\
 <%frag f>
   int i;
 </%frag>\
-<& f; i => 0 &><& *CHILD &><& f; i => 2 &>
+<% s %><& f; i => 0 &><& *CHILD &><& f; i => 2 &>
