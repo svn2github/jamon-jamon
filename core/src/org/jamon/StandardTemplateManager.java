@@ -140,40 +140,48 @@ public class StandardTemplateManager
                ParserException,
                LexerException
     {
-        Parser parser =
-            new Parser(new Lexer(new PushbackReader
-                                 (new FileReader(getTemplateFileName(p_path)),
-                                  1024)));
+        String packageName, className;
         int i = p_path.lastIndexOf(FS);
-        String dir, name;
         if (i >= 1)
         {
             new File(m_workDir + p_path.substring(0,i)).mkdirs();
-            dir = PathUtils.pathToClassName(p_path.substring(1,i));
-            name = p_path.substring(i+1);
+            packageName = PathUtils.pathToClassName(p_path.substring(1,i));
+            className = p_path.substring(i+1);
         }
         else if (i == 0)
         {
-            dir = "";
-            name = p_path.substring(1);
+            packageName = "";
+            className = p_path.substring(1);
         }
         else
         {
-            dir = "";
-            name = p_path;
+            packageName = "";
+            className = p_path;
         }
-        FileWriter w = new FileWriter(getJavaFileName(p_path));
-        ImplGenerator g2 = new ImplGenerator(w,m_packagePrefix,dir,name);
-        parser.parse().apply(g2);
+
+        File javaFile = new File(getJavaFileName(p_path));
+        FileWriter writer = new FileWriter(javaFile);
+
+        ImplGenerator g2 = new ImplGenerator(writer,
+                                             m_packagePrefix,
+                                             packageName,
+                                             className);
+
+        new Parser(new Lexer(new PushbackReader
+                             (new FileReader(getTemplateFileName(p_path)),
+                              1024)))
+            .parse()
+            .apply(g2);
+
         try
         {
             g2.generateClassSource();
-            w.close();
+            writer.close();
         }
         catch (IOException e)
         {
-            w.close();
-            new File(getJavaFileName(p_path)).delete();
+            writer.close();
+            javaFile.delete();
             throw e;
         }
     }
