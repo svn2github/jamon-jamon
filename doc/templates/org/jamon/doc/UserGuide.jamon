@@ -61,24 +61,28 @@ which will place the generated Java source file(s) into the
 You can then use the template as follows:
         <pre class="code">
 import org.foo.templates.Foo;
+import org.jamon.StandardTemplateManager;
 import org.jamon.TemplateManager;
+import org.jamon.TemplateManagerSource;
 
   ...
-       StandardTemplateManager templateManager =
-         new StandardTemplateManager(...);
+       TemplateManager manager = new StandardTemplateManager(...);
+       TemplateManagerSource.setTemplateManager(manager);
        Writer writer = new OutputStreamWriter(System.out);
-       Foo foo = new Foo(templateManager);
+       Foo foo = new Foo();
        foo.writeTo(writer)
          .setName("Duke & Co.")
          .render(3, "Hello");
 
        // alternatively:
+       foo = new Foo();
        foo.setName("Duke & Co.");
        org.jamon.Renderer r = foo.makeRenderer(3, "Hello");
        ...
        foo.renderTo(writer);
 
        // or even:
+       foo = new Foo();
        foo.setName("Duke & Co.");
        String value = foo.makeRenderer(3, "Hello").asString();
        ...

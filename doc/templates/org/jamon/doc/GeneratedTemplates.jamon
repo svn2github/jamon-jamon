@@ -33,9 +33,9 @@ following relationships to the template sources:
   </li>
 </ul>
 
-For example, suppose there is a template <code>MyTmpl</code> in the
+For example, suppose there is a template <code>MyTemplate</code> in the
 directory <code>tmpls/org/foo</code>, the template source directory is
-set to <code>tmpls</code>, and <code>MyTmpl</code> contains the
+set to <code>tmpls</code>, and <code>MyTemplate</code> contains the
 declarations
 
 <pre><&| /org/jamon/escape/Html &><%LITERAL><%args>
@@ -51,26 +51,30 @@ generated class would be:
 <pre class="java"><&| /org/jamon/escape/Html &>\
   package org.foo;
 
+  import org.jamon.TemplateManager;
   import org.jamon.escaping.Escaping;
 
-  public class MyTmpl
+  public class MyTemplate
     extends org.jamon.AbstractTemplateProxy
   {
+    public MyTemplate() { ... }
+    public MyTemplate(TemplateManager manager) { ... }
+
     public void render(int i, boolean b)
       throws java.io.IOException { ... }
 
     public Renderer makeRenderer(int i, boolean b)
       throws java.io.IOException { ... }
 
-    public MyTmpl setS(String s) { ... }
+    public MyTemplate setS(String s) { ... }
 
-    public MyTmpl setSomeNumber(java.math.BigDecimal someNumber) { ... }
+    public MyTemplate setSomeNumber(java.math.BigDecimal someNumber) { ... }
 
-    public MyTmpl writeTo(java.io.Writer p_writer) { ... }
+    public MyTemplate writeTo(java.io.Writer p_writer) { ... }
 
-    public MyTmpl escapeWith(Escaping escaping) { ... }
+    public MyTemplate escapeWith(Escaping escaping) { ... }
 
-    public MyTmpl autoFlush(boolean autoFlush) { ... }
+    public MyTemplate autoFlush(boolean autoFlush) { ... }
 
   }</&></pre>
 
@@ -133,7 +137,7 @@ If one template inherits from another, then:
   </li>
 </ul>
 
-For example, if <code>/org/foo/ParentTmpl</code> contained the
+For example, if <code>/org/foo/ParentTemplate</code> contained the
 declarations
 
 <pre><&| /org/jamon/escape/Html &><%LITERAL><%args>
@@ -142,7 +146,7 @@ declarations
   Integer count;
 </%args></%LITERAL></&></pre>
 
-then the generated class <code>org.foo.ParentTmpl</code> would look
+then the generated class <code>org.foo.ParentTemplate</code> would look
 something like:
 
 <pre class="java"><&| /org/jamon/escape/Html &>\
@@ -150,14 +154,14 @@ something like:
 
   import org.jamon.escaping.Escaping;
 
-  public abstract class ParentTmpl
+  public abstract class ParentTemplate
     extends org.jamon.AbstractTemplateProxy
   {
-    public ParentTmpl setS(String s) { ... }
+    public ParentTemplate setS(String s) { ... }
 
     public abstract class ParentRenderer
     {
-      public ParentTmpl setS(String s) { ... }
+      public ParentTemplate setS(String s) { ... }
 
       public void render(int i, Integer count)
         throws java.io.IOException { ... }
@@ -170,44 +174,47 @@ something like:
     }
   }</&></pre>
 
-Moreover, if <code>/org/foo/ChildTmpl</code> contained the
+Moreover, if <code>/org/foo/ChildTemplate</code> contained the
 declarations
 
-<pre><&| /org/jamon/escape/Html &><%LITERAL><%extends ParentTmpl>
+<pre><&| /org/jamon/escape/Html &><%LITERAL><%extends ParentTemplate>
 <%args>
   long t;
   java.math.BigDecimal amount => new BigDecimal(0);
   double x;
 </%args></%LITERAL></&></pre>
 
-then the generated class <code>org.foo.ChildTmpl</code> would look
+then the generated class <code>org.foo.ChildTemplate</code> would look
 something like:
 
 <pre class="java"><&| /org/jamon/escape/Html &>\
   package org.foo;
 
+  import org.jamon.TemplateManager;
   import org.jamon.escaping.Escaping;
 
-  public abstract class ChildTmpl
-    extends org.foo.ParentTmpl
+  public abstract class ChildTemplate
+    extends org.foo.ParentTemplate
   {
+    public ChildTemplate() { ... }
+    public ChildTemplate(TemplateManager manager) { ... }
+
     public void render(int i, Integer count, long t, double x)
       throws java.io.IOException { ... }
 
     public Renderer makeRenderer(int i, Integer count, long t, double x)
       throws java.io.IOException { ... }
 
-    public ChildTmpl setAmount(java.math.BigDecimal amount) { ... }
+    public ChildTemplate setAmount(java.math.BigDecimal amount) { ... }
 
-    public ChildTmpl writeTo(java.io.Writer p_writer) { ... }
+    public ChildTemplate writeTo(java.io.Writer p_writer) { ... }
 
-    public ChildTmpl escapeWith(Escaping escaping) { ... }
+    public ChildTemplate escapeWith(Escaping escaping) { ... }
 
-    public ChildTmpl autoFlush(boolean autoFlush) { ... }
+    public ChildTemplate autoFlush(boolean autoFlush) { ... }
 
-    public ParentTmpl.ParentRenderer makeParentRenderer(long t, double x)
+    public ParentTemplate.ParentRenderer makeParentRenderer(long t, double x)
       throws java.io.IOException { ... }
   }</&></pre>
 
-An instantiated template is a <b>thread-safe</b> object, and may
-safely be used by concurrent threads.
+An instantiated template may be used at most once.

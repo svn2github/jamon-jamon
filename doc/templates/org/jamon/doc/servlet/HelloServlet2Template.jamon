@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.jamon.StandardTemplateManager;
+import org.jamon.TemplateManagerSource;
 
 public final class HelloServlet
     extends HttpServlet {
@@ -17,19 +18,19 @@ public final class HelloServlet
         StandardTemplateManager.Data data = new StandardTemplateManager.Data();
         data.setSourceDir("templates");
         data.setWorkDir("build/work");
-        StandardTemplateManager manager;
         try {
-            manager =new StandardTemplateManager(data);
+            TemplateManagerSource.setTemplateManager(
+                new StandardTemplateManager(data));
         }
         catch (IOException e) {
             throw new ServletException(e);
         }
-        helloTemplate = new HelloTemplate(manager);
     }
 
     public void doGet(HttpServletRequest request, HttpServletResponse response)
-	throws IOException {
+        throws IOException {
         response.setContentType("text/html");
+        HelloTemlpate helloTemplate = new HelloTemplate();
         helloTemplate.writeTo(response.getWriter());
         HelloFormFields formFields = new HelloFormFields(request.getParameterMap());
         if (formFields.hasData()) {
@@ -43,8 +44,6 @@ public final class HelloServlet
         }
         helloTemplate.render(formFields);
     }
-
-    private HelloTemplate helloTemplate;
 
     private static final int DEFAULT_NUMBER = 10;
 
