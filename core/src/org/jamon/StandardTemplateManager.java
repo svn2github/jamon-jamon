@@ -26,6 +26,7 @@ public class StandardTemplateManager
     private boolean m_includeRtJar = false;
     private String m_classpath = "";
     private ClassLoader m_classLoader = ClassLoader.getSystemClassLoader();
+    private String m_packagePrefix = "";
 
     public StandardTemplateManager(ClassLoader p_parentLoader)
     {
@@ -62,6 +63,11 @@ public class StandardTemplateManager
         m_classpath = p_classpath;
     }
 
+    public void setPackagePrefix(String p_packagePrefix)
+    {
+        m_packagePrefix = p_packagePrefix;
+    }
+
     private long createJavaFile(String p_path)
         throws IOException,
                ParserException,
@@ -85,7 +91,7 @@ public class StandardTemplateManager
             name = p_path;
         }
         FileWriter w = new FileWriter(getJavaFileName(p_path));
-        ImplGenerator g2 = new ImplGenerator(w,dir,name);
+        ImplGenerator g2 = new ImplGenerator(w,m_packagePrefix,dir,name);
         parser.parse().apply(g2);
         try
         {

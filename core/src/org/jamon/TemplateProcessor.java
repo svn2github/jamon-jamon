@@ -12,7 +12,8 @@ public class TemplateGenerator
     {
         try
         {
-            File destdir = new File(args[0]);
+            int arg = 0;
+            File destdir = new File(args[arg++]);
             destdir.mkdirs();
             if (! destdir.exists() || ! destdir.isDirectory())
             {
@@ -20,18 +21,22 @@ public class TemplateGenerator
                                       + destdir);
             }
 
-            for (int i = 1; i < args.length; ++i)
+            String pkgPrefix = args[arg++];
+
+            while (arg < args.length)
             {
-                String templateName = args[i];
+                String filename = args[arg++];
+                String templateName = filename;
                 int slash = templateName.lastIndexOf('/');
-                String pkg = "";
+                String pkg = pkgPrefix;
                 if (slash == 0)
                 {
                     throw new IOException("Can only use relative paths");
                 }
                 else if (slash > 0)
                 {
-                    pkg = templateName.substring(0,slash).replace('/','.');
+                    pkg = pkgPrefix +
+                        templateName.substring(0,slash).replace('/','.');
                     templateName = templateName.substring(slash+1);
                 }
 
@@ -39,7 +44,7 @@ public class TemplateGenerator
                                    + pkg + '.' + templateName);
                 Parser parser =
                     new Parser(new Lexer(new PushbackReader
-                                         (new FileReader(args[i]),
+                                         (new FileReader(filename),
                                           1024)));
                 Start tree = parser.parse();
 
@@ -50,7 +55,7 @@ public class TemplateGenerator
                     new FileWriter(new File(javaFile, templateName + ".java"));
 
                 InterfaceGenerator g1 =
-                    new InterfaceGenerator(w, pkg, templateName);
+                    new InterfaceGenerator(w, pkgPrefix, pkg, templateName);
 
                 tree.apply(g1);
                 g1.generateClassSource();

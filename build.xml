@@ -92,6 +92,7 @@
           classpath="${classes.dir}:${java.lib.sablecc}"
           classname="org.modusponens.jtt.TemplateGenerator">
       <arg value="../${test.src.dir}" />
+      <arg value="foo.bar." />
       <arg value="${test.pkg}/TestTemplate" />
       <arg value="${test.pkg}/SubTemplate" />
     </java>

@@ -18,12 +18,15 @@ public class ImplGenerator extends BaseGenerator
     private Map m_unitStatements = new HashMap();
     private StringBuffer m_current = new StringBuffer();
     private Set m_calls = new HashSet();
+    private final String m_packagePrefix;
 
     public ImplGenerator(Writer p_writer,
+                         String p_packagePrefix,
                          String p_packageName,
                          String p_className)
     {
         super(p_writer,p_packageName,p_className);
+        m_packagePrefix = p_packagePrefix;
         m_unitStatements.put(MAIN_UNIT_NAME,new ArrayList());
     }
 
@@ -181,6 +184,11 @@ public class ImplGenerator extends BaseGenerator
         return s.toString();
     }
 
+    private String getInterfaceClassName()
+    {
+        return m_packagePrefix + getPackageName() + "." + getClassName();
+    }
+
     private void generateDeclaration()
         throws IOException
     {
@@ -190,7 +198,7 @@ public class ImplGenerator extends BaseGenerator
         print  ("  extends ");
         println(           BASE_TEMPLATE);
         print  ("  implements ");
-        println(              getClassName());
+        println(              getInterfaceClassName());
         println("{");
     }
 
@@ -439,6 +447,12 @@ public class ImplGenerator extends BaseGenerator
         {
             return getAbsolutePath().substring(1).replace('/','.');
         }
+
+        private String getInterfaceClassName()
+        {
+            return m_packagePrefix + getClassName();
+        }
+
         public String asString()
             throws JttException
         {
@@ -499,9 +513,9 @@ public class ImplGenerator extends BaseGenerator
         {
             StringBuffer s = new StringBuffer();
             s.append("{\n      ");
-            s.append(getClassName());
+            s.append(getInterfaceClassName());
             s.append(" c = (");
-            s.append(getClassName());
+            s.append(getInterfaceClassName());
             s.append(") getTemplateManager().getInstance(\"");
             s.append(getAbsolutePath());
             s.append("\", getWriter());\n");
@@ -509,7 +523,7 @@ public class ImplGenerator extends BaseGenerator
             List requiredArgs = new ArrayList();
             try
             {
-                Class c = Class.forName(getClassName());
+                Class c = Class.forName(m_packagePrefix + getClassName());
                 requiredArgs.addAll
                     (Arrays.asList
                      ((String []) c.getField("RENDER_ARGS").get(null)));

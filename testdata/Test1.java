@@ -1,5 +1,6 @@
 package test.jtt;
 
+import foo.bar.test.jtt.TestTemplate;
 import java.io.*;
 import java.math.*;
 import org.modusponens.jtt.*;
@@ -11,7 +12,8 @@ public class Test1
         try
         {
             Writer w = new OutputStreamWriter(System.out);
-            TemplateManager m = new StandardTemplateManager();
+            StandardTemplateManager m = new StandardTemplateManager();
+            m.setPackagePrefix("foo.bar.");
             TestTemplate.Factory f = new TestTemplate.Factory(m);
             TestTemplate t = f.getInstance(w);
             t.setX(57);
