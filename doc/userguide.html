@@ -44,7 +44,7 @@
 &lt;html&gt;
   &lt;body&gt;
 %   for (int i = 1; i &lt;= count; ++i) {
-    &lt;% i %&gt;. &lt; greeting &gt; &lt; name &gt; &lt;br /&gt;
+    &lt;% i %&gt;. &lt;% greeting %&gt; &lt;% name %&gt; &lt;br /&gt;
 %   }
   &lt;/body&gt;
 &lt;/html&gt;
@@ -75,7 +75,7 @@ import org.jamon.TemplateManager;
        Writer writer = new OutputStreamWriter(System.out);
        new Foo(templateManager)
          .writeTo(writer)
-         .setName("Duke")
+         .setName("Duke & Co.")
          .render(3, "Hello");
 </pre>
     <p>
@@ -86,11 +86,57 @@ import org.jamon.TemplateManager;
     <pre class="tty">
 &lt;html&gt;
   &lt;body&gt;
-    1. Hello Duke&lt;br /&gt;
-    2. Hello Duke&lt;br /&gt;
-    3. Hello Duke&lt;br /&gt;
+    1. Hello Duke &amp;amp; Co.&lt;br /&gt;
+    2. Hello Duke &amp;amp; Co.&lt;br /&gt;
+    3. Hello Duke &amp;amp; Co.&lt;br /&gt;
   &lt;/body&gt;
 &lt;/html&gt;
 </pre>
+
+<h3>Changing the default escaping mechanism</h3>
+Suppose the we wanted to include some text for inclusion in an email.  Since we are 
+producing plain text (and not HTML) we want a different default escaping mechanism.
+For example
+    <pre class="template">
+&lt;%args&gt;
+  int count;
+  String name => "Somebody";
+  String greeting;
+&lt;/%args&gt;
+    Many Greetings
+    ==============
+%   for (int i = 1; i &lt;= count; ++i) {
+    &lt;% i %&gt;. &lt;% greeting %&gt; &lt;% name %&gt;
+%   }
+ </pre>
+Could be called from Java as follows
+        <pre class="code">
+import org.modusponens.templates.Foo;
+import org.jamon.TemplateManager;
+<b>import org.jamon.Encoding;</b>
+
+  ...
+       StandardTemplateManager templateManager =
+         new StandardTemplateManager(...);
+       // to be able to dynamically recompile templates:
+       //    templateManager.setSourceDir("templates");
+       //    templateManager.setWorkDir("jamonwork");
+       ...
+       Writer writer = new OutputStreamWriter(System.out);
+       new Foo(templateManager)
+         .writeTo(writer)
+         <b>.encoding(Encoding.NONE)</b>
+         .setName("Duke & Co.")
+         .render(3, "Hello");
+</pre>
+(Note how we set the escaping mechanism.)  It would emit
+    <pre class="tty">
+    Many Greetings
+    ==============
+    1. Hello Duke &amp; Co.
+    2. Hello Duke &amp; Co.
+    3. Hello Duke &amp; Co.
+</pre>
+
   </body>
 </html>

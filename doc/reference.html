@@ -57,6 +57,41 @@
       method body. Thus, for example, package declarations and import
       statements would trigger a compilation error.
 
+    <p>
+      Before a Java expression is emitted, the string that represents it
+      is <em>escaped</em>.  The default escaping mechanism is HTML, so for
+      example the following template
+<pre class="template">
+this &lt;% "&" %&gt; that
+</pre>
+      produces
+<pre class="tty">
+this &amp;amp; that
+</pre>
+      However different escaping mechanisms can be specified in the template itself.
+      A string can be emitted with no escaping as follows:
+<pre class="template">
+this &lt;% "&" |n %&gt; that
+</pre>
+      producing
+<pre class="tty">
+this &amp; that
+</pre>
+     The available escaping mechanism are
+     <ul>
+       <li>HTML (use <code>|h</code> in the emit block)</li>
+       <li>XML (use <code>|x</code> in the emit block)</li>
+       <li>URL (use <code>|u</code> in the emit block)</li>
+       <li>None (use <code>|n</code> in the emit block)</li>
+     </ul>
+
+   <p>
+
+     In addition the <em>default</em> escaping mechanism can also be changed, however this is 
+     done from outside the template, see the Jamon <a href="userguide.html">user's guide</a>
+     for further details.
+      
+
     <li><span class="concept">Comments</span>
 
       Any template content between <code>&lt;%doc&gt;</code> and
