@@ -1,0 +1,18 @@
+Handle dependencies correctly. Already have the called templates, so just need to compute
+(and persist) the inverse.
+
+Allow setting breakpoints in templates
+  - maybe do side-by-side debugging of template and corresponding source
+
+Allow user-specified template folder(s) and generated source folder(s)
+
+Primitive Jamon editor and file type
+
+Possibly hide / alternate display of generated source folder
+
+"Trampoline" compilation errors in generated templates to have markers
+indicate template source problem. Do this by registering a "post" builder
+which traverses markers on generated sources and "moves" them to the templates.
+Will need a map from generated source line numbers to template line numbers.
+
+New Jamon project wizard
