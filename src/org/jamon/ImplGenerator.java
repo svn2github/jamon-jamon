@@ -315,6 +315,7 @@ public class ImplGenerator extends BaseGenerator
                     print(",");
                 }
                 String arg = (String) a.next();
+                print("final ");
                 print(getArgType(name,arg));
                 print(" ");
                 print(arg);
@@ -348,6 +349,14 @@ public class ImplGenerator extends BaseGenerator
         }
     }
 
+
+    private int m_lastVar = 0;
+
+    private String newVarName()
+    {
+        return "j$" + (m_lastVar++);
+    }
+
     private static final String TEMPLATE_MANAGER =
         TemplateManager.class.getName();
 
@@ -363,6 +372,7 @@ public class ImplGenerator extends BaseGenerator
              /* */)
         {
             String name = (String) i.next();
+            print("final ");
             print(getArgType(MAIN_UNIT_NAME,name));
             print(" ");
             print(name);
@@ -524,10 +534,13 @@ public class ImplGenerator extends BaseGenerator
             throws JttException
         {
             StringBuffer s = new StringBuffer();
+            String fragVar = newVarName();
             s.append("{\n");
-            s.append("    ");
+            s.append("    final ");
             s.append(FRAGMENT_CLASS);
-            s.append(" f =\n");
+            s.append(" ");
+            s.append(fragVar);
+            s.append(" =\n");
             s.append("      new ");
             s.append(FRAGMENT_CLASS);
             s.append(" () {\n");
@@ -541,7 +554,7 @@ public class ImplGenerator extends BaseGenerator
             }
             s.append("    }\n");
             s.append("  };\n");
-            m_params.put(getFirstArgName(),"f");
+            m_params.put(getFirstArgName(),fragVar);
             s.append(super.asString());
             s.append("}\n");
             return s.toString();
@@ -684,9 +697,12 @@ public class ImplGenerator extends BaseGenerator
             throws JttException
         {
             StringBuffer s = new StringBuffer();
-            s.append("{\n      ");
+            String tVar = newVarName();
+            s.append("{\n      final ");
             s.append(getInterfaceClassName());
-            s.append(" c = (");
+            s.append(" ");
+            s.append(tVar);
+            s.append(" = (");
             s.append(getInterfaceClassName());
             s.append(") getTemplateManager().getInstance(\"");
             s.append(getAbsolutePath());
@@ -701,14 +717,18 @@ public class ImplGenerator extends BaseGenerator
                 String name = (String) i.next();
                 if (! requiredArgs.contains(name) )
                 {
-                    s.append("      c.set");
+                    s.append("      ");
+                    s.append(tVar);
+                    s.append(".set");
                     s.append(capitalize(name));
                     s.append("(");
                     s.append(m_params.get(name));
                     s.append(");\n");
                 }
             }
-            s.append("      c.render(");
+            s.append("      ");
+            s.append(tVar);
+            s.append(".render(");
             for (Iterator i = getRequiredArgs().iterator(); i.hasNext(); /* */)
             {
                 String name = (String) i.next();

@@ -100,3 +100,20 @@ body3
   </%args>
   A def component (<% y+1 %>) with frag param: <|frag|>.\
 </%def>
+
+
+Nested frag param calls:
+
+<|& sub1 &><|& Sub2; x => 7 &>in sub2body</&>in sub1</&>
+
+And frag calling frag:
+<%def sub3> \
+<%args frag></%args> \
+A <|frag|> B <|frag|> C \
+</%def> \
+% class Counter { int i = 0; public int bump() { return i++; } }
+% final Counter c = new Counter();
+<%def sub4> \
+<%args f2></%args> \
+front<|& sub3 &>before<|f2|>middle<|f2|>after</&>back</%def> \
+<|& sub4 &> <% c.bump() %> </&>
