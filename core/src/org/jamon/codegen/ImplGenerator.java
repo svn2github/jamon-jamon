@@ -146,31 +146,21 @@ public class ImplGenerator
         }
     }
 
+    //FIXME - see same in ProxyGenerator
     private void generateInnerUnitFargInterface(FragmentUnit p_fragmentUnit,
                                                 boolean p_private)
     {
         m_writer.println((p_private ? "private" : "protected")
-                         + " static abstract class "
+                         + " static interface "
                          + p_fragmentUnit.getFragmentInterfaceName());
-        m_writer.println("  extends " + ClassNames.BASE_TEMPLATE);
+        m_writer.println("  extends " + ClassNames.FRAGMENT_INTF);
         m_writer.openBlock();
-        m_writer.println("protected "
-                         + p_fragmentUnit.getFragmentInterfaceName()
-                         + "(" + ClassNames.TEMPLATE_MANAGER + " p_manager, "
-                         + ClassNames.ESCAPING + " p_escaping)");
-        m_writer.openBlock();
-        m_writer.println("super(p_manager, p_escaping);");
-        m_writer.closeBlock();
-
-        m_writer.println();
-        m_writer.print  ("abstract public void render(");
-
+        m_writer.print  ("void render(");
         p_fragmentUnit.printRequiredArgsDecl(m_writer);
         m_writer.println(")");
         m_writer.println("  throws java.io.IOException;");
 
-        m_writer.print("abstract public " + ClassNames.RENDERER
-                       + " makeRenderer(");
+        m_writer.print(ClassNames.RENDERER + " makeRenderer(");
         p_fragmentUnit.printRequiredArgsDecl(m_writer);
         m_writer.println(");");
         m_writer.closeBlock();

@@ -140,46 +140,32 @@ public class ProxyGenerator
         }
     }
 
+    //FIXME - see same in ImplGenerator
     private void generateFragmentInterface(FragmentUnit p_fragmentUnit,
                                            boolean p_inner)
     {
         String className = p_fragmentUnit.getFragmentInterfaceName();
-        m_writer.println("public static abstract class " + className);
+        m_writer.println("public static interface " + className);
         if (!p_inner)
         {
             m_writer.println("  extends " + getClassName() + ".Intf."
-                             + className);
-            m_writer.openBlock();
-            generateFragmentConstructor(className);
-            m_writer.closeBlock();
+                             + className + "{}");
         }
         else
         {
-            m_writer.println(" extends " + ClassNames.BASE_TEMPLATE);
+            m_writer.println("  extends FragmentIntf");
             m_writer.openBlock();
-            generateFragmentConstructor(className);
-            m_writer.println();
-            m_writer.print  ("abstract public void render(");
+            m_writer.print  ("void render(");
             p_fragmentUnit.printRequiredArgsDecl(m_writer);
             m_writer.println(")");
             m_writer.println("  throws " + ClassNames.IOEXCEPTION + ";");
-            m_writer.print("abstract public " + ClassNames.RENDERER
-                           + " makeRenderer(");
+
+            m_writer.print(ClassNames.RENDERER + " makeRenderer(");
             p_fragmentUnit.printRequiredArgsDecl(m_writer);
             m_writer.println(");");
             m_writer.closeBlock();
         }
         m_writer.println();
-    }
-
-    private void generateFragmentConstructor(String p_className)
-    {
-        m_writer.println("protected " + p_className
-                         + "(" + ClassNames.TEMPLATE_MANAGER + " p_manager, "
-                         + ClassNames.ESCAPING + " p_escaping)");
-        m_writer.openBlock();
-        m_writer.println("super(p_manager, p_escaping);");
-        m_writer.closeBlock();
     }
 
     private void generateFragmentInterfaces(boolean p_inner)

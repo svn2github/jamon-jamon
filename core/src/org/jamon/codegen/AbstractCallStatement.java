@@ -46,13 +46,28 @@ public abstract class AbstractCallStatement
     private final String m_path;
     private final Map m_params;
     private final Map m_fragParams = new HashMap();
+    private final static String FRAGMENT_IMPL_PREFIX = "__jamon__instanceOf__";
+    private static int s_fragmentImplCounter = 0;
+    private final Map m_fragmentImplNames = new HashMap();
 
     protected abstract String getFragmentIntfName(
         FragmentUnit p_fragmentUnitIntf);
 
-    private void handleFragmentParam(FragmentUnit p_fragmentUnitIntf,
-                                     IndentingWriter p_writer,
-                                     TemplateDescriber p_describer)
+    private String getFragmentImplName(FragmentUnit p_fragmentUnitIntf)
+    {
+        if(! m_fragmentImplNames.containsKey(p_fragmentUnitIntf))
+        {
+            m_fragmentImplNames
+                .put(p_fragmentUnitIntf,
+                     FRAGMENT_IMPL_PREFIX + (s_fragmentImplCounter++) + "__"
+                     + p_fragmentUnitIntf.getFragmentInterfaceName());
+        }
+        return (String) m_fragmentImplNames.get(p_fragmentUnitIntf);
+    }
+
+    private void makeFragmentImplClass(FragmentUnit p_fragmentUnitIntf,
+                                       IndentingWriter p_writer,
+                                       TemplateDescriber p_describer)
         throws IOException
     {
         final FragmentUnit fragmentUnitImpl =
@@ -64,11 +79,17 @@ public abstract class AbstractCallStatement
                  + " is missing fragment " + p_fragmentUnitIntf.getName());
         }
 
-        p_writer.print("new "
-                       + getFragmentIntfName(p_fragmentUnitIntf)
-                       + "(this.getTemplateManager(), this.getEscaping()) ");
+        p_writer.println("class " + getFragmentImplName(p_fragmentUnitIntf));
+        p_writer.println("  extends " + ClassNames.BASE_TEMPLATE);
+        p_writer.println("  implements "
+                         + getFragmentIntfName(p_fragmentUnitIntf));
         p_writer.openBlock();
-
+        p_writer.println("public " + getFragmentImplName(p_fragmentUnitIntf)
+                         + "(" + ClassNames.TEMPLATE_MANAGER + " p_manager, "
+                         + ClassNames.ESCAPING + " p_escaping)");
+        p_writer.openBlock();
+        p_writer.println("super(p_manager, p_escaping);");
+        p_writer.closeBlock();
         p_writer.print("public " + ClassNames.RENDERER + " makeRenderer(");
         fragmentUnitImpl.printRequiredArgsDecl(p_writer);
         p_writer.println(")");
@@ -98,10 +119,9 @@ public abstract class AbstractCallStatement
         p_writer.closeBlock();
     }
 
-    protected void handleFragmentParams(List p_fragmentInterfaces,
-                                      IndentingWriter p_writer,
-                                      TemplateDescriber p_describer,
-                                      boolean p_argsAlreadyPrinted)
+    protected void makeFragmentImplClasses(List p_fragmentInterfaces,
+                                           IndentingWriter p_writer,
+                                           TemplateDescriber p_describer)
         throws IOException
     {
         if (m_fragParams.size() == 1
@@ -129,15 +149,31 @@ public abstract class AbstractCallStatement
         }
         for (Iterator i = p_fragmentInterfaces.iterator(); i.hasNext(); )
         {
+            makeFragmentImplClass
+                (((FragmentArgument) i.next()).getFragmentUnit(),
+                 p_writer,
+                 p_describer);
+        }
+    }
+
+    protected void generateFragmentParams(IndentingWriter p_writer,
+                                          Iterator p_fragmentInterfaces,
+                                          boolean p_argsAlreadyPrinted)
+    {
+        while (p_fragmentInterfaces.hasNext())
+        {
             if (p_argsAlreadyPrinted)
             {
                 p_writer.println(", ");
             }
             p_argsAlreadyPrinted = true;
-            handleFragmentParam
-                (((FragmentArgument) i.next()).getFragmentUnit(),
-                 p_writer,
-                 p_describer);
+
+            p_writer.print(
+                "new "
+                + getFragmentImplName(
+                    (((FragmentArgument) p_fragmentInterfaces.next())
+                     .getFragmentUnit()))
+                + "(this.getTemplateManager(), this.getEscaping())");
         }
     }
 

@@ -32,6 +32,12 @@ public abstract class AbstractTemplateProxy
         void escapeWith(Escaping p_escaping);
     }
 
+    protected interface FragmentIntf
+    {
+        void writeTo(Writer p_writer);
+        void escapeWith(Escaping p_escaping);
+    }
+
     protected static class ImplData
     {
         public final void setWriter(Writer p_writer)

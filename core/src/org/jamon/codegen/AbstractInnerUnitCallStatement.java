@@ -53,6 +53,9 @@ public abstract class AbstractInnerUnitCallStatement
                                TemplateDescriber p_describer)
         throws IOException
     {
+        p_writer.openBlock();
+        makeFragmentImplClasses(
+            m_unit.getFragmentArgsList(), p_writer, p_describer);
         p_writer.println("__jamon_innerUnit__" + getPath() + "(");
         p_writer.indent(2);
         boolean argsAlreadyPrinted = false;
@@ -99,13 +102,13 @@ public abstract class AbstractInnerUnitCallStatement
                 p_writer.println(",");
             }
         }
-        handleFragmentParams(m_unit.getFragmentArgsList(),
-                             p_writer,
-                             p_describer,
-                             argsAlreadyPrinted);
+        generateFragmentParams(p_writer,
+                               m_unit.getFragmentArgsList().iterator(),
+                               argsAlreadyPrinted);
         p_writer.outdent(2);
         p_writer.println(");");
         checkSuppliedParams();
+        p_writer.closeBlock();
     }
 
     protected abstract void printDefault(IndentingWriter p_writer,

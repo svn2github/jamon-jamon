@@ -44,6 +44,13 @@ public class ComponentCallStatement
                                TemplateDescriber p_describer)
         throws IOException
     {
+        p_writer.openBlock();
+        TemplateDescription desc =
+            p_describer.getTemplateDescription(getPath());
+
+        makeFragmentImplClasses(desc.getFragmentInterfaces(),
+                                p_writer,
+                                p_describer);
         String instanceVar = getUniqueName();
         p_writer.println(getComponentProxyClassName() + " "
                          + instanceVar + " = "
@@ -53,9 +60,6 @@ public class ComponentCallStatement
         p_writer.println(".writeTo(this.getWriter())");
         p_writer.println(".escapeWith(this.getEscaping());");
         p_writer.outdent(2);
-
-        TemplateDescription desc =
-            p_describer.getTemplateDescription(getPath());
 
         for (Iterator i = desc.getOptionalArgs().iterator(); i.hasNext(); )
         {
@@ -87,12 +91,12 @@ public class ComponentCallStatement
             p_writer.print(expr);
             argsAlreadyPrinted = true;
         }
-        handleFragmentParams(desc.getFragmentInterfaces(),
-                             p_writer,
-                             p_describer,
-                             argsAlreadyPrinted);
+        generateFragmentParams(p_writer,
+                               desc.getFragmentInterfaces().iterator(),
+                               argsAlreadyPrinted);
         p_writer.println(");");
         checkSuppliedParams();
+        p_writer.closeBlock();
     }
 
     private String getComponentProxyClassName()
