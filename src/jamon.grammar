@@ -36,10 +36,10 @@ Tokens
   {imports -> body} import_end = '</%import>';
   {body -> call} call_start = '<&' ws*;
   {call -> body} call_end = ws* '&>';
-  {body -> java} java_start = '<%java>';
-  {java -> body} java_end = '</%java>';
+  {body -> java} java_start = '<%java>' ws*;
+  {java -> body} java_end = ws* '</%java>';
   {args,imports} dot = period;
-  {args -> argexp} arrow = '=>';
+  {args -> argexp} arrow = '=>' hs*;
   {call,args,imports} white_space = ws*;
   {call,args,imports} identifier = letter letter_or_digit*;
 
