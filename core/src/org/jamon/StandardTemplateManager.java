@@ -118,6 +118,12 @@ public class StandardTemplateManager
                 + ".class";
         }
 
+        void invalidate()
+        {
+            m_loader = null;
+            m_classMap.clear();
+        }
+
         protected Class loadClass(String p_name, boolean p_resolve)
             throws ClassNotFoundException
         {
@@ -127,12 +133,12 @@ public class StandardTemplateManager
                 return super.loadClass(p_name, p_resolve);
             }
 
-            Long last = (Long) m_timestampMap.get(p_name);
-            if (last != null && last.longValue() >= cf.lastModified())
+            Class c = (Class) m_classMap.get(p_name);
+            if (c != null)
             {
-                return (Class) m_classMap.get(p_name);
+                return c;
             }
-            if (last != null || m_loader == null)
+            if (m_loader == null)
             {
                 try
                 {
@@ -145,20 +151,17 @@ public class StandardTemplateManager
                     throw new JttClassNotFoundException(e);
                 }
             }
-            Class c = m_loader.loadClass(p_name);
+            c = m_loader.loadClass(p_name);
             if (p_resolve)
             {
                 resolveClass(c);
             }
             m_classMap.put(p_name,c);
-            m_timestampMap.put(p_name, new Long(cf.lastModified()));
             return c;
         }
 
         private ClassLoader m_loader;
-
         private final Map m_classMap = new HashMap();
-        private final Map m_timestampMap = new HashMap();
     }
 
     private WorkDirLoader getLoader()
@@ -309,7 +312,11 @@ public class StandardTemplateManager
             }
         }
 
-        compile(outOfDateJavaFiles);
+        if (!outOfDateJavaFiles.isEmpty())
+        {
+            compile(outOfDateJavaFiles);
+            getLoader().invalidate();
+        }
     }
 
     /**
