@@ -18,38 +18,24 @@
  * Contributor(s):
  */
 
-package org.jamon.tests;
+package org.jamon.escaping;
 
 import java.io.Writer;
-import java.io.StringWriter;
 import java.io.IOException;
 
-import junit.framework.TestCase;
-
-import org.jamon.Escaping;
-
-public class EscapingTest
-    extends TestCase
+public class NoneEscaping
+    implements Escaping
 {
 
-    public void testHtmlEscaping()
-        throws IOException
+    NoneEscaping()
     {
-        check(Escaping.HTML, "&lt;&gt;&amp;\"'");
+        // package scope constructor
     }
 
-    public void testStrictHtmlEscaping()
+    public void write(String p_string, Writer p_writer)
         throws IOException
     {
-        check(Escaping.STRICT_HTML, "&lt;&gt;&amp;&quot;&#39;");
-    }
-
-    private void check(Escaping p_escaping, String p_expected)
-        throws IOException
-    {
-        Writer writer = new StringWriter();
-        p_escaping.write("<>&\"'", writer);
-        assertEquals(p_expected, writer.toString());
+        p_writer.write(p_string);
     }
 
 }

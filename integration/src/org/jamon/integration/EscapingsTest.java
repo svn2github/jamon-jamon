@@ -24,7 +24,7 @@ import java.io.Writer;
 import java.io.StringWriter;
 import java.io.IOException;
 
-import org.jamon.Escaping;
+import org.jamon.escaping.Escaping;
 
 import test.jamon.Escapings;
 

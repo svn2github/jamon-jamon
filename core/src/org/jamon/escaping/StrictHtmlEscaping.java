@@ -18,16 +18,16 @@
  * Contributor(s):
  */
 
-package org.jamon;
+package org.jamon.escaping;
 
 import java.io.Writer;
 import java.io.IOException;
 
-public class HtmlEscaping
-    extends AbstractCharacterEscaping
+public class StrictHtmlEscaping
+    extends HtmlEscaping
 {
 
-    HtmlEscaping()
+    StrictHtmlEscaping()
     {
         // package scope constructor
     }
@@ -37,10 +37,10 @@ public class HtmlEscaping
     {
         switch (p_char)
         {
-          case '<': p_writer.write("&lt;"); break;
-          case '>': p_writer.write("&gt;"); break;
-          case '&': p_writer.write("&amp;"); break;
-          default: p_writer.write(p_char);
+          case '"': p_writer.write("&quot;"); break;
+          case '\'': p_writer.write("&#39;"); break;
+              // FIXME: numerically escape other chars
+          default: super.write(p_char, p_writer);
         }
     }
 

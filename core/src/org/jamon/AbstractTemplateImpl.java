@@ -24,6 +24,8 @@ import java.io.Writer;
 import java.io.IOException;
 import java.net.URLEncoder;
 
+import org.jamon.escaping.Escaping;
+
 public abstract class AbstractTemplateImpl
 {
     protected AbstractTemplateImpl(TemplateManager p_templateManager,

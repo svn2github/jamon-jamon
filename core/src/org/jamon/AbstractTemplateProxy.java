@@ -23,6 +23,8 @@ package org.jamon;
 import java.io.Writer;
 import java.io.IOException;
 
+import org.jamon.escaping.Escaping;
+
 public abstract class AbstractTemplateProxy
 {
     public interface Intf

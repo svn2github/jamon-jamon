@@ -18,30 +18,25 @@
  * Contributor(s):
  */
 
-package org.jamon;
+package org.jamon.escaping;
 
 import java.io.Writer;
 import java.io.IOException;
+import java.net.URLEncoder;
 
-public class StrictHtmlEscaping
-    extends HtmlEscaping
+public class UrlEscaping
+    implements Escaping
 {
 
-    StrictHtmlEscaping()
+    UrlEscaping()
     {
         // package scope constructor
     }
 
-    protected void write(char p_char, Writer p_writer)
+    public void write(String p_string, Writer p_writer)
         throws IOException
     {
-        switch (p_char)
-        {
-          case '"': p_writer.write("&quot;"); break;
-          case '\'': p_writer.write("&#39;"); break;
-              // FIXME: numerically escape other chars
-          default: super.write(p_char, p_writer);
-        }
+        p_writer.write(URLEncoder.encode(p_string));
     }
 
 }

@@ -4,4 +4,4 @@
   boolean compose => false;
 </%args>\
 <&| _escape; compose => compose;
-             escaping => org.jamon.Escaping.XML &><& content &></&>\
+             escaping => org.jamon.escaping.Escaping.XML &><& content &></&>\

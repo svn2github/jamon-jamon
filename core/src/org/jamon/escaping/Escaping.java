@@ -18,16 +18,16 @@
  * Contributor(s):
  */
 
-package org.jamon;
+package org.jamon.escaping;
 
 import java.io.Writer;
 import java.io.IOException;
 
 /**
  * Converts a string into an escaped version of it.  <em>Escaping</em> is the
- * process of converting a string into another string such that 
+ * process of converting a string into another string such that
  * <ul>
- *   <li>the process can be inverted (i.e., you can recover the original string 
+ *   <li>the process can be inverted (i.e., you can recover the original string
  *     from its escaped version), and
  *   <li>the escaped version is gauranteed to satisfy certain constraints
  * </ul>

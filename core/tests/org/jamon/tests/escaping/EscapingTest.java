@@ -18,25 +18,38 @@
  * Contributor(s):
  */
 
-package org.jamon;
+package org.jamon.tests.escaping;
 
 import java.io.Writer;
+import java.io.StringWriter;
 import java.io.IOException;
 
-public abstract class AbstractCharacterEscaping
-    implements Escaping
+import junit.framework.TestCase;
+
+import org.jamon.escaping.Escaping;
+
+public class EscapingTest
+    extends TestCase
 {
 
-    public void write(String p_string, Writer p_writer)
+    public void testHtmlEscaping()
         throws IOException
     {
-        for (int i = 0; i < p_string.length(); i++)
-        {
-            write(p_string.charAt(i), p_writer);
-        }
+        check(Escaping.HTML, "&lt;&gt;&amp;\"'");
     }
 
-    protected abstract void write(char p_char, Writer p_writer)
-        throws IOException;
+    public void testStrictHtmlEscaping()
+        throws IOException
+    {
+        check(Escaping.STRICT_HTML, "&lt;&gt;&amp;&quot;&#39;");
+    }
+
+    private void check(Escaping p_escaping, String p_expected)
+        throws IOException
+    {
+        Writer writer = new StringWriter();
+        p_escaping.write("<>&\"'", writer);
+        assertEquals(p_expected, writer.toString());
+    }
 
 }

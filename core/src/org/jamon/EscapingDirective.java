@@ -37,10 +37,14 @@ public class EscapingDirective
     }
 
 
-    private static final String PREFIX = org.jamon.Escaping.class.getName() + ".";
+    private static final String PREFIX =
+        org.jamon.escaping.Escaping.class.getName() + ".";
 
-    public static final EscapingDirective NONE = new EscapingDirective(PREFIX + "NONE");
-    public static final EscapingDirective DEFAULT = new EscapingDirective(null);
+    public static final EscapingDirective NONE =
+        new EscapingDirective(PREFIX + "NONE");
+
+    public static final EscapingDirective DEFAULT =
+        new EscapingDirective(null);
 
     public static EscapingDirective get(String p_abbreviation)
     {

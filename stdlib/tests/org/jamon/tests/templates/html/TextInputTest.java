@@ -21,7 +21,6 @@
 package org.jamon.tests.templates.html;
 
 import org.jamon.render.html.TextInput;
-import org.jamon.Escaping;
 
 public class TextInputTest
     extends TestBase

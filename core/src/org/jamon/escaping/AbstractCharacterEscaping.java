@@ -18,25 +18,25 @@
  * Contributor(s):
  */
 
-package org.jamon;
+package org.jamon.escaping;
 
 import java.io.Writer;
 import java.io.IOException;
-import java.net.URLEncoder;
 
-public class UrlEscaping
+public abstract class AbstractCharacterEscaping
     implements Escaping
 {
-
-    UrlEscaping()
-    {
-        // package scope constructor
-    }
 
     public void write(String p_string, Writer p_writer)
         throws IOException
     {
-        p_writer.write(URLEncoder.encode(p_string));
+        for (int i = 0; i < p_string.length(); i++)
+        {
+            write(p_string.charAt(i), p_writer);
+        }
     }
+
+    protected abstract void write(char p_char, Writer p_writer)
+        throws IOException;
 
 }

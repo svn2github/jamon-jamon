@@ -492,7 +492,7 @@ public class IntfGenerator extends AbstractGenerator
         println();
         print  ("  public ");
         print  (getClassName());
-        println(" escaping(org.jamon.Escaping p_escaping)");
+        println(" escaping(org.jamon.escaping.Escaping p_escaping)");
         println("  {");
         println("    escape(p_escaping);");
         println("    return this;");

@@ -18,7 +18,7 @@
  * Contributor(s):
  */
 
-package org.jamon;
+package org.jamon.escaping;
 
 import java.io.Writer;
 import java.io.IOException;

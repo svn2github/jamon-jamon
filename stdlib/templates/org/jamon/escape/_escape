@@ -6,7 +6,7 @@
 <%import>
   java.io.Writer;
   java.io.StringWriter;
-  org.jamon.Escaping;
+  org.jamon.escaping.Escaping;
 </%import>\
 <%java>
   content.escaping(compose ? escaping : getEscaping());

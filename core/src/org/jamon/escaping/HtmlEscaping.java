@@ -18,24 +18,30 @@
  * Contributor(s):
  */
 
-package org.jamon;
+package org.jamon.escaping;
 
 import java.io.Writer;
 import java.io.IOException;
 
-public class NoneEscaping
-    implements Escaping
+public class HtmlEscaping
+    extends AbstractCharacterEscaping
 {
 
-    NoneEscaping()
+    HtmlEscaping()
     {
         // package scope constructor
     }
 
-    public void write(String p_string, Writer p_writer)
+    protected void write(char p_char, Writer p_writer)
         throws IOException
     {
-        p_writer.write(p_string);
+        switch (p_char)
+        {
+          case '<': p_writer.write("&lt;"); break;
+          case '>': p_writer.write("&gt;"); break;
+          case '&': p_writer.write("&amp;"); break;
+          default: p_writer.write(p_char);
+        }
     }
 
 }
