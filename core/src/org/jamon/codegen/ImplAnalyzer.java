@@ -31,7 +31,9 @@ import java.util.Set;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.HashMap;
+
 import org.jamon.node.*;
+import org.jamon.JamonException;
 
 public class ImplAnalyzer extends BaseAnalyzer
 {
@@ -47,7 +49,14 @@ public class ImplAnalyzer extends BaseAnalyzer
     {
         m_unitStatements.put(MAIN_UNIT_NAME,new ArrayList());
         m_path = p_templatePath;
-        p_start.apply(new Adapter());
+        try
+        {
+            p_start.apply(new Adapter());
+        }
+        catch (TunnelingException e)
+        {
+            throw new JamonException(e.getMessage());
+        }
     }
 
     public String getClassContent()

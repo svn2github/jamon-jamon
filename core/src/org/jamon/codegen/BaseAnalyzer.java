@@ -38,7 +38,23 @@ public class BaseAnalyzer
         throws IOException
     {
         this();
-        p_start.apply(new Adapter());
+        try
+        {
+            p_start.apply(new Adapter());
+        }
+        catch (TunnelingException e)
+        {
+            throw new JamonException(e.getMessage());
+        }
+    }
+
+    protected static class TunnelingException
+        extends RuntimeException
+    {
+        TunnelingException(String p_message)
+        {
+            super(p_message);
+        }
     }
 
     protected BaseAnalyzer() {}
@@ -82,6 +98,11 @@ public class BaseAnalyzer
     protected final String popUnitName()
     {
         return (String) m_unitNames.removeLast();
+    }
+
+    private boolean isFarg(String p_unitName)
+    {
+        return m_unit.get(p_unitName) instanceof FargInfo;
     }
 
     protected String getUnitName()
@@ -196,6 +217,12 @@ public class BaseAnalyzer
             if (argDefault == null)
             {
                 getAbstractUnitInfo(getUnitName()).addRequiredArg(name, type);
+            }
+            else if (isFarg(getUnitName()))
+            {
+                AbstractUnitInfo info = getAbstractUnitInfo(getUnitName());
+                throw new TunnelingException
+                    ("farg '" + info.getName() + "' has optional argument(s)");
             }
             else
             {
