@@ -30,7 +30,7 @@ import junit.framework.TestCase;
 import org.jamon.StandardTemplateManager;
 import org.jamon.TemplateManager;
 
-public class TestBase
+public abstract class TestBase
     extends TestCase
 {
 
