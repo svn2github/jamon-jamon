@@ -15,13 +15,14 @@
  * created by Ian Robertson are Copyright (C) 2003 Ian Robertson.  All Rights
  * Reserved.
  *
- * Contributor(s):
+ * Contributor(s): Jay Sachs
  */
 
 package org.jamon.codegen;
 
 import java.io.Writer;
 import java.io.StringWriter;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 import junit.framework.TestCase;
@@ -29,13 +30,13 @@ import junit.framework.TestCase;
 public class CodeWriterTest
     extends TestCase
 {
-    private StringWriter m_stringWriter;
+    private ByteArrayOutputStream m_bytes;
     private CodeWriter m_codeWriter;
 
     public void setUp() throws Exception
     {
-        m_stringWriter = new StringWriter();
-        m_codeWriter = new CodeWriter(m_stringWriter);
+        m_bytes = new ByteArrayOutputStream();
+        m_codeWriter = new CodeWriter(m_bytes);
     }
 
     public void testIndentation() throws Exception
@@ -89,6 +90,7 @@ public class CodeWriterTest
     }
 
     public void testClosingUnopenedList()
+        throws IOException
     {
         try
         {
@@ -99,6 +101,7 @@ public class CodeWriterTest
     }
 
     public void testPrintArgOutsideOfList()
+        throws IOException
     {
         try
         {
@@ -109,6 +112,7 @@ public class CodeWriterTest
     }
 
     public void testNoArgList()
+        throws IOException
     {
         m_codeWriter.openList();
         m_codeWriter.closeList();
@@ -116,6 +120,7 @@ public class CodeWriterTest
     }
 
     public void testOneArgList()
+        throws IOException
     {
         m_codeWriter.openList();
         m_codeWriter.printArg("foo");
@@ -124,6 +129,7 @@ public class CodeWriterTest
     }
 
     public void testTwoArgList()
+        throws IOException
     {
         m_codeWriter.openList();
         m_codeWriter.printArg("foo");
@@ -133,6 +139,7 @@ public class CodeWriterTest
     }
 
     public void testThreeArgList()
+        throws IOException
     {
         m_codeWriter.openList();
         m_codeWriter.printArg("foo");
@@ -143,7 +150,9 @@ public class CodeWriterTest
     }
 
     private void checkOutput(String p_expected)
+        throws IOException
     {
-        assertEquals(p_expected, m_stringWriter.toString());
+        m_codeWriter.finish();
+        assertEquals(p_expected, new String(m_bytes.toByteArray(), CodeWriter.JAVA_SOURCE_ENCODING));
     }
 }
