@@ -1,0 +1,8 @@
+<%args>
+  String path;
+  String cssClass;
+</%args>
+
+<pre class="<% cssClass %>"><&| /org/jamon/escape/Html &>\
+<& _ReadFile: path &>\
+</&></pre>

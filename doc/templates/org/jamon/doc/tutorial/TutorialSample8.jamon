@@ -19,7 +19,7 @@ arg1 => ... &amp;></code></nobr>, up to the closing tag,
 In this example,
 <a href="FragmentCallerTemplate.jamon" class="file">
      <code>FragmentCallerTemplate</code></a>,
-    <& ../_TemplateInclude; fileName => "tutorial/templates/FragmentCallerTemplate" &>
+    <& ../_TemplateInclude: "/sample/tutorial/templates/FragmentCallerTemplate" &>
 
 the block of HTML text "<code>Account information for &lt;% userName %></code>"
 is passed to the subtemplate <code>liRef</code>, which constructs a list
@@ -67,7 +67,7 @@ calls the fragment as it would any other template to output its contents.
 The template below, <a href="LiRef.jamon" class="file">
      <code>LiRef</code></a>, is a more elaborate version of the
 subtemplate in the above example.
-    <& ../_TemplateInclude; fileName => "tutorial/templates/LiRef" &>
+    <& ../_TemplateInclude: "/sample/tutorial/templates/LiRef" &>
 
 It formats the <code>content</code> fragment text with the specified
 stylesheet style as an HTML anchor inside a list item.
@@ -113,7 +113,7 @@ Thus
       except it has a name and its parameters <strong>cannot</strong>
        have default values.
 
-    <& ../_TemplateInclude; fileName => "tutorial/templates/AlternatingList" &>
+    <& ../_TemplateInclude: "/sample/tutorial/templates/AlternatingList" &>
 
 This template, <a href="AlternatingList.jamon" >
 AltneratingList</a>, loops through all the objects that were passed to
@@ -136,12 +136,12 @@ output, and then passes this fragment of Jamon text to the
 table with alternating background colors.
 <p>
 
-    <& ../_TemplateInclude; fileName => "tutorial/templates/FragmentExampleTemplate"&>
+    <& ../_TemplateInclude: "/sample/tutorial/templates/FragmentExampleTemplate"&>
 
 <p>
 The example template is executed by the
 <a href="Holiday.java" class="file"> <code>Holiday</code></a> Java class.
-<& ../_JavaInclude; fileName => "tutorial/src/Holiday" &>
+<& ../_JavaInclude: "/sample/tutorial/src/Holiday" &>
 <p>
 The output from the template is
 <& ../_RunJava; className => "Holiday" &>

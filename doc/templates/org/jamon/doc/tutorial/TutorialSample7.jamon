@@ -46,13 +46,13 @@ same file or other top level templates.
     calls the subtemplate <code>generateLink</code> to compose a
     URL for each user account.
 
-    <& ../_TemplateInclude; fileName => "tutorial/templates/SubtemplateTemplate" &>
+    <& ../_TemplateInclude: "/sample/tutorial/templates/SubtemplateTemplate" &>
   </li>
 
   <li>
     This template is called from the Java class
      <a class="file" href="SubtemplateTut7.java">SubtemplateTut7.java</a>:
-     <& ../_JavaInclude; fileName => "tutorial/src/SubtemplateTut7" &>
+     <& ../_JavaInclude: "/sample/tutorial/src/SubtemplateTut7" &>
   </li>
 
   <li>

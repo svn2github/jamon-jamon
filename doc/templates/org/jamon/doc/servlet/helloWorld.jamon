@@ -35,33 +35,29 @@ In directory <code class="file">templates/foo/bar</code> create a file called
 <a class="file" href="templates/foo/bar/HelloTemplate.jamon">HelloTemplate.jamon</a> (you should <em>save</em>
 this file since your browser may not display it correctly) containing:
 
-<pre class="template"><&| /org/jamon/escape/Html &>\
-<& ../_ReadFile;
-   fileName => "/sample/servlet/templates/HelloTemplate.jamon" &></&></pre>
+<& ../_TemplateInclude: "/sample/servlet/templates/HelloTemplate" &>
 
 In directory <code class="file">src/foo/bar</code> create
 a file <a href="src/foo/bar/HelloServlet.java">HelloServlet.java</a> containing:
 
-<& ../_JavaInclude; fileName => "servlet/src/HelloServlet" &>
+<& ../_JavaInclude: "/sample/servlet/src/HelloServlet" &>
 
 Create the following deployment descriptor by placing the following in a file
 called <a href="web.xml">web.xml</a>:
 
-<pre class="webxml"><&| /org/jamon/escape/Html &>\
-<& ../_ReadFile; fileName => "/sample/servlet/web.xml" &></&></pre>
+<& ../_FileInclude; path => "/sample/servlet/web.xml"; cssClass => "webxml" &>
 
 Create an Ant script by placing the following in a file called
 <a href="build.xml">build.xml</a>:
 
-<pre class="ant"><&| /org/jamon/escape/Html &>\
-<& ../_ReadFile; fileName => "/sample/servlet/build.xml" &></&></pre>
+<& ../_FileInclude; path => "/sample/servlet/build.xml"; cssClass => "ant" &>
 
 In order to run this script you need to tell Ant where to find the Jamon libraries
 and the servlet APIs.  For example, say the jamon JAR file is in
 <code>/usr/share/java/jamon.jar</code> and the servlet APIs are in
 <code>/somewhere/else/servlet.jar</code>, then you would execute it by typing:
 
-<pre class="tty">% ant -Djava.lib.jamon=/usr/share/java/jamon.jar \ 
+<pre class="tty">% ant -Djava.lib.jamon=/usr/share/java/jamon.jar \
      -Djava.lib.servlet=/somewhere/else/servlet.jar</pre>
 
 This will translate the Jamon source into Java, compile them and the servlet, and

@@ -34,16 +34,15 @@ application (you can also download a
 sources from this section, or a <a href="example2/foobar.war">WAR file</a>
 ready for deployment):
 
-  <& ../_JavaInclude; fileName => "standardLibrary/src/HelloFormFields" &>
+  <& ../_JavaInclude: "/sample/standardLibrary/src/HelloFormFields" &>
 
 Here is a servlet that will use the above class:
 
-  <& ../_JavaInclude; fileName => "standardLibrary/src/HelloServlet" &>
+  <& ../_JavaInclude: "/sample/standardLibrary/src/HelloServlet" &>
 
 and the corresponding template should look like:
 
-  <& ../_TemplateInclude;
-     fileName => "standardLibrary/templates/HelloTemplate" &>
+  <& ../_TemplateInclude: "/sample/standardLibrary/templates/HelloTemplate" &>
 
 There are a few things to note about the above example.
 <ul>

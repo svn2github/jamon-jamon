@@ -96,13 +96,13 @@ values to the template arguments.</div>
 Create a Jamon template
  <a href="AccountSummaryTemplate.jamon" type="text/plain" class="file">
 AccountSummaryTemplate.jamon</a>:
-<& ../_TemplateInclude; fileName => "tutorial/templates/AccountSummaryTemplate" &>
+<& ../_TemplateInclude: "/sample/tutorial/templates/AccountSummaryTemplate" &>
 
 
 <li> Write a java class to call the template:
 <a class="file" href="AccountSummaryTut3.java" type="text/plain" >
 AccountSummaryTut3.java</a>:
-<& ../_JavaInclude; fileName => "tutorial/src/AccountSummaryTut3" &>
+<& ../_JavaInclude: "/sample/tutorial/src/AccountSummaryTut3" &>
 
 <li> Set the classpath, process the template, compile, and run the program:
 <pre class="tty">

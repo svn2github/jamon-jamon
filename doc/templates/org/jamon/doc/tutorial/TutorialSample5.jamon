@@ -107,12 +107,12 @@ methods, and classes, may be declared in a Jamon template between the
     and <code>java.text.SimpleDateFormat</code>. It also defines two
     class static fields and one method. The template code uses all of
     these fields and method to output the desired text.
-    <& ../_TemplateInclude; fileName => "tutorial/templates/ClassExampleTemplate" &>
+    <& ../_TemplateInclude: "/sample/tutorial/templates/ClassExampleTemplate" &>
 
 <p>
 When this template is called by the java code
 <a class="file" href="ClassExampleTut5.java">ClassExampleTut5.java</a>:
-<& ../_JavaInclude; fileName => "tutorial/src/ClassExampleTut5" &>
+<& ../_JavaInclude: "/sample/tutorial/src/ClassExampleTut5" &>
 
 the output of the template's <code>render</code> method will be
 <& ../_RunJava; className => "ClassExampleTut5" &>

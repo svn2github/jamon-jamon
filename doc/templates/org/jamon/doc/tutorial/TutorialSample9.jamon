@@ -32,7 +32,7 @@ child template's output. The parent template takes care of the
 HTML header as well as the page's header banner while the child
 template simply fills in the body.
 
-    <& ../_TemplateInclude; fileName => "tutorial/templates/InheritanceParent"; &>
+    <& ../_TemplateInclude: "/sample/tutorial/templates/InheritanceParent"; &>
 <p>
 The child template declares that it extends the parent template by including the tag
 <pre class="template">
@@ -47,12 +47,12 @@ The example template below,
 <code>InheritanceChild</code></a> extends <code>InheritanceTemplate</code>
 and provides subject text that is included in the output of the parent template.
 
-    <& ../_TemplateInclude; fileName => "tutorial/templates/InheritanceChild" &>
+    <& ../_TemplateInclude: "/sample/tutorial/templates/InheritanceChild" &>
 
 This template would be invoked from Java with the class
 <a href="InheritanceSimpleTut9.java" class="file">
 InheritanceSimpleTut9.java</a>
-    <& ../_JavaInclude; fileName => "tutorial/src/InheritanceSimpleTut9" &>
+    <& ../_JavaInclude: "/sample/tutorial/src/InheritanceSimpleTut9" &>
 
 The output from the template is
 <& ../_RunJava; className => "InheritanceSimpleTut9" &>
@@ -73,7 +73,7 @@ For example, consider the parent template
 <code>InheritanceParentWArgs</code></a>. It defines arguments
 <code>userAccount</code> and <code>title</code>.
 
-    <& ../_TemplateInclude; fileName => "tutorial/templates/InheritanceParentWArgs" &>
+    <& ../_TemplateInclude: "/sample/tutorial/templates/InheritanceParentWArgs" &>
 
 The child template can only access these arguments by including
 <pre class="template">
@@ -95,7 +95,7 @@ A complete example of a child template,
 <a href="InheritanceChildWArgs.jamon" class="file">
 <code>InheritanceChildWArgs</code></a>, is below.
 
-    <& ../_TemplateInclude; fileName => "tutorial/templates/InheritanceChildWArgs" &>
+    <& ../_TemplateInclude: "/sample/tutorial/templates/InheritanceChildWArgs" &>
 
 
 <h3>Invoking a derived template</h3>
@@ -124,7 +124,7 @@ separate Java classes.
 The class <a href="User.java" class="file"><code>User</code></a> implements
 invoking the child template through the second approach described above.
 
-<& ../_JavaInclude; fileName => "tutorial/src/User" &>
+<& ../_JavaInclude: "/sample/tutorial/src/User" &>
 <p>
 The output from the template is
 <& ../_RunJava; className => "User" &>

@@ -1,8 +1,5 @@
-<%extends _FileIncludeTemplate>
-<%class>
-  protected String getCompleteFileName(String fileName)
-  {
-    return "sample/" + fileName + ".java";
-  }
-</%class>
-<%override preAttributes> class="java"</%override>
+<%args>
+  String path;
+</%args>
+
+<& _FileInclude; path => path + ".java"; cssClass => "java" &>

@@ -21,12 +21,12 @@ file</a>.
 <li>
 Create a Jamon template
 <a href="HelloTemplate.jamon" class="file">HelloTemplate.jamon</a>:
-<& ../_TemplateInclude; fileName => "tutorial/templates/HelloTemplate" &>
+<& ../_TemplateInclude: "/sample/tutorial/templates/HelloTemplate" &>
 
 
 <li>
 Create a java file <a class="file" href="HelloTut1.java">HelloTut1.java</a>:
-<& ../_JavaInclude; fileName => "tutorial/src/HelloTut1" &>
+<& ../_JavaInclude: "/sample/tutorial/src/HelloTut1" &>
 The code then calls the
 <code>render()</code> method on the template, providing a
 <code>Writer</code> that the template will use to output its content.
