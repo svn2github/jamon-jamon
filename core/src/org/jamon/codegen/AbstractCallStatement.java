@@ -58,6 +58,25 @@ public abstract class AbstractCallStatement
     protected abstract String getFragmentIntfName(
         FragmentUnit p_fragmentUnitIntf);
 
+    protected void generateRequiredArgs(Iterator p_args, CodeWriter p_writer)
+        throws IOException
+    {
+        while (p_args.hasNext())
+        {
+            String name = ((RequiredArgument) p_args.next()).getName();
+            String expr = (String) getParams().remove(name);
+            if (expr == null)
+            {
+                throw new AnalysisException(
+                    "No value supplied for required argument " + name,
+                    getTemplateIdentifier(),
+                    getToken());
+            }
+            p_writer.printArg("(" + expr + ")");
+        }
+    }
+
+
     private String getFragmentImplName(FragmentUnit p_fragmentUnitIntf)
     {
         if(! m_fragmentImplNames.containsKey(p_fragmentUnitIntf))

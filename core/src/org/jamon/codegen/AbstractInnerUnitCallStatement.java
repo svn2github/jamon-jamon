@@ -62,19 +62,7 @@ public abstract class AbstractInnerUnitCallStatement
         p_writer.print("__jamon_innerUnit__" + getPath());
         p_writer.openList();
         //FIXME - do we need to surround args with parens?
-        for (Iterator r = m_unit.getSignatureRequiredArgs(); r.hasNext(); )
-        {
-            String name = ((RequiredArgument) r.next()).getName();
-            String expr = (String) getParams().remove(name);
-            if (expr == null)
-            {
-                throw new AnalysisException(
-                    "No value supplied for required argument " + name,
-                    getTemplateIdentifier(),
-                    getToken());
-            }
-            p_writer.printArg("(" + expr + ")");
-        }
+        generateRequiredArgs(m_unit.getSignatureRequiredArgs(), p_writer);
         for (Iterator o = m_unit.getSignatureOptionalArgs(); o.hasNext(); )
         {
             OptionalArgument arg = (OptionalArgument) o.next();

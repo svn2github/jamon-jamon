@@ -63,19 +63,7 @@ public class FargCallStatement
         p_writer.println(tn + ".escapeWith(this.getEscaping());");
         p_writer.print  (tn + ".render");
         p_writer.openList();
-        for (Iterator r = m_fragmentUnit.getRequiredArgs(); r.hasNext(); /* */)
-        {
-            String name = ((RequiredArgument) r.next()).getName();
-            String expr = (String) getParams().remove(name);
-            if (expr == null)
-            {
-                throw new AnalysisException(
-                    "No value supplied for required argument " + name,
-                    getTemplateIdentifier(),
-                    getToken());
-            }
-            p_writer.printArg("(" + expr + ")");
-        }
+        generateRequiredArgs(m_fragmentUnit.getRequiredArgs(), p_writer);
         p_writer.closeList();
         p_writer.println(";");
         checkSuppliedParams();

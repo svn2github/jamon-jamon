@@ -79,19 +79,7 @@ public class ComponentCallStatement
         p_writer.print(instanceVar + ".render");
         p_writer.openList();
         p_writer.printArg("this.getWriter()");
-        for (Iterator i = desc.getRequiredArgs().iterator(); i.hasNext(); )
-        {
-            String name = ((RequiredArgument) i.next()).getName();
-            String expr = (String) getParams().remove(name);
-            if (expr == null)
-            {
-                throw new AnalysisException(
-                    "No value supplied for required argument " + name,
-                    getTemplateIdentifier(),
-                    getToken());
-            }
-            p_writer.printArg(expr);
-        }
+        generateRequiredArgs(desc.getRequiredArgs().iterator(), p_writer);
         generateFragmentParams(p_writer,
                                desc.getFragmentInterfaces().iterator());
         p_writer.closeList();
