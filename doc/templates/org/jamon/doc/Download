@@ -3,7 +3,6 @@
   String srcZip;
   String binTarball;
   String binZip;
-  String javadocZip;
 </%args>
 <&| _Base; title => "Getting Jamon"; section => "Download" &>
   <h2>Where to get Jamon</h2>
@@ -15,7 +14,6 @@
       <a href="<% binZip %>">[zip]</a></li>
       <li>Source <a href="<% srcTarball %>">[tgz]</a>
           <a href="<% srcZip %>">[zip]</a></li>
-      <li><a href="<% javadocZip %>">Javadoc (zip)</a></li>
     </ul>
 
     <h3>CVS access</h3>
