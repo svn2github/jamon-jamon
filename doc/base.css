@@ -286,12 +286,22 @@ dt
 {
   float: left;
   width: 20%;
-  margin: 0 0 1em 0
+  margin: 0 0 1em 0;
+  padding: 0.5em 0 0.5em 0;
+  background-color: #00a0a0;
 }
 
 .tutorialNavContents
 {
   float: left;
   width: 60%;
-  margin: 0 0 1em 0
+  margin: 0 0 1em 0;
+  padding: 0.5em 0 0.5em 0;
+  background-color: #00a0a0;
+}
+
+*.tutorialNav a
+{
+  padding: 3px;
+  color: #ffffff;
 }
