@@ -41,8 +41,14 @@ public abstract class AbstractTemplateProxy
         return m_templateManager;
     }
 
+    private Escaping m_escaping;
     private final TemplateManager m_templateManager;
     private final ThreadLocal m_instance = new ThreadLocal();
+
+    protected final void escape(Escaping p_escaping)
+    {
+        m_escaping = p_escaping;
+    }
 
     protected final Intf getInstance(String p_path)
         throws IOException
@@ -53,6 +59,10 @@ public abstract class AbstractTemplateProxy
             instance = (Intf) getTemplateManager().getInstance(p_path);
             m_instance.set(instance);
             ((AbstractTemplateImpl)instance).initialize();
+        }
+        if (m_escaping != null)
+        {
+            instance.escaping(m_escaping);
         }
         return instance;
     }

@@ -445,10 +445,8 @@ public class IntfGenerator
         print  ("  public ");
         print  (getClassName());
         println(" escaping(org.jamon.Escaping p_escaping)");
-        print  ("    throws ");
-        println(IOEXCEPTION_CLASS);
         println("  {");
-        println("    getInstance().escaping(p_escaping);");
+        println("    escape(p_escaping);");
         println("    return this;");
         println("  }");
     }

@@ -253,8 +253,8 @@ public class StandardTemplateManager
                     .getConstructor(new Class [] { TemplateManager.class,
                                                    String.class })
                     .newInstance(new Object [] { p_manager, p_path });
+                impl.escaping(m_escaping);
             }
-            impl.escaping(m_escaping);
             return impl;
         }
         catch (IOException e)
