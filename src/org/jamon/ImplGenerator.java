@@ -19,7 +19,6 @@ public class ImplGenerator extends BaseGenerator
     private final Map m_unitStatements = new HashMap();
     private StringBuffer m_current = new StringBuffer();
     private final Set m_calls = new HashSet();
-    private final String m_packagePrefix;
 
     private final static String FRAGMENT_CLASS =
         Fragment.class.getName();
@@ -31,12 +30,10 @@ public class ImplGenerator extends BaseGenerator
         Writer.class.getName();
 
     public ImplGenerator(Writer p_writer,
-                         String p_packagePrefix,
-                         String p_packageName,
-                         String p_className)
+                         TemplateDescriber p_describer,
+                         String p_templatePath)
     {
-        super(p_writer,p_packageName,p_className);
-        m_packagePrefix = p_packagePrefix;
+        super(p_writer,p_describer,p_templatePath);
         m_unitStatements.put(MAIN_UNIT_NAME,new ArrayList());
     }
 
@@ -252,23 +249,19 @@ public class ImplGenerator extends BaseGenerator
 
     private String getInterfaceClassName()
     {
-        String pkgName = getPackageName();
-        if (pkgName.length() > 0)
-        {
-            return m_packagePrefix + pkgName + "." + getClassName();
-        }
-        else
-        {
-            return m_packagePrefix + getClassName();
-        }
+        return getTemplateDescriber().getIntfClassName(getPath());
+    }
+
+    private String getClassName()
+    {
+        return getTemplateDescriber().getImplClassName(getPath());
     }
 
     private void generateDeclaration()
         throws IOException
     {
         print  ("public class ");
-        print  (              getClassName());
-        println(                           "Impl");
+        println(              getClassName());
         print  ("  extends ");
         println(           BASE_TEMPLATE);
         print  ("  implements ");
@@ -281,7 +274,7 @@ public class ImplGenerator extends BaseGenerator
     {
         print("  public ");
         print(getClassName());
-        print("Impl(");
+        print("(");
         print(WRITER_CLASS);
         println(" p_writer,");
         print  ("        ");
@@ -292,6 +285,23 @@ public class ImplGenerator extends BaseGenerator
         println("  }");
         println();
 
+    }
+
+    private String getPackageName()
+    {
+        return getTemplateDescriber().getImplPackageName(getPath());
+    }
+
+    private void generatePrologue()
+        throws IOException
+    {
+        if (getPackageName().length() > 0)
+        {
+            print("package ");
+            print(getPackageName());
+            println(";");
+            println();
+        }
     }
 
 
@@ -563,20 +573,22 @@ public class ImplGenerator extends BaseGenerator
 
     protected String getAbsolutePath(String p_path)
     {
+        // FIXME: should use properties ...
         if (p_path.charAt(0) == '/')
         {
             return p_path;
         }
         else
         {
-            String pkgName = getPackageName();
-            if (pkgName.length() > 0)
+            String path = getPath();
+            int i = path.lastIndexOf('/');
+            if (i <= 0)
             {
-                return "/" + pkgName.replace('.','/') + '/' + p_path;
+                return "/" + p_path;
             }
             else
             {
-                return "/" + p_path;
+                return path.substring(0,i) + "/" + p_path;
             }
         }
 
@@ -604,14 +616,13 @@ public class ImplGenerator extends BaseGenerator
             return getDefNames().contains(m_path);
         }
 
-        private String getClassName()
-        {
-            return PathUtils.pathToClassName(getAbsolutePath(m_path));
-        }
-
         private String getInterfaceClassName()
         {
-            return m_packagePrefix + getClassName();
+            String pkg = getTemplateDescriber()
+                .getIntfPackageName(getAbsolutePath(m_path));
+            String clsName = getTemplateDescriber()
+                .getIntfClassName(getAbsolutePath(m_path));
+            return "".equals(pkg) ? clsName : (pkg + "." + clsName);
         }
 
         public String asString()
@@ -670,27 +681,8 @@ public class ImplGenerator extends BaseGenerator
         protected List getRequiredArgs()
             throws JttException
         {
-            List requiredArgs = new ArrayList();
-            try
-            {
-                Class c = Class.forName(getInterfaceClassName());
-                requiredArgs.addAll
-                    (Arrays.asList
-                     ((String []) c.getField("RENDER_ARGS").get(null)));
-                return requiredArgs;
-            }
-            catch (ClassNotFoundException e)
-            {
-                throw new JttException("Class " + e.getMessage() + " not found",e);
-            }
-            catch (IllegalAccessException e)
-            {
-                throw new JttException(e);
-            }
-            catch (NoSuchFieldException e)
-            {
-                throw new JttException(e);
-            }
+            return getTemplateDescriber()
+                .getRequiredArgNames(getAbsolutePath(m_path));
         }
 
         protected String asComponentCall()

@@ -85,10 +85,20 @@ public class BaseGenerator extends AnalysisAdapter
     private List m_imports = new LinkedList();
     private Map m_unit = new HashMap();
     private List m_defNames = new LinkedList();
-    private final String m_className;
-    private final String m_packageName;
+    private final String m_path;
+    private final TemplateDescriber m_describer;
     private final PrintWriter m_writer;
     private final LinkedList m_unitNames = new LinkedList();
+
+    protected final TemplateDescriber getTemplateDescriber()
+    {
+        return m_describer;
+    }
+
+    protected final String getPath()
+    {
+        return m_path;
+    }
 
     protected final void pushUnitName(String p_unitName)
     {
@@ -101,12 +111,12 @@ public class BaseGenerator extends AnalysisAdapter
     }
 
     protected BaseGenerator(Writer p_writer,
-                            String p_packageName,
-                            String p_className)
+                            TemplateDescriber p_describer,
+                            String p_path)
     {
         m_writer = new PrintWriter(p_writer);
-        m_packageName = p_packageName;
-        m_className = p_className;
+        m_describer = p_describer;
+        m_path = p_path;
     }
 
     public void caseStart(Start start)
@@ -137,6 +147,11 @@ public class BaseGenerator extends AnalysisAdapter
         return (UnitInfo) m_unit.get(p_unitName);
     }
 
+    public Iterator getRequiredArgNames()
+    {
+        return getRequiredArgNames(MAIN_UNIT_NAME);
+    }
+
     protected Iterator getRequiredArgNames(String p_unitName)
     {
         return getUnitInfo(p_unitName).getRequiredArgNames();
@@ -157,23 +172,6 @@ public class BaseGenerator extends AnalysisAdapter
         return getUnitInfo(p_unitName).getDefault(p_argName);
     }
 
-
-
-
-    protected String getClassName()
-    {
-        return m_className;
-    }
-
-    protected String getPackageName()
-    {
-        return m_packageName;
-    }
-
-    protected String getFullyQualifiedClassName()
-    {
-        return getPackageName() + "." + getClassName();
-    }
 
     protected String capitalize(String p_string)
     {
@@ -293,18 +291,6 @@ public class BaseGenerator extends AnalysisAdapter
         }
         def.getDefEnd().apply(this);
         popUnitName();
-    }
-
-    protected void generatePrologue()
-        throws IOException
-    {
-        if (getPackageName().length() > 0)
-        {
-            print("package ");
-            print(getPackageName());
-            println(";");
-            println();
-        }
     }
 
     protected void generateImports()

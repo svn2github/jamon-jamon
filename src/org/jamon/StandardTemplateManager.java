@@ -89,7 +89,7 @@ public class StandardTemplateManager
 
     public void setPackagePrefix(String p_packagePrefix)
     {
-        m_packagePrefix = p_packagePrefix;
+        m_packagePrefix = p_packagePrefix == null ? "" : p_packagePrefix;
         m_javaCompiler = null;
     }
 
@@ -100,7 +100,7 @@ public class StandardTemplateManager
 
     private String getClassName(String p_path)
     {
-        return PathUtils.pathToClassName(p_path) + "Impl";
+        return m_packagePrefix + PathUtils.pathToClassName(p_path) + "Impl";
     }
 
     private class WorkDirLoader
@@ -218,26 +218,37 @@ public class StandardTemplateManager
     private final WorkDirLoader m_loader;
 
 
-
+    private String prefix()
+    {
+        if (m_packagePrefix.length() > 0
+            && m_packagePrefix.charAt(m_packagePrefix.length()-1) == '.')
+        {
+            return m_workDir + PathUtils.classNameToPath(m_packagePrefix.substring(0,m_packagePrefix.length()-1));
+        }
+        else
+        {
+            return m_workDir + PathUtils.classNameToPath(m_packagePrefix);
+        }
+    }
 
     private String javaImpl(String p_path)
     {
-        return m_workDir + p_path + "Impl.java";
+        return prefix() + p_path + "Impl.java";
     }
 
     private String classImpl(String p_path)
     {
-        return m_workDir + p_path + "Impl.class";
+        return prefix() + p_path + "Impl.class";
     }
 
     private String javaIntf(String p_path)
     {
-        return m_workDir + p_path + ".java";
+        return prefix() + p_path + ".java";
     }
 
     private String classIntf(String p_path)
     {
-        return m_workDir + p_path + ".class";
+        return prefix() + p_path + ".class";
     }
 
     private void ensureUpToDate(String p_path)
@@ -311,32 +322,19 @@ public class StandardTemplateManager
     {
         System.err.println("generating impl for " + p_path);
 
-        String packageName, className;
-        int i = p_path.lastIndexOf(FS);
+        String jp = javaImpl(p_path);
+        int i = jp.lastIndexOf(FS);
         if (i >= 1)
         {
-            new File(m_workDir + p_path.substring(0,i)).mkdirs();
-            packageName = PathUtils.pathToClassName(p_path.substring(1,i));
-            className = p_path.substring(i+1);
-        }
-        else if (i == 0)
-        {
-            packageName = "";
-            className = p_path.substring(1);
-        }
-        else
-        {
-            packageName = "";
-            className = p_path;
+            new File(jp.substring(0,i)).mkdirs();
         }
 
         File javaFile = new File(javaImpl(p_path));
         FileWriter writer = new FileWriter(javaFile);
 
         ImplGenerator g2 = new ImplGenerator(writer,
-                                             m_packagePrefix,
-                                             packageName,
-                                             className);
+                                             getDescriber(),
+                                             p_path);
 
         new Parser(new Lexer(new PushbackReader
                              (new FileReader(getTemplateFileName(p_path)),
@@ -358,6 +356,77 @@ public class StandardTemplateManager
         }
     }
 
+    private class Describer
+        implements TemplateDescriber
+    {
+        public String getIntfClassName(final String p_path)
+        {
+            int i = p_path.lastIndexOf(FS);
+            return i < 0 ? p_path : p_path.substring(i+1);
+        }
+        public String getImplClassName(final String p_path)
+        {
+            return getIntfClassName(p_path) + "Impl";
+        }
+        public String getIntfPackageName(final String p_path)
+        {
+            StringBuffer pkg = new StringBuffer();
+            if (! "".equals(m_packagePrefix))
+            {
+                pkg.append(m_packagePrefix);
+            }
+            int i = p_path.lastIndexOf(FS);
+            if (i > 0)
+            {
+                pkg.append(PathUtils.pathToClassName(p_path.substring(0,i)));
+            }
+            else
+            {
+                pkg.deleteCharAt(pkg.length()-1);
+            }
+            return pkg.toString();
+        }
+        public String getImplPackageName(final String p_path)
+        {
+            return getIntfPackageName(p_path);
+        }
+        public List getRequiredArgNames(final String p_path)
+            throws JttException
+        {
+            try
+            {
+                BaseGenerator g = new BaseGenerator(new FileWriter("/dev/null"),
+                                                    getDescriber(),
+                                                    p_path);
+
+                new Parser(new Lexer(new PushbackReader
+                                     (new FileReader(getTemplateFileName(p_path)),
+                                      1024)))
+                    .parse()
+                    .apply(g);
+                LinkedList list = new LinkedList();
+                for (Iterator i = g.getRequiredArgNames(); i.hasNext(); /* */)
+                {
+                    list.add(i.next());
+                }
+                return list;
+            }
+            catch (RuntimeException e)
+            {
+                throw e;
+            }
+            catch (Exception e)
+            {
+                throw new JttException(e);
+            }
+        }
+    }
+
+    private TemplateDescriber getDescriber()
+    {
+        return new Describer();
+    }
+
     private void generateIntf(String p_path)
         throws IOException,
                ParserException,
@@ -365,32 +434,19 @@ public class StandardTemplateManager
     {
         System.err.println("generating intf for " + p_path);
 
-        String packageName, className;
-        int i = p_path.lastIndexOf(FS);
+        String jp = javaIntf(p_path);
+        int i = jp.lastIndexOf(FS);
         if (i >= 1)
         {
-            new File(m_workDir + p_path.substring(0,i)).mkdirs();
-            packageName = PathUtils.pathToClassName(p_path.substring(1,i));
-            className = p_path.substring(i+1);
-        }
-        else if (i == 0)
-        {
-            packageName = "";
-            className = p_path.substring(1);
-        }
-        else
-        {
-            packageName = "";
-            className = p_path;
+            new File(jp.substring(0,i)).mkdirs();
         }
 
         File javaFile = new File(javaIntf(p_path));
         FileWriter writer = new FileWriter(javaFile);
 
         InterfaceGenerator g1 = new InterfaceGenerator(writer,
-                                                       m_packagePrefix,
-                                                       packageName,
-                                                       className);
+                                                       getDescriber(),
+                                                       p_path);
 
         new Parser(new Lexer(new PushbackReader
                              (new FileReader(getTemplateFileName(p_path)),
@@ -440,30 +496,10 @@ public class StandardTemplateManager
     {
         System.err.println("computing dependencies for " + p_path);
 
-        String packageName, className;
-        int i = p_path.lastIndexOf(FS);
-        if (i >= 1)
-        {
-            new File(m_workDir + p_path.substring(0,i)).mkdirs();
-            packageName = PathUtils.pathToClassName(p_path.substring(1,i));
-            className = p_path.substring(i+1);
-        }
-        else if (i == 0)
-        {
-            packageName = "";
-            className = p_path.substring(1);
-        }
-        else
-        {
-            packageName = "";
-            className = p_path;
-        }
-
         // FIXME: shouldn't have to pass a writer at ALL.
         ImplGenerator g2 = new ImplGenerator(new FileWriter("/dev/null"),
-                                             m_packagePrefix,
-                                             packageName,
-                                             className);
+                                             getDescriber(),
+                                             p_path);
 
         new Parser(new Lexer(new PushbackReader
                              (new FileReader(getTemplateFileName(p_path)),

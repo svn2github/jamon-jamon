@@ -18,15 +18,11 @@ public class InterfaceGenerator extends BaseGenerator
         JttException.class.getName();
 
     public InterfaceGenerator(Writer p_writer,
-                              String p_templatePath,
-                              String p_packageName,
-                              String p_className)
+                              TemplateDescriber p_describer,
+                              String p_templatePath)
     {
-        super(p_writer,p_packageName,p_className);
-        m_templatePath = p_templatePath;
+        super(p_writer,p_describer,p_templatePath);
     }
-
-    private final String m_templatePath;
 
     public void generateClassSource()
         throws IOException
@@ -39,6 +35,29 @@ public class InterfaceGenerator extends BaseGenerator
         generateOptionalArgs();
         generateRequiredArgsField();
         generateEpilogue();
+    }
+
+    private String getClassName()
+    {
+        return getTemplateDescriber().getIntfClassName(getPath());
+    }
+
+    private String getPackageName()
+    {
+        return getTemplateDescriber().getIntfPackageName(getPath());
+    }
+
+    private void generatePrologue()
+        throws IOException
+    {
+        String pkgName = getPackageName();
+        if (pkgName.length() > 0)
+        {
+            print("package ");
+            print(pkgName);
+            println(";");
+            println();
+        }
     }
 
     private void generateRequiredArgsField()
@@ -72,8 +91,9 @@ public class InterfaceGenerator extends BaseGenerator
         println("      super(p_templateManager);");
         println("    }");
         println();
+        String className;
         print  ("    public ");
-        print  (getClassName());
+        print  (getTemplateDescriber().getIntfClassName(getPath()));
         println(" getInstance(java.io.Writer p_writer)");
         print  ("      throws ");
         println(JTT_EXCEPTION);
@@ -83,7 +103,7 @@ public class InterfaceGenerator extends BaseGenerator
         println(") ");
         print  ("        getInstance(\"");
         print  ("/");
-        print  (m_templatePath);
+        print  (getPath());
         println("\", p_writer);");
         println("    }");
         println("  }");

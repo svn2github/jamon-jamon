@@ -5,7 +5,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PushbackReader;
-
+import java.util.List;
 import org.modusponens.jtt.lexer.Lexer;
 import org.modusponens.jtt.lexer.LexerException;
 import org.modusponens.jtt.node.Start;
@@ -24,6 +24,7 @@ public class TemplateGenerator
                ParserException,
                LexerException
     {
+        TemplateDescriber describer = new Describer(p_pkgPrefix);
         String templateName = p_filename;
         String pkg = p_pkgPrefix;
         int fsPos = templateName.lastIndexOf(FILESEP);
@@ -61,7 +62,7 @@ public class TemplateGenerator
         FileWriter writer = new FileWriter(javaFile);
 
         InterfaceGenerator intfGen =
-            new InterfaceGenerator(writer, p_filename, pkg, templateName);
+            new InterfaceGenerator(writer, describer, p_filename);
 
         tree.apply(intfGen);
         try
@@ -75,6 +76,51 @@ public class TemplateGenerator
             throw e;
         }
         writer.close();
+    }
+
+    private static class Describer
+        implements TemplateDescriber
+    {
+        private final String m_packagePrefix;
+        Describer(String p_packagePrefix)
+        {
+            m_packagePrefix = p_packagePrefix;
+        }
+        public String getIntfClassName(final String p_path)
+        {
+            int i = p_path.lastIndexOf(FILESEP);
+            return i < 0 ? p_path : p_path.substring(i+1);
+        }
+        public String getImplClassName(final String p_path)
+        {
+            return getIntfClassName(p_path) + "Impl";
+        }
+        public String getIntfPackageName(final String p_path)
+        {
+            StringBuffer pkg = new StringBuffer();
+            if (! "".equals(m_packagePrefix))
+            {
+                pkg.append(m_packagePrefix);
+            }
+            int i = p_path.lastIndexOf(FILESEP);
+            if (i > 0)
+            {
+                pkg.append(PathUtils.pathToClassName(p_path.substring(0,i)));
+            }
+            else
+            {
+                pkg.deleteCharAt(pkg.length()-1);
+            }
+            return pkg.toString();
+        }
+        public String getImplPackageName(final String p_path)
+        {
+            return getIntfPackageName(p_path);
+        }
+        public List getRequiredArgNames(final String p_path)
+        {
+            throw new RuntimeException("not yet implemented");
+        }
     }
 
     public static void main(String [] args)
@@ -91,7 +137,6 @@ public class TemplateGenerator
             }
 
             String pkgPrefix = args[arg++];
-
             while (arg < args.length)
             {
                 generateInterface(destdir, pkgPrefix, args[arg++]);
