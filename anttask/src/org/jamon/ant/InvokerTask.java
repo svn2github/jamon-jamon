@@ -15,7 +15,7 @@
  * created by Jay Sachs are Copyright (C) 2003 Jay Sachs.  All Rights
  * Reserved.
  *
- * Contributor(s):
+ * Contributor(s): Ian Robertson
  */
 
 package org.jamon.ant;
@@ -34,7 +34,6 @@ import java.util.Iterator;
 import java.util.Properties;
 
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.Location;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Environment;
@@ -93,9 +92,9 @@ public class InvokerTask
         catch (JamonTemplateException e)
         {
             throw new BuildException(e.getMessage(),
-                                     new Location(e.getFileName(),
-                                                  e.getLine(),
-                                                  e.getColumn()));
+                                     new JamonLocation(e.getFileName(),
+                                                       e.getLine(),
+                                                       e.getColumn()));
         }
         catch (IOException e)
         {
