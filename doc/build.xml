@@ -128,6 +128,15 @@ the documentation thus taking care of issues such as escaping.
          first example -->
     <copy file="${www.dir}/web.xml" todir="${www.dir}/example2" />
     <copy file="${www.dir}/build.xml" todir="${www.dir}/example2" />
+    <!-- Copy the various files needed for Appendix A -->
+    <copy todir="${www.dir}">
+      <fileset dir="resources">
+        <include name="server.xml"/>
+        <include name="tomcat-users.xml"/>
+        <include name="catalina.policy"/>
+        <include name="default-web.xml"/>
+      </fileset>
+    </copy>
   </target>
 
   <target name="war"
