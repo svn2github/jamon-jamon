@@ -1,0 +1,52 @@
+<%args>
+  String output;
+</%args>
+<&| _Base; title => "Jamon Quick Start Mini-Tutorial" &>
+Create a java file <a class="file" href="JamonQs.java">JamonQs.java</a>:
+
+<pre class="java"><& JamonQsJava &></pre>
+Create a Jamon template <a href="QsTemp" class="file">QsTemp</a>:
+<pre class="jamon"><& QsTemp &></pre>
+
+Set your classpath:
+<&|| _command &>
+ <|windows>SET CLASSPATH=.;\path\to\jamon.jar</|>
+ <|unix>export CLASSPATH=.:/path/to/jamon.jar</|>
+</&>
+
+Process the template:
+<&|| _command &>
+ <|windows>java org.jamon.TemplateProcessor --destDir=. --all QsTemp</|>
+ <|unix>java org.jamon.TemplateProcessor --destDir=. --all QsTemp</|>
+</&>
+
+Compile everything:
+<&|| _command &>
+ <|windows>javac JamonQs.java QsTemp*.java</|>
+ <|unix>javac JamonQs.java QsTemp*.java</|>
+</&>
+
+Run it:
+<&|| _command &>
+ <|windows>java JamonQs one two three</|>
+ <|unix>java JamonQs one two three</|>
+</&>
+
+You should see:
+<pre class="tty"><% output %></pre>
+</&>
+
+<%def _command>
+  <%farg windows></%farg>
+  <%farg unix></%farg>
+<table width="100%">
+<tr>
+  <td>Windows</td>
+  <td><pre class="tty">C:\JAMONTMP&gt; <& windows &></pre></td>
+</tr>
+<tr>
+  <td>Unix</td>
+  <td><pre class="tty">% <& unix &></pre></td>
+</tr>
+</table>
+</%def>

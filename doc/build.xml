@@ -22,10 +22,53 @@ the documentation thus taking care of issues such as escaping.
            classname="org.jamon.ant.InvokerTask"
            classpath="${java.lib.jamon}" />
 
-  <target name="doc"
-          description="Generates all the documentation">
+  <target name="init">
     <mkdir dir="${www.dir}"/>
     <copy file="base.css" todir="${www.dir}" />
+  </target>
+
+  <target name="quickstart" depends="init" >
+    <copy file="templates/org/jamon/doc/JamonQsJava"
+          tofile="${www.dir}/JamonQs.java" />
+    <copy file="${www.dir}/JamonQs.java" todir="${work.dir}" />
+    <invoker classpath="${java.lib.jamon}"
+             workDir="${work.dir}"
+             sourceDir="templates"
+             output="${www.dir}/QsTemp"
+             template="/org/jamon/doc/QsTemp" />
+    <copy file="${www.dir}/QsTemp" todir="${work.dir}" />
+    <java classname="org.jamon.TemplateProcessor"
+          fork="yes"
+          dir="${work.dir}"
+          classpath="${java.lib.jamon}">
+      <arg line="--destDir=. --all QsTemp" />
+    </java>
+    <javac destdir="${work.dir}"
+           srcdir="${work.dir}"
+           classpath="${java.lib.jamon}"
+           includes="JamonQs.java,QsTemp.java,QsTempImpl.java" />
+    <tempfile property="temp.file" destdir="${work.dir}"/>
+    <!-- why is fork needed?? -->
+    <java classname="JamonQs"
+          fork="yes"
+          classpath="${work.dir}:${java.lib.jamon}"
+          output="${temp.file}" >
+      <arg line="one two three" />
+    </java>
+    <loadfile property="quickstart.output" srcFile="${temp.file}" />
+    <invoker classpath="${java.lib.jamon}"
+             workDir="${work.dir}"
+             sourceDir="templates"
+             output="${www.dir}/QuickStart.html"
+             template="/org/jamon/doc/QuickStart" >
+      <arg name="output" value="${quickstart.output}" />
+    </invoker>
+  </target>
+
+  <target name="doc"
+          description="Generates all the documentation"
+          depends="init" >
+    <antcall target="quickstart" />
     <antcall target="grind">
       <param name="template" value="BuildingProjects" />
     </antcall>
