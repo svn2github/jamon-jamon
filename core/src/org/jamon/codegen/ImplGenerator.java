@@ -131,32 +131,12 @@ public class ImplGenerator
         m_writer.openBlock();
         m_writer.print  ("void render(");
 
-        for (Iterator a = p_fargInfo.getArgumentNames(); a.hasNext(); /* */)
-        {
-            String argName = (String) a.next();
-            m_writer.print(p_fargInfo.getArgumentType(argName));
-            m_writer.print(" ");
-            m_writer.print(argName);
-            if (a.hasNext())
-            {
-                m_writer.print(", ");
-            }
-        }
+        p_fargInfo.printArgsDecl(m_writer);
         m_writer.println(")");
         m_writer.println("  throws java.io.IOException;");
 
         m_writer.print("public " + ClassNames.RENDERER + " makeRenderer(");
-        for (Iterator a = p_fargInfo.getArgumentNames(); a.hasNext(); /* */)
-        {
-            String argName = (String) a.next();
-            m_writer.print(p_fargInfo.getArgumentType(argName));
-            m_writer.print(" ");
-            m_writer.print(argName);
-            if (a.hasNext())
-            {
-                m_writer.print(", ");
-            }
-        }
+        p_fargInfo.printArgsDecl(m_writer);
         m_writer.println(");");
         m_writer.closeBlock();
         m_writer.println();

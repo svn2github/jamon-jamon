@@ -128,18 +128,7 @@ public class CallStatement
 
 
         p_writer.print("public " + RENDERER_CLASS + " makeRenderer(");
-        for (Iterator a = fargInfo.getArgumentNames(); a.hasNext(); /* */)
-        {
-            String arg = (String) a.next();
-            p_writer.print("final ");
-            p_writer.print(fargInfo.getArgumentType(arg));
-            p_writer.print(" ");
-            p_writer.print(arg);
-            if (a.hasNext())
-            {
-                p_writer.print(", ");
-            }
-        }
+        fargInfo.printArgsDecl(p_writer);
         p_writer.println(")");
         p_writer.openBlock();
         p_writer.print(  "return new " + RENDERER_CLASS + "()");
@@ -152,32 +141,14 @@ public class CallStatement
         p_writer.openBlock();
         p_writer.println("writeTo(p_writer);");
         p_writer.print  ("render(");
-        for (Iterator a = fargInfo.getArgumentNames(); a.hasNext(); /* */)
-        {
-            String arg = (String) a.next();
-            p_writer.print(arg);
-            if (a.hasNext())
-            {
-                p_writer.print(", ");
-            }
-        }
+        fargInfo.printArgs(p_writer);
         p_writer.println(");");
         p_writer.closeBlock();
         p_writer.closeBlock(";");
         p_writer.closeBlock();
 
         p_writer.print("public void render(");
-        for (Iterator a = fargInfo.getArgumentNames(); a.hasNext(); /* */)
-        {
-            String arg = (String) a.next();
-            p_writer.print(fargInfo.getArgumentType(arg));
-            p_writer.print(" ");
-            p_writer.print(arg);
-            if (a.hasNext())
-            {
-                p_writer.print(", ");
-            }
-        }
+        fargInfo.printArgsDecl(p_writer);
         p_writer.print(") throws ");
         p_writer.println(IOEXCEPTION_CLASS);
         p_writer.openBlock();

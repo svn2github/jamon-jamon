@@ -55,14 +55,10 @@ public class FargCallStatement
         p_writer.println(".escaping(this.getEscaping());");
         p_writer.print  (tn);
         p_writer.print  (".render(");
-        int argNum = 0;
-        for (Iterator r = m_fargInfo.getArgumentNames(); r.hasNext(); /* */)
+        for (Iterator r = m_fargInfo.getArgs(); r.hasNext(); /* */)
         {
-            if (argNum++ > 0)
-            {
-                p_writer.print(",");
-            }
-            String name = (String) r.next();
+            Argument arg = (Argument) r.next();
+            String name = arg.getName();
             String expr = (String) m_params.get(name);
             if (expr == null)
             {
@@ -72,6 +68,10 @@ public class FargCallStatement
             p_writer.print("(");
             p_writer.print(expr);
             p_writer.print(")");
+            if (r.hasNext())
+            {
+                p_writer.print(", ");
+            }
         }
         p_writer.println(");");
     }

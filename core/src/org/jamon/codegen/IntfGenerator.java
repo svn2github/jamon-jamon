@@ -130,31 +130,11 @@ public class IntfGenerator
             m_writer.println(" extends " + ClassNames.TEMPLATE_INTF);
             m_writer.openBlock();
             m_writer.print  ("void render(");
-            for (Iterator a = p_fargInfo.getArgumentNames(); a.hasNext(); /* */)
-            {
-                String argName = (String) a.next();
-                m_writer.print(p_fargInfo.getArgumentType(argName));
-                m_writer.print(" ");
-                m_writer.print(argName);
-                if (a.hasNext())
-                {
-                    m_writer.print(", ");
-                }
-            }
+            p_fargInfo.printArgsDecl(m_writer);
             m_writer.println(")");
             m_writer.println("  throws " + ClassNames.IOEXCEPTION + ";");
             m_writer.print(ClassNames.RENDERER + " makeRenderer(");
-            for (Iterator a = p_fargInfo.getArgumentNames(); a.hasNext(); /* */)
-            {
-                String argName = (String) a.next();
-                m_writer.print(p_fargInfo.getArgumentType(argName));
-                m_writer.print(" ");
-                m_writer.print(argName);
-                if (a.hasNext())
-                {
-                    m_writer.print(", ");
-                }
-            }
+            p_fargInfo.printArgsDecl(m_writer);
             m_writer.println(");");
             m_writer.closeBlock();
         }
@@ -205,15 +185,15 @@ public class IntfGenerator
             m_writer.print("    static");
             m_writer.openBlock();
             FargInfo info = m_analyzer.getFargInfo(name);
-            for (Iterator a = info.getArgumentNames(); a.hasNext(); /* */)
+            for (Iterator a = info.getArgs(); a.hasNext(); /* */)
             {
+                Argument arg = (Argument) a.next();
                 m_writer.print("FARGINFO_");
                 m_writer.print(name);
-                String an = (String) a.next();
                 m_writer.print(".put(\"");
-                m_writer.print(an);
+                m_writer.print(arg.getName());
                 m_writer.print("\",\"");
-                m_writer.print(info.getArgumentType(an));
+                m_writer.print(arg.getType());
                 m_writer.println("\");");
             }
             m_writer.closeBlock();

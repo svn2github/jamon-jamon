@@ -15,14 +15,14 @@
  * created by Jay Sachs are Copyright (C) 2002 Jay Sachs.  All Rights
  * Reserved.
  *
- * Contributor(s):
+ * Contributor(s): Ian Robertson
  */
 
 package org.jamon.codegen;
 
 import java.util.Iterator;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 class FargInfo
@@ -30,35 +30,52 @@ class FargInfo
     public FargInfo(String p_name, UnitInfo p_unitInfo)
     {
         m_name = p_name;
-        m_args = new HashMap();
-        m_argNames = new ArrayList();
-        for(Iterator i = p_unitInfo.getRequiredArgs(); i.hasNext(); /**/)
+        m_args = new LinkedList();
+        for (Iterator i = p_unitInfo.getRequiredArgs(); i.hasNext(); /* */)
         {
-            Argument arg = (Argument) i.next();
-            m_argNames.add(arg.getName());
-            m_args.put(arg.getName(), arg.getType());
+            m_args.add((Argument) i.next());
         }
     }
 
     public FargInfo(String p_name, Iterator p_argNames, Map p_args)
     {
         m_name = p_name;
-        m_args = p_args;
-        m_argNames = new ArrayList();
+        m_args = new LinkedList();
         while (p_argNames.hasNext())
         {
-            m_argNames.add(p_argNames.next());
+            String name = (String) p_argNames.next();
+            m_args.add(new Argument(name, (String) p_args.get(name)));
         }
     }
 
-    public Iterator getArgumentNames()
+    public Iterator getArgs()
     {
-        return m_argNames.iterator();
+        return m_args.iterator();
     }
 
-    public String getArgumentType(String p_name)
+    public void printArgsDecl(IndentingWriter p_writer)
     {
-        return (String) m_args.get(p_name);
+        for(Iterator i = getArgs(); i.hasNext(); /* */)
+        {
+            Argument arg = (Argument) i.next();
+            p_writer.print("final " + arg.getType() + " " + arg.getName());
+            if (i.hasNext())
+            {
+                p_writer.print(", ");
+            }
+        }
+    }
+
+    public void printArgs(IndentingWriter p_writer)
+    {
+        for(Iterator i = getArgs(); i.hasNext(); /* */)
+        {
+            p_writer.print(((Argument) i.next()).getName());
+            if (i.hasNext())
+            {
+                p_writer.print(", ");
+            }
+        }
     }
 
     public String getFargInterfaceName()
@@ -72,6 +89,5 @@ class FargInfo
     }
 
     private final String m_name;
-    private final Map m_args;
-    private final ArrayList m_argNames;
+    private final List m_args;
 }
