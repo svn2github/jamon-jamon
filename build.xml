@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<project name="meta" default="demo">
+<project name="meta" default="test1">
 
   <description>
     Meta build script for Jamon.  From this script one can
@@ -21,6 +21,11 @@
 
   <target name="compiler" description="Build the compiler">
     <ant dir="core" target="build"/>
+  </target>
+
+  <target name="cvsignores" description="Generates cvsignore files">
+    <ant dir="core" target="cvsignores"/>
+    <ant dir="integration" target="cvsignores"/>
   </target>
 
   <target name="spotless"
