@@ -20,15 +20,16 @@
 <%args>
   org.jamon.render.html.TextInput input;
   String type => "text";
-  int size => 0;
+  int size => -1;
 </%args>\
 <input type='<% type #H %>'
        name='<% input.getName() #H %>'
        value='<% input.getValue() #H %>'
 % int max = input.getMaxLength();
-% if (size <= 0 && max > 0) { size = max; }
-% if (size > 0) {
-       size='<% size %>'
+% int displaySize = size;
+% if (size < 0 && max > 0) { displaySize = max; }
+% if (displaySize > 0) {
+       size='<% displaySize %>'
 % }
 % if (max > 0) {
        maxlength='<% max %>'
