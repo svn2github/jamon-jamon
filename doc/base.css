@@ -118,6 +118,11 @@ li.static
   padding: 0 0 0 0;
 }
 
+ul.referenceTagList li
+{
+  padding: 0;
+}
+
 ul ul li.nav
 {
   padding-left: 0;

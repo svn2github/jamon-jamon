@@ -23,7 +23,7 @@
 
     Other ignored white space includes whitespace immediately after
     the following tags:
-    <ul>
+    <ul class="referenceTagList">
       <li><% "</%args>" %></li>
       <li><% "</%doc>" %></li>
       <li><% "</%frag>" %></li>
