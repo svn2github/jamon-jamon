@@ -74,13 +74,11 @@ public class FileTemplateSource
     }
 
     public long lastModified(String p_templatePath)
-        throws IOException
     {
         return getTemplateFile(p_templatePath).lastModified();
     }
 
     public boolean available(String p_templatePath)
-        throws IOException
     {
         return getTemplateFile(p_templatePath).exists();
     }
