@@ -29,6 +29,10 @@
   </target>
 
   <target name="templates" depends="template-src">
+    <dependset>
+      <srcfileset dir="../core/build/classes"/>
+      <targetfileset dir="${build.src.dir}"/>
+    </dependset>
     <mkdir dir="${build.src.dir}" />
     <taskdef name="jamon"
              classname="org.jamon.ant.JamonTask"

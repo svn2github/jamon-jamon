@@ -26,6 +26,10 @@
 
   <target name="templates">
     <mkdir dir="${build.src.dir}" />
+    <dependset>
+      <srcfileset dir="../core/build/classes"/>
+      <targetfileset dir="${build.src.dir}"/>
+    </dependset>
     <taskdef name="jamon"
              classname="org.jamon.ant.JamonTask"
              classpath="${java.lib.jamon-anttask}:${java.lib.jamon}" />
