@@ -13,7 +13,12 @@
   <property name="classpath"
             value="../build/classes:../../core/build/classes" />
 
-  <target name="test" depends="test-invoker,test-jamon" />
+  <target name="test" depends="init,test-invoker,test-jamon" />
+
+  <target name="init">
+    <delete dir="${build.dir}" />
+    <mkdir dir="${build.dir}" />
+  </target>
 
   <target name="test-jamon">
     <taskdef name="jamon"
