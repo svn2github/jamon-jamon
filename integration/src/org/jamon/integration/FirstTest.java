@@ -24,12 +24,12 @@ public class FirstTest
 
 
     public void setUp()
-    {    
+    {
     }
 
-    
+
     public void tearDown()
-    { 
+    {
     }
 
 
@@ -48,8 +48,8 @@ public class FirstTest
         w.flush();
 
         // This is expected to fail
-        RE re = new RE("^a.b$");
-        assertTrue(re.isMatch(w));
+         RE re = new RE("^a.b$");
+         assertTrue(re.isMatch(w.toString()));
     }
 
 }

@@ -17,13 +17,19 @@
   <property name="java.lib.junit" value="/usr/local/share/java/junit.jar" />
   <property name="java.lib.gnuregexp" value="/usr/local/share/java/gnu-regexp-1.1.4.jar" />
 
+  <property name="junit.fork" value="yes" />
+  <property name="junit.timeout" value="5000" />
+  <property name="junit.printsummary" value="off" />
+  <property name="junit.formatter" value="brief" />
+
   <target name="templates"
           depends=""
           description="Compiles the Jamon templates into Java">
     <mkdir dir="${build.src.dir}"/>
     <java fork="true"
           dir="templates"
-          classpath="${java.lib.jamon}"
+          failonerror="true"
+          classpath="${java.lib.jamon}:${java.lib.gnuregexp}"
           classname="org.jamon.TemplateGenerator">
       <arg value="../${build.src.dir}" />
       <arg value="foo.bar." />
@@ -33,7 +39,7 @@
     </java>
   </target>
 
-  <target name="compile" 
+  <target name="compile"
           depends="templates"
           description="Compiles Java">
     <mkdir dir="${classes.dir}"/>
@@ -46,13 +52,33 @@
     </javac>
   </target>
 
-  <target name="test1" 
+  <target name="test1"
           depends="compile"
           description="Exercises the compiled templates">
     <java fork="true"
-          failonerror="true"
           classpath="${classes.dir}:${java.lib.jamon}:${java.lib.gnuregexp}"
           classname="${test.pkg}.Test1" />
+  </target>
+
+  <target name="test"
+          depends="compile"
+          description="Run the unit tests">
+    <junit printsummary="${junit.printsummary}"
+           fork="${junit.fork}" timeout="${junit.timeout}">
+      <formatter type="${junit.formatter}" usefile="no"/>
+      <classpath>
+        <pathelement location="${classes.dir}"/>
+        <pathelement location="${java.lib.junit}"/>
+        <pathelement location="${java.lib.jamon}"/>
+        <pathelement location="${java.lib.gnuregexp}"/>
+      </classpath>
+      <batchtest>
+        <fileset dir="${src.dir}">
+          <include name="**/*Test.java" />
+          <exclude name="**/Abstract*.java"/>
+        </fileset>
+      </batchtest>
+    </junit>
   </target>
 
   <target name="cvsignores">
