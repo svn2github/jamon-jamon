@@ -59,8 +59,8 @@ public class InvokerTool
         throws UsageException, IOException
     {
         int a = 0;
-        StandardTemplateManager.Data data =
-            new StandardTemplateManager.Data();
+        StandardTemplateManager.Data data = new StandardTemplateManager.Data();
+        data.setCleanWorkDir(false);
         String outFile = null;
         while (a < args.length && args[a].startsWith("-"))
         {
