@@ -167,10 +167,10 @@ public class Analyzer
 
     private String computePath(PPath p_node)
     {
-        return getTemplateUnit().computePath(NodeUtils.asText(p_node));
+        return getTemplateUnit().computePath(makePath(p_node));
     }
 
-    private String asText(PAliasName p_aliasName)
+    private String aliasNameToString(PAliasName p_aliasName)
     {
         if (p_aliasName instanceof ARootAliasName)
         {
@@ -192,7 +192,7 @@ public class Analyzer
             {
                 AAlias alias = (AAlias) a.next();
                 getTemplateUnit().addAlias
-                    (asText(alias.getAliasName()),
+                    (aliasNameToString(alias.getAliasName()),
                      computePath(alias.getPath()));
             }
         }
@@ -231,7 +231,7 @@ public class Analyzer
     {
         public void caseAImport(AImport p_import)
         {
-            getTemplateUnit().addImport(NodeUtils.asText(p_import.getName()));
+            getTemplateUnit().addImport(p_import.getName().toString());
         }
 
         public void caseAParentArg(AParentArg p_arg)
@@ -512,5 +512,48 @@ public class Analyzer
     {
         getCurrentUnit().addStatement(p_statement);
     }
+
+
+    private static Path makePath(PPath node)
+    {
+        if (node instanceof ARelPath)
+        {
+            return new Path(null,
+                            pathToString((ARelativePath) ((ARelPath) node).getRelativePath()));
+        }
+        else if (node instanceof AAbsPath)
+        {
+            return new Path(null,
+                            pathToString((AAbsolutePath) ((AAbsPath)node).getAbsolutePath()));
+        }
+        else
+        {
+            AAliasedPath path =
+                (AAliasedPath) ((AAliasPath)node).getAliasedPath();
+            return new Path(path.getIdentifier() == null
+                            ? ""
+                            : path.getIdentifier().getText(),
+                            pathToString((AAbsolutePath) path.getAbsolutePath()));
+        }
+    }
+
+    private static String pathToString(AAbsolutePath p_path)
+    {
+        if (p_path == null)
+        {
+            return "";
+        }
+        else
+        {
+            return "/" + pathToString((ARelativePath) p_path.getRelativePath());
+        }
+    }
+
+    private static String pathToString(ARelativePath p_path)
+    {
+        return p_path.getIdentifier().getText()
+            + pathToString((AAbsolutePath) p_path.getAbsolutePath());
+    }
+
 
 }
