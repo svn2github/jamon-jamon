@@ -61,15 +61,15 @@ public class EscapingDirective
 
     static
     {
-        s_standardDirectives.put("|H",
+        s_standardDirectives.put("H",
                                  new EscapingDirective(PREFIX + "STRICT_HTML"));
-        s_standardDirectives.put("|h",
+        s_standardDirectives.put("h",
                                  new EscapingDirective(PREFIX + "HTML"));
-        s_standardDirectives.put("|n",
+        s_standardDirectives.put("n",
                                  NONE);
-        s_standardDirectives.put("|u",
+        s_standardDirectives.put("u",
                                  new EscapingDirective(PREFIX + "URL"));
-        s_standardDirectives.put("|x",
+        s_standardDirectives.put("x",
                                  new EscapingDirective(PREFIX + "XML"));
     }
 
