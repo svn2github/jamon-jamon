@@ -27,3 +27,6 @@ XML escaped: <% "&"   |x  %> <% ">" |x%> <% "<"   |x %> <% "'" |x%> <% "\"" |x %
 URL escaped: <% "&"   |u  %> <% ">" |u%> <% "<"   |u %> <% "'" |u%> <% "\"" |u %>
 
 Not escaped: <% "&"   |n  %> <% ">" |n%> <% "<"   |n %> <% "'" |n%> <% "\"" |n %>
+
+This is a call: <& /foo/bar; a => 3 &>
+So is this: <& baz/bop/boop; qwer => "asdf"; zxcvzx => foo.bar(6,"asdf") &>
