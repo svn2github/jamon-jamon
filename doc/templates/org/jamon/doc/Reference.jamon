@@ -373,33 +373,13 @@ a good sign for you, <% name %>.
   <p>
 
     For example, suppose <code>/accounting/bill</code> contains
-    <&| _Template &><%LITERAL>
-<%args>
-  float amount;
-  String payee;
-  boolean overdue => false;
-</%args>
-You owe <% payee %> $<% amount %>.\
-% if (overdue) {
-  Pay now, or else!
-% }
-</%LITERAL></&>
+    <& _TemplateInclude: "/templates/accounting/bill" &>
 
     This tempate can be called in the following ways:
-    <&| _Template &><%LITERAL>
-<& /accounting/bill; amount => 30; payee => "the phone company" &>
-<& /accounting/bill; payee => "the gas company"; amount => 35 &>
-<& /accounting/bill: 25; "the mechanic" &>
-<& /accounting/bill; amount => 400; payee => "Dad"; overdue => true &>
-</%LITERAL></&>
+    <& _TemplateInclude: "/templates/accounting/summary" &>
 
     resulting in something like
-<pre class="tty">
-You owe the phone company $30.
-You owe the gas company $35.
-You owe the mechanic $25.
-You owe Dad $400.  Pay now, or else!
-</pre>
+    <pre class="tty"><& /accounting/summary &></pre>
 
     When using positional parameter syntax to invoke templates which
     extend abstract templates, first pass the required arguments of the
@@ -427,63 +407,9 @@ You owe Dad $400.  Pay now, or else!
     <p>
 
     For example:
-    <&| _Template &><%LITERAL>
-<%def _row>
-  <%args>
-    String name;
-    int age;
-  </%args>
-  <tr>
-    <td align="left"><% name %></td>
-    <td>&nbsp;</td>
-    <td align="center"
-%     if (age < 18) {
-        bgcolor="red"
-%     }
-    >
-      <% age %>
-    </td>
-  </tr>
-</%def>
-
-<table>
-<%doc>named parameter syntax</%doc>
-  <& _row; name => "Mickey"; age => 46 &>
-  <& _row; name => "Junior"; age => 8 &>
-<%doc>positional parameter syntax</%doc>
-  <& _row: "Minnie"; 25 &>
-</table>
-</%LITERAL></&>
-      produces
-      <pre class="tty"><&| escape//Html &><%LITERAL>
-<table>
-  <tr>
-    <td align="left">Mickey</td>
-    <td>&nbsp;</td>
-    <td align="center"
-    >
-      46
-    </td>
-  </tr>
-  <tr>
-    <td align="left">Junior</td>
-    <td>&nbsp;</td>
-    <td align="center"
-        bgcolor="red"
-    >
-      8
-    </td>
-  </tr>
-  <tr>
-    <td align="left">Minnie</td>
-    <td>&nbsp;</td>
-    <td align="center"
-    >
-      25
-    </td>
-  </tr>
-</table>
-</%LITERAL></&></pre>
+    <& _TemplateInclude: "/templates/org/jamon/doc/reference/defExample" &>
+    produces
+    <pre class="tty"><&| escape//Html &><& reference/defExample &></&></pre>
     <p>
 
     Protected templates ("<def>methods</def>") can be declared via
