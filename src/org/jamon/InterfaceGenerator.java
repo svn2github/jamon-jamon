@@ -117,7 +117,6 @@ public class InterfaceGenerator extends BaseGenerator
         print  (getClassName());
         println(") ");
         print  ("        getInstance(\"");
-        print  ("/");
         print  (getPath());
         println("\", p_writer);");
         println("    }");
