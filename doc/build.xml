@@ -154,7 +154,7 @@ the documentation thus taking care of issues such as escaping.
     <antcall target="compile-docbuilder" />
     <java className="org.jamon.doc.DocBuilder">
       <classpath path="${java.lib.jamon}:${work.dir}:${java.lib.diff}:${this.dir}"/>
-      <arg value="${doc.dir}"/>
+      <arg value="${this.dir}/${doc.dir}"/>
     </java>
   </target>
 
