@@ -10,7 +10,7 @@ of times.  We can do this with the following template.
                             separator => "---";
                             beginInsert => "<span class='changed'>";
                             endInsert => "</span>" &>\
-<&| /org/jamon/escape/Html &><& hello &>---<& hello2 &></&></&></pre>
+<& hello &>---<& hello2 &></&></pre>
 
 (New or changed lines look like <span class="changed">this</span>).  
 The above template can be invoked with code like:
@@ -31,7 +31,7 @@ displayed.  We can achieve that with a template such as:
                             separator => "---";
                             beginInsert => "<span class='changed'>";
                             endInsert => "</span>" &>\
-<&| /org/jamon/escape/Html &><& hello2 &>---<& hello3 &></&></&></pre>
+<& hello2 &>---<& hello3 &></&></pre>
 
 The corresponding servlet would look like:
 
@@ -56,7 +56,7 @@ name of the parameter, for the moment we reduce the smell by doing this:
                             separator => "---";
                             beginInsert => "<span class='changed'>";
                             endInsert => "</span>" &>\
-<&| /org/jamon/escape/Html &><& hello3 &>---<& hello4 &></&></&></pre>
+<& hello3 &>---<& hello4 &></&></pre>
 
 and
 
@@ -84,7 +84,7 @@ and the template needs an additional error parameter:
                             separator => "---";
                             beginInsert => "<span class='changed'>";
                             endInsert => "</span>" &>\
-<&| /org/jamon/escape/Html &><& hello4 &>---<& hello5 &></&></&></pre>
+<& hello4 &>---<& hello5 &></&></pre>
 
 However, in spite of all this the servlet leaves a great deal to be desired.  For example
 invalid input should be returned to the user for editing.

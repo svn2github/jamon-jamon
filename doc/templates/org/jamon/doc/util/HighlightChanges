@@ -41,17 +41,17 @@
   {
     for (int i = last; i < change.line1; ++i)
     {
-</%java><% second[i] #n %><%java>
+</%java><% second[i] %><%java>
     }
     for (int i = 0; i < change.inserted; ++i)
     {
-</%java><% beginInsert #n %><% second[change.line1 + i] #n %><% endInsert #n %><%java>
+</%java><% beginInsert #n %><% second[change.line1 + i] %><% endInsert #n %><%java>
     }
     last = change.line1 + change.inserted;
     change = change.link;
   }
   for (int i = last; i < second.length; ++i)
   {
-</%java><% second[i] #n %><%java>
+</%java><% second[i] %><%java>
   }
 </%java>
