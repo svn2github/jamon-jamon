@@ -33,10 +33,50 @@ import java.lang.reflect.Proxy;
 
 import junit.framework.Assert;
 
+/**
+ * A <code>TemplateManager</code> implementation suitable for use in
+ * constructing unit tests via JUnit.
+ *
+ * A <code>JUnitTemplateManager<code> instance is not reusable, but
+ * instead allows the "rendering" of the one template specified at
+ * construction. For example, suppose the <code>/com/bar/FooTemplate</code>
+ * is declared as follows:
+ * <pre>
+ *   &lt;%args&gt;
+ *     int x;
+ *     String s =&gt; "hello";
+ *   &lt;/%args&gt;
+ * </pre>
+ *
+ * To test that the method <code>showPage()</code> attempts to render
+ * the <code>FooTemplate</code> with arguements <code>7</code> and
+ * <code>"bye"</code>, use something like the following code:
+ *
+ * <pre>
+ *    Map optArgs = new HashMap();
+ *    optArgs.put("s", "bye");
+ *    JUnitTemplateManager jtm =
+ *       new JUnitTemplateManager("/com/bar/FooTemplate",
+ *                                optArgs,
+ *                                new Object[] { new Integer(7) });
+ *
+ *    TemplateManagerSource.setTemplateManager(jtm);
+ *    someObj.showPage();
+ *    assertTrue(jtm.getWasRendered());
+ * </pre>
+ */
+
 public class JUnitTemplateManager
     implements TemplateManager,
                InvocationHandler
 {
+    /**
+     * Construct a <code>JUnitTemplateManager</code>.
+     *
+     * @param p_path the template path
+     * @param p_optionalArgs the expect optional arguments
+     * @param p_requiredArgs the expected required argument values
+     */
     public JUnitTemplateManager(String p_path,
                                 Map p_optionalArgs,
                                 Object[] p_requiredArgs)
@@ -46,6 +86,13 @@ public class JUnitTemplateManager
         m_requiredArgs = p_requiredArgs;
     }
 
+    /**
+     * Construct a <code>JUnitTemplateManager</code>.
+     *
+     * @param p_class the template class
+     * @param p_optionalArgs the expect optional arguments
+     * @param p_requiredArgs the expected required argument values
+     */
     public JUnitTemplateManager(Class p_class,
                                 Map p_optionalArgs,
                                 Object[] p_requiredArgs)
@@ -54,6 +101,18 @@ public class JUnitTemplateManager
              p_optionalArgs,
              p_requiredArgs);
     }
+
+    /**
+     * Determine if the template was successfully "rendered".
+     *
+     * @return whether the specified template was rendered with the
+     * specified arguments
+     */
+    public boolean getWasRendered()
+    {
+        return m_rendered;
+    }
+
 
     public Escaping getDefaultEscaping()
     {
@@ -236,11 +295,6 @@ public class JUnitTemplateManager
                        + StringUtils.capitalize(p_name),
                        new Class[0])
             .invoke(m_implData, new Object[0]);
-    }
-
-    public boolean getWasRendered()
-    {
-        return m_rendered;
     }
 
     private boolean equals(Object p_obj1, Object p_obj2)
