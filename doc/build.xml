@@ -14,7 +14,6 @@ the documentation thus taking care of issues such as escaping.
   <property name="www.dir" value="${build.dir}/www"/>
   <property name="classes.dir" value="${www.dir}/classes"/>
   <property name="java.lib.jamon" location="../jamon.jar"/>
-  <property name="java.lib.servlet" value="/usr/share/java/servlet.jar"/>
   <property name="java.lib.diff" value="/usr/local/share/java/diff.jar"/>
 
   <target name="doc"
