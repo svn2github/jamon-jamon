@@ -5,7 +5,7 @@
 <p>Preprocesses Jamon templates to Java sources.</p>
 
 <p>Templates under the specified <span class="file">src</span>
-directory are processed into Java sources. The generated java source
+directory are translated into Java sources. The generated java source
 files are placed under the <span class="file">destdir</span>
 directory. The directory structure underneath the <span
 class="file">src</span> directory is preserved, and is used to place
@@ -22,11 +22,6 @@ the generated Java sources in appropriate packages.</p>
     <td valign="top">destdir</td>
     <td valign="top">the target directory for generated Java files.</td>
     <td align="center" valign="top">Yes</td>
-  </tr>
-  <tr>
-    <td valign="top">generateImpls</td>
-    <td valign="top">whether to generate implementation classes as well as interfaces. Defaults to "false".</td>
-    <td align="center" valign="top">No</td>
   </tr>
 </table>
 
@@ -48,19 +43,18 @@ to process. <b>Required</b>.</p>
   <src path="wwwtemplates" />
 </jamon></&></pre>
 
-<p>creates Java interfaces for all of the templates in the <span
+<p>creates Java sources for all of the templates in the <span
 class="file">wwwtemplates</span> directory, putting generated sources
 into <span class="file">tsrc</span></p>
 
-<pre class="ant"><&| /org/jamon/escape/Html &><jamon destDir="tsrc" generateImpls="true">
+<pre class="ant"><&| /org/jamon/escape/Html &><jamon destDir="tsrc">
   <src path="templs" />
   <exclude name="not/for/prod/**" />
 </jamon></&></pre>
 
-<p>creates Java proxies and implementation sources for all of the
-templates in the <span class="file">templs</span> directory, except
-those in the direcotry <span
-class="file">templs/not/for/prod</span>. The sources are placed into
-the directory tree rooted at <span class="file">tsrc</span>.</p>
+<p>creates Java sources for all of the templates in the <span
+class="file">templs</span> directory, except those in the directory
+<span class="file">templs/not/for/prod</span>. The sources are placed
+into the directory tree rooted at <span class="file">tsrc</span>.</p>
 
 </&>

@@ -20,7 +20,7 @@
              classname="org.jamon.ant.JamonTask"
              classpath="${classpath}" />
     <mkdir dir="${test.src.dir}" />
-    <jamon destdir="${test.src.dir}" generateImpls="true">
+    <jamon destdir="${test.src.dir}">
       <src path="templates"/>
     </jamon>
   </target>

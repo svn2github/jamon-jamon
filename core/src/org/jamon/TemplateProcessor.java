@@ -15,7 +15,7 @@
  * created by Jay Sachs are Copyright (C) 2002 Jay Sachs.  All Rights
  * Reserved.
  *
- * Contributor(s):
+ * Contributor(s): Ian Robertson
  */
 
 package org.jamon;
@@ -41,20 +41,17 @@ import org.jamon.parser.ParserException;
 public class TemplateProcessor
 {
     public TemplateProcessor(File p_destDir,
-                             File p_sourceDir,
-                             boolean p_generateImpls)
+                             File p_sourceDir)
     {
         m_destDir = p_destDir;
         m_describer =
             new TemplateDescriber(new FileTemplateSource(p_sourceDir));
         m_resolver = new TemplateResolver();
-        m_generateImpls = p_generateImpls;
     }
 
     private File m_destDir;
     private TemplateDescriber m_describer;
     private TemplateResolver m_resolver;
-    private boolean m_generateImpls;
 
     public void generateSource(String p_filename)
         throws IOException,
@@ -82,12 +79,9 @@ public class TemplateProcessor
                                StringUtils.classNameToFilePath(pkg));
         File javaFile = new File(pkgDir, templateName + ".java");
 
-        BaseAnalyzer analyzer =
-            m_generateImpls
-            ? new ImplAnalyzer(StringUtils.filePathToTemplatePath(p_filename),
-                               m_describer.parseTemplate(p_filename))
-            : new BaseAnalyzer(m_describer.parseTemplate(p_filename));
-
+        ImplAnalyzer analyzer =
+            new ImplAnalyzer(StringUtils.filePathToTemplatePath(p_filename),
+                             m_describer.parseTemplate(p_filename));
         pkgDir.mkdirs();
         FileWriter writer = new FileWriter(javaFile);
 
@@ -113,33 +107,30 @@ public class TemplateProcessor
         }
         writer.close();
 
-        if (m_generateImpls)
+        javaFile = new File(pkgDir, templateName + "Impl.java");
+        writer = new FileWriter(javaFile);
+        try
         {
-            javaFile = new File(pkgDir, templateName + "Impl.java");
-            writer = new FileWriter(javaFile);
+            new ImplGenerator(writer,
+                              m_resolver,
+                              m_describer,
+                              analyzer)
+                .generateSource();
+        }
+        catch (IOException e)
+        {
             try
             {
-                new ImplGenerator(writer,
-                                  m_resolver,
-                                  m_describer,
-                                  (ImplAnalyzer)analyzer)
-                    .generateSource();
+                writer.close();
+                javaFile.delete();
             }
-            catch (IOException e)
+            finally
             {
-                try
-                {
-                    writer.close();
-                    javaFile.delete();
-                }
-                finally
-                {
-                    e.printStackTrace();
-                    throw e;
-                }
+                e.printStackTrace();
+                throw e;
             }
-            writer.close();
         }
+        writer.close();
     }
 
     private static void showHelp()
@@ -147,9 +138,8 @@ public class TemplateProcessor
         System.out.println("Usage: java org.jamon.TemplateProcessor <args> templatePath*");
         System.out.println("  Arguments:");
         System.out.println("  -h|--help         - print this help");
-        System.out.println("  -a|--all         - generate impls too");
         System.out.println("  --destDir=<path>  - path to where compiled .java files go (required)");
-        System.out.println("  --sourceDir=<path>  - path to template directory");
+        System.out.println("  --srcDir=<path>   - path to template directory");
     }
 
     public static void main(String [] args)
@@ -157,7 +147,6 @@ public class TemplateProcessor
         try
         {
             int arg = 0;
-            boolean doBoth = false;
             File sourceDir = new File(".");
             File destDir = null;
             while (arg<args.length && args[arg].startsWith("-"))
@@ -167,15 +156,11 @@ public class TemplateProcessor
                     showHelp();
                     System.exit(0);
                 }
-                else if ("-a".equals(args[arg]) || "--all".equals(args[arg]))
-                {
-                    doBoth = true;
-                }
                 else if (args[arg].startsWith("--destDir="))
                 {
                     destDir = new File(args[arg].substring(10));
                 }
-                else if (args[arg].startsWith("--sourceDir="))
+                else if (args[arg].startsWith("--srcDir="))
                 {
                     sourceDir = new File(args[arg].substring(12));
                 }
@@ -196,7 +181,7 @@ public class TemplateProcessor
             }
 
             TemplateProcessor processor =
-                new TemplateProcessor(destDir, sourceDir, doBoth);
+                new TemplateProcessor(destDir, sourceDir);
 
             while (arg < args.length)
             {

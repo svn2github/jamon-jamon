@@ -15,7 +15,7 @@
  * created by Jay Sachs are Copyright (C) 2002 Jay Sachs.  All Rights
  * Reserved.
  *
- * Contributor(s):
+ * Contributor(s): Luis O'Shea, Ian Robertson
  */
 
 package org.jamon.ant;
@@ -49,20 +49,6 @@ public class JamonTask
         m_destDir = p_destDir;
     }
 
-
-    /**
-     * Set whether the template generator should generate implementations (in
-     * addition to interfaces).  Defaults to 'false'.
-     *
-     * @param p_generateImpls whether implementations should be generated
-     */
-
-    public void setGenerateImpls(boolean p_generateImpls)
-    {
-        m_generateImpls = p_generateImpls;
-    }
-
-
     public Path createSrc()
     {
         if (m_src == null)
@@ -87,11 +73,6 @@ public class JamonTask
         }
         String basePath = paths[0];
         log("basepath = " + basePath);
-
-        if (m_generateImpls)
-        {
-            log("Generating implementations");
-        }
 
         // Copied from org.apache.tools.ant.taskdefs.Javac below
 
@@ -140,7 +121,7 @@ public class JamonTask
         }
 
         TemplateProcessor processor =  new TemplateProcessor
-            (m_destDir, new File(m_src.toString()), m_generateImpls);
+            (m_destDir, new File(m_src.toString()));
 
         try
         {
@@ -221,6 +202,4 @@ public class JamonTask
     private String m_package;
     private File m_destDir;
     private Path m_src;
-    private boolean m_generateImpls;
-
 }
