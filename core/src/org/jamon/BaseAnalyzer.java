@@ -62,7 +62,9 @@ public class BaseAnalyzer
 
     public FargInfo getFargInfo(String p_unitName, String p_fargName)
     {
-        return new FargInfo(p_fargName);
+        return new FargInfo(p_fargName,
+                            Fragment.class.getName(),
+                            new HashMap());
     }
 
     public Iterator getFargNames()

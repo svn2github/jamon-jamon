@@ -63,7 +63,21 @@ public class FragmentCallStatement
         p_writer.print("      new ");
         p_writer.print(fargInfo.getFargInterfaceName());
         p_writer.println(" () {");
-        p_writer.print("       public void render() throws ");
+        p_writer.print("       public void render(");
+
+        for (Iterator a = fargInfo.getArgumentNames(); a.hasNext(); /* */)
+        {
+            String arg = (String) a.next();
+            p_writer.print(fargInfo.getArgumentType(arg));
+            p_writer.print(" ");
+            p_writer.print(arg);
+            if (a.hasNext())
+            {
+                p_writer.print(", ");
+            }
+        }
+
+        p_writer.print(") throws ");
         p_writer.print(IOEXCEPTION_CLASS);
         p_writer.println(" {");
         for (Iterator i = m_fragment.iterator(); i.hasNext(); /* */)

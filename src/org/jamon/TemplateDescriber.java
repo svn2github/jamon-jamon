@@ -3,6 +3,7 @@ package org.modusponens.jtt;
 import java.util.Iterator;
 import java.util.List;
 import java.util.LinkedList;
+import java.util.HashMap;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -30,7 +31,9 @@ public class TemplateDescriber
 
     public FargInfo getFargInfo(String p_path, String p_fargName)
     {
-        return new FargInfo(p_fargName);
+        return new FargInfo(p_fargName,
+                            Fragment.class.getName(),
+                            new HashMap());
     }
 
     public Iterator getFargNames(String p_path)
