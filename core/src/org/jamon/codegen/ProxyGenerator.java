@@ -292,18 +292,15 @@ public class ProxyGenerator
     {
         m_writer.print((m_templateUnit.isParent() ? "protected" : "public")
                        + " void render(");
-        m_writer.print(ClassNames.WRITER + " p__jamon_writer");
-        if (m_templateUnit.getRenderArgs().hasNext())
-        {
-            m_writer.print(", ");
-        }
+        m_writer.print(WRITER_ARG_DECL);
+        maybePrintComma(m_templateUnit.getRenderArgs());
         m_templateUnit.printRenderArgsDecl(m_writer);
         m_writer.println(")");
 
         m_writer.println("  throws " + ClassNames.IOEXCEPTION);
         m_writer.openBlock();
         m_writer.println("ImplData implData = (ImplData) getImplData();");
-        m_writer.println("implData.setWriter(p__jamon_writer);");
+        m_writer.println("implData.setWriter(" + WRITER_ARG + ");");
         for (Iterator i = m_templateUnit.getRenderArgs(); i.hasNext(); )
         {
             AbstractArgument arg = (AbstractArgument) i.next();
@@ -331,15 +328,11 @@ public class ProxyGenerator
         m_writer.openBlock();
         m_writer.print(  "return new " + ClassNames.RENDERER + "() ");
         m_writer.openBlock();
-        m_writer.println("public void renderTo("
-                         + ClassNames.WRITER + " p__jamon_writer)");
+        m_writer.println("public void renderTo(" + WRITER_ARG_DECL + ")");
         m_writer.println(  "  throws " + ClassNames.IOEXCEPTION);
         m_writer.openBlock();
-        m_writer.print  ("render(p__jamon_writer");
-        if (m_templateUnit.getRenderArgs().hasNext())
-        {
-            m_writer.print(", ");
-        }
+        m_writer.print  ("render(" + WRITER_ARG);
+        maybePrintComma(m_templateUnit.getRenderArgs());
         m_templateUnit.printRenderArgs(m_writer);
         m_writer.println(");");
         m_writer.closeBlock();
@@ -469,21 +462,14 @@ public class ProxyGenerator
 
         if (! m_templateUnit.hasParentPath())
         {
-            m_writer.print("public void render("
-                           + ClassNames.WRITER + " p__jamon_writer");
-            if (m_templateUnit.getDeclaredRenderArgs().hasNext())
-            {
-                m_writer.print(", ");
-            }
+            m_writer.print("public void render(" + WRITER_ARG_DECL);
+            maybePrintComma(m_templateUnit.getDeclaredRenderArgs());
             m_templateUnit.printDeclaredRenderArgsDecl(m_writer);
             m_writer.println(")");
             m_writer.print("  throws " + ClassNames.IOEXCEPTION);
             m_writer.openBlock();
-            m_writer.print("renderChild( p__jamon_writer");
-            if (m_templateUnit.getDeclaredRenderArgs().hasNext())
-            {
-                m_writer.print(", ");
-            }
+            m_writer.print("renderChild(" + WRITER_ARG);
+            maybePrintComma(m_templateUnit.getDeclaredRenderArgs());
             m_templateUnit.printDeclaredRenderArgs(m_writer);
             m_writer.println(");");
             m_writer.closeBlock();
@@ -499,11 +485,8 @@ public class ProxyGenerator
         }
 
         m_writer.print("protected abstract void renderChild("
-                       + ClassNames.WRITER + " p__jamon_writer");
-        if (m_templateUnit.getRenderArgs().hasNext())
-        {
-            m_writer.print(", ");
-        }
+                       + WRITER_ARG_DECL);
+        maybePrintComma(m_templateUnit.getRenderArgs());
         m_templateUnit.printRenderArgsDecl(m_writer);
         m_writer.println(")");
         m_writer.println("  throws " + ClassNames.IOEXCEPTION + ";");
@@ -523,12 +506,8 @@ public class ProxyGenerator
         m_writer.openBlock();
         m_writer.print("return new " + parentRendererClass + "() ");
         m_writer.openBlock();
-        m_writer.print("protected void renderChild("
-                       + ClassNames.WRITER + " p__jamon_writer");
-        if (m_templateUnit.getParentRenderArgs().hasNext())
-        {
-            m_writer.print(", ");
-        }
+        m_writer.print("protected void renderChild(" + WRITER_ARG_DECL);
+        maybePrintComma(m_templateUnit.getParentRenderArgs());
         m_templateUnit.printParentRenderArgsDecl(m_writer);
         m_writer.println(")");
         m_writer.println("  throws " + ClassNames.IOEXCEPTION);
@@ -537,11 +516,8 @@ public class ProxyGenerator
         {
             m_writer.print
                 (PathUtils.getFullyQualifiedIntfClassName(getClassName())
-                 + ".ParentRenderer.this.renderChild(p__jamon_writer");
-            if (m_templateUnit.getRenderArgs().hasNext())
-            {
-                m_writer.print(", ");
-            }
+                 + ".ParentRenderer.this.renderChild(" + WRITER_ARG);
+            maybePrintComma(m_templateUnit.getRenderArgs());
             m_templateUnit.printRenderArgs(m_writer);
             m_writer.println(");");
         }
@@ -549,11 +525,8 @@ public class ProxyGenerator
         {
             m_writer.print(
                 PathUtils.getFullyQualifiedIntfClassName(getClassName())
-                + ".this.render(p__jamon_writer");
-            if (m_templateUnit.getRenderArgs().hasNext())
-            {
-                m_writer.print(", ");
-            }
+                + ".this.render(" + WRITER_ARG);
+            maybePrintComma(m_templateUnit.getRenderArgs());
             m_templateUnit.printRenderArgs(m_writer);
             m_writer.println(");");
         }
@@ -596,4 +569,16 @@ public class ProxyGenerator
         m_writer.println();
         m_writer.closeBlock();
     }
+
+    private void maybePrintComma(Iterator p_args)
+    {
+        if(p_args.hasNext())
+        {
+            m_writer.print(", ");
+        }
+    }
+
+    private final static String WRITER_ARG = "p__jamon_writer";
+    private final static String WRITER_ARG_DECL =
+        ClassNames.WRITER + " " + WRITER_ARG;
 }
