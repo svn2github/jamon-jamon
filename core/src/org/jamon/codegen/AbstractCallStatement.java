@@ -114,9 +114,11 @@ public abstract class AbstractCallStatement
         p_writer.openBlock();
         p_writer.println("super(p_manager);");
         p_writer.closeBlock();
-        p_writer.print("public " + ClassNames.RENDERER + " makeRenderer(");
+        p_writer.print("public " + ClassNames.RENDERER + " makeRenderer");
+        p_writer.openList();
         fragmentUnitImpl.printRenderArgsDecl(p_writer);
-        p_writer.println(")");
+        p_writer.closeList();
+        p_writer.println();
         p_writer.openBlock();
         p_writer.print(  "return new " + ClassNames.RENDERER + "()");
         p_writer.openBlock();
@@ -127,17 +129,20 @@ public abstract class AbstractCallStatement
         p_writer.println(ClassNames.IOEXCEPTION);
         p_writer.openBlock();
         p_writer.println("writeTo(p_writer);");
-        p_writer.print  ("renderNoFlush(");
+        p_writer.print("renderNoFlush");
+        p_writer.openList();
         fragmentUnitImpl.printRenderArgs(p_writer);
-        p_writer.println(");");
+        p_writer.closeList();
+        p_writer.println(";");
         p_writer.closeBlock();
         p_writer.closeBlock(";");
         p_writer.closeBlock();
 
-        p_writer.print("public void renderNoFlush(");
+        p_writer.print("public void renderNoFlush");
+        p_writer.openList();
         fragmentUnitImpl.printRenderArgsDecl(p_writer);
-        p_writer.print(") throws ");
-        p_writer.println(ClassNames.IOEXCEPTION);
+        p_writer.closeList();
+        p_writer.println(" throws "+ ClassNames.IOEXCEPTION);
         fragmentUnitImpl.generateRenderBody(p_writer, p_describer);
 
         p_writer.closeBlock();

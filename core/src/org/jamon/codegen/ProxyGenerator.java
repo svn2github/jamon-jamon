@@ -306,28 +306,31 @@ public class ProxyGenerator
     private void generateRender()
     {
         m_writer.print((m_templateUnit.isParent() ? "protected" : "public")
-                       + " void render(");
-        m_writer.print(WRITER_ARG_DECL);
-        maybePrintComma(m_templateUnit.getRenderArgs());
+                       + " void render");
+        m_writer.openList();
+        m_writer.printArg(WRITER_ARG_DECL);
         m_templateUnit.printRenderArgsDecl(m_writer);
-        m_writer.println(")");
+        m_writer.closeList();
+        m_writer.println();
 
         m_writer.println("  throws " + ClassNames.IOEXCEPTION);
         m_writer.openBlock();
-        m_writer.print("renderNoFlush(");
-        m_writer.print(WRITER_ARG);
-        maybePrintComma(m_templateUnit.getRenderArgs());
+        m_writer.print("renderNoFlush");
+        m_writer.openList();
+        m_writer.printArg(WRITER_ARG);
         m_templateUnit.printRenderArgs(m_writer);
-        m_writer.println(");");
+        m_writer.closeList();
+        m_writer.println(";");
         m_writer.println(WRITER_ARG + ".flush();");
         m_writer.closeBlock();
 
         m_writer.print((m_templateUnit.isParent() ? "protected" : "public")
-                       + " void renderNoFlush(");
-        m_writer.print(WRITER_ARG_DECL);
-        maybePrintComma(m_templateUnit.getRenderArgs());
+                       + " void renderNoFlush");
+        m_writer.openList();
+        m_writer.printArg(WRITER_ARG_DECL);
         m_templateUnit.printRenderArgsDecl(m_writer);
-        m_writer.println(")");
+        m_writer.closeList();
+        m_writer.println();
 
         m_writer.println("  throws " + ClassNames.IOEXCEPTION);
         m_writer.openBlock();
@@ -352,9 +355,11 @@ public class ProxyGenerator
 
     private void generateMakeRenderer()
     {
-        m_writer.print("public " + ClassNames.RENDERER + " makeRenderer(");
+        m_writer.print("public " + ClassNames.RENDERER + " makeRenderer");
+        m_writer.openList();
         m_templateUnit.printRenderArgsDecl(m_writer);
-        m_writer.println(")");
+        m_writer.closeList();
+        m_writer.println();
 
         m_writer.openBlock();
         m_writer.print(  "return new " + ClassNames.RENDERER + "() ");
@@ -362,10 +367,12 @@ public class ProxyGenerator
         m_writer.println("public void renderTo(" + WRITER_ARG_DECL + ")");
         m_writer.println(  "  throws " + ClassNames.IOEXCEPTION);
         m_writer.openBlock();
-        m_writer.print  ("render(" + WRITER_ARG);
-        maybePrintComma(m_templateUnit.getRenderArgs());
+        m_writer.print("render");
+        m_writer.openList();
+        m_writer.printArg(WRITER_ARG);
         m_templateUnit.printRenderArgs(m_writer);
-        m_writer.println(");");
+        m_writer.closeList();
+        m_writer.println(";");
         m_writer.closeBlock();
         m_writer.closeBlock(";");
         m_writer.closeBlock();
@@ -493,29 +500,37 @@ public class ProxyGenerator
 
         if (! m_templateUnit.hasParentPath())
         {
-            m_writer.print("public void render(" + WRITER_ARG_DECL);
-            maybePrintComma(m_templateUnit.getDeclaredRenderArgs());
+            m_writer.print("public void render");
+            m_writer.openList();
+            m_writer.printArg(WRITER_ARG_DECL);
             m_templateUnit.printDeclaredRenderArgsDecl(m_writer);
-            m_writer.println(")");
+            m_writer.closeList();
+            m_writer.println();
             m_writer.print("  throws " + ClassNames.IOEXCEPTION);
             m_writer.openBlock();
-            m_writer.print("renderNoFlush(" + WRITER_ARG);
-            maybePrintComma(m_templateUnit.getDeclaredRenderArgs());
+            m_writer.print("renderNoFlush");
+            m_writer.openList();
+            m_writer.printArg(WRITER_ARG);
             m_templateUnit.printDeclaredRenderArgs(m_writer);
-            m_writer.println(");");
+            m_writer.closeList();
+            m_writer.println(";");
             m_writer.println(WRITER_ARG + ".flush();");
             m_writer.closeBlock();
 
-            m_writer.print("public void renderNoFlush(" + WRITER_ARG_DECL);
-            maybePrintComma(m_templateUnit.getDeclaredRenderArgs());
+            m_writer.print("public void renderNoFlush");
+            m_writer.openList();
+            m_writer.printArg(WRITER_ARG_DECL);
             m_templateUnit.printDeclaredRenderArgsDecl(m_writer);
-            m_writer.println(")");
+            m_writer.closeList();
+            m_writer.println();
             m_writer.print("  throws " + ClassNames.IOEXCEPTION);
             m_writer.openBlock();
-            m_writer.print("renderChild(" + WRITER_ARG);
-            maybePrintComma(m_templateUnit.getDeclaredRenderArgs());
+            m_writer.print("renderChild");
+            m_writer.openList();
+            m_writer.printArg(WRITER_ARG);
             m_templateUnit.printDeclaredRenderArgs(m_writer);
-            m_writer.println(");");
+            m_writer.closeList();
+            m_writer.println(";");
             m_writer.closeBlock();
 
             generateMakeRenderer();
@@ -525,11 +540,12 @@ public class ProxyGenerator
             generateMakeParentRenderer();
         }
 
-        m_writer.print("protected abstract void renderChild("
-                       + WRITER_ARG_DECL);
-        maybePrintComma(m_templateUnit.getRenderArgs());
+        m_writer.print("protected abstract void renderChild");
+        m_writer.openList();
+        m_writer.printArg(WRITER_ARG_DECL);
         m_templateUnit.printRenderArgsDecl(m_writer);
-        m_writer.println(")");
+        m_writer.closeList();
+        m_writer.println();
         m_writer.println("  throws " + ClassNames.IOEXCEPTION + ";");
 
         m_writer.closeBlock();
@@ -541,36 +557,37 @@ public class ProxyGenerator
             PathUtils.getFullyQualifiedIntfClassName(
                 m_templateUnit.getParentPath()) + ".ParentRenderer";
         m_writer.print("public " + parentRendererClass
-                       + " makeParentRenderer(");
+                       + " makeParentRenderer");
+        m_writer.openList();
         m_templateUnit.printDeclaredRenderArgsDecl(m_writer);
-        m_writer.println(")");
+        m_writer.closeList();
+        m_writer.println();
         m_writer.openBlock();
         m_writer.print("return new " + parentRendererClass + "() ");
         m_writer.openBlock();
-        m_writer.print("protected void renderChild(" + WRITER_ARG_DECL);
-        maybePrintComma(m_templateUnit.getParentRenderArgs());
+        m_writer.print("protected void renderChild");
+        m_writer.openList();
+        m_writer.printArg(WRITER_ARG_DECL);
         m_templateUnit.printParentRenderArgsDecl(m_writer);
-        m_writer.println(")");
+        m_writer.closeList();
+        m_writer.println();
         m_writer.println("  throws " + ClassNames.IOEXCEPTION);
         m_writer.openBlock();
+        m_writer.print(PathUtils
+                       .getFullyQualifiedIntfClassName(getClassName()));
         if (m_templateUnit.isParent())
         {
-            m_writer.print
-                (PathUtils.getFullyQualifiedIntfClassName(getClassName())
-                 + ".ParentRenderer.this.renderChild(" + WRITER_ARG);
-            maybePrintComma(m_templateUnit.getRenderArgs());
-            m_templateUnit.printRenderArgs(m_writer);
-            m_writer.println(");");
+            m_writer.print(".ParentRenderer.this.renderChild");
         }
         else
         {
-            m_writer.print(
-                PathUtils.getFullyQualifiedIntfClassName(getClassName())
-                + ".this.renderNoFlush(" + WRITER_ARG);
-            maybePrintComma(m_templateUnit.getRenderArgs());
-            m_templateUnit.printRenderArgs(m_writer);
-            m_writer.println(");");
+            m_writer.print(".this.renderNoFlush");
         }
+        m_writer.openList();
+        m_writer.printArg(WRITER_ARG);
+        m_templateUnit.printRenderArgs(m_writer);
+        m_writer.closeList();
+        m_writer.println(";");
         m_writer.closeBlock();
         m_writer.closeBlock(";");
         m_writer.closeBlock();
@@ -580,14 +597,6 @@ public class ProxyGenerator
     {
         m_writer.println();
         m_writer.closeBlock();
-    }
-
-    private void maybePrintComma(Iterator p_args)
-    {
-        if(p_args.hasNext())
-        {
-            m_writer.print(", ");
-        }
     }
 
     private final static String WRITER_ARG = "p__jamon_writer";

@@ -164,30 +164,20 @@ public abstract class AbstractUnit
         printArgs(p_writer, getRenderArgs());
     }
 
-    protected static void printArgsDecl(CodeWriter p_writer,
-                                        Iterator i)
+    protected static void printArgsDecl(CodeWriter p_writer, Iterator i)
     {
         while (i.hasNext())
         {
             AbstractArgument arg = (AbstractArgument) i.next();
-            p_writer.print("final " + arg.getType() + " " + arg.getName());
-            if (i.hasNext())
-            {
-                p_writer.print(", ");
-            }
+            p_writer.printArg("final " + arg.getType() + " " + arg.getName());
         }
     }
 
-    protected static void printArgs(CodeWriter p_writer,
-                                    Iterator p_args)
+    protected static void printArgs(CodeWriter p_writer, Iterator p_args)
     {
         while (p_args.hasNext())
         {
-            p_writer.print(((AbstractArgument) p_args.next()).getName());
-            if (p_args.hasNext())
-            {
-                p_writer.print(", ");
-            }
+            p_writer.printArg(((AbstractArgument) p_args.next()).getName());
         }
     }
 

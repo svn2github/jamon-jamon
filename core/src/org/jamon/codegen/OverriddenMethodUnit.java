@@ -82,14 +82,10 @@ public class OverriddenMethodUnit
         for (Iterator i = m_declaredMethodUnit.getRenderArgs(); i.hasNext(); )
         {
             AbstractArgument arg = (AbstractArgument) i.next();
-            p_writer.print("final " + arg.getType() + " "
-                           + (m_inheritedArgs.isArgVisible(arg)
-                              ? "" : "p__jamon__" )
-                           + arg.getName());
-            if (i.hasNext())
-            {
-                p_writer.print(", ");
-            }
+            p_writer.printArg("final " + arg.getType() + " "
+                              + (m_inheritedArgs.isArgVisible(arg)
+                                 ? "" : "p__jamon__" )
+                              + arg.getName());
         }
     }
 
