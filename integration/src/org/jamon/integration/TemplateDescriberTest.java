@@ -95,18 +95,28 @@ public class TemplateDescriberTest
         assertEquals("f1", info.getName());
         assertTrue(info.hasRequiredArgs());
         Iterator i = info.getRequiredArgs();
-        Argument a = (Argument) i.next();
-        assertEquals("k",a.getName());
-        assertEquals("int", a.getType());
-        a = (Argument) i.next();
-        assertEquals("m",a.getName());
-        assertEquals("Boolean[]", a.getType());
+        checkArgument(i,"k","int");
+        checkArgument(i,"m","Boolean[]");
+        checkArgument(i,"a1","String");
+        checkArgument(i,"a4","String");
+        checkArgument(i,"a2","String");
+        checkArgument(i,"a3","String");
+        checkArgument(i,"a5","String");
 
         info = m_describer.getFargInfo("/test/jamon/ClassOnly2","f2");
         assertEquals("f2", info.getName());
         assertTrue(! info.hasRequiredArgs());
         i = info.getRequiredArgs();
         assertTrue(! i.hasNext());
+    }
+
+    private void checkArgument(Iterator p_argIter,
+                               String p_name,
+                               String p_type)
+    {
+        Argument a = (Argument) p_argIter.next();
+        assertEquals(p_name,a.getName());
+        assertEquals(p_type, a.getType());
     }
 
 }

@@ -8,4 +8,9 @@
 <%farg f1>
   int k;
   Boolean[] m;
+  String a1;
+  String a4;
+  String a2;
+  String a3;
+  String a5;
 </%farg>
