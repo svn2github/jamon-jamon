@@ -237,7 +237,8 @@ public class Analyzer
             String prefix = (String) m_aliases.get(alias);
             if (prefix == null)
             {
-                throw new TunnelingException("Unknown alias " + alias);
+                throw new TunnelingException("Unknown alias " + alias,
+                                             p_aliasedPath.getIdentifier());
             }
             else
             {
@@ -248,15 +249,31 @@ public class Analyzer
 
     private class AliasAdapter extends AnalysisAdapter
     {
-        private void addAlias(String p_name, String p_path)
+        private void addAlias(AAlias p_alias)
         {
-            if (m_aliases.containsKey(p_name))
+            String name = p_alias.getAliasName().toString().trim();
+            if (m_aliases.containsKey(name))
             {
-                throw new TunnelingException("Duplicate alias " + p_name);
+                Token token = null;
+                if (p_alias.getAliasName() instanceof ARootAliasName)
+                {
+                    token = ((ARootAliasName) p_alias.getAliasName())
+                        .getPathsep();
+                }
+                else if (p_alias.getAliasName() instanceof AIdAliasName)
+                {
+                    token = ((AIdAliasName) p_alias.getAliasName())
+                        .getIdentifier();
+                }
+                else // in case we forget to handle new types
+                {
+                    token = p_alias.getArrow();
+                }
+                throw new TunnelingException("Duplicate alias " + name, token);
             }
             else
             {
-                m_aliases.put(p_name, p_path);
+                m_aliases.put(name, computePath(p_alias.getPath()));
             }
         }
 
@@ -266,9 +283,7 @@ public class Analyzer
                      .getAlias().iterator();
                  a.hasNext(); )
             {
-                AAlias alias = (AAlias) a.next();
-                addAlias(alias.getAliasName().toString().trim(),
-                         computePath(alias.getPath()));
+                addAlias((AAlias) a.next());
             }
         }
     }

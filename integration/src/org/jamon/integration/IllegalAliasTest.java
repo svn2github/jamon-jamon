@@ -15,7 +15,7 @@
  * created by Jay Sachs are Copyright (C) 2003 Jay Sachs.  All Rights
  * Reserved.
  *
- * Contributor(s):
+ * Contributor(s): Ian Robertson
  */
 
 package org.jamon.integration;
@@ -28,35 +28,21 @@ public class IllegalAliasTest
     public void testCircularAlias()
         throws Exception
     {
-        checkTemplate("test/jamon/broken/CircularAlias",
-                      "Unknown alias ");
+        expectTemplateException(
+            "test/jamon/broken/CircularAlias", "Unknown alias bar", 2, 10);
     }
 
     public void testUnknownAlias()
         throws Exception
     {
-        checkTemplate("test/jamon/broken/UnknownAlias",
-                      "Unknown alias ");
+        expectTemplateException(
+            "test/jamon/broken/UnknownAlias", "Unknown alias foo", 4, 4);
     }
 
     public void testDuplicateAlias()
         throws Exception
     {
-        checkTemplate("test/jamon/broken/DuplicateAlias",
-                      "Duplicate alias ");
-    }
-
-    private void checkTemplate(String p_path, String p_message)
-        throws Exception
-    {
-        try
-        {
-            generateSource(p_path);
-            fail("No exception thrown");
-        }
-        catch(JamonException e)
-        {
-            assertTrue(e.getMessage().startsWith(p_message));
-        }
+        expectTemplateException(
+            "test/jamon/broken/DuplicateAlias", "Duplicate alias foo", 3, 3);
     }
 }
