@@ -21,7 +21,6 @@
 package org.jamon.emit;
 
 class BaseEmitter
-    extends StrictEmitter
 {
     public static String valueOf(int p_int)
     {
@@ -62,5 +61,4 @@ class BaseEmitter
     {
         return String.valueOf(p_byte);
     }
-
 }
