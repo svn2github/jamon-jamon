@@ -1,4 +1,4 @@
-package org.modusponens.tests.jtt;
+package org.jamon.tests;
 
 import junit.framework.TestCase;
 
