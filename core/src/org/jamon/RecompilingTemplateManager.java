@@ -601,7 +601,6 @@ public class RecompilingTemplateManager
 
     private String getIntfSignatureFromClass(String p_path,
                                              ClassLoader p_loader)
-        throws IOException
     {
         if (TRACE)
         {
@@ -634,7 +633,6 @@ public class RecompilingTemplateManager
     private boolean isIntfChanged(String p_path,
                                   String p_signature,
                                   ClassLoader p_loader)
-        throws IOException
     {
         return ! p_signature.equals(getIntfSignatureFromClass(p_path,
                                                               p_loader));
