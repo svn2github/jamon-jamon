@@ -248,9 +248,11 @@ public class ImplAnalyzer extends BaseAnalyzer
             }
 
             handleBody();
-            Statement s = new FragmentCallStatement(path,
-                                                    makeParamMap(call.getParam()),
-                                                    getStatements(getUnitName()));
+            Statement s =
+                new FragmentCallStatement(path,
+                                          makeParamMap(call.getParam()),
+                                          getStatements(getUnitName()),
+                                          null);
             popUnitName();
             addStatement(s);
 

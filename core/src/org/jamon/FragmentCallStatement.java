@@ -29,28 +29,37 @@ import java.util.Iterator;
 public class FragmentCallStatement
     extends CallStatement
 {
-    FragmentCallStatement(String p_path, Map p_params, List p_fragment)
+    FragmentCallStatement(String p_path,
+                          Map p_params,
+                          List p_fragment,
+                          String p_fargName)
     {
         super(p_path, p_params);
         m_fragment = p_fragment;
+        m_fargName = p_fargName;
     }
 
     private final List m_fragment;
+    private final String m_fargName;
 
     private final static String IOEXCEPTION_CLASS =
         IOException.class.getName();
 
-    private Object getFargName(ImplAnalyzer p_analyzer,
+    private String getFargName(ImplAnalyzer p_analyzer,
                                TemplateDescriber p_describer)
         throws JamonException
     {
-        if (isDefCall(p_analyzer))
+        if (m_fargName != null)
         {
-            return p_analyzer.getFargNames(getPath()).next();
+            return m_fargName;
+        }
+        else if (isDefCall(p_analyzer))
+        {
+            return (String) p_analyzer.getFargNames(getPath()).next();
         }
         else
         {
-            return p_describer
+            return (String) p_describer
                 .getFargNames(p_analyzer.getAbsolutePath(getPath())).next();
         }
     }
