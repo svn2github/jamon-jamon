@@ -25,7 +25,8 @@ file</a>.
 <ol>
 
 <li>
-Create a Jamon template <a href="HelloTemplate.jamon" class="file">HelloTemplate.jamon</a>:
+Create a Jamon template
+<a href="HelloTemplate.jamon" class="file">HelloTemplate.jamon</a>:
 <& ../_TemplateInclude; fileName => "tutorial/templates/HelloTemplate" &>
 
 
@@ -56,7 +57,8 @@ Set your classpath:
 
 <li>
 Process the template:
-<pre class="tty">java org.jamon.TemplateProcessor --destDir=. HelloTemplate</pre>
+<pre class="tty"
+ >java org.jamon.TemplateProcessor --destDir=. HelloTemplate</pre>
 
 <li>
 Compile everything:
@@ -74,7 +76,12 @@ You should see:
 <p>
 <h2>Template Constraints and Variations</h2>
 
-A useful variation on the Java code that invokes the template is to set a <code>TemplateManager</code> once globally and then use the no-argument constructor to create each template. To set a global <code>TemplateManager</code>, provide an instance to the <code>TemplateManagerSource.setTemplateManager()</code> method, as shown below.
+A useful variation on the Java code that invokes the template is to
+set a <code>TemplateManager</code> once globally and then use the
+no-argument constructor to create each template. To set a global
+<code>TemplateManager</code>, provide an instance to the
+<code>TemplateManagerSource.setTemplateManager()</code> method, as
+shown below.
 
 <pre class="java">
   // set the template manager once for all time ...
