@@ -14,8 +14,6 @@ import org.jamon.TemplateManager;
 public class TestBase
     extends TestCase
 {
-    private TemplateManager m_templateManager;
-    private StringWriter m_writer;
 
     public void setUp()
         throws Exception
@@ -30,12 +28,6 @@ public class TestBase
         throws IOException
     {
         return m_writer;
-    }
-
-    private String getOutput()
-    {
-        m_writer.flush();
-        return m_writer.toString();
     }
 
     protected void checkOutput(String p_expected)
@@ -54,4 +46,14 @@ public class TestBase
     {
         return m_templateManager;
     }
+
+    private String getOutput()
+    {
+        m_writer.flush();
+        return m_writer.toString();
+    }
+
+    private TemplateManager m_templateManager;
+    private StringWriter m_writer;
+
 }
