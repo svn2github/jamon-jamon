@@ -103,12 +103,12 @@ body3
 </&>
 
 <%def sub1>
-  <%farg frag>
+  <%farg f1>
   </%farg>
   <%args>
     int y => 5;
   </%args>
-  A def component (<% y+1 %>) with frag param: <|frag|>.\
+  A def component (<% y+1 %>) with frag param: <|f1|>.\
 </%def>
 
 
