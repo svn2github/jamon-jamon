@@ -91,6 +91,10 @@ public class Invoker
                 {
                     return p_string;
                 }
+                else if (p_type == Boolean.class || p_type == Boolean.TYPE )
+                {
+                    return Boolean.valueOf(p_string);
+                }
                 else if (p_type == Integer.class || p_type == Integer.TYPE)
                 {
                     return Integer.valueOf(p_string);
@@ -304,7 +308,7 @@ public class Invoker
         if (paramTypes.length != 1)
         {
             throw new TemplateArgumentException("Set method "
-                                                + p_name 
+                                                + p_name
                                                 + "does not take 1 arg");
         }
         try
