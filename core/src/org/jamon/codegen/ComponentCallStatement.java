@@ -53,7 +53,7 @@ public class ComponentCallStatement
                          +"(this.getTemplateManager())");
         p_writer.indent(5);
         p_writer.println(".writeTo(this.getWriter())");
-        p_writer.println(".escaping(this.getEscaping())");
+        p_writer.println(".escapeWith(this.getEscaping())");
 
         TemplateDescription desc =
             p_describer.getTemplateDescription(componentPath);

@@ -293,7 +293,7 @@ public class StandardTemplateManager
                     .getConstructor(new Class [] { TemplateManager.class,
                                                    String.class })
                     .newInstance(new Object [] { p_manager, p_path });
-                impl.escaping(m_escaping);
+                impl.escapeWith(m_escaping);
                 impl.autoFlush(m_autoFlush);
             }
             return impl;

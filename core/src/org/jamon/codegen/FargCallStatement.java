@@ -56,7 +56,7 @@ public class FargCallStatement
         // FIXME!
         String tn = getPath();
         p_writer.println(tn + ".writeTo(this.getWriter());");
-        p_writer.println(tn + ".escaping(this.getEscaping());");
+        p_writer.println(tn + ".escapeWith(this.getEscaping());");
         p_writer.print  (tn + ".render(");
         for (Iterator r = m_fragmentUnit.getRequiredArgs(); r.hasNext(); /* */)
         {

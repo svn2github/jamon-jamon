@@ -125,7 +125,7 @@ public class JUnitTemplateManager
             m_writer = (Writer) p_args[0];
             return null;
         }
-        else if ("escaping".equals(p_method.getName()))
+        else if ("escapeWith".equals(p_method.getName()))
         {
             checkArgsLength(p_method,p_args,1);
             return null;

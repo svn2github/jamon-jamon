@@ -390,7 +390,7 @@ public class Analyzer
                         p_writer.println(ImplGenerator.CHILD_FARG_NAME
                                          + ".writeTo(this.getWriter());");
                         p_writer.println(ImplGenerator.CHILD_FARG_NAME
-                                         + ".escaping(this.getEscaping());");
+                                         + ".escapeWith(this.getEscaping());");
                         p_writer.println(ImplGenerator.CHILD_FARG_NAME
                                          + ".render();");
                     }

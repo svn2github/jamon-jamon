@@ -51,7 +51,7 @@ public class MethodCallStatement
         p_writer.println(m_methodUnit.getGetterName() + "()");
         p_writer.indent(5);
         p_writer.println("._writeTo(this.getWriter())");
-        p_writer.println("._escaping(this.getEscaping())");
+        p_writer.println("._escapeWith(this.getEscaping())");
         p_writer.println("._initialize()");
         for (Iterator o = m_methodUnit.getSignatureOptionalArgs();
              o.hasNext(); )

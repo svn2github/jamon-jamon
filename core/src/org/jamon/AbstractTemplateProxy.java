@@ -30,7 +30,7 @@ public abstract class AbstractTemplateProxy
     public interface Intf
     {
         void writeTo(Writer p_writer);
-        void escaping(Escaping p_escaping);
+        void escapeWith(Escaping p_escaping);
         void initialize() throws IOException;
         void autoFlush(boolean p_autoflush);
         String getPath();
@@ -69,7 +69,7 @@ public abstract class AbstractTemplateProxy
         }
         if (m_escaping != null)
         {
-            instance.escaping(m_escaping);
+            instance.escapeWith(m_escaping);
         }
         return instance;
     }

@@ -535,7 +535,14 @@ public class IntfGenerator
     private void generateEscaping(String p_returnClassName)
     {
         m_writer.println();
+        m_writer.println("/** @deprecated use #escapeWith */");
         m_writer.println("public " + p_returnClassName + " escaping("
+                         + ClassNames.ESCAPING + " p_escaping)");
+        m_writer.openBlock();
+        m_writer.println("return escapeWith(p_escaping);");
+        m_writer.closeBlock();
+        m_writer.println();
+        m_writer.println("public " + p_returnClassName + " escapeWith("
                          + ClassNames.ESCAPING + " p_escaping)");
         m_writer.openBlock();
         m_writer.println("escape(p_escaping);");

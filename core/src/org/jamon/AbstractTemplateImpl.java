@@ -62,7 +62,7 @@ public abstract class AbstractTemplateImpl
         m_autoFlush = p_autoFlush;
     }
 
-    public void escaping(Escaping p_escaping)
+    public void escapeWith(Escaping p_escaping)
     {
         m_escaping = p_escaping;
     }

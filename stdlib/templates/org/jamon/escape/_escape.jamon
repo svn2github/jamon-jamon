@@ -9,8 +9,8 @@
   org.jamon.escaping.Escaping;
 </%import>\
 <%java>
-  content.escaping(compose ? escaping : getEscaping());
+  content.escapeWith(compose ? escaping : getEscaping());
   String text = content.makeRenderer().asString();
-  escaping(escaping);
+  escapeWith(escaping);
 </%java>\
 <% text %>

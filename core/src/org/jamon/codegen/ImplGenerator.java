@@ -243,10 +243,10 @@ public class ImplGenerator
         m_writer.closeBlock();
 
         m_writer.println("public " + p_methodUnit.getInterfaceName()
-                         + " _escaping("
+                         + " _escapeWith("
                          + ClassNames.ESCAPING + " p_escaping)");
         m_writer.openBlock();
-        m_writer.println("escaping(p_escaping);");
+        m_writer.println("escapeWith(p_escaping);");
         m_writer.println("return this;");
         m_writer.closeBlock();
 
