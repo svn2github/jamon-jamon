@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.Set;
 import java.util.HashSet;
+import org.modusponens.jtt.node.Start;
 import org.modusponens.jtt.parser.Parser;
 import org.modusponens.jtt.parser.ParserException;
 import org.modusponens.jtt.lexer.Lexer;
@@ -197,8 +198,6 @@ public class StandardTemplateManager
 
     private Class getImplementationClass(String p_path)
         throws IOException,
-               ParserException,
-               LexerException,
                ClassNotFoundException
     {
 
@@ -255,9 +254,7 @@ public class StandardTemplateManager
     }
 
     private void ensureUpToDate(String p_path)
-        throws IOException,
-               ParserException,
-               LexerException
+        throws IOException
     {
         Collection seen = new HashSet();
         Collection outOfDateJavaFiles = new HashSet();
@@ -323,9 +320,7 @@ public class StandardTemplateManager
      * @return dependencies
      */
     private Collection generateImpl(String p_path)
-        throws IOException,
-               ParserException,
-               LexerException
+        throws IOException
     {
         System.err.println("generating impl for " + p_path);
 
@@ -343,11 +338,7 @@ public class StandardTemplateManager
                               getDescriber(),
                               p_path);
 
-        new Parser(new Lexer(new PushbackReader
-                             (new FileReader(getTemplateFileName(p_path)),
-                              1024)))
-            .parse()
-            .apply(g2);
+        parseTemplate(p_path).apply(g2);
 
         FileWriter writer = new FileWriter(javaFile);
         try
@@ -364,6 +355,27 @@ public class StandardTemplateManager
         }
     }
 
+    private Start parseTemplate(String p_path)
+        throws IOException
+    {
+        try
+        {
+            return new Parser(new Lexer
+                              (new PushbackReader
+                               (new FileReader(getTemplateFileName(p_path)),
+                                1024)))
+                .parse();
+        }
+        catch (ParserException e)
+        {
+            throw new JttException(e);
+        }
+        catch (LexerException e)
+        {
+            throw new JttException(e);
+        }
+    }
+
     private class Describer
         implements TemplateDescriber
     {
@@ -373,12 +385,7 @@ public class StandardTemplateManager
             try
             {
                 BaseGenerator g = new BaseGenerator();
-
-                new Parser(new Lexer(new PushbackReader
-                                     (new FileReader(getTemplateFileName(p_path)),
-                                      1024)))
-                    .parse()
-                    .apply(g);
+                parseTemplate(p_path).apply(g);
                 LinkedList list = new LinkedList();
                 for (Iterator i = g.getRequiredArgNames(); i.hasNext(); /* */)
                 {
@@ -386,11 +393,7 @@ public class StandardTemplateManager
                 }
                 return list;
             }
-            catch (RuntimeException e)
-            {
-                throw e;
-            }
-            catch (Exception e)
+            catch (IOException e)
             {
                 throw new JttException(e);
             }
@@ -403,9 +406,7 @@ public class StandardTemplateManager
     }
 
     private void generateIntf(String p_path)
-        throws IOException,
-               ParserException,
-               LexerException
+        throws IOException
     {
         System.err.println("generating intf for " + p_path);
 
@@ -421,11 +422,7 @@ public class StandardTemplateManager
             new InterfaceGenerator(new TemplateResolver(m_packagePrefix),
                                    p_path);
 
-        new Parser(new Lexer(new PushbackReader
-                             (new FileReader(getTemplateFileName(p_path)),
-                              1024)))
-            .parse()
-            .apply(g1);
+        parseTemplate(p_path).apply(g1);
 
         FileWriter writer = new FileWriter(javaFile);
 
@@ -465,9 +462,7 @@ public class StandardTemplateManager
     }
 
     private Collection computeDependencies(String p_path)
-        throws IOException,
-               ParserException,
-               LexerException
+        throws IOException
     {
         System.err.println("computing dependencies for " + p_path);
 
@@ -476,11 +471,7 @@ public class StandardTemplateManager
                               getDescriber(),
                               p_path);
 
-        new Parser(new Lexer(new PushbackReader
-                             (new FileReader(getTemplateFileName(p_path)),
-                              1024)))
-            .parse()
-            .apply(g2);
+        parseTemplate(p_path).apply(g2);
 
         return g2.getCalledTemplateNames();
     }
