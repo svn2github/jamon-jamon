@@ -30,6 +30,7 @@ the documentation thus taking care of issues such as escaping.
 
   <property name="tomcat.home" value="env.TOMCAT_HOME"/>
   <property name="tomcat.common.lib" value="${tomcat.home}/common/lib"/>
+  <property name="java.lib.servlet" value="${tomcat.common.lib}/servlet.jar"/>
 
   <property name="invoker.compiler" value="${build.compiler}"/>
 
@@ -281,7 +282,7 @@ the documentation thus taking care of issues such as escaping.
     <javac destdir="${build.classes.dir}"
            debug="true"
            deprecation="true"
-           classpath="${java.lib.jamon}:${tomcat.common.lib}/servlet.jar"
+           classpath="${java.lib.jamon}:${java.lib.servlet}"
            srcdir="${src.dir}"
            failonerror="true"/>
   </target>
