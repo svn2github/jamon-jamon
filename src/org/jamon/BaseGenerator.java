@@ -31,11 +31,59 @@ public class BaseGenerator extends AnalysisAdapter
         m_writer.println(p_obj);
     }
 
+
+    protected static final String MAIN_UNIT_NAME = "";
+
+    private static class UnitInfo
+    {
+        UnitInfo(String p_name)
+        {
+            m_name = p_name;
+        }
+        private final String m_name;
+        String getName()
+        {
+            return m_name;
+        }
+        void addArg(String p_name, String p_type, ADefault p_default)
+        {
+            if (p_default == null)
+            {
+                m_requiredArgs.add(p_name);
+                m_argTypes.put(p_name, p_type);
+            }
+            else
+            {
+                m_optionalArgs.add(p_name);
+                m_argTypes.put(p_name,p_type);
+                m_default.put(p_name, p_default.getFragment().toString().trim());
+            }
+        }
+        String getArgType(String p_argName)
+        {
+            return (String) m_argTypes.get(p_argName);
+        }
+        String getDefault(String p_argName)
+        {
+            return (String) m_default.get(p_argName);
+        }
+        Iterator getRequiredArgNames()
+        {
+            return m_requiredArgs.iterator();
+        }
+        Iterator getOptionalArgNames()
+        {
+            return m_optionalArgs.iterator();
+        }
+        private final Map m_default = new HashMap();
+        private final Map m_argTypes = new HashMap();
+        private List m_requiredArgs = new ArrayList();
+        private List m_optionalArgs = new ArrayList();
+    }
+
     private List m_imports = new ArrayList();
-    private Map m_argTypes = new HashMap();
-    private Map m_default = new HashMap();
-    private List m_requiredArgs = new ArrayList();
-    private List m_optionalArgs = new ArrayList();
+    private Map m_unit = new HashMap();
+    private List m_defNames = new ArrayList();
     private final String m_className;
     private final String m_packageName;
     private final PrintWriter m_writer;
@@ -51,8 +99,20 @@ public class BaseGenerator extends AnalysisAdapter
 
     public void caseStart(Start start)
     {
+        m_unitName = MAIN_UNIT_NAME;
+        m_unit.put(m_unitName,new UnitInfo(m_unitName));
         start.getPTemplate().apply(this);
         start.getEOF().apply(this);
+    }
+
+    protected List getDefNames()
+    {
+        return m_defNames;
+    }
+
+    protected String getUnitName()
+    {
+        return m_unitName;
     }
 
     protected Iterator getImports()
@@ -60,25 +120,33 @@ public class BaseGenerator extends AnalysisAdapter
         return m_imports.iterator();
     }
 
-    protected Iterator getRequiredArgs()
+    private UnitInfo getUnitInfo(String p_unitName)
     {
-        return m_requiredArgs.iterator();
+        return (UnitInfo) m_unit.get(p_unitName);
     }
 
-    protected Iterator getOptionalArgs()
+    protected Iterator getRequiredArgNames(String p_unitName)
     {
-        return m_optionalArgs.iterator();
+        return getUnitInfo(p_unitName).getRequiredArgNames();
     }
 
-    protected String getArgType(String p_argName)
+    protected Iterator getOptionalArgNames(String p_unitName)
     {
-        return (String) m_argTypes.get(p_argName);
+        return getUnitInfo(p_unitName).getOptionalArgNames();
     }
 
-    protected String getDefault(String p_argName)
+    protected String getArgType(String p_unitName,String p_argName)
     {
-        return (String) m_default.get(p_argName);
+        return getUnitInfo(p_unitName).getArgType(p_argName);
     }
+
+    protected String getDefault(String p_unitName,String p_argName)
+    {
+        return getUnitInfo(p_unitName).getDefault(p_argName);
+    }
+
+
+
 
     protected String getClassName()
     {
@@ -118,45 +186,11 @@ public class BaseGenerator extends AnalysisAdapter
         }
     }
 
-    protected void addRequiredArg(String p_name, String p_type)
-    {
-        if (getCurrentDef() == null)
-        {
-            m_requiredArgs.add(p_name);
-            m_argTypes.put(p_name, p_type);
-        }
-    }
-
-    protected void addOptionalArg(String p_name, String p_type, String p_expr)
-    {
-        if (getCurrentDef() == null)
-        {
-            m_optionalArgs.add(p_name);
-            m_argTypes.put(p_name,p_type);
-            m_default.put(p_name, p_expr);
-        }
-    }
-
-    private String m_currentDef;
-
-    protected String getCurrentDef()
-    {
-        return m_currentDef;
-    }
-
     public void caseAArg(AArg arg)
     {
-        String name = arg.getName().getText();
-        if (arg.getDefault() == null)
-        {
-            addRequiredArg(name, asText(arg.getType()));
-        }
-        else
-        {
-            addOptionalArg(name,
-                           asText(arg.getType()),
-                           ((ADefault)arg.getDefault()).getFragment().toString().trim());
-        }
+        getUnitInfo(m_unitName).addArg(arg.getName().getText(),
+                                       asText(arg.getType()),
+                                       (ADefault)arg.getDefault());
     }
 
     public void caseAImportsComponent(AImportsComponent imports)
@@ -208,6 +242,29 @@ public class BaseGenerator extends AnalysisAdapter
         }
     }
 
+    private String m_unitName;
+    private boolean m_inDef = false;
+
+    public void caseADefComponent(ADefComponent node)
+    {
+        if (! m_unitName.equals(MAIN_UNIT_NAME))
+        {
+            throw new RuntimeException("Can't nest def!");
+        }
+
+        m_unitName = node.getIdentifier().getText();
+        m_defNames.add(m_unitName);
+        m_unit.put(m_unitName,new UnitInfo(m_unitName));
+        node.getDefStart().apply(this);
+        for (Iterator i = node.getComponent().iterator();
+             i.hasNext();
+             /* */ )
+        {
+            ((Node)i.next()).apply(this);
+        }
+        node.getDefEnd().apply(this);
+        m_unitName = MAIN_UNIT_NAME;
+    }
 
     protected void generatePrologue()
         throws IOException

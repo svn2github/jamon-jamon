@@ -42,7 +42,9 @@ public class InterfaceGenerator extends BaseGenerator
     {
         println();
         println("  public static final String[] RENDER_ARGS = {");
-        for (Iterator i = getRequiredArgs(); i.hasNext(); /* */)
+        for (Iterator i = getRequiredArgNames(MAIN_UNIT_NAME);
+             i.hasNext();
+             /* */)
         {
             print("    \"");
             print(i.next());
@@ -97,10 +99,12 @@ public class InterfaceGenerator extends BaseGenerator
         throws IOException
     {
         print("  public void render(");
-        for (Iterator i = getRequiredArgs(); i.hasNext(); /* */)
+        for (Iterator i = getRequiredArgNames(MAIN_UNIT_NAME);
+             i.hasNext();
+             /* */)
         {
             String name = (String) i.next();
-            print(getArgType(name));
+            print(getArgType(MAIN_UNIT_NAME,name));
             print(" p_");
             print(name);
             if (i.hasNext())
@@ -116,14 +120,16 @@ public class InterfaceGenerator extends BaseGenerator
     private void generateOptionalArgs()
         throws IOException
     {
-        for (Iterator i = getOptionalArgs(); i.hasNext(); /* */)
+        for (Iterator i = getOptionalArgNames(MAIN_UNIT_NAME);
+             i.hasNext();
+             /* */)
         {
             println();
             String name = (String) i.next();
             print("  public void set");
             print(capitalize(name));
             print("(");
-            print(getArgType(name));
+            print(getArgType(MAIN_UNIT_NAME,name));
             print(" p_");
             print(name);
             println(");");

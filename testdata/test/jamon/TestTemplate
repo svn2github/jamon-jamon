@@ -38,10 +38,14 @@ Not escaped: <% "&"   |n  %> <% ">" |n%> <% "<"   |n %> <% "'" |n%> <% "\"" |n %
 This is a call: <& /test/jtt/SubTemplate; z => 3; y => "yes" &>
 So is this: <& SubTemplate; z => 12; y => "no"; x => 1 &>
 
+A call to a def: <& foo; qq => "yes" &>.
+% for (int q = 0; q < 10; q++) {
+<& foo; qq => "loop"; rr => q &>
+% }
+
 <%def foo>
   <%args>
     String qq
     int rr => 7
   </%args>
-  this should not show up.
-</%def>
+  in def foo. <% rr %></%def>

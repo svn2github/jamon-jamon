@@ -15,7 +15,7 @@ import org.modusponens.jtt.analysis.*;
 
 public class ImplGenerator extends BaseGenerator
 {
-    private List m_statements = new ArrayList();
+    private Map m_unitStatements = new HashMap();
     private StringBuffer m_current = new StringBuffer();
     private Set m_calls = new HashSet();
 
@@ -24,6 +24,7 @@ public class ImplGenerator extends BaseGenerator
                          String p_className)
     {
         super(p_writer,p_packageName,p_className);
+        m_unitStatements.put(MAIN_UNIT_NAME,new ArrayList());
     }
 
     public Iterator getCalledTemplateNames()
@@ -40,6 +41,7 @@ public class ImplGenerator extends BaseGenerator
         generateConstructor();
         generateRender();
         generateOptionalArgs();
+        generateDefs();
         generateEpilogue();
     }
 
@@ -78,12 +80,6 @@ public class ImplGenerator extends BaseGenerator
 
     private void handleBody()
     {
-        if (getCurrentDef() != null)
-        {
-            // FIXME
-            System.err.println("in def body");
-            return;
-        }
         if (m_current.length() > 0)
         {
             addStatement(new WriteStatement("\""
@@ -156,6 +152,17 @@ public class ImplGenerator extends BaseGenerator
         handleBody();
     }
 
+    public void caseTDefEnd(TDefEnd node)
+    {
+        handleBody();
+    }
+
+    public void caseTDefStart(TDefStart node)
+    {
+        handleBody();
+        m_unitStatements.put(getUnitName(),new ArrayList());
+    }
+
     private String javaEscape(String p_string)
     {
         // assert p_string != null
@@ -203,6 +210,59 @@ public class ImplGenerator extends BaseGenerator
 
     }
 
+
+    private void generateDefs()
+        throws IOException
+    {
+        for (Iterator d = getDefNames().iterator(); d.hasNext(); /* */)
+        {
+            String name = (String) d.next();
+            println();
+            print("  private void $def$");
+            print(name);
+            print("(");
+            int argNum = 0;
+            for (Iterator a = getRequiredArgNames(name);
+                 a.hasNext();
+                 /* */)
+            {
+                if (argNum++ > 0)
+                {
+                    print(",");
+                }
+                String arg = (String) a.next();
+                print(getArgType(name,arg));
+                print(" ");
+                print(arg);
+            }
+            for (Iterator a = getOptionalArgNames(name);
+                 a.hasNext();
+                 /* */)
+            {
+                if (argNum++ > 0)
+                {
+                    print(",");
+                }
+                String arg = (String) a.next();
+                print(getArgType(name,arg));
+                print(" ");
+                print(arg);
+            }
+            println(")");
+            println("    throws java.io.IOException");
+            println("  {");
+            for (Iterator i = getStatements(name).iterator();
+                 i.hasNext();
+                 /* */)
+            {
+                print("    ");
+                println(((Statement)i.next()).asString());
+            }
+            println("  }");
+            println();
+        }
+    }
+
     private static final String TEMPLATE_MANAGER =
         TemplateManager.class.getName();
 
@@ -213,10 +273,12 @@ public class ImplGenerator extends BaseGenerator
         throws IOException
     {
         print("  public void render(");
-        for (Iterator i = getRequiredArgs(); i.hasNext(); /* */)
+        for (Iterator i = getRequiredArgNames(MAIN_UNIT_NAME);
+             i.hasNext();
+             /* */)
         {
             String name = (String) i.next();
-            print(getArgType(name));
+            print(getArgType(MAIN_UNIT_NAME,name));
             print(" ");
             print(name);
             if (i.hasNext())
@@ -228,8 +290,11 @@ public class ImplGenerator extends BaseGenerator
 
         println("    throws java.io.IOException");
         println("  {");
-        for (Iterator i = m_statements.iterator(); i.hasNext(); /* */)
+        for (Iterator i = getStatements(MAIN_UNIT_NAME).iterator();
+             i.hasNext();
+             /* */)
         {
+            print("    ");
             println(((Statement)i.next()).asString());
         }
         println("  }");
@@ -238,14 +303,16 @@ public class ImplGenerator extends BaseGenerator
     private void generateOptionalArgs()
         throws IOException
     {
-        for (Iterator i = getOptionalArgs(); i.hasNext(); /* */)
+        for (Iterator i = getOptionalArgNames(MAIN_UNIT_NAME);
+             i.hasNext();
+             /* */)
         {
             println();
             String name = (String) i.next();
             print("  public void set");
             print(capitalize(name));
             print("(");
-            String type = getArgType(name);
+            String type = getArgType(MAIN_UNIT_NAME,name);
             print(type);
             print(" p_");
             print(name);
@@ -263,7 +330,7 @@ public class ImplGenerator extends BaseGenerator
             print(" ");
             print(name);
             print(" = ");
-            print(getDefault(name));
+            print(getDefault(MAIN_UNIT_NAME,name));
             println(";");
         }
     }
@@ -275,9 +342,14 @@ public class ImplGenerator extends BaseGenerator
         println("}");
     }
 
+    private List getStatements(String p_unitName)
+    {
+        return (List) m_unitStatements.get(p_unitName);
+    }
+
     private void addStatement(Statement p_statement)
     {
-        m_statements.add(p_statement);
+        getStatements(getUnitName()).add(p_statement);
     }
 
     private static class Encoding
@@ -370,8 +442,63 @@ public class ImplGenerator extends BaseGenerator
         public String asString()
             throws JttException
         {
+            return getDefNames().contains(m_path)
+                ? asDefCall()
+                : asComponentCall();
+        }
+
+        private String asDefCall()
+            throws JttException
+        {
             StringBuffer s = new StringBuffer();
-            s.append("{\n  ");
+            s.append("this.$def$");
+            s.append(m_path);
+            s.append("(");
+            int argNum = 0;
+            for (Iterator r = getRequiredArgNames(m_path); r.hasNext(); )
+            {
+                if (argNum++ > 0)
+                {
+                    s.append(",");
+                }
+                String name = (String) r.next();
+                String expr = (String) m_params.get(name);
+                if (expr == null)
+                {
+                    throw new JttException("No value supplied for required argument " + name);
+                }
+                s.append("(");
+                s.append(expr);
+                s.append(")");
+            }
+            for (Iterator o = getOptionalArgNames(m_path); o.hasNext(); )
+            {
+                if (argNum++ > 0)
+                {
+                    s.append(",");
+                }
+                String name = (String) o.next();
+                s.append("(");
+                String expr = (String) m_params.get(name);
+                if (expr == null)
+                {
+                    s.append(getDefault(m_path,name));
+                }
+                else
+                {
+                    s.append(expr);
+                }
+                s.append(")");
+            }
+            s.append(");\n");
+            return s.toString();
+        }
+
+        private String asComponentCall()
+            throws JttException
+        {
+            StringBuffer s = new StringBuffer();
+            s.append("{\n      ");
             s.append(getClassName());
             s.append(" c = (");
             s.append(getClassName());
@@ -407,14 +534,14 @@ public class ImplGenerator extends BaseGenerator
                 String name = (String) i.next();
                 if (! requiredArgs.contains(name) )
                 {
-                    s.append("  c.set");
+                    s.append("      c.set");
                     s.append(capitalize(name));
                     s.append("(");
                     s.append(m_params.get(name));
                     s.append(");\n");
                 }
             }
-            s.append("  c.render(");
+            s.append("      c.render(");
             for (Iterator i = requiredArgs.iterator(); i.hasNext(); /* */)
             {
                 String name = (String) i.next();
@@ -430,7 +557,7 @@ public class ImplGenerator extends BaseGenerator
                 }
             }
             s.append(");\n");
-            s.append("}\n");
+            s.append("    }\n");
             return s.toString();
         }
     }
