@@ -6,6 +6,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PushbackReader;
 import java.io.Writer;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -99,13 +101,50 @@ public class StandardTemplateManager
 
     private String getClassPath()
     {
-        String cp = m_classpath != null ? (m_classpath + PS) : "";
-        cp = m_workDir + PS + cp + System.getProperty("java.class.path");
+        StringBuffer cp = new StringBuffer(m_workDir);
+        cp.append(PS);
+        if (m_classpath != null)
+        {
+            cp.append(m_classpath);
+            cp.append(PS);
+        }
+
+        ClassLoader loader = getClass().getClassLoader();
+        if (loader instanceof URLClassLoader)
+        {
+            URL[] urls = ((URLClassLoader)loader).getURLs();
+            if (urls.length > 0)
+            {
+                cp.append(urls[0].toExternalForm());
+                for (int i = 1; i < urls.length; ++i)
+                {
+                    cp.append(PS);
+                    cp.append(urls[i].toExternalForm());
+                }
+            }
+        }
+        else
+        {
+            cp.append(System.getProperty("java.class.path"));
+        }
+
         if (m_includeRtJar)
         {
-            cp += PS + System.getProperty("java.home") + FS + "lib" + FS +"rt.jar";
+            cp.append(PS);
+            cp.append(getRtJarPath());
         }
-        return cp;
+
+        return cp.toString();
+    }
+
+    private String getRtJarPath()
+    {
+        StringBuffer path = new StringBuffer(System.getProperty("java.home"));
+        path.append(FS);
+        path.append("lib");
+        path.append(FS);
+        path.append("rt.jar");
+        return path.toString();
     }
 
     private JavaCompiler getJavaCompiler()
