@@ -21,6 +21,7 @@
 package org.jamon.tests.codegen;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -158,6 +159,19 @@ public class TemplateUnitTest
         assertEquals("/foo/bar/boz/bez",
                      new TemplateUnit("/foo/bar/baz")
                          .getAbsolutePath("boz/bez"));
+    }
+
+    public void testDependencies()
+        throws Exception
+    {
+        TemplateUnit unit = new TemplateUnit("/foo/bar");
+        unit.addCallPath("/baz");
+        unit.setParentPath("balla");
+        Collection dependencies = unit.getTemplateDependencies();
+        System.out.println(dependencies);
+        assertEquals(2, dependencies.size());
+        assertTrue(dependencies.contains("/baz"));
+        assertTrue(dependencies.contains("/foo/balla"));
     }
 
     private void checkSigIsUnique(TemplateUnit p_unit, Set p_set)

@@ -236,18 +236,7 @@ public class TemplateUnit extends AbstractUnit
 
     public Collection getTemplateDependencies()
     {
-        Set calls = new HashSet();
-        calls.addAll(m_callPaths);
-        List absCalls = new ArrayList(calls.size());
-        for (Iterator i = calls.iterator(); i.hasNext(); /* */)
-        {
-            absCalls.add(getAbsolutePath((String) i.next()));
-        }
-        if (hasParentPath())
-        {
-            absCalls.add(getParentPath());
-        }
-        return absCalls;
+        return m_dependencies;
     }
 
     public void makeDefUnit(String p_defName)
@@ -293,6 +282,7 @@ public class TemplateUnit extends AbstractUnit
                 ("a template cannot extend multiple templates");
         }
         m_parentPath = getAbsolutePath(p_parentPath);
+        m_dependencies.add(m_parentPath);
     }
 
     public String getParentPath()
@@ -327,7 +317,7 @@ public class TemplateUnit extends AbstractUnit
 
     public void addCallPath(String p_callPath)
     {
-        m_callPaths.add(p_callPath);
+        m_dependencies.add(p_callPath);
     }
 
     private Set m_visibleArgs = new HashSet();
@@ -345,7 +335,7 @@ public class TemplateUnit extends AbstractUnit
     private String m_parentPath = null;
     private boolean m_isParent = false;
     private StringBuffer m_classContent = new StringBuffer();
-    private Set m_callPaths = new HashSet();
+    private Set m_dependencies = new HashSet();
 
     public boolean hasRequiredParentArgs()
     {
