@@ -20,7 +20,7 @@ public class WriteStatement
     {
         p_writer.println("write"
                          + m_encoding
-                         + "Escaped(String.valueOf("
+                         + "Escaped(valueOf("
                          + m_expr
                          + "));");
     }

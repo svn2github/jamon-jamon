@@ -80,6 +80,31 @@ public abstract class AbstractTemplate
         m_writer.write(URLEncoder.encode(p_string));
     }
 
+    protected String valueOf(Object p_obj)
+    {
+        return p_obj != null ? p_obj.toString() : "";
+    }
+
+    protected String valueOf(int p_int)
+    {
+        return String.valueOf(p_int);
+    }
+
+    protected String valueOf(double p_double)
+    {
+        return String.valueOf(p_double);
+    }
+
+    protected String valueOf(char p_char)
+    {
+        return String.valueOf(p_char);
+    }
+
+    protected String valueOf(boolean p_bool)
+    {
+        return String.valueOf(p_bool);
+    }
+
     private final Writer m_writer;
     private final TemplateManager m_templateManager;
 }
