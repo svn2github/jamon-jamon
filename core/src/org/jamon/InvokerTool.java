@@ -29,13 +29,13 @@ import java.util.HashMap;
 
 public class InvokerTool
 {
-    public static class UsageException
+    public class UsageException
         extends Exception
     {
-        String usage()
+        public String toString()
         {
             return "java "
-                + InvokerTool.class.getName()
+                + InvokerTool.this.getClass().getName()
                 + " [-o outputfile] "
                 + " [-s templatesourcedir]"
                 + " [-w workdir]"
@@ -43,7 +43,7 @@ public class InvokerTool
         }
     }
 
-    private static void parseArgString(Map p_argMap, String p_arg)
+    private void parseArgString(Map p_argMap, String p_arg)
         throws UsageException
     {
         int i = p_arg.indexOf("=");
@@ -54,8 +54,8 @@ public class InvokerTool
         p_argMap.put(p_arg.substring(0,i),p_arg.substring(i+1));
     }
 
-    protected static void invoke(String[] args,
-                                 Invoker.ObjectParser p_objectParser)
+    protected void invoke(String[] args,
+                          Invoker.ObjectParser p_objectParser)
         throws UsageException, IOException
     {
         int a = 0;
@@ -148,11 +148,11 @@ public class InvokerTool
     {
         try
         {
-            invoke(args,null);
+            new InvokerTool().invoke(args,null);
         }
         catch (UsageException e)
         {
-            displayError("Usage: " + e.usage());
+            displayError("Usage: " + e);
         }
         catch (Exception e)
         {
