@@ -11,5 +11,5 @@
     </%args><% text %></|>
   <|deletedRenderer><%args>
       Object text;
-    </%args></|>
+    </%args><span class='deleted'><% text %></span></|>
 </&>

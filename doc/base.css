@@ -54,6 +54,14 @@ li
   font-weight: bold
 }
 
+.deleted
+{
+  color: red;
+  /*  text-decoration: line-through; */
+  display: none;
+  font-weight: lighter;
+}
+
 .smell
 {
   border: dashed;
