@@ -40,12 +40,12 @@ public class Invoker
     public static class InvalidTemplateException
         extends JamonException
     {
-        InvalidTemplateException(String p_templateName)
+        public InvalidTemplateException(String p_templateName)
         {
             this(p_templateName, null);
         }
 
-        InvalidTemplateException(String p_templateName,Throwable t)
+        public InvalidTemplateException(String p_templateName,Throwable t)
         {
             super(p_templateName
                   + " does not appear to be a valid template class",
@@ -56,12 +56,12 @@ public class Invoker
     public static class TemplateArgumentException
         extends JamonException
     {
-        TemplateArgumentException(Throwable t)
+        public TemplateArgumentException(Throwable t)
         {
             super(t);
         }
 
-        TemplateArgumentException(String p_msg)
+        public TemplateArgumentException(String p_msg)
         {
             super(p_msg);
         }
