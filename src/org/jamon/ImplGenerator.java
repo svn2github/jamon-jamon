@@ -265,6 +265,12 @@ public class ImplGenerator extends BaseGenerator
         print  ("  extends ");
         println(           BASE_TEMPLATE);
         print  ("  implements ");
+        String pkgName = getPackageName();
+        if (pkgName.length() > 0)
+        {
+            print(pkgName);
+            print(".");
+        }
         println(              getInterfaceClassName());
         println("{");
     }
