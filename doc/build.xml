@@ -139,71 +139,57 @@ the documentation thus taking care of issues such as escaping.
       <src path="${work.dir}" />
     </javac>
     <antcall target="generateHtmlFormat">
-      <param name="arg.line" value="" />
       <param name="tutorial.page" value="TutorialPath" />
     </antcall>
     <antcall target="generateHtmlFormat">
-      <param name="arg.line" value="" />
       <param name="tutorial.page" value="TutorialSample1a" />
     </antcall>
     <antcall target="generateOutput">
-      <param name="arg.line" value="" />
       <param name="sample.template" value="HelloTut1" />
       <param name="tutorial.page" value="TutorialSample1" />
     </antcall>
     <antcall target="generateOutput">
-      <param name="arg.line" value="" />
       <param name="sample.template" value="HelloTut1" />
       <param name="tutorial.page" value="TutorialSample1a" />
     </antcall>
     <antcall target="generateOutput">
-      <param name="arg.line" value="" />
       <param name="sample.template" value="TimeAndTempTut2" />
       <param name="tutorial.page" value="TutorialSample2" />
     </antcall>
     <antcall target="generateOutput">
-      <param name="arg.line" value="" />
       <param name="sample.template" value="AccountSummaryTut3" />
       <param name="tutorial.page" value="TutorialSample3" />
     </antcall>
     <antcall target="generateOutput">
-      <param name="arg.line" value="" />
       <param name="sample.template" value="EscapingTut4" />
       <param name="tutorial.page" value="TutorialSample4" />
     </antcall>
     <antcall target="generateOutput">
-      <param name="arg.line" value="" />
       <param name="sample.template" value="ClassExampleTut5" />
       <param name="tutorial.page" value="TutorialSample5" />
     </antcall>
     <antcall target="generateOutput">
-      <param name="arg.line" value="" />
       <param name="sample.template" value="JamonCallerTut6" />
       <param name="tutorial.page" value="TutorialSample6" />
     </antcall>
     <antcall target="generateOutput">
-      <param name="arg.line" value="" />
       <param name="sample.template" value="SubtemplateTut7" />
       <param name="tutorial.page" value="TutorialSample7" />
     </antcall>
     <antcall target="generateOutput">
-      <param name="arg.line" value="" />
       <param name="sample.template" value="Holiday" />
       <param name="tutorial.page" value="TutorialSample8" />
     </antcall>
     <!-- there are two examples for tutorial 9 -->
     <antcall target="generateOutput">
-      <param name="arg.line" value="" />
       <param name="sample.template" value="InheritanceSimpleTut9" />
       <param name="tutorial.page" value="TutorialSample9" />
     </antcall>
     <antcall target="generateOutput">
-      <param name="arg.line" value="" />
       <param name="sample.template" value="User" />
       <param name="tutorial.page" value="TutorialSample9" />
     </antcall>
     <antcall target="generateOutput">
-      <param name="arg.line" value="" />
       <param name="sample.template" value="User2" />
       <param name="tutorial.page" value="TutorialSample10" />
     </antcall>
@@ -227,9 +213,7 @@ the documentation thus taking care of issues such as escaping.
     <java classname="${sample.template}"
           failonerror="true"
           classpath="${work.dir}:${java.lib.jamon}"
-          output="${temp.file}" >
-      <arg line="${arg.line}" />
-    </java>
+          output="${temp.file}" />
     <loadfile property="template.output" srcFile="${temp.file}" />
     <delete file="${temp.file}" />
     <echo message="${tutorial.page}"/>
