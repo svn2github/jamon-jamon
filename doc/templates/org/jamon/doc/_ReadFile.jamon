@@ -12,7 +12,8 @@
     getClass().getResourceAsStream(fileName)));
   for (String line = reader.readLine(); line != null; line = reader.readLine())
   {
-    write(line);
-    write("\n");
-  }
+</%java>
+<% line #n %>
+<%java>
+}
 </%java>
