@@ -1,15 +1,14 @@
 import java.io.OutputStreamWriter;
 import org.jamon.StandardTemplateManager;
 
-public class JamonTut1 {
-  public static void main(String[] args) {
+public class JamonQs {
+  public static void main(String[] argv) {
     try {
       StandardTemplateManager mgr = new StandardTemplateManager();
-      TutTemp1 template = new TutTemp1(mgr);
+      QsTemp template = new QsTemp(mgr);
       template
           .writeTo(new OutputStreamWriter(System.out))
-          .render();
-      template.render();
+          .render(argv);
     }
     catch (Exception e) {
       e.printStackTrace();

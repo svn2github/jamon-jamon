@@ -2,28 +2,27 @@
 <!--    $Id$ -->
 <html>
   <head>
-    <title>Jamon Tutorial</title>
+    <title>Jamon Quick Start</title>
     <link rel="StyleSheet" href="base.css" type="text/css" media="screen" />
   </head>
 
   <body>
-    <h1>Jamon Tutorial</h1>
+    <h1>Jamon Quick Start</h1>
 
-Create a java file <a class="file" href="JamonTut1.java">JamonTut1.java</a>:
+Create a java file <a class="file" href="JamonQs.java">JamonQs.java</a>:
 
 <pre class="java">
 import java.io.OutputStreamWriter;
 import org.jamon.StandardTemplateManager;
 
-public class JamonTut1 {
-  public static void main(String[] args) {
+public class JamonQs {
+  public static void main(String[] argv) {
     try {
       StandardTemplateManager mgr = new StandardTemplateManager();
-      TutTemp1 template = new TutTemp1(mgr);
+      QsTemp template = new QsTemp(mgr);
       template
           .writeTo(new OutputStreamWriter(System.out))
-          .render();
-      template.render();
+          .render(argv);
     }
     catch (Exception e) {
       e.printStackTrace();
@@ -31,9 +30,16 @@ public class JamonTut1 {
   }
 }
 </pre>
-Create a Jamon template <a href="TutTemp1" class="file">TutTemp1</a>:
+Create a Jamon template <a href="QsTemp" class="file">QsTemp</a>:
 <pre class="jamon">
+&lt;%args&gt;
+  String [] s;
+&lt;/%args&gt;
 Hello, world
+The arguments are:
+% for (int i = 0; i &lt; s.length; ++i) {
+&lt;% s[i] %&gt;
+% }
 </pre>
 
 Set your classpath:
@@ -43,22 +49,25 @@ Set your classpath:
 
 Process the template
 <pre class="tty">
-% java org.jamon.TemplateProcessor --destDir=. --all MyTemplate
+% java org.jamon.TemplateProcessor --destDir=. --all QsTemp
 </pre>
 
 Compile everything:
 <pre class="tty">
-% javac JamonTut.java MyTemplate*.java
+% javac JamonQs.java QsTemp*.java
 </pre>
 
 Run it:
 <pre class="tty">
-% java JamonTut
+% java JamonQs here we go
 </pre>
 
 You should see:
 <pre class="tty">
 Hello, world
+here
+we
+go
 </pre>
 
   </body>
