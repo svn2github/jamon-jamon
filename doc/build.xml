@@ -13,6 +13,7 @@ the documentation thus taking care of issues such as escaping.
   <property name="build.dir" value="build"/>
   <property name="work.dir" value="${build.dir}/work"/>
   <property name="www.dir" value="${build.dir}/www"/>
+  <property name="doc.dir" value="${build.dir}/doc"/>
   <property name="classes.dir" value="${www.dir}/classes"/>
   <property name="java.lib.jamon" location="../jamon.jar"/>
   <property name="java.lib.diff" value="/usr/local/share/java/diff.jar"/>
@@ -23,20 +24,20 @@ the documentation thus taking care of issues such as escaping.
            classpath="${java.lib.jamon}" />
 
   <target name="init">
-    <mkdir dir="${www.dir}"/>
-    <copy file="base.css" todir="${www.dir}" />
+    <mkdir dir="${doc.dir}"/>
+    <copy file="base.css" todir="${doc.dir}" />
   </target>
 
   <target name="quickstart" depends="init" >
     <copy file="templates/org/jamon/doc/JamonQsJava"
-          tofile="${www.dir}/JamonQs.java" />
-    <copy file="${www.dir}/JamonQs.java" todir="${work.dir}" />
+          tofile="${doc.dir}/JamonQs.java" />
+    <copy file="${doc.dir}/JamonQs.java" todir="${work.dir}" />
     <invoker classpath="${java.lib.jamon}"
              workDir="${work.dir}"
              sourceDir="templates"
-             output="${www.dir}/QsTemp"
+             output="${doc.dir}/QsTemp"
              template="/org/jamon/doc/QsTemp" />
-    <copy file="${www.dir}/QsTemp" todir="${work.dir}" />
+    <copy file="${doc.dir}/QsTemp" todir="${work.dir}" />
     <java classname="org.jamon.TemplateProcessor"
           fork="yes"
           dir="${work.dir}"
@@ -59,7 +60,7 @@ the documentation thus taking care of issues such as escaping.
     <invoker classpath="${java.lib.jamon}"
              workDir="${work.dir}"
              sourceDir="templates"
-             output="${www.dir}/QuickStart.html"
+             output="${doc.dir}/QuickStart.html"
              template="/org/jamon/doc/QuickStart" >
       <arg name="output" value="${quickstart.output}" />
     </invoker>
@@ -68,6 +69,7 @@ the documentation thus taking care of issues such as escaping.
   <target name="doc"
           description="Generates all the documentation"
           depends="init" >
+    <copy file="index.html" todir="${doc.dir}" />
     <antcall target="quickstart" />
     <antcall target="grind">
       <param name="template" value="BuildingProjects" />
@@ -145,7 +147,7 @@ the documentation thus taking care of issues such as escaping.
   <target name="grind">
     <uptodate property="grindnotneeded"
               srcfile="templates/org/jamon/doc/${template}"
-              targetfile="${www.dir}/${template}.html" />
+              targetfile="${doc.dir}/${template}.html" />
     <antcall target="dogrind" />
   </target>
 
@@ -153,7 +155,7 @@ the documentation thus taking care of issues such as escaping.
     <invoker classpath="${java.lib.jamon}:${java.lib.diff}"
              workDir="${work.dir}"
              sourceDir="templates"
-             output="${www.dir}/${template}.html"
+             output="${doc.dir}/${template}.html"
              template="/org/jamon/doc/${template}" />
   </target>
 
