@@ -3,6 +3,12 @@ Jamon comes with a library of classes and templates to aid in the systematic
 development of web applications.  The library consists of "input" objects
 and corresponding templates to render them.  The idea behind these input
 objects is that they encapsulate the name of a CGI paramater and its value.
-For example the <code>org.jamon.render.html.TextInput</code> object consists
+For example the <code>org.jamon.render.html.TextInput</code> input object consists
 (more or less) of a name (a string), a value (a string) and its maxlength (an int).
-There is a corre
+There is a corresponding template, <code>org.jamon.html.TextInput</code>, which
+takes as parameters 
+<ul>
+  <li>an object of the above input type</li>
+  <li>the size of the input element (an integer)</li>
+  <li>the type of the input element, for example "text" or "password" (a string)</li>
+</ul>
