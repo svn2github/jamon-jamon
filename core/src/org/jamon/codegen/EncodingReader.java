@@ -58,7 +58,8 @@ public class EncodingReader
             m_reader = new InputStreamReader(stream,
                                              computeOneByteEncoding(stream));
         }
-        else if (matches(UTF16SIG, stream))
+        else if (matches(UTF16LESIG, stream)
+                 || matches(UTF16BESIG, stream))
         {
             m_reader = new InputStreamReader(stream,
                                              computeUtf16Encoding(stream));
@@ -200,13 +201,15 @@ public class EncodingReader
     private int m_bytesRead;
 
     private static final byte[] ONEBYTESIG;
-    private static final byte[] UTF16SIG;
+    private static final byte[] UTF16LESIG;
+    private static final byte[] UTF16BESIG;
     static
     {
         try
         {
             ONEBYTESIG = "<%encoding ".getBytes("latin1");
-            UTF16SIG = "<%encoding ".getBytes("UTF-16");
+            UTF16BESIG = "<%encoding ".getBytes("UTF-16BE");
+            UTF16LESIG = "<%encoding ".getBytes("UTF-16LE");
         }
         catch (UnsupportedEncodingException e)
         {
