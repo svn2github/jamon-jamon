@@ -1,4 +1,5 @@
 <&| _Base; title => "Jamon"; section => "Home" &>
+
     <b>Jamon</b> is a text template engine for <a
     href="http://java.sun.com">Java</a>, useful for generating dynamic
     HTML, XML, or any text-based content. In a typical
@@ -6,8 +7,7 @@
     architecture</a>, Jamon clearly is aimed at the View (or
     presentation) layer.
 
-    <h3>Goals</h3>
-
+    <p>
     The inspiration for Jamon was born over dissatisfaction with
     current presentation layer technologies, including <a
     href="http://java.sun.com/products/jsp/">JSP</a> and
@@ -16,103 +16,65 @@
     <a href="http://www.masonhq.com">Mason</a>, which though written in
     and for <a href="http://www.perl.org">Perl</a>, provided inspiration
     both conceptual and syntactic (for better or worse).
+    </p>
 
-    <ul>
-      <li>
-        Keep the rendering logic in the presentation layer
-        technology. Since rendering logic may be arbitrarily
-        complicated (e.g. rendering hierarchical data such as a
-        recursive directory structure), this logic needs to be
-        expressable in a Turing-complete language. Rather than invent
-        yet another language, use Java itself inside the presentation
-        framework.
-      </li>
 
-      <li>
-        Developers must pass information to the view according to a
-        well-defined contract which is checkable at compile-time
-        (e.g., an interface).  In other words the the
-        devoloper and the web-designer should be able to define an API
-        for the view.
-      </li>
-
-      <li>
-        Web designers must be able to check that they have not
-        violated the above contract
-      </li>
-
-      <li>
-        Web designers should be able to test the page easily aginst
-        test data with none of the developer's code present (apart,
-        perhaps from the above interface)
-      </li>
-
-      <li>
-        It should be possible to use the approach for views other than
-        web-pages.  For example, sending e-mails with the same look
-        and feel (possibly with the same HTML) as a web page
-      </li>
-
-      <li>
-        Java class(es) should be generated corresponding to each
-        template. Avoid reflection in generated code.
-      </li>
-
-      <li>
-        Use a template directly, without any (explicit)
-        compilation. For example,
-        <pre class="java">
-import org.modusponens.templates.MyTemplate;
-...
-MyTemplate t = ...;
-...
-t.render("hello", 3, new BigDecimal(17.5));
-</pre>
-      </li>
-
-      <li>
-        Facilitate development (e.g. automatic recompilation if
-        template modified)
-      </li>
-
-      <li>
-        Facilitate decomposition and reuse (e.g. public and private
-        methods)
-      </li>
-
-      <li>
-        Errors detected as early as possible. Provide good error
-        messages.
-      </li>
-
-    </ul>
-
-    <h3>Features</h3>
+    <h4>Highlights</h4>
 
     <ul>
 
       <li>
         Jamon has a rich feature set to support encapsulation,
-        parameterization, and reuse of presentation logic.
+        parameterization, functional decomposition, and reuse of
+        presentation logic.
       </li>
 
       <li>
-        You can pass arbitrary objects between templates (only <a
+        Since rendering logic may be arbitrarily complicated
+        (e.g. rendering hierarchical data such as a recursive
+        directory structure), this logic needs to be expressable in a
+        Turing-complete language. Rather than invent yet another
+        language, use Java itself inside the presentation
+        framework. <emph>Jamon helps keep the rendering logic in the
+        presentation layer technology</emph>.
+      </li>
+
+      <li>
+        Jamon templates declare the arguments required for
+        rendering. This provides a well-defined contract between the
+        presentation layer and the application.
+      </li>
+
+      <li>
+        Jamon allows passing arbitrary objects between templates
+        (only <a
         href="http://opensource.go.com/Tea/index.html">Tea</a> seems
-        to provide this capability).  In particular, Jamon templates
-        can pass arbitrary dynamic content (i.e. template fragments)
-        as parameters to other templates. In fact, Jamon allows
-        passing parameterized fragments -- higher order templates.
+        to provide this capability).  Jamon templates can pass
+        arbitrary dynamic content (i.e. template fragments) as
+        parameters to other templates. (In fact, Jamon allows
+        passing <emph>parameterized</emph> fragments, i.e. templates
+        can be "higher-order".)
       </li>
 
       <li>
         Templates are compiled into Java and then into bytecode, and
-        are used in applications just like any other Java class. This
-        provides compile-time type-checking and superior
-        performance. During development, however, changes to template
-        sources at runtime trigger dynamic retranslation and
-        recompilation of the templates. This dynamic recompilation can
-        be turned off for production deployment.
+        are referred to in application code just like any other Java
+        class.  See the <a href="QuickStart.html">quick start
+        tutorial</a> for a simple but complete working example.
+      </li>
+
+      <li>
+        Templates are translated into Java classes with public methods
+        whose signatures reflect the arguments declared in the
+        templates. This provides compile-time type-checking as well as
+        excellent performance.
+      </li>
+
+      <li>
+        During development, changes to template sources at runtime
+        trigger dynamic retranslation and recompilation of the
+        templates. This dynamic recompilation can be turned off for
+        production deployment.
       </li>
 
       <li>
@@ -120,8 +82,8 @@ t.render("hello", 3, new BigDecimal(17.5));
         arbitrary text output format (for contrast,
         <a href="http://xmlc.enhydra.org">Enhydra XMLC</a> and <a
         href="http://www.zope.org">Zope</a> are tied to HTML or
-        XML). Consider generating text and / or multipart MIME email,
-        or program source code.
+        XML). Consider "views" such as generating text and / or
+        multipart MIME email, or program source code.
       </li>
 
     </ul>
