@@ -1,0 +1,41 @@
+<Server port="8105" shutdown="SHUTDOWN" debug="0">
+
+  <Service name="Tomcat-Standalone">
+
+    <Connector className="org.apache.catalina.connector.http.HttpConnector"
+               port="@CONTAINER_PORT@" 
+               minProcessors="5" 
+               maxProcessors="75"
+               enableLookups="true" 
+               redirectPort="8543"
+               acceptCount="10" 
+               debug="0" 
+               connectionTimeout="60000"/>
+
+    <Engine name="Standalone" defaultHost="localhost" debug="0">
+
+      <Logger className="org.apache.catalina.logger.FileLogger"
+              prefix="catalina_log." suffix=".txt"
+              timestamp="true"/>
+
+      <Realm className="org.apache.catalina.realm.MemoryRealm" />
+
+      <Host name="localhost" appBase="webapps" unpackWARs="true">
+
+        <Valve className="org.apache.catalina.valves.AccessLogValve"
+                 directory="logs"  prefix="localhost_access_log." suffix=".txt"
+                 pattern="common"/>
+
+        <Logger className="org.apache.catalina.logger.FileLogger"
+                 directory="logs"  prefix="localhost_log." suffix=".txt"
+	        timestamp="true"/>
+
+        <DefaultContext reloadable="true"/>
+
+      </Host>
+
+    </Engine>
+
+  </Service>
+
+</Server>
