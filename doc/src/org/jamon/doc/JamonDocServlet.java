@@ -49,8 +49,7 @@ public class JamonDocServlet
                 (new StandardTemplateManager.Data()
                     .setWorkDir("build/work")
                     .setSourceDir("templates")
-                    .setJavaCompiler("jikes")
-                    .setJavaCompilerNeedsRtJar(true));
+                    .setJavaCompiler("jikes"));
         }
         catch (IOException e)
         {

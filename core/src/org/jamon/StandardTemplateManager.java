@@ -158,10 +158,10 @@ public class StandardTemplateManager
 
         public Data setJavaCompilerNeedsRtJar(boolean p_javaCompilerNeedsRtJar)
         {
-            javaCompilerNeedsRtJar = p_javaCompilerNeedsRtJar;
+            javaCompilerNeedsRtJar = new Boolean(p_javaCompilerNeedsRtJar);
             return this;
         }
-        private boolean javaCompilerNeedsRtJar;
+        private Boolean javaCompilerNeedsRtJar;
 
         public Data setClasspath(String p_classpath)
         {
@@ -242,7 +242,9 @@ public class StandardTemplateManager
             (javac,
              getClasspath(p_workDir,
                           p_data.classpath,
-                          p_data.javaCompilerNeedsRtJar,
+                          p_data.javaCompilerNeedsRtJar == null
+                          ? javac.endsWith("jikes")
+                          : p_data.javaCompilerNeedsRtJar.booleanValue(),
                           p_classLoader));
     }
 
