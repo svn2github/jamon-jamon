@@ -23,16 +23,52 @@ package org.jamon;
 import java.io.IOException;
 import java.io.Reader;
 
+/**
+ * An interface representing a "repository" of template sources. One
+ * obvious implementation would be a file-system based implementation
+ * (e.g. {@link FileTemplateSource}), but others might include storing
+ * templates in a database, or retrieving them remotely via HTTP.
+ */
+
 public interface TemplateSource
 {
+    /**
+     * Determines when the indicated template was last modified, in ms
+     * since the epoch.
+     *
+     * @param p_templatePath the path to the template
+     *
+     * @return the timestamp of when the template was last modified
+     */
     long lastModified(String p_templatePath)
         throws IOException;
 
+    /**
+     * Determines whether the indicated template source is available.
+     *
+     * @param p_templatePath the path to the template
+     *
+     * @return whether the template source is available
+     */
     boolean available(String p_templatePath)
         throws IOException;
 
+    /**
+     * Get a {@link Reader} for the source of the specified template.
+     *
+     * @param p_templatePath the path to the template
+     *
+     * @return a Reader for the characters comprising the template
+     */
     Reader getReaderFor(String p_templatePath)
         throws IOException;
 
+    /**
+     * Get an identifying string for the specified template.
+     *
+     * @param p_templatePath the path to the template
+     *
+     * @return an identifying string
+     */
     String getExternalIdentifier(String p_templatePath);
 }
