@@ -4,6 +4,7 @@
   java.lang.reflect.InvocationTargetException;
   org.jamon.JamonException;
   org.jamon.TemplateManagerSource;
+  org.jamon.TemplateManager;
   org.jamon.BasicTemplateManager;
 </%import>
 
@@ -16,6 +17,7 @@
 <%java>
   PrintStream oldOut = System.out;
   String oldUserDir = System.getProperty("user.dir");
+  TemplateManager manager = TemplateManagerSource.getTemplateManagerFor("/");
   try
   {
     ByteArrayOutputStream trap = new ByteArrayOutputStream();
@@ -54,6 +56,7 @@
   {
       System.setOut(oldOut);
       System.setProperty("user.dir", oldUserDir);
+      TemplateManagerSource.setTemplateManager(manager);
   }
 </%java>
 </&></pre>
