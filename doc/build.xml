@@ -41,7 +41,7 @@ the documentation thus taking care of issues such as escaping.
     <property name="build.sysclasspath" value="last" />
     <copy file="templates/org/jamon/doc/JamonQsJava"
           tofile="${doc.dir}/JamonQs.java" />
-    <copy file="${doc.dir}/JamonQs.java" todir="${work.dir}" />
+    <copy file="templates/org/jamon/doc/JamonQsJava" todir="${work.dir}" />
     <invoker classpath="${java.lib.jamon}"
              workDir="${work.dir}"
              sourceDir="templates"
