@@ -77,6 +77,7 @@ public abstract class AbstractTemplateProxy
                 .loadClass(s_templateManagerSourceName);
             source = (TemplateManagerSource) tmsClass.newInstance();
             m_templateManager = source.getTemplateManager();
+            m_implDataInstance = null;
         }
         catch (ClassNotFoundException e)
         {
@@ -92,9 +93,11 @@ public abstract class AbstractTemplateProxy
         }
     }
 
-    protected AbstractTemplateProxy(TemplateManager p_templateManager)
+    protected AbstractTemplateProxy(TemplateManager p_templateManager,
+                                    boolean p_singleThreaded)
     {
         m_templateManager = p_templateManager;
+        m_implDataInstance = p_singleThreaded ? makeImplData() : null;
     }
 
     protected final TemplateManager getTemplateManager()
@@ -105,6 +108,7 @@ public abstract class AbstractTemplateProxy
     private Escaping m_escaping = Escaping.DEFAULT;
     private final TemplateManager m_templateManager;
     private final ThreadLocal m_implData = new ThreadLocal();
+    private final ImplData m_implDataInstance;
 
     protected final void escape(Escaping p_escaping)
     {
@@ -130,13 +134,20 @@ public abstract class AbstractTemplateProxy
 
     protected final ImplData getImplData()
     {
-        ImplData implData = (ImplData) m_implData.get();
-        if (implData == null)
+        if (m_implDataInstance != null)
         {
-            implData = makeImplData();
-            m_implData.set(implData);
+            return m_implDataInstance;
         }
-        return implData;
+        else
+        {
+            ImplData implData = (ImplData) m_implData.get();
+            if (implData == null)
+            {
+                implData = makeImplData();
+                m_implData.set(implData);
+            }
+            return implData;
+        }
     }
 
     public final void reset()

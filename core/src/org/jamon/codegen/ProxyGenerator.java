@@ -119,7 +119,16 @@ public class ProxyGenerator
             ("public " + getClassName()
              + "(" + ClassNames.TEMPLATE_MANAGER + " p_manager)");
         m_writer.openBlock();
-        m_writer.println(" super(p_manager);");
+        m_writer.println(" super(p_manager, false);");
+        m_writer.closeBlock();
+
+        m_writer.println();
+        m_writer.println
+            ("public " + getClassName()
+             + "(" + ClassNames.TEMPLATE_MANAGER + " p_manager, "
+             + " boolean p_singleThreaded)");
+        m_writer.openBlock();
+        m_writer.println(" super(p_manager, p_singleThreaded);");
         m_writer.closeBlock();
 
         m_writer.println();
