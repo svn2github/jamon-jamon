@@ -26,10 +26,10 @@
   String action;
   Input submit;
   org.jamon.render.html.CgiParameters hiddenParams => null;
-  String method => "GET";
+  boolean post => false;
 </%args>\
 \
-<form method='<% method %>' action='<% action %>'>
+<form method='<% post ? "POST" : "GET" %>' action='<% action %>'>
   <& HiddenInput; input => submit &>
 % if( hiddenParams != null ) {
 %   Input[] inputs = hiddenParams.getInputs();
