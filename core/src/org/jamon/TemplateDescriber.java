@@ -1,12 +1,15 @@
 package org.jamon;
 
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.LinkedList;
 import java.util.HashMap;
+import java.lang.reflect.Field;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.FileNotFoundException;
 import java.io.PushbackReader;
 
 import org.jamon.node.Start;
@@ -42,8 +45,26 @@ public class TemplateDescriber
         {
             return new BaseAnalyzer(parseTemplate(p_path)).getFargNames();
         }
+        catch (FileNotFoundException fnfe)
+        {
+            try
+            {
+                Class c = Class.forName(StringUtils.pathToClassName(p_path));
+                Field f = c.getField("FARGNAMES");
+                return Arrays.asList( (String []) f.get(null) ).iterator();
+            }
+            catch (RuntimeException e)
+            {
+                throw e;
+            }
+            catch (Exception e)
+            {
+                throw new JamonException(e);
+            }
+        }
         catch (IOException e)
         {
+
             throw new JamonException(e);
         }
     }
