@@ -120,25 +120,18 @@ public class JamonTask
 
         FileNameMapper m = new FileNameMapper()
             {
-                private final static String SUFFIX1 = ".jamon";
-                private final static String SUFFIX2 = ".jam";
                 public void setFrom(String p_from) {}
                 public void setTo(String p_to) {}
                 public String[] mapFileName(String p_sourceName)
                 {
-                    StringBuffer target = new StringBuffer(p_sourceName);
-                    if(p_sourceName.endsWith(SUFFIX1))
+                    String target = p_sourceName;
+                    int i = target.lastIndexOf('.');
+                    if (i > 0)
                     {
-                        target.delete(p_sourceName.length() - SUFFIX1.length(),
-                                      p_sourceName.length());
+                        target = target.substring(0,i);
                     }
-                    else if(p_sourceName.endsWith(SUFFIX2))
-                    {
-                        target.delete(p_sourceName.length() - SUFFIX2.length(),
-                                      p_sourceName.length());
-                    }
-                    target.append(".java");
-                    return new String[] { target.toString() };
+                    return new String[] { target + ".java",
+                                          target + "Impl.java" };
                 }
             };
         SourceFileScanner sfs = new SourceFileScanner(this);
