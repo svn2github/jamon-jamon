@@ -50,7 +50,8 @@ public class WorkDirClassLoader
             }
             if (m_loader == null)
             {
-                m_loader = new URLClassLoader(new URL[] { m_workUrl });
+                m_loader = new URLClassLoader(new URL[] { m_workUrl },
+                                              getParent());
             }
             c = m_loader.loadClass(p_name);
             if (p_resolve)
