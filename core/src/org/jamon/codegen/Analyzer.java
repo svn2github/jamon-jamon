@@ -66,7 +66,17 @@ public class Analyzer
         }
         catch (TunnelingException e)
         {
-            throw new JamonException(e.getMessage());
+            if(e.getToken() != null)
+            {
+                throw new AnalysisException(e.getMessage(),
+                                            m_describer.getExternalIdentifier(
+                                                m_templateUnit.getName()),
+                                            e.getToken());
+            }
+            else
+            {
+                throw new JamonException(e.getMessage());
+            }
         }
     }
 
@@ -203,7 +213,8 @@ public class Analyzer
             if (lastSlash == 0)
             {
                 throw new TunnelingException
-                    ("Cannot reference templates above the root");
+                    ("Cannot reference templates above the root",
+                     p_updir.getUpdir());
             }
             m_path.delete(lastSlash+1, m_path.length());
         }

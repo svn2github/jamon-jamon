@@ -96,17 +96,20 @@ public class TemplateDescriber
         }
         catch (ParserException e)
         {
-            throw new JamonParseException
-                (m_templateSource.getExternalIdentifier(p_path),e);
+            throw new JamonParseException(getExternalIdentifier(p_path),e);
         }
         catch (LexerException e)
         {
-            throw new JamonParseException
-                (m_templateSource.getExternalIdentifier(p_path),e);
+            throw new JamonParseException(getExternalIdentifier(p_path),e);
         }
         finally
         {
             reader.close();
         }
+    }
+
+    public String getExternalIdentifier(String p_path)
+    {
+        return m_templateSource.getExternalIdentifier(p_path);
     }
 }

@@ -12,36 +12,26 @@
  * The Original Code is Jamon code, released February, 2003.
  *
  * The Initial Developer of the Original Code is Ian Robertson.  Portions
- * created by Ian Robertson are Copyright (C) 2003 Ian Robertson.  All Rights
+ * created by Ian Robertson are Copyright (C) 2003 Jay Sachs.  All Rights
  * Reserved.
  *
  * Contributor(s):
  */
 
-package org.jamon.integration;
+package org.jamon.codegen;
 
 import java.io.File;
+import java.io.IOException;
 
-import test.jamon.subdir.RelativePath;
-import org.jamon.TemplateProcessor;
 import org.jamon.JamonTemplateException;
+import org.jamon.node.Token;
 
-public class RelativePathTest
-    extends TestBase
+public class AnalysisException
+    extends JamonTemplateException
 {
-    public void testRelativePath()
-        throws Exception
+    public AnalysisException(
+        String p_message, String p_fileName, Token p_token)
     {
-        new RelativePath(getTemplateManager()).render(getWriter());
-        checkOutput("simple");
-    }
-
-    public void testToManyDotDots()
-        throws Exception
-    {
-        expectTemplateException("test/jamon/broken/TooManyDotDots",
-                                "Cannot reference templates above the root",
-                                1,
-                                10);
+        super(p_message, p_fileName, p_token.getLine(), p_token.getPos());
     }
 }

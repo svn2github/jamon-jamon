@@ -26,6 +26,7 @@ import java.io.StringWriter;
 import java.io.IOException;
 
 import org.jamon.JamonException;
+import org.jamon.JamonTemplateException;
 import org.jamon.StandardTemplateManager;
 import org.jamon.TemplateManager;
 import org.jamon.TemplateProcessor;
@@ -147,6 +148,32 @@ public abstract class TestBase
                               new File(integrationDir + "/templates"),
                               getClass().getClassLoader())
             .generateSource(p_path);
+    }
+
+    protected void expectTemplateException(String p_path,
+                                           String p_message,
+                                           int p_line,
+                                           int p_column)
+        throws Exception
+    {
+        try
+        {
+            generateSource(p_path);
+            fail();
+        }
+        catch(JamonTemplateException e)
+        {
+            assertEquals(p_message, e.getMessage());
+            assertEquals(p_line, e.getLine());
+            assertEquals(p_column, e.getColumn());
+            assertEquals(getTemplateFilePath(p_path), e.getFileName());
+        }
+    }
+
+    private String getTemplateFilePath(String p_path)
+    {
+        return System.getProperty("org.jamon.integration.basedir")
+            + "/templates/" + p_path + ".jamon";
     }
 
     public static void assertEquals(String p_first, String p_second)

@@ -20,26 +20,34 @@
 
 package org.jamon.codegen;
 
+import org.jamon.node.Token;
+
 public class TunnelingException
     extends RuntimeException
 {
     TunnelingException(String p_message)
     {
-        this(p_message, null);
+        this(p_message, null, null);
     }
 
-    public TunnelingException(String p_msg, Throwable p_rootCause)
+    private TunnelingException(String p_msg,
+                               Throwable p_rootCause,
+                               Token p_token)
     {
         super(p_msg);
         m_rootCause = p_rootCause;
+        m_token = p_token;
     }
 
     public TunnelingException(Throwable p_rootCause)
     {
-        this(p_rootCause.getMessage(),p_rootCause);
+        this(p_rootCause.getMessage(), p_rootCause, null);
     }
 
-    private final Throwable m_rootCause;
+    public TunnelingException(String p_message, Token p_token)
+    {
+        this(p_message, null, p_token);
+    }
 
     public Throwable getRootCause()
     {
@@ -67,4 +75,11 @@ public class TunnelingException
         printStackTrace(System.err);
     }
 
+    Token getToken()
+    {
+        return m_token;
+    }
+
+    private final Token m_token;
+    private final Throwable m_rootCause;
 }
