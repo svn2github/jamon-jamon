@@ -1,0 +1,8 @@
+<%farg frag>
+</%farg>
+<%args>
+  int x;
+</%args>
+Above the content
+<& frag &>
+Below the content
