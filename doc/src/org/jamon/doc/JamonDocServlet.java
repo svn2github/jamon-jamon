@@ -33,10 +33,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServlet;
 
-import org.jamon.TemplateInspector;
-import org.jamon.RecompilingTemplateManager;
-import org.jamon.TemplateManager;
+import org.jamon.JamonException;
 import org.jamon.JamonTemplateException;
+import org.jamon.RecompilingTemplateManager;
+import org.jamon.TemplateInspector;
+import org.jamon.TemplateManager;
 
 public class JamonDocServlet
     extends HttpServlet
@@ -57,14 +58,27 @@ public class JamonDocServlet
         }
         catch (JamonTemplateException e)
         {
-            writer.write("In " + e.getFileName()
-                                + ", line " + e.getLine()
-                                + ", column " + e.getColumn()
-                                + "\n<pre>\n");
-            e.printStackTrace(new PrintWriter(writer));
-            writer.write("</pre>");
+            dumpException(writer, e,
+                          "In " + e.getFileName()
+                          + ", line " + e.getLine()
+                          + ", column " + e.getColumn());
+        }
+        catch (JamonException e)
+        {
+            dumpException(writer, e, "JamonExcepton!!!");
         }
         writer.close();
+    }
+
+    private static void dumpException(Writer p_writer,
+                                      Exception p_exception,
+                                      String p_message)
+        throws IOException
+    {
+        p_writer.write(p_message);
+        p_writer.write("\n");
+        p_exception.printStackTrace(new PrintWriter(p_writer));
+        p_writer.write("</pre>");
     }
 
     public void init(ServletConfig p_config)
