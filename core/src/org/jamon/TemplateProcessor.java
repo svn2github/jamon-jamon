@@ -23,7 +23,6 @@ package org.jamon;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.List;
 
 import org.jamon.util.StringUtils;
 import org.jamon.codegen.TemplateDescriber;
@@ -31,11 +30,6 @@ import org.jamon.codegen.Analyzer;
 import org.jamon.codegen.ImplGenerator;
 import org.jamon.codegen.ProxyGenerator;
 import org.jamon.codegen.TemplateUnit;
-import org.jamon.lexer.Lexer;
-import org.jamon.lexer.LexerException;
-import org.jamon.node.Start;
-import org.jamon.parser.Parser;
-import org.jamon.parser.ParserException;
 
 public class TemplateProcessor
 {
@@ -53,9 +47,7 @@ public class TemplateProcessor
     private TemplateDescriber m_describer;
 
     public void generateSource(String p_filename)
-        throws IOException,
-               ParserException,
-               LexerException
+        throws IOException
     {
         int pPos = p_filename.indexOf('.');
         String templateName =
