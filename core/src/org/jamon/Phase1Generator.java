@@ -56,7 +56,8 @@ public class Phase1Generator extends BaseGenerator
         print  (getClassName());
         println(") ");
         print  ("        getInstance(\"");
-        print  (getFullyQualifiedClassName());
+        print  ("/");
+        print  (getFullyQualifiedClassName().replace('.','/'));
         println("\", p_writer);");
         println("    }");
         println("  }");
