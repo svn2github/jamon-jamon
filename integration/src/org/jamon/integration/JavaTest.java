@@ -2,12 +2,13 @@ package org.jamon.integration;
 
 import java.io.Writer;
 import java.io.StringWriter;
-import java.math.BigDecimal;
+import java.io.IOException;
 
 import junit.framework.TestCase;
 
 import org.jamon.StandardTemplateManager;
 import org.jamon.StringUtils;
+import org.jamon.JttException;
 
 import foo.bar.test.jamon.JavaEscape;
 
@@ -28,7 +29,8 @@ public class JavaTest
 
 
     public void testExercise()
-        throws Exception
+        throws IOException, 
+               JttException
     {
         Writer w = new StringWriter();
         StandardTemplateManager m =
