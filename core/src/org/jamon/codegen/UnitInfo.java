@@ -20,11 +20,9 @@
 
 package org.jamon.codegen;
 
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.LinkedList;
-import java.util.Map;
 
 import org.jamon.node.ADefault;
 
@@ -60,11 +58,6 @@ public class UnitInfo
         }
     }
 
-    public String getArgType(String p_argName)
-    {
-        return (String) m_argTypes.get(p_argName);
-    }
-
     public Iterator getRequiredArgs()
     {
         return m_requiredArgs.iterator();
@@ -88,11 +81,6 @@ public class UnitInfo
     public Iterator getFargNames()
     {
         return m_fargs.iterator();
-    }
-
-    public Map getArgumentMap()
-    {
-        return m_argTypes;
     }
 
     public void printRequiredArgsDecl(IndentingWriter p_writer)
@@ -120,8 +108,6 @@ public class UnitInfo
         }
     }
 
-    private final Map m_default = new HashMap();
-    private final Map m_argTypes = new HashMap();
     private final List m_requiredArgs = new LinkedList();
     private final List m_optionalArgs = new LinkedList();
     private final List m_fargs = new LinkedList();
