@@ -1,0 +1,16 @@
+% int count = 3;
+% while (count-- > 0) {
+    Hello world!
+% }
+
+<%java>
+  String[] forecasts = new String[] {
+    "partly cloudy", "mostly cloudy", "sunny", "rain", "night" };
+  int whichForecast = (int) (Math.random() * 5);
+  String forecast = forecasts[whichForecast];
+</%java>
+
+Welcome to the free weather site.
+Today's date is <% new java.util.Date() %>.
+Tonight's forecast is <% forecast %>.
+To get a better forcast, please sign up for our premium service.

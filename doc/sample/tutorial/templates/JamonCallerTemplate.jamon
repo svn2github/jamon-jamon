@@ -1,0 +1,13 @@
+<%args>
+  String[] names;
+  String[] phoneNumbers;
+</%args>
+<table>
+% for (int i=0; i<names.length; i++) {
+  <tr>
+    <td><% names[i] %></td>
+    <td><& StdPhoneNumberFormat; number => phoneNumbers[i];
+           separator => "-" &></td>
+  </tr>
+% }
+</table>

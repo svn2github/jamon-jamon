@@ -1,0 +1,12 @@
+<%args>
+  int count;
+  String name => "Somebody";
+  String greeting;
+</%args>
+<html>
+  <body>
+%   for (int i = 1; i <= count; ++i) {
+    <% i %>. <% greeting %> <% name %> <br />
+%   }
+  </body>
+</html>

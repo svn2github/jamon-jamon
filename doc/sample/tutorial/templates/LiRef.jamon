@@ -1,0 +1,8 @@
+<%frag content>
+</%frag>
+<%args>
+  String href;
+</%args>
+<li>
+<a href="<% href %>"><& content &></a>
+</li>

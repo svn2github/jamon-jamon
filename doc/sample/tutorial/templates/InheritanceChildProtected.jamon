@@ -1,0 +1,19 @@
+<%extends InheritanceParentProtected>
+<%args>
+  String special;
+</%args>
+<%xargs>
+  userAccount;
+</%xargs>
+
+<h2>Weekly Special</h2>
+<% userAccount == null ? "You" : (userAccount.getName() + ", you") %>\
+ qualify for the special of the week!
+<blink><% special %></blink>
+
+<%override title>
+  <%xargs>
+    name;
+  </%xargs>
+  Jamon Specials for <% name %>
+</%override>
