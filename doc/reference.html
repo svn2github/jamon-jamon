@@ -79,7 +79,11 @@ this &amp; that
 </pre>
      The available escaping mechanism are
      <ul>
-       <li>HTML (use <code>|h</code> in the emit block)</li>
+       <li>HTML (use <code>|h</code> in the emit block) -- produces output suitable for 
+         inclusion in the body of HTML elements</li>
+       <li>Strict HTML (use <code>|H</code> in the emit block) -- produces output suitable
+         for use as an HTML attribute value (it is similar to HTML escaping but also escapes
+         quotes and apostrophes)</li>
        <li>XML (use <code>|x</code> in the emit block)</li>
        <li>URL (use <code>|u</code> in the emit block)</li>
        <li>None (use <code>|n</code> in the emit block)</li>
