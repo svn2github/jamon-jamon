@@ -422,6 +422,12 @@ public class ImplGenerator extends BaseGenerator
             println();
             String name = (String) i.next();
             print("  public ");
+            String pkgName = getPackageName();
+            if (pkgName.length() > 0)
+            {
+                print(pkgName);
+                print(".");
+            }
             print(getInterfaceClassName());
             print(" set");
             print(capitalize(name));
