@@ -25,9 +25,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.LinkedList;
 import java.util.Map;
-import java.util.HashMap;
-import java.util.StringTokenizer;
-import java.io.File;
 import java.io.Reader;
 import java.io.IOException;
 import java.io.PushbackReader;
@@ -109,21 +106,6 @@ public class TemplateDescriber
                 throw new JamonException(e);
             }
         }
-    }
-
-    private String templatePathToFilePath(String p_path)
-    {
-        StringTokenizer tokenizer = new StringTokenizer(p_path, "/");
-        StringBuffer path = new StringBuffer(p_path.length());
-        while (tokenizer.hasMoreTokens())
-        {
-            path.append(tokenizer.nextToken());
-            if (tokenizer.hasMoreTokens())
-            {
-                path.append(File.separator);
-            }
-        }
-        return path.toString();
     }
 
     public List getRequiredArgNames(final String p_path)
