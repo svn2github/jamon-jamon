@@ -15,7 +15,7 @@
  * created by Jay Sachs are Copyright (C) 2003 Jay Sachs.  All Rights
  * Reserved.
  *
- * Contributor(s):
+ * Contributor(s): Ian Robertson
  */
 
 package org.jamon;
@@ -28,61 +28,59 @@ import org.jamon.lexer.LexerException;
 import org.jamon.node.Token;
 
 public class JamonParseException
-    extends JamonException
+    extends JamonTemplateException
 {
+    private static class Details
+    {
+        int line;
+        int column;
+        String description;
+    }
+
+    private JamonParseException(String p_fileName, Details p_details)
+    {
+        super(p_details.description, p_fileName,
+              p_details.line, p_details.column);
+    }
+
     public JamonParseException(String p_fileName, LexerException p_exception)
     {
-        super(p_exception.getMessage());
-        m_fileName = p_fileName;
-        String message = p_exception.getMessage();
-        int i = message.indexOf(',');
-        m_line = Integer.parseInt(message.substring(1, i));
-        int j = message.indexOf(']');
-        m_column = Integer.parseInt(message.substring(i+1,j));
-        m_description = message.substring(j+2);
+        this(p_fileName, parseLexerException(p_exception));
     }
 
     public JamonParseException(String p_fileName, ParserException p_exception)
     {
-        super(p_exception.getMessage());
-        m_fileName = p_fileName;
+        this(p_fileName, parseParserException(p_exception));
+    }
+
+    private static Details parseLexerException(LexerException p_exception)
+    {
+        Details details = new Details();
+        String message = p_exception.getMessage();
+        int i = message.indexOf(',');
+        details.line = Integer.parseInt(message.substring(1, i));
+        int j = message.indexOf(']');
+        details.column = Integer.parseInt(message.substring(i+1,j));
+        details.description = message.substring(j+2);
+        return details;
+    }
+
+    private static Details parseParserException(ParserException p_exception)
+    {
+        Details details = new Details();
         Token token = p_exception.getToken();
-        m_line = token.getLine();
-        m_column = token.getPos();
+        details.line = token.getLine();
+        details.column = token.getPos();
         int i = p_exception.getMessage().lastIndexOf(']');
-        m_description = p_exception.getMessage().substring(i+1);
+        details.description = p_exception.getMessage().substring(i+1);
+        return details;
     }
 
     public String getStandardMessage()
     {
         return getFileName() + ":" + getLine() + ":" + getColumn() + ":"
-            + getDescription();
+            + getMessage();
     }
-
-    public String getDescription()
-    {
-        return m_description;
-    }
-
-    public String getFileName()
-    {
-        return m_fileName;
-    }
-
-    public int getLine()
-    {
-        return m_line;
-    }
-
-    public int getColumn()
-    {
-        return m_column;
-    }
-
-    private final int m_line;
-    private final int m_column;
-    private final String m_fileName;
-    private final String m_description;
 }
 
 

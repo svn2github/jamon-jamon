@@ -36,7 +36,7 @@ import org.apache.tools.ant.types.Path;
 
 import org.jamon.Invoker;
 import org.jamon.StandardTemplateManager;
-import org.jamon.JamonParseException;
+import org.jamon.JamonTemplateException;
 
 /**
  * Ant task to reflectively invoke templates.
@@ -79,9 +79,9 @@ public class InvokerTask
         {
             throw new BuildException(e);
         }
-        catch (JamonParseException e)
+        catch (JamonTemplateException e)
         {
-            throw new BuildException(e.getDescription(),
+            throw new BuildException(e.getMessage(),
                                      new Location(e.getFileName(),
                                                   e.getLine(),
                                                   e.getColumn()));

@@ -221,9 +221,10 @@ public class TemplateProcessor
                 processor.generateSource(args[arg++]);
             }
         }
-        catch (JamonParseException e)
+        catch (JamonTemplateException e)
         {
-            System.err.println(e.getStandardMessage());
+            System.err.println(e.getFileName() + ":" + e.getLine() + ":"
+                               + e.getColumn() + ":" + e.getMessage());
             System.exit(2);
         }
         catch (Throwable t)
