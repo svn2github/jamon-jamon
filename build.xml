@@ -13,6 +13,7 @@
   <property name="jarfile" value="jamon.jar" />
   <property name="core.classes.dir" value="core/build/classes" />
   <property name="stage.dir" value="site" />
+  <property name="dist.dir" value="${stage.dir}/dist" />
   <property file="core/src/org/jamon/Resources.properties" />
   <property name="tarfilebase"
             value="jamon-${org.jamon.version}" />
@@ -206,9 +207,11 @@
     <mkdir dir="${stage.dir}" />
     <copy todir="${stage.dir}" >
       <fileset dir="doc/build/www" />
+      <fileset dir="core/build" includes="javadoc/**" />
+    </copy>
+    <copy todir="${dist.dir}" >
       <fileset dir="." includes="${tarball.bin}" />
       <fileset dir="." includes="${tarball.src}" />
-      <fileset dir="core/build" includes="javadoc/**" />
     </copy>
   </target>
 
@@ -221,8 +224,20 @@
       <arg value="--cvs-exclude" />
       <arg value="--delete" />
       <arg value="--compress" />
+      <arg value="--exclude" />
+      <arg value="dist" />
       <arg value="." />
       <arg value="jamon@jamon.org:/home/jamon/www" />
+    </exec>
+    <exec dir="${dist.dir}" executable="rsync">
+      <arg value="--rsh=ssh" />
+      <arg value="--verbose" />
+      <arg value="--recursive" />
+      <arg value="--relative" />
+      <arg value="--cvs-exclude" />
+      <arg value="--compress" />
+      <arg value="." />
+      <arg value="jamon@jamon.org:/home/jamon/www/dist" />
     </exec>
   </target>
 
