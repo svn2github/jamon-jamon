@@ -14,7 +14,7 @@ public abstract class AbstractTemplate
         m_templateManager = p_templateManager;
     }
 
-    protected void write(String p_string)
+    protected void writeEscaped(String p_string)
         throws IOException
     {
         // FIXME: need to set default escaping

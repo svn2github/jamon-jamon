@@ -12,7 +12,7 @@ import org.modusponens.jtt.analysis.*;
 
 public class ImplGenerator extends BaseGenerator
 {
-    private List m_body = new ArrayList();
+    private List m_statements = new ArrayList();
     private StringBuffer m_current = new StringBuffer();
     private Set m_calls = new HashSet();
 
@@ -58,22 +58,23 @@ public class ImplGenerator extends BaseGenerator
         {
             buf.append(((TAny)i.next()).getText());
         }
-        m_body.add(buf.toString());
+        addStatement(new RawStatement(buf.toString()));
     }
 
     public void caseAJlineComponent(AJlineComponent node)
     {
         handleBody();
-        m_body.add(node.getFragment().getText());
+        addStatement(new RawStatement(node.getFragment().getText()));
     }
 
     private void handleBody()
     {
         if (m_current.length() > 0)
         {
-            m_body.add("    write(\""
-                       + javaEscape(m_current.toString())
-                       + "\");");
+            addStatement(new WriteStatement("\""
+                                          + javaEscape(m_current.toString())
+                                          + "\"",
+                                          Encoding.NONE));
             m_current = new StringBuffer();
         }
     }
@@ -83,35 +84,32 @@ public class ImplGenerator extends BaseGenerator
         handleBody();
         StringBuffer expr = new StringBuffer();
         TEscape escape = node.getEscape();
-        if (escape == null)
-        {
-            expr.append("    write(");
-        }
-        else
+        Encoding encoding = Encoding.DEFAULT;
+        if (escape != null)
         {
             char c = escape.getText().trim().charAt(1);
             switch (c)
             {
-              case 'h': expr.append("    writeHtmlEscaped("); break;
-              case 'u': expr.append("    writeUrlEscaped("); break;
-              case 'n': expr.append("    writeUnEscaped("); break;
-              case 'x': expr.append("    writeXmlEscaped("); break;
+              case 'h': encoding = Encoding.HTML; break;
+              case 'u': encoding = Encoding.URL; break;
+              case 'n': encoding = Encoding.NONE; break;
+              case 'x': encoding = Encoding.XML; break;
               default:
                 throw new RuntimeException("Unknown escape " + c);
             }
         }
-        expr.append("String.valueOf(");
         for (Iterator i = node.getAny().iterator(); i.hasNext(); /* */)
         {
             expr.append(((TAny)i.next()).getText());
         }
-        expr.append("));");
-        m_body.add(expr);
+        addStatement(new WriteStatement(expr.toString(),encoding));
     }
 
     public void caseACallComponent(ACallComponent node)
     {
-        m_calls.add(asText(node.getPath()));
+        String path = asText(node.getPath());
+        m_calls.add(path);
+        addStatement(new CallStatement(path,node.getParam()));
     }
 
     private String asText(PPath node)
@@ -209,9 +207,9 @@ public class ImplGenerator extends BaseGenerator
 
         println("    throws java.io.IOException");
         println("  {");
-        for (Iterator i = m_body.iterator(); i.hasNext(); /* */)
+        for (Iterator i = m_statements.iterator(); i.hasNext(); /* */)
         {
-            println(i.next());
+            println(((Statement)i.next()).asString());
         }
         println("  }");
     }
@@ -256,4 +254,100 @@ public class ImplGenerator extends BaseGenerator
         println("}");
     }
 
+    private void addStatement(Statement p_statement)
+    {
+        m_statements.add(p_statement);
+    }
+
+    private static class Encoding
+    {
+        private Encoding(String p_name)
+        {
+            m_name = p_name;
+        }
+        public String toString()
+        {
+            return m_name;
+        }
+        public boolean equals(Object p_obj)
+        {
+            return (p_obj instanceof Encoding) ? p_obj == this : false;
+        }
+
+        private final String m_name;
+
+        final static Encoding DEFAULT = new Encoding("");
+        final static Encoding NONE = new Encoding("Un");
+        final static Encoding HTML = new Encoding("Html");
+        final static Encoding XML = new Encoding("Xml");
+        final static Encoding URL = new Encoding("Url");
+    }
+
+    private static interface Statement
+    {
+        String asString();
+    }
+
+    private static class WriteStatement
+        implements Statement
+    {
+        WriteStatement(String p_expr, Encoding p_encoding)
+        {
+            m_expr = p_expr;
+            m_encoding = p_encoding;
+        }
+        private final String m_expr;
+        private final Encoding m_encoding;
+        public String asString()
+        {
+            return "write" + m_encoding + "Escaped(String.valueOf(" + m_expr + "));";
+        }
+    }
+
+    private static class RawStatement
+        implements Statement
+    {
+        RawStatement(String p_code)
+        {
+            m_code = p_code;
+        }
+        private final String m_code;
+        public String asString()
+        {
+            return m_code;
+        }
+    }
+
+    private static class Param
+    {
+        Param(String p_name, String p_expr)
+        {
+            m_name = p_name;
+            m_expr = p_expr;
+        }
+        private final String m_name;
+        private final String m_expr;
+    }
+
+    private static class CallStatement
+        implements Statement
+    {
+        CallStatement(String p_path,List p_params)
+        {
+            m_path = p_path;
+            m_params = new Param[p_params.size()];
+            for (int i = 0; i < m_params.length; ++i)
+            {
+                AParam p = (AParam) p_params.get(i);
+                m_params[i] = new Param(p.getIdentifier().getText(),
+                                        p.getParamExpr().getText());
+            }
+        }
+        private final String m_path;
+        private final Param [] m_params;
+        public String asString()
+        {
+            return "/* call to " + m_path + " goes here */";
+        }
+    }
 }
