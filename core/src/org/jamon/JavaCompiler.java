@@ -52,32 +52,39 @@ public class JavaCompiler
 
         Process p = Runtime.getRuntime().exec(cmdline);
         StreamConsumer stderr = new StreamConsumer(p.getErrorStream());
-        Thread errThread = new Thread(stderr);
-        errThread.start();
-        int code = -1;
         try
         {
-            code = p.waitFor();
+            Thread errThread = new Thread(stderr);
+            errThread.start();
+            int code = -1;
+            try
+            {
+                code = p.waitFor();
+            }
+            catch (InterruptedException e)
+            {
+                errThread.interrupt();
+            }
+            
+            try
+            {
+                errThread.join();
+            }
+            catch (InterruptedException e)
+            {
+                // just ignore it
+            }
+            if (code != 0)
+            {
+                throw new IOException("Compilation failed code="
+                                      + code
+                                      + "\n"
+                                      + stderr.getContents());
+            }
         }
-        catch (InterruptedException e)
+        finally
         {
-            errThread.interrupt();
-        }
-
-        try
-        {
-            errThread.join();
-        }
-        catch (InterruptedException e)
-        {
-            // just ignore it
-        }
-        if (code != 0)
-        {
-            throw new IOException("Compilation failed code="
-                                  + code
-                                  + "\n"
-                                  + stderr.getContents());
+            stderr.close();
         }
     }
 
@@ -90,6 +97,12 @@ public class JavaCompiler
         }
         private final InputStream m_stream;
         private final StringBuffer m_buffer = new StringBuffer();
+
+        private void close()
+            throws IOException
+        {
+            m_stream.close();
+        }
 
         synchronized String getContents()
         {
