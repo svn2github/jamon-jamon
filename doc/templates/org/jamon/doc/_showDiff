@@ -1,0 +1,15 @@
+<%farg oldContent></%farg>\
+<%farg newContent></%farg>\
+<&|| /org/jamon/doc/util/HighlightChanges &>
+  <|oldContent><& oldContent &></|>
+  <|newContent><& newContent &></|>
+  <|insertedRenderer><%args>
+      Object text;
+    </%args><span class='changed'><% text %></span></|>
+  <|unchangedRenderer><%args>
+      Object text;
+    </%args><% text %></|>
+  <|deletedRenderer><%args>
+      Object text;
+    </%args></|>
+</&>
