@@ -43,12 +43,6 @@ public abstract class TestBase
         resetWriter();
     }
 
-    protected final boolean doDynamicRecompilation()
-    {
-        return false;
-    }
-
-
     private static final String BASEDIR =
         System.getProperty("org.jamon.integration.basedir");
     protected static final String SOURCE_DIR =
