@@ -33,7 +33,6 @@ import org.jamon.TemplateManager;
 public abstract class TestBase
     extends TestCase
 {
-
     public void setUp()
         throws Exception
     {
@@ -41,6 +40,8 @@ public abstract class TestBase
             (new StandardTemplateManager.Data()
                  .setDynamicRecompilation(doDynamicRecompilation())
                  .setSourceDir(SOURCE_DIR)
+                 .setClasspath(System.getProperty
+                               ("org.jamon.integration.classpath"))
                  .setCacheSize(cacheSize())
                  .setWorkDir(WORK_DIR));
         resetWriter();

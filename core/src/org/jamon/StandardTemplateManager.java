@@ -35,7 +35,6 @@ import java.util.HashMap;
 import java.util.Set;
 import java.util.HashSet;
 
-import org.apache.tools.ant.AntClassLoader;
 
 /**
  * The standard implementation of the @{link TemplateManager}
@@ -328,11 +327,6 @@ public class StandardTemplateManager
                     p_classpath.append(url.substring(5));
                 }
             }
-        }
-        else if (p_classLoader instanceof AntClassLoader)
-        {
-            p_classpath.append(File.pathSeparator);
-            p_classpath.append(((AntClassLoader)p_classLoader).getClasspath());
         }
         if (p_classLoader.getParent() != null)
         {

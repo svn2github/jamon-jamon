@@ -15,14 +15,29 @@
 
   <property name="sample.template1" value="test/jamon/TestTemplate"/>
   <property name="sample.template2" value="test/jamon/Arguments"/>
-  <property name="java.lib.jamon" value="../jamon.jar"/>
   <property name="java.lib.junit" value="/usr/local/share/java/junit.jar" />
 
   <property name="junit.timeout" value="15000" />
   <property name="junit.printsummary" value="off" />
   <property name="junit.formatter" value="org.apache.tools.ant.taskdefs.optional.junit.BriefJUnitResultFormatter" />
 
-  <target name="template-src">
+
+  <target name="jamon-libs-use-jar" if="org.jamon.integration.usejar">
+    <dirname property="jamon.top.dir" file="." />
+    <property name="java.lib.jamon" value="${jamon.top.dir}/jamon.jar"/>
+  </target>
+
+  <target name="jamon-libs-use-work" unless="org.jamon.integration.usejar">
+    <dirname property="jamon.top.dir" file="." />
+    <property name="java.lib.jamon"
+              value="${jamon.top.dir}/core/build/classes:${jamon.top.dir}/stdlib/build/classes:${jamon.top.dir}/anttask/build/classes" />
+  </target>
+
+  <target name="init" depends="jamon-libs-use-jar,jamon-libs-use-work">
+    <echo message="${java.lib.jamon}" />
+  </target>
+
+  <target name="template-src" depends="init">
     <echo file="templates/test/jamon/Recompilation"
           append="false">This is the template</echo>
     <echo>File created</echo>
@@ -100,6 +115,8 @@
            failureproperty="org.jamon.junit.failuresOccured">
       <sysproperty key="org.jamon.integration.basedir"
                    value="${template.src.dir}" />
+      <sysproperty key="org.jamon.integration.classpath"
+                   value="${java.lib.jamon}:${template.src.dir}/${classes.dir}" />
       <formatter classname="${junit.formatter}" usefile="no"/>
       <classpath>
         <pathelement location="${classes.dir}"/>

@@ -21,7 +21,9 @@
           depends="jar"
           description="Run tests">
     <ant dir="core" target="test"/>
-    <ant dir="integration" target="test"/>
+    <ant dir="integration" target="test">
+      <property name="org.jamon.integration.usejar" value="true" />
+    </ant>
     <ant dir="stdlib" target="test"/>
   </target>
 
