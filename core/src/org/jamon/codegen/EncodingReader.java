@@ -35,59 +35,117 @@ public class EncodingReader
     public EncodingReader(InputStream p_stream)
         throws IOException
     {
-        PushbackInputStream stream = new PushbackInputStream(p_stream, 30);
-        byte[] data = new byte[ONEBYTESIG.length];
-        int len = stream.read(data);
-        if (len != data.length && len > 0)
+        PushbackInputStream stream = new PushbackInputStream(p_stream, 50);
+        if (matches(ONEBYTESIG, stream))
         {
-            stream.unread(data, 0, len);
-            m_reader = new InputStreamReader(stream);
+            m_reader = new InputStreamReader(stream,
+                                             computeOneByteEncoding(stream));
+        }
+        else if (matches(UTF16SIG, stream))
+        {
+            m_reader = new InputStreamReader(stream,
+                                             computeUtf16Encoding(stream));
         }
         else
         {
-            int c;
-            final int SPACE = (int) ' ';
-            final int TAB = (int) '\t';
-            final int CLOSE = (int) '>';
+            m_reader = new InputStreamReader(stream);
+        }
+    }
 
-            final int START = 0;
-            final int INNAME = 1;
-            final int WAITFORCLOSE = 2;
-
-            StringBuffer encoding = new StringBuffer();
-
-            int state = 0;
-            while (true)
+    private boolean matches(byte[] match, PushbackInputStream p_stream)
+        throws IOException
+    {
+        byte[] data = new byte[match.length];
+        int len = p_stream.read(data);
+        if (len == match.length)
+        {
+            for (int i = 0; i < len; ++i)
             {
-                c = stream.read();
-                if (c == -1)
+                if (match[i] != data[i])
                 {
-                    throw new IOException("EOF before encoding tag finished");
+                    p_stream.unread(data, 0, len);
+                    return false;
                 }
-                else if (c == SPACE || c == TAB)
+
+            }
+            return true;
+        }
+        p_stream.unread(data, 0, len);
+        return false;
+    }
+
+    private String computeUtf16Encoding(InputStream p_stream)
+        throws IOException
+    {
+        return computeEncoding(p_stream, true);
+    }
+
+    private String computeOneByteEncoding(InputStream p_stream)
+        throws IOException
+    {
+        return computeEncoding(p_stream, false);
+    }
+
+    private String computeEncoding(InputStream p_stream, boolean p_twoBytes)
+        throws IOException
+    {
+        final int SPACE = (int) ' ';
+        final int TAB = (int) '\t';
+        final int CLOSE = (int) '>';
+
+        final int START = 0;
+        final int INNAME = 1;
+        final int WAITFORCLOSE = 2;
+
+        StringBuffer encoding = new StringBuffer();
+        boolean lowByte = true;
+        int state = 0;
+        while (true)
+        {
+            int c = p_stream.read();
+            if (p_twoBytes)
+            {
+                if (lowByte)
                 {
-                    if (state == INNAME)
+                    if (c != 0)
                     {
-                        state = WAITFORCLOSE;
                     }
-                }
-                else if (c == CLOSE)
-                {
-                    break;
-                }
-                else if (state != WAITFORCLOSE)
-                {
-                    state = INNAME;
-                    // FIXME: check that c is ASCII
-                    encoding.append((char)c);
+                    lowByte = false;
+                    continue;
                 }
                 else
                 {
-                    throw new IOException("Malformed encoding tag");
+                    lowByte = true;
                 }
             }
-            m_reader = new InputStreamReader(stream, encoding.toString());
+
+            if (c == -1)
+            {
+                throw new IOException("EOF before encoding tag finished");
+            }
+            else if (c == SPACE || c == TAB)
+            {
+                if (state == INNAME)
+                {
+                    state = WAITFORCLOSE;
+                }
+            }
+            else if (c == CLOSE)
+            {
+                break;
+            }
+            else if (state != WAITFORCLOSE)
+            {
+                state = INNAME;
+                encoding.append((char)c);
+            }
+            else
+            {
+                throw new IOException("Malformed encoding tag");
+            }
         }
+        System.err.println("Encoding is " + encoding);
+        return encoding.toString();
     }
 
     public void close()
@@ -111,10 +169,11 @@ public class EncodingReader
         try
         {
             ONEBYTESIG = "<%encoding ".getBytes("latin1");
-            UTF16SIG = "<%encoding ".getBytes("utf16");
+            UTF16SIG = "<%encoding ".getBytes("UTF-16");
         }
         catch (UnsupportedEncodingException e)
         {
+            e.printStackTrace();
             throw new JamonRuntimeException(e);
         }
     }
