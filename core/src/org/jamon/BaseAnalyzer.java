@@ -123,6 +123,10 @@ public class BaseAnalyzer
     {
 
         UnitInfo unitInfo = getUnitInfo("#PFRAG#" + p_fargName);
+        if (unitInfo == null)
+        {
+            return null;
+        }
         return new FargInfo(p_fargName,
                             unitInfo.getRequiredArgNames(),
                             unitInfo.getArgumentMap());
