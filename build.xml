@@ -13,20 +13,19 @@
   <property name="jarfile" value="jamon.jar" />
 
   <target name="test1"
-          depends="compiler"
+          depends="compile"
           description="Run the demo">
     <ant dir="integration" target="test1">
       <property name="java.lib.jamon" value="${basedir}/core/build/classes"/>
     </ant>
   </target>
 
-  <target name="compiler" description="Build the compiler">
-    <ant dir="core" target="build"/>
+  <target name="core" description="Build the core template engine">
+    <ant dir="core" target="compile"/>
   </target>
 
   <target name="compile" description="Build every project">
     <ant dir="core" target="build"/>
-    <ant dir="integration" target="compile"/>
     <ant dir="anttask" target="build"/>
     <ant dir="stdlib" target="compile"/>
   </target>
@@ -45,13 +44,22 @@
     <ant dir="core" target="cvsignores"/>
     <ant dir="integration" target="cvsignores"/>
     <ant dir="anttask" target="cvsignores"/>
+    <ant dir="stdlib" target="cvsignores"/>
   </target>
 
-  <target name="spotless"
-          depends="">
+  <target name="spotless">
     <ant dir="core" target="spotless"/>
     <ant dir="integration" target="spotless"/>
     <ant dir="anttask" target="spotless"/>
+    <ant dir="stdlib" target="spotless"/>
+    <delete file="${jarfile}" />
+  </target>
+
+  <target name="clean">
+    <ant dir="core" target="clean"/>
+    <ant dir="integration" target="clean"/>
+    <ant dir="anttask" target="clean"/>
+    <ant dir="stdlib" target="clean"/>
   </target>
 
 </project>

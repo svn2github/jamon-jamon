@@ -11,7 +11,7 @@
   <property name="test.src.dir" value="${build.dir}/src" />
 
   <target name="test">
-    <taskdef name="jamon" 
+    <taskdef name="jamon"
              classname="org.jamon.ant.JamonTask"
              classpath="../build/classes:../../core/build/classes"/>
     <mkdir dir="${test.src.dir}" />
@@ -21,8 +21,8 @@
   </target>
 
   <target name="cvsignores">
-    <echo file=".cvsignore">.cvsignore 
-${build.dir} 
+    <echo file=".cvsignore">.cvsignore
+${build.dir}
 build.properties
 </echo>
   </target>
@@ -31,4 +31,7 @@ build.properties
     <delete dir="${test.src.dir}" />
   </target>
 
+  <target name="spotless">
+    <delete file=".cvsignore" />
+  </target>
 </project>

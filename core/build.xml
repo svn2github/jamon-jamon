@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<project name="Jamon" default="build">
+<project name="Jamon" default="compile">
 
   <description>
     A compiler that turns typed templates into Java code.
@@ -49,7 +49,7 @@
     </sablecc>
  </target>
 
-  <target name="build"
+  <target name="compile"
           depends="parser"
           description="Compiles all the Java files">
       <mkdir dir="${classes.dir}"/>
@@ -79,13 +79,13 @@
 </echo>
   </target>
 
-  <target name="jar" depends="build">
+  <target name="jar" depends="compile">
     <jar basedir="${classes.dir}" jarfile="${jarfile}" />
   </target>
 
 
 
-  <target name="testclasses" depends="build">
+  <target name="testclasses" depends="compile">
     <mkdir dir="${tests.classes.dir}" />
     <javac srcdir="${tests.src.dir}"
            destdir="${tests.classes.dir}"

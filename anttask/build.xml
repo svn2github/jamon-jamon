@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<project name="AntTask" default="build">
+<project name="AntTask" default="compile">
 
   <description>Ant task for Jamon</description>
 
@@ -16,7 +16,7 @@
   <property name="java.lib.ant" value="/usr/local/ant/lib/ant.jar"/>
   <property name="java.lib.jamon" value="../core/build/classes"/>
 
-  <target name="build"
+  <target name="compile"
           description="Compiles Java files">
     <mkdir dir="${classes.dir}"/>
     <javac destdir="${classes.dir}"
@@ -28,13 +28,13 @@
   </target>
 
   <target name="jar"
-          depends="build"
+          depends="compile"
           description="Creates a JAR file for the ant-task">
     <jar basedir="${classes.dir}" jarfile="${jarfile}" />
   </target>
 
   <target name="test"
-          depends="build"
+          depends="compile"
           description="Tests the anttask">
     <echo message="java.lib.jamon=${java.lib.jamon}"/>
     <echo message="classes.dir=${classes.dir}"/>
@@ -47,8 +47,8 @@
   </target>
 
   <target name="cvsignores">
-    <echo file=".cvsignore">.cvsignore 
-${build.dir} 
+    <echo file=".cvsignore">.cvsignore
+${build.dir}
 build.properties
 ${jarfile}
 </echo>
@@ -62,8 +62,11 @@ ${jarfile}
   </target>
 
   <target name="spotless"
+          depends="clean"
           description="Restores work area to its state after checking out">
-    <delete dir="${classes.dir}"/>
+    <ant dir="test" target="spotless"/>
+    <delete file=".cvsignore" />
+    <delete file="${jarfile}" />
   </target>
 
 </project>

@@ -51,8 +51,13 @@
 </echo>
   </target>
 
-  <target name="spotless">
+  <target name="clean">
     <delete dir="${build.dir}"/>
+  </target>
+
+  <target name="spotless" depends="clean">
+    <delete file=".cvsignore" />
+    <delete file="${jarfile}" />
   </target>
 
 </project>
