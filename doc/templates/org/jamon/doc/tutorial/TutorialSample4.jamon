@@ -77,7 +77,7 @@ Templates usually construct text in a structured language such as HTML or XML, o
       details.
 
     <li><span class="concept">Setting the default escaping mechanism</span>
-       The default escaping rule for a tempalte is HTML. This default
+       The default escaping rule for a template is HTML. This default
        can be changed by the Java code that invokes the template by
        calling the <code>escaping()</code> method on the template with the
        desired escaping mode.  For example, the following code fragment
