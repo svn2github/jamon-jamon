@@ -23,15 +23,23 @@
     <ant dir="core" target="build"/>
   </target>
 
+  <target name="compile" description="Build every project">
+    <ant dir="core" target="build"/>
+    <ant dir="integration" target="compile"/>
+    <ant dir="anttask" target="compile"/>
+  </target>
+
   <target name="cvsignores" description="Generates cvsignore files">
     <ant dir="core" target="cvsignores"/>
     <ant dir="integration" target="cvsignores"/>
+    <ant dir="anttask" target="cvsignores"/>
   </target>
 
   <target name="spotless"
           depends="">
     <ant dir="core" target="spotless"/>
     <ant dir="integration" target="spotless"/>
+    <ant dir="anttask" target="spotless"/>
   </target>
 
 </project>
