@@ -4,13 +4,19 @@
 
   <description>Test the Ant task for Jamon</description>
 
+  <target name="clean">
+    <delete dir="${test.src.dir}" />
+  </target>
+
   <taskdef name="jamon" classname="org.jamon.ant.JamonTask"/>
 
   <property file="build.properties"/>
   <property file="${user.home}/.ant.properties"/>
+  <property name="test.src.dir" value="build/src" />
 
   <target name="test">
-    <jamon package="foo.bar." destdir="build/src">
+    <mkdir dir="${test.src.dir}" />
+    <jamon package="foo.bar." destdir="${test.src.dir}">
       <src path="templates"/>
     </jamon>
   </target>

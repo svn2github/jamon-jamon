@@ -11,7 +11,6 @@
   <property name="build.src.dir" value="${build.dir}/src"/>
   <property name="classes.dir" value="${build.dir}/classes"/>
   <property name="src.dir" value="src"/>
-
   <property name="jarfile" value="jamon-anttask.jar" />
 
   <property name="java.lib.ant" value="/usr/local/ant/lib/ant.jar"/>
@@ -28,7 +27,7 @@
     </javac>
   </target>
 
-  <target name="jar" 
+  <target name="jar"
           depends="compile"
           description="Creates a JAR file for the ant-task">
     <jar basedir="${classes.dir}" jarfile="${jarfile}" />
@@ -49,6 +48,12 @@
 
   <target name="clean"
           description="Removes all the class files">
+    <!--
+    <exec dir="test" executable="ant">
+      <env key="CLASSPATH" path="${java.lib.jamon}:${classes.dir}"/>
+      <arg value="clean" />
+    </exec>
+     -->
     <delete dir="${classes.dir}"/>
   </target>
 
