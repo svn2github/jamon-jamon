@@ -6,10 +6,9 @@ import java.util.Map;
 
 class FargInfo
 {
-    public FargInfo(String p_name, String p_intfName, Map p_args)
+    public FargInfo(String p_name, Map p_args)
     {
         m_name = p_name;
-        m_intfName = p_intfName;
         m_args = p_args;
     }
 
@@ -25,7 +24,7 @@ class FargInfo
 
     public String getFargInterfaceName()
     {
-        return m_intfName;
+        return Fragment.class.getName();
     }
 
     public String getName()
@@ -34,6 +33,5 @@ class FargInfo
     }
 
     private final String m_name;
-    private final String m_intfName;
     private final Map m_args;
 }

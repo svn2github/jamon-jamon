@@ -32,7 +32,6 @@ public class TemplateDescriber
     public FargInfo getFargInfo(String p_path, String p_fargName)
     {
         return new FargInfo(p_fargName,
-                            Fragment.class.getName(),
                             new HashMap());
     }
 

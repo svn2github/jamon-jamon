@@ -8,9 +8,9 @@ import java.util.Iterator;
 public class IntfGenerator
 {
     public IntfGenerator(TemplateResolver p_resolver,
-                              String p_templatePath,
-                              BaseAnalyzer p_analyzer,
-                              Writer p_writer)
+                         String p_templatePath,
+                         BaseAnalyzer p_analyzer,
+                         Writer p_writer)
     {
         m_path = p_templatePath;
         m_resolver = p_resolver;
@@ -25,6 +25,7 @@ public class IntfGenerator
         generateImports();
         generateDeclaration();
         generateFactoryClass();
+        generateFargInterfaces();
         generateRender();
         generateOptionalArgs();
         generateEpilogue();
@@ -106,6 +107,44 @@ public class IntfGenerator
             println();
         }
     }
+
+
+    private void generateFargInterface(FargInfo p_fargInfo)
+        throws IOException
+    {
+        print  ("  public static interface Fragment_");
+        println(p_fargInfo.getName());
+        println("  {");
+        print  ("    void render(");
+        for (Iterator a = p_fargInfo.getArgumentNames(); a.hasNext(); /* */)
+        {
+            String argName = (String) a.next();
+            print(p_fargInfo.getArgumentType(argName));
+            print(" ");
+            print(argName);
+            if (a.hasNext())
+            {
+                print(", ");
+            }
+        }
+        println(")");
+        print  ("      throws ");
+        print  (IOEXCEPTION_CLASS);
+        println(";");
+        println("  }");
+        println("");
+    }
+
+    private void generateFargInterfaces()
+        throws IOException
+    {
+        for (Iterator f = m_analyzer.getFargNames(); f.hasNext(); /* */)
+        {
+            generateFargInterface(m_analyzer.getFargInfo((String)f.next()));
+        }
+    }
+
+
 
     private void generateFactoryClass()
         throws IOException
