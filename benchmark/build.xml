@@ -56,6 +56,19 @@
           classname="org.jamon.benchmark.Benchmark" />
   </target>
 
+  <target name="run-sablecc"
+          depends="compile"
+          description="Run the sablecc benchmarks">
+    <property name="template.dir" value = "../doc/templates"/>
+    <property name="template.file" value = "org/jamon/doc/Reference"/>
+    <java fork="true"
+          classpath="${classes.dir}:${java.lib.jamon}"
+          classname="org.jamon.benchmark.SableCcBenchmarks">
+      <arg value="${template.dir}"/>
+      <arg value="${template.file}"/>
+    </java>
+  </target>
+
   <target name="cvsignores">
     <echo file=".cvsignore">.cvsignore ${build.dir} build.properties
 </echo>
