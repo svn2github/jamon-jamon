@@ -153,6 +153,7 @@ Tokens
        | '</%class' [all - gt] )*;
 
   {body,start -> body} text = all_except_nl;
+  {start,body -> start} ignorable_newline = bs nl;
   {start,body -> start} newline = nl;
 
   {body -> literal, start -> literal} litstart = '<%LITERAL>';
@@ -213,7 +214,7 @@ Tokens
 
 Ignored Tokens
 
-  white_space,doc;
+  white_space,doc,ignorable_newline;
 
 Productions
 

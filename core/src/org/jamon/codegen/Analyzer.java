@@ -438,23 +438,7 @@ public class Analyzer
 
         public void caseANewlineBaseComponent(ANewlineBaseComponent node)
         {
-            int len = m_current.length();
-            if (len == 0)
-            {
-                m_current.append(node.getNewline().getText());
-            }
-            else
-            {
-                char c = m_current.charAt(len-1);
-                if (c == '\\')
-                {
-                    m_current.deleteCharAt(len-1);
-                }
-                else
-                {
-                    m_current.append(node.getNewline().getText());
-                }
-            }
+            m_current.append(node.getNewline().getText());
         }
 
         public void inAMultiFragmentCall(AMultiFragmentCall p_call)
