@@ -289,7 +289,7 @@ public class StandardTemplateManager
         System.getProperty("java.home") + FS + ".." + FS + "bin" + FS +"javac";
     private boolean m_includeRtJar = false;
     private String m_classpath = null;
-    private ClassLoader m_classLoader = ClassLoader.getSystemClassLoader();
+    private ClassLoader m_classLoader = getClass().getClassLoader();
     private JavaCompiler m_javaCompiler;
     private WorkDirClassLoader m_loader;
     private boolean m_initialized;
