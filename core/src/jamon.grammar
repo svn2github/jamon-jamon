@@ -109,7 +109,7 @@ Tokens
   {args} brackets = '[' (hs)* ']';
   {start -> body,body} fragment_call_end = '</&>';
   {call -> callexp} carrow = '=>' hs*;
-  {start -> call, body -> call} fragment_call_start = '<|&' ws*;
+  {start -> call, body -> call} fragment_call_start = '<&|' ws*;
   {start -> call,body -> call} call_start = '<&' ws*;
   {call -> body} call_end = ws* '&>';
   {callexp -> call} param_expr =

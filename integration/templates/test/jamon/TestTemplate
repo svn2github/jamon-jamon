@@ -73,7 +73,7 @@ One more: <& foo; qq => "\""; rr => 8 &>
 
 A call with a template fragment: \
 % final int i = 3;
-<|& Sub2; x => 5 &>This is the body <% i %>
+<&| Sub2; x => 5 &>This is the body <% i %>
 <& foo; qq=>"yes"; rr => i+1 &>
 <& SubTemplate; z => 77; y => "icky" &>
 </&>
@@ -83,22 +83,22 @@ A call with a template fragment: \
 </%import>
 3 more fragment calls:\
 % final LinkedList list = new LinkedList();
-<|& Sub2; x => 5 &>This is the body <% list.size() %>
+<&| Sub2; x => 5 &>This is the body <% list.size() %>
 % list.add(new Integer(x));
 </&>
-<|& Sub2; x => 5 &>This is the body <% list.size() %>
+<&| Sub2; x => 5 &>This is the body <% list.size() %>
 % list.add(new Integer(x));
 </&>
-<|& Sub2; x => 5 &>This is the body <% list.size() %>
+<&| Sub2; x => 5 &>This is the body <% list.size() %>
 % list.add(new Integer(x));
 </&>
 
 
 And now some def frag calls:
-  <|& sub1 &><% i %>
+  <&| sub1 &><% i %>
 body
 </&>
-  <|& sub1; y => 3 &>
+  <&| sub1; y => 3 &>
 body3
 </&>
 
@@ -114,7 +114,7 @@ body3
 
 Nested frag param calls:
 
-<|& sub1 &><|& Sub2; x => 7 &>in sub2body</&>in sub1</&>
+<&| sub1 &><&| Sub2; x => 7 &>in sub2body</&>in sub1</&>
 
 And frag calling frag:
 <%def sub3> \
@@ -125,8 +125,8 @@ A <& frag &> B <& frag &> C \
 % final Counter c = new Counter();
 <%def sub4> \
 <%farg f2></%farg> \
-front<|& sub3 &>before<& f2 &>middle<&f2&>after</&>back</%def> \
-<|& sub4 &> <% c.bump() %> </&>
+front<&| sub3 &>before<& f2 &>middle<&f2&>after</&>back</%def> \
+<&| sub4 &> <% c.bump() %> </&>
 
 
 <%def subX>
@@ -138,7 +138,7 @@ front<|& sub3 &>before<& f2 &>middle<&f2&>after</&>back</%def> \
   <& f; i => 7; s => "no" &>
 </%def>
 
-<|& subX &>
+<&| subX &>
   <%args>
     int i;
     String s;
@@ -146,7 +146,7 @@ front<|& sub3 &>before<& f2 &>middle<&f2&>after</&>back</%def> \
   i is <% i %> and s is <% s %>.
 </&>
 
-<|& SubZ &>
+<&| SubZ &>
   <%args>
     int i;
     String s;

@@ -252,7 +252,7 @@ Your nicknames are
         It is possible to pass a "fragment" of a template as an
         argument to another template (or a <code>def</code>).  When
         passing template fragments, the invocation syntax must look
-        like <code>&lt;|&amp; <i>target</i>; arg1 =&gt;
+        like <code>&lt;&amp;| <i>target</i>; arg1 =&gt;
         ... &amp;&gt;</code>, and any template content up until a
         closing <code>&lt;/&amp;&gt;</code> is considered the fragment
         argument.
@@ -286,9 +286,9 @@ Your nicknames are
 &lt;/%def&gt;
 
 &lt;ul&gt;
-  &lt;|&amp; _lilink; href =&gt; "index.html" &amp;&gt;Home&lt;/&amp;&gt;
-  &lt;|&amp; _lilink; href =&gt; "faq.html" &amp;&gt;&lt;b&gt;FAQ&lt;/b&gt;&lt;/&amp;&gt;
-  &lt;|&amp; _lilink; href =&gt; "toc.html" &amp;&gt;&lt;&amp; _big &amp;&gt;Table of contents&lt;/&amp;&gt;
+  &lt;&amp;| _lilink; href =&gt; "index.html" &amp;&gt;Home&lt;/&amp;&gt;
+  &lt;&amp;| _lilink; href =&gt; "faq.html" &amp;&gt;&lt;b&gt;FAQ&lt;/b&gt;&lt;/&amp;&gt;
+  &lt;&amp;| _lilink; href =&gt; "toc.html" &amp;&gt;&lt;&amp; _big &amp;&gt;Table of contents&lt;/&amp;&gt;
 &lt;/ul&gt;
 </pre>
         produces
@@ -330,7 +330,7 @@ Your nicknames are
 &lt;/ul&gt;
 &lt;/%def&gt;
 
-&lt;|&amp; _list; temps =&gt; new float[] { -13.0, 34.0 }  &amp;&gt;
+&lt;&amp;| _list; temps =&gt; new float[] { -13.0, 34.0 }  &amp;&gt;
   &lt;%args&gt;
     float temperature;
   &lt;/%args&gt;

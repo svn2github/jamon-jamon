@@ -6,7 +6,7 @@
 % }
 </%def>\
 <%args> int[] nums; </%args>\
-<|& subX; nums => nums &>\
+<&| subX; nums => nums &>\
 <%args> int num; </%args>\
 % if (num > 0) {
 +\

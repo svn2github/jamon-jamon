@@ -4,4 +4,4 @@
 <% x %><& content &><% x %>\
 </%def>\
 <%args> int x; </%args>\
-<|& foo; x => x &>(<% x + 1 %>)</&>
+<&| foo; x => x &>(<% x + 1 %>)</&>
