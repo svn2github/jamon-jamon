@@ -19,7 +19,7 @@
       refactoring the <span class="tagline">view</span><br />
     </h3>
 
-    <div id="header"></div>
+    <div id="header">&nbsp;</div>
     <div id="body">
       <div id="nav">
         <ul>
