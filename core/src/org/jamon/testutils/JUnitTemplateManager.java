@@ -35,6 +35,8 @@ public class JUnitTemplateManager
     public AbstractTemplateProxy.Intf acquireInstance(String p_path)
         throws IOException
     {
+        Assert.assertTrue( m_impl == null );
+
         if (p_path.equals(m_path))
         {
 
@@ -51,11 +53,12 @@ public class JUnitTemplateManager
                                          + p_path);
             }
 
-            return (AbstractTemplateProxy.Intf)
+            m_impl = (AbstractTemplateProxy.Intf)
                 Proxy.newProxyInstance
                 (getClass().getClassLoader(),
                  new Class[] { intfClass, AbstractTemplateProxy.Intf.class },
                  this);
+            return m_impl;
         }
         else
         {
@@ -68,9 +71,11 @@ public class JUnitTemplateManager
     {
         // if we got here, we should be ok
 
-        // we could assert that what we got here is what we gave out above
+        Assert.assertTrue( p_impl == m_impl );
+        m_impl = null;
     }
 
+    private AbstractTemplateProxy.Intf m_impl;
     private Writer m_writer;
 
     private void checkArgsLength(Method p_method,
@@ -95,6 +100,8 @@ public class JUnitTemplateManager
     public Object invoke(Object p_proxy, Method p_method, Object[] p_args)
         throws Throwable
     {
+        // sanity:
+        Assert.assertTrue( m_impl == p_proxy );
 
         // from AbstractTemplateProxy.Intf:
         if ("writeTo".equals(p_method.getName()))
@@ -132,10 +139,6 @@ public class JUnitTemplateManager
             checkArgsLength(p_method,
                             p_args,
                             m_requiredArgs.length);
-            if (m_requiredArgs.length != p_args.length)
-            {
-                throw new IllegalStateException("shouldn't get here");
-            }
             for (int i = 0; i < m_requiredArgs.length; ++i)
             {
                 checkArgument(p_method, i, m_requiredArgs[i], p_args[i]);
