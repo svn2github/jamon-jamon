@@ -7,7 +7,9 @@
 
 <h2>Jamon Tutorial - More Advanced Jamon Tags</h2>
 
-Jamon templates are translated into Java classes and interfaces. Jamon provides several tags to give the template author more control over how declarations in the template get translated into Java constructs.
+Jamon templates are translated into Java classes and interfaces. Jamon
+provides several tags to give the template author more control over
+how declarations in the template get translated into Java constructs.
 
 <ol>
   <li><span class="concept">Jamon comments</span>
@@ -16,7 +18,13 @@ Jamon templates are translated into Java classes and interfaces. Jamon provides 
     the Jamon processor and the Java compiler.
 
   <li><span class="concept">Import statements</span>
-    The example templates shown up to this point have completely specified every Java class not in the <code>java.lang</code> package. In the tutorial section on <a href="TutorialSample3.html">Templates with arguments</a> the examples contained the declarations
+
+    The example templates shown up to this point have completely
+specified every Java class not in the <code>java.lang</code>
+package. In the tutorial section on <a
+href="TutorialSample3.html">Templates with arguments</a> the examples
+contained the declarations
+
       <&| ../_Template &>
 <%LITERAL>
 <%args>
@@ -90,7 +98,9 @@ public class SomeTemplateImpl
 }
 </pre>
  <p>
-    Any Java code that is legal at the class level, including fields, methods, and classes, may be declared in a Jamon template between the <code>&lt;%class></code> ... <code>&lt;/%class></code> tags.
+    Any Java code that is legal at the class level, including fields,
+methods, and classes, may be declared in a Jamon template between the
+<code>&lt;%class></code> ... <code>&lt;/%class></code> tags.
 </ol>
 <h3>An Example</h3>
     The template below,      <a href="ClassExampleTemplate.jamon" class="file">
