@@ -16,10 +16,9 @@
   <property name="tests.src.dir" value="tests"/>
   <property name="java.lib.junit" value="junit.jar" />
 
-  <property name="junit.fork" value="no" />
   <property name="junit.timeout" value="1000" />
   <property name="junit.printsummary" value="off" />
-  <property name="junit.formatter" value="brief" />
+  <property name="junit.formatter" value="org.apache.tools.ant.taskdefs.optional.junit.BriefJUnitResultFormatter" />
 
   <property name="java.lib.sablecc"
             value="/usr/local/share/java/sablecc.jar" />
@@ -96,9 +95,12 @@
   <target name="test"
           depends="testclasses"
           description="Run the unit tests">
+    <property name="build.sysclasspath" value="last" />
     <junit printsummary="${junit.printsummary}"
-           fork="${junit.fork}" timeout="${junit.timeout}">
-      <formatter type="${junit.formatter}" usefile="no"/>
+           fork="no"
+           timeout="${junit.timeout}"
+           failureproperty="org.jamon.junit.failuresOccured">
+      <formatter classname="${junit.formatter}" usefile="no"/>
       <classpath>
         <pathelement location="${tests.classes.dir}"/>
         <pathelement location="${classes.dir}"/>
@@ -111,6 +113,7 @@
         </fileset>
       </batchtest>
     </junit>
+    <fail message="tests failed" if="org.jamon.junit.failuresOccured" />
   </target>
 
 
