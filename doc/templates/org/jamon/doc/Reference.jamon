@@ -490,4 +490,42 @@ a good sign for you, <% name %>.
     <pre class="tty"><&| escape//Html &><& reference/paramFragExample &>\
     </&></pre>
 
+  <li><span class="concept">Path aliases</span>
+
+    It is possible to create aliases for path-names.  The basic syntax is:
+    <code>
+      <% "<%alias>" %>
+        <var>shortcut</var> <% "=>" %> <var>/full/path</var>;
+        ...
+      <% "</%alias>" %>
+    </code>
+
+    To use an alias, replace <var>/full/path//</var> with
+    <var>shortcut//</var> when refering to other templates (note the
+    double-slash after <var>shortcut</var>.  Aliases may only be used
+    for the leading part of a path.  Aliases can be used to declare
+    the full path for other aliases.  Shortcut must be a single word,
+    without slashes; the only exception to this is that "/" may be
+    made an alias, refering to the "empty" shortcut.
+
+    <%doc>
+      FIXME - we should define what legal jamon identifiers are,
+      i.e. [a-zA-Z_][a-zA-Z_0-9]*
+    </%doc>
+
+    <p>
+
+    For example:
+    <&| _Template &><%LITERAL>
+<%alias>
+  / => /com/foo/bar;
+  nav => //navigation;
+  legal => /attorneys/documents;
+</%alias>
+
+<& //Home &>  -- calls /com/foo/bar/Home
+<& nav//Left &> -- calls /com/foo/bar/navigation/Left
+<& legal/Disclaimer &> -- calls /attorneys/documents/Disclaimer
+</%LITERAL></&>
+
 </ol>
