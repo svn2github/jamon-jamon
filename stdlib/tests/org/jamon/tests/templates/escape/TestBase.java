@@ -18,7 +18,7 @@
  * Contributor(s):
  */
 
-package org.jamon.tests.templates.html;
+package org.jamon.tests.templates.escape;
 
 public class TestBase
     extends org.jamon.tests.templates.TestBase
