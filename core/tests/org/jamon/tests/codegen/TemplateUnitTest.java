@@ -123,7 +123,6 @@ public class TemplateUnitTest
     public void testSignature()
         throws Exception
     {
-        //FIXME - test imports
         TemplateUnit unit = new TemplateUnit("/foo");
         TemplateUnit parent = new TemplateUnit("/bar");
 
@@ -164,9 +163,6 @@ public class TemplateUnitTest
         f.addRequiredArg(new RequiredArgument("x", "float"));
         checkSigIsUnique(unit, sigs);
         unit.addFragmentArg(new FragmentArgument(g));
-        checkSigIsUnique(unit, sigs);
-
-        unit.addImport(new org.jamon.node.AImport());
         checkSigIsUnique(unit, sigs);
     }
 

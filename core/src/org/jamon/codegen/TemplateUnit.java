@@ -423,12 +423,6 @@ public class TemplateUnit
             p_buf.append("\n");
             arg.getFragmentUnit().generateInterfaceSummary(p_buf);
         }
-        for(Iterator i = getImports(); i.hasNext(); )
-        {
-            p_buf.append("import: ");
-            p_buf.append(i.next());
-            p_buf.append("\n");
-        }
     }
 
     public String getSignature()
