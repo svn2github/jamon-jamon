@@ -460,7 +460,6 @@ public class ProxyGenerator
     }
 
     private void generateInheritanceDepth()
-        throws IOException
     {
         m_writer.print("public static final int INHERITANCE_DEPTH = ");
         m_writer.print(String.valueOf(m_templateUnit.getInheritanceDepth()));

@@ -68,7 +68,6 @@ public class ImplGenerator
     }
 
     private void generateDeclaration()
-        throws IOException
     {
         m_writer.print("public");
         if(m_templateUnit.isParent())
@@ -122,7 +121,6 @@ public class ImplGenerator
     }
 
     private void generateConstructor()
-        throws IOException
     {
         m_writer.println("public " +  getClassName()
                          + "(" + ClassNames.TEMPLATE_MANAGER
@@ -142,7 +140,6 @@ public class ImplGenerator
     }
 
     private void generatePrologue()
-        throws IOException
     {
         String pkgName = m_resolver.getImplPackageName(getPath());
         if (pkgName.length() > 0)
@@ -165,7 +162,6 @@ public class ImplGenerator
 
     private void generateInnerUnitFargInterface(FragmentUnit p_fragmentUnit,
                                                 boolean p_private)
-        throws IOException
     {
         m_writer.println((p_private ? "private" : "protected")
                          + " static abstract class "
@@ -231,7 +227,6 @@ public class ImplGenerator
     }
 
     private void generateMethodIntf(MethodUnit p_methodUnit)
-        throws IOException
     {
         m_writer.println();
         for (Iterator f = p_methodUnit.getFragmentArgs(); f.hasNext(); )
@@ -307,14 +302,12 @@ public class ImplGenerator
     }
 
     private void generateEpilogue()
-        throws IOException
     {
         m_writer.println();
         m_writer.closeBlock();
     }
 
     private void generateImports()
-        throws IOException
     {
         for (Iterator i = m_templateUnit.getImports();
              i.hasNext(); )
