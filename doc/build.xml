@@ -179,6 +179,7 @@ the documentation thus taking care of issues such as escaping.
   </target>
 
   <target name="grind">
+    <echo>Grinding templates/org/jamon/doc/${template}</echo>
     <uptodate property="grindnotneeded"
               srcfile="templates/org/jamon/doc/${template}"
               targetfile="${doc.dir}/${template}.html" />
@@ -186,6 +187,7 @@ the documentation thus taking care of issues such as escaping.
   </target>
 
   <target name="dogrind" unless="grindnotneeded">
+    <echo>Generating ${doc.dir}/${template}.html</echo>
     <invoker classpath="${java.lib.jamon}:${java.lib.diff}"
              workDir="${work.dir}"
              sourceDir="templates"
