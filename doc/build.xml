@@ -283,7 +283,7 @@ the documentation thus taking care of issues such as escaping.
         <pathelement location="${java.lib.jamon}"/>
         <pathelement location="${java.lib.diff}"/>
         <pathelement location="${tomcat.home}/server/lib/servlets-default.jar"/>
-        <pathelement location="com.sun.tools.jar"/>
+        <pathelement location="${com.sun.tools.jar}"/>
         <fileset dir="${tomcat.common.lib}" includes="*.jar" />
         <fileset dir="${tomcat.home}/server/lib" includes="*.jar" />
         <fileset dir="${tomcat.home}/bin" includes="*.jar" />
