@@ -47,12 +47,14 @@ a file <a href="src/foo/bar/HelloServlet.java">HelloServlet.java</a> containing:
 Create the following deployment descriptor by placing the following in a file
 called <a href="web.xml">web.xml</a>:
 
-<pre class="webxml"><&| /org/jamon/escape/Html &><& webxml &></&></pre>
+<pre class="webxml"><&| /org/jamon/escape/Html &>\
+<& ../_ReadFile; fileName => "/sample/servlet/web.xml" &></&></pre>
 
 Create an Ant script by placing the following in a file called
 <a href="build.xml">build.xml</a>:
 
-<pre class="ant"><&| /org/jamon/escape/Html &><& buildxml &></&></pre>
+<pre class="ant"><&| /org/jamon/escape/Html &>\
+<& ../_ReadFile; fileName => "/sample/servlet/build.xml" &></&></pre>
 
 In order to run this script you need to tell Ant where to find the Jamon libraries
 and the servlet APIs.  For example, say the jamon JAR file is in

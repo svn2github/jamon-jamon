@@ -53,6 +53,17 @@ the documentation thus taking care of issues such as escaping.
     <copy file="earthaddress.gif" todir="${doc.dir}" />
     <copy file="favicon.ico" todir="${doc.dir}" />
     <copy file="robots.txt" todir="${doc.dir}" />
+
+    <copy todir="${www.dir}">
+      <fileset id="servlet.control.files" dir="sample/servlet">
+        <include name="web.xml"/>
+        <include name="build.xml"/>
+      </fileset>
+    </copy>
+    <copy todir="${www.dir}/example2">
+      <fileset refid="servlet.control.files"/>
+    </copy>
+
     <copy file="sample/servlet/templates/HelloTemplate.jamon"
           todir="${www.dir}/templates/foo/bar/"/>
     <copy file="sample/servlet/templates/HelloTemplate2.jamon"
@@ -223,21 +234,6 @@ the documentation thus taking care of issues such as escaping.
     <antcall target="grind">
       <param name="template" value="Servlets" />
     </antcall>
-    <!-- Generate the first servlet example -->
-    <!-- Generate the ant script -->
-    <invoker classpath="${java.lib.jamon}:${java.lib.diff}"
-             workDir="${work.dir}"
-             compiler="${org.jamon.invoker.compiler}"
-             sourceDir="templates"
-             output="${www.dir}/build.xml"
-             template="/org/jamon/doc/servlet/buildxml" />
-    <!-- Generate the deployment descriptor -->
-    <invoker classpath="${java.lib.jamon}:${java.lib.diff}"
-             compiler="${org.jamon.invoker.compiler}"
-             workDir="${work.dir}"
-             sourceDir="templates"
-             output="${www.dir}/web.xml"
-             template="/org/jamon/doc/servlet/webxml" />
     <!-- Now do the second example -->
     <!-- Generate the second servlet example -->
     <property name="servlet.src2.dir" value="${www.dir}/example2/src/foo/bar" />
@@ -254,10 +250,6 @@ the documentation thus taking care of issues such as escaping.
              sourceDir="templates"
              output="${servlet.src2.dir}/HelloFormFields.java"
              template="/org/jamon/doc/servlet/FormFieldsTemplate" />
-    <!-- To get a web.xml and build.xml for the example we just copy
-         them from the first example -->
-    <copy file="${www.dir}/web.xml" todir="${www.dir}/example2" />
-    <copy file="${www.dir}/build.xml" todir="${www.dir}/example2" />
     <!-- Copy the various files needed for Appendix A -->
     <copy todir="${www.dir}">
       <fileset dir="resources">
