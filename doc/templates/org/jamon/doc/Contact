@@ -3,15 +3,23 @@
     <h2>Mailing lists</h2>
 
     <ul>
+
       <li>
         <a href="mailman/listinfo/jamon-announce">Jamon
-        announce</a>. Low-bandwidth, restricted, announcements-only
+        announce</a>. Low-bandwidth, announcements-only
         list.
       </li>
+
       <li>
         <a href="mailman/listinfo/jamon-users">Jamon
         users</a>. Questions, suggestions, problems.
       </li>
+
+      <li>
+        <a href="mailman/listinfo/jamon-users">Jamon
+        hackers</a>. Developers' list.
+      </li>
+
     </ul>
 
 </&>
