@@ -1,6 +1,2 @@
-<%extends /test/jamon/ParentFragment>
-  <%use>
-    f;
-  </%use>
-</%extends>\
+<%extends /test/jamon/ParentFragment; f; >\
 {<& f; i => 1 &>}

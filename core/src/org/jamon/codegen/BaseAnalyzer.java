@@ -135,20 +135,21 @@ public class BaseAnalyzer
             {
                 throw new TunnelingException(e);
             }
-            AUse use = (AUse) p_extends.getUse();
-            if (use != null)
+            p_extends.getExtendsUse().apply(this);
+        }
+
+        public void caseASomeExtendsUse(ASomeExtendsUse p_use)
+        {
+            for (Iterator i = p_use.getParentArg().iterator();
+                 i.hasNext(); )
             {
-                for (Iterator i = use.getParentArg().iterator();
-                     i.hasNext(); )
-                {
-                    AParentArg arg = (AParentArg) i.next();
-                    ADefault argDefault = (ADefault) arg.getDefault();
-                    getTemplateUnit().addParentArg
-                        (arg.getName().getText(),
-                         (argDefault != null
-                          ? argDefault.getArgexpr().toString().trim()
-                          : null));
-                }
+                AParentArg arg = (AParentArg) i.next();
+                ADefault argDefault = (ADefault) arg.getDefault();
+                getTemplateUnit().addParentArg
+                    (arg.getName().getText(),
+                     (argDefault != null
+                      ? argDefault.getArgexpr().toString().trim()
+                      : null));
             }
         }
 

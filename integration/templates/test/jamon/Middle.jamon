@@ -1,12 +1,10 @@
-<%extends /test/jamon/Parent>
-  <%use>
-    i;
-    opt1 => "o1m";
-    opt2 => "o2m";
-    opt5 => "o5m";
-    opt6;
-  </%use>
-</%extends><%args>
+<%extends /test/jamon/Parent;
+          i;
+          opt1 => "o1m";
+          opt2 => "o2m";
+          opt5 => "o5m";
+          opt6; >\
+<%args>
   String a;
   boolean b;
   String opt7 => "o7m";

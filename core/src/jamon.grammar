@@ -58,7 +58,6 @@ States
   def,
   imports,
   extends,
-  extends_inner,
   emit,
   class,
   java,
@@ -84,10 +83,8 @@ Tokens
   {args -> body} args_end = '</%args>';
   {args -> body} farg_end = '</%frag>';
   {start -> extends,body -> extends} extends_start = '<%extends' ws+;
-  {extends -> extends_inner} extends_start_done = ws* '>';
-  {extends_inner -> body} extends_end = ws* '</%extends>';
-  {extends_inner -> parent_args} use_start = '<%use>';
-  {parent_args -> extends_inner} use_end = '</%use>';
+  {extends -> parent_args} extends_args_start = ws* argsep;
+  {parent_args -> body, extends->body} extends_end = ws* '>';
   {start -> class,body -> class} class_start = '<%class>' ws*;
   {class -> body} class_end = ws* '</%class>';
   {start -> args, body -> args} args_start = '<%args>';
@@ -97,7 +94,7 @@ Tokens
   {java -> body} java_end = ws* '</%java>';
   {args,imports} dot = period;
   {args -> argexp, parent_args -> parent_argexp} arrow = '=>' hs*;
-  {call,multifragmentcall,multifragmentcallbody,args,farginit,imports, extends_inner, parent_args} white_space = ws*;
+  {call,multifragmentcall,multifragmentcallbody,args,farginit,imports, parent_args} white_space = ws*;
   {call,multifragmentcall,multifragmentcallbody,args,parent_args,farginit,imports,def,extends} identifier = letter letter_or_digit*;
   {call} child_call = '*CHILD';
 
@@ -221,7 +218,7 @@ Productions
             | {imports} imports
             | {def} def
             | {class} class_tag
-            | {extends} extends_start path extends_start_done use? extends_end
+            | {extends} extends_start path extends_use
             ;
 
   def = def_start identifier gt base_component* def_end;
@@ -275,4 +272,5 @@ Productions
 
   type = name brackets*;
 
-  use = use_start parent_arg* use_end;
+  extends_use = {none} extends_end
+              | {some} extends_args_start parent_arg* extends_end;
