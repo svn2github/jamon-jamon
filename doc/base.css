@@ -288,7 +288,7 @@ dt
   width: 20%;
   margin: 0 0 1em 0;
   padding: 0.5em 0 0.5em 0;
-  background-color: #00a0a0;
+  background-color: #0f2f7f;
 }
 
 .tutorialNavContents
@@ -297,7 +297,7 @@ dt
   width: 60%;
   margin: 0 0 1em 0;
   padding: 0.5em 0 0.5em 0;
-  background-color: #00a0a0;
+  background-color: #0f2f7f;
 }
 
 *.tutorialNav a
