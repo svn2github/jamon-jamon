@@ -176,8 +176,7 @@
 
   <target name="push" depends="stage" if="push.dest" >
     <exec dir="${stage.dir}" executable="rsync">
-      <arg value="-e" />
-      <arg value="ssh" />
+      <arg value="--rsh=ssh" />
       <arg value="--verbose" />
       <arg value="--recursive" />
       <arg value="--relative" />
