@@ -75,8 +75,8 @@ public class StandardTemplateManager
         String dir, name;
         if (i >= 0)
         {
+            new File(m_workDir + p_path.substring(0,i)).mkdirs();
             dir = p_path.substring(1,i).replace('/','.');
-            new File(m_workDir + p_path).mkdirs();
             name = p_path.substring(i+1);
         }
         else
