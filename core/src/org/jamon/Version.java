@@ -29,19 +29,24 @@ import java.util.StringTokenizer;
 
 public class Version
 {
-    private static void usage()
+    private static void usage(String p_msg)
     {
-        System.err.println( "Usage: "
-                            + Version.class.getName()
-                            + " [ " + CMD_SHOW
-                            + " | " + CMD_NEXT_MINOR
-                            + " | " + CMD_NEXT_MAJOR
-                            + " | " + CMD_NEXT_SUB
-                            + " | " + CMD_CURRENT
-                            + " ]" );
+
+        System.err.println(p_msg == null
+                           ? "Usage: "
+                           + Version.class.getName()
+                           + " [ " + CMD_SHOW
+                           + " | " + CMD_NEXT_MINOR
+                           + " | " + CMD_NEXT_MAJOR
+                           + " | " + CMD_NEXT_SUB
+                           + " | " + CMD_CURRENT
+                           + " | " + CMD_RELEASE
+                           + " ]"
+                           : p_msg);
         System.exit(1);
     }
 
+    private static final String CMD_RELEASE = "release";
     private static final String CMD_SHOW = "show";
     private static final String CMD_CURRENT = "current";
     private static final String CMD_NEXT_MAJOR = "nextmajor";
@@ -57,24 +62,24 @@ public class Version
 
     public static void main(String [] args)
     {
-        if (args.length > 2)
+        if (args.length > 1)
         {
-            usage();
+            usage(null);
         }
         String cmd = args.length == 1 ? args[0] : CMD_SHOW;
 
-        if ( cmd.equals(CMD_SHOW) )
+        if (cmd.equals(CMD_SHOW))
         {
             boolean isDev =
                 ! "true".equalsIgnoreCase(s_resources.getString
                                           ("org.jamon.version.release"));
-            System.out.println( "Jamon version "
-                                + CURRENT
-                                + ( isDev ? "dev" : "")
-                                + " ("
-                                + s_resources.getString
-                                    ("org.jamon.version.cvs")
-                                + ")" );
+            System.out.println("Jamon version "
+                               + CURRENT
+                               + (isDev ? "dev" : "")
+                               + " ("
+                               + s_resources.getString
+                               ("org.jamon.version.cvs")
+                               + ")");
         }
         else if (cmd.equals(CMD_CVSTAG))
         {
@@ -83,6 +88,21 @@ public class Version
         else if (cmd.equals(CMD_CURRENT))
         {
             System.out.println(CURRENT);
+        }
+        else if (cmd.equals(CMD_RELEASE))
+        {
+            if (CURRENT.m_beta)
+            {
+                System.out.println(CURRENT.release());
+            }
+            else
+            {
+                usage("Can only release if current version is beta");
+            }
+        }
+        else if (CURRENT.m_beta)
+        {
+            usage("Cannot bump version if current version is beta");
         }
         else if (cmd.equals(CMD_NEXT_MAJOR))
         {
@@ -98,12 +118,18 @@ public class Version
         }
         else
         {
-            usage();
+            usage(null);
         }
     }
 
     private Version(String p_current)
     {
+        m_beta = p_current.charAt(p_current.length() - 1) == 'b';
+        if (m_beta)
+        {
+            p_current = p_current.substring(0, p_current.length() - 1);
+        }
+
         StringTokenizer tokenizer = new StringTokenizer(p_current,".");
         m_major = Integer.parseInt(tokenizer.nextToken());
         m_minor = Integer.parseInt(tokenizer.nextToken());
@@ -112,35 +138,46 @@ public class Version
             : 0;
     }
 
-    private Version(int p_major, int p_minor, int p_sub)
+    private Version(int p_major, int p_minor, int p_sub, boolean p_beta)
     {
         m_major = p_major;
         m_minor = p_minor;
         m_sub = p_sub;
+        m_beta = p_beta;
     }
 
     private final int m_major;
     private final int m_minor;
     private final int m_sub;
+    private final boolean m_beta;
 
     public Version bumpmajor()
     {
-        return new Version(m_major+1, 0, 0);
+        // assert ! m_beta
+        return new Version(m_major+1, 0, 0, true);
     }
 
     public Version bumpminor()
     {
-        return new Version(m_major, m_minor+1, 0);
+        // assert ! m_beta
+        return new Version(m_major, m_minor+1, 0, true);
     }
 
     public Version bumpsub()
     {
-        return new Version(m_major, m_minor, m_sub+1);
+        // assert ! m_beta
+        return new Version(m_major, m_minor, m_sub+1, true);
+    }
+
+    public Version release()
+    {
+        // assert m_beta
+        return new Version(m_major, m_minor, m_sub, false);
     }
 
     public String toString()
     {
-        return makeString(".");
+        return makeString(".") + (m_beta ? "b" : "");
     }
 
     private String makeString(String p_delim)
@@ -153,6 +190,6 @@ public class Version
 
     public String asCvsTag()
     {
-        return makeString("_");
+        return makeString("_") + (m_beta ? "-BETA" : "-RELEASE");
     }
 }
