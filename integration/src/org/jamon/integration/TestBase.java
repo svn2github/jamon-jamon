@@ -109,11 +109,13 @@ public abstract class TestBase
     {
         return new StandardTemplateManager
             (new StandardTemplateManager.Data()
-                 .setDynamicRecompilation(p_recompiling)
-                 .setSourceDir(SOURCE_DIR)
-                 .setClasspath(System.getProperty
-                               ("org.jamon.integration.classpath"))
-                 .setWorkDir(WORK_DIR));
+                .setDynamicRecompilation(p_recompiling)
+                .setSourceDir(SOURCE_DIR)
+                .setJavaCompiler(System.getProperty
+                                 ("org.jamon.integration.compiler"))
+                .setClasspath(System.getProperty
+                              ("org.jamon.integration.classpath"))
+                .setWorkDir(WORK_DIR));
     }
 
     private String removeCrs(StringBuffer p_string)
