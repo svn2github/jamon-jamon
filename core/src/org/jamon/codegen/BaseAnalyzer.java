@@ -26,10 +26,8 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-import org.jamon.util.StringUtils;
 import org.jamon.JamonException;
 import org.jamon.node.*;
 import org.jamon.analysis.*;
@@ -43,43 +41,7 @@ public class BaseAnalyzer
         p_start.apply(new Adapter());
     }
 
-    protected BaseAnalyzer()
-        throws IOException
-    {
-        try
-        {
-            m_md5 = MessageDigest.getInstance("MD5");
-        }
-        catch (NoSuchAlgorithmException e)
-        {
-            throw new JamonException(e);
-        }
-    }
-
-    public String getSignature()
-    {
-        StringBuffer buf = new StringBuffer();
-        buf.append("Required\n");
-        for (Iterator i = getUnitInfo().getRequiredArgs(); i.hasNext(); /* */)
-        {
-            Argument arg = (Argument) i.next();
-            buf.append(arg.getName());
-            buf.append(":");
-            buf.append(arg.getType());
-            buf.append("\n");
-        }
-        buf.append("Optional\n");
-        for (Iterator i = getUnitInfo().getOptionalArgs(); i.hasNext(); /* */)
-        {
-            Argument arg = (Argument) i.next();
-            buf.append(arg.getName());
-            buf.append(":");
-            buf.append(arg.getType());
-            buf.append("\n");
-        }
-        return StringUtils.byteArrayToHexString
-            (m_md5.digest(buf.toString().getBytes()));
-    }
+    protected BaseAnalyzer() {}
 
     public List getDefNames()
     {
@@ -144,8 +106,6 @@ public class BaseAnalyzer
     private final Map m_unit = new HashMap();
     private final List m_defNames = new LinkedList();
     private final LinkedList m_unitNames = new LinkedList();
-    private MessageDigest m_md5;
-
 
     private String asText(PName name)
     {

@@ -20,11 +20,15 @@
 
 package org.jamon.codegen;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.LinkedList;
 
+import org.jamon.JamonException;
 import org.jamon.node.ADefault;
+import org.jamon.util.StringUtils;
 
 public class UnitInfo
 {
@@ -105,6 +109,40 @@ public class UnitInfo
             {
                 p_writer.print(", ");
             }
+        }
+    }
+
+    public String getSignature()
+        throws JamonException
+    {
+        StringBuffer buf = new StringBuffer();
+        buf.append("Required\n");
+        for (Iterator i = getRequiredArgs(); i.hasNext(); /* */)
+        {
+            Argument arg = (Argument) i.next();
+            buf.append(arg.getName());
+            buf.append(":");
+            buf.append(arg.getType());
+            buf.append("\n");
+        }
+        buf.append("Optional\n");
+        for (Iterator i = getOptionalArgs(); i.hasNext(); /* */)
+        {
+            Argument arg = (Argument) i.next();
+            buf.append(arg.getName());
+            buf.append(":");
+            buf.append(arg.getType());
+            buf.append("\n");
+        }
+        try
+        {
+            return StringUtils.byteArrayToHexString
+                (MessageDigest.getInstance("MD5").digest
+                     (buf.toString().getBytes()));
+        }
+        catch (NoSuchAlgorithmException e)
+        {
+            throw new JamonException(e);
         }
     }
 

@@ -337,7 +337,7 @@ public class IntfGenerator
         throws IOException
     {
         m_writer.print("public static final String SIGNATURE = \"");
-        m_writer.print(m_analyzer.getSignature());
+        m_writer.print(m_analyzer.getUnitInfo().getSignature());
         m_writer.println("\";");
     }
 

@@ -632,7 +632,7 @@ public class StandardTemplateManager
             new BaseAnalyzer(m_describer.parseTemplate(p_path));
 
         String oldsig = getIntfSignatureFromClass(p_path);
-        if (! bg.getSignature().equals(oldsig))
+        if (! bg.getUnitInfo().getSignature().equals(oldsig))
         {
             if (TRACE)
             {
