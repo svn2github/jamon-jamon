@@ -12,7 +12,7 @@
   String[] args => new String[0];
 </%args>
 
-<pre class="tty">\
+<pre class="tty"><&| /org/jamon/escape/Html &>
 <%java>
   PrintStream oldOut = System.out;
   String oldUserDir = System.getProperty("user.dir");
@@ -54,4 +54,4 @@
       System.setProperty("user.dir", oldUserDir);
   }
 </%java>
-</pre>
+</&></pre>
