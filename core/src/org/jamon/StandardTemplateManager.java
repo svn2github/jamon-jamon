@@ -146,7 +146,7 @@ public class StandardTemplateManager
             cleanWorkDir = p_cleanWorkDir;
             return this;
         }
-        private boolean cleanWorkDir = true;
+        private boolean cleanWorkDir = false;
 
         public Data setDynamicRecompilation(boolean p_dynamicRecompilation)
         {
