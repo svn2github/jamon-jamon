@@ -37,7 +37,7 @@ public class RawStatement
                                ImplAnalyzer p_analyzer)
         throws IOException
     {
-        p_writer.println(m_code);
+        p_writer.print(m_code);
     }
 
     private final String m_code;
