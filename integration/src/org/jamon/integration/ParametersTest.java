@@ -109,57 +109,49 @@ public class ParametersTest
         throws Exception
     {
         expectTemplateException(
-            "test/jamon/broken/FictionalParentArgument",
+            "FictionalParentArgument",
             "/test/jamon/Parent does not have an arg named nosucharg",
-            3,
-            3);
+            3, 3);
     }
 
     public void testSettingDefaultForInheritedRequiredArg()
         throws Exception
     {
-        expectTemplateException(
-            "test/jamon/broken/DefaultForInheritedRequiredArg",
-            "i is an inherited required argument, and may not be given a default value",
-            3,
-            5);
+        expectTemplateException("DefaultForInheritedRequiredArg",
+                                "i is an inherited required argument, and may not be given a default value",
+                                3, 5);
     }
 
     public void testSettingDefaultForInheritedFragmentArg()
         throws Exception
     {
-        expectTemplateException(
-            "test/jamon/broken/DefaultForInheritedFragmentArg",
-            "f is an inherited fragment argument, and may not be given a default value",
-            3,
-            5);
+        expectTemplateException("DefaultForInheritedFragmentArg",
+                                "f is an inherited fragment argument, and may not be given a default value",
+                                3, 5);
     }
 
     public void testDuplicateArgument()
         throws Exception
     {
-        expectTemplateException("test/jamon/broken/DuplicateArgument",
+        expectTemplateException("DuplicateArgument",
                                 "multiple arguments named opt1",
-                                3,
-                                7);
+                                3, 7);
     }
 
     public void testDuplicateFragmentArgument()
         throws Exception
     {
-        expectTemplateException("test/jamon/broken/DuplicateFragmentArgument",
+        expectTemplateException("DuplicateFragmentArgument",
                                 "multiple arguments named f",
-                                3,
-                                7);
+                                3, 7);
     }
 
     public void testXargsWithoutExtends()
         throws Exception
     {
         expectTemplateException(
-            "test/jamon/broken/XargsWithoutExtends",
+            "XargsWithoutExtends",
             "xargs may not be declared without extending another template",
-            1,
-            1);
+            1, 1);
     }
 }

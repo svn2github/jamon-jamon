@@ -156,9 +156,10 @@ public abstract class TestBase
                                            int p_column)
         throws Exception
     {
+        String path = "test/jamon/broken/" + p_path;
         try
         {
-            generateSource(p_path);
+            generateSource(path);
             fail();
         }
         catch(JamonTemplateException e)
@@ -166,7 +167,7 @@ public abstract class TestBase
             assertEquals(p_message, e.getMessage());
             assertEquals(p_line, e.getLine());
             assertEquals(p_column, e.getColumn());
-            assertEquals(getTemplateFilePath(p_path), e.getFileName());
+            assertEquals(getTemplateFilePath(path), e.getFileName());
         }
     }
 

@@ -39,9 +39,8 @@ public class RelativePathTest
     public void testToManyDotDots()
         throws Exception
     {
-        expectTemplateException("test/jamon/broken/TooManyDotDots",
+        expectTemplateException("TooManyDotDots",
                                 "Cannot reference templates above the root",
-                                1,
-                                10);
+                                1, 10);
     }
 }

@@ -211,19 +211,17 @@ public class InheritanceTest
     public void testNonParentChildCall()
         throws Exception
     {
-        expectTemplateException("test/jamon/broken/NonParentChildCall",
+        expectTemplateException("NonParentChildCall",
                                 "<& *CHILD &> cannot be called from a template without an <%abstract> tag",
-                                1,
-                                1);
+                                1, 1);
     }
 
     public void testMultipleParents()
         throws Exception
     {
-        expectTemplateException("test/jamon/broken/MultipleParents",
+        expectTemplateException("MultipleParents",
                                 "a template cannot extend multiple templates",
-                                2,
-                                1);
+                                2, 1);
     }
 
     private void checkCompilationFailure(String p_path)

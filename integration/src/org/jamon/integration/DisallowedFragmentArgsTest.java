@@ -28,19 +28,17 @@ public class DisallowedFragmentArgsTest
     public void testFragmentInFragment()
         throws Exception
     {
-        expectTemplateException("test/jamon/broken/FragmentInFragment",
+        expectTemplateException("FragmentInFragment",
                                 "Fragments cannot have fragment arguments",
-                                5,
-                                10);
+                                5, 10);
     }
 
     public void testOptionalArgInFragment()
         throws Exception
     {
-        expectTemplateException("test/jamon/broken/OptionalArgInFragment",
+        expectTemplateException("OptionalArgInFragment",
                                 "Fragments cannot have optional arguments",
-                                5,
-                                16);
+                                5, 16);
     }
 
     public void testUnusedArgumentToFragment()

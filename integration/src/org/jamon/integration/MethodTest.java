@@ -59,9 +59,8 @@ public class MethodTest
         throws Exception
     {
         expectTemplateException(
-            "test/jamon/broken/OverrideNonexistentMethod",
+            "OverrideNonexistentMethod",
             "There is no such method noSuchMethod to override",
-            2,
-            12);
+            2, 12);
     }
 }

@@ -28,21 +28,18 @@ public class IllegalAliasTest
     public void testCircularAlias()
         throws Exception
     {
-        expectTemplateException(
-            "test/jamon/broken/CircularAlias", "Unknown alias bar", 2, 10);
+        expectTemplateException("CircularAlias", "Unknown alias bar", 2, 10);
     }
 
     public void testUnknownAlias()
         throws Exception
     {
-        expectTemplateException(
-            "test/jamon/broken/UnknownAlias", "Unknown alias foo", 4, 4);
+        expectTemplateException("UnknownAlias", "Unknown alias foo", 4, 4);
     }
 
     public void testDuplicateAlias()
         throws Exception
     {
-        expectTemplateException(
-            "test/jamon/broken/DuplicateAlias", "Duplicate alias foo", 3, 3);
+        expectTemplateException("DuplicateAlias", "Duplicate alias foo", 3, 3);
     }
 }
