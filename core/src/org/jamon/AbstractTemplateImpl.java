@@ -29,17 +29,6 @@ import org.jamon.escaping.Escaping;
 public abstract class AbstractTemplateImpl
     implements AbstractTemplateProxy.Intf
 {
-    protected abstract class ChildFarg extends AbstractTemplateImpl
-    {
-        public ChildFarg(TemplateManager p_templateManager)
-        {
-            super(p_templateManager);
-        }
-
-        public abstract void render()
-            throws java.io.IOException;
-    }
-
     protected AbstractTemplateImpl(TemplateManager p_templateManager)
     {
         m_templateManager = p_templateManager;
