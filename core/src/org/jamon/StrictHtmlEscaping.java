@@ -37,7 +37,7 @@ public class StrictHtmlEscaping
     {
         switch (p_char)
         {
-          case '"': p_writer.write("&#34;"); break;
+          case '"': p_writer.write("&quot;"); break;
           case '\'': p_writer.write("&#39;"); break;
               // FIXME: numerically escape other chars
           default: super.write(p_char, p_writer);

@@ -41,7 +41,7 @@ public class EscapingTest
     public void testStrictHtmlEscaping()
         throws IOException
     {
-        check(Escaping.STRICT_HTML, "&lt;&gt;&amp;&#34;&#39;");
+        check(Escaping.STRICT_HTML, "&lt;&gt;&amp;&quot;&#39;");
     }
 
     private void check(Escaping p_escaping, String p_expected)
