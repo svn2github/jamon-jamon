@@ -32,7 +32,7 @@ public class LiteralTest
             .writeTo(getWriter())
             .render();
         checkOutput("<%args>xxx</%args></%def><%def>\n"
-                    +"<%import><%java>\n"
+                    +"<%import><%java>\\\n"
                     +"</%java></%import>\n"
                     +"% x = 5;\n\n");
     }

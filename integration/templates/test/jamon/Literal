@@ -1,5 +1,5 @@
 <%LITERAL><%args>xxx</%args></%def><%def>
-<%import><%java>
+<%import><%java>\
 </%java></%import>
 % x = 5;
 </%LITERAL>

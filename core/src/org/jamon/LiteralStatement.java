@@ -25,9 +25,9 @@ import java.io.PrintWriter;
 public class LiteralStatement
     implements Statement
 {
-    LiteralStatement(String p_text)
+    LiteralStatement(String p_text, boolean p_escapeNewline)
     {
-        m_text = javaEscape(newlineEscape(p_text));
+        m_text = javaEscape(p_escapeNewline ? newlineEscape(p_text) : p_text);
     }
 
     public void generateSource(PrintWriter p_writer,

@@ -131,7 +131,9 @@ public class ImplAnalyzer extends BaseAnalyzer
 
         public void caseALiteralBaseComponent(ALiteralBaseComponent node)
         {
-            m_current.append(node.getLiteralText().getText());
+            handleBody();
+            addStatement(new LiteralStatement(node.getLiteralText().getText(),
+                                              false));
         }
 
         public void caseABodyBaseComponent(ABodyBaseComponent node)
@@ -278,7 +280,7 @@ public class ImplAnalyzer extends BaseAnalyzer
     {
         if (m_current.length() > 0)
         {
-            addStatement(new LiteralStatement(m_current.toString()));
+            addStatement(new LiteralStatement(m_current.toString(),true));
             m_current = new StringBuffer();
         }
     }
