@@ -23,7 +23,7 @@ public class JamonQs {
       QsTemp template = new QsTemp(mgr);
       template
           .writeTo(new OutputStreamWriter(System.out))
-          .render(new Date(), argv);
+          .render(new Date(0), argv);
     }
     catch (Exception e) {
       e.printStackTrace();
@@ -61,16 +61,16 @@ Compile everything:
 
 Run it:
 <pre class="tty">
-% java JamonQs here we go
+% java JamonQs one two three
 </pre>
 
-You should see (modulo the exact date/time):
+You should see:
 <pre class="tty">
-Hello, world on Wed Oct 09 06:06:52 GMT+04:00 2002.
+Hello, world on Wed Dec 31 19:00:00 EST 1969.
 The arguments are:
-here
-we
-go
+one
+two
+three
 </pre>
 
   </body>

@@ -9,7 +9,7 @@ public class JamonQs {
       QsTemp template = new QsTemp(mgr);
       template
           .writeTo(new OutputStreamWriter(System.out))
-          .render(new Date(),argv);
+          .render(new Date(0),argv);
     }
     catch (Exception e) {
       e.printStackTrace();
