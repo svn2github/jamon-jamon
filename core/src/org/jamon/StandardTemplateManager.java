@@ -102,29 +102,29 @@ public class StandardTemplateManager
     private String getClassPath()
     {
         StringBuffer cp = new StringBuffer(m_workDir);
-        cp.append(PS);
         if (m_classpath != null)
         {
-            cp.append(m_classpath);
             cp.append(PS);
+            cp.append(m_classpath);
         }
 
         ClassLoader loader = getClass().getClassLoader();
         if (loader instanceof URLClassLoader)
         {
             URL[] urls = ((URLClassLoader)loader).getURLs();
-            if (urls.length > 0)
+            for (int i = 0; i < urls.length; ++i)
             {
-                cp.append(urls[0].toExternalForm());
-                for (int i = 1; i < urls.length; ++i)
+                String url = urls[i].toExternalForm();
+                if (url.startsWith("file:"))
                 {
                     cp.append(PS);
-                    cp.append(urls[i].toExternalForm());
+                    cp.append(url.substring(5));
                 }
             }
         }
         else
         {
+            cp.append(PS);
             cp.append(System.getProperty("java.class.path"));
         }
 
@@ -133,6 +133,9 @@ public class StandardTemplateManager
             cp.append(PS);
             cp.append(getRtJarPath());
         }
+
+        System.err.print("Jamon compilation CLASSPATH is ");
+        System.err.println(cp);
 
         return cp.toString();
     }
@@ -173,7 +176,7 @@ public class StandardTemplateManager
     private String m_javac =
         System.getProperty("java.home") + FS + ".." + FS + "bin" + FS +"javac";
     private boolean m_includeRtJar = false;
-    private String m_classpath = "";
+    private String m_classpath = null;
     private ClassLoader m_classLoader = ClassLoader.getSystemClassLoader();
     private JavaCompiler m_javaCompiler;
     private final WorkDirClassLoader m_loader;
