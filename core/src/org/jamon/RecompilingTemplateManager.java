@@ -516,6 +516,7 @@ public class RecompilingTemplateManager
                     {
                         generateIntf(path, p_describer, templateUnit);
                         outOfDateJavaFiles.add(intfFileName);
+                        intfGenerated = true;
                     }
                 }
                 else
