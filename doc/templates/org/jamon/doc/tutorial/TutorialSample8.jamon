@@ -59,7 +59,7 @@ accessed by fragment text are
         arguments to the template are implemented as <code>final</code>
         fields in the translated Java class and, hence, are visible
         to inner classes.)
-<ul>
+</ul>
 </div>
 
 <li> <span class="concept"> Accepting fragment arguments</span>
