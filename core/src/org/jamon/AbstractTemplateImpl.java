@@ -75,6 +75,12 @@ public abstract class AbstractTemplateImpl
         // override me
     }
 
+    protected void write(String p_string)
+        throws IOException
+    {
+        m_writer.write(p_string);
+    }
+
     protected void writeEscaped(String p_string)
         throws IOException
     {

@@ -273,11 +273,7 @@ public class ImplAnalyzer extends BaseAnalyzer
     {
         if (m_current.length() > 0)
         {
-            addStatement(new WriteStatement
-                         ("\""
-                          + javaEscape(newlineEscape(m_current.toString()))
-                          + "\"",
-                          EscapingDirective.NONE));
+            addStatement(new LiteralStatement(m_current.toString()));
             m_current = new StringBuffer();
         }
     }
@@ -316,45 +312,6 @@ public class ImplAnalyzer extends BaseAnalyzer
                 + "/"
                 + path.getIdentifier().getText();
         }
-    }
-
-    private static String newlineEscape(String p_string)
-    {
-        // assert p_string != null
-        if (p_string.length() < 2)
-        {
-            return p_string;
-        }
-        StringBuffer s = new StringBuffer();
-        int j = 0;
-        int i = p_string.indexOf("\\\n");
-        while (i >= 0)
-        {
-            s.append(p_string.substring(j,i));
-            j = i+2;
-            i = p_string.indexOf("\\\n",j);
-        }
-        s.append(p_string.substring(j));
-        return s.toString();
-    }
-
-    private static String javaEscape(String p_string)
-    {
-        // assert p_string != null
-        StringBuffer s = new StringBuffer();
-        for (int i = 0; i < p_string.length(); ++i)
-        {
-            char c = p_string.charAt(i);
-            switch(c)
-            {
-              case '\\': s.append("\\\\"); break;
-              case '\n': s.append("\\n"); break;
-              case '\t': s.append("\\t"); break;
-              case '\"': s.append("\\\""); break;
-              default: s.append(c);
-            }
-        }
-        return s.toString();
     }
 
     private void addStatement(Statement p_statement)
