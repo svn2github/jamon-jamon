@@ -191,8 +191,19 @@ public class Invoker
         }
         catch (InvocationTargetException e)
         {
-            throw new InvalidTemplateException(p_templateName,
-                                               e.getTargetException());
+            Throwable t = e.getTargetException();
+            if (t instanceof Error)
+            {
+                throw (Error) t;
+            }
+            else if (t instanceof RuntimeException)
+            {
+                throw (RuntimeException) t;
+            }
+            else
+            {
+                throw new InvalidTemplateException(p_templateName, t);
+            }
         }
         catch (NoSuchMethodException e)
         {
@@ -239,7 +250,20 @@ public class Invoker
         }
         catch (InvocationTargetException e)
         {
-            throw new InvalidTemplateException(m_templateClass.getName(),e);
+            Throwable t = e.getTargetException();
+            if (t instanceof Error)
+            {
+                throw (Error) t;
+            }
+            else if (t instanceof RuntimeException)
+            {
+                throw (RuntimeException) t;
+            }
+            else
+            {
+                throw new InvalidTemplateException(m_templateClass.getName(),
+                                                   t);
+            }
         }
     }
 
@@ -294,7 +318,19 @@ public class Invoker
         }
         catch (InvocationTargetException e)
         {
-            throw new TemplateArgumentException(e);
+            Throwable t = e.getTargetException();
+            if (t instanceof Error)
+            {
+                throw (Error) t;
+            }
+            else if (t instanceof RuntimeException)
+            {
+                throw (RuntimeException) t;
+            }
+            else
+            {
+                throw new TemplateArgumentException(t);
+            }
         }
     }
 
