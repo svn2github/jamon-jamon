@@ -57,6 +57,11 @@ public class WorkDirClassLoader
             super(WorkDirClassLoader.this);
         }
 
+        public String toString()
+        {
+            return super.toString() + " { " + " parent: " + getParent() + " }";
+        }
+
         private final Map m_cache = new HashMap();
 
         private byte [] readBytesForClass(String p_name)
@@ -136,6 +141,12 @@ public class WorkDirClassLoader
             }
             return m_loader.loadClass(p_name, p_resolve);
         }
+    }
+
+    public String toString()
+    {
+        return super.toString() + " { workDir: " + m_workDir
+            + "; parent: " + getParent() + " }";
     }
 
     private Loader m_loader;
