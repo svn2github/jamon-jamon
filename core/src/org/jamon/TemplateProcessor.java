@@ -18,7 +18,15 @@ public class TemplateGenerator
                                       1024)));
             Start tree = parser.parse();
 
-            tree.apply(new Phase1Generator("test.jtt", "TestTemplate"));
+            Phase1Generator g1 =
+                new Phase1Generator("test.jtt", "TestTemplate");
+            tree.apply(g1);
+            g1.generateClassSource();
+
+            Phase2Generator g2 =
+                new Phase2Generator("test.jtt", "TestTemplate");
+            tree.apply(g2);
+            g2.generateClassSource();
         }
         catch (Throwable t)
         {
