@@ -27,13 +27,16 @@ public class EmitMode
 {
     private static Map s_modes = new HashMap();
 
-    public static final EmitMode STANDARD = new EmitMode("Standard");
-    public static final EmitMode LIMITED = new EmitMode("Limited");
-    public static final EmitMode STRICT = new EmitMode("Strict");
+    public static final EmitMode STANDARD =
+        new EmitMode(StandardEmitter.class);
+    public static final EmitMode LIMITED =
+        new EmitMode(LimitedEmitter.class);
+    public static final EmitMode STRICT =
+        new EmitMode(StrictEmitter.class);
 
     public static EmitMode fromString(String p_string)
     {
-        return (EmitMode) s_modes.get(p_string);
+        return (EmitMode) s_modes.get(p_string.toUpperCase());
     }
 
     public boolean equals(Object p_obj)
@@ -58,10 +61,26 @@ public class EmitMode
     }
 
 
-    private EmitMode(String p_name)
+    private static String extractModeName(Class p_class)
     {
-        m_name = p_name;
-        s_modes.put(m_name, this);
+        final String EMITTER = "Emitter";
+        String name = p_class.getName();
+        name = name.substring(name.lastIndexOf('.')+1);
+        if (name.endsWith(EMITTER))
+        {
+            return name.substring(0, name.length() - EMITTER.length());
+        }
+        else
+        {
+            throw new IllegalArgumentException("Not an emitter class "
+                                               + p_class);
+        }
+    }
+
+    private EmitMode(Class p_emitterClass)
+    {
+        m_name = extractModeName(p_emitterClass);
+        s_modes.put(m_name.toUpperCase(), this);
     }
 
     private final String m_name;
