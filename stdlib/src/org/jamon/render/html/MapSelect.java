@@ -36,9 +36,9 @@ public class MapSelect
               p_default == null ? null : p_default.toString(),
               p_options.keySet().iterator(),
               new ItemMaker() {
-                  public Item makeItem(final Object p_data)
+                  public Select.Item makeItem(final Object p_data)
                   {
-                      return new Item()
+                      return new SingleSelect.Item()
                           {
                               public Object getRenderable()
                                   { return p_options.get(p_data); }

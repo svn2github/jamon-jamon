@@ -28,11 +28,10 @@ public interface Select
     {
         Object getRenderable();
         String getValue();
+        boolean isSelected();
     }
 
     String getName();
-
-    boolean isSelected(Item item);
 
     Item[] getItems();
 }

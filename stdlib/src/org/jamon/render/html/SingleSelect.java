@@ -25,6 +25,15 @@ import java.util.Iterator;
 public class SingleSelect
     extends AbstractSelect
 {
+    public static abstract class Item
+        extends AbstractSelect.Item
+    {
+        public final boolean isSelected()
+        {
+            return getValue().equals(((SingleSelect) getSelect()).m_selectedValue);
+        }
+    }
+
     public SingleSelect(String p_name,
                         String p_selectedValue,
                         Object[] p_data,
@@ -49,11 +58,6 @@ public class SingleSelect
     {
         super(p_name, p_items);
         m_selectedValue = p_selectedValue;
-    }
-
-    public boolean isSelected(Item item)
-    {
-        return item.getValue().equals(m_selectedValue);
     }
 
     private final String m_selectedValue;

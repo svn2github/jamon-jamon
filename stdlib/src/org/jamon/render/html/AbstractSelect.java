@@ -22,25 +22,36 @@ package org.jamon.render.html;
 
 import java.util.Iterator;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public abstract class AbstractSelect
     extends AbstractInput
     implements Select
 {
-    public interface ItemMaker
+    public static abstract class Item
+        implements Select.Item
     {
-        Item makeItem(Object data);
+        public abstract Object getRenderable();
+        public abstract String getValue();
+        public abstract boolean isSelected();
+        public final String getName()
+        {
+            return m_select.getName();
+        }
+        protected AbstractSelect getSelect()
+        {
+            return m_select;
+        }
+        private void setSelect(AbstractSelect p_select)
+        {
+            m_select = p_select;
+        }
+        private AbstractSelect m_select;
     }
 
-    protected AbstractSelect(String p_name,
-                             Object[] p_data,
-                             ItemMaker p_maker)
+    public interface ItemMaker
     {
-        this(p_name, new Item[p_data.length]);
-        for(int i = 0; i < m_items.length; ++i)
-        {
-            m_items[i] = p_maker.makeItem(p_data[i]);
-        }
+        Select.Item makeItem(Object data);
     }
 
     private static Item[] create( Iterator p_data, ItemMaker p_maker)
@@ -51,6 +62,13 @@ public abstract class AbstractSelect
             items.add( p_maker.makeItem( p_data.next() ) );
         }
         return (Item[]) items.toArray(new Item[0]);
+    }
+
+    protected AbstractSelect(String p_name,
+                             Object[] p_data,
+                             ItemMaker p_maker)
+    {
+        this(p_name, Arrays.asList(p_data).iterator(), p_maker);
     }
 
     protected AbstractSelect(String p_name,
@@ -65,11 +83,13 @@ public abstract class AbstractSelect
     {
         super(p_name);
         m_items = p_items;
+        for(int i = 0; i < m_items.length; ++i)
+        {
+            m_items[i].setSelect(this);
+        }
     }
 
-    public abstract boolean isSelected(Item item);
-
-    public Item[] getItems()
+    public Select.Item[] getItems()
     {
         return m_items;
     }
