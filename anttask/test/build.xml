@@ -55,6 +55,17 @@
              compiler="${org.jamon.invoker.compiler}"
              template="/Foo"
              output ="${temp.file}" />
+    <property name="test.output" value="" />
+    <invoker classpath="${classpath}"
+             sourceDir="templates"
+             workDir="${work.dir}"
+             compiler="${org.jamon.invoker.compiler}"
+             template="/Foo"
+             property="test.output"/>
+    <condition property="test.ok">
+      <equals arg1="${test.output}" arg2="Bla"/>
+    </condition>
+    <fail unless="test.ok" message="output was ${test.output}"/>
   </target>
 
   <target name="cvsignores">

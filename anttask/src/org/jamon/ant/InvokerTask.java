@@ -24,6 +24,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.io.StringWriter;
 import java.io.Writer;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -56,6 +57,30 @@ public class InvokerTask
         m_recompilingManagerData = new RecompilingTemplateManager.Data();
     }
 
+    private Writer computeWriter()
+        throws IOException
+    {
+        if (m_outputPropertyName != null)
+        {
+            return new StringWriter();
+        }
+        else if (m_output != null)
+        {
+            File parent = m_output.getAbsoluteFile().getParentFile();
+            if (parent != null)
+            {
+                // FIXME: should we check for failure here
+                //   or let it fall through?
+                parent.mkdirs();
+            }
+            return new FileWriter(m_output);
+        }
+        else
+        {
+            return new OutputStreamWriter(System.out);
+        }
+    }
+
     public void execute()
         throws BuildException
     {
@@ -67,27 +92,17 @@ public class InvokerTask
                 Environment.Variable var = (Environment.Variable) p.next();
                 System.setProperty(var.getKey(), var.getValue());
             }
-            Writer writer;
-            if (m_output == null)
-            {
-                writer = new OutputStreamWriter(System.out);
-            }
-            else
-            {
-                File parent = m_output.getAbsoluteFile().getParentFile();
-                if (parent != null)
-                {
-                    // FIXME: should we check for failure here
-                    //   or let it fall through?
-                    parent.mkdirs();
-                }
-                writer = new FileWriter(m_output);
-            }
+            Writer writer = computeWriter();
             TemplateManager manager =
                 m_dynamicRecompilation
                 ? new RecompilingTemplateManager(m_recompilingManagerData)
                 : (TemplateManager) new BasicTemplateManager();
             new Invoker(manager, m_path).render(writer, m_args);
+            if (m_outputPropertyName != null)
+            {
+                getProject().setProperty(m_outputPropertyName,
+                                         writer.toString());
+            }
         }
         catch (Invoker.InvalidTemplateException e)
         {
@@ -108,6 +123,15 @@ public class InvokerTask
         {
             System.setProperties(sysprops);
         }
+    }
+
+    public void setProperty(String p_outputPropertyName)
+    {
+        if (m_output != null)
+        {
+            throw new BuildException("Can't specify both output file and output property name");
+        }
+        m_outputPropertyName = p_outputPropertyName;
     }
 
     public void setCompiler(String p_javac)
@@ -151,6 +175,10 @@ public class InvokerTask
     public void setOutput(File p_output)
         throws IOException
     {
+        if (m_outputPropertyName != null)
+        {
+            throw new BuildException("Can't specify both output file and output property name");
+        }
         m_output = p_output;
     }
 
@@ -170,6 +198,7 @@ public class InvokerTask
     private HashMap m_args = new HashMap();
     private Collection m_sysprops = new HashSet();
     private File m_output;
+    private String m_outputPropertyName;
 
     public void addSysproperty(Environment.Variable p_property)
     {
