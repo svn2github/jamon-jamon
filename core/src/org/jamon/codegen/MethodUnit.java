@@ -23,5 +23,4 @@ package org.jamon.codegen;
 public interface MethodUnit extends Unit
 {
     String getOptionalArgDefaultMethod(OptionalArgument p_arg);
-    public void printAllArgsDecl(IndentingWriter p_writer);
 }

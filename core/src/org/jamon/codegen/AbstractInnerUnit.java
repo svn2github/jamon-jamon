@@ -97,7 +97,7 @@ public abstract class AbstractInnerUnit extends AbstractUnit
         return m_fragmentArgs;
     }
 
-    protected Iterator getAllArgs()
+    public Iterator getRenderArgs()
     {
         return new SequentialIterator(getDeclaredRequiredArgs(),
                                       getOptionalArgs(),
@@ -106,7 +106,7 @@ public abstract class AbstractInnerUnit extends AbstractUnit
 
     public Iterator getVisibleArgs()
     {
-        return getAllArgs();
+        return getRenderArgs();
     }
 
     public Iterator getSignatureRequiredArgs()
@@ -118,6 +118,8 @@ public abstract class AbstractInnerUnit extends AbstractUnit
     {
         return getOptionalArgs();
     }
+
+
 
     private final List m_requiredArgs = new LinkedList();
     private final Set m_optionalArgs = new HashSet();

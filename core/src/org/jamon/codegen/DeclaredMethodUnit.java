@@ -33,9 +33,4 @@ public class DeclaredMethodUnit
     {
         return "__jamon__get_Method_Opt_" + p_arg.getName() + "_default";
     }
-
-    public void printAllArgsDecl(IndentingWriter p_writer)
-    {
-        printArgsDecl(p_writer, getAllArgs());
-    }
 }

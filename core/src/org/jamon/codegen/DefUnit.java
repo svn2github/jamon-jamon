@@ -28,9 +28,4 @@ public class DefUnit extends AbstractInnerUnit
     {
         super(p_name, p_parent);
     }
-
-    public void printAllArgsDecl(IndentingWriter p_writer)
-    {
-        printArgsDecl(p_writer, getAllArgs());
-    }
 }

@@ -172,7 +172,7 @@ public class ImplGenerator
             m_writer.print("private void __jamon_innerUnit__");
             m_writer.print(defUnit.getName());
             m_writer.print("(");
-            defUnit.printAllArgsDecl(m_writer);
+            defUnit.printRenderArgsDecl(m_writer);
             m_writer.println(")");
             m_writer.println("  throws " + ClassNames.IOEXCEPTION);
             defUnit.generateRenderBody(m_writer, m_describer);
@@ -216,7 +216,7 @@ public class ImplGenerator
         m_writer.print("protected void __jamon_innerUnit__");
         m_writer.print(p_methodUnit.getName());
         m_writer.print("(");
-        p_methodUnit.printAllArgsDecl(m_writer);
+        p_methodUnit.printRenderArgsDecl(m_writer);
         m_writer.println(")");
         m_writer.println("  throws " + ClassNames.IOEXCEPTION);
         p_methodUnit.generateRenderBody(m_writer, m_describer);

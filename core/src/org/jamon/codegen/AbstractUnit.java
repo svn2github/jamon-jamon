@@ -119,19 +119,20 @@ public abstract class AbstractUnit
         }
     }
 
-
+    public Iterator getRenderArgs()
+    {
+        return new SequentialIterator(getSignatureRequiredArgs(),
+                                      getFragmentArgs());
+    }
 
     public void printRenderArgsDecl(IndentingWriter p_writer)
     {
-        printArgsDecl(p_writer,
-                      new SequentialIterator(getSignatureRequiredArgs(),
-                                             getFragmentArgs()));
+        printArgsDecl(p_writer, getRenderArgs());
     }
 
     public void printRenderArgs(IndentingWriter p_writer)
     {
-        printArgs(p_writer, new SequentialIterator(getSignatureRequiredArgs(),
-                                                   getFragmentArgs()));
+        printArgs(p_writer, getRenderArgs());
     }
 
     protected static void printArgsDecl(IndentingWriter p_writer,

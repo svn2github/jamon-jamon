@@ -365,12 +365,6 @@ public class TemplateUnit
         printArgsDecl(p_writer, getParentRenderArgs());
     }
 
-    public Iterator getRenderArgs()
-    {
-        return new SequentialIterator(getParentRenderArgs(),
-                                      getDeclaredRenderArgs());
-    }
-
     public Iterator getDeclaredRenderArgs()
     {
         return new SequentialIterator(m_declaredRequiredArgs.iterator(),

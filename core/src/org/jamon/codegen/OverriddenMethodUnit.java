@@ -74,9 +74,9 @@ public class OverriddenMethodUnit
         return m_declaredMethodUnit.getOptionalArgDefaultMethod(p_arg);
     }
 
-    public void printAllArgsDecl(IndentingWriter p_writer)
+    public void printRenderArgsDecl(IndentingWriter p_writer)
     {
-        for (Iterator i = m_declaredMethodUnit.getAllArgs(); i.hasNext(); )
+        for (Iterator i = m_declaredMethodUnit.getRenderArgs(); i.hasNext(); )
         {
             AbstractArgument arg = (AbstractArgument) i.next();
             p_writer.print("final " + arg.getType() + " "
