@@ -20,7 +20,6 @@
 
 package org.jamon.codegen;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Iterator;
 
@@ -54,7 +53,6 @@ public class FargCallStatement
 
     public void generateSource(CodeWriter p_writer,
                                TemplateDescriber p_describer)
-        throws IOException
     {
         generateSourceLine(p_writer);
         String tn = getPath();

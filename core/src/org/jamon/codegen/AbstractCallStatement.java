@@ -20,7 +20,6 @@
 
 package org.jamon.codegen;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Iterator;
 import java.util.Map;
@@ -73,7 +72,6 @@ public abstract class AbstractCallStatement
     private void makeFragmentImplClass(FragmentUnit p_fragmentUnitIntf,
                                        CodeWriter p_writer,
                                        TemplateDescriber p_describer)
-        throws IOException
     {
         final FragmentUnit fragmentUnitImpl =
             (FragmentUnit) m_fragParams.remove(p_fragmentUnitIntf.getName());
@@ -130,7 +128,6 @@ public abstract class AbstractCallStatement
     protected void makeFragmentImplClasses(List p_fragmentInterfaces,
                                            CodeWriter p_writer,
                                            TemplateDescriber p_describer)
-        throws IOException
     {
         if (m_fragParams.size() == 1
             && m_fragParams.keySet().iterator().next() == null)

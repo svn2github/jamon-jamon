@@ -20,9 +20,9 @@
 
 package org.jamon.codegen;
 
-import java.io.IOException;
 import java.util.Iterator;
 
+import org.jamon.JamonRuntimeException;
 import org.jamon.node.Token;
 
 public class ComponentCallStatement
@@ -44,14 +44,20 @@ public class ComponentCallStatement
 
     public void generateSource(CodeWriter p_writer,
                                TemplateDescriber p_describer)
-        throws IOException
     {
         generateSourceLine(p_writer);
         p_writer.openBlock();
-        TemplateDescription desc =
-            p_describer.getTemplateDescription(getPath(),
-                                               getToken(),
-                                               getTemplateIdentifier());
+        TemplateDescription desc;
+        try
+        {
+            desc = p_describer.getTemplateDescription(getPath(),
+                                                      getToken(),
+                                                      getTemplateIdentifier());
+        }
+        catch (java.io.IOException e)
+        {
+            throw new JamonRuntimeException(e);
+        }
 
         makeFragmentImplClasses(desc.getFragmentInterfaces(),
                                 p_writer,

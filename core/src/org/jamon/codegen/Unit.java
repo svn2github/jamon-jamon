@@ -20,7 +20,6 @@
 
 package org.jamon.codegen;
 
-import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 
@@ -43,6 +42,6 @@ public interface Unit
     void addNonFragmentArg(AArg p_arg);
 
     void printRenderArgsDecl(CodeWriter p_writer);
-    void generateRenderBody(CodeWriter p_writer, TemplateDescriber p_describer)
-        throws IOException;
+    void generateRenderBody(CodeWriter p_writer,
+                            TemplateDescriber p_describer);
 }

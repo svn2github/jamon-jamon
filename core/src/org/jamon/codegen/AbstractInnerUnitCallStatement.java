@@ -20,7 +20,6 @@
 
 package org.jamon.codegen;
 
-import java.io.IOException;
 import java.util.Iterator;
 
 import org.jamon.node.Token;
@@ -52,7 +51,6 @@ public abstract class AbstractInnerUnitCallStatement
 
     public void generateSource(CodeWriter p_writer,
                                TemplateDescriber p_describer)
-        throws IOException
     {
         generateSourceLine(p_writer);
         p_writer.openBlock();

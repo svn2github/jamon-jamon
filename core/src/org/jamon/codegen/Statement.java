@@ -20,8 +20,6 @@
 
 package org.jamon.codegen;
 
-import java.io.IOException;
-
 
 /**
  * A <code>Statement</code> represents a generatable java statement
@@ -36,9 +34,6 @@ public interface Statement
      * @param p_writer where to emit the java source
      * @param p_resolver the <code>TemplateResolver</code> to use
      * @param p_describer the <code>TemplateDescriber</code> to use
-     *
-     * @exception IOException if something goes wrong
      */
-    void generateSource(CodeWriter p_writer, TemplateDescriber p_describer)
-        throws IOException;
+    void generateSource(CodeWriter p_writer, TemplateDescriber p_describer);
 }

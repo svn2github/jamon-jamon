@@ -20,7 +20,6 @@
 
 package org.jamon.codegen;
 
-import java.io.IOException;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -79,7 +78,6 @@ public abstract class AbstractUnit
 
     public void generateRenderBody(CodeWriter p_writer,
                                    TemplateDescriber p_describer)
-        throws IOException
     {
         p_writer.openBlock();
         printStatements(p_writer, p_describer);
@@ -89,7 +87,6 @@ public abstract class AbstractUnit
 
     private void printStatements(CodeWriter p_writer,
                                  TemplateDescriber p_describer)
-        throws IOException
     {
         for (Iterator i = getStatements().iterator(); i.hasNext(); )
         {
