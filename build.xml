@@ -101,6 +101,7 @@
     <mkdir dir="${test.classes.dir}"/>
     <javac destdir="${test.classes.dir}"
            debug="true"
+           classpath="${classes.dir}:{java.lib.sablecc}"
            deprecation="true">
       <src path="${test.src.dir}"/>
     </javac>
