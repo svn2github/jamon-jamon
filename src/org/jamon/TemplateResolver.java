@@ -91,7 +91,7 @@ public class TemplateResolver
         int i = p_path.lastIndexOf(FS);
         if (i > 0)
         {
-            pkg.append(PathUtils.pathToClassName(p_path.substring(0,i)));
+            pkg.append(StringUtils.pathToClassName(p_path.substring(0,i)));
         }
         else
         {

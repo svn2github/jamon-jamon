@@ -101,7 +101,7 @@ public class StandardTemplateManager
 
     private String getClassName(String p_path)
     {
-        return m_packagePrefix + PathUtils.pathToClassName(p_path) + "Impl";
+        return m_packagePrefix + StringUtils.pathToClassName(p_path) + "Impl";
     }
 
     private class WorkDirLoader
@@ -115,7 +115,7 @@ public class StandardTemplateManager
         private String getFileNameForClass(String p_name)
         {
             return m_workDir
-                + PathUtils.classNameToPath(p_name.replace('.','/'))
+                + StringUtils.classNameToPath(p_name.replace('.','/'))
                 + ".class";
         }
 
@@ -225,11 +225,11 @@ public class StandardTemplateManager
         if (m_packagePrefix.length() > 0
             && m_packagePrefix.charAt(m_packagePrefix.length()-1) == '.')
         {
-            return m_workDir + PathUtils.classNameToPath(m_packagePrefix.substring(0,m_packagePrefix.length()-1));
+            return m_workDir + StringUtils.classNameToPath(m_packagePrefix.substring(0,m_packagePrefix.length()-1));
         }
         else
         {
-            return m_workDir + PathUtils.classNameToPath(m_packagePrefix);
+            return m_workDir + StringUtils.classNameToPath(m_packagePrefix);
         }
     }
 
@@ -418,17 +418,20 @@ public class StandardTemplateManager
         }
 
         File javaFile = new File(javaIntf(p_path));
-        InterfaceGenerator g1 =
-            new InterfaceGenerator(new TemplateResolver(m_packagePrefix),
-                                   p_path);
 
-        parseTemplate(p_path).apply(g1);
+        BaseGenerator bg = new BaseGenerator();
+
+        parseTemplate(p_path).apply(bg);
 
         FileWriter writer = new FileWriter(javaFile);
 
         try
         {
-            g1.generateClassSource(writer);
+            new InterfaceGenerator(new TemplateResolver(m_packagePrefix),
+                                   p_path,
+                                   bg,
+                                   writer)
+                .generateClassSource();
             writer.close();
         }
         catch (IOException e)

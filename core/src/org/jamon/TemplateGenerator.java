@@ -35,7 +35,7 @@ public class TemplateGenerator
         else if (fsPos > 0)
         {
             pkg = p_pkgPrefix
-                + PathUtils.pathToClassName(p_filename.substring(0,fsPos));
+                + StringUtils.pathToClassName(p_filename.substring(0,fsPos));
             templateName = templateName.substring(fsPos+FILESEP.length());
         }
         else
@@ -47,27 +47,28 @@ public class TemplateGenerator
             }
         }
 
-        File pkgDir = new File(p_destdir, PathUtils.classNameToPath(pkg));
+        File pkgDir = new File(p_destdir, StringUtils.classNameToPath(pkg));
         File javaFile = new File(pkgDir, templateName + ".java");
 
         System.out.println(p_filename + " => " + javaFile);
 
-        Parser parser =
-            new Parser(new Lexer(new PushbackReader
-                                 (new FileReader(p_filename),
-                                  1024)));
-        Start tree = parser.parse();
+        BaseGenerator bg = new BaseGenerator();
+        new Parser(new Lexer(new PushbackReader
+                             (new FileReader(p_filename),
+                              1024)))
+            .parse()
+            .apply(bg);
 
         pkgDir.mkdirs();
         FileWriter writer = new FileWriter(javaFile);
 
-        InterfaceGenerator intfGen =
-            new InterfaceGenerator(p_resolver, "/" + p_filename);
-
-        tree.apply(intfGen);
         try
         {
-            intfGen.generateClassSource(writer);
+            new InterfaceGenerator(p_resolver,
+                                   "/" + p_filename,
+                                   bg,
+                                   writer)
+                .generateClassSource();
         }
         catch (IOException e)
         {

@@ -19,13 +19,18 @@ public class InterfaceGenerator extends BaseGenerator
         JttException.class.getName();
 
     public InterfaceGenerator(TemplateResolver p_resolver,
-                              String p_templatePath)
+                              String p_templatePath,
+                              BaseGenerator p_generator,
+                              Writer p_writer)
     {
         m_path = p_templatePath;
         m_resolver = p_resolver;
+        m_generator = p_generator;
+        m_writer = new PrintWriter(p_writer);
     }
 
-    private PrintWriter m_writer;
+    private final BaseGenerator m_generator;
+    private final PrintWriter m_writer;
     private final String m_path;
     private final TemplateResolver m_resolver;
 
@@ -55,7 +60,7 @@ public class InterfaceGenerator extends BaseGenerator
     private void generateImports()
         throws IOException
     {
-        for (Iterator i = getImports(); i.hasNext(); /* */ )
+        for (Iterator i = m_generator.getImports(); i.hasNext(); /* */ )
         {
             print("import ");
             print(i.next());
@@ -64,10 +69,9 @@ public class InterfaceGenerator extends BaseGenerator
         println();
     }
 
-    public void generateClassSource(Writer p_writer)
+    public void generateClassSource()
         throws IOException
     {
-        m_writer = new PrintWriter(p_writer);
         generatePrologue();
         generateImports();
         generateDeclaration();
@@ -145,12 +149,10 @@ public class InterfaceGenerator extends BaseGenerator
         throws IOException
     {
         print("  public void render(");
-        for (Iterator i = getRequiredArgNames(MAIN_UNIT_NAME);
-             i.hasNext();
-             /* */)
+        for (Iterator i = m_generator.getRequiredArgNames(); i.hasNext(); /* */)
         {
             String name = (String) i.next();
-            print(getArgType(MAIN_UNIT_NAME,name));
+            print(m_generator.getArgType(name));
             print(" p_");
             print(name);
             if (i.hasNext())
@@ -166,9 +168,7 @@ public class InterfaceGenerator extends BaseGenerator
     private void generateOptionalArgs()
         throws IOException
     {
-        for (Iterator i = getOptionalArgNames(MAIN_UNIT_NAME);
-             i.hasNext();
-             /* */)
+        for (Iterator i = m_generator.getOptionalArgNames(); i.hasNext(); /* */)
         {
             println();
             String name = (String) i.next();
@@ -181,9 +181,9 @@ public class InterfaceGenerator extends BaseGenerator
             }
             print(getClassName());
             print(" set");
-            print(capitalize(name));
+            print(StringUtils.capitalize(name));
             print("(");
-            print(getArgType(MAIN_UNIT_NAME,name));
+            print(getArgType(name));
             print(" p_");
             print(name);
             println(");");

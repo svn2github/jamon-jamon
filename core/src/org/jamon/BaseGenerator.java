@@ -76,15 +76,7 @@ public class BaseGenerator extends AnalysisAdapter
         return (String) m_unitNames.removeLast();
     }
 
-    public void caseStart(Start start)
-    {
-        m_unitNames.add(MAIN_UNIT_NAME);
-        m_unit.put(getUnitName(),new UnitInfo(getUnitName()));
-        start.getPTemplate().apply(this);
-        start.getEOF().apply(this);
-    }
-
-    protected List getDefNames()
+    public List getDefNames()
     {
         return m_defNames;
     }
@@ -94,7 +86,7 @@ public class BaseGenerator extends AnalysisAdapter
         return (String) m_unitNames.get(m_unitNames.size()-1);
     }
 
-    protected Iterator getImports()
+    public Iterator getImports()
     {
         return m_imports.iterator();
     }
@@ -109,40 +101,54 @@ public class BaseGenerator extends AnalysisAdapter
         return getRequiredArgNames(MAIN_UNIT_NAME);
     }
 
-    protected Iterator getRequiredArgNames(String p_unitName)
+    public Iterator getRequiredArgNames(String p_unitName)
     {
         return getUnitInfo(p_unitName).getRequiredArgNames();
     }
 
-    protected Iterator getOptionalArgNames(String p_unitName)
+    public Iterator getOptionalArgNames()
+    {
+        return getOptionalArgNames(MAIN_UNIT_NAME);
+    }
+
+    public Iterator getOptionalArgNames(String p_unitName)
     {
         return getUnitInfo(p_unitName).getOptionalArgNames();
     }
 
-    protected String getArgType(String p_unitName,String p_argName)
+    public String getArgType(String p_unitName,String p_argName)
     {
         return getUnitInfo(p_unitName).getArgType(p_argName);
     }
 
-    protected String getDefault(String p_unitName,String p_argName)
+    public String getDefault(String p_unitName,String p_argName)
     {
         return getUnitInfo(p_unitName).getDefault(p_argName);
     }
 
-
-    protected String capitalize(String p_string)
+    public String getArgType(String p_argName)
     {
-        // assert p_string != null
-        char [] chars = p_string.toCharArray();
-        if (chars.length == 0)
-        {
-            return p_string;
-        }
-        else
-        {
-            chars[0] = Character.toUpperCase(chars[0]);
-            return new String(chars);
-        }
+        return getArgType(MAIN_UNIT_NAME,p_argName);
+    }
+
+    public String getDefault(String p_argName)
+    {
+        return getDefault(MAIN_UNIT_NAME,p_argName);
+    }
+
+
+
+
+
+
+    // begin Adapter methods
+
+    public void caseStart(Start start)
+    {
+        m_unitNames.add(MAIN_UNIT_NAME);
+        m_unit.put(getUnitName(),new UnitInfo(getUnitName()));
+        start.getPTemplate().apply(this);
+        start.getEOF().apply(this);
     }
 
     public void caseAComponent(AComponent node)

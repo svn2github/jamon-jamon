@@ -1,8 +1,8 @@
 package org.modusponens.jtt;
 
-public class PathUtils
+public class StringUtils
 {
-    private PathUtils() { }
+    private StringUtils() { }
 
     private static final String PS = System.getProperty("path.separator");
     private static final String FS = System.getProperty("file.separator");
@@ -40,5 +40,27 @@ public class PathUtils
         }
         return sb.toString();
     }
+
+    public static String capitalize(String p_string)
+    {
+        if (p_string == null)
+        {
+            return null;
+        }
+        else
+        {
+            char [] chars = p_string.toCharArray();
+            if (chars.length == 0)
+            {
+                return p_string;
+            }
+            else
+            {
+                chars[0] = Character.toUpperCase(chars[0]);
+                return new String(chars);
+            }
+        }
+    }
+
 
 }

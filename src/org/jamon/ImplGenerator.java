@@ -467,7 +467,7 @@ public class ImplGenerator extends BaseGenerator
             }
             print(getInterfaceClassName());
             print(" set");
-            print(capitalize(name));
+            print(StringUtils.capitalize(name));
             print("(");
             String type = getArgType(MAIN_UNIT_NAME,name);
             print(type);
@@ -773,7 +773,7 @@ public class ImplGenerator extends BaseGenerator
                     s.append("      ");
                     s.append(tVar);
                     s.append(".set");
-                    s.append(capitalize(name));
+                    s.append(StringUtils.capitalize(name));
                     s.append("(");
                     s.append(m_params.get(name));
                     s.append(");\n");
