@@ -9,11 +9,15 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IProjectNature;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
+import org.osgi.service.prefs.BackingStoreException;
 
 public class JamonNature implements IProjectNature {
 
@@ -33,17 +37,37 @@ public class JamonNature implements IProjectNature {
 		p_description.setNatureIds((String[]) p_natures.toArray(new String[p_natures.size()]));
 	}
 	
-	public static void addToProject(IProject p_project) throws CoreException {
+	public static void addToProject(IProject p_project, String p_templateSourceDir) throws CoreException {
 		IProjectDescription description = p_project.getDescription();
 		ArrayList natures = naturesList(description);
-		if (natures.contains(natureId())) {
-			return;
+		if (! natures.contains(natureId())) {
+			natures.add(natureId());
+			setNatures(description, natures);
+			p_project.setDescription(description, null);
 		}
-		natures.add(natureId());
-		setNatures(description, natures);
-		p_project.setDescription(description, null);
+		IEclipsePreferences projectNode = preferences(p_project);
+        if (projectNode != null) {
+        	projectNode.put(TEMPLATE_SOURCE_DIR_PROPERTY, p_templateSourceDir);
+        	try {
+        		projectNode.flush();
+        	}
+        	catch (BackingStoreException e) {
+        		e.printStackTrace();
+        	}
+        }
+        else {
+        	System.err.println("Couldn't find preferences node");
+        }
+	}
+	
+	private static IEclipsePreferences preferences(IProject p_project) {
+		IScopeContext projectScope = new ProjectScope(p_project);
+		return projectScope.getNode(JAMON_PREFERENCES_NODE);
 	}
 
+	private static final String TEMPLATE_SOURCE_DIR_PROPERTY = "templateSourceDir";
+	private static final String JAMON_PREFERENCES_NODE = "org.jamon.eclipse";
+	
 	public static void removeFromProject(IProject p_project) throws CoreException {
 		IProjectDescription description = p_project.getDescription();
 		ArrayList natures = naturesList(description);
@@ -58,6 +82,15 @@ public class JamonNature implements IProjectNature {
 	public IFolder getTemplateOutputFolder() {
 		// TODO: don't hardcode the generated template directory
 		return getProject().getFolder(new Path("tsrc"));
+	}
+	
+	static String templateSourceFolder(IProject p_project) {
+		return preferences(p_project).get(TEMPLATE_SOURCE_DIR_PROPERTY, DEFAULT_TEMPLATE_SOURCE);
+	}
+	
+	public IFolder getTemplateSourceFolder() {
+		IProject project = getProject();
+		return project.getFolder(new Path(templateSourceFolder(project)));
 	}
 
 	private void unsetReadOnly(IContainer p_container) throws CoreException {
@@ -114,5 +147,7 @@ public class JamonNature implements IProjectNature {
 	}
 	
 	private IProject m_project;
+	static final String JAMON_EXTENSION = "jamon";
+	static final String DEFAULT_TEMPLATE_SOURCE = "templates";
 
 }
