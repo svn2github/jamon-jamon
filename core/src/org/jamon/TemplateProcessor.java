@@ -193,6 +193,10 @@ public class TemplateProcessor
                 processor.generateSource(args[arg++]);
             }
         }
+        catch (JamonParseException e)
+        {
+            System.err.println(e.getStandardMessage());
+        }
         catch (Throwable t)
         {
             t.printStackTrace();

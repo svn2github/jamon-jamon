@@ -152,21 +152,21 @@ public class TemplateDescriber
     public Start parseTemplate(String p_path)
         throws IOException
     {
+        File file = getTemplateFile(p_path);
         try
         {
             return new Parser(new Lexer
                               (new PushbackReader
-                               (new FileReader(getTemplateFile(p_path)),
-                                1024)))
+                               (new FileReader(file), 1024)))
                 .parse();
         }
         catch (ParserException e)
         {
-            throw new JamonException(e);
+            throw new JamonParseException(file,e);
         }
         catch (LexerException e)
         {
-            throw new JamonException(e);
+            throw new JamonParseException(file,e);
         }
     }
 }

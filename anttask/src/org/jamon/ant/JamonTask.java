@@ -33,8 +33,7 @@ import org.apache.tools.ant.util.SourceFileScanner;
 import org.apache.tools.ant.taskdefs.MatchingTask;
 
 import org.jamon.TemplateProcessor;
-import org.jamon.StringUtils;
-import org.jamon.parser.ParserException;
+import org.jamon.JamonParseException;
 
 /**
  * Ant task to convert Jamon templates into Java.
@@ -148,6 +147,11 @@ public class JamonTask
             {
                 processor.generateSource(relativize(basePath, compileList[i]));
             }
+        }
+        catch (JamonParseException e)
+        {
+            System.err.println(e.getStandardMessage());
+            throw new BuildException(e);
         }
         catch (Exception e)
         {
