@@ -43,7 +43,7 @@ public class EncodingReaderTest
     public void testUtf8()
         throws Exception
     {
-        doTest("utf8", "abcdefg12345!@#$%^\u00B2\u00EC\u3092");
+        doTest("utf-8", "abcdefg12345!@#$%^\u00B2\u00EC\u3092");
     }
 
     public void testUtf16()
