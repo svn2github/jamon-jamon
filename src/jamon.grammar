@@ -27,6 +27,7 @@ States
   jline,
   call,
   argexp,
+  callexp,
   args;
 
 Tokens
@@ -34,8 +35,6 @@ Tokens
   {args -> body} args_end = '</%args>';
   {body -> imports} import_start = '<%import>';
   {imports -> body} import_end = '</%import>';
-  {body -> call} call_start = '<&' ws*;
-  {call -> body} call_end = ws* '&>';
   {body -> java} java_start = '<%java>' ws*;
   {java -> body} java_end = ws* '</%java>';
   {args,imports} dot = period;
@@ -56,6 +55,12 @@ Tokens
   {body,emit,java} any = all;
   {args} brackets = '[' (hs)* ']';
 
+  {call -> callexp} carrow = '=>' hs*;
+  {body -> call} call_start = '<&' ws*;
+  {call -> body} call_end = ws* '&>';
+  {callexp -> call} param_expr = ([all - [';' + '&']] | '&' [all-'>'])*;
+  {call} semi = ';';
+
 Ignored Tokens
 
   white_space;
@@ -70,10 +75,12 @@ Productions
             | {java} java_start any* java_end
             | {jline} injava fragment outjava
             | {emit} emit_start any* emit_end
-            | {call} call_start name call_end
+            | {call} call_start name param* call_end
             ;
 
   arg = type [name]: identifier default?;
+
+  param = semi name carrow param_expr;
 
   default = arrow fragment donearg;
 

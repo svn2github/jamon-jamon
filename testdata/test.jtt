@@ -15,7 +15,7 @@ bar
   Integer i =>     3
 </%args>
 
-<%     
+<%
   xyz
                   %>
 
@@ -23,7 +23,7 @@ bar
 
 
 bar
-       yyy <&     other
+       yyy <&     other    ; a => 3
       &> zzz
 <%java>
      trew  </%java>

@@ -23,10 +23,22 @@ public class PrettyPrinterAdapter extends AnalysisAdapter
         }
     }
 
+    public void caseAParam(AParam param)
+    {
+        param.getName().apply(this);
+        System.out.print(" => ");
+        System.out.println(param.getParamExpr().getText());
+    }
+
     public void caseACallComponent(ACallComponent call)
     {
         System.out.print("<& ");
         call.getName().apply(this);
+        for (Iterator i = call.getParam().iterator(); i.hasNext(); /* */)
+        {
+            System.out.print(", ");
+            ((Node)i.next()).apply(this);
+        }
         System.out.print(" &>");
     }
 
