@@ -227,7 +227,7 @@ public class ImplGenerator
                                            false);
         }
 
-        m_writer.println("protected static abstract class "
+        m_writer.println("protected abstract class "
                          + p_methodUnit.getInterfaceName()
                          + " extends " + ClassNames.BASE_TEMPLATE);
         m_writer.openBlock();
@@ -274,8 +274,7 @@ public class ImplGenerator
         throws IOException
     {
         m_writer.println();
-        m_writer.println("protected static class "
-                         + p_methodUnit.getImplName()
+        m_writer.println("protected class " + p_methodUnit.getImplName()
                          + " extends " + p_methodUnit.getInterfaceName());
         m_writer.openBlock();
         generateConstructor(p_methodUnit.getImplName());
