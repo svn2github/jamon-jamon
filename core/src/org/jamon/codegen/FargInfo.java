@@ -31,16 +31,6 @@ public class FargInfo extends AbstractUnitInfo
         super(p_name);
     }
 
-    public FargInfo(String p_name, Iterator p_argNames, Map p_args)
-    {
-        super(p_name);
-        while (p_argNames.hasNext())
-        {
-            String name = (String) p_argNames.next();
-            addRequiredArg(name, (String) p_args.get(name));
-        }
-    }
-
     public void addOptionalArg(String p_name,
                                         String p_type,
                                         String p_default)
@@ -59,5 +49,4 @@ public class FargInfo extends AbstractUnitInfo
     {
         return "Fragment_" + getName();
     }
-
 }

@@ -176,31 +176,29 @@ public class IntfGenerator
              f.hasNext();
              /* */)
         {
-            String name = (String)f.next();
-            m_writer.print("public static final java.util.Map FARGINFO_");
-            m_writer.print(name);
-            m_writer.println(" = new java.util.HashMap();");
-            m_writer.print("public static class init_" + name);
-            m_writer.openBlock();
-            m_writer.print("    static");
-            m_writer.openBlock();
+            String name = (String) f.next();
             FargInfo info = m_analyzer.getFargInfo(name);
+            m_writer.print("public static final String[] FARGINFO_" + name
+                             + "_ARG_NAMES = new String[] ");
+            m_writer.openBlock();
             for (Iterator a = info.getRequiredArgs(); a.hasNext(); /* */)
             {
-                Argument arg = (Argument) a.next();
-                m_writer.print("FARGINFO_");
-                m_writer.print(name);
-                m_writer.print(".put(\"");
-                m_writer.print(arg.getName());
-                m_writer.print("\",\"");
-                m_writer.print(arg.getType());
-                m_writer.println("\");");
+                m_writer.print("\""
+                               + ((Argument) a.next()).getName()
+                               + "\", ");
             }
-            m_writer.closeBlock();
-            m_writer.closeBlock();
-            m_writer.println("public static final init_" + name
-                             + " init2_" + name
-                             + " = new init_" + name + "();");
+            m_writer.closeBlock(";");
+
+            m_writer.print("public static final String[] FARGINFO_" + name
+                             + "_ARG_TYPES = new String[] ");
+            m_writer.openBlock();
+            for (Iterator a = info.getRequiredArgs(); a.hasNext(); /* */)
+            {
+                m_writer.print("\""
+                               + ((Argument) a.next()).getType()
+                               + "\", ");
+            }
+            m_writer.closeBlock(";");
         }
         m_writer.println();
     }

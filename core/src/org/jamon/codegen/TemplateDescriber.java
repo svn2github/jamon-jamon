@@ -15,7 +15,7 @@
  * created by Jay Sachs are Copyright (C) 2002 Jay Sachs.  All Rights
  * Reserved.
  *
- * Contributor(s):
+ * Contributor(s): Ian Robertson
  */
 
 package org.jamon.codegen;
@@ -57,15 +57,22 @@ public class TemplateDescriber
         }
         else
         {
+            FargInfo fargInfo = new FargInfo(p_fargName);
             try
             {
-                Map args = (Map)
-                    Class.forName(StringUtils.templatePathToClassName(p_path))
-                    .getField("FARGINFO_"+p_fargName)
-                    .get(null);
-                return new FargInfo(p_fargName,
-                                    args.keySet().iterator(),
-                                    args);
+                 String[] argNames = (String[])
+                     Class.forName(StringUtils.templatePathToClassName(p_path))
+                     .getField("FARGINFO_" + p_fargName + "_ARG_NAMES")
+                     .get(null);
+                 String[] argTypes = (String[])
+                     Class.forName(StringUtils.templatePathToClassName(p_path))
+                     .getField("FARGINFO_" + p_fargName + "_ARG_TYPES")
+                     .get(null);
+                 for(int i = 0; i < argNames.length; i++)
+                 {
+                     fargInfo.addRequiredArg(argNames[i], argTypes[i]);
+                 }
+                 return fargInfo;
             }
             catch (RuntimeException e)
             {
