@@ -29,8 +29,17 @@
              classpath="${classpath}"/>
     <!-- we only need to specify classpath here because we're bootstrapping
          Jamon; in "normal" invocations, all Jamon classes are available -->
-    <invoker classpath="${classpath}" sourceDir="templates" workDir="${work.dir}" template="/bar/Bar" />
-    <invoker classpath="${classpath}" sourceDir="templates" workDir="${work.dir}" template="/Foo" />
+    <tempfile property="temp.file" />
+    <invoker classpath="${classpath}"
+             sourceDir="templates"
+             workDir="${work.dir}"
+             template="/bar/Bar"
+             output="${temp.file}" />
+    <invoker classpath="${classpath}"
+             sourceDir="templates"
+             workDir="${work.dir}"
+             template="/Foo"
+             output ="${temp.file}" />
   </target>
 
   <target name="cvsignores">
