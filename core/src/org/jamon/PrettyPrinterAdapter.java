@@ -23,9 +23,13 @@ public class PrettyPrinterAdapter extends AnalysisAdapter
         }
     }
 
+    public void caseAPath(PPath path)
+    {
+    }
+
     public void caseAParam(AParam param)
     {
-        param.getName().apply(this);
+        param.getIdentifier().apply(this);
         System.out.print(" => ");
         System.out.println(param.getParamExpr().getText());
     }
@@ -33,7 +37,7 @@ public class PrettyPrinterAdapter extends AnalysisAdapter
     public void caseACallComponent(ACallComponent call)
     {
         System.out.print("<& ");
-        call.getName().apply(this);
+        call.getPath().apply(this);
         for (Iterator i = call.getParam().iterator(); i.hasNext(); /* */)
         {
             System.out.print(", ");

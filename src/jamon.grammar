@@ -63,6 +63,7 @@ Tokens
   {call -> body} call_end = ws* '&>';
   {callexp -> call} param_expr = ([all - [';' + '&']] | '&' [all-'>'])*;
   {call} semi = ';';
+  {call} slash = '/';
 
 Ignored Tokens
 
@@ -78,12 +79,14 @@ Productions
             | {java} java_start any* java_end
             | {jline} injava fragment outjava
             | {emit} emit_start any* emit_end
-            | {call} call_start name param* call_end
+            | {call} call_start path param* call_end
             ;
+
+  path = {simple} slash? identifier | {qualified} path slash identifier;
 
   arg = type [name]: identifier default?;
 
-  param = semi name carrow param_expr;
+  param = semi identifier carrow param_expr;
 
   default = arrow fragment donearg;
 
