@@ -10,6 +10,7 @@
 
   <property file="build.properties"/>
   <property file="${user.home}/.ant.properties"/>
+  <property name="jarfile" value="jamon.jar" />
 
   <target name="test1"
           depends="compiler"
@@ -26,12 +27,18 @@
   <target name="compile" description="Build every project">
     <ant dir="core" target="build"/>
     <ant dir="integration" target="compile"/>
-    <ant dir="anttask" target="compile"/>
+    <ant dir="anttask" target="build"/>
+    <ant dir="stdlib" target="compile"/>
   </target>
 
-  <target name="jar" description="Creates a JAR for core and anttask">
-    <ant dir="core" target="jar"/>
-    <ant dir="anttask" target="jar"/>
+  <target name="jar"
+          description="Creates a uber JAR"
+          depends="compile">
+    <jar jarfile="${jarfile}">
+      <fileset dir="core/build/classes" />
+      <fileset dir="stdlib/build/classes" />
+      <fileset dir="anttask/build/classes" />
+    </jar>
   </target>
 
   <target name="cvsignores" description="Generates cvsignore files">

@@ -13,7 +13,7 @@
   <property name="src.dir" value="src"/>
   <property name="test.pkg" value="test/jamon"/>
 
-  <property name="java.lib.jamon" value="../core/jamon.jar"/>
+  <property name="java.lib.jamon" value="../core/jamon-core.jar"/>
   <property name="java.lib.junit" value="/usr/local/share/java/junit.jar" />
   <property name="java.lib.gnuregexp" value="/usr/local/share/java/gnu-regexp-1.1.4.jar" />
 
