@@ -31,8 +31,19 @@ public class JttException
         if (getRootCause() != null)
         {
             getRootCause().printStackTrace(p_writer);
-            p_writer.print("wrapped by");
+            p_writer.print("wrapped by ");
         }
         super.printStackTrace(p_writer);
+        p_writer.flush();
+    }
+
+    public void printStackTrace(java.io.PrintStream p_stream)
+    {
+        printStackTrace(new java.io.PrintWriter(p_stream));
+    }
+
+    public void printStackTrace()
+    {
+        printStackTrace(System.err);
     }
 }
