@@ -96,7 +96,7 @@ public class InvokerTask
             TemplateManager manager =
                 m_dynamicRecompilation
                 ? new RecompilingTemplateManager(m_recompilingManagerData)
-                : (TemplateManager) new BasicTemplateManager();
+                : (TemplateManager) new BasicTemplateManager(m_classLoader);
             new Invoker(manager, m_path).render(writer, m_args);
             if (m_outputPropertyName != null)
             {
@@ -156,9 +156,9 @@ public class InvokerTask
                 null,
                 paths[i] + (new File(paths[i]).isDirectory() ? "/" : ""));
         }
-        m_recompilingManagerData
-            .setClassLoader(new URLClassLoader(urls,
-                                               getClass().getClassLoader()));
+        m_classLoader = new URLClassLoader(urls,
+                                           getClass().getClassLoader());
+        m_recompilingManagerData.setClassLoader(m_classLoader);
         m_recompilingManagerData.setClasspath(p_classpath.toString());
     }
 
@@ -199,6 +199,7 @@ public class InvokerTask
     private Collection m_sysprops = new HashSet();
     private File m_output;
     private String m_outputPropertyName;
+    private ClassLoader m_classLoader;
 
     public void addSysproperty(Environment.Variable p_property)
     {
