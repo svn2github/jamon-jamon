@@ -176,7 +176,7 @@ This component has been accessed <% pageViews++ %> times.
       Java classes or packages to be imported and used in a template
       should be placed inside an <code>&lt;%import&gt;</code>
       block. Each package or class should be separated by a semicolon
-      ('<code>;</code>').  Note that imports are not inherited, so you
+      ('<code>;</code>').  Note that imports are not inherited, so if you
       use an import to aid in the declaration of an argument type in a
       parent template, you must use the same import in all descendants
       of that template.
@@ -200,11 +200,12 @@ This component has been accessed <% pageViews++ %> times.
       <p>
 
       Arguments are usable inside any java escape or java expression
-      in the template. Top-level visible arguments are also usable
-      inside <code>&lt;%class&gt;</code>
-      ... <code>&lt;%/class&gt;</code> blocks.  Technically, arguments
-      are declared "<code>final</code>", so it is not possible to
-      (re)assign a value to an argument.
+      in the template, including those in subtemplates. Top-level
+      visible arguments are also usable inside
+      <code>&lt;%class&gt;</code> ... <code>&lt;%/class&gt;</code>
+      blocks.  Technically, arguments are declared
+      "<code>final</code>", so it is not possible to (re)assign a
+      value to an argument.
 
       <p>
 
@@ -450,8 +451,8 @@ Now would be a poor time to go sailing.
 
       It is also possible to invoke other templates from within a
       template. Instead of supplying the subtemplate name, simply
-      supply the path to the template, e.g. in
-      <code>/img/spacer</code>:
+      supply the path to the template.  For example, suppose
+      <code>/img/spacer</code> contains:
 
       <&| _template &><%LITERAL>
 <%args>
