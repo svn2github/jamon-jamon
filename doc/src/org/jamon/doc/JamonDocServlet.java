@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.util.Map;
+import java.util.HashMap;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -15,28 +17,20 @@ import org.jamon.Invoker;
 import org.jamon.StandardTemplateManager;
 import org.jamon.TemplateManager;
 
-public class StaticServlet
+public class JamonDocServlet
     extends HttpServlet
 {
     public void doGet(HttpServletRequest p_request,
                       HttpServletResponse p_response)
         throws IOException, ServletException
     {
-        doPost(p_request, p_response);
-    }
-
-    public void doPost(HttpServletRequest p_request,
-                       HttpServletResponse p_response)
-        throws IOException, ServletException
-    {
         Writer writer = p_response.getWriter();
         expireResponse(p_response);
         p_response.setContentType("text/html");
-        String pathInfo = p_request.getServletPath();
-        new Invoker(m_manager,
-                    "/org/jamon/doc"
-                    + pathInfo.substring(0,pathInfo.length()-5))
-            .render(writer, p_request.getParameterMap());
+        String templatePath = p_request.getServletPath();
+        templatePath = templatePath.substring(0,templatePath.length()-5);
+        new Invoker(m_manager, "/org/jamon/doc" + templatePathInfo)
+            .render(writer, makeParameters(templatePath));
         writer.close();
     }
 
@@ -45,15 +39,29 @@ public class StaticServlet
     {
         try
         {
-            m_manager = new StandardTemplateManager(
-                new StandardTemplateManager.Data()
-                .setWorkDir("build/work")
-                .setSourceDir("templates"));
+            m_manager = new StandardTemplateManager
+                (new StandardTemplateManager.Data()
+                 .setWorkDir("build/work")
+                 .setSourceDir("templates"));
         }
         catch (IOException e)
         {
             throw new ServletException(e);
         }
+    }
+
+    private Map makeParameters(String p_pathInfo)
+    {
+        Map parameters = new HashMap();
+        if (p_pathInfo.equals("/Download"))
+        {
+            parameters.put("srcTarball", "jamon-src.tgz");
+            parameters.put("srcZip", "jamon-src.zip");
+            parameters.put("binTarball", "jamon.tgz");
+            parameters.put("binZip", "jamon.zip");
+            parameters.put("version", "3.14");
+        }
+        return parameters;
     }
 
     private void expireResponse(HttpServletResponse p_response)

@@ -21,12 +21,12 @@
   </servlet>
 
   <servlet>
-    <servlet-name>Static</servlet-name>
-    <servlet-class>org.jamon.doc.StaticServlet</servlet-class>
+    <servlet-name>Jamon Doc</servlet-name>
+    <servlet-class>org.jamon.doc.JamonDocServlet</servlet-class>
   </servlet>
 
   <servlet-mapping>
-    <servlet-name>Static</servlet-name>
+    <servlet-name>Jamon Doc</servlet-name>
     <url-pattern>*.html</url-pattern>
   </servlet-mapping>
 

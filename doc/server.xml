@@ -9,7 +9,7 @@
       <Logger className="org.apache.catalina.logger.SystemErrLogger"
               timestamp="true"/>
       <Host name="localhost" debug="0" appBase="." unpackWARs="false">
-        <Context path="" docBase="." debug="99" override="true"
+        <Context path="" docBase="." debug="0" override="true"
                  reloadable="false" />
       </Host>
     </Engine>

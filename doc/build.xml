@@ -91,7 +91,6 @@ the documentation thus taking care of issues such as escaping.
   <target name="doc"
           description="Generates all the documentation"
           depends="init" >
-    <property name="template.src.prefix" value="" />
     <dependset>
       <srcfilelist dir="templates/org/jamon/doc" files="_Base" />
       <targetfileset dir="${doc.dir}" includes="*.html" />
@@ -149,7 +148,6 @@ the documentation thus taking care of issues such as escaping.
       <param name="template" value="News" />
     </antcall>
     <antcall target="grind">
-      <param name="template.src.prefix" value="servlet/" />
       <param name="template" value="Servlets" />
     </antcall>
     <!-- Generate the first template example -->
@@ -215,7 +213,7 @@ the documentation thus taking care of issues such as escaping.
   <target name="checkgrind">
     <echo>Checking templates/org/jamon/doc/${template}</echo>
     <uptodate property="grindnotneeded"
-              srcfile="templates/org/jamon/doc/${template.src.prefix}${template}.jamon"
+              srcfile="templates/org/jamon/doc/${template}.jamon"
               targetfile="${doc.dir}/${template}.html" />
   </target>
 
@@ -225,7 +223,7 @@ the documentation thus taking care of issues such as escaping.
              workDir="${work.dir}"
              sourceDir="templates"
              output="${doc.dir}/${template}.html"
-             template="/org/jamon/doc/${template.src.prefix}${template}" />
+             template="/org/jamon/doc/${template}" />
   </target>
 
   <target name="war"
@@ -283,6 +281,7 @@ the documentation thus taking care of issues such as escaping.
           dir=".">
       <classpath>
         <pathelement location="${java.lib.jamon}"/>
+        <pathelement location="${java.lib.diff}"/>
         <pathelement location="${tomcat.home}/server/lib/servlets-default.jar"/>
         <fileset dir="${tomcat.common.lib}" includes="*.jar" />
         <fileset dir="${tomcat.home}/server/lib" includes="*.jar" />
