@@ -26,6 +26,14 @@
     </javac>
   </target>
 
+  <target name="test"
+          depends="compile"
+          description="Tests the anttask">
+    <exec dir="test" executable="ant">
+      <env key="CLASSPATH" path="${java.lib.jamon}:${classes.dir}"/>
+    </exec>
+  </target>
+
   <target name="cvsignores">
     <echo file=".cvsignore">.cvsignore ${build.dir} build.properties
 </echo>
