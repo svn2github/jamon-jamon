@@ -18,6 +18,7 @@ public class TemplateGenerator
         System.getProperty("file.separator");
 
     private static void generateInterface(File p_destdir,
+                                          TemplateDescriber p_describer,
                                           TemplateResolver p_resolver,
                                           String p_pkgPrefix,
                                           String p_filename)
@@ -53,10 +54,7 @@ public class TemplateGenerator
         System.out.println(p_filename + " => " + javaFile);
 
         BaseAnalyzer bg =
-            new BaseAnalyzer(new Parser(new Lexer(new PushbackReader
-                                                  (new FileReader(p_filename),
-                                                   1024)))
-                             .parse());
+            new BaseAnalyzer(p_describer.parseTemplate(p_filename));
 
         pkgDir.mkdirs();
         FileWriter writer = new FileWriter(javaFile);
@@ -94,9 +92,11 @@ public class TemplateGenerator
             String pkgPrefix = args[arg++];
             TemplateResolver resolver = new TemplateResolver(pkgPrefix);
 
+            TemplateDescriber describer = new TemplateDescriber("");
+
             while (arg < args.length)
             {
-                generateInterface(destdir, resolver, pkgPrefix, args[arg++]);
+                generateInterface(destdir, describer, resolver, pkgPrefix, args[arg++]);
             }
         }
         catch (Throwable t)

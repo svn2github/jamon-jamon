@@ -6,8 +6,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PushbackReader;
 import java.io.Writer;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -17,10 +15,6 @@ import java.util.HashMap;
 import java.util.Set;
 import java.util.HashSet;
 import org.modusponens.jtt.node.Start;
-import org.modusponens.jtt.parser.Parser;
-import org.modusponens.jtt.parser.ParserException;
-import org.modusponens.jtt.lexer.Lexer;
-import org.modusponens.jtt.lexer.LexerException;
 
 
 public class StandardTemplateManager
@@ -31,9 +25,9 @@ public class StandardTemplateManager
                                    String p_workDir)
         throws IOException
     {
-        m_loader = new WorkDirLoader(p_parentLoader);
         m_workDir = p_workDir;
-        m_templateSourceDir = p_templateSourceDir;
+        m_loader = new WorkDirClassLoader(p_parentLoader, m_workDir);
+        m_describer = new TemplateDescriber(p_templateSourceDir);
     }
 
     public StandardTemplateManager(String p_templateSourceDir,
@@ -48,13 +42,21 @@ public class StandardTemplateManager
     public Template getInstance(String p_path, Writer p_writer)
         throws JttException
     {
+        return getInstance(p_path, p_writer, this);
+    }
+
+    public Template getInstance(String p_path,
+                                Writer p_writer,
+                                TemplateManager p_manager)
+        throws JttException
+    {
         try
         {
             return (Template)
                 getImplementationClass(p_path)
                     .getConstructor(new Class [] { Writer.class,
                                                    TemplateManager.class })
-                    .newInstance(new Object [] { p_writer, this });
+                    .newInstance(new Object [] { p_writer, p_manager });
         }
         catch (RuntimeException e)
         {
@@ -89,86 +91,15 @@ public class StandardTemplateManager
         m_packagePrefix = p_packagePrefix == null ? "" : p_packagePrefix;
     }
 
-    private String getTemplateFileName(String p_path)
-    {
-        return m_templateSourceDir + p_path;
-    }
-
     private String getClassName(String p_path)
     {
         return m_packagePrefix + StringUtils.pathToClassName(p_path) + "Impl";
     }
 
-    private class WorkDirLoader
-        extends ClassLoader
-    {
-        WorkDirLoader(ClassLoader p_parent)
-        {
-            super(p_parent);
-        }
-
-        private String getFileNameForClass(String p_name)
-        {
-            return m_workDir
-                + StringUtils.classNameToPath(p_name.replace('.','/'))
-                + ".class";
-        }
-
-        void invalidate()
-        {
-            m_loader = null;
-            m_classMap.clear();
-        }
-
-        protected Class loadClass(String p_name, boolean p_resolve)
-            throws ClassNotFoundException
-        {
-            File cf = new File(getFileNameForClass(p_name));
-            if (!cf.exists())
-            {
-                return super.loadClass(p_name, p_resolve);
-            }
-
-            Class c = (Class) m_classMap.get(p_name);
-            if (c != null)
-            {
-                return c;
-            }
-            if (m_loader == null)
-            {
-                try
-                {
-                    m_loader = new URLClassLoader
-                        (new URL [] { new URL("file:" + m_workDir + "/") },
-                         getParent());
-                }
-                catch (IOException e)
-                {
-                    throw new JttClassNotFoundException(e);
-                }
-            }
-            c = m_loader.loadClass(p_name);
-            if (p_resolve)
-            {
-                resolveClass(c);
-            }
-            m_classMap.put(p_name,c);
-            return c;
-        }
-
-        private ClassLoader m_loader;
-        private final Map m_classMap = new HashMap();
-    }
-
-    private WorkDirLoader getLoader()
-    {
-        return m_loader;
-    }
-
     private Class loadAndResolveClass(String p_path)
         throws ClassNotFoundException
     {
-        return getLoader().loadClass(getClassName(p_path));
+        return m_loader.loadClass(getClassName(p_path));
     }
 
     private String getClassPath()
@@ -203,7 +134,7 @@ public class StandardTemplateManager
     private static final String PS = System.getProperty("path.separator");
     private static final String FS = System.getProperty("file.separator");
 
-    private final String m_templateSourceDir;
+    private final TemplateDescriber m_describer;
     private final String m_workDir;
     private String m_javac =
         System.getProperty("java.home") + FS + ".." + FS + "bin" + FS +"javac";
@@ -212,7 +143,7 @@ public class StandardTemplateManager
     private ClassLoader m_classLoader = ClassLoader.getSystemClassLoader();
     private String m_packagePrefix = "";
     private JavaCompiler m_javaCompiler;
-    private final WorkDirLoader m_loader;
+    private final WorkDirClassLoader m_loader;
 
 
     private String prefix()
@@ -262,7 +193,7 @@ public class StandardTemplateManager
             System.err.println("processing " + path);
             seen.add(path);
 
-            File tf = new File(getTemplateFileName(path));
+            File tf = m_describer.getTemplateFile(path);
             if (!tf.exists())
             {
                 throw new JttException("Missing template " + path);
@@ -307,8 +238,21 @@ public class StandardTemplateManager
         if (!outOfDateJavaFiles.isEmpty())
         {
             compile(outOfDateJavaFiles);
-            getLoader().invalidate();
+            m_loader.invalidate();
         }
+    }
+
+
+    private File getWriteableFile(String p_filename)
+        throws IOException
+    {
+        File file = new File(p_filename);
+        File parent = file.getParentFile();
+        if (parent != null)
+        {
+            parent.mkdirs();
+        }
+        return file;
     }
 
     /**
@@ -319,25 +263,19 @@ public class StandardTemplateManager
     {
         System.err.println("generating impl for " + p_path);
 
-        String jp = javaImpl(p_path);
-        int i = jp.lastIndexOf(FS);
-        if (i >= 1)
-        {
-            new File(jp.substring(0,i)).mkdirs();
-        }
+        ImplAnalyzer ia =
+            new ImplAnalyzer(p_path,
+                             m_describer.parseTemplate(p_path));
 
-        File javaFile = new File(javaImpl(p_path));
-
-        ImplAnalyzer ia = new ImplAnalyzer(p_path,
-                                           parseTemplate(p_path));
-
+        File javaFile = getWriteableFile(javaImpl(p_path));
         FileWriter writer = new FileWriter(javaFile);
         try
         {
             new ImplGenerator(writer,
                               new TemplateResolver(m_packagePrefix),
-                              getDescriber(),
-                              ia).generateSource();
+                              m_describer,
+                              ia)
+                .generateSource();
             writer.close();
             return ia.getCalledTemplateNames();
         }
@@ -349,73 +287,16 @@ public class StandardTemplateManager
         }
     }
 
-    private Start parseTemplate(String p_path)
-        throws IOException
-    {
-        try
-        {
-            return new Parser(new Lexer
-                              (new PushbackReader
-                               (new FileReader(getTemplateFileName(p_path)),
-                                1024)))
-                .parse();
-        }
-        catch (ParserException e)
-        {
-            throw new JttException(e);
-        }
-        catch (LexerException e)
-        {
-            throw new JttException(e);
-        }
-    }
-
-    private class Describer
-        implements TemplateDescriber
-    {
-        public List getRequiredArgNames(final String p_path)
-            throws JttException
-        {
-            try
-            {
-                LinkedList list = new LinkedList();
-                BaseAnalyzer g = new BaseAnalyzer(parseTemplate(p_path));
-                for (Iterator i = g.getRequiredArgNames(); i.hasNext(); /* */)
-                {
-                    list.add(i.next());
-                }
-                return list;
-            }
-            catch (IOException e)
-            {
-                throw new JttException(e);
-            }
-        }
-    }
-
-    private TemplateDescriber getDescriber()
-    {
-        return new Describer();
-    }
-
     private void generateIntf(String p_path)
         throws IOException
     {
         System.err.println("generating intf for " + p_path);
 
-        String jp = javaIntf(p_path);
-        int i = jp.lastIndexOf(FS);
-        if (i >= 1)
-        {
-            new File(jp.substring(0,i)).mkdirs();
-        }
+        BaseAnalyzer bg =
+            new BaseAnalyzer(m_describer.parseTemplate(p_path));
 
-        File javaFile = new File(javaIntf(p_path));
-
-        BaseAnalyzer bg = new BaseAnalyzer(parseTemplate(p_path));
-
+        File javaFile = getWriteableFile(javaIntf(p_path));
         FileWriter writer = new FileWriter(javaFile);
-
         try
         {
             new IntfGenerator(new TemplateResolver(m_packagePrefix),
@@ -461,7 +342,7 @@ public class StandardTemplateManager
         System.err.println("computing dependencies for " + p_path);
 
         return new ImplAnalyzer(p_path,
-                                parseTemplate(p_path))
+                                m_describer.parseTemplate(p_path))
             .getCalledTemplateNames();
     }
 
