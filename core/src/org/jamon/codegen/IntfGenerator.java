@@ -316,7 +316,7 @@ public class IntfGenerator
             m_writer.println(ClassNames.IOEXCEPTION);
             m_writer.openBlock();
             m_writer.println("getInstance().set" + StringUtils.capitalize(name)
-                             + "(" + " p_" + name + ");");
+                             + "(" + "p_" + name + ");");
             m_writer.println("return this;");
             m_writer.closeBlock();
         }
