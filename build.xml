@@ -13,18 +13,19 @@
   <property name="build.src.dir" value="${build.dir}/src"/>
   <property name="classes.dir" value="${build.dir}/classes"/>
   <property name="dist.dir" value="${build.dir}/dist"/>
+  <property name="test.dir" value="test" />
+  <property name="work.dir" value="work" />
+  <property name="test.src.dir" value="${test.dir}/src" />
+  <property name="test.pkg" value="test/jtt"/>
+  <property name="test.src2.dir" value="${test.src.dir}/${test.pkg}" />
+  <property name="test.classes.dir" value="${test.dir}/classes" />
+  <property name="testdata.dir" value="testdata/${test.pkg}" />
+
+
   <property name="java.lib.sablecc"
             value="/usr/local/share/java/sablecc.jar" />
   <property name="java.lib.sablecctask"
             value="/usr/local/share/java/sablecc/anttask.jar"/>
-
-  <property name="java.lib.log4j" value="/usr/local/share/java/log4j.jar"/>
-  <property name="java.lib.junit" value="/usr/local/share/java/junit.jar"/>
-
-  <path id="class.path">
-     <pathelement location="${java.lib.log4j}"/>
-     <pathelement location="${java.lib.junit}"/>
-  </path>
 
   <target name="init">
     <mkdir dir="${build.src.dir}"/>
@@ -57,7 +58,6 @@
              deprecation="true">
         <src path="src"/>
         <src path="${build.src.dir}"/>
-        <classpath refid="class.path"/>
       </javac>
       <copy todir="${classes.dir}" >
         <fileset dir="${build.src.dir}" includes="**/*.dat" />
@@ -73,8 +73,45 @@
   </target>
 
   <target name="cvsignores">
-    <echo file=".cvsignore">.cvsignore build build.properties work
+    <echo file=".cvsignore">.cvsignore ${build.dir} build.properties ${work.dir} ${test.dir}
 </echo>
+  </target>
+
+  <target name="testdirs">
+    <delete dir="${test.dir}"/>
+    <delete dir="${work.dir}"/>
+    <mkdir dir="${test.src.dir}" />
+  </target>
+
+  <target name="testsrc" depends="testdirs">
+    <copy file="testdata/Test1.java" todir="${test.src2.dir}" />
+  </target>
+
+  <target name="testtemplates" depends="build,testsrc">
+    <java fork="true"
+          dir="testdata"
+          classpath="${classes.dir}:${java.lib.sablecc}"
+          classname="org.modusponens.jtt.TemplateGenerator">
+      <arg value="../${test.src.dir}" />
+      <arg value="${test.pkg}/TestTemplate" />
+      <arg value="${test.pkg}/SubTemplate" />
+    </java>
+  </target>
+
+  <target name="testbuild" depends="testtemplates">
+    <mkdir dir="${test.classes.dir}"/>
+    <javac destdir="${test.classes.dir}"
+           debug="true"
+           deprecation="true">
+      <src path="${test.src.dir}"/>
+    </javac>
+  </target>
+
+  <target name="test1" depends="testbuild">
+    <mkdir dir="${work.dir}" />
+    <java fork="true"
+          classpath="${classes.dir}:${java.lib.sablecc}:${test.classes.dir}"
+          classname="${test.pkg}.Test1" />
   </target>
 
 </project>

@@ -12,20 +12,50 @@ public class TemplateGenerator
     {
         try
         {
-            Parser parser =
-                new Parser(new Lexer(new PushbackReader
-                                     (new FileReader(args[0]),
-                                      1024)));
-            Start tree = parser.parse();
+            File destdir = new File(args[0]);
+            destdir.mkdirs();
+            if (! destdir.exists() || ! destdir.isDirectory())
+            {
+                throw new IOException("Unable to create destination dir "
+                                      + destdir);
+            }
 
-            OutputStreamWriter w = new OutputStreamWriter(System.out);
-            InterfaceGenerator g1 =
-                new InterfaceGenerator(w,
-                                       "test.jtt",
-                                       "TestTemplate");
-            tree.apply(g1);
-            g1.generateClassSource();
-            w.flush();
+            for (int i = 1; i < args.length; ++i)
+            {
+                String templateName = args[i];
+                int slash = templateName.lastIndexOf('/');
+                String pkg = "";
+                if (slash == 0)
+                {
+                    throw new IOException("Can only use relative paths");
+                }
+                else if (slash > 0)
+                {
+                    pkg = templateName.substring(0,slash).replace('/','.');
+                    templateName = templateName.substring(slash+1);
+                }
+
+                System.out.println("Generating interface for "
+                                   + pkg + '.' + templateName);
+                Parser parser =
+                    new Parser(new Lexer(new PushbackReader
+                                         (new FileReader(args[i]),
+                                          1024)));
+                Start tree = parser.parse();
+
+                File javaFile = new File(destdir, pkg.replace('.','/'));
+                javaFile.mkdirs();
+
+                FileWriter w =
+                    new FileWriter(new File(javaFile, templateName + ".java"));
+
+                InterfaceGenerator g1 =
+                    new InterfaceGenerator(w, pkg, templateName);
+
+                tree.apply(g1);
+                g1.generateClassSource();
+                w.flush();
+            }
         }
         catch (Throwable t)
         {
