@@ -18,9 +18,9 @@
  * Contributor(s):
  */
 
-package org.jamon.tests.templates.html;
+package org.jamon.templates.html;
 
 public class TestBase
-    extends org.jamon.tests.templates.TestBase
+    extends org.jamon.templates.TestBase
 {
 }

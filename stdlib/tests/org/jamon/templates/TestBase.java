@@ -18,7 +18,7 @@
  * Contributor(s):
  */
 
-package org.jamon.tests.templates;
+package org.jamon.templates;
 
 import java.io.Writer;
 import java.io.StringWriter;

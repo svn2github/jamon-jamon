@@ -18,11 +18,9 @@
  * Contributor(s):
  */
 
-package org.jamon.tests.render.html;
+package org.jamon.render.html;
 
 import junit.framework.TestCase;
-
-import org.jamon.render.html.SelectableInput;
 
 public class SelectableInputTest
     extends TestCase

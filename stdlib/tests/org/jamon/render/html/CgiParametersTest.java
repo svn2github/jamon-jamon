@@ -18,14 +18,11 @@
  * Contributor(s):
  */
 
-package org.jamon.tests.render.html;
+package org.jamon.render.html;
 
 import java.util.HashMap;
 
 import junit.framework.TestCase;
-
-import org.jamon.render.html.CgiParameters;
-import org.jamon.render.html.Input;
 
 public class CgiParametersTest
     extends TestCase
