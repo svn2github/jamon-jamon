@@ -39,6 +39,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.launching.JavaRuntime;
 import org.jamon.JamonRuntimeException;
 import org.jamon.JamonTemplateException;
 import org.jamon.codegen.Analyzer;
@@ -50,13 +51,13 @@ import org.jamon.emit.EmitMode;
 import org.jamon.util.StringUtils;
 
 
-public class JamonProjectBuilder extends IncrementalProjectBuilder {
+public class TemplateBuilder extends IncrementalProjectBuilder {
 
 	private TemplateDependencies m_dependencies = null;
 	private final Set m_changed = new HashSet();
 	
 	private IPath getWorkDir() {
-		return getProject().getWorkingLocation(JamonPlugin.getDefault().pluginId());
+		return getProject().getWorkingLocation(JamonProjectPlugin.getDefault().pluginId());
 	}
 	
 	private File getDependencyFile() {
@@ -110,6 +111,15 @@ public class JamonProjectBuilder extends IncrementalProjectBuilder {
 		saveDependencies();
 		return null;
 	}
+	
+	protected void clean(IProgressMonitor monitor) throws CoreException {
+		IFolder tsrc = getNature().getTemplateOutputFolder();
+		IResource[] things = tsrc.members();
+		for (int i = 0; i < things.length; ++i) {
+			things[i].setReadOnly(false);
+			things[i].delete(true, monitor);
+		}
+     }
 
 	private void fullBuild(IProgressMonitor monitor) throws CoreException {
 		m_dependencies = new TemplateDependencies();
@@ -127,9 +137,7 @@ public class JamonProjectBuilder extends IncrementalProjectBuilder {
 		IFolder templateDir = getNature().getTemplateSourceFolder();
 		for (Iterator i = m_changed.iterator(); i.hasNext(); ) {
 			IPath s = (IPath) i.next();
-			System.err.println(s  +" changed");
 			Collection c = m_dependencies.getDependenciesOf(s.toString());
-			System.err.println("Things that depend on s are " + c);
 			for (Iterator j = c.iterator(); j.hasNext(); ) {
 				visitor.visit(templateDir.findMember((new Path((String) j.next())).addFileExtension(JamonNature.JAMON_EXTENSION)));
 			}
@@ -147,16 +155,37 @@ public class JamonProjectBuilder extends IncrementalProjectBuilder {
 			m_describer = new TemplateDescriber(m_source, classLoader());
 			m_outFolder = getNature().getTemplateOutputFolder();
 		}
-
+		
 		private ClassLoader classLoader() throws CoreException {
+			String[] entries = JavaRuntime.computeDefaultRuntimeClassPath(getJavaProject());
+			URL[] urls = new URL[entries.length];
+			// TODO: this isn't correct. Need to pay attention to inclusion / exclusion
+			//   patterns, and probably do something special with non-binary entries.
+			//   Also probably should skip source folders.
+			for (int i = 0; i < entries.length; ++i) {
+				System.err.println(entries[i]);
+				try {
+					urls[i] = new File(entries[i]).toURL();
+				}
+				catch (MalformedURLException e) {
+					throw new RuntimeException(e);
+				}
+			}
+			// TODO: does this have the proper parent?
+			return new URLClassLoader(urls);
+			
+		}
+
+		private ClassLoader classLoader2() throws CoreException {
 			IClasspathEntry[] entries = getJavaProject().getResolvedClasspath(true);
 			URL[] urls = new URL[entries.length];
 			// TODO: this isn't correct. Need to pay attention to inclusion / exclusion
 			//   patterns, and probably do something special with non-binary entries.
 			//   Also probably should skip source folders.
 			for (int i = 0; i < entries.length; ++i) {
+				System.err.println(entries[i].getPath().makeUNC(true).toFile());
 				try {
-					urls[i] = entries[i].getPath().toFile().toURL();
+					urls[i] = entries[i].getPath().makeUNC(true).toFile().toURL();
 				}
 				catch (MalformedURLException e) {
 					throw new RuntimeException(e);
@@ -186,7 +215,7 @@ public class JamonProjectBuilder extends IncrementalProjectBuilder {
 		}
 		
 		private CoreException createCoreException(Exception e) {
-			return new CoreException(new Status(IStatus.ERROR,JamonPlugin.getDefault().getBundle().getSymbolicName(), 0, e.getMessage(), e));
+			return new CoreException(new Status(IStatus.ERROR,JamonProjectPlugin.getDefault().getBundle().getSymbolicName(), 0, e.getMessage(), e));
 		}
 		
 		private void markFile(IFile file, JamonTemplateException e) throws CoreException {
@@ -250,7 +279,7 @@ public class JamonProjectBuilder extends IncrementalProjectBuilder {
 		private void createSourceFile(byte[] contents, IFile p_file) throws CoreException {
 			createParents(p_file.getParent());
 			p_file.create(new ByteArrayInputStream(contents), true, null);
-			p_file.setReadOnly(true);
+			// p_file.setReadOnly(true);
 		}
 		
 		public boolean visit(IResource resource) throws CoreException {
@@ -285,7 +314,7 @@ public class JamonProjectBuilder extends IncrementalProjectBuilder {
 	}
 
 	private static String builderId() {
-		return JamonPlugin.getDefault().pluginId() + ".templateBuilder";
+		return JamonProjectPlugin.getDefault().pluginId() + ".templateBuilder";
 	}
 
 	public static void addToProject(IProject p_project) throws CoreException {

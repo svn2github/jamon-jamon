@@ -42,10 +42,10 @@ public class MarkerUpdaterBuilder extends IncrementalProjectBuilder {
 	
 	private void moveMarker(IResource p_srcFile, IMarker p_marker, IFile p_template) throws CoreException {
 		System.err.println("Moving marker " + p_marker + " for " + p_srcFile + " to " + p_template);
-		IMarker marker = p_template.createMarker(p_marker.getType());
+		// IMarker marker = p_template.createMarker(p_marker.getType());
 		// TODO: need to translate line and column number!
-		marker.setAttributes(p_marker.getAttributes());
-		p_marker.delete();
+		// marker.setAttributes(p_marker.getAttributes());
+		// p_marker.delete();
 	}
 	
 	private void moveAllMarkers(IContainer p_container) throws CoreException {
@@ -65,7 +65,7 @@ public class MarkerUpdaterBuilder extends IncrementalProjectBuilder {
 	}
 
 	private static String builderId() {
-		return JamonPlugin.getDefault().pluginId() + ".markerUpdater";
+		return JamonProjectPlugin.getDefault().pluginId() + ".markerUpdater";
 	}
 
 	

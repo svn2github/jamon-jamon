@@ -22,7 +22,7 @@ import org.osgi.service.prefs.BackingStoreException;
 public class JamonNature implements IProjectNature {
 
 	static String natureId() {
-		return JamonPlugin.getDefault().pluginId() + ".jamonnature";
+		return JamonProjectPlugin.getDefault().pluginId() + ".jamonnature";
 	}
 	
 	public static boolean projectHasNature(IProject p_project) throws CoreException {
@@ -66,7 +66,7 @@ public class JamonNature implements IProjectNature {
 	}
 
 	private static final String TEMPLATE_SOURCE_DIR_PROPERTY = "templateSourceDir";
-	private static final String JAMON_PREFERENCES_NODE = "org.jamon.eclipse";
+	private static final String JAMON_PREFERENCES_NODE = "org.jamon";
 	
 	public static void removeFromProject(IProject p_project) throws CoreException {
 		IProjectDescription description = p_project.getDescription();
@@ -117,7 +117,7 @@ public class JamonNature implements IProjectNature {
 	
 	public void configure() throws CoreException {
 
-		JamonProjectBuilder.addToProject(getProject());
+		TemplateBuilder.addToProject(getProject());
 		MarkerUpdaterBuilder.addToProject(getProject());
 		removeTsrc();
 		IFolder tsrc = getTemplateOutputFolder();

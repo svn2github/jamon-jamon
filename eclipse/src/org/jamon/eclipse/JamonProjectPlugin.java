@@ -7,9 +7,9 @@ import java.util.*;
 /**
  * The main plugin class to be used in the desktop.
  */
-public class JamonPlugin extends AbstractUIPlugin {
+public class JamonProjectPlugin extends AbstractUIPlugin {
 	//The shared instance.
-	private static JamonPlugin plugin;
+	private static JamonProjectPlugin plugin;
 	//Resource bundle.
 	private ResourceBundle resourceBundle;
 
@@ -17,11 +17,11 @@ public class JamonPlugin extends AbstractUIPlugin {
 	/**
 	 * The constructor.
 	 */
-	public JamonPlugin() {
+	public JamonProjectPlugin() {
 		super();
 		plugin = this;
 		try {
-			resourceBundle = ResourceBundle.getBundle("org.jamon.eclipse.JamonPluginResources");
+			resourceBundle = ResourceBundle.getBundle("org.jamon.JamonProjectPluginResources");
 		} catch (MissingResourceException x) {
 			resourceBundle = null;
 		}
@@ -45,7 +45,7 @@ public class JamonPlugin extends AbstractUIPlugin {
 	/**
 	 * Returns the shared instance.
 	 */
-	public static JamonPlugin getDefault() {
+	public static JamonProjectPlugin getDefault() {
 		return plugin;
 	}
 
@@ -54,7 +54,7 @@ public class JamonPlugin extends AbstractUIPlugin {
 	 * or 'key' if not found.
 	 */
 	public static String getResourceString(String key) {
-		ResourceBundle bundle = JamonPlugin.getDefault().getResourceBundle();
+		ResourceBundle bundle = JamonProjectPlugin.getDefault().getResourceBundle();
 		try {
 			return (bundle != null) ? bundle.getString(key) : key;
 		} catch (MissingResourceException e) {
