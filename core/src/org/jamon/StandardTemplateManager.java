@@ -314,18 +314,10 @@ public class StandardTemplateManager
         AbstractTemplateProxy p_proxy, TemplateManager p_manager)
         throws IOException
     {
-        //FIXME - don't require the path name for impl construction
-        if(m_dynamicRecompilation)
+        if (m_dynamicRecompilation)
         {
-            try
-            {
-                return p_proxy.constructImpl(getImplClass(p_proxy.getClass()),
-                                             p_manager);
-            }
-            catch (ClassNotFoundException e)
-            {
-                throw new JamonException(e);
-            }
+            return p_proxy.constructImpl(getImplClass(p_proxy.getClass()),
+                                         p_manager);
         }
         else
         {
@@ -450,40 +442,38 @@ public class StandardTemplateManager
     }
 
     private Class getImplClass(Class p_proxyClass)
-        throws IOException,
-               ClassNotFoundException
+        throws IOException
     {
         return getTemplateClass(StringUtils.classToTemplatePath(p_proxyClass),
                                 p_proxyClass.getName() + "Impl");
     }
 
     private Class getProxyClass(String p_path)
-        throws IOException,
-               ClassNotFoundException
+        throws IOException
     {
         return getTemplateClass(p_path,
                                 StringUtils.templatePathToClassName(p_path));
     }
 
     private Class getTemplateClass(String p_path, String p_className)
-        throws IOException,
-               ClassNotFoundException
-    {
-        if (m_dynamicRecompilation)
-        {
-            ensureUpToDate(p_path);
-            return m_loader.loadClass(p_className);
-        }
-        else
-        {
-            return m_classLoader.loadClass(p_className);
-        }
-    }
-
-    private ClassLoader getWorkClassLoader()
         throws IOException
     {
-        return m_loader;
+        try
+        {
+            if (m_dynamicRecompilation)
+            {
+                ensureUpToDate(p_path);
+                return m_loader.loadClass(p_className);
+            }
+            else
+            {
+                return m_classLoader.loadClass(p_className);
+            }
+        }
+        catch (ClassNotFoundException e)
+        {
+            throw new JamonException(e);
+        }
     }
 
     private final TemplateSource m_templateSource;
