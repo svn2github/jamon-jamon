@@ -34,6 +34,7 @@ public class LiteralTest
         checkOutput("<%args>xxx</%args></%def><%def>\n"
                     +"<%import><%java>\\\n"
                     +"</%java></%import>\n"
+                    +"</%LITERAL\n"
                     +"% x = 5;\n\n");
     }
 }
