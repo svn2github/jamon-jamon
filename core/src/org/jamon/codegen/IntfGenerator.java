@@ -368,7 +368,7 @@ public class IntfGenerator
     private void generateIntf()
         throws IOException
     {
-        m_writer.println("public interface Intf");
+        m_writer.println("protected interface Intf");
         m_writer.print("  extends "
                        + (m_templateUnit.hasParentPath()
                           ? m_resolver.getFullyQualifiedIntfClassName(
