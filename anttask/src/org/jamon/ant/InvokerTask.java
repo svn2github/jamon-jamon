@@ -27,12 +27,17 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Properties;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Location;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.Environment;
 
 import org.jamon.Invoker;
 import org.jamon.StandardTemplateManager;
@@ -53,8 +58,14 @@ public class InvokerTask
     public void execute()
         throws BuildException
     {
+        Properties sysprops = System.getProperties();
         try
         {
+            for (Iterator p = m_sysprops.iterator(); p.hasNext(); )
+            {
+                Environment.Variable var = (Environment.Variable) p.next();
+                System.setProperty(var.getKey(), var.getValue());
+            }
             Writer writer;
             if (m_output == null)
             {
@@ -89,6 +100,10 @@ public class InvokerTask
         catch (IOException e)
         {
             throw new BuildException(e);
+        }
+        finally
+        {
+            System.setProperties(sysprops);
         }
     }
 
@@ -141,7 +156,13 @@ public class InvokerTask
     private final StandardTemplateManager.Data m_templateManagerData;
     private String m_path;
     private HashMap m_args = new HashMap();
+    private Collection m_sysprops = new HashSet();
     private File m_output;
+
+    public void addSysproperty(Environment.Variable p_property)
+    {
+        m_sysprops.add(p_property);
+    }
 
     public void addConfiguredArg(Arg p_arg)
     {
