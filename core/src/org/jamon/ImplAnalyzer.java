@@ -164,7 +164,7 @@ public class ImplAnalyzer extends BaseAnalyzer
         public void caseAFragmentCallBaseComponent(AFragmentCallBaseComponent node)
         {
             handleBody();
-            pushUnitName("#" + (fragments++));
+            pushUnit("#" + (fragments++));
             m_unitStatements.put(getUnitName(),new ArrayList());
             AFragmentCall call = (AFragmentCall) node.getFragmentCall();
             String path = asText(call.getPath());

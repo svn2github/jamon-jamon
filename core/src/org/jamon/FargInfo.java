@@ -24,7 +24,7 @@ class FargInfo
 
     public String getFargInterfaceName()
     {
-        return Fragment.class.getName();
+        return "Fragment_" + m_name;
     }
 
     public String getName()

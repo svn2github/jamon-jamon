@@ -17,9 +17,6 @@ public class FragmentCallStatement
 
     private final List m_fragment;
 
-    private final static String FRAGMENT_CLASS =
-        Fragment.class.getName();
-
     private final static String IOEXCEPTION_CLASS =
         IOException.class.getName();
 
@@ -56,12 +53,22 @@ public class FragmentCallStatement
 
         p_writer.println("{");
         p_writer.print("    final ");
-        p_writer.print(fargInfo.getFargInterfaceName());
+
+        String fargIntf = fargInfo.getFargInterfaceName();
+        if (! isDefCall(p_analyzer))
+        {
+            fargIntf =
+                p_resolver.getFullyQualifiedIntfClassName
+                    (p_analyzer.getAbsolutePath(getPath()))
+                + "." + fargIntf;
+        }
+
+        p_writer.print(fargIntf);
         p_writer.print(" ");
         p_writer.print(fragVar);
         p_writer.println(" =");
         p_writer.print("      new ");
-        p_writer.print(fargInfo.getFargInterfaceName());
+        p_writer.print(fargIntf);
         p_writer.println(" () {");
         p_writer.print("       public void render(");
 

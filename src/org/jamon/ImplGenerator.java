@@ -115,6 +115,32 @@ public class ImplGenerator
     }
 
 
+    private void generateDefFargInterface(FargInfo p_fargInfo)
+        throws IOException
+    {
+        print  ("  private static interface ");
+        println(p_fargInfo.getFargInterfaceName());
+        println("  {");
+        print  ("    void render(");
+
+        for (Iterator a = p_fargInfo.getArgumentNames(); a.hasNext(); /* */)
+        {
+            String argName = (String) a.next();
+            print(p_fargInfo.getArgumentType(argName));
+            print(" ");
+            print(argName);
+            if (a.hasNext())
+            {
+                print(", ");
+            }
+        }
+        println(")");
+        println("      throws java.io.IOException;");
+        println("  }");
+        println();
+    }
+
+
     private void generateDefs()
         throws IOException
     {
@@ -122,6 +148,14 @@ public class ImplGenerator
         {
             String name = (String) d.next();
             println();
+
+            for (Iterator f = m_analyzer.getFargNames(name);
+                 f.hasNext();
+                 /* */)
+            {
+                generateDefFargInterface(m_analyzer.getFargInfo((String)f.next()));
+            }
+
             print("  private void $def$");
             print(name);
             print("(");

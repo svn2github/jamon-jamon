@@ -93,9 +93,10 @@ public class BaseAnalyzer
 
     protected static final String MAIN_UNIT_NAME = "";
 
-    protected final void pushUnitName(String p_unitName)
+    protected final void pushUnit(String p_unitName)
     {
         m_unitNames.addLast(p_unitName);
+        m_unit.put(p_unitName,new UnitInfo(p_unitName));
     }
 
     protected final String popUnitName()
@@ -270,15 +271,14 @@ public class BaseAnalyzer
             AFargStart start = (AFargStart) f.getFargStart();
 
             String pfragName = start.getIdentifier().getText();
-            pushUnitName("#PFRAG#" + pfragName);
-            m_unit.put(getUnitName(),new UnitInfo(getUnitName()));
+            pushUnit("#PFRAG#" + pfragName);
 
             for (Iterator a = f.getArg().iterator(); a.hasNext(); /* */)
             {
                 ((Node)a.next()).apply(this);
             }
 
-            if (getRequiredArgNames(getUnitName()).hasNext())
+            if (getOptionalArgNames(getUnitName()).hasNext())
             {
                 throw new UnsupportedOperationException("PFrags cannot have optional arguments");
             }
@@ -290,7 +290,7 @@ public class BaseAnalyzer
 
             getUnitInfo(getUnitName())
                 .addFarg(pfragName,
-                         Fragment.class.getName(),
+                         "Fragment_" + pfragName,
                          null);
 
         }
@@ -300,8 +300,7 @@ public class BaseAnalyzer
             ADef def = (ADef) node.getDef();
             String unitName = def.getIdentifier().getText();
             m_defNames.add(unitName);
-            pushUnitName(unitName);
-            m_unit.put(getUnitName(),new UnitInfo(getUnitName()));
+            pushUnit(unitName);
             def.getDefStart().apply(this);
             for (Iterator i = def.getBaseComponent().iterator(); i.hasNext(); /* */ )
             {

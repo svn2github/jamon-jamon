@@ -127,3 +127,22 @@ A <|frag|> B <|frag|> C \
 <%farg f2></%farg> \
 front<|& sub3 &>before<|f2|>middle<|f2|>after</&>back</%def> \
 <|& sub4 &> <% c.bump() %> </&>
+
+
+<%def subX>
+<%farg f>
+  int i;
+  String s;
+</%farg>
+  <|f|>
+  <|f|>
+</%def>
+
+<%doc>
+<|& subX &><%args>
+  int i;
+  String s;
+</%args>
+  i is <% i %> and s is <% s %>.
+</&>
+</%doc>
