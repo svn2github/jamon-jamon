@@ -40,16 +40,14 @@ override the subtemplate in order to replace the title.
 The template that derives this template would override the <code>title</code>
 subtemplate by using the <code>&lt;%override title></code> ... <code>&lt;/%override></code> tag.
 
-<pre class="template">
-<%LITERAL>
+<pre class="template"><%LITERAL>
 <%override title>
   <%xargs>
     name;
   &lt;/%xargs>
   Jamon Specials for <% name %>
 &lt;/%override>
-</%LITERAL>
-</pre>
+</%LITERAL></pre>
 
 Overridden methods take the same arguments as the method they
 override, although, as with template inheritance, only those
