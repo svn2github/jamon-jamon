@@ -34,15 +34,7 @@ public class EscapingDirective
 
     public static EscapingDirective get(String p_abbreviation)
     {
-        EscapingDirective result =
-            (EscapingDirective) s_standardDirectives.get(p_abbreviation);
-        if (result == null)
-        {
-            throw new RuntimeException("No escaping directive found with abbreviation '"
-                                       + p_abbreviation
-                                       + "'");
-        }
-        return result;
+        return (EscapingDirective) s_standardDirectives.get(p_abbreviation);
     }
 
 

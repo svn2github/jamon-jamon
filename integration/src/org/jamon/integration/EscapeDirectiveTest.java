@@ -34,4 +34,22 @@ public class EscapeDirectiveTest
         checkOutput("+%25x");
     }
 
+    public void testBadDirective()
+        throws Exception
+    {
+        expectTemplateException(
+            "BadEscaping",
+            "Unknown escaping directive 'Q'",
+            1, 7);
+    }
+
+    public void testBadDefault()
+        throws Exception
+    {
+        expectTemplateException(
+            "BadDefaultEscaping",
+            "Unknown escaping directive 'Z'",
+            1, 11);
+    }
+
 }

@@ -323,8 +323,15 @@ public class Analyzer
                     ("a template cannot specify multiple default escapings",
                      p_escape.getEscapeDirectiveStart());
             }
-            m_defaultEscaping = p_escape.getEscaping().getText();
-            EscapingDirective.get(m_defaultEscaping);
+            TEscaping token = p_escape.getEscaping();
+            m_defaultEscaping = token.getText();
+            if (EscapingDirective.get(m_defaultEscaping) == null)
+            {
+                throw new AnalysisException
+                    ("Unknown escaping directive '" + m_defaultEscaping + "'",
+                     m_describer.getExternalIdentifier(getTemplateUnit().getName()),
+                     token);
+            }
         }
 
         public void caseAExtendsComponent(AExtendsComponent p_extends)
@@ -662,20 +669,42 @@ public class Analyzer
             AEscape escape = (AEscape) p_emit.getEscape();
             addStatement(new WriteStatement
                          (p_emit.getEmitExpr().getText(),
-                          EscapingDirective.get
-                          (escape == null
-                           ? getDefaultEscaping()
-                           : escape.getEscapeCode().getText()),
+                          extractEscaping(escape),
                           p_emit.getEmitStart(),
                           m_templateIdentifier));
+        }
+
+        private EscapingDirective extractEscaping(AEscape p_escape)
+        {
+            if (p_escape == null)
+            {
+                return getDefaultEscaping();
+            }
+            else
+            {
+                String directive = p_escape.getEscapeCode().getText();
+                EscapingDirective escaping =
+                    EscapingDirective.get(directive);
+                if (escaping == null)
+                {
+                    throw new AnalysisException
+                        ("Unknown escaping directive '" + directive + "'",
+                         m_describer.getExternalIdentifier(getTemplateUnit().getName()),
+                         p_escape.getEscapeCode());
+                }
+                else
+                {
+                    return escaping;
+                }
+            }
         }
     }
 
     private String m_defaultEscaping;
 
-    private String getDefaultEscaping()
+    private EscapingDirective getDefaultEscaping()
     {
-        return m_defaultEscaping;
+        return EscapingDirective.get(m_defaultEscaping);
     }
 
     private void handleBody()

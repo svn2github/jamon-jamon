@@ -165,10 +165,16 @@ public abstract class TestBase
         }
         catch(JamonTemplateException e)
         {
-            assertEquals(p_message, e.getMessage());
-            assertEquals(p_line, e.getLine());
-            assertEquals(p_column, e.getColumn());
-            assertEquals(getTemplateFilePath(path), e.getFileName());
+            assertEquals("Exception message mismatch", p_message, e.getMessage());
+            assertEquals("Exception line number mismatch",
+                         p_line,
+                         e.getLine());
+            assertEquals("Exception column number mismatch",
+                         p_column,
+                         e.getColumn());
+            assertEquals("Exception filename mismatch",
+                         getTemplateFilePath(path),
+                         e.getFileName());
         }
     }
 
