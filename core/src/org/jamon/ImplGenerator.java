@@ -1,6 +1,7 @@
 package org.modusponens.jtt;
 
 import java.io.Writer;
+import java.io.PrintWriter;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
@@ -29,12 +30,31 @@ public class ImplGenerator extends BaseGenerator
     private final static String WRITER_CLASS =
         Writer.class.getName();
 
-    public ImplGenerator(Writer p_writer,
-                         TemplateDescriber p_describer,
+    public ImplGenerator(TemplateDescriber p_describer,
                          String p_templatePath)
     {
-        super(p_writer,p_describer,p_templatePath);
+        super(p_describer,p_templatePath);
         m_unitStatements.put(MAIN_UNIT_NAME,new ArrayList());
+    }
+
+    private PrintWriter m_writer;
+
+    private void print(Object p_obj)
+        throws IOException
+    {
+        m_writer.print(p_obj);
+    }
+
+    private void println()
+        throws IOException
+    {
+        m_writer.println();
+    }
+
+    private void println(Object p_obj)
+        throws IOException
+    {
+        m_writer.println(p_obj);
     }
 
     public Collection getCalledTemplateNames()
@@ -50,9 +70,10 @@ public class ImplGenerator extends BaseGenerator
         return absCalls;
     }
 
-    public void generateClassSource()
+    public void generateClassSource(Writer p_writer)
         throws IOException
     {
+        m_writer = new PrintWriter(p_writer);
         generatePrologue();
         generateImports();
         generateDeclaration();
@@ -461,6 +482,18 @@ public class ImplGenerator extends BaseGenerator
     {
         println();
         println("}");
+    }
+
+    private void generateImports()
+        throws IOException
+    {
+        for (Iterator i = getImports(); i.hasNext(); /* */ )
+        {
+            print("import ");
+            print(i.next());
+            println(";");
+        }
+        println();
     }
 
     private List getStatements(String p_unitName)

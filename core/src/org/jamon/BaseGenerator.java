@@ -1,8 +1,6 @@
 package org.modusponens.jtt;
 
 import java.io.IOException;
-import java.io.Writer;
-import java.io.PrintWriter;
 import java.util.List;
 import java.util.LinkedList;
 import java.util.Map;
@@ -13,25 +11,6 @@ import org.modusponens.jtt.analysis.*;
 
 public class BaseGenerator extends AnalysisAdapter
 {
-    protected void print(Object p_obj)
-        throws IOException
-    {
-        m_writer.print(p_obj);
-    }
-
-    protected void println()
-        throws IOException
-    {
-        m_writer.println();
-    }
-
-    protected void println(Object p_obj)
-        throws IOException
-    {
-        m_writer.println(p_obj);
-    }
-
-
     protected static final String MAIN_UNIT_NAME = "";
 
     private static class UnitInfo
@@ -87,7 +66,6 @@ public class BaseGenerator extends AnalysisAdapter
     private List m_defNames = new LinkedList();
     private final String m_path;
     private final TemplateDescriber m_describer;
-    private final PrintWriter m_writer;
     private final LinkedList m_unitNames = new LinkedList();
 
     protected final TemplateDescriber getTemplateDescriber()
@@ -110,11 +88,9 @@ public class BaseGenerator extends AnalysisAdapter
         return (String) m_unitNames.removeLast();
     }
 
-    protected BaseGenerator(Writer p_writer,
-                            TemplateDescriber p_describer,
+    protected BaseGenerator(TemplateDescriber p_describer,
                             String p_path)
     {
-        m_writer = new PrintWriter(p_writer);
         m_describer = p_describer;
         m_path = p_path;
     }
@@ -291,18 +267,6 @@ public class BaseGenerator extends AnalysisAdapter
         }
         def.getDefEnd().apply(this);
         popUnitName();
-    }
-
-    protected void generateImports()
-        throws IOException
-    {
-        for (Iterator i = getImports(); i.hasNext(); /* */ )
-        {
-            print("import ");
-            print(i.next());
-            println(";");
-        }
-        println();
     }
 
 }

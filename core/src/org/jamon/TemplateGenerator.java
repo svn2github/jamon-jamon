@@ -62,12 +62,12 @@ public class TemplateGenerator
         FileWriter writer = new FileWriter(javaFile);
 
         InterfaceGenerator intfGen =
-            new InterfaceGenerator(writer, describer, p_filename);
+            new InterfaceGenerator(describer, p_filename);
 
         tree.apply(intfGen);
         try
         {
-            intfGen.generateClassSource();
+            intfGen.generateClassSource(writer);
         }
         catch (IOException e)
         {

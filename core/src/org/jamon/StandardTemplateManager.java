@@ -337,10 +337,8 @@ public class StandardTemplateManager
         }
 
         File javaFile = new File(javaImpl(p_path));
-        FileWriter writer = new FileWriter(javaFile);
 
-        ImplGenerator g2 = new ImplGenerator(writer,
-                                             getDescriber(),
+        ImplGenerator g2 = new ImplGenerator(getDescriber(),
                                              p_path);
 
         new Parser(new Lexer(new PushbackReader
@@ -349,9 +347,10 @@ public class StandardTemplateManager
             .parse()
             .apply(g2);
 
+        FileWriter writer = new FileWriter(javaFile);
         try
         {
-            g2.generateClassSource();
+            g2.generateClassSource(writer);
             writer.close();
             return g2.getCalledTemplateNames();
         }
@@ -402,8 +401,7 @@ public class StandardTemplateManager
         {
             try
             {
-                BaseGenerator g = new BaseGenerator(new FileWriter("/dev/null"),
-                                                    getDescriber(),
+                BaseGenerator g = new BaseGenerator(getDescriber(),
                                                     p_path);
 
                 new Parser(new Lexer(new PushbackReader
@@ -449,10 +447,7 @@ public class StandardTemplateManager
         }
 
         File javaFile = new File(javaIntf(p_path));
-        FileWriter writer = new FileWriter(javaFile);
-
-        InterfaceGenerator g1 = new InterfaceGenerator(writer,
-                                                       getDescriber(),
+        InterfaceGenerator g1 = new InterfaceGenerator(getDescriber(),
                                                        p_path);
 
         new Parser(new Lexer(new PushbackReader
@@ -461,9 +456,11 @@ public class StandardTemplateManager
             .parse()
             .apply(g1);
 
+        FileWriter writer = new FileWriter(javaFile);
+
         try
         {
-            g1.generateClassSource();
+            g1.generateClassSource(writer);
             writer.close();
         }
         catch (IOException e)
@@ -503,9 +500,7 @@ public class StandardTemplateManager
     {
         System.err.println("computing dependencies for " + p_path);
 
-        // FIXME: shouldn't have to pass a writer at ALL.
-        ImplGenerator g2 = new ImplGenerator(new FileWriter("/dev/null"),
-                                             getDescriber(),
+        ImplGenerator g2 = new ImplGenerator(getDescriber(),
                                              p_path);
 
         new Parser(new Lexer(new PushbackReader
