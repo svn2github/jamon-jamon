@@ -15,7 +15,8 @@
 % if (error) {
       <b>The data you entered was invalid</b><br>
 % }
-      How many times would you like to be greeted? <input type="text" name="<% HelloServlet.NUM_KEY %>" />
+      How many times would you like to be greeted?
+      <input type="text" name="<% HelloServlet.NUM_KEY %>" />
       <br>
       <input type="submit" value="Greet Me"/>
     </form>

@@ -16,7 +16,8 @@
   <target name="build"
           depends="init,templates,prepare-tomcat,semperj"
           description="Compiles all the Java files">
-    <property name="classes.dir" value="${tomcat.home.dir}/webapps/${context.name}/WEB-INF/classes"/>
+    <property name="classes.dir"
+              value="${tomcat.dir}/webapps/${context}/WEB-INF/classes"/>
     <mkdir dir="${classes.dir}"/>
     <javac destdir="${classes.dir}"
 	   debug="true"
