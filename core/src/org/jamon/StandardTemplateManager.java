@@ -54,11 +54,12 @@ public class StandardTemplateManager
     {
         try
         {
-            return (Template)
+            AbstractTemplate template = (AbstractTemplate)
                 getImplementationClass(p_path)
-                    .getConstructor(new Class [] { Writer.class,
-                                                   TemplateManager.class })
-                    .newInstance(new Object [] { p_writer, p_manager });
+                    .getConstructor(new Class [] { TemplateManager.class })
+                    .newInstance(new Object [] { p_manager });
+            template.initialize(p_writer);
+            return template;
         }
         catch (RuntimeException e)
         {

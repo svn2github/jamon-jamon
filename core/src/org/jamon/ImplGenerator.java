@@ -25,6 +25,7 @@ public class ImplGenerator
         generateImports();
         generateDeclaration();
         generateConstructor();
+        generateInitialize();
         generateRender();
         generateOptionalArgs();
         generateDefs();
@@ -83,22 +84,48 @@ public class ImplGenerator
         println("{");
     }
 
+    private void generateInitialize()
+        throws IOException
+    {
+        println("  protected void initializeDefaultArguments()");
+        println("    throws org.jamon.JttException");
+        println("  {");
+        println("    try");
+        println("    {");
+        for (Iterator i = m_analyzer.getOptionalArgNames(); i.hasNext(); /* */)
+        {
+            String name = (String) i.next();
+            print("      ");
+            print(name);
+            print(" = ");
+            print(m_analyzer.getDefault(name));
+            println(";");
+        }
+        println("    }");
+        println("    catch (RuntimeException e)");
+        println("    {");
+        println("      throw e;");
+        println("    }");
+        println("    catch (Exception e)");
+        println("    {");
+        println("      throw new org.jamon.JttException(e);");
+        println("    }");
+        println("  }");
+        println();
+    }
+
     private void generateConstructor()
         throws IOException
     {
-        print("  public ");
-        print(getClassName());
-        print("(");
-        print(WRITER_CLASS);
-        println(" p_writer,");
-        print  ("        ");
-        print  (         TEMPLATE_MANAGER);
-        println(                        " p_templateManager)");
+        print  ("  public ");
+        print  (          getClassName());
+        print  (                        "(");
+        print  ( TEMPLATE_MANAGER);
+        println(                 " p_templateManager)");
         println("  {");
-        println("    super(p_writer, p_templateManager);");
+        println("    super(p_templateManager);");
         println("  }");
         println();
-
     }
 
     private void generatePrologue()
@@ -274,8 +301,6 @@ public class ImplGenerator
             print(type);
             print(" ");
             print(name);
-            print(" = ");
-            print(m_analyzer.getDefault(name));
             println(";");
         }
     }

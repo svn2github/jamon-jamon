@@ -7,12 +7,20 @@ import java.net.URLEncoder;
 public abstract class AbstractTemplate
     implements Template
 {
-    protected AbstractTemplate(Writer p_writer,
-                               TemplateManager p_templateManager)
+    protected AbstractTemplate(TemplateManager p_templateManager)
     {
-        m_writer = p_writer;
         m_templateManager = p_templateManager;
     }
+
+    public final void initialize(Writer p_writer)
+        throws JttException
+    {
+        m_writer = p_writer;
+        initializeDefaultArguments();
+    }
+
+    protected abstract void initializeDefaultArguments()
+        throws JttException;
 
     protected void writeEscaped(String p_string)
         throws IOException
@@ -105,6 +113,6 @@ public abstract class AbstractTemplate
         return String.valueOf(p_bool);
     }
 
-    private final Writer m_writer;
+    private Writer m_writer;
     private final TemplateManager m_templateManager;
 }
