@@ -49,6 +49,7 @@
  </target>
 
   <target name="build"
+          depends="parser"
           description="Compiles all the Java files">
       <mkdir dir="${classes.dir}"/>
       <javac destdir="${classes.dir}"
@@ -65,5 +66,9 @@
   </target>
 
   <target name="spotless" depends="clean" />
+
+  <target name="cvsignores">
+    <echo file=".cvsignore">.cvsignore build build.properties</echo>
+  </target>
 
 </project>
