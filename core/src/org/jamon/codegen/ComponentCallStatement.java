@@ -35,9 +35,9 @@ public class ComponentCallStatement
     }
 
     protected String getFragmentIntfName(FragmentUnit p_fragmentUnitIntf,
-                                       TemplateResolver p_resolver)
+                                         TemplateResolver p_resolver)
     {
-        return p_resolver.getFullyQualifiedIntfClassName(getPath())
+        return getComponentProxyClassName(p_resolver)
             + "." + p_fragmentUnitIntf.getFragmentInterfaceName();
     }
 
@@ -46,17 +46,18 @@ public class ComponentCallStatement
                                TemplateDescriber p_describer)
         throws IOException
     {
-        String componentPath = getPath();
-        p_writer.println("new "
-                         + p_resolver.getFullyQualifiedIntfClassName
-                             (componentPath)
+        String instanceVar = getUniqueName();
+        p_writer.println(getComponentProxyClassName(p_resolver) + " "
+                         + instanceVar + " = "
+                         + "new " + getComponentProxyClassName(p_resolver)
                          +"(this.getTemplateManager())");
-        p_writer.indent(5);
+        p_writer.indent(2);
         p_writer.println(".writeTo(this.getWriter())");
-        p_writer.println(".escapeWith(this.getEscaping())");
+        p_writer.println(".escapeWith(this.getEscaping());");
+        p_writer.outdent(2);
 
         TemplateDescription desc =
-            p_describer.getTemplateDescription(componentPath);
+            p_describer.getTemplateDescription(getPath());
 
         for (Iterator i = desc.getOptionalArgs().iterator(); i.hasNext(); )
         {
@@ -64,11 +65,11 @@ public class ComponentCallStatement
             String value = (String) getParams().remove(arg.getName());
             if (value != null)
             {
-                p_writer.println("." + arg.getSetterName() + "(" + value + ")");
-                i.remove(); //FIXME - why?
+                p_writer.println(instanceVar + "." + arg.getSetterName()
+                                 + "(" + value + ");");
             }
         }
-        p_writer.print(".render(");
+        p_writer.print(instanceVar + ".render(");
         boolean argsAlreadyPrinted = false;
         for (Iterator i = desc.getRequiredArgs().iterator(); i.hasNext(); )
         {
@@ -94,7 +95,18 @@ public class ComponentCallStatement
                              p_describer,
                              argsAlreadyPrinted);
         p_writer.println(");");
-        p_writer.outdent(5);
         checkSuppliedParams();
     }
+
+    private String getComponentProxyClassName(TemplateResolver p_resolver)
+    {
+        return p_resolver.getFullyQualifiedIntfClassName(getPath());
+    }
+
+    private static String getUniqueName()
+    {
+        return "__jamon__var_" + m_uniqueId++;
+    }
+
+    private static int m_uniqueId = 0;
 }
