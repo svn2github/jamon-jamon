@@ -1,0 +1,66 @@
+<&| _Base; title => "Jamon and Ant: JamonTask"; section => "Documentation" &>
+
+<h2>JamonTask</h2>
+<h3>Description</h3>
+<p>Preprocesses Jamon templates to Java sources.</p>
+
+<p>Templates under the specified <span class="file">src</span>
+directory are processed into Java sources. The generated java source
+files are placed under the <span class="file">destdir</span>
+directory. The directory structure underneath the <span
+class="file">src</span> directory is preserved, and is used to place
+the generated Java sources in appropriate packages.</p>
+
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">destdir</td>
+    <td valign="top">the target directory for generated Java files.</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">generateImpls</td>
+    <td valign="top">whether to generate implementation classes as well as interfaces. Defaults to "false".</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+</table>
+
+<h3>Parameters specified as nested elements</h3>
+
+<p>This task forms an implicit <i>FileSet</i> and supports all
+attributes of <code>&lt;fileset&gt;</code> as well as the nested
+<code>&lt;include&gt;</code>, <code>&lt;exclude&gt;</code> and
+<code>&lt;patternset&gt;</code> elements.</p>
+
+<h4><code>src</code></h4>
+
+<p>a path-like structure specifying the root of the template sources
+to process. <b>Required</b>.</p>
+
+<h3>Examples</h3>
+
+<pre class="ant"><&| /org/jamon/escape/Html &><jamon destDir="tsrc">
+  <src path="wwwtemplates" />
+</jamon></&></pre>
+
+<p>creates Java interfaces for all of the templates in the <span
+class="file">wwwtemplates</span> directory, putting generated sources
+into <span class="file">tsrc</span></p>
+
+<pre class="ant"><&| /org/jamon/escape/Html &><jamon destDir="tsrc" generateImpls="true">
+  <src path="templs" />
+  <exclude name="not/for/prod/**" />
+</jamon></&></pre>
+
+<p>creates Java proxies and implementation sources for all of the
+templates in the <span class="file">templs</span> directory, except
+those in the direcotry <span
+class="file">templs/not/for/prod</span>. The sources are placed into
+the directory tree rooted at <span class="file">tsrc</span>.</p>
+
+</&>
