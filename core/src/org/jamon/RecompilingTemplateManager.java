@@ -517,7 +517,7 @@ public class RecompilingTemplateManager
                     {
                         m_classLoader.loadClass
                             (StringUtils.templatePathToClassName(path));
-                        new File(javaIntf(path)).delete();
+                        ji.delete();
                         deleteClassFilesFor(path);
                     }
                     catch (ClassNotFoundException e)
