@@ -3,15 +3,6 @@ body
   font-family: Verdana, Arial, Georgia, Sans-serif;
 }
 
-#footer
-{
-  background-color: #654928;
-  padding: 0 0 0 0;
-  margin: 0 0 0 0;
-  clear: both;
-  z-order: -100;
-}
-
 .header
 {
   width: 100%;
