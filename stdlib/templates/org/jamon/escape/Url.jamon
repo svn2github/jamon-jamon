@@ -1,7 +1,9 @@
-<%extends _escape>\
+<%extends _escape>
+
 <%import>
   org.jamon.escaping.Escaping;
-</%import>\
+</%import>
+
 <%class>
   protected Escaping _escaping() { return Escaping.URL; }
 </%class>
