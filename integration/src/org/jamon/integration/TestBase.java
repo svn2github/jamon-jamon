@@ -56,6 +56,12 @@ public class TestBase
         assertEquals(p_expected, getOutput());
     }
 
+    protected void checkOutput(String p_message, String p_expected)
+        throws IOException
+    {
+        assertEquals(p_message, p_expected, getOutput());
+    }
+
     protected void checkOutput(RE p_regexp)
         throws Exception
     {
