@@ -50,7 +50,7 @@
     This can be processed into a Java interface with the
     Jamon <code>TemplateProcessor</code> class, e.g.
   <pre class="tty">
-java org.jamon.TemplateProcessor --destDir=./gensrc \
+java org.jamon.TemplateProcessor --destDir=./gensrc \ 
   --srcDir=templates templates/org/foo/templates/Foo
 </pre>
 which will place the generated Java source file(s) into the
