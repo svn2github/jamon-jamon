@@ -17,9 +17,9 @@
     In general, any characters appearing in a template are output
     literally, whitespace included.
 
-    This excludes whitespace inside <&| /org/jamon/escape/Html
-    &><%LITERAL> <%args>, <%xargs>, <%import>, <%alias>, <%absmeth>, and
-    <%frag> declarations.  </%LITERAL></&>
+    This excludes whitespace inside <&| escape//Html &>
+    <%LITERAL><%args>, <%xargs>, <%import>, <%alias>, <%absmeth>, and
+    <%frag> declarations.</%LITERAL></&>
 
     Other ignored white space includes whitespace immediately after
     the following tags:
