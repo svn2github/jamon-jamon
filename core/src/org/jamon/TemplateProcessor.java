@@ -137,9 +137,16 @@ public class TemplateProcessor
         System.out.println("Usage: java org.jamon.TemplateProcessor <args> templatePath*");
         System.out.println("  Arguments:");
         System.out.println("  -h|--help         - print this help");
-        System.out.println("  --destDir=<path>  - path to where compiled .java files go (required)");
-        System.out.println("  --srcDir=<path>   - path to template directory");
+        System.out.println("  "
+                           + DESTDIR
+                           + "<path>  - path to where compiled .java files go (required)");
+        System.out.println("  "
+                           + SRCDIR
+                           + "<path>   - path to template directory");
     }
+
+    private static final String DESTDIR = "--destDir=";
+    private static final String SRCDIR = "--srcDir=";
 
     public static void main(String [] args)
     {
@@ -155,19 +162,19 @@ public class TemplateProcessor
                     showHelp();
                     System.exit(0);
                 }
-                else if (args[arg].startsWith("--destDir="))
+                else if (args[arg].startsWith(DESTDIR))
                 {
-                    destDir = new File(args[arg].substring(10));
+                    destDir = new File(args[arg].substring(DESTDIR.length()));
                 }
-                else if (args[arg].startsWith("--srcDir="))
+                else if (args[arg].startsWith(SRCDIR))
                 {
-                    sourceDir = new File(args[arg].substring(12));
+                    sourceDir = new File(args[arg].substring(SRCDIR.length()));
                 }
                 arg++;
             }
             if (destDir==null)
             {
-                System.err.println("You must specify --destDir");
+                System.err.println("You must specify " + DESTDIR);
                 showHelp();
                 System.exit(1);
             }
