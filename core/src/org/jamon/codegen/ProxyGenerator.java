@@ -524,6 +524,27 @@ public class ProxyGenerator
             generateSetWriter("ParentRenderer");
             generateEscaping("ParentRenderer");
             generateSetAutoFlush("ParentRenderer");
+
+
+            m_writer.print("public " + ClassNames.RENDERER + " makeRenderer(");
+            m_templateUnit.printDeclaredRequiredArgsDecl(m_writer);
+            m_writer.println(")");
+
+            m_writer.openBlock();
+            m_writer.print(  "return new " + ClassNames.RENDERER + "() ");
+            m_writer.openBlock();
+            m_writer.println("public void renderTo("
+                             + ClassNames.WRITER + " p_writer)");
+            m_writer.println(  "  throws " + ClassNames.IOEXCEPTION);
+            m_writer.openBlock();
+            m_writer.println("writeTo(p_writer);");
+            m_writer.print  ("render(");
+            m_templateUnit.printDeclaredRequiredArgs(m_writer);
+            m_writer.println(");");
+            m_writer.closeBlock();
+            m_writer.closeBlock(";");
+            m_writer.closeBlock();
+            m_writer.println();
         }
         else
         {
