@@ -24,9 +24,9 @@ Package
 Helpers
   lower = ['a'..'z'];
   upper = ['A'..'Z'];
-  letter = lower | upper;
+  letter = lower | upper | '_';
   digit = ['0'..'9'];
-  letter_or_digit = letter | digit | '_';
+  letter_or_digit = letter | digit;
   period = '.';
   ht  = 0x0009;
   lf  = 0x000a;
