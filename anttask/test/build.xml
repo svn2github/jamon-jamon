@@ -13,8 +13,6 @@
   <property name="classpath"
             value="../build/classes:../../core/build/classes" />
 
-  <property name="invoker.compiler" value="${build.compiler}"/>
-
   <target name="test" depends="init,test-invoker,test-jamon" />
 
   <target name="init">
@@ -37,11 +35,17 @@
     <!-- we only need to specify classpath here because we're bootstrapping
          Jamon; in "normal" invocations, all Jamon classes are available -->
     <tempfile property="temp.file" destdir="${build.dir}" />
+    <condition property="org.jamon.invoker.compiler" value="${build.compiler}">
+      <isset property="build.compiler"/>
+    </condition>
     <condition property="org.jamon.invoker.compiler" value="jikes">
-      <equals arg1="${invoker.compiler}" arg2="jikes"/>
+      <equals arg1="${build.compiler}" arg2="jikes"/>
     </condition>
     <condition property="org.jamon.invoker.compiler" value="javac">
-      <equals arg1="${invoker.compiler}" arg2="extJavac"/>
+      <equals arg1="${build.compiler}" arg2="extJavac"/>
+    </condition>
+    <condition property="org.jamon.invoker.compiler" value="">
+      <not><isset property="org.jamon.invoker.compiler"/></not>
     </condition>
     <invoker classpath="${classpath}"
              sourceDir="templates"
