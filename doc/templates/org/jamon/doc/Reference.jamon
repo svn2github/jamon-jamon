@@ -293,18 +293,24 @@ a good sign for you, <% name %>.
       <code>&lt;%xargs&gt;</code> ... <code>&lt;/%xargs&gt;</code>
       block.
 
-    <li><span class="concept">Private subtemplates</span>
+    <li><span class="concept">Subtemplates</span>
 
-      Private subtemplates ("<def>defs</def>") can be declared via
-      the <code>&lt;%def <i>def-name</i>&gt;</code>
-      instruction. Defs may be declared to accept arguments similar to
-      templates by using <code>%args</code>.
+      Subtemplates come in two forms, "private" and "protected".
+      Subtemplates may be declared to accept arguments similar to
+      templates by using <code>%args</code>.  Subtemplates can invoke
+      other subtemplates in the same template, and can be directly or
+      indirectly recursive. Arguments to subtemplates can be given
+      default values.  Subtemplates can be invoked via the
+      <code>&lt;&amp; <i>subtemplate-name</i>; argument1;
+      ... &amp;&gt;</code> construct.
 
       <p>
 
-      Defs can be invoked via the
-      <code>&lt;&amp; <i>def-name</i>; argument1; ... &amp;&gt;</code>
-      construct.
+      Private subtemplates ("<def>defs</def>") can be declared via the
+      <code>&lt;%def <i>def-name</i>&gt;</code> instruction, and are
+      only visible within the template in which they are
+      declared.
+
 
       <p>
 
@@ -365,26 +371,18 @@ a good sign for you, <% name %>.
 </table>
 </%LITERAL></&></pre>
       <p>
-      Defs can invoke other defs in the same template, and can be
-      directly or indirectly recursive. Arguments to defs can be
-      given default values.
 
-    <li><span class="concept">Protected subtemplates</span>
-
-      Protected subtemplates ("<def>methods</def>") are similar to
-      <def>defs</def>, and can be declared via the <code>&lt;%method
-      <i>method-name</i>&gt;</code> instruction. Methods may be declared to
-      accept arguments similar to templates by using
-      <code>%args</code>.  However, where as a def is only visible in
-      the template in which it is declared, a method is visible to all
+      Protected templates ("<def>methods</def>") can be declared via
+      the <code>&lt;%method <i>method-name</i>&gt;</code> instruction.
+      A method is similar to a <def>def</def>, but is visible to all
       descendants of the declaring template.  Moreover, a method
       declared in an ancestor template can be overriddden via the
       <code>&lt;%override <i>method-name</i>&gt;</code> instruction.
       Overridden methods take the same arguments as the method they
       override, although, as with template inheritance, only those
-      args declared in an
-      <code>&lt;%xargs&gt;</code> ... <code>&lt;/%xargs&gt;</code>
-      block will be visible within the body of the override.
+      args declared in an <code>&lt;%xargs&gt;</code>
+      ... <code>&lt;/%xargs&gt;</code> block will be visible within
+      the body of the override.
 
       For example, suppose <code>/weatherReport</code> contains:
       <&| _template &><%LITERAL>
