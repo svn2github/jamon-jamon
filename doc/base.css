@@ -28,35 +28,38 @@
   margin-bottom: 0;
   padding-bottom: 0;
   padding-top: 1em;
+  text-transform: lowercase;
 }
 
-#navul
+#nav ul
 {
   list-style-type: none;
-  border-bottom: 1px solid;
+  margin: 1em 0em 1em 0em;
+  border: 1px solid;
   padding: 0.25em 0em 0.25em 0em;
   font-size: 80%;
-  background-color: #bbbbbb;
+  background-color: #bbb;
 }
 
-li.nav
+#nav li
 {
   display: inline;
+//  padding-left: .0em;
 }
 
-li.nav a
+#nav li a
 {
   text-align: center;
   padding: 0.25em 1em 0.25em 1em;
-  background-color: #ffff77;
+  background-color: #ddd;
   border-left: 1px solid;
   border-right: 1px solid;
 }
 
 #current
 {
-  background-color: #ffffff;
-  text-weight: bold;
+  background-color: #ffff70 !important;
+  text-weight: bold !important;
 }
 
 #main
