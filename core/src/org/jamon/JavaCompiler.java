@@ -35,22 +35,6 @@ public class JavaCompiler
         m_classPath = p_classPath;
     }
 
-    public JavaCompiler(String p_classPath)
-        throws IOException
-    {
-        // FIXME: does this work on windows? mac?
-        this(new File(new File(System.getProperty("java.home")).getParent(),
-                      "bin" + File.separator +"javac")
-                 .getCanonicalPath(),
-             p_classPath);
-    }
-
-    public JavaCompiler()
-        throws IOException
-    {
-        this(System.getProperty("java.class.path"));
-    }
-
     public void compile(String p_javaFile)
         throws IOException
     {
