@@ -12,7 +12,7 @@ pre
   background-color: #efffdf 
 }
 
-pre.java, pre.code 
+.java, .code 
 { 
   background-color: #ffdfdf 
 }
