@@ -26,7 +26,7 @@ import java.util.LinkedList;
 
 /**
  * A cache which allows multiple values for keys, and which removes
- * values after getting them.
+ * values after getting them. Threadsafe.
  */
 
 public class LifoMultiCache
@@ -53,7 +53,7 @@ public class LifoMultiCache
      *
      * @return a value corresponding to the given key, or null
      */
-    public Object get(Object p_key)
+    public synchronized Object get(Object p_key)
     {
         LinkedList values = (LinkedList) m_cache.get(p_key);
         if (values == null || values.isEmpty())
@@ -74,7 +74,7 @@ public class LifoMultiCache
      * @param p_key the key
      * @param p_value the value to put
      */
-    public void put(Object p_key, Object p_value)
+    public synchronized void put(Object p_key, Object p_value)
     {
         if (m_maxSize == 0)
         {
