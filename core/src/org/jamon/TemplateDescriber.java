@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.HashMap;
 import java.lang.reflect.Field;
 import java.io.File;
@@ -35,7 +36,30 @@ public class TemplateDescriber
     public FargInfo getFargInfo(String p_path, String p_fargName)
         throws IOException
     {
-        return new BaseAnalyzer(parseTemplate(p_path)).getFargInfo(p_fargName);
+        try
+        {
+            return new BaseAnalyzer(parseTemplate(p_path)).getFargInfo(p_fargName);
+        }
+        catch (FileNotFoundException fnfe)
+        {
+            try
+            {
+                Class c = Class.forName(StringUtils.pathToClassName(p_path));
+                Field f = c.getField("FARGINFO_"+p_fargName);
+                Map args = (Map) f.get(null);
+                return new FargInfo(p_fargName,
+                                    args.keySet().iterator(),
+                                    args);
+            }
+            catch (RuntimeException e)
+            {
+                throw e;
+            }
+            catch (Exception e)
+            {
+                throw new JamonException(e);
+            }
+        }
     }
 
     public Iterator getFargNames(String p_path)
@@ -86,6 +110,23 @@ public class TemplateDescriber
                 list.add(i.next());
             }
             return list;
+        }
+        catch (FileNotFoundException fnfe)
+        {
+            try
+            {
+                Class c = Class.forName(StringUtils.pathToClassName(p_path));
+                Field f = c.getField("REQUIRED_ARGS");
+                return Arrays.asList( (String []) f.get(null) );
+            }
+            catch (RuntimeException e)
+            {
+                throw e;
+            }
+            catch (Exception e)
+            {
+                throw new JamonException(e);
+            }
         }
         catch (IOException e)
         {

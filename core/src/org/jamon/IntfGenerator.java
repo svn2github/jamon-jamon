@@ -28,6 +28,7 @@ public class IntfGenerator
         generateFargInterfaces();
         generateRender();
         generateOptionalArgs();
+        generateFargInfo();
         generateEpilogue();
     }
 
@@ -142,6 +143,12 @@ public class IntfGenerator
         {
             generateFargInterface(m_analyzer.getFargInfo((String)f.next()));
         }
+        println();
+    }
+
+    private void generateFargInfo()
+        throws IOException
+    {
         println("  public static final String[] FARGNAMES = {");
         for (Iterator f = m_analyzer.getFargNames(); f.hasNext(); /* */)
         {
@@ -158,6 +165,39 @@ public class IntfGenerator
             }
         }
         println("  };");
+        println();
+        for (Iterator f = m_analyzer.getFargNames(); f.hasNext(); /* */)
+        {
+            String name = (String)f.next();
+            print("  public static final java.util.Map FARGINFO_");
+            print(name);
+            println(" = new java.util.HashMap();");
+            print("  public static class init_");
+            print(name);
+            println(" {");
+            println("    static {");
+            FargInfo info = m_analyzer.getFargInfo(name);
+            for (Iterator a = info.getArgumentNames(); a.hasNext(); /* */)
+            {
+                print("    FARGINFO_");
+                print(name);
+                String an = (String) a.next();
+                print(".put(\"");
+                print(an);
+                print("\",\"");
+                print(info.getArgumentType(an));
+                println("\");");
+            }
+            println("    }");
+            println("  }");
+            print("  public static final init_");
+            print(name);
+            print(" init2_");
+            print(name);
+            print(" = new init_");
+            print(name);
+            println("();");
+        }
         println();
     }
 
@@ -222,6 +262,23 @@ public class IntfGenerator
         println(")");
 
         println("    throws java.io.IOException;");
+
+        println();
+        println("  public static final String[] REQUIRED_ARGS = {");
+        for (Iterator i = m_analyzer.getRequiredArgNames(); i.hasNext(); /* */)
+        {
+            print("    \"");
+            print((String) i.next());
+            if (i.hasNext())
+            {
+                println("\",");
+            }
+            else
+            {
+                println("\"");
+            }
+        }
+        println("  };");
     }
 
     private void generateOptionalArgs()
