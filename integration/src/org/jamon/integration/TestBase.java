@@ -14,15 +14,15 @@ import org.jamon.TemplateManager;
 public class TestBase
     extends TestCase
 {
-    private StandardTemplateManager m_templateManager;
+    private TemplateManager m_templateManager;
     private StringWriter m_writer;
 
     public void setUp()
         throws Exception
     {
-        m_templateManager = new StandardTemplateManager();
-        m_templateManager.setSourceDir("templates");
-        m_templateManager.setWorkDir("build/work");
+        m_templateManager = new StandardTemplateManager()
+            .setSourceDir("templates")
+            .setWorkDir("build/work");
         m_writer = new StringWriter();
     }
 
