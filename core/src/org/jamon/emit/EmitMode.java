@@ -42,27 +42,22 @@ public class EmitMode
     public boolean equals(Object p_obj)
     {
         return (p_obj instanceof EmitMode)
-            && ((EmitMode)p_obj).m_name.equals(m_name);
+            && ((EmitMode)p_obj).m_class.equals(m_class);
     }
 
     public int hashCode()
     {
-        return m_name.hashCode();
-    }
-
-    public String getName()
-    {
-        return m_name;
+        return m_class.hashCode();
     }
 
     public String getEmitterClassName()
     {
-        return "org.jamon.emit." + m_name + "Emitter";
+        return m_class.getName();
     }
 
     public String toString()
     {
-        return "EmitMode{" + m_name + "}";
+        return "EmitMode{" + m_class.getName() + "}";
     }
 
 
@@ -84,9 +79,9 @@ public class EmitMode
 
     private EmitMode(Class p_emitterClass)
     {
-        m_name = extractModeName(p_emitterClass);
-        s_modes.put(m_name.toUpperCase(), this);
+        m_class = p_emitterClass;
+        s_modes.put(extractModeName(p_emitterClass).toUpperCase(), this);
     }
 
-    private final String m_name;
+    private final Class m_class;
 }
