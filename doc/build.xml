@@ -415,6 +415,7 @@ the documentation thus taking care of issues such as escaping.
 
   <target name="servlet" depends="init,compile" description="Run the servlet">
     <mkdir dir="${work.dir}" />
+    <dirname property="this.dir" file="build.xml" />
     <java classname="org.apache.catalina.startup.Catalina"
           failonerror="true"
           fork="yes"
@@ -427,6 +428,7 @@ the documentation thus taking care of issues such as escaping.
         <fileset dir="${tomcat.common.lib}" includes="*.jar" />
         <fileset dir="${tomcat.home}/server/lib" includes="*.jar" />
         <fileset dir="${tomcat.home}/bin" includes="*.jar" />
+        <pathelement location="${this.dir}" />
       </classpath>
       <sysproperty key="catalina.home" value="."/>
       <arg line="-config server.xml start" />
