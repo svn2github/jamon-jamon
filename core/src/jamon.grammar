@@ -1,0 +1,84 @@
+Package
+  org.modusponens.jtt;
+
+Helpers
+  letter = ['a'..'z'] | ['A'..'Z'];
+  digit = ['0'..'9'];
+  letter_or_digit = letter | digit | '_';
+  period = '.';
+  ht  = 0x0009;
+  lf  = 0x000a;
+  ff  = 0x000c;
+  cr  = 0x000d;
+  sp  = ' ';
+  line_terminator = lf | cr | cr lf;
+  percent = '%';
+  all = [0x0000 .. 0xFFFF];
+  all_except_nl = [all - [lf + cr]];
+
+States
+  body,
+  imports,
+  emit,
+  java,
+  java1,
+  call,
+  args;
+
+Tokens
+  {body -> args} args_start = '<%args>';
+  {args -> body} args_end = '</%args>';
+  {body -> imports} import_start = '<%import>';
+  {imports -> body} import_end = '</%import>';
+  {body -> emit} emit_start = '<%';
+  {emit -> body} emit_end = '%>';
+  {body -> call} call_start = '<&';
+  {call -> body} call_end = '&>';
+  {body -> java} java_start = '<%java>';
+  {java -> body} java_end = '</%java>';
+  {emit,args,java,imports} dot = period;
+  {args} arrow = '=>';
+  {emit,call,java,args,imports} white_space = (sp | ht | ff | line_terminator)*;
+  {emit,java,call,java1,args,imports} identifier = letter letter_or_digit*;
+  {body -> java1} injava = line_terminator percent;
+  {java1 -> body} outjava = line_terminator;
+  {body} any = all;
+  {java1} any1 = (sp | ht)* all_except_nl (sp | ht)*;
+  {args} brackets = '[' (sp|ht)* ']';
+
+Ignored Tokens
+
+  white_space;
+
+Productions
+
+  template = {template} component*;
+
+  component = {imports} import_start name* import_end
+            | {args} args_start arg* args_end
+            | {body} any
+            | {java} java_start statement* java_end
+            | {java1} injava fragment outjava
+            | {emit} emit_start expr emit_end
+            | {call} call_start name call_end
+            ;
+
+  statement = expr;
+
+  arg = type simple_name default?;
+
+  default = arrow expr;
+
+  name = {simple_name} simple_name
+       | {qualified_name} qualified_name;
+
+  simple_name = identifier;
+
+  qualified_name = name dot identifier;
+
+  fragment = any1;
+
+/* placeholders */
+  type = {class} name | {array} type brackets;
+
+  expr = name;
