@@ -1,12 +1,9 @@
-<%extends _Base>
+<%extends _DocumentationBase>
 <%args>
   String output;
 </%args>
 
 <%override title>Jamon Quick Start Mini-Tutorial</%override>
-<%class>
-  protected Section currentSection() { return Section.DOCUMENTATION; }
-</%class>
 
 <h2>Quick Start Mini-Tutorial</h2>
 

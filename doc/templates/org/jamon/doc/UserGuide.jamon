@@ -1,8 +1,5 @@
-<%extends _Base>
+<%extends _DocumentationBase>
 <%override title>Jamon User's Guide</%override>
-<%class>
-  protected Section currentSection() { return Section.DOCUMENTATION; }
-</%class>
 
 <h2>User Guide</h2>
 
