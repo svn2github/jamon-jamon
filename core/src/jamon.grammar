@@ -39,6 +39,8 @@ Helpers
   argsep = ';'; // could be nl ...
   all = [0x0000 .. 0xFFFF];
   all_except_nl = [all - [lf + cr]];
+  pct = '%';
+  all_except_nl_or_pct = [[all - [lf + cr]] - pct];
   q = '"';
   bs = '\';
   pipe = '|';
@@ -48,12 +50,10 @@ Helpers
   squoted = sq (([all-[sq+bs]]) | (bs all) | (bs 'u' hex hex hex hex)) sq;
   gt = '>';
   lt = '<';
-  pct = '%';
   slash = '/';
   hash = '#';
 
 States
-  start,
   body,
   def,
   method,
@@ -81,30 +81,29 @@ States
 
 Tokens
 
-  {start -> farginit,body -> farginit} farg_start_begin = '<%frag';
+  {body -> farginit} farg_start_begin = '<%frag';
   {farginit -> args} farg_start_done = '>';
   {farginit -> body} farg_start_end = ws* '/>' ws*;
   {args -> body} args_end = '</%args>' ws*;
   {args -> body} farg_end = '</%frag>' ws*;
 
-  {start -> extends,body -> extends} extends_start = '<%extends' ws+;
+  {body -> extends} extends_start = '<%extends' ws+;
 
-  {start -> abstract,body -> abstract} abstract_start = '<%abstract';
+  {body -> abstract} abstract_start = '<%abstract';
   {abstract} fixed = ws+ 'fixed';
   {abstract -> body} abstract_end = '>' ws*;
 
-  {start -> parent_args, body -> parent_args}
-         inherited_args_start = '<%xargs>';
+  {body -> parent_args} inherited_args_start = '<%xargs>';
   {parent_args -> body} inherited_args_end = '</%xargs>' ws*;
 
-  {start -> class,body -> class} class_start = '<%class>' ws*;
+  {body -> class} class_start = '<%class>' ws*;
   {class -> body} class_end = ws* '</%class>' ws*;
-  {start -> args, body -> args} args_start = '<%args>';
-  {start -> imports,body -> imports} import_start = '<%import>';
+  {body -> args} args_start = '<%args>';
+  {body -> imports} import_start = '<%import>';
   {imports -> body} import_end = '</%import>' ws*;
-  {start -> imports,body -> imports} implements_start = '<%implements>';
+  {body -> imports} implements_start = '<%implements>';
   {imports -> body} implements_end = '</%implements>' ws*;
-  {start ->java,body -> java} java_start = '<%java>' ws*;
+  {body -> java} java_start = '<%java>' ws*;
   {java -> body} java_end = ws* '</%java>' ws*;
   {args,imports} dot = period;
   {args -> argexp, parent_args -> parent_argexp,alias} arrow = '=>' hs*;
@@ -112,7 +111,7 @@ Tokens
   {call,multifragmentcall,multifragmentcallbody,args,parent_args,farginit,imports,def,extends,method,override,alias} identifier = letter letter_or_digit*;
   {call} child_call = '*CHILD';
 
-  {start -> emit,body -> emit} emit_start = '<%' ws+;
+  {body -> emit} emit_start = '<%' ws+;
   {emit -> body, escape -> body} emit_end = ws* '%>';
   {emit -> escape} escape_delimiter = hash;
   {escape} escape_code = letter;
@@ -124,10 +123,9 @@ Tokens
       | pct [all - gt]
       )*;
 
-  {start -> jline} injava = pct hs*;
-  {jline -> start} outjava = hs* nl;
+  {jline -> body} outjava = nl;
   {jline} expr = all_except_nl*;
-   // fixme: line ending ...
+   // FIXME: line ending ...
   {argexp, parent_argexp} argexpr = ([all - [argsep+q]] | quoted | squoted)*;
   {argexp -> args,parent_argexp -> parent_args, args, parent_args}
       donearg = hs* argsep ws*;
@@ -157,11 +155,12 @@ Tokens
        | '</%clas' [all - 's']
        | '</%class' [all - gt] )*;
 
-  {body,start -> body} text = all_except_nl;
-  {start,body -> start} ignorable_newline = bs nl;
-  {start,body -> start} newline = nl;
+  {body} percent = pct;
+  {body} text = all_except_nl_or_pct;
+  {body} ignorable_newline = bs nl;
+  {body} newline = nl;
 
-  {body -> literal, start -> literal} litstart = '<%LITERAL>';
+  {body -> literal} litstart = '<%LITERAL>';
   {literal} literal_text =
        (    [all - '<']
        | '<' [all - '/']
@@ -177,10 +176,10 @@ Tokens
   {literal -> body} litend = '</%LITERAL>';
 
   {args} brackets = '[' (hs)* ']';
-  {start -> body,body,multifragmentcallbody -> body} fragment_call_end = '</&>';
+  {body,multifragmentcallbody -> body} fragment_call_end = '</&>';
   {call -> callexp, multifragmentcall -> multifragmentcallexp} carrow = '=>' hs*;
-  {start -> call, body -> call} fragment_call_start = '<&|' ws*;
-  {start -> call,body -> call} call_start = '<&' ws*;
+  {body -> call} fragment_call_start = '<&|' ws*;
+  {body -> call} call_start = '<&' ws*;
   {multifragmentcall -> multifragmentcallbody, call -> body} call_end = ws* '&>';
   {callexp -> call, multifragmentcallexp -> multifragmentcall} param_expr =
        ([all - [argsep + [q + '&']]] | quoted | squoted | '&' [all - '>'])*;
@@ -188,24 +187,24 @@ Tokens
   {multifragmentcall,call,extends,alias} pathsep = slash;
   {multifragmentcall,call,extends,alias} updir = period period slash;
 
-  {start -> multifragmentcall, body -> multifragmentcall} multi_fragment_call_init = '<&||' ws*;
+  {body -> multifragmentcall} multi_fragment_call_init = '<&||' ws*;
 
 
   {multifragmentcallbody} named_farg_init = '<|';
   {multifragmentcallbody -> body} named_farg_done = '>';
   {body -> multifragmentcallbody} named_farg_end = '</|>';
 
-  {start -> def,body -> def} def_start = '<%def' hs+;
-  {body,start} def_end = '</%def>' ws*;
+  {body -> def} def_start = '<%def' hs+;
+  {body} def_end = '</%def>' ws*;
   {def -> body, method -> body, override -> body, extends -> body} gt = hs* gt ws*;
 
-  {start -> method,body -> method} method_start = '<%method' hs+;
-  {body,start} method_end = '</%method>' ws*;
+  {body -> method} method_start = '<%method' hs+;
+  {body} method_end = '</%method>' ws*;
 
-  {start -> override,body -> override} override_start = '<%override' hs+;
-  {body,start} override_end = '</%override>' ws*;
+  {body -> override} override_start = '<%override' hs+;
+  {body} override_end = '</%override>' ws*;
 
-  {start -> body,body} doc =
+  {body} doc =
        '<%doc>' ([all - '<']
               | '<' [all-slash]
               | '</' [all-'%']
@@ -214,7 +213,7 @@ Tokens
               | '</%do' [all-'c']
               | '</%doc' [all-'>'])* '</%doc>' ws*;
 
-  {start -> alias, body -> alias} alias_start = '<%aliases>';
+  {body -> alias} alias_start = '<%aliases>';
   {alias -> body} alias_end = '</%aliases>' ws*;
 
 Ignored Tokens
@@ -228,6 +227,7 @@ Productions
   base_component =
               {body} text
             | {newline} newline
+            | {percent} percent
             | {literal} litstart literal_text litend
             | {java} java
             | {jline} jline
@@ -296,9 +296,9 @@ Productions
 
   java = java_start java_stmts java_end;
 
-  jline = injava expr outjava;
+  jline = expr outjava;
 
-  partial_jline = injava expr;
+  partial_jline = expr;
 
   emit = emit_start emit_expr escape? emit_end;
 

@@ -38,7 +38,6 @@ import org.jamon.node.Start;
 import org.jamon.node.Token;
 import org.jamon.parser.Parser;
 import org.jamon.parser.ParserException;
-import org.jamon.lexer.Lexer;
 import org.jamon.lexer.LexerException;
 
 public class TemplateDescriber

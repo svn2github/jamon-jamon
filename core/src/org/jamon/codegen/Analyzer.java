@@ -495,6 +495,15 @@ public class Analyzer
             m_current.append(node.getNewline().getText());
         }
 
+        public void caseAPercentBaseComponent(APercentBaseComponent node)
+        {
+            if (m_currentToken == null)
+            {
+                m_currentToken = node.getPercent();
+            }
+            m_current.append(node.getPercent().getText());
+        }
+
         public void inAMultiFragmentCall(AMultiFragmentCall p_call)
         {
             handleBody();
@@ -557,7 +566,7 @@ public class Analyzer
         {
             handleBody();
             addStatement(new RawStatement(node.getExpr().getText(),
-                                          node.getInjava(),
+                                          node.getExpr(),
                                           m_templateIdentifier));
         }
 
@@ -565,7 +574,7 @@ public class Analyzer
         {
             handleBody();
             addStatement(new RawStatement(p_jline.getExpr().getText(),
-                                          p_jline.getInjava(),
+                                          p_jline.getExpr(),
                                           m_templateIdentifier));
         }
 
