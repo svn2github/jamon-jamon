@@ -45,21 +45,18 @@ public class UnitInfo
 
     public void addFarg(String p_name, String p_type)
     {
-        addArg(p_name, p_type, null);
+        addRequiredArg(p_name, p_type);
         m_fargs.add(p_name);
     }
 
-    public void addArg(String p_name, String p_type, ADefault p_default)
+    public void addRequiredArg(String p_name, String p_type)
     {
-        if (p_default == null)
-        {
-            m_requiredArgs.add(new Argument(p_name, p_type));
-        }
-        else
-        {
-            m_optionalArgs.add(new OptionalArgument
-                (p_name, p_type, p_default.getArgexpr().toString().trim()));
-        }
+        m_requiredArgs.add(new Argument(p_name, p_type));
+    }
+
+    public void addOptionalArg(String p_name, String p_type, String p_default)
+    {
+        m_optionalArgs.add(new OptionalArgument(p_name, p_type, p_default));
     }
 
     public Iterator getRequiredArgs()

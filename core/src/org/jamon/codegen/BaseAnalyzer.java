@@ -172,9 +172,20 @@ public class BaseAnalyzer
 
         public void caseAArg(AArg arg)
         {
-            getUnitInfo(getUnitName()).addArg(arg.getName().getText(),
-                                              asText(arg.getType()),
-                                              (ADefault)arg.getDefault());
+            ADefault argDefault = (ADefault) arg.getDefault();
+            String name = arg.getName().getText();
+            String type = asText(arg.getType());
+            if (argDefault == null)
+            {
+                getUnitInfo(getUnitName()).addRequiredArg(name, type);
+            }
+            else
+            {
+                getUnitInfo(getUnitName())
+                    .addOptionalArg(name,
+                                    type,
+                                    argDefault.getArgexpr().toString().trim());
+            }
         }
 
         public void caseAImportsComponent(AImportsComponent imports)
