@@ -251,7 +251,7 @@ public class IntfGenerator
 
 
         m_writer.println();
-        m_writer.print("  public static final String[] REQUIRED_ARGS =");
+        m_writer.print("public static final String[] REQUIRED_ARGS =");
         m_writer.openBlock();
 
         for (Iterator i = m_analyzer.getRequiredArgNames(); i.hasNext(); /* */)
@@ -373,7 +373,7 @@ public class IntfGenerator
         throws IOException
     {
         m_writer.println();
-        m_writer.println("  public " + getClassName()
+        m_writer.println("public " + getClassName()
                          + " writeTo(java.io.Writer p_writer)");
         m_writer.print  ("  throws ");
         m_writer.println(ClassNames.IOEXCEPTION);
