@@ -92,8 +92,6 @@ public class BasicTemplateManager
      * @param p_path the path to the template
      *
      * @return a <code>Template</code> proxy instance
-     *
-     * @exception IOException if something goes wrong
      **/
     public AbstractTemplateProxy constructProxy(String p_path)
     {
@@ -102,6 +100,10 @@ public class BasicTemplateManager
             return (AbstractTemplateProxy) getProxyClass(p_path)
                 .getConstructor(new Class [] { TemplateManager.class })
                 .newInstance(new Object [] { this });
+        }
+        catch (ClassNotFoundException e)
+        {
+            throw new UnknownTemplateException(p_path);
         }
         catch (RuntimeException e)
         {

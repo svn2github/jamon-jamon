@@ -391,16 +391,26 @@ public class RecompilingTemplateManager
     {
         try
         {
-            ensureUpToDate(p_path,
-                           new TemplateDescriber(m_templateSource,
-                                                 m_loader));
-            return m_loader.loadClass(p_className);
+            try
+            {
+                ensureUpToDate(p_path,
+                               new TemplateDescriber(m_templateSource,
+                                                     m_loader));
+                return m_loader.loadClass(p_className);
+            }
+            catch (ClassNotFoundException e)
+            {
+                if (! m_templateSource.available(p_path))
+                {
+                    throw new UnknownTemplateException(p_path);
+                }
+                else
+                {
+                    throw new JamonRuntimeException(e);
+                }
+            }
         }
-        catch (RuntimeException e)
-        {
-            throw e;
-        }
-        catch (Exception e)
+        catch (IOException e)
         {
             throw new JamonRuntimeException(e);
         }
