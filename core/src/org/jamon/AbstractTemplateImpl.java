@@ -6,9 +6,16 @@ import java.net.URLEncoder;
 
 public abstract class AbstractTemplateImpl
 {
-    protected AbstractTemplateImpl(TemplateManager p_templateManager)
+    protected AbstractTemplateImpl(TemplateManager p_templateManager,
+                                   String p_path)
     {
         m_templateManager = p_templateManager;
+        m_path = p_path;
+    }
+
+    public final String getPath()
+    {
+        return m_path;
     }
 
     public final void setWriter(Writer p_writer)
@@ -137,4 +144,5 @@ public abstract class AbstractTemplateImpl
 
     private Writer m_writer;
     private final TemplateManager m_templateManager;
+    private final String m_path;
 }

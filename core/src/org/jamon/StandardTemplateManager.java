@@ -62,6 +62,7 @@ public class StandardTemplateManager
             {
                 throw new JamonException(e);
             }
+            m_cache.put(p_impl.getPath(), p_impl);
         }
     }
 
@@ -72,9 +73,20 @@ public class StandardTemplateManager
         try
         {
             initialize();
-            return (AbstractTemplateImpl) getImplementationClass(p_path)
-                .getConstructor(new Class [] { TemplateManager.class })
-                .newInstance(new Object [] { p_manager });
+
+            // need to do this first to check dependencies if so enabled
+            Class cls = getImplementationClass(p_path);
+
+            AbstractTemplateImpl impl =
+                (AbstractTemplateImpl) m_cache.get(p_path);
+            if (impl == null)
+            {
+                impl = (AbstractTemplateImpl) cls
+                    .getConstructor(new Class [] { TemplateManager.class,
+                                                   String.class })
+                    .newInstance(new Object [] { p_manager, p_path });
+            }
+            return impl;
         }
         catch (RuntimeException e)
         {
@@ -94,6 +106,12 @@ public class StandardTemplateManager
     public void setClassLoader(ClassLoader p_classLoader)
     {
         m_classLoader = p_classLoader;
+        m_initialized = false;
+    }
+
+    public void setCacheSize(int p_cacheSize)
+    {
+        m_cacheSize = p_cacheSize;
         m_initialized = false;
     }
 
@@ -153,6 +171,7 @@ public class StandardTemplateManager
                 new TemplateDescriber(new File(m_templateSourceDir == null
                                                ? System.getProperty("user.dir")
                                                : m_templateSourceDir));
+            m_cache = new LifoMultiCache(m_cacheSize);
             m_initialized = true;
         }
     }
@@ -256,6 +275,8 @@ public class StandardTemplateManager
     private WorkDirClassLoader m_loader;
     private boolean m_initialized;
     private boolean m_autoFlush = true;
+    private LifoMultiCache m_cache;
+    private int m_cacheSize = 32;
 
     private String prefix()
     {
@@ -350,11 +371,17 @@ public class StandardTemplateManager
 
         if (!outOfDateJavaFiles.isEmpty())
         {
+            purgeCache();
             compile(outOfDateJavaFiles);
             m_loader.invalidate();
         }
     }
 
+
+    private void purgeCache()
+    {
+        m_cache = new LifoMultiCache(m_cacheSize);
+    }
 
     private File getWriteableFile(String p_filename)
         throws IOException

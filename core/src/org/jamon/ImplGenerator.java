@@ -112,9 +112,9 @@ public class ImplGenerator
         print  (          getClassName());
         print  (                        "(");
         print  ( TEMPLATE_MANAGER);
-        println(                 " p_templateManager)");
+        println(                 " p_templateManager, String p_path)");
         println("  {");
-        println("    super(p_templateManager);");
+        println("    super(p_templateManager, p_path);");
         println("  }");
         println();
     }
