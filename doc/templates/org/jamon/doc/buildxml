@@ -11,7 +11,6 @@
 
   <target name="templates">
     <mkdir dir="${build.src.dir}" />
-    <echo>java.lib.jamon=${java.lib.jamon}</echo>
     <taskdef name="jamon" 
              classname="org.jamon.ant.JamonTask"
              classpath="${java.lib.jamon}" />
@@ -30,9 +29,12 @@
   </target>
 
   <target name="war" depends="compile">
+    <mkdir dir="lib" />
+    <copy file="${java.lib.jamon}" todir="lib" />
     <war destfile="foobar.war" 
          webxml="web.xml">
-      <classes dir="${classes.dir}"/>
+      <classes dir="${classes.dir}" />
+      <lib dir="lib" />
     </war>
   </target>
 
