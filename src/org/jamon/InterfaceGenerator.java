@@ -4,11 +4,32 @@ import java.io.Writer;
 import java.io.PrintWriter;
 import java.io.IOException;
 import java.util.Iterator;
-import org.modusponens.jtt.node.*;
-import org.modusponens.jtt.analysis.*;
 
-public class InterfaceGenerator extends BaseGenerator
+public class InterfaceGenerator
 {
+    public InterfaceGenerator(TemplateResolver p_resolver,
+                              String p_templatePath,
+                              BaseGenerator p_adapter,
+                              Writer p_writer)
+    {
+        m_path = p_templatePath;
+        m_resolver = p_resolver;
+        m_adapter = p_adapter;
+        m_writer = new PrintWriter(p_writer);
+    }
+
+    public void generateClassSource()
+        throws IOException
+    {
+        generatePrologue();
+        generateImports();
+        generateDeclaration();
+        generateFactoryClass();
+        generateRender();
+        generateOptionalArgs();
+        generateEpilogue();
+    }
+
     private final static String TEMPLATE =
         Template.class.getName();
     private final static String BASE_FACTORY =
@@ -17,19 +38,13 @@ public class InterfaceGenerator extends BaseGenerator
         TemplateManager.class.getName();
     private final static String JTT_EXCEPTION =
         JttException.class.getName();
+    private final static String IOEXCEPTION_CLASS =
+        IOException.class.getName();
+    private final static String WRITER_CLASS =
+        Writer.class.getName();
 
-    public InterfaceGenerator(TemplateResolver p_resolver,
-                              String p_templatePath,
-                              BaseGenerator p_generator,
-                              Writer p_writer)
-    {
-        m_path = p_templatePath;
-        m_resolver = p_resolver;
-        m_generator = p_generator;
-        m_writer = new PrintWriter(p_writer);
-    }
 
-    private final BaseGenerator m_generator;
+    private final BaseGenerator m_adapter;
     private final PrintWriter m_writer;
     private final String m_path;
     private final TemplateResolver m_resolver;
@@ -60,25 +75,13 @@ public class InterfaceGenerator extends BaseGenerator
     private void generateImports()
         throws IOException
     {
-        for (Iterator i = m_generator.getImports(); i.hasNext(); /* */ )
+        for (Iterator i = m_adapter.getImports(); i.hasNext(); /* */ )
         {
             print("import ");
             print(i.next());
             println(";");
         }
         println();
-    }
-
-    public void generateClassSource()
-        throws IOException
-    {
-        generatePrologue();
-        generateImports();
-        generateDeclaration();
-        generateFactoryClass();
-        generateRender();
-        generateOptionalArgs();
-        generateEpilogue();
     }
 
     private String getClassName()
@@ -149,10 +152,10 @@ public class InterfaceGenerator extends BaseGenerator
         throws IOException
     {
         print("  public void render(");
-        for (Iterator i = m_generator.getRequiredArgNames(); i.hasNext(); /* */)
+        for (Iterator i = m_adapter.getRequiredArgNames(); i.hasNext(); /* */)
         {
             String name = (String) i.next();
-            print(m_generator.getArgType(name));
+            print(m_adapter.getArgType(name));
             print(" p_");
             print(name);
             if (i.hasNext())
@@ -168,7 +171,7 @@ public class InterfaceGenerator extends BaseGenerator
     private void generateOptionalArgs()
         throws IOException
     {
-        for (Iterator i = m_generator.getOptionalArgNames(); i.hasNext(); /* */)
+        for (Iterator i = m_adapter.getOptionalArgNames(); i.hasNext(); /* */)
         {
             println();
             String name = (String) i.next();
@@ -183,7 +186,7 @@ public class InterfaceGenerator extends BaseGenerator
             print(" set");
             print(StringUtils.capitalize(name));
             print("(");
-            print(getArgType(name));
+            print(m_adapter.getArgType(name));
             print(" p_");
             print(name);
             println(");");

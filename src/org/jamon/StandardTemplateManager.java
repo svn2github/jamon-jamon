@@ -333,19 +333,20 @@ public class StandardTemplateManager
 
         File javaFile = new File(javaImpl(p_path));
 
-        ImplGenerator g2 =
-            new ImplGenerator(new TemplateResolver(m_packagePrefix),
-                              getDescriber(),
-                              p_path);
+        ImplAdapter ia = new ImplAdapter(p_path);
 
-        parseTemplate(p_path).apply(g2);
+
+        parseTemplate(p_path).apply(ia);
 
         FileWriter writer = new FileWriter(javaFile);
         try
         {
-            g2.generateClassSource(writer);
+            new ImplGenerator(writer,
+                              new TemplateResolver(m_packagePrefix),
+                              getDescriber(),
+                              ia).generateSource();
             writer.close();
-            return g2.getCalledTemplateNames();
+            return ia.getCalledTemplateNames();
         }
         catch (IOException e)
         {
@@ -469,10 +470,7 @@ public class StandardTemplateManager
     {
         System.err.println("computing dependencies for " + p_path);
 
-        ImplGenerator g2 =
-            new ImplGenerator(new TemplateResolver(m_packagePrefix),
-                              getDescriber(),
-                              p_path);
+        ImplAdapter g2 = new ImplAdapter(p_path);
 
         parseTemplate(p_path).apply(g2);
 
