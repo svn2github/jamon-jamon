@@ -21,19 +21,22 @@
 package org.jamon.ant;
 
 import java.io.File;
-import java.io.OutputStreamWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.HashMap;
 
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Location;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Path;
 
 import org.jamon.Invoker;
 import org.jamon.StandardTemplateManager;
+import org.jamon.JamonParseException;
 
 /**
  * Ant task to reflectively invoke templates.
@@ -52,6 +55,22 @@ public class InvokerTask
     {
         try
         {
+            Writer writer;
+            if (m_output == null)
+            {
+                writer = new OutputStreamWriter(System.out);
+            }
+            else
+            {
+                File parent = m_output.getAbsoluteFile().getParentFile();
+                if (parent != null)
+                {
+                    // FIXME: should we check for failure here
+                    //   or let it fall through?
+                    parent.mkdirs();
+                }
+                writer = new FileWriter(m_output);
+            }
             new Invoker(m_templateManager,m_path)
                 .render(m_output == null
                         ? new OutputStreamWriter(System.out)
@@ -61,6 +80,13 @@ public class InvokerTask
         catch (Invoker.InvalidTemplateException e)
         {
             e.printStackTrace(System.err);
+        }
+        catch (JamonParseException e)
+        {
+            throw new BuildException(e.getDescription(),
+                                     new Location(e.getFileName(),
+                                                  e.getLine(),
+                                                  e.getColumn()));
         }
         catch (IOException e)
         {
