@@ -51,6 +51,11 @@
           depends="parser"
           description="Compiles all the Java files">
       <mkdir dir="${classes.dir}"/>
+      <dependset>
+        <srcfileset dir="${src.dir}" includes="**/*.java" />
+        <srcfileset dir="${build.src.dir}" includes="**/*.java" />
+        <targetfileset dir="${classes.dir}" includes="**/*.class" />
+      </dependset>
       <javac destdir="${classes.dir}"
              debug="true"
              depend="true"
