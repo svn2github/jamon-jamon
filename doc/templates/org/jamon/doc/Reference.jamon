@@ -104,6 +104,64 @@
       method body. Thus, for example, package declarations and import
       statements would trigger a compilation error.
 
+    <li><span class="conecpt">Inheritance</span>
+
+      Templates can inherit from other templates.  A template is an
+      "abstract" template if it contains a <code>&lt;&amp; *CHILD
+      &amp;&gt;</code> tag.  A template extends another template by
+      means of an <code>&lt;%extends <i>pathToParent</i>&gt;</code>
+      tag.  There can be multiple levels of inheritance:
+      <code>/grandchild</code> can extend <code>/child</code>, which
+      in turn can extend <code>/parent</code>.  When jamon encounters
+      a <code>&lt;&amp; *CHILD &amp;&gt;</code> tag, it inserts the
+      results of rendering the child template.
+
+      <p>
+
+      For example, suppose <code>/restaurant/Menu</code> contains:
+      <&| _template &><&| escape//Html &><%LITERAL>
+<html>
+ <body>
+   <h1>Menu</h1>
+   <& *CHILD &>
+ </body>
+</html>
+</%LITERAL></&></&>
+      and <code>/restaurant/Lunch</code> contains:
+      <&| _template &><%LITERAL>
+<%extends /restaurant/Menu>
+Sandwich Jamon y Queso
+</%LITERAL></&>
+
+      Then rendering <code>/restaurant/Lunch</code> produces
+      <pre class="tty"><&| escape//Html &><%LITERAL>
+<html>
+ <body>
+   <h1>Menu</h1>
+   Sandwich Jamon y Queso
+ </body>
+</html>
+</%LITERAL></&></pre>
+
+    <li><span class="concept">Class code</span>
+
+      Any code to be included in the generated class should be placed
+      inside a <code>&lt;%class&gt;</code>
+      ... <code>&lt;/%class&gt;</code> block.  If one template
+      inherits from another, there is corresponding inheritance of
+      java classes.  As a result, protected members declared in a
+      parent template's <code>&lt;%class&gt;</code>
+      ... <code>&lt;/%class&gt;</code> block will be visible to the
+      child.
+
+      <p>
+      For example:
+      <&| _template &><%LITERAL>
+<%class>
+  static int pageViews = 1;
+</%class>
+This component has been accessed <% pageViews++ %> times.
+</%LITERAL></&>
 
     <li><span class="concept">Comments</span>
 
@@ -116,7 +174,10 @@
       Java classes or packages to be imported and used in a template
       should be placed inside an <code>&lt;%import&gt;</code>
       block. Each package or class should be separated by a semicolon
-      ('<code>;</code>').
+      ('<code>;</code>').  Note that imports are not inherited, so you
+      use an import to aid in the declaration of an argument type in a
+      parent template, you must use the same import in all descendants
+      of that template.
       <p>
       For example:
       <&| _template &><%LITERAL>
@@ -136,10 +197,12 @@
 
       <p>
 
-      Arguments are usable inside any (top-level) java escape or java
-      expression in the template. Technically, they are declared
-      "<code>final</code>", so it is not possible to (re)assign a
-      value to a template argument.
+      Arguments are usable inside any java escape or java expression
+      in the template. Top-level visible arguments are also usable
+      inside <code>&lt;%class&gt;</code>
+      ... <code>&lt;%/class&gt;</code> blocks.  Technically, arguments
+      are declared "<code>final</code>", so it is not possible to
+      (re)assign a value to an argument.
 
       <p>
 
@@ -176,6 +239,58 @@ Your nicknames are
       object rather than as arguments to the <code>render</code>
       method.
 
+      <p>
+
+      If a template inherits from another template, the arguments to
+      the template's ancestors are not automatically visible to the
+      child template.  They can be made visible to code in the child
+      ptemplate by declaring them in <code>&lt;%xargs&gt;</code>
+      ... <code>&lt;/%xargs&gt;</code> blocks.  Unlike
+      <code>&lt;%args&gt;</code> ... <code>&lt;/%args&gt;</code>
+      blocks, <code>&lt;%xargs&gt;</code>
+      ... <code>&lt;/%xargs&gt;</code> blocks do not specify argument
+      types, since those have already been specified by a parent
+      template.  Optional arguments, however, may have their default
+      values redefined by the child.  For example, if
+      <code>/parent</code> contains:
+      <&| _template &><%LITERAL>
+<%args>
+  String name;
+  String favoriteColor => "red";
+  String favoriteFood => "jamon";
+  int luckyNumber => 7;
+</%args>
+<font color="<% favoriteColor %>">Hello <% name %></font>.
+Would you like some <% favoriteFood %>?
+<& *CHILD &>
+Remember, today's lucky number is <% luckyNumber %>.
+</%LITERAL></&>
+
+    then <code>/child</code> might contain:
+    <&| _template &><%LITERAL>
+<%extends /parent>
+<%args>
+  int temperature;
+</%args>
+<%xargs>
+  name;
+  favoriteColor => "green"
+  luckyNumber;
+</%xargs>
+Today's temperature is
+<font color="<% favoriteColor %>"><% temperature %></font>, which is
+% if(temperature != luckyNumber) {
+  not
+%}
+a good sign for you, <% name %>.
+</%LITERAL></&>
+
+      Note that it would be an error if <code>/child</code> tried
+      referring to <code>favoriteFood</code>'s argument to
+      <code>/parent</code> without referencing it in an
+      <code>&lt;%xargs&gt;</code> ... <code>&lt;/%xargs&gt;</code>
+      block.
+
     <li><span class="concept">Private template methods</span>
 
       Private template methods ("<def>defs</def>") can be declared via
@@ -185,7 +300,7 @@ Your nicknames are
 
       <p>
 
-      Methods can be invoked via the
+      Defs can be invoked via the
       <code>&lt;&amp; <i>def-name</i>; argument1; ... &amp;&gt;</code>
       construct.
 
@@ -252,6 +367,82 @@ Your nicknames are
       directly or indirectly recursive. Arguments to defs can be
       given default values.
 
+    <li><span class="concept">Protected template methods</span>
+
+      Protected template methods ("<def>methods</def>") are similar to
+      <def>defs</def>, and can be declared via the <code>&lt;%method
+      <i>method-name</i>&gt;</code> instruction. Methods may be declared to
+      accept arguments similar to templates by using
+      <code>%args</code>.  However, where as a def is only visible in
+      the template in which it is declared, methods are visible to all
+      descendants of a template.  Moreover, a method declared in an
+      ancestor template can be overriddden via the <code>&lt;%override
+      <i>method-name</i>&gt;</code> instruction.  Overridden methods
+      take the same arguments as the method they override, although,
+      as with template inheritance, only those args declared in an
+      <code>&lt;%xargs&gt;</code> ... <code>&lt;/%xargs&gt;</code>
+      block will be visible within the body of the override.
+
+      For example, suppose <code>/weatherReport</code> contains:
+      <&| _template &><%LITERAL>
+<%method title>
+  <%args>
+    String city;
+    String dayOfWeek;
+  </%args>
+  <% dayOfWeek %>'s Weather for <% city %>.
+</%method>
+<%args>
+  WeatherReport report;
+</%args>
+<html>
+  <head>
+    <title>
+      <& title; city => report.getCity(); dayOfWeek => report.getDay(); &>
+    </title>
+  </head>
+  <body><& *CHILD  &></body>
+</html>
+</%LITERAL></&>
+
+      Then <code>/sunny</code> might contain:
+<&| _template &><%LITERAL>
+<%extends /weatherReport>
+Head for the beach!  It's going to be sunny and beautiful.
+</%LITERAL></&>
+
+      resulting in (for example)
+<pre class="tty"><&| escape//Html &>
+<html>
+  <head>
+    <title>
+      Monday's Weather for Boston
+    </title>
+  </head>
+  <body>Head for the beach!  It's going to be sunny and beautiful.</body>
+</&></pre>
+
+    However, <code>/stormWarning</code> could contain:
+      <&| _template &><%LITERAL>
+<override title>
+  <%xargs>
+    city;
+  </%xargs>
+  Storm Warning for <% city %>
+</%override>
+Now would be a poor time to go sailing.
+</%LITERAL></&>
+      resulting in (for example)
+<pre class="tty"><&| escape//Html &>
+<html>
+  <head>
+    <title>
+      Storm Warning for Boston
+    </title>
+  </head>
+  <body>Now would be a poor time to go sailing.</body>
+</&></pre>
+
     <li><span class="concept">Invoking other templates</span>
 
       It is also possible to invoke other templates from within a
@@ -281,13 +472,13 @@ Your nicknames are
 
     <li><span class="concept">Fragment arguments</span>
 
-      It is possible to pass a "fragment" of a template as an
-      argument to another template (or a <code>def</code>).  When
-      passing template fragments, the invocation syntax must look
-      like <code>&lt;&amp;| <i>target</i>; arg1 =&gt;
-      ... &amp;&gt;</code>, and any template content up until a
-      closing <code>&lt;/&amp;&gt;</code> is considered the fragment
-      argument.
+      It is possible to pass a "fragment" of a template as an argument
+      to another template (or a <code>def</code> or
+      <code>method</code>).  When passing template fragments, the
+      invocation syntax must look like <code>&lt;&amp;| <i>target</i>;
+      arg1 =&gt; ... &amp;&gt;</code>, and any template content up
+      until a closing <code>&lt;/&amp;&gt;</code> is considered the
+      fragment argument.
 
       <p>
 
@@ -396,21 +587,8 @@ produces <pre class="tty"><&| escape//Html &>
   <li>water at 34.0 degrees
 </ul>
 </&></pre>
-(in fact it produces the above with some extra whitsepace).
+      (in fact it produces the above with some extra whitsepace).
 
-    <li><span class="concept">Class code</span>
-
-      Any code to be included in the generated class should be placed
-      inside a <code>&lt;%class&gt;</code> block.
-
-      <p>
-      For example:
-      <&| _template &><%LITERAL>
-<%class>
-  static int pageViews = 1;
-</%class>
-This component has been accessed <% pageViews++ %> times.
-</%LITERAL></&>
   </ol>
 
 <%def _template><%frag content></%frag>
