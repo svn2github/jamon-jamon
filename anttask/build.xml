@@ -29,13 +29,6 @@
   <target name="test"
           depends="compile"
           description="Tests the anttask">
-    <echo message="java.lib.jamon=${java.lib.jamon}"/>
-    <echo message="classes.dir=${classes.dir}"/>
-<!--
-    <exec dir="test" executable="ant">
-      <env key="CLASSPATH" path="${java.lib.jamon}:${classes.dir}"/>
-    </exec>
--->
     <ant dir="test"/>
   </target>
 
