@@ -9,4 +9,5 @@
 
 Here is a template. It has two arguments:
 
-x, which is <% x %>, and amount, which is <% amount %>.
+x, which is <% x %>,
+and amount, which is <% amount %>.

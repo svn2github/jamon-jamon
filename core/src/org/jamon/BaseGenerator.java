@@ -23,6 +23,7 @@ public class BaseGenerator extends AnalysisAdapter
 
     private List m_imports = new ArrayList();
     private Map m_argTypes = new HashMap();
+    private Map m_default = new HashMap();
     private List m_requiredArgs = new ArrayList();
     private List m_optionalArgs = new ArrayList();
     private final String m_className;
@@ -59,6 +60,11 @@ public class BaseGenerator extends AnalysisAdapter
     protected String getArgType(String p_argName)
     {
         return (String) m_argTypes.get(p_argName);
+    }
+
+    protected String getDefault(String p_argName)
+    {
+        return (String) m_default.get(p_argName);
     }
 
     protected String getClassName()
@@ -111,6 +117,8 @@ public class BaseGenerator extends AnalysisAdapter
         {
             m_optionalArgs.add(name);
             m_argTypes.put(name,asText(arg.getType()));
+            m_default.put(name,
+                          ((ADefault)arg.getDefault()).getFragment().toString().trim());
         }
     }
 

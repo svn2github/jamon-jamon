@@ -1,12 +1,51 @@
 package org.modusponens.jtt;
 
 import java.io.Writer;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 
 public class StandardTemplateManager
     implements TemplateManager
 {
     public Template getInstance(String p_path, Writer p_writer)
     {
-        return null;
+        // this method SHOULD:
+        //   use its own class loader (!)
+        //   check that the class exists. if it doesn't,
+        //     to generate it.
+        //   verify that the class is up to date. if it isn't
+        //     generate it.
+        try
+        {
+            Class c = Class.forName(p_path + "Impl");
+            Constructor con =
+                c.getConstructor(new Class [] { Writer.class,
+                                                TemplateManager.class });
+            return (Template) con.newInstance(new Object [] { p_writer, this });
+        }
+        catch (ClassNotFoundException e)
+        {
+            throw new RuntimeException(e.getMessage());
+        }
+        catch (NoSuchMethodException e)
+        {
+            throw new RuntimeException(e.getMessage());
+        }
+        catch (InstantiationException e)
+        {
+            throw new RuntimeException(e.getMessage());
+        }
+        catch (IllegalAccessException e)
+        {
+            throw new RuntimeException(e.getMessage());
+        }
+        catch (IllegalArgumentException e)
+        {
+            throw new RuntimeException(e.getMessage());
+        }
+        catch (InvocationTargetException e)
+        {
+            throw new RuntimeException(e.getMessage());
+        }
     }
 }
