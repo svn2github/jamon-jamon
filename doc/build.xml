@@ -36,8 +36,12 @@ the documentation thus taking care of issues such as escaping.
   <property name="zip.src" value="${tarfilebase}-src.zip" />
   <property name="zip.bin" value="${tarfilebase}.zip" />
 
+  <fileset id="build-files" dir="${build.dir}"/>
+  <fileset id="servlet-build-files" dir="${build.classes.dir}"/>
+
   <target name="init">
     <mkdir dir="${doc.dir}"/>
+    <mkdir dir="${build.dir}"/>
     <copy file="base.css" todir="${doc.dir}" />
     <copy file="earthaddress.gif" todir="${doc.dir}" />
     <copy file="favicon.ico" todir="${doc.dir}" />
@@ -45,6 +49,10 @@ the documentation thus taking care of issues such as escaping.
     <taskdef name="invoker"
              classname="org.jamon.ant.InvokerTask"
              classpath="${java.lib.jamon}" />
+    <dependset>
+      <srcfileset file="${java.lib.jamon}"/>
+      <targetfileset refid="build-files"/>
+    </dependset>
   </target>
 
   <target name="quickstart" depends="init" >
@@ -260,7 +268,10 @@ the documentation thus taking care of issues such as escaping.
   </target>
 
   <target name="clean">
-    <delete dir="${build.dir}"/>
+    <delete>
+      <fileset refid="build-files"/>
+      <fileset refid="servlet-build-files"/>
+    </delete>
   </target>
 
   <target name="spotless" depends="clean">
@@ -269,6 +280,10 @@ the documentation thus taking care of issues such as escaping.
 
   <target name="compile"
           description="Compile the servlet">
+    <dependset>
+      <srcfileset file="${java.lib.jamon}"/>
+      <targetfileset refid="servlet-build-files"/>
+    </dependset>
     <mkdir dir="${build.classes.dir}"/>
     <javac destdir="${build.classes.dir}"
            debug="true"
@@ -278,7 +293,7 @@ the documentation thus taking care of issues such as escaping.
            failonerror="true"/>
   </target>
 
-  <target name="servlet" depends="compile" description="Run the servlet">
+  <target name="servlet" depends="init,compile" description="Run the servlet">
     <mkdir dir="${work.dir}" />
     <java classname="org.apache.catalina.startup.Catalina"
           failonerror="true"
