@@ -184,7 +184,7 @@ public class StandardTemplateManager
             ? getClass().getClassLoader()
             : p_data.classLoader;
         m_dynamicRecompilation = p_data.dynamicRecompilation;
-        m_workDir = p_data.workDir == null
+        m_workDir = (m_dynamicRecompilation && p_data.workDir == null)
             ? getDefaultWorkDir()
             : p_data.workDir;
         m_javaCompiler =
