@@ -23,7 +23,6 @@ package org.jamon.escaping;
 import java.io.Writer;
 import java.io.StringWriter;
 import java.io.IOException;
-import java.net.URLEncoder;
 
 import junit.framework.TestCase;
 

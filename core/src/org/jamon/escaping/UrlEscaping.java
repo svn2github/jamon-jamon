@@ -22,7 +22,6 @@ package org.jamon.escaping;
 
 import java.io.Writer;
 import java.io.IOException;
-import java.net.URLEncoder;
 
 public class UrlEscaping
     implements Escaping
