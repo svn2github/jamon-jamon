@@ -36,7 +36,7 @@ public class StandardTemplateManager
         try
         {
             initialize();
-            AbstractTemplate template = (AbstractTemplate)
+            AbstractTemplateImpl template = (AbstractTemplateImpl)
                 getImplementationClass(p_path)
                     .getConstructor(new Class [] { TemplateManager.class })
                     .newInstance(new Object [] { p_manager });

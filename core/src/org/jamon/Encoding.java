@@ -46,7 +46,7 @@ public class Encoding
     /**
      * Convert the <code>Encoding</code> to a String.  For pure
      * convenience, these correspond directly to pieces of method
-     * names in @{link AbstractTemplate}.
+     * names in @{link AbstractTemplateImpl}.
      *
      * @return a String representation of this <code>Encoding</code>
      */

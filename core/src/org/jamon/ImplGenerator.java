@@ -240,7 +240,7 @@ public class ImplGenerator
         TemplateManager.class.getName();
 
     private static final String BASE_TEMPLATE =
-        AbstractTemplate.class.getName();
+        AbstractTemplateImpl.class.getName();
 
     private void generateRender()
         throws IOException
