@@ -12,7 +12,6 @@
   <property name="build.dir" value="build"/>
   <property name="build.src.dir" value="${build.dir}/src"/>
   <property name="classes.dir" value="${build.dir}/classes"/>
-  <property name="dist.dir" value="${build.dir}/dist"/>
   <property name="test.dir" value="test" />
   <property name="work.dir" value="work" />
   <property name="test.src.dir" value="${test.dir}/src" />
@@ -20,7 +19,7 @@
   <property name="test.src2.dir" value="${test.src.dir}/${test.pkg}" />
   <property name="test.classes.dir" value="${test.dir}/classes" />
   <property name="testdata.dir" value="testdata/${test.pkg}" />
-
+  <property name="jarfile" value="jtt.jar" />
 
   <property name="java.lib.sablecc"
             value="/usr/local/share/java/sablecc.jar" />
@@ -112,6 +111,10 @@
     <java fork="true"
           classpath="${classes.dir}:${java.lib.sablecc}:${test.classes.dir}"
           classname="${test.pkg}.Test1" />
+  </target>
+
+  <target name="jar" depends="build">
+    <jar basedir="${classes.dir}" jarfile="${jarfile}" />
   </target>
 
 </project>
