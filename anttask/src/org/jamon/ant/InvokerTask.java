@@ -136,11 +136,14 @@ public class InvokerTask
 
     public void setCompiler(String p_javac)
     {
-        m_recompilingManagerData.setJavaCompiler(p_javac);
-        // slight hack but convenient
-        if (p_javac.toLowerCase().endsWith("jikes"))
+        if (p_javac != null && p_javac.length() > 0)
         {
-            m_recompilingManagerData.setJavaCompilerNeedsRtJar(true);
+            m_recompilingManagerData.setJavaCompiler(p_javac);
+            // slight hack but convenient
+            if (p_javac.toLowerCase().endsWith("jikes"))
+            {
+                m_recompilingManagerData.setJavaCompilerNeedsRtJar(true);
+            }
         }
     }
 
