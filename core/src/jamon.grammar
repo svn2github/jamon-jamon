@@ -31,11 +31,14 @@ States
   argexp,
   callexp,
   inherit,
-  args;
+  args,
+  content,
+  argsinit;
 
 Tokens
 
-  {start -> args,body -> args} args_start = '<%args>';
+  {start -> argsinit,body -> argsinit} args_start_begin = '<%args';
+  {argsinit -> args} args_start_done = '>';
   {args -> body} args_end = '</%args>';
   {start ->imports,body -> imports} import_start = '<%import>';
   {imports -> body} import_end = '</%import>';
@@ -43,8 +46,8 @@ Tokens
   {java -> body} java_end = ws* '</%java>';
   {args,imports} dot = period;
   {args -> argexp} arrow = '=>' hs*;
-  {call,args,inherit,imports} white_space = ws*;
-  {call,args,imports,inherit,def} identifier = letter letter_or_digit*;
+  {call,args,argsinit,content,inherit,imports} white_space = ws*;
+  {call,args,argsinit,content,imports,inherit,def} identifier = letter letter_or_digit*;
 
   {start -> emit,body -> emit} emit_start = '<%' ws+;
   {emit -> body} emit_end = ws* '%>';
@@ -88,7 +91,8 @@ Tokens
               | '</%do' [all-'c']
               | '</%doc' [all-'>'])* '</%doc>';
 
-  {body,start -> body} content = '<||>';
+  {body -> content,start -> content} content_start = '<|';
+  {content -> body} content_end = '|>';
 
 Ignored Tokens
 
@@ -120,6 +124,8 @@ Productions
             | {def} def
             ;
 
+  content = content_start identifier content_end;
+
   def = def_start identifier gt unit_component* def_end;
 
   call = call_start path param* call_end;
@@ -129,6 +135,10 @@ Productions
   imports = import_start name* import_end;
 
   args = args_start arg* args_end;
+
+  args_start =
+      {args_start} args_start_begin args_start_done
+    | {args_with_frag} args_start_begin identifier args_start_done;
 
   java = java_start any* java_end;
 

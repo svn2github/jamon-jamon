@@ -1,6 +1,6 @@
-<%args>
+<%args frag>
   int x;
 </%args>
 Above the content
-<||>
+<|frag|>
 Below the content
