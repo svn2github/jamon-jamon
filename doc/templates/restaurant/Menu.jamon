@@ -1,0 +1,7 @@
+<%abstract>
+<html>
+ <body>
+   <h1>Menu</h1>
+   <& *CHILD &>
+ </body>
+</html>

@@ -71,21 +71,19 @@
     is <em>escaped</em>.  The default escaping mechanism is HTML, so for
     example the following template
 
-    <&| _Template &><%LITERAL>this <% "&" %> that</%LITERAL></&>
-
+    <& _TemplateInclude: "/templates/org/jamon/doc/reference/escapedEmit" &>
     produces
 
-    <pre class="tty">this &amp;amp; that</pre>
+    <pre class="tty"><&| escape//Html &><& reference/escapedEmit &></&></pre>
 
     However different escaping mechanisms can be specified in the
     template itself.  A string can be emitted with no escaping as
     follows:
 
-    <&| _Template &><%LITERAL>this <% "&" #n %> that</%LITERAL></&>
-
+    <& _TemplateInclude: "/templates/org/jamon/doc/reference/unescapedEmit" &>
     producing
 
-    <pre class="tty">this &amp; that</pre>
+    <pre class="tty"><&| escape//Html &><& reference/unescapedEmit &></&></pre>
 
     The available escaping mechanism are
     <ul>
@@ -160,30 +158,12 @@
     <p>
 
     For example, suppose <code>/restaurant/Menu</code> contains:
-    <&| _Template &><%LITERAL>
-<%abstract>
-<html>
- <body>
-   <h1>Menu</h1>
-   <& *CHILD &>
- </body>
-</html>
-</%LITERAL></&>
-      and <code>/restaurant/Lunch</code> contains:
-      <&| _Template &><%LITERAL>
-<%extends /restaurant/Menu>
-Sandwich Jamon y Queso
-</%LITERAL></&>
+    <& _TemplateInclude: "/templates/restaurant/Menu" &>
+     and <code>/restaurant/Lunch</code> contains:
+    <& _TemplateInclude: "/templates/restaurant/Lunch" &>
 
     Then rendering <code>/restaurant/Lunch</code> produces
-    <pre class="tty"><&| escape//Html &><%LITERAL>
-<html>
- <body>
-   <h1>Menu</h1>
-   Sandwich Jamon y Queso
- </body>
-</html>
-</%LITERAL></&></pre>
+    <pre class="tty"><&| escape//Html &><& /restaurant/Lunch &></&></pre>
 
   <li><span class="concept">Class code</span>
 
