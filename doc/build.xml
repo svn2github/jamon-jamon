@@ -28,13 +28,12 @@ the documentation thus taking care of issues such as escaping.
   <property name="zip.src" value="${tarfilebase}-src.zip" />
   <property name="zip.bin" value="${tarfilebase}.zip" />
 
-  <taskdef name="invoker"
-           classname="org.jamon.ant.InvokerTask"
-           classpath="${java.lib.jamon}" />
-
   <target name="init">
     <mkdir dir="${doc.dir}"/>
     <copy file="base.css" todir="${doc.dir}" />
+    <taskdef name="invoker"
+             classname="org.jamon.ant.InvokerTask"
+             classpath="${java.lib.jamon}" />
   </target>
 
   <target name="quickstart" depends="init" >
