@@ -478,17 +478,18 @@ public class StandardTemplateManager
                 ensureUpToDate(p_path,
                                new TemplateDescriber(m_templateSource,
                                                      m_loader));
-                return m_loader.loadClass(p_className);
             }
-            else
-            {
-                return m_classLoader.loadClass(p_className);
-            }
+            return getClassLoader().loadClass(p_className);
         }
         catch (ClassNotFoundException e)
         {
             throw new JamonException(e);
         }
+    }
+
+    private ClassLoader getClassLoader()
+    {
+        return m_dynamicRecompilation ? m_loader : m_classLoader;
     }
 
     private final TemplateSource m_templateSource;
@@ -659,9 +660,10 @@ public class StandardTemplateManager
         try
         {
             return (String)
-                Class.forName(StringUtils.templatePathToClassName(p_path))
-                    .getField("SIGNATURE")
-                    .get(null);
+                getClassLoader().loadClass(
+                    StringUtils.templatePathToClassName(p_path))
+                .getField("SIGNATURE")
+                .get(null);
         }
         catch (ClassNotFoundException e)
         {
