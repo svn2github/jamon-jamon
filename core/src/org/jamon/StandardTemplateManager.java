@@ -1,19 +1,20 @@
 package org.modusponens.jtt;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PushbackReader;
 import java.io.Writer;
-import java.net.URLClassLoader;
 import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.Map;
+import java.util.HashMap;
 import org.modusponens.jtt.parser.Parser;
 import org.modusponens.jtt.parser.ParserException;
 import org.modusponens.jtt.lexer.Lexer;
 import org.modusponens.jtt.lexer.LexerException;
+
 
 public class StandardTemplateManager
     implements TemplateManager
@@ -21,10 +22,8 @@ public class StandardTemplateManager
     public StandardTemplateManager(ClassLoader p_parentLoader)
         throws IOException
     {
-        m_parentLoader = p_parentLoader;
+        m_loader = new WorkDirLoader(p_parentLoader);
     }
-
-    private final ClassLoader m_parentLoader;
 
     public StandardTemplateManager()
         throws IOException
@@ -57,7 +56,6 @@ public class StandardTemplateManager
     {
         m_workDir = p_workDir;
         m_javaCompiler = null;
-        m_loader = null;
     }
 
     public void setTemplateSourceDir(String p_dir)
@@ -109,21 +107,76 @@ public class StandardTemplateManager
         return PathUtils.pathToClassName(p_path) + "Impl";
     }
 
-    private ClassLoader getLoader()
-        throws IOException
+    private class WorkDirLoader
+        extends ClassLoader
     {
-        if (m_loader == null)
+        WorkDirLoader(ClassLoader p_parent)
         {
-            m_loader = new URLClassLoader
-                (new URL [] { new URL("file:" + m_workDir + "/") },
-                 m_parentLoader);
+            super(p_parent);
         }
+
+        private String getFileNameForClass(String p_name)
+        {
+            return m_workDir
+                + PathUtils.classNameToPath(p_name.replace('.','/'))
+                + ".class";
+        }
+
+        protected Class loadClass(String p_name, boolean p_resolve)
+            throws ClassNotFoundException
+        {
+            System.err.println("load class " + p_name);
+            File cf = new File(getFileNameForClass(p_name));
+            if (!cf.exists())
+            {
+                System.err.println("to super " + p_name);
+                return super.loadClass(p_name, p_resolve);
+            }
+
+            Long last = (Long) m_timestampMap.get(p_name);
+            if (last != null && last.longValue() >= cf.lastModified())
+            {
+                System.err.println("up to date in cache " + p_name);
+                return (Class) m_classMap.get(p_name);
+            }
+            if (last != null || m_loader == null)
+            {
+                System.err.println("creating new class loader " + p_name);
+                try
+                {
+                    m_loader = new URLClassLoader
+                        (new URL [] { new URL("file:" + m_workDir + "/") },
+                         getParent());
+                }
+                catch (IOException e)
+                {
+                    throw new JttClassNotFoundException(e);
+                }
+            }
+            System.err.println("inner load " + p_name);
+            Class c = m_loader.loadClass(p_name);
+            if (p_resolve)
+            {
+                resolveClass(c);
+            }
+            m_classMap.put(p_name,c);
+            m_timestampMap.put(p_name, new Long(cf.lastModified()));
+            return c;
+        }
+
+        private ClassLoader m_loader;
+
+        private final Map m_classMap = new HashMap();
+        private final Map m_timestampMap = new HashMap();
+    }
+
+    private WorkDirLoader getLoader()
+    {
         return m_loader;
     }
 
     private Class loadAndResolveClass(String p_path)
-        throws ClassNotFoundException,
-               IOException
+        throws ClassNotFoundException
     {
         // FIXME: need to check that it still implements the interface
         return getLoader().loadClass(getClassName(p_path));
@@ -264,5 +317,5 @@ public class StandardTemplateManager
     private ClassLoader m_classLoader = ClassLoader.getSystemClassLoader();
     private String m_packagePrefix = "";
     private JavaCompiler m_javaCompiler;
-    private ClassLoader m_loader;
+    private final WorkDirLoader m_loader;
 }
