@@ -4,7 +4,7 @@
 
   <description>
     Meta build script for Jamon.  From this script one can
-    compile the Jamon engine (project 'core') and the exercise it (project
+    compile the Jamon engine (project 'core') and exercise it (project
     'integration').
   </description>
 
