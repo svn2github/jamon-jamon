@@ -1,4 +1,7 @@
-<%extends _DocumentationBase>
+<%extends _Base>
+<%class>
+  protected Section currentSection() { return Section.DOC_GENERATED; }
+</%class>
 <%override title>Jamon Generated Templates</%override>
 
 <h2>Generated Template Classes</h2>

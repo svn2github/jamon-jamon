@@ -1,5 +1,9 @@
 <%abstract>
-<%extends ../_DocumentationBase>
+<%extends ../_Base>
+<%class>
+  protected Section currentSection() { return Section.DOC_TUTORIAL; }
+</%class>
+
 <& *CHILD &>
 
 <%override docRootUrl>\

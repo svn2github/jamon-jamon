@@ -1,4 +1,7 @@
-<%extends _DocumentationBase>
+<%extends _Base>
+<%class>
+  protected Section currentSection() { return Section.DOC_JAMONTASK; }
+</%class>
 <%override title>Jamon and Ant: JamonTask</%override>
 
 <h2>JamonTask</h2>

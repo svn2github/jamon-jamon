@@ -1,7 +1,7 @@
 <%extends ../_Base>
 <%override title>Servlets with Jamon</%override>
 <%class>
-  protected Section currentSection() { return Section.DOCUMENTATION; }
+  protected Section currentSection() { return Section.DOC_SERVLETS; }
 </%class>
 
 <h1>Servlets with Jamon</h1>

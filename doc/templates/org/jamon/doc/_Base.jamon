@@ -31,22 +31,31 @@
           <& _menuItem; section => Section.CONTACT; href => "Contact" &>
           <& _menuItem; section => Section.ABOUT; href => "About" &>
         </ul>
+
         <ul class="nav">
           <li class="static">Documentation</li>
-          <li class="nav"><a href="Overview.html">Overview</a></li>
-<!--              <li><a href="QuickStart.html">Quick start mini-tutorial</a></li> -->
-              <li class="nav"><a href="tutorial/TutorialPath.html">10 Step Tutorial</a></li>
-              <li class="nav"><a href="GeneratedTemplates.html">Generated classes</a></li>
-              <li class="nav"><a href="UserGuide.html">User's Guide</a></li>
-              <li class="nav"><a href="BuildingProjects.html">Ant integration</a>
-                <ul class="nav">
-                  <li class="nav"><a href="JamonTask.html">JamonTask</a></li>
-                  <li class="nav"><a href="InvokerTask.html">InvokerTask</a></li>
-                </ul>
-              </li>
-              <li class="nav"><a href="Servlets.html">Servlet integration</a></li>
-              <li class="nav"><a href="Reference.html">Reference manual</a></li>
-              <li class="nav"><a href="javadoc/index.html">Javadoc</a></li>
+          <& _menuItem; section => Section.DOC_OVERVIEW;
+                        href => "Overview" &>
+          <& _menuItem; section => Section.DOC_TUTORIAL;
+                        href => "tutorial/TutorialPath" &>
+          <& _menuItem; section => Section.DOC_GENERATED;
+                        href => "GeneratedTemplates" &>
+          <& _menuItem; section => Section.DOC_USERGUIDE;
+                        href => "UserGuide" &>
+          <&| _menuItemFrag; section => Section.DOC_PROJECTS;
+                             href => "BuildingProjects" &>
+            <ul class="nav">
+              <& _menuItem; section => Section.DOC_JAMONTASK;
+                            href => "JamonTask" &>
+              <& _menuItem; section => Section.DOC_INVOKERTASK;
+                            href => "InvokerTask" &>
+            </ul>
+          </&>
+          <& _menuItem; section => Section.DOC_SERVLETS;
+                        href => "Servlets" &>
+          <& _menuItem; section => Section.DOC_REFERENCE;
+                        href => "Reference" &>
+          <li class="nav"><a href="javadoc/index">Javadoc</a></li>
         </ul>
       </div>
       <div id="main">
@@ -65,13 +74,22 @@
     Section section;
     String href;
   </%args>
+<&| _menuItemFrag; section => section; href => href; &></&>
+</%def>
+
+<%def _menuItemFrag>
+  <%frag content />
+  <%args>
+    Section section;
+    String href;
+  </%args>
 <li class="nav"\
 % if (section == currentSection()) {
  id="current"\
 % }
 >
-<a href="<& docRootUrl; href => "" &><% href #u %>.html" \
-><% section %></a>
+<a href="<& docRootUrl; href => "" &><% href %>.html" \
+><% section %></a><& content &>
 </li>
 </%def>
 
@@ -98,9 +116,18 @@
     public static Section NEWS = new Section("News");
     public static Section FEATURES = new Section("Features");
     public static Section DOWNLOAD = new Section("Download");
-    public static Section DOCUMENTATION = new Section("Documentation");
     public static Section CONTACT = new Section("Contact");
     public static Section ABOUT = new Section("About");
+
+    public static Section DOC_OVERVIEW = new Section("Overview");
+    public static Section DOC_TUTORIAL = new Section("10 Step Tutorial");
+    public static Section DOC_GENERATED = new Section("Generated classes");
+    public static Section DOC_USERGUIDE = new Section("User's Guide");
+    public static Section DOC_PROJECTS = new Section("Ant integration");
+    public static Section DOC_JAMONTASK = new Section("JamonTask");
+    public static Section DOC_INVOKERTASK = new Section("InvokerTask");
+    public static Section DOC_SERVLETS = new Section("Servlet integration");
+    public static Section DOC_REFERENCE = new Section("Reference manual");
 
     private final String m_name;
   }

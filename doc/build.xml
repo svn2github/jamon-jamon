@@ -110,8 +110,8 @@ the documentation thus taking care of issues such as escaping.
              workDir="${work.dir}"
              compiler="${org.jamon.invoker.compiler}"
              sourceDir="templates"
-             output="${doc.dir}/QuickStart.html"
-             template="/org/jamon/doc/QuickStart" >
+             output="${doc.dir}/Overview.html"
+             template="/org/jamon/doc/Overview" >
       <arg name="output" value="${quickstart.output}" />
     </invoker>
   </target>
@@ -254,9 +254,6 @@ the documentation thus taking care of issues such as escaping.
       <param name="template" value="index" />
     </antcall>
     <antcall target="grind">
-      <param name="template" value="Overview" />
-    </antcall>
-    <antcall target="grind">
       <param name="template" value="JamonTask" />
     </antcall>
     <antcall target="grind">
@@ -274,9 +271,6 @@ the documentation thus taking care of issues such as escaping.
       <arg name="srcZip" value="${zip.src}" />
       <arg name="version" value="${org.jamon.version}" />
     </invoker>
-    <antcall target="grind">
-      <param name="template" value="Documentation" />
-    </antcall>
     <antcall target="grind">
       <param name="template" value="Contact" />
     </antcall>

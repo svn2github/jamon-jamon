@@ -1,4 +1,7 @@
-<%extends _DocumentationBase>
+<%extends _Base>
+<%class>
+  protected Section currentSection() { return Section.DOC_REFERENCE; }
+</%class>
 <%override title>Jamon Template Reference Manual</%override>
 <%aliases>
   escape => /org/jamon/escape;

@@ -1,6 +1,0 @@
-<%abstract>
-<%extends _Base>
-<%class>
-  protected Section currentSection() { return Section.DOCUMENTATION; }
-</%class>
-<& *CHILD &>
