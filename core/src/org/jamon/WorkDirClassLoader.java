@@ -63,21 +63,28 @@ public class WorkDirClassLoader
         {
             FileInputStream s =
                 new FileInputStream(getFileForClass(p_name));
-            final byte [] buf = new byte[1024];
-            byte [] bytes = new byte[0];
-            while (true)
+            try
             {
-                int i = s.read(buf);
-                if (i <= 0)
+                final byte [] buf = new byte[1024];
+                byte [] bytes = new byte[0];
+                while (true)
                 {
-                    break;
+                    int i = s.read(buf);
+                    if (i <= 0)
+                    {
+                        break;
+                    }
+                    byte [] newbytes = new byte[bytes.length + i];
+                    System.arraycopy(bytes,0,newbytes,0,bytes.length);
+                    System.arraycopy(buf,0,newbytes,bytes.length,i);
+                    bytes = newbytes;
                 }
-                byte [] newbytes = new byte[bytes.length + i];
-                System.arraycopy(bytes,0,newbytes,0,bytes.length);
-                System.arraycopy(buf,0,newbytes,bytes.length,i);
-                bytes = newbytes;
+                return bytes;
             }
-            return bytes;
+            finally
+            {
+                s.close();
+            }
         }
 
         protected Class loadClass(String p_name, boolean p_resolve)
