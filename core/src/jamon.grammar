@@ -259,13 +259,13 @@ Productions
 
   override = override_start identifier gt override_component* override_end;
 
-  call = call_start path param* call_end
+  call = call_start path param* semi? call_end
        | {child} call_start child_call call_end
        ;
 
-  fragment_call = fragment_call_start path param* call_end base_component* fragment_call_end;
+  fragment_call = fragment_call_start path param* semi? call_end base_component* fragment_call_end;
 
-  multi_fragment_call = multi_fragment_call_init path param* call_end named_farg* fragment_call_end;
+  multi_fragment_call = multi_fragment_call_init path param* semi? call_end named_farg* fragment_call_end;
   named_farg = named_farg_init identifier named_farg_done base_component* named_farg_end;
 
   imports = import_start import* import_end;

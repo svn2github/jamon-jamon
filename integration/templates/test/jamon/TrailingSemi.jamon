@@ -1,0 +1,4 @@
+<& Arguments; i => 1; b => true; s => "s"; &>\
+<&| d; &><%args>int i;</%args>anonFrag</&>\
+<&|| d; &><|f><%args>int i;</%args>namedFrag</|></&>
+<%def d><%frag f>int i;</%frag> <& f; i => 0; &></%def>\
