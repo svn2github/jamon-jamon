@@ -55,6 +55,9 @@
     <jamon destdir="${build.src.dir}" generateImpls="true">
       <src path="templates"/>
     </jamon>
+    <jamon destdir="${build.src.dir}" generateImpls="true">
+      <src path="libTemplates"/>
+    </jamon>
   </target>
 
   <target name="commandlineTemplates"

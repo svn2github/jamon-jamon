@@ -1,0 +1,5 @@
+<%args>
+  int i;
+  String foo => "bar";
+  Integer j;
+</%args>
