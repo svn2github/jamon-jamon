@@ -9,12 +9,19 @@
 
   <property name="build.dir" value="build"/>
   <property name="build.src.dir" value="${build.dir}/src"/>
+  <property name="tests.classes.dir" value="${build.dir}/testclasses"/>
+  <property name="tests.src.dir" value="tests"/>
   <property name="classes.dir" value="${build.dir}/classes"/>
   <property name="src.dir" value="src"/>
 
   <property name="java.lib.jamon" value="../core/build/classes"/>
   <property name="java.lib.jamon-anttask" value="../anttask/build/classes"/>
   <property name="java.lib.junit" value="/usr/local/share/java/junit.jar" />
+
+  <property name="junit.fork" value="no" />
+  <property name="junit.timeout" value="1000" />
+  <property name="junit.printsummary" value="off" />
+  <property name="junit.formatter" value="brief" />
 
 
   <target name="templates">
@@ -39,6 +46,43 @@
       <src path="${build.src.dir}"/>
     </javac>
   </target>
+
+
+  <target name="testclasses" depends="compile">
+    <mkdir dir="${tests.classes.dir}" />
+    <javac srcdir="${tests.src.dir}"
+           destdir="${tests.classes.dir}"
+           debug="on"
+           deprecation="on"
+           optimize="on" >
+      <include name="**/*.java"/>
+      <classpath>
+        <pathelement location="${classes.dir}"/>
+        <pathelement location="${java.lib.junit}"/>
+      </classpath>
+    </javac>
+  </target>
+
+  <target name="test"
+          depends="testclasses"
+          description="Run the unit tests">
+    <junit printsummary="${junit.printsummary}"
+           fork="${junit.fork}" timeout="${junit.timeout}">
+      <formatter type="${junit.formatter}" usefile="no"/>
+      <classpath>
+        <pathelement location="${tests.classes.dir}"/>
+        <pathelement location="${classes.dir}"/>
+        <pathelement location="${java.lib.junit}"/>
+      </classpath>
+      <batchtest>
+        <fileset dir="${tests.src.dir}">
+          <include name="**/*Test.java" />
+          <exclude name="**/Abstract*.java"/>
+        </fileset>
+      </batchtest>
+    </junit>
+  </target>
+
 
   <target name="cvsignores">
     <echo file=".cvsignore">.cvsignore ${build.dir} build.properties
