@@ -53,11 +53,13 @@ same file or other top level templates.
     URL for each user account.
 
     <& _TutorialTemplateInclude; fileName => "SubtemplateTemplate" &>
+  </li>
 
   <li>
     This template is called from the Java class
      <a class="file" href="SubtemplateTut7.java">SubtemplateTut7.java</a>:
      <& _TutorialJavaFileInclude; fileName => "SubtemplateTut7" &>
+  </li>
 
   <li>
     Process the template and Java class with the following commands.
@@ -67,9 +69,11 @@ same file or other top level templates.
         javac SubtemplateTut7.java SubtemplateTemplate*.java
         java SubtemplateTut7
     </pre>
+  </li>
 
   <li>
     The output should be
     <pre class="tty"><% output %></pre>
-<ol>
+  </li>
+</ol>
 <p>
