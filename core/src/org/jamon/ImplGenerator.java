@@ -76,13 +76,8 @@ public class ImplGenerator extends BaseGenerator
     public void caseAJavaBaseComponent(AJavaBaseComponent node)
     {
         handleBody();
-        StringBuffer buf = new StringBuffer();
         AJava java = (AJava) node.getJava();
-        for (Iterator i = java.getAny().iterator(); i.hasNext(); /* */)
-        {
-            buf.append(((TAny)i.next()).getText());
-        }
-        addStatement(new RawStatement(buf.toString()));
+        addStatement(new RawStatement(java.getJavaStmts().getText()));
     }
 
     public void caseAJlineBaseComponent(AJlineBaseComponent node)
@@ -108,7 +103,6 @@ public class ImplGenerator extends BaseGenerator
     public void caseAEmitBaseComponent(AEmitBaseComponent node)
     {
         handleBody();
-        StringBuffer expr = new StringBuffer();
         AEmit emit = (AEmit) node.getEmit();
         TEscape escape = emit.getEscape();
         Encoding encoding = Encoding.DEFAULT;
@@ -125,11 +119,8 @@ public class ImplGenerator extends BaseGenerator
                 throw new RuntimeException("Unknown escape " + c);
             }
         }
-        for (Iterator i = emit.getAny().iterator(); i.hasNext(); /* */)
-        {
-            expr.append(((TAny)i.next()).getText());
-        }
-        addStatement(new WriteStatement(expr.toString(), encoding));
+        addStatement(new WriteStatement(emit.getEmitExpr().getText(),
+                                        encoding));
     }
 
     public void caseAContentBaseComponent(AContentBaseComponent node)
@@ -178,7 +169,7 @@ public class ImplGenerator extends BaseGenerator
         if (node instanceof ASimplePath)
         {
             ASimplePath path = (ASimplePath) node;
-            if (path.getSlash() != null)
+            if (path.getPathsep() != null)
             {
                 return "/" + path.getIdentifier().getText();
             }

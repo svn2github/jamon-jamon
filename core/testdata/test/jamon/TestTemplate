@@ -25,6 +25,10 @@ and amount, which is <% amount %>.
 i is <% i %>.
 <%java> } </%java>
 
+Some funky emits:
+<% "\"quoted string\"" %>
+<% "<% this is an \"emit\" %>" |n %>
+
 Some escaping stuff:
 
 HTML Escaped: <% "&" %> <% ">" %> <% "<" %> <% "'" %> <% "\"" %>
@@ -56,12 +60,16 @@ A call to a def: <& foo; qq => "yes" &>.
 <& foo; qq => "loop"; rr => q &>
 % }
 
+Another call to foo: <& foo; qq => "&>"; rr => 5 &>
+And another: <& foo; qq => ";"; rr => 6 &>
+One more: <& foo; qq => "\""; rr => 8 &>
+
 <%def foo>
   <%args>
     String qq;
     int rr => 7;
   </%args>
-  in def foo. <% rr %></%def>
+<% qq %>  in def foo. <% rr %></%def>
 
 A call with a template fragment: \
 % final int i = 3;

@@ -2,7 +2,9 @@ Package
   org.modusponens.jtt;
 
 Helpers
-  letter = ['a'..'z'] | ['A'..'Z'];
+  lower = ['a'..'z'];
+  upper = ['A'..'Z'];
+  letter = lower | upper;
   digit = ['0'..'9'];
   letter_or_digit = letter | digit | '_';
   period = '.';
@@ -12,12 +14,19 @@ Helpers
   cr  = 0x000d;
   sp  = ' ';
   nl = lf | cr | cr lf;
-  hs = sp | ht;
-  ws = hs | lf | ff;
+  hs = [sp + ht];
+  ws = [[hs + lf] + ff];
   argend = ';'; // could be nl ...
-  percent = '%';
   all = [0x0000 .. 0xFFFF];
   all_except_nl = [all - [lf + cr]];
+  q = '"';
+  bs = '\';
+  pipe = '|';
+  quoted = q ([all-[q+bs]]* | (bs all))* q;
+  gt = '>';
+  lt = '<';
+  pct = '%';
+  slash = '/';
 
 States
   start,
@@ -51,15 +60,34 @@ Tokens
 
   {start -> emit,body -> emit} emit_start = '<%' ws+;
   {emit -> body} emit_end = ws* '%>';
-  {emit} escape = ws* '|' ('h' | 'u' | 'x' | 'n');
+  {emit} escape = pipe ('h' | 'u' | 'x' | 'n');
 
-  {start -> jline} injava = percent hs*;
+  {emit} emit_expr =
+      ( [all - [[q + pct] + pipe]]
+      | quoted
+      | pct [all - gt]
+      | pipe [all - lower]
+      | pipe lower ws* [all - [pct + ws]]
+      | pipe lower ws* pct [all - [gt + ws]] )*;
+
+  {start -> jline} injava = pct hs*;
   {jline -> start} outjava = hs* nl;
   {jline} expr = all_except_nl*;
-  {argexp} argexpr = ([all - argend])*;
+   // fixme: line ending ...
+  {argexp} argexpr = ([all - [argend+q]] | quoted)*;
   {argexp -> args,args} donearg = hs* argend ws*;
 
-  {emit,java} any = all;
+  {java} java_stmts =
+       ( [all - [q + lt]]
+       | quoted
+       | '<' [all - slash]
+       | '</' [all - '%']
+       | '</%' [all - 'j']
+       | '</%j' [all - 'a']
+       | '</%ja' [all - 'v']
+       | '</%jav' [all - 'a']
+       | '</%java' [all - gt] )*;
+
   {body,start -> body} text = all_except_nl;
   {start,body -> start} newline = nl;
 
@@ -69,13 +97,14 @@ Tokens
   {start -> call, body -> call} fragment_call_start = '<|&' ws*;
   {start -> call,body -> call} call_start = '<&' ws*;
   {call -> body} call_end = ws* '&>';
-  {callexp -> call} param_expr = ([all - [';' + '&']] | '&' [all-'>'])*;
+  {callexp -> call} param_expr =
+       ([all - [argend + [q + '&']]] | quoted | '&' [all - '>'])*;
   {call} semi = ';';
-  {call,inherit} slash = '/';
+  {call,inherit} pathsep = slash;
 
   {start -> def,body -> def} def_start = '<%def' hs+;
   {body,start} def_end = '</%def>';
-  {def -> body} gt = hs* '>';
+  {def -> body} gt = hs* gt;
 
   {start -> inherit, body -> inherit} inherit_start = ws* '<%inherit';
   {inherit -> body} inherit_end = '%>';
@@ -84,7 +113,7 @@ Tokens
 
   {start -> body,body} doc =
        '<%doc>' ([all - '<']
-              | '<' [all-'/']
+              | '<' [all-slash]
               | '</' [all-'%']
               | '</%' [all-'d']
               | '</%d' [all-'o']
@@ -140,15 +169,15 @@ Productions
       {args_start} args_start_begin args_start_done
     | {args_with_frag} args_start_begin identifier args_start_done;
 
-  java = java_start any* java_end;
+  java = java_start java_stmts java_end;
 
   jline = injava expr outjava;
 
-  emit = emit_start any* escape? emit_end;
+  emit = emit_start emit_expr escape? emit_end;
 
   inherit = inherit_start path inherit_end;
 
-  path = {simple} slash? identifier | {qualified} path slash identifier;
+  path = {simple} pathsep? identifier | {qualified} path pathsep identifier;
 
   arg = type [name]: identifier default? donearg;
 
