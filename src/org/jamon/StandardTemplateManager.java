@@ -26,16 +26,23 @@ import org.modusponens.jtt.lexer.LexerException;
 public class StandardTemplateManager
     implements TemplateManager
 {
-    public StandardTemplateManager(ClassLoader p_parentLoader)
+    public StandardTemplateManager(ClassLoader p_parentLoader,
+                                   String p_templateSourceDir,
+                                   String p_workDir)
         throws IOException
     {
         m_loader = new WorkDirLoader(p_parentLoader);
+        m_workDir = p_workDir;
+        m_templateSourceDir = p_templateSourceDir;
     }
 
-    public StandardTemplateManager()
+    public StandardTemplateManager(String p_templateSourceDir,
+                                   String p_workDir)
         throws IOException
     {
-        this(ClassLoader.getSystemClassLoader());
+        this(ClassLoader.getSystemClassLoader(),
+             p_templateSourceDir,
+             p_workDir);
     }
 
     public Template getInstance(String p_path, Writer p_writer)
@@ -59,17 +66,6 @@ public class StandardTemplateManager
         }
     }
 
-    public void setWorkDir(String p_workDir)
-    {
-        m_workDir = p_workDir;
-        m_javaCompiler = null;
-    }
-
-    public void setTemplateSourceDir(String p_dir)
-    {
-        m_templateSourceDir = p_dir;
-    }
-
     public void setJavaCompiler(String p_javac)
     {
         m_javac = p_javac;
@@ -91,7 +87,6 @@ public class StandardTemplateManager
     public void setPackagePrefix(String p_packagePrefix)
     {
         m_packagePrefix = p_packagePrefix == null ? "" : p_packagePrefix;
-        m_javaCompiler = null;
     }
 
     private String getTemplateFileName(String p_path)
@@ -208,8 +203,8 @@ public class StandardTemplateManager
     private static final String PS = System.getProperty("path.separator");
     private static final String FS = System.getProperty("file.separator");
 
-    private String m_templateSourceDir = "testdata";
-    private String m_workDir = "work";
+    private final String m_templateSourceDir;
+    private final String m_workDir;
     private String m_javac =
         System.getProperty("java.home") + FS + ".." + FS + "bin" + FS +"javac";
     private boolean m_includeRtJar = false;
