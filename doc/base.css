@@ -233,13 +233,13 @@ li
 .note
 {
   border: solid;
-  border-width: thin;
+  border-width: thick;
   margin-left: 5em;
   margin-right: 5em;
   margin-top: 1em;
   margin-bottom: 1em;
   padding: .2em;
-  background-color: cccccc;
+  background-color: ee8888;
 }
 
 dt
