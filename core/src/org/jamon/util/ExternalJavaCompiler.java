@@ -36,7 +36,7 @@ public class ExternalJavaCompiler
         m_classPath = p_classPath;
     }
 
-    public void compile(String [] p_javaFiles)
+    public String compile(String [] p_javaFiles)
         throws IOException
     {
         String [] cmdline = new String[p_javaFiles.length + 3];
@@ -69,13 +69,7 @@ public class ExternalJavaCompiler
             {
                 // just ignore it
             }
-            if (code != 0)
-            {
-                throw new IOException("Compilation failed code="
-                                      + code
-                                      + "\n"
-                                      + stderr.getContents());
-            }
+            return code == 0 ? null : stderr.getContents();
         }
         finally
         {

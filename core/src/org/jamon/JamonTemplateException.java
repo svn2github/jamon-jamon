@@ -20,15 +20,12 @@
 
 package org.jamon;
 
-import java.io.File;
-import java.io.IOException;
-
 import org.jamon.parser.ParserException;
 import org.jamon.lexer.LexerException;
 import org.jamon.node.Token;
 
 public abstract class JamonTemplateException
-    extends JamonException
+    extends JamonRuntimeException
 {
     public JamonTemplateException(String p_message,
                                   String p_fileName,

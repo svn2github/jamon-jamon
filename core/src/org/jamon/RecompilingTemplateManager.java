@@ -237,7 +237,6 @@ public class RecompilingTemplateManager
 
     public AbstractTemplateProxy.Intf constructImpl(
         AbstractTemplateProxy p_proxy)
-        throws IOException
     {
         return constructImpl(p_proxy, this);
     }
@@ -257,7 +256,6 @@ public class RecompilingTemplateManager
      **/
     public AbstractTemplateProxy.Intf constructImpl(
         AbstractTemplateProxy p_proxy, TemplateManager p_manager)
-        throws IOException
     {
         return p_proxy.constructImpl(getImplClass(p_proxy.getClass()),
                                      p_manager);
@@ -273,7 +271,6 @@ public class RecompilingTemplateManager
      * @exception IOException if something goes wrong
      **/
     public AbstractTemplateProxy constructProxy(String p_path)
-        throws IOException
     {
         try
         {
@@ -282,17 +279,13 @@ public class RecompilingTemplateManager
                 .getConstructor(new Class [] { TemplateManager.class })
                 .newInstance(new Object [] { this });
         }
-        catch (IOException e)
-        {
-            throw e;
-        }
         catch (RuntimeException e)
         {
             throw e;
         }
         catch (Exception e)
         {
-            throw new JamonException(e);
+            throw new JamonRuntimeException(e);
         }
     }
 
@@ -383,21 +376,18 @@ public class RecompilingTemplateManager
     }
 
     private Class getImplClass(Class p_proxyClass)
-        throws IOException
     {
         return getTemplateClass(StringUtils.classToTemplatePath(p_proxyClass),
                                 p_proxyClass.getName() + "Impl");
     }
 
     private Class getProxyClass(String p_path)
-        throws IOException
     {
         return getTemplateClass(p_path,
                                 StringUtils.templatePathToClassName(p_path));
     }
 
     private Class getTemplateClass(String p_path, String p_className)
-        throws IOException
     {
         try
         {
@@ -406,9 +396,13 @@ public class RecompilingTemplateManager
                                                  m_loader));
             return m_loader.loadClass(p_className);
         }
-        catch (ClassNotFoundException e)
+        catch (RuntimeException e)
         {
-            throw new JamonException(e);
+            throw e;
+        }
+        catch (Exception e)
+        {
+            throw new JamonRuntimeException(e);
         }
     }
 
@@ -530,8 +524,12 @@ public class RecompilingTemplateManager
 
         if (!outOfDateJavaFiles.isEmpty())
         {
-            compile(outOfDateJavaFiles);
+            String errors = compile(outOfDateJavaFiles);
             m_loader.invalidate();
+            if (errors != null)
+            {
+                throw new TemplateCompilationException(errors);
+            }
         }
     }
 
@@ -663,12 +661,12 @@ public class RecompilingTemplateManager
         }
     }
 
-    private void compile(Collection p_sourceFiles)
+    private String compile(Collection p_sourceFiles)
         throws IOException
     {
         if (p_sourceFiles.isEmpty())
         {
-            return;
+            return null;
         }
 
         StringBuffer buf = new StringBuffer();
@@ -685,7 +683,7 @@ public class RecompilingTemplateManager
         {
             trace(buf.toString());
         }
-        m_javaCompiler
+        return m_javaCompiler
             .compile((String []) p_sourceFiles.toArray(new String [0]));
     }
 

@@ -62,7 +62,6 @@ public class BasicTemplateManager
 
     public AbstractTemplateProxy.Intf constructImpl(
         AbstractTemplateProxy p_proxy)
-        throws IOException
     {
         return constructImpl(p_proxy, this);
     }
@@ -72,6 +71,7 @@ public class BasicTemplateManager
      * proxy path, return an instance of the executable code for that
      * proxy's template.
      *
+
      * @param p_proxy a proxy for the template
      * @param p_manager the {@link TemplateManager} to supply to the
      * template
@@ -82,7 +82,6 @@ public class BasicTemplateManager
      **/
     public AbstractTemplateProxy.Intf constructImpl(
         AbstractTemplateProxy p_proxy, TemplateManager p_manager)
-        throws IOException
     {
         return p_proxy.constructImpl(p_manager);
     }
@@ -97,7 +96,6 @@ public class BasicTemplateManager
      * @exception IOException if something goes wrong
      **/
     public AbstractTemplateProxy constructProxy(String p_path)
-        throws IOException
     {
         try
         {
@@ -111,7 +109,7 @@ public class BasicTemplateManager
         }
         catch (Exception e)
         {
-            throw new JamonException(e);
+            throw new JamonRuntimeException(e);
         }
     }
 

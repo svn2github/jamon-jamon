@@ -116,6 +116,14 @@ public class InvokerTask
         {
             throw new BuildException(e);
         }
+        catch (TemplateInspector.UnknownArgumentsException e)
+        {
+            throw new BuildException(e);
+        }
+        catch (InvokerTool.TemplateArgumentException e)
+        {
+            throw new BuildException(e);
+        }
         catch (JamonTemplateException e)
         {
             throw new BuildException(e.getMessage(),

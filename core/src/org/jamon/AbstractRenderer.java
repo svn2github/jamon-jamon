@@ -47,10 +47,17 @@ public abstract class AbstractRenderer
      * @return a String that is the result of rendering this Renderer
      */
     public final String asString()
-        throws IOException
     {
         StringWriter writer = new StringWriter();
-        renderTo(writer);
+        try
+        {
+            renderTo(writer);
+        }
+        catch (IOException e)
+        {
+            // It's a StringWriter, so we shouldn't ever get here
+            throw new JamonRuntimeException(e);
+        }
         return writer.toString();
     }
 }

@@ -68,7 +68,7 @@ public class TemplateInspector
      * @param p_templateName the path of the template to be rendered
      */
     public TemplateInspector(String p_templateName)
-        throws IOException
+        throws IOException, InvalidTemplateException
     {
         this(TemplateManagerSource.getTemplateManagerFor(p_templateName),
              p_templateName);
@@ -83,7 +83,8 @@ public class TemplateInspector
      * @param p_templateName the path of the template to be rendered
      */
     public TemplateInspector(TemplateManager p_manager, String p_templateName)
-        throws IOException
+        throws IOException,
+               InvalidTemplateException
     {
         m_template = p_manager.constructProxy(p_templateName);
         m_templateClass = m_template.getClass();
@@ -135,6 +136,7 @@ public class TemplateInspector
      */
     public void render(Writer p_writer, Map p_argMap)
         throws InvalidTemplateException,
+               UnknownArgumentsException,
                IOException
     {
         render(p_writer, p_argMap, false);
@@ -152,6 +154,7 @@ public class TemplateInspector
                        Map p_argMap,
                        boolean p_ignoreUnusedParams)
         throws InvalidTemplateException,
+               UnknownArgumentsException,
                IOException
     {
         try
@@ -243,8 +246,17 @@ public class TemplateInspector
         }
     }
 
+    public static class UnknownArgumentsException
+        extends JamonException
+    {
+        UnknownArgumentsException(String p_msg)
+        {
+            super(p_msg);
+        }
+    }
+
     private void validateArguments(Map p_argMap)
-        throws JamonException
+        throws UnknownArgumentsException
     {
         Set argNames = new HashSet();
         argNames.addAll(p_argMap.keySet());
@@ -262,7 +274,7 @@ public class TemplateInspector
                     msg.append(",");
                 }
             }
-            throw new JamonException(msg.toString());
+            throw new UnknownArgumentsException(msg.toString());
         }
     }
 

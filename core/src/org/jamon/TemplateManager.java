@@ -36,12 +36,9 @@ public interface TemplateManager
      * @param p_proxy a proxy for the template
      *
      * @return a <code>Template</code> instance
-     *
-     * @exception IOException if something goes wrong
      **/
     AbstractTemplateProxy.Intf constructImpl(
-        AbstractTemplateProxy p_proxy)
-        throws IOException;
+        AbstractTemplateProxy p_proxy);
 
 
     /**
@@ -50,9 +47,6 @@ public interface TemplateManager
      * @param p_path the path to the template
      *
      * @return a <code>Template</code> instance
-     *
-     * @exception IOException if something goes wrong
      */
-    AbstractTemplateProxy constructProxy(String p_path)
-        throws IOException;
+    AbstractTemplateProxy constructProxy(String p_path);
 }

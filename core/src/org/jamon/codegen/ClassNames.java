@@ -24,8 +24,8 @@ public interface ClassNames
 {
     public final static String IOEXCEPTION =
         java.io.IOException.class.getName();
-    public final static String JAMON_EXCEPTION =
-        org.jamon.JamonException.class.getName();
+    public final static String JAMON_RUNTIME_EXCEPTION =
+        org.jamon.JamonRuntimeException.class.getName();
     public final static String WRITER = java.io.Writer.class.getName();
     public final static String RENDERER = org.jamon.Renderer.class.getName();
     public final static String ABSTRACT_RENDERER =

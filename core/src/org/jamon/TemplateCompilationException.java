@@ -20,29 +20,11 @@
 
 package org.jamon;
 
-import java.io.Writer;
-import java.io.IOException;
-
-/**
- * A simple interface describing that which knows how to render.
- */
-public interface Renderer
+public class TemplateCompilationException
+    extends JamonRuntimeException
 {
-    /**
-     * Render to the given writer.
-     *
-     * @param p_writer the Writer to which to render
-     *
-     * @exception IOException if writing to the Writer throws an IOException
-     */
-    void renderTo(Writer p_writer)
-        throws IOException;
-
-    /**
-     * Render this Renderer into a String.
-     *
-     * @return a String that is the result of rendering this Renderer
-     */
-    String asString();
-
+    public TemplateCompilationException(String p_msg)
+    {
+        super(p_msg);
+    }
 }

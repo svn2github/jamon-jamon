@@ -30,6 +30,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.jamon.util.StringUtils;
+import org.jamon.TemplateCompilationException;
 
 import test.jamon.Parent;
 import test.jamon.Child;
@@ -231,7 +232,7 @@ public class InheritanceTest
             getRecompilingTemplateManager().constructProxy(p_path);
             fail("recompilation of Troubled child threw no exception");
         }
-        catch(IOException e)
+        catch(TemplateCompilationException e)
         {
             // Excellent, Smithers.
         }

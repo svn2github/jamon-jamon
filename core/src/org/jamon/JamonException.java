@@ -20,8 +20,8 @@
 
 package org.jamon;
 
-public class JamonException
-    extends java.io.IOException
+public abstract class JamonException
+    extends Exception
 {
     public JamonException(String p_msg)
     {

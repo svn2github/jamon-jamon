@@ -267,7 +267,6 @@ public class ProxyGenerator
             "protected " + ClassNames.BASE_TEMPLATE + " constructImpl"
             + "(Class p_class, "
             + ClassNames.TEMPLATE_MANAGER + " p_manager)");
-        m_writer.println("  throws " + ClassNames.IOEXCEPTION);
         m_writer.openBlock();
         m_writer.println("try");
         m_writer.openBlock();
@@ -286,7 +285,9 @@ public class ProxyGenerator
         m_writer.closeBlock();
         m_writer.println("catch (Exception e)");
         m_writer.openBlock();
-        m_writer.println("throw new " + ClassNames.JAMON_EXCEPTION + "(e);");
+        m_writer.println("throw new "
+                         + ClassNames.JAMON_RUNTIME_EXCEPTION
+                         + "(e);");
         m_writer.closeBlock();
         m_writer.closeBlock();
 
@@ -294,7 +295,6 @@ public class ProxyGenerator
         m_writer.print(
             "protected " + ClassNames.BASE_TEMPLATE + " constructImpl("
             + ClassNames.TEMPLATE_MANAGER + " p_manager)");
-        m_writer.println("  throws " + ClassNames.IOEXCEPTION);
         m_writer.openBlock();
         m_writer.println(
             "return new "

@@ -164,7 +164,11 @@ public class InvokerTool
     }
 
     protected void invoke(String[] args)
-        throws UsageException, IOException
+        throws UsageException,
+               IOException,
+               TemplateArgumentException,
+               TemplateInspector.UnknownArgumentsException,
+               TemplateInspector.InvalidTemplateException
     {
         int a = 0;
         RecompilingTemplateManager.Data data =

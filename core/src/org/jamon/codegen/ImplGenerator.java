@@ -254,7 +254,6 @@ public class ImplGenerator
             m_writer.println("protected " + arg.getType() + " "
                              + p_methodUnit.getOptionalArgDefaultMethod(arg)
                              + "()");
-            m_writer.println("  throws " + ClassNames.JAMON_EXCEPTION);
             m_writer.openBlock();
             m_writer.println("return " + arg.getDefault() + ";");
             m_writer.closeBlock();

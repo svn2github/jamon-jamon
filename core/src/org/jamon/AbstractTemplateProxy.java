@@ -51,12 +51,10 @@ public abstract class AbstractTemplateProxy
     private ImplData m_implData = makeImplData();
 
     protected abstract AbstractTemplateImpl constructImpl(
-        Class p_class, TemplateManager p_manager)
-        throws IOException;
+        Class p_class, TemplateManager p_manager);
 
     protected abstract AbstractTemplateImpl constructImpl(
-        TemplateManager p_manager)
-        throws IOException;
+        TemplateManager p_manager);
 
     protected abstract ImplData makeImplData();
 

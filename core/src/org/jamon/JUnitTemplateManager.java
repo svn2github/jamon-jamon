@@ -123,7 +123,6 @@ public class JUnitTemplateManager
 
     public AbstractTemplateProxy.Intf constructImpl(
         AbstractTemplateProxy p_proxy)
-        throws IOException
     {
         Assert.assertTrue( m_impl == null );
         String path = StringUtils.classToTemplatePath(p_proxy.getClass());
@@ -139,8 +138,8 @@ public class JUnitTemplateManager
             }
             catch (ClassNotFoundException e)
             {
-                throw new JamonException("couldn't find class for template "
-                                         + path);
+                throw new JamonRuntimeException
+                    ("couldn't find class for template " + path);
             }
 
             try
@@ -152,7 +151,7 @@ public class JUnitTemplateManager
             }
             catch (Exception e)
             {
-                throw new JamonException(e);
+                throw new JamonRuntimeException(e);
             }
 
             m_implData = p_proxy.getImplData();
@@ -165,12 +164,12 @@ public class JUnitTemplateManager
         }
         else
         {
-            throw new JamonException("No template registered for " + path);
+            throw new JamonRuntimeException
+                ("No template registered for " + path);
         }
     }
 
     public AbstractTemplateProxy constructProxy(String p_path)
-        throws IOException
     {
         try
         {
@@ -185,7 +184,7 @@ public class JUnitTemplateManager
         }
         catch (Exception e)
         {
-            throw new JamonException(e);
+            throw new JamonRuntimeException(e);
         }
     }
 

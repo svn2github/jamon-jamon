@@ -32,7 +32,10 @@ public interface JavaCompiler
      * Compile the specified java source files.
      *
      * @param p_javaFiles the source files to compile
+     *
+     * @return null if the compilation was successful, otherwise a
+     * description of the failure
      */
-    void compile(String [] p_javaFiles)
+    String compile(String [] p_javaFiles)
         throws IOException;
 }

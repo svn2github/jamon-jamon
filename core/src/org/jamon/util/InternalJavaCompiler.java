@@ -50,7 +50,7 @@ public class InternalJavaCompiler
         m_compile.invoke(m_compiler, new String[0]);
     }
 
-    public void compile(String [] p_javaFiles)
+    public String compile(String [] p_javaFiles)
         throws IOException
     {
         String [] cmdline = new String[p_javaFiles.length + 2];
@@ -71,13 +71,10 @@ public class InternalJavaCompiler
             int code = ((Integer) m_compile.invoke(m_compiler,
                                                    new Object[] { cmdline }))
                         .intValue();
-            if (code != 0)
-            {
-                pErr.close();
-                throw new IOException("Compilation failed code=" + code
-                                      + "\n"
-                                      + new String(err.toByteArray()));
-            }
+            pErr.close();
+            return code == 0
+                ? null
+                : new String(err.toByteArray());
         }
         catch (IllegalAccessException e)
         {
@@ -96,7 +93,7 @@ public class InternalJavaCompiler
             // internal compiler error, so the compiler object
             //   is not usable
             m_compiler = null;
-            throw new JamonException(e.getTargetException());
+            throw new JamonRuntimeException(e.getTargetException());
         }
         finally
         {
