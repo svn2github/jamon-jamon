@@ -3,16 +3,16 @@
   String output;
 </%args>
 
-<%override title>Jamon Tutorial - Template Inheritance: Overriding Inherited Methods/Sub-Templates</%override>
+<%override title>Jamon Tutorial - Template Inheritance: Overriding Inherited Methods/Subtemplates</%override>
 
-<h2>Jamon Tutorial - Template Inheritance: Overriding Inherited Methods/Sub-Templates</h2>
+<h2>Jamon Tutorial - Template Inheritance: Overriding Inherited Methods/Subtemplates</h2>
 
 As explained in the section on
-<a href="TutorialSample7.html">sub-templates</a>, a sub-template can
-either be <em>private</em> or <em>protected</em>. Sub-templates defined
+<a href="TutorialSample7.html">subtemplates</a>, a subtemplate can
+either be <em>private</em> or <em>protected</em>. Subtemplates defined
 with the <code>&lt;%def subTempName></code> ... <doce>&lt;/%def></code> tag are
 <em>private</em> and can be accessed <strong>only</strong> within the
-template that defined the sub-template.
+template that defined the subtemplate.
 <p>
 
 Subtemplates defined with the

@@ -49,7 +49,6 @@ yourself!  <p>
         <a href="TutorialSample9.html">Template inheritance - composing template output through inheritance</a>
       </li>
       <li>
-        <a href="TutorialSample10.html">Template inheritance - inheriting sub-templates</a>
+        <a href="TutorialSample10.html">Template inheritance - inheriting subtemplates</a>
       </li>
     </ol>
-

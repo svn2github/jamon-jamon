@@ -7,7 +7,11 @@
 
 <h2>Jamon Tutorial - Subtemplates: Functional Decomposition of Templates</h2>
 
-Jamon templates can define <em>sub</em>-templates. These are exactly analogous to methods of a class, except that they are written in Jamon and are called from the main template or other subtemplates of the main template. Calling a subtemplate will cause it to print its output to the same output stream as the main template.
+Jamon templates can define <em>subtemplates</em>. These are exactly
+analogous to methods of a class, except that they are written in Jamon
+and are called from the main template or other subtemplates of the
+main template. Calling a subtemplate will cause it to print its output
+to the same output stream as the main template.
 
 <blockquote>
 There are actually two types of subtemplates: private and protected. Private subtemplates are described in this document. Private subtemplates are accessible <em>only</em> from the template in which they are defined. Protected subtemplates, which are described in the tutorial section on inheritance, can also be called from templates that inherit from the main template.
