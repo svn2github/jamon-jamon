@@ -103,5 +103,3 @@ template is to be displayed.
 If the above code had called the <code>HelloTemplate</code> instance's
 <code>render()</code> method twice, Jamon would have generated an
 exception.
-
-
