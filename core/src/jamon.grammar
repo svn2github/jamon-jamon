@@ -18,6 +18,27 @@
  * Contributor(s):
  */
 
+/*
+<&|| /some/Component; arg1 => "foo"; &>
+  <|farg1>This is content to the first farg</|>
+  <|farg2><%args>String bar;</%args>This is bar: <% bar %></|>
+</&>
+
+States:
+  fargcall (for line 1)
+    has to duplicate all call stuff, unfortunately
+  fargcallbody (lines 2, 3)
+
+Tokens:
+  farg_call_init = <&||
+  (unnamed) = &>        to end call
+  farg_call_end = /&>
+
+  named_farg_init = <|
+  (unnamed) = >
+  named_farg_end = </|>
+*/
+
 Package
   org.jamon;
 
@@ -59,6 +80,9 @@ States
   java,
   jline,
   call,
+  fargcall,
+  fargcallexp,
+  fargcallbody,
   argexp,
   callexp,
   args,
@@ -81,8 +105,8 @@ Tokens
   {java -> body} java_end = ws* '</%java>';
   {args,imports} dot = period;
   {args -> argexp} arrow = '=>' hs*;
-  {call,args,farginit,imports} white_space = ws*;
-  {call,args,farginit,imports,def} identifier = letter letter_or_digit*;
+  {call,fargcall,fargcallbody,args,farginit,imports} white_space = ws*;
+  {call,fargcall,fargcallbody,args,farginit,imports,def} identifier = letter letter_or_digit*;
 
   {start -> emit,body -> emit} emit_start = '<%' ws+;
   {emit -> body, escape -> body} emit_end = ws* '%>';
@@ -144,15 +168,22 @@ Tokens
   {literal -> body} litend = '</%LITERAL>';
 
   {args} brackets = '[' (hs)* ']';
-  {start -> body,body} fragment_call_end = '</&>';
-  {call -> callexp} carrow = '=>' hs*;
+  {start -> body,body,fargcallbody -> body} fragment_call_end = '</&>';
+  {call -> callexp, fargcall -> fargcallexp} carrow = '=>' hs*;
   {start -> call, body -> call} fragment_call_start = '<&|' ws*;
   {start -> call,body -> call} call_start = '<&' ws*;
-  {call -> body} call_end = ws* '&>';
-  {callexp -> call} param_expr =
+  {fargcall -> fargcallbody, call -> body} call_end = ws* '&>';
+  {callexp -> call, fargcallexp -> fargcall} param_expr =
        ([all - [argsep + [q + '&']]] | quoted | '&' [all - '>'])*;
-  {call,imports} semi = ';';
-  {call} pathsep = slash;
+  {fargcall,call,imports} semi = ';';
+  {fargcall,call} pathsep = slash;
+
+  {start -> fargcall, body -> fargcall} farg_call_init = '<&||' ws*;
+
+
+  {fargcallbody} named_farg_init = '<|';
+  {fargcallbody -> body} named_farg_done = '>';
+  {body -> fargcallbody} named_farg_end = '</|>';
 
   {start -> def,body -> def} def_start = '<%def' hs+;
   {body,start} def_end = '</%def>';
@@ -184,6 +215,7 @@ Productions
             | {emit} emit
             | {call} call
             | {fragment_call} fragment_call
+            | {farg_call} farg_call
             | {args} args
             | {farg} farg
             ;
@@ -199,6 +231,9 @@ Productions
   call = call_start path param* call_end;
 
   fragment_call = fragment_call_start path param* call_end base_component* fragment_call_end;
+
+  farg_call = farg_call_init path param* call_end named_farg* fragment_call_end;
+  named_farg = named_farg_init identifier named_farg_done base_component* named_farg_end;
 
   imports = import_start import* import_end;
 

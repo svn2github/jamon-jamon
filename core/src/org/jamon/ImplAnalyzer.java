@@ -234,27 +234,53 @@ public class ImplAnalyzer extends BaseAnalyzer
             }
         }
 
+        public void caseAFargCallBaseComponent(AFargCallBaseComponent node)
+        {
+            handleBody();
+            AFargCall call = (AFargCall) node.getFargCall();
+            String path = asText(call.getPath());
+            CallStatement s =
+                new CallStatement(path,
+                                  makeParamMap(call.getParam()));
+            m_calls.add(path);
+            for (Iterator f = call.getNamedFarg().iterator(); f.hasNext(); /* */)
+            {
+                ANamedFarg farg = (ANamedFarg) f.next();
+                pushUnit("#fragment#" + (fragments++));
+                m_unitStatements.put(getUnitName(),new ArrayList());
+                for (Iterator i = farg.getBaseComponent().iterator(); i.hasNext(); /* */)
+                {
+                    ((Node) i.next()).apply(this);
+                }
+                handleBody();
+                s.addFragmentArg(farg.getIdentifier().getText(),
+                                 getStatements(getUnitName()));
+                popUnitName();
+            }
+            addStatement(s);
+        }
+
         public void caseAFragmentCallBaseComponent(AFragmentCallBaseComponent node)
         {
             handleBody();
-            pushUnit("#fragment#" + (fragments++));
-            m_unitStatements.put(getUnitName(),new ArrayList());
             AFragmentCall call = (AFragmentCall) node.getFragmentCall();
             String path = asText(call.getPath());
             CallStatement s =
                 new CallStatement(path,
                                   makeParamMap(call.getParam()));
             m_calls.add(path);
+
+            pushUnit("#fragment#" + (fragments++));
+            m_unitStatements.put(getUnitName(),new ArrayList());
             for (Iterator i = call.getBaseComponent().iterator(); i.hasNext(); /* */)
             {
                 ((Node) i.next()).apply(this);
             }
-
             handleBody();
             s.addFragmentArg(null, getStatements(getUnitName()));
             popUnitName();
-            addStatement(s);
 
+            addStatement(s);
         }
 
         public void caseEOF(EOF node)
