@@ -126,7 +126,7 @@
   <property name="javadoc.zip.file" value="jamon-api.zip" />
   <property name="javadoc.zip" value="${javadoc.zip.file}" />
 
-  <target name="javadoc.check">
+  <target name="javadoc.check" depends="compile">
     <uptodate property="javadoc.build.notrequired"
               targetfile="${javadoc.dir}/index.html" >
       <srcfiles dir="${src.dir}" includes="**/*.java" />
@@ -137,8 +137,9 @@
           depends="javadoc.check"
           unless="javadoc.build.notrequired" >
     <mkdir dir="${javadoc.dir}" />
-    <javadoc packagenames="org.jamon"
-             sourcepath="${src.dir}:${build.src.dir}"
+    <javadoc packagenames="org.jamon,org.jamon.escaping"
+             sourcepath="${src.dir}"
+             classpath="${classes.dir}"
              defaultexcludes="yes"
              destdir="${javadoc.dir}"
              author="true"
