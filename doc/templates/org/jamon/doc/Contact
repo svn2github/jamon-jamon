@@ -5,21 +5,25 @@
     <ul>
 
       <li>
-        <a href="mailman/listinfo/jamon-announce">Jamon
-        announce</a>. Low-bandwidth, announcements-only
+        <& _list; name => "announce" &>. Announcements-only
         list.
       </li>
 
       <li>
-        <a href="mailman/listinfo/jamon-users">Jamon
-        users</a>. Questions, suggestions, problems.
+        <& _list; name => "users" &>. Questions, suggestions, problems.
       </li>
 
       <li>
-        <a href="mailman/listinfo/jamon-users">Jamon
-        hackers</a>. Developers' list.
+        <& _list; name => "hackers" &>. Developers' list.
       </li>
 
     </ul>
 
 </&>
+
+<%def _list>
+  <%args>
+    String name;
+  </%args>
+<a href="mailman/listinfo/jamon-<% name %>">jamon-<% name %></a>
+</%def>
