@@ -24,9 +24,17 @@ public class StandardTemplateManager
     private String m_javac =
         System.getProperty("java.home") + "/../bin/javac";
     private boolean m_includeRtJar = false;
+    private String m_classpath = "";
+    private ClassLoader m_classLoader = ClassLoader.getSystemClassLoader();
+
+    public StandardTemplateManager(ClassLoader p_parentLoader)
+    {
+        m_loader = new Loader(p_parentLoader);
+    }
 
     public StandardTemplateManager()
     {
+        this(ClassLoader.getSystemClassLoader());
     }
 
     public void setWorkDir(String p_workDir)
@@ -47,6 +55,11 @@ public class StandardTemplateManager
     public void setJavaCompilerNeedsRtJar(boolean p_includeRtJar)
     {
         m_includeRtJar = p_includeRtJar;
+    }
+
+    public void setClasspath(String p_classpath)
+    {
+        m_classpath = p_classpath;
     }
 
     private long createJavaFile(String p_path)
@@ -136,6 +149,11 @@ public class StandardTemplateManager
     private class Loader
         extends ClassLoader
     {
+        Loader(ClassLoader p_parent)
+        {
+            super(p_parent);
+        }
+
         private byte [] readBytesForClass(String p_name)
             throws IOException
         {
@@ -160,7 +178,7 @@ public class StandardTemplateManager
 
         private String getClassFileNameForClass(String p_name)
         {
-            return m_workDir + "/" + p_name.replace('.','/') + "Impl.class";
+            return m_workDir + "/" + p_name.replace('.','/') + ".class";
         }
 
         protected Class findClass(String p_name)
@@ -169,29 +187,16 @@ public class StandardTemplateManager
             try
             {
                 byte [] bytecode = readBytesForClass(p_name);
-                return defineClass(p_name+"Impl",bytecode,0,bytecode.length);
+                return defineClass(p_name,bytecode,0,bytecode.length);
             }
             catch (IOException e)
             {
                 throw new JttClassNotFoundException(e);
             }
         }
-
-        public Class load(String p_name, boolean p_resolve)
-            throws ClassNotFoundException
-        {
-            Class c = findLoadedClass(p_name + "Impl");
-            if (c == null)
-            {
-                c = findClass(p_name);
-                resolveClass(c);
-            }
-            return c;
-
-        }
     }
 
-    private final Loader m_loader = new Loader();
+    private final Loader m_loader;
 
     private String getClassName(String p_path)
     {
@@ -203,13 +208,13 @@ public class StandardTemplateManager
         throws ClassNotFoundException
     {
         // FIXME: need to check that it still implements the interface
-        return m_loader.load(getClassName(p_path),true);
+        return m_loader.loadClass(getClassName(p_path)+"Impl");
     }
 
     private String getClassPath()
     {
-        String cp =
-            m_workDir + ":" + System.getProperty("java.class.path");
+        String cp = m_classpath != null ? (m_classpath + ':') : "";
+        cp = m_workDir + ":" + cp + System.getProperty("java.class.path");
         if (m_includeRtJar)
         {
             cp += ':' + System.getProperty("java.home") + "/lib/rt.jar";
