@@ -138,6 +138,7 @@ public class ImplGenerator
     {
         print  ("  private static interface ");
         println(p_fargInfo.getFargInterfaceName());
+        println("    extends org.jamon.AbstractTemplateProxy.Intf");
         println("  {");
         print  ("    void render(");
 

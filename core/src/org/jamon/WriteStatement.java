@@ -18,9 +18,9 @@ public class WriteStatement
                                ImplAnalyzer p_analyzer)
         throws IOException
     {
-        p_writer.println("write"
+        p_writer.println("this.write"
                          + m_encoding
-                         + "Escaped(valueOf("
+                         + "Escaped(this.valueOf("
                          + m_expr
                          + "));");
     }

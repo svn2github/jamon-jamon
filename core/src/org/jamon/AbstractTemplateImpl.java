@@ -44,8 +44,11 @@ public abstract class AbstractTemplateImpl
         }
     }
 
-    protected abstract void initializeDefaultArguments()
-        throws Exception;
+    protected void initializeDefaultArguments()
+        throws Exception
+    {
+        // override me
+    }
 
     protected void writeEscaped(String p_string)
         throws IOException

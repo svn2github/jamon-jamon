@@ -106,10 +106,10 @@ public class CallStatement
         p_writer.print(tVar);
         p_writer.print(" = new ");
         p_writer.print(intfName);
-        p_writer.println("(getTemplateManager());");
+        p_writer.println("(this.getTemplateManager());");
         p_writer.print("  ");
         p_writer.print(tVar);
-        p_writer.println(".writeTo(getWriter());");
+        p_writer.println(".writeTo(this.getWriter());");
 
         List requiredArgs = p_describer.getRequiredArgNames(p_absPath);
 

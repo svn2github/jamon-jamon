@@ -63,15 +63,20 @@ public class FragmentCallStatement
                 + "." + fargIntf;
         }
 
-        p_writer.print(fargIntf);
-        p_writer.print(" ");
-        p_writer.print(fragVar);
-        p_writer.println(" =");
-        p_writer.print("      new ");
-        p_writer.print(fargIntf);
-        p_writer.println(" () {");
+        String className = fargInfo.getFargInterfaceName()
+            + p_analyzer.newVarName();
+        p_writer.print  ("class ");
+        p_writer.println(className);
+        p_writer.println("  extends org.jamon.AbstractTemplateImpl");
+        p_writer.print  ("  implements ");
+        p_writer.println(fargIntf);
+        p_writer.println("{");
+        p_writer.print  ("  ");
+        p_writer.print  (className);
+        p_writer.println("(org.jamon.TemplateManager p_manager) {");
+        p_writer.println("    super(p_manager,\"\");");
+        p_writer.println("  }");
         p_writer.print("       public void render(");
-
         for (Iterator a = fargInfo.getArgumentNames(); a.hasNext(); /* */)
         {
             String arg = (String) a.next();
@@ -83,7 +88,6 @@ public class FragmentCallStatement
                 p_writer.print(", ");
             }
         }
-
         p_writer.print(") throws ");
         p_writer.print(IOEXCEPTION_CLASS);
         p_writer.println(" {");
@@ -96,8 +100,17 @@ public class FragmentCallStatement
             p_writer.println();
         }
         p_writer.println("    }");
-        p_writer.println("  };");
+        p_writer.println("  }");
 
+        p_writer.print(className);
+        p_writer.print(" ");
+        p_writer.print(fragVar);
+        p_writer.println(" =");
+        p_writer.print("      new ");
+        p_writer.print(className);
+        p_writer.println(" (this.getTemplateManager());");
+        p_writer.print(fragVar);
+        p_writer.println(".writeTo(this.getWriter());");
         m_params.put(fargName, fragVar);
 
         super.generateSource(p_writer,p_resolver,p_describer,p_analyzer);

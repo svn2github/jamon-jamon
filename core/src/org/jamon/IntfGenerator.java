@@ -166,6 +166,7 @@ public class IntfGenerator
         }
         else
         {
+            print  (" extends org.jamon.AbstractTemplateProxy.Intf");
             println("  {");
             print  ("    void render(");
             for (Iterator a = p_fargInfo.getArgumentNames(); a.hasNext(); /* */)

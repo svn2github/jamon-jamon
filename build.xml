@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<project name="meta" default="test1">
+<project name="meta" default="jar">
 
   <description>
     Meta build script for Jamon.  From this script one can

@@ -12,7 +12,6 @@
   <property name="build.src2.dir" value="${build.dir}/src2"/>
   <property name="classes.dir" value="${build.dir}/classes"/>
   <property name="src.dir" value="src"/>
-  <property name="test.pkg" value="test/jamon"/>
 
   <property name="sample.template1" value="test/jamon/TestTemplate"/>
   <property name="sample.template2" value="test/jamon/Arguments"/>
@@ -78,7 +77,11 @@
           description="Exercises the compiled templates">
     <java fork="true"
           classpath="${classes.dir}:${java.lib.jamon}:${java.lib.gnuregexp}"
-          classname="${test.pkg}.Test1" />
+          classname="org.jamon.Invoker">
+      <arg value="test.jamon.TestTemplate" />
+      <arg value="amount=4.5" />
+      <arg value="y=17" />
+    </java>
   </target>
 
   <target name="test"

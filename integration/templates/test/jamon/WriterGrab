@@ -1,0 +1,14 @@
+<%import>
+  java.io.StringWriter;
+  java.io.Writer;
+</%import>\
+% StringWriter nw = new StringWriter();
+<&| stringify; sink => nw &>secret message</&>\
+% String me = nw.toString();
+<% me.toUpperCase() %>
+<%def stringify><%farg content></%farg><%args>
+    StringWriter sink;
+  </%args>\
+% content.writeTo(sink);
+<& content &>\
+</%def>
