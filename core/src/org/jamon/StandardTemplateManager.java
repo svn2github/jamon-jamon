@@ -38,6 +38,7 @@ import java.util.HashSet;
 import org.jamon.escaping.Escaping;
 import org.jamon.util.JavaCompiler;
 import org.jamon.util.ExternalJavaCompiler;
+import org.jamon.util.InternalJavaCompiler;
 import org.jamon.util.StringUtils;
 import org.jamon.util.WorkDirClassLoader;
 import org.jamon.codegen.TemplateDescriber;
@@ -210,15 +211,35 @@ public class StandardTemplateManager
             + "javac";
     }
 
+    private static JavaCompiler getInternalJavaCompiler(String p_classpath)
+        throws Exception
+    {
+        return new InternalJavaCompiler(p_classpath);
+    }
+
     private static JavaCompiler makeCompiler(Data p_data,
                                              String p_workDir,
                                              ClassLoader p_classLoader)
         throws IOException
     {
+        String javac = p_data.javaCompiler;
+        if (javac == null)
+        {
+            try
+            {
+                return getInternalJavaCompiler(getClasspath(p_workDir,
+                                                            p_data.classpath,
+                                                            false,
+                                                            p_classLoader));
+            }
+            catch (Exception e)
+            {
+                // well, we tried
+                javac = getDefaultJavac();
+            }
+        }
         return new ExternalJavaCompiler
-            (p_data.javaCompiler == null
-             ? getDefaultJavac()
-             : p_data.javaCompiler,
+            (javac,
              getClasspath(p_workDir,
                           p_data.classpath,
                           p_data.javaCompilerNeedsRtJar,
