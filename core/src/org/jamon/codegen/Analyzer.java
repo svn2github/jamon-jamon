@@ -86,6 +86,10 @@ public class Analyzer
     {
         topLevelAnalyze(p_start, new AliasAdapter());
         topLevelAnalyze(p_start, new PreliminaryAdapter());
+        if (m_defaultEscaping == null)
+        {
+            m_defaultEscaping = "h";
+        }
     }
 
     private void topLevelAnalyze(Start p_start, AnalysisAdapter p_adapter)
@@ -311,6 +315,18 @@ public class Analyzer
 
     private class PreliminaryAdapter extends AnalysisAdapter
     {
+        public void caseAEscapeComponent(AEscapeComponent p_escape)
+        {
+            if (m_defaultEscaping != null)
+            {
+                throw new TunnelingException
+                    ("a template cannot specify multiple default escapings",
+                     p_escape.getEscapeDirectiveStart());
+            }
+            m_defaultEscaping = p_escape.getEscaping().getText();
+            EscapingDirective.get(m_defaultEscaping);
+        }
+
         public void caseAExtendsComponent(AExtendsComponent p_extends)
         {
             if(getTemplateUnit().hasParentPath())
@@ -655,9 +671,11 @@ public class Analyzer
         }
     }
 
+    private String m_defaultEscaping;
+
     private String getDefaultEscaping()
     {
-        return "h";
+        return m_defaultEscaping;
     }
 
     private void handleBody()

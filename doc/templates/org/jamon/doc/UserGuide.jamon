@@ -104,8 +104,8 @@ Suppose the we wanted to include some text for inclusion in an email.
 Since we are producing plain text (and not HTML) we want a different
 default escaping mechanism.  This can be specified in the template as
 follows:
-<%doc>FIXME: use <%escape #n></%doc>
     <pre class="template"><&| /org/jamon/escape/Html &><%LITERAL>
+<%escape #n>
 <%args>
   int count;
   String name => "Somebody";
@@ -114,7 +114,7 @@ follows:
     Many Greetings
     ==============
 %   for (int i = 1; i <= count; ++i) {
-    <% i #n %>. <% greeting #n %> <% name #n %>
+    <% i %>. <% greeting %> <% name %>
 %   }
 </%LITERAL></&></pre>
 It would emit
@@ -126,11 +126,14 @@ It would emit
     3. Hello Duke &amp; Co.
 </pre>
 
-<%doc>FIXME - show template escapings via #</%doc>
 The available escaping mechanisms are:
-<code>Escaping.NONE</code>, <code>Escaping.HTML</code>,
-<code>Escaping.STRICT_HTML</code>, <code>Escaping.URL</code>
-and <code>Escaping.XML</code>.
+<ul>
+  <li><code>Escaping.NONE</code> (#n)
+  <li><code>Escaping.HTML</code> (#h)
+  <li><code>Escaping.STRICT_HTML</code> (#H)
+  <li><code>Escaping.URL</code> (#u)
+  <li><code>Escaping.XML</code> (#x)
+</ul>
 
 See the <a href="Reference.html">template reference manual</a> for
 further details.

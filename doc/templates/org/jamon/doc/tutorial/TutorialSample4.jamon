@@ -70,59 +70,41 @@ Templates usually construct text in a structured language such as HTML or XML, o
       <p>
 
     <li><span class="concept">Setting the default escaping mechanism</span>
-       The default escaping rule for a template is HTML.
-       FIXME
-       <%doc>
-       This default
-       can be changed by the Java code that invokes the template by
-       calling the <code>escaping()</code> method on the template with the
-       desired escaping mode.  For example, the following code fragment
-       sets the escaping on the template <code>Foo</code> to
-       <code>Escaping.NONE</code>.
 
-        <pre class="code">
-import org.foo.templates.Foo;
-import org.jamon.TemplateManager;
-<b>import org.jamon.Escaping;</b>
-
-  ...
-       Writer writer = new OutputStreamWriter(System.out);
-       new Foo()
-         <b>.escapeWith(Escaping.NONE)</b>
-         .setName("Duke & Co.")
-         .render(writer, 3, "Hello");
-</pre>
-      </%doc>
-
-    </ol>
+       The default escaping rule for a template is HTML.  This default
+       can be changed for a particular template by using the
+       directive <code><%LITERAL><%escape #?></%LITERAL></code>.
+  </ol>
 
 
 
     <h4>Example</h4>
 
     Suppose the template
-     <a href="EscapingTemplate.jamon" class="file" type="text/plain" >
-        <code>EscapingTemplate</code>
-     </a>contains
-    <& ../_TemplateInclude; fileName => "tutorial/templates/EscapingTemplate" &>
+     <a href="EscapingTemplateA.jamon" class="file"
+        type="text/plain" ><code>EscapingTemplateA</code></a> contains
+    <& ../_TemplateInclude; fileName => "tutorial/templates/EscapingTemplateA" &>
 
 <p>
 If this template is called by the java code
-<a class="file" href="EscapingTut4.java" type="text/plain" >
-EscapingTut4.java</a>:
-<& ../_JavaInclude; fileName => "tutorial/src/EscapingTut4" &>
+<a class="file" href="EscapingTut4a.java" type="text/plain" >
+EscapingTut4a.java</a>:
+<& ../_JavaInclude; fileName => "tutorial/src/EscapingTut4a" &>
 
 Then the output of the template's <code>render</code> method will be
-<& ../_RunJava; className => "EscapingTut4" &>
-
+<& ../_RunJava; className => "EscapingTut4a" &>
 
 <p>
-If the default escaping on the template had been set to
-<code>Escaping.NONE</code>, then the output of the template would have been
+In contrast, if the template
+     <a href="EscapingTemplateB.jamon" class="file"
+        type="text/plain" ><code>EscapingTemplateB</code></a> containing
+    <& ../_TemplateInclude; fileName => "tutorial/templates/EscapingTemplateB" &>
 
-    <pre class="tty"><&| /org/jamon/escape/Html &>
-<html>
-  <body>
-    Hello Duke & Co.<br />
-  </body>
-</html></&></pre>
+<p>
+is called by the java code
+<a class="file" href="EscapingTut4b.java"
+   type="text/plain">EscapingTut4b.java</a>:
+<& ../_JavaInclude; fileName => "tutorial/src/EscapingTut4b" &>
+
+Then the output of the template's <code>render</code> method will be
+<& ../_RunJava; className => "EscapingTut4b" &>

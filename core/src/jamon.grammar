@@ -78,6 +78,7 @@ States
   parent_args,
   parent_argexp,
   escape,
+  escape_directive,
   literal,
   alias,
   farginit;
@@ -91,6 +92,11 @@ Tokens
   {args -> body} farg_end = '</%frag>' ws*;
 
   {body -> extends} extends_start = '<%extends' ws+;
+
+  {body -> escape_directive} escape_directive_start = '<%escape' ws+;
+  {escape_directive} escaping_start = hash;
+  {escape_directive} escaping = letter;
+  {escape_directive -> body} escape_directive_end = ws* gt ws*;
 
   {body -> abstract} abstract_start = '<%abstract';
   {abstract} fixed = ws+ 'fixed';
@@ -253,6 +259,7 @@ Productions
 
   component = base_component
             | {alias} aliases
+            | {escape} escape_directive_start escaping_start escaping escape_directive_end
             | {imports} imports
             | {implements} implements
             | {def} def
