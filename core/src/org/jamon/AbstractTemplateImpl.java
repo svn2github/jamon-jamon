@@ -13,10 +13,17 @@ public abstract class AbstractTemplate
         m_templateManager = p_templateManager;
     }
 
-    protected void write(String p_string)
+    protected void write(Object p_obj)
         throws IOException
     {
-        m_writer.write(p_string);
+        // FIXME: test for null. what to do?
+        m_writer.write(p_obj.toString());
+    }
+
+    protected void write(int p_int)
+        throws IOException
+    {
+        write(new Integer(p_int));
     }
 
     protected void writeHtmlEscaped(String p_string)
