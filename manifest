@@ -2,9 +2,9 @@ Main-Class: org.jamon.Version
 
 Name: org/jamon
 Specification-Title: Jamon Classes
-Specification-Version: 1.0
+Specification-Version: 1.3
 Specification-Vendor: Jay Sachs <jay@jamon.org>
 Implementation-Title: org.jamon
-Implementation-Version: 1.0  ($Name$)
+Implementation-Version: 1.3  ($Name$)
 Implementation-Vendor: Jay Sachs <jay@jamon.org>
 Sealed: true
