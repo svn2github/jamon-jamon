@@ -151,9 +151,7 @@ the documentation thus taking care of issues such as escaping.
 
   <target name="doc"
           description="Generates all the documentation"
-          depends="init" >
-    <antcall target="overview-files" />
-    <antcall target="tutorial" />
+          depends="overview-files,tutorial">
     <echo message="compiling templates"/>
     <javac destdir="${work.dir}"
            classpath="${java.lib.jamon}:${java.lib.diff}:${work.dir}"
