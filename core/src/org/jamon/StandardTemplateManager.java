@@ -20,6 +20,9 @@ public class StandardTemplateManager
 
     private String m_templateSourceDir = "testdata";
     private String m_workDir = "work";
+    private String m_javac =
+        System.getProperty("java.home") + "/../bin/javac";
+    private boolean m_includeRtJar = false;
 
     public StandardTemplateManager()
     {
@@ -35,17 +38,15 @@ public class StandardTemplateManager
         m_templateSourceDir = p_dir;
     }
 
+    public void setJavaCompiler(String p_javac)
+    {
+        m_javac = p_javac;
+    }
 
-    /*
-      1) look for .java in workDir
-      2) if not found
-           look for template in srcDir
-           if not found, exception
-           else process template in .java file
-      3) look for .class file in workDir
-      4) if not found or older than .java, compile .java
-      5) load class
-    */
+    public void setJavaCompilerNeedsRtJar(boolean p_includeRtJar)
+    {
+        m_includeRtJar = p_includeRtJar;
+    }
 
     private long createJavaFile(String p_path)
         throws IOException,
@@ -174,28 +175,44 @@ public class StandardTemplateManager
     private Class loadAndResolveClass(String p_path)
         throws ClassNotFoundException
     {
+        // FIXME: need to check that it still implements the interface
         return m_loader.load(getClassName(p_path),true);
+    }
+
+    private String getClassPath()
+    {
+        String cp =
+            m_workDir + ":" + System.getProperty("java.class.path");
+        if (m_includeRtJar)
+        {
+            cp += System.getProperty("java.home") + "/lib/rt.jar";
+        }
+        return cp;
     }
 
     private void compile(String p_path)
         throws IOException
     {
         // FIXME
-        String cmdline = "/usr/local/java/bin/javac -classpath " + m_workDir + ":" + System.getProperty("java.class.path") + " " + getJavaFileName(p_path);
-        System.err.println("Compiling " + p_path + " with " + cmdline);
+        String [] cmdline = new String [] { m_javac,
+                                            "-classpath",
+                                            getClassPath(),
+                                            getJavaFileName(p_path) };
+
         Process p = Runtime.getRuntime().exec(cmdline);
+        int rv = -1;
         while (true)
         {
             try
             {
-                p.waitFor();
+                rv = p.waitFor();
                 break;
             }
             catch (InterruptedException e)
             {
             }
         }
-
+        System.err.println("compile done " + rv);
     }
 
     private Class getClass(String p_path)
