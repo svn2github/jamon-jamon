@@ -24,13 +24,15 @@
 </%farg>\
 <%args>
   String action;
-  Input submit;
+  Input submit => null;
   org.jamon.render.html.CgiParameters hiddenParams => null;
   boolean post => false;
 </%args>\
 \
 <form method='<% post ? "POST" : "GET" %>' action='<% action %>'>
+% if( submit != null ) {
   <& HiddenInput; input => submit &>
+% }
 % if( hiddenParams != null ) {
 %   Input[] inputs = hiddenParams.getInputs();
 %   for( int i = 0; i < inputs.length; ++i ) {
