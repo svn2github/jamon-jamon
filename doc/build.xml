@@ -20,6 +20,13 @@ the documentation thus taking care of issues such as escaping.
   <property name="java.lib.diff" value="/usr/local/share/java/diff.jar"/>
   <property name="invoker.class" value="org.jamon.InvokerTool" />
 
+  <property name="web.inf.dir" value="webapp/WEB-INF"/>
+  <property name="build.classes.dir" value="${web.inf.dir}/classes"/>
+  <property name="src.dir" value="src"/>
+
+  <property name="tomcat.home" value="env.TOMCAT_HOME"/>
+  <property name="tomcat.common.lib" value="${tomcat.home}/common/lib"/>
+
   <property file="../core/src/org/jamon/Resources.properties" />
   <property name="tarfilebase" value="jamon-${org.jamon.version}" />
   <property name="tarball.src" value="${tarfilebase}-src.tgz" />
@@ -255,6 +262,34 @@ the documentation thus taking care of issues such as escaping.
 
   <target name="spotless" depends="clean">
     <delete file=".cvsignore"/>
+  </target>
+
+  <target name="compile"
+          description="Compile the servlet">
+    <mkdir dir="${build.classes.dir}"/>
+    <javac destdir="${build.classes.dir}"
+           debug="true"
+           deprecation="true"
+           classpath="${java.lib.jamon}:${tomcat.common.lib}/servlet.jar"
+           srcdir="${src.dir}"
+           failonerror="true"/>
+  </target>
+
+  <target name="servlet" depends="compile" description="Run the servlet">
+    <java classname="org.apache.catalina.startup.Catalina"
+          failonerror="true"
+          fork="yes"
+          dir=".">
+      <classpath>
+        <pathelement location="${java.lib.jamon}"/>
+        <pathelement location="${tomcat.home}/server/lib/servlets-default.jar"/>
+        <fileset dir="${tomcat.common.lib}" includes="*.jar" />
+        <fileset dir="${tomcat.home}/server/lib" includes="*.jar" />
+        <fileset dir="${tomcat.home}/bin" includes="*.jar" />
+      </classpath>
+      <sysproperty key="catalina.home" value="."/>
+      <arg line="-config server.xml start" />
+    </java>
   </target>
 
 </project>
