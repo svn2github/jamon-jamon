@@ -27,6 +27,11 @@ public abstract class AbstractTemplate
         return m_templateManager;
     }
 
+    protected Writer getWriter()
+    {
+        return m_writer;
+    }
+
     protected void writeHtmlEscaped(String p_string)
         throws IOException
     {
