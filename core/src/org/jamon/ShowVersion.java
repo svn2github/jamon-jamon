@@ -22,7 +22,7 @@ package org.jamon;
 
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
-import java.text.DecimalFormat;
+import java.util.StringTokenizer;
 
 /**
  * Class used during release for obtaining version information.
@@ -37,34 +37,19 @@ public class ShowVersion
                             + " [ " + CMD_SHOW
                             + " | " + CMD_NEXT_MINOR
                             + " | " + CMD_NEXT_MAJOR
-                            + " | " + CMD_MAJOR
-                            + " | " + CMD_MINOR
+                            + " | " + CMD_NEXT_SUB
+                            + " | " + CMD_CURRENT
                             + " ]" );
         System.exit(1);
     }
 
     private static final String CMD_SHOW = "show";
+    private static final String CMD_CURRENT = "current";
     private static final String CMD_NEXT_MAJOR = "nextmajor";
     private static final String CMD_NEXT_MINOR = "nextminor";
-    private static final String CMD_MINOR = "minor";
-    private static final String CMD_MAJOR = "major";
+    private static final String CMD_NEXT_SUB = "nextsub";
+    private static final String CMD_CVSTAG = "cvstag";
 
-    private static final DecimalFormat MINOR_FORMAT =
-        new DecimalFormat("00");
-
-    private static final DecimalFormat MAJOR_FORMAT =
-        new DecimalFormat("#");
-
-    /**
-     * Show version info.
-     * <ul>
-     *   <li><b>current</b> display current version info</li>
-     *   <li><b>next</b> display next version number</li>
-     *   <li><b>major</b> display next major version number</li>
-     *   <li><b>show</b> display full current version information</li>
-     * </ul>
-     * Default is <b>show</b>.
-     */
     public static void main(String [] args)
     {
         try
@@ -77,40 +62,41 @@ public class ShowVersion
             ResourceBundle resources =
                 ResourceBundle.getBundle("org.jamon.Resources");
 
-            int major = Integer.parseInt(resources.getString
-                                         ("org.jamon.version.major"));
-            int minor = Integer.parseInt(resources.getString
-                                         ("org.jamon.version.minor"));
+            Version current =
+                new Version(resources.getString("org.jamon.version"));
+
             if ( cmd.equals(CMD_SHOW) )
             {
                 boolean isDev =
                     ! "true".equalsIgnoreCase(resources.getString
                                               ("org.jamon.version.release"));
                 System.out.println( "Jamon version "
-                                    + MAJOR_FORMAT.format(major)
-                                    + "."
-                                    + MINOR_FORMAT.format(minor)
+                                    + current
                                     + ( isDev ? "dev" : "")
                                     + " ("
                                     + resources.getString
                                         ("org.jamon.version.cvs")
                                     + ")" );
             }
-            else if ( cmd.equals(CMD_MAJOR) )
+            else if (cmd.equals(CMD_CVSTAG))
             {
-                System.out.println( MAJOR_FORMAT.format(major) );
+                System.out.println(current.asCvsTag());
             }
-            else if ( cmd.equals(CMD_MINOR) )
+            else if (cmd.equals(CMD_CURRENT))
             {
-                System.out.println( MINOR_FORMAT.format(minor) );
+                System.out.println(current);
             }
-            else if ( cmd.equals(CMD_NEXT_MAJOR) )
+            else if (cmd.equals(CMD_NEXT_MAJOR))
             {
-                System.out.println( MAJOR_FORMAT.format(major+1) );
+                System.out.println(current.bumpmajor());
             }
             else if ( cmd.equals(CMD_NEXT_MINOR) )
             {
-                System.out.println( MINOR_FORMAT.format(minor+1) );
+                System.out.println(current.bumpminor());
+            }
+            else if ( cmd.equals(CMD_NEXT_SUB) )
+            {
+                System.out.println(current.bumpsub());
             }
             else
             {
@@ -124,10 +110,65 @@ public class ShowVersion
         }
     }
 
-    /**
-     * This class is not instantiable.
-     */
+    private static class Version
+    {
+        public Version(String p_current)
+        {
+            StringTokenizer tokenizer = new StringTokenizer(p_current,".");
+            m_major = Integer.parseInt(tokenizer.nextToken());
+            m_minor = Integer.parseInt(tokenizer.nextToken());
+            m_sub = tokenizer.hasMoreTokens()
+                ? Integer.parseInt(tokenizer.nextToken())
+                : 0;
+        }
+
+        public Version(int p_major, int p_minor, int p_sub)
+        {
+            m_major = p_major;
+            m_minor = p_minor;
+            m_sub = p_sub;
+        }
+
+        private final int m_major;
+        private final int m_minor;
+        private final int m_sub;
+
+        public Version bumpmajor()
+        {
+            return new Version(m_major+1, 0, 0);
+        }
+
+        public Version bumpminor()
+        {
+            return new Version(m_major, m_minor+1, 0);
+        }
+
+        public Version bumpsub()
+        {
+            return new Version(m_major, m_minor, m_sub+1);
+        }
+
+        public String toString()
+        {
+            return makeString(".");
+        }
+
+        private String makeString(String p_delim)
+        {
+            return m_major
+                + p_delim
+                + m_minor
+                + (m_sub == 0 ? "" : (p_delim + m_sub));
+        }
+
+        public String asCvsTag()
+        {
+            return makeString("_");
+        }
+    }
+
     private ShowVersion()
     {
+        // not instantiable
     }
 }

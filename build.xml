@@ -15,7 +15,7 @@
   <property name="stage.dir" value="site" />
   <property file="core/src/org/jamon/Resources.properties" />
   <property name="tarfilebase"
-            value="jamon-${org.jamon.version.major}.${org.jamon.version.minor}" />
+            value="jamon-${org.jamon.version}" />
   <property name="tarball.src" value="${tarfilebase}-src.tgz" />
   <property name="tarball.bin" value="${tarfilebase}.tgz" />
   <property name="zip.src" value="${tarfilebase}-src.zip" />
@@ -87,46 +87,65 @@
     <ant dir="anttask" target="clean"/>
   </target>
 
-  <target name="release" depends="core">
+  <target name="major-release">
     <exec executable="java"
-          outputproperty="currentversion">
+          outputproperty="jamon.version.next">
       <arg value="-cp" />
       <arg value="${core.classes.dir}" />
       <arg value="org.jamon.ShowVersion" />
-      <arg value="minor" />
+      <arg value="nextmajor" />
     </exec>
+    <antcall target=" release" />
+  </target>
+
+  <target name="minor-release">
     <exec executable="java"
-          outputproperty="majorversion">
-      <arg value="-cp" />
-      <arg value="${core.classes.dir}" />
-      <arg value="org.jamon.ShowVersion" />
-      <arg value="major" />
-    </exec>
-    <exec executable="java"
-          outputproperty="nextversion">
+          outputproperty="jamon.version.next">
       <arg value="-cp" />
       <arg value="${core.classes.dir}" />
       <arg value="org.jamon.ShowVersion" />
       <arg value="nextminor" />
     </exec>
-    <echo message="Current version: ${majorversion}.${currentversion}" />
-    <echo message="Next version: ${majorversion}.${nextversion}" />
+    <antcall target=" release" />
+  </target>
+
+  <target name="bugfix-release">
+    <exec executable="java"
+          outputproperty="jamon.version.next">
+      <arg value="-cp" />
+      <arg value="${core.classes.dir}" />
+      <arg value="org.jamon.ShowVersion" />
+      <arg value="nextsub" />
+    </exec>
+    <antcall target=" release" />
+  </target>
+
+  <target name=" release" depends="core" if="{jamon.version.next}" >
+    <echo message="Current version: ${org.jamon.version}" />
+    <echo message="Next version: ${jamon.version.next}" />
     <input message="Press enter to continue ..." />
     <property name="file" value="core/src/org/jamon/Resources.properties" />
     <cvs command="edit ${file}"/>
     <replace file="${file}"
-             token="minor=${currentversion}"
-             value="minor=${nextversion}" />
+             token="version=${org.jamon.version}"
+             value="version=${jamon.version.next}" />
     <replace file="${file}"
              token="release=false"
              value="release=true" />
-    <cvs command="commit -m 'minor version bump to ${nextversion}' ${file}" />
-    <cvs command="tag RELEASE-${majorversion}_${nextversion}" />
+    <cvs command="commit -m 'version bump to ${jamon.version.next}' ${file}" />
+    <exec executable="java"
+          outputproperty="jamon.version.cvs">
+      <arg value="-cp" />
+      <arg value="${core.classes.dir}" />
+      <arg value="org.jamon.ShowVersion" />
+      <arg value="cvstag" />
+    </exec>
+    <cvs command="tag RELEASE-${jamon.version.cvs}" />
     <cvs command="edit ${file}"/>
     <replace file="${file}"
              token="release=true"
              value="release=false" />
-    <cvs command="commit -m 'dev version of ${currentversion}' ${file}" />
+    <cvs command="commit -m 'dev version of ${jamon.version.next}' ${file}" />
   </target>
 
   <target name="javadoc">
