@@ -14,19 +14,26 @@
 <%def tutorialNavBar>
   <div class="tutorialNav">
     <span class="tutorialNavNeighbor">
-      <&| logic//If; condition => tutorialStage() > 1 &>
-        <a href="TutorialSample<% tutorialStage() - 1 %>.html">Previous</a>
-      </&>
+      <&| stageLink; index => tutorialStage() - 1 &>Previous</&>
     </span>
     <span class="tutorialNavContents">
       <a href="TutorialPath.html">Tutorial contents</a>
     </span>
     <span class="tutorialNavNeighbor">
-      <&| logic//If; condition => tutorialStage() < 10 &>
-        <a href="TutorialSample<% tutorialStage() + 1 %>.html">Next</a>
-      </&>
+      <&| stageLink; index => tutorialStage() + 1 &>Next</&>
     </span>
   </div>
+</%def>
+
+<%def stageLink>
+  <%frag name/>
+  <%args>
+    int index;
+  </%args>
+  <&|| logic//IfElse; condition => index >= 1 && index <= 10 &>
+    <|Then><a href="TutorialSample<% index %>.html"><& name &></a></|>
+    <|Else>&nbsp;</|>
+  </&>
 </%def>
 
 <%class>
