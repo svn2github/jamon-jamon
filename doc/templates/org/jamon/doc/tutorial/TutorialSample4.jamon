@@ -89,10 +89,8 @@ import org.jamon.TemplateManager;
 <b>import org.jamon.Escaping;</b>
 
   ...
-       StandardTemplateManager templateManager =
-         new StandardTemplateManager(...);
        Writer writer = new OutputStreamWriter(System.out);
-       new Foo(templateManager)
+       new Foo()
          <b>.escapeWith(Escaping.NONE)</b>
          .setName("Duke & Co.")
          .render(writer, 3, "Hello");

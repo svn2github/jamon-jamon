@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import org.jamon.StandardTemplateManager;
-import org.jamon.TemplateManagerSource;
 
 public class Holiday {
   private Date date;
@@ -27,9 +25,6 @@ public class Holiday {
     holidays.add(new Holiday("July 4", format.parse("2003-7-4")));
     holidays.add(new Holiday("Thanksgiving", format.parse("2003-11-17")));
     holidays.add(new Holiday("Christmas", format.parse("2003-12-25")));
-    // set the template manager once for all time ...
-    TemplateManagerSource.setTemplateManager(new StandardTemplateManager());
-    // now create templates without specifying a template manager
     new FragmentExampleTemplate()
       .render(new OutputStreamWriter(System.out), holidays);
   }

@@ -1,6 +1,4 @@
 import java.io.OutputStreamWriter;
-import org.jamon.StandardTemplateManager;
-import org.jamon.TemplateManagerSource;
 
 public class User2
 {
@@ -19,8 +17,6 @@ public class User2
     User2[] users = new User2[2];
     users[0] = new User2("John Public", false);
     users[1] = new User2("John Rockerfeller", true);
-
-    TemplateManagerSource.setTemplateManager(new StandardTemplateManager());
 
     for (int i=0; i<users.length; i++) {
       // call render() on the parent template and provide arguments
