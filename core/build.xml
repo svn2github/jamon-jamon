@@ -54,6 +54,7 @@
       <mkdir dir="${classes.dir}"/>
       <javac destdir="${classes.dir}"
              debug="true"
+             depend="true"
              deprecation="true">
         <src path="src"/>
         <src path="${build.src.dir}"/>
@@ -108,7 +109,7 @@
     </javac>
   </target>
 
-  <target name="test1" depends="testbuild" 
+  <target name="test1" depends="testbuild"
           description="Tests the compiler by rendering a simple template">
     <mkdir dir="${work.dir}" />
     <java fork="true"
