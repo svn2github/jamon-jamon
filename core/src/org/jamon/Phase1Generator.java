@@ -31,7 +31,23 @@ public class Phase1Generator extends BaseGenerator
         generateFactoryClass();
         generateRender();
         generateOptionalArgs();
+        generateRequiredArgsField();
         generateEpilogue();
+    }
+
+    private void generateRequiredArgsField()
+        throws IOException
+    {
+        println();
+        println("  public static final String[] RENDER_ARGS = {");
+        for (Iterator i = getRequiredArgs(); i.hasNext(); /* */)
+        {
+            print("    \"");
+            print(i.next());
+            print("\"");
+            println(i.hasNext() ? "," : "");
+        }
+        println("  };");
     }
 
     private void generateFactoryClass()
