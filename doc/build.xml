@@ -205,7 +205,8 @@ the documentation thus taking care of issues such as escaping.
     <loadfile property="template.output" srcFile="${temp.file}" />
     <delete file="${temp.file}" />
     <echo message="${tutorial.page}"/>
-    <invoker classpath="${java.lib.jamon}"
+    <dirname property="this.dir" file="build.xml" />
+    <invoker classpath="${java.lib.jamon}:${this.dir}"
              workDir="${work.dir}"
              compiler="${org.jamon.invoker.compiler}"
              sourceDir="templates"
