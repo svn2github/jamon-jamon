@@ -13,26 +13,22 @@ public final class HelloServlet
     extends HttpServlet {
 
     public void init()
-        throws ServletException
-    {
+        throws ServletException {
         StandardTemplateManager.Data data = new StandardTemplateManager.Data();
         data.setSourceDir("templates");
         data.setWorkDir("build/work");
         StandardTemplateManager manager;
-        try
-        {
+        try {
             manager =new StandardTemplateManager(data);
         }
-        catch (IOException e)
-        {
+        catch (IOException e) {
             throw new ServletException(e);
         }
         helloTemplate = new HelloTemplate(manager);
     }
 
     public void doGet(HttpServletRequest request, HttpServletResponse response)
-	throws IOException
-    {
+	throws IOException {
         response.setContentType("text/html");
         helloTemplate.writeTo(response.getWriter());
         HelloFormFields formFields = new HelloFormFields(request.getParameterMap());
