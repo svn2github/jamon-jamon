@@ -108,7 +108,8 @@
     </javac>
   </target>
 
-  <target name="test1" depends="testbuild">
+  <target name="test1" depends="testbuild" 
+          description="Tests the compiler by rendering a simple template">
     <mkdir dir="${work.dir}" />
     <java fork="true"
           classpath="${classes.dir}:${java.lib.sablecc}:${test.classes.dir}"
