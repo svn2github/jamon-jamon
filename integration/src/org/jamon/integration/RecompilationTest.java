@@ -34,17 +34,20 @@ public class RecompilationTest
         new Recompilation(getRecompilingTemplateManager()).render(getWriter());
         checkOutput("This is the template");
 
-        FileWriter w =
-            new FileWriter(new File(SOURCE_DIR,
-                                    StringUtils.classNameToFilePath
-                                        (Recompilation.class.getName())
-                                    + ".jamon"));
-
+        File template = new File(
+            SOURCE_DIR,
+            StringUtils.classNameToFilePath(Recompilation.class.getName())
+            + ".jamon");
+        FileWriter w = new FileWriter(template);
         final String STRING = "This is changed\n";
-
         w.write(STRING);
         w.close();
+        // guarantee that the template is "newer" than the impl after
+        // truncation of milliseconds
+        template.setLastModified(System.currentTimeMillis() + 1000);
+
         resetWriter();
+
         new Recompilation(getRecompilingTemplateManager()).render(getWriter());
         checkOutput(STRING);
     }
