@@ -16,11 +16,8 @@ template.
 (You should be able to distinguish lines that are <span class="changed">new or
 changed</span><span class="deleted"> or deleted</span>).
 
-<pre class="code"><&|| _showDiff &>
-  <|oldContent><& ../_ReadFile;
-                  fileName => "/sample/servlet/src/HelloServlet.java" &></|>
-  <|newContent><& servletSnippet &></|>
-</&></pre>
+<& _showSourceDiff; oldName => "HelloServlet";
+                    newName => "HelloServletSnippet" &>
 
 (note that Java code identical to the previous example has been
 omitted.)  The above code will result in "Hello World!" being printed
@@ -35,10 +32,8 @@ displayed.  We can achieve that with a template such as:
 
 The corresponding servlet would look like:
 
-<pre class="code"><&|| _showDiff &>
-  <|oldContent><& servletSnippet &></|>
-  <|newContent><& servletSnippet2 &></|>
-</&></pre>
+<& _showSourceDiff; oldName => "HelloServletSnippet";
+                    newName => "HelloServletSnippet2" &>
 
 However, there is something unsatisfactory about this:
 
@@ -58,10 +53,8 @@ the smell by doing this:
 
 and
 
-<pre class="code"><&|| _showDiff &>
-  <|oldContent><& servletSnippet2 &></|>
-  <|newContent><& servletSnippet3 &></|>
-</&></pre>
+<& _showSourceDiff; oldName => "HelloServletSnippet2";
+                    newName => "HelloServletSnippet3" &>
 
 The next problem to address is the fact that no validation is
 performed on the data coming from the web.  For example a user may
@@ -70,10 +63,8 @@ cause the <span class="code">doGet</span> method to throw a <span
 class="code">NumberFormatException</span>.  Thus we need to catch this
 as follows (unchanged code is omitted).  In the servlet we need:
 
-<pre class="code"><&|| _showDiff &>
-  <|oldContent><& servletSnippet3 &></|>
-  <|newContent><& servletSnippet4 &></|>
-</&></pre>
+<& _showSourceDiff; oldName => "HelloServletSnippet3";
+                    newName => "HelloServletSnippet4" &>
 
 and the template needs an additional error parameter:
 
@@ -103,12 +94,19 @@ The next section presents solutions to these problems.
   </%args>
 
 <pre class="template">\
-<&|| _showDiff &>
-  <|oldContent><& ../_ReadFile;
-                  fileName => "/sample/servlet/templates/"
-                  + oldName + ".jamon" &></|>
-  <|newContent><& ../_ReadFile;
-                  fileName => "/sample/servlet/templates/"
-                  + newName + ".jamon" &></|>
-</&></pre>
+<& _showDiff; oldName => "/sample/servlet/templates/" + oldName + ".jamon";
+              newName => "/sample/servlet/templates/" + newName + ".jamon" &>\
+</pre>
+</%def>
+
+<%def _showSourceDiff>
+  <%args>
+    String oldName;
+    String newName;
+  </%args>
+
+<pre class="template">\
+<& _showDiff; oldName => "/sample/servlet/src/" + oldName + ".java";
+              newName => "/sample/servlet/src/" + newName + ".java" &>\
+</pre>
 </%def>

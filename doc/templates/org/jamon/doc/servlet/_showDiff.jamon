@@ -1,8 +1,11 @@
-<%frag oldContent/>
-<%frag newContent/>
+<%args>
+  String oldName;
+  String newName;
+</%args>
+
 <&|| /org/jamon/doc/util/HighlightChanges &>
-  <|oldContent><& oldContent &></|>
-  <|newContent><& newContent &></|>
+  <|oldContent><& ../_ReadFile; fileName => oldName &></|>
+  <|newContent><& ../_ReadFile; fileName => newName &></|>
   <|insertedRenderer><%args>
       Object text;
     </%args><span class='changed'><% text %></span></|>
