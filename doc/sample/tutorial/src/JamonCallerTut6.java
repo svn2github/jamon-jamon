@@ -8,7 +8,7 @@ public class JamonCallerTut6 {
        String[] names = new String[] {
         "John Public", "Mary Private", "Lee Protected"};
        String[] phoneNumbers = new String[] {
-        "7750324", "4135549232", "4135551212" };
+        "5550324", "4135559232", "4135551212" };
        TemplateManagerSource
            .setTemplateManager(new StandardTemplateManager());
        new JamonCallerTemplate()
