@@ -13,7 +13,11 @@
   <property name="jarfile" value="jamon.jar" />
   <property name="core.classes.dir" value="core/build/classes" />
   <property name="stage.dir" value="stagesite" />
-
+  <property name="doc.zip" value="jamondoc.zip" />
+  <property name="tarfile.src" value="jamon-src.tar" />
+  <property name="tarball.src" value="jamon-src.tgz" />
+  <property name="tarfile.bin" value="jamon-bin.tar" />
+  <property name="tarball.bin" value="jamon-bin.tgz" />
 
   <target name="test"
           depends="jar"
@@ -51,7 +55,7 @@
 </echo>
   </target>
 
-  <target name="spotless">
+  <target name="spotless" depends="localclean">
     <ant dir="core" target="spotless"/>
     <ant dir="integration" target="spotless"/>
     <ant dir="anttask" target="spotless"/>
@@ -60,7 +64,16 @@
     <delete file=".cvsignore" />
   </target>
 
-  <target name="clean">
+  <target name="localclean">
+    <delete file="${doc.zip}" />
+    <delete file="${tarfile.src}" />
+    <delete file="${tarball.src}" />
+    <delete file="${tarfile.bin}" />
+    <delete file="${tarball.bin}" />
+    <delete dir="${stage.dir}" />
+  </target>
+
+  <target name="clean" depends="localclean">
     <ant dir="core" target="clean"/>
     <ant dir="integration" target="clean"/>
     <ant dir="stdlib" target="clean"/>
@@ -111,12 +124,6 @@
   <target name="javadoc">
     <ant dir="core" target="javadoc"/>
   </target>
-
-  <property name="doc.zip" value="jamondoc.zip" />
-  <property name="tarfile.src" value="jamon-src.tar" />
-  <property name="tarball.src" value="jamon-src.tgz" />
-  <property name="tarfile.bin" value="jamon-bin.tar" />
-  <property name="tarball.bin" value="jamon-bin.tgz" />
 
   <target name="doczip" depends="javadoc">
     <zip zipfile="${doc.zip}">
