@@ -16,13 +16,15 @@
   Reserved.
 
   Contributor(s):
-</%doc>\
+</%doc>
+
 <%args>
   String path;
   org.jamon.render.html.CgiParameters parameters;
-</%args>\
-<%frag content>
-</%frag>\
+</%args>
+
+<%frag content />
+
 <a href='<% path %>\
 % org.jamon.render.html.Input[] inputs = parameters.getInputs();
 % for( int i = 0; i < inputs.length; ++i )

@@ -16,14 +16,16 @@
   Reserved.
 
   Contributor(s):
-</%doc>\
-<%frag content>
-</%frag>\
+</%doc>
+
+<%frag content />
+
 <%args>
   org.jamon.render.html.Input input;
   int cols => 0;
   int rows => 0;
 </%args>
+
 <textarea name="<% input.getName() #H %>"
 % if (cols > 0) {
        cols="<% cols %>"

@@ -16,10 +16,12 @@
   Reserved.
 
   Contributor(s):
-</%doc>\
+</%doc>
+
 <%args>
   org.jamon.render.html.Input input;
-</%args>\
+</%args>
+
 <input type='hidden'
        name='<% input.getName() #H %>'
        value='<% input.getValue() #H %>' />

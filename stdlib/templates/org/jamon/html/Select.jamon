@@ -16,14 +16,17 @@
   Reserved.
 
   Contributor(s):
-</%doc>\
+</%doc>
+
 <%frag renderOption>
   Object renderable;
-</%frag>\
+</%frag>
+
 <%args>
   org.jamon.render.html.Select input;
   boolean multiple => false;
-</%args>\
+</%args>
+
 <select name="<% input.getName() #H %>" \
 % if (multiple) {
     multiple \

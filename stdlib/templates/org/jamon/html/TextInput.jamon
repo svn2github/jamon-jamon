@@ -16,12 +16,14 @@
   Reserved.
 
   Contributor(s):
-</%doc>\
+</%doc>
+
 <%args>
   org.jamon.render.html.TextInput input;
   String type => "text";
   int size => -1;
-</%args>\
+</%args>
+
 <input type='<% type #H %>'
        name='<% input.getName() #H %>'
        value='<% input.getValue() #H %>'
