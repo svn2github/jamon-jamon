@@ -84,7 +84,7 @@ public class EscapingsTest
         escapings.render();
         checkOutput("Escaping is " + p_escaping,
                     escapedExpected(p_escaping == null
-                                    ? Escaping.NONE
+                                    ? Escaping.DEFAULT
                                     : p_escaping));
     }
 

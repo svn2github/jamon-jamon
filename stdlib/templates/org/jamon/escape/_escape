@@ -21,7 +21,7 @@
 <& content &>\
 <%java>
   writeTo(oldWriter);
-  escaping(compose ? escaping : Escaping.NONE);
+  escaping(escaping);
 </%java>\
 <% buffer.toString() %>\
 <%java>

@@ -470,7 +470,7 @@ public class StandardTemplateManager
 
     private boolean m_dynamicRecompilation = true;
     private TemplateDescriber m_describer;
-    private Escaping m_escaping = Escaping.NONE;
+    private Escaping m_escaping = Escaping.DEFAULT;
     private String m_workDir;
     private String m_templateSourceDir;
     private String m_javac;

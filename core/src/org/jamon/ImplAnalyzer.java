@@ -277,7 +277,7 @@ public class ImplAnalyzer extends BaseAnalyzer
                          ("\""
                           + javaEscape(newlineEscape(m_current.toString()))
                           + "\"",
-                          EscapingDirective.DEFAULT));
+                          EscapingDirective.NONE));
             m_current = new StringBuffer();
         }
     }
