@@ -2,4 +2,4 @@
 java.lib.junit=/usr/local/share/java/junit.jar
 
 # use this to run integration tests against built classes instead of jar
-java.lib.jamon=../core/build/classes:../anttask/build/classes
+java.lib.jamon=../core/build/classes:../anttask/build/classes:../stdlib/build/classes
