@@ -55,6 +55,7 @@ Helpers
 
 States
   body,
+  doc,
   bad,
   def,
   method,
@@ -210,8 +211,8 @@ Tokens
   {body -> override} override_start = '<%override' hs+;
   {body} override_end = '</%override>' ws*;
 
-  {body} doc =
-       '<%doc>' ([all - '<']
+  {body -> doc} doc_start = '<%doc>';
+  {doc -> body} doc_body = ([all - '<']
               | '<' [all-slash]
               | '</' [all-'%']
               | '</%' [all-'d']
@@ -222,12 +223,12 @@ Tokens
   {body -> alias} alias_start = '<%aliases>';
   {alias -> body} alias_end = '</%aliases>' ws*;
 
-  {body -> bad} bad_token = '<%' [all - ws];
-  {bad -> body} rest_of_token = [all - ws]+;
+  {body -> bad} bad_token = '<%' [[all - ws] - gt];
+  {bad -> body} rest_of_token = [all - ws]+ gt;
 
 Ignored Tokens
 
-  white_space,doc,ignorable_newline;
+  white_space,ignorable_newline;
 
 Productions
 
@@ -236,6 +237,7 @@ Productions
   base_component =
               {body} text
             | {bad} bad_token rest_of_token?
+            | {doc} doc_start doc_body
             | {newline} newline
             | {percent} percent
             | {literal} litstart literal_text litend
