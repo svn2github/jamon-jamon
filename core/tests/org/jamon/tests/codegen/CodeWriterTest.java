@@ -98,6 +98,16 @@ public class CodeWriterTest
         catch(IllegalStateException e) {}
     }
 
+    public void testPrintArgOutsideOfList()
+    {
+        try
+        {
+            m_codeWriter.printArg("foo");
+            fail("no exception thrown");
+        }
+        catch(IllegalStateException e) {}
+    }
+
     public void testNoArgList()
     {
         m_codeWriter.openList();

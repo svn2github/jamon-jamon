@@ -119,6 +119,11 @@ public class CodeWriter
 
     public void printArg(Object p_arg)
     {
+        if(! m_inList)
+        {
+            throw new IllegalStateException(
+                "Attempt to print arg outside of list");
+        }
         if(m_argAlreadyPrinted)
         {
             print(", ");
