@@ -155,9 +155,6 @@ public class Invoker
         {
             Constructor con = m_templateClass
                 .getConstructor(new Class[] { TemplateManager.class });
-            m_writeToMethod =
-                m_templateClass.getMethod("writeTo",
-                                          new Class [] { Writer.class });
             Method[] methods = m_templateClass.getMethods();
             Method renderMethod = null;
             for (int i = 0; i < methods.length; ++i)
@@ -195,7 +192,6 @@ public class Invoker
     {
         try
         {
-            m_writeToMethod.invoke(m_template, new Object[] { p_writer } );
             Field required = m_templateClass.getField("REQUIRED_ARG_NAMES");
             Field optional = m_templateClass.getField("OPTIONAL_ARG_NAMES");
             String[] requiredArgNames = (String[]) required.get(null);
@@ -223,13 +219,15 @@ public class Invoker
                 }
             }
 
-            Object[] actuals = new Object[requiredArgNames.length];
+            Object[] actuals = new Object[1 + requiredArgNames.length];
+            actuals[0] = p_writer;
+
             Class[] paramTypes = m_renderMethod.getParameterTypes();
 
             for (int i = 0; i < requiredArgNames.length; ++i)
             {
-                actuals[i] =
-                    parse(paramTypes[i],
+                actuals[i + 1] =
+                    parse(paramTypes[i + 1],
                           (String) p_argMap.get(requiredArgNames[i]));
             }
             for (int i = 0; i < optionalArgNames.length; ++i)
@@ -274,7 +272,6 @@ public class Invoker
     private final AbstractTemplateProxy m_template;
     private final Method m_renderMethod;
     private final ObjectParser m_objectParser;
-    private final Method m_writeToMethod;
 
     private Object parse(Class p_type, String p_value)
         throws TemplateArgumentException

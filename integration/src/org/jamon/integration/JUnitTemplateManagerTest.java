@@ -54,7 +54,6 @@ public class JUnitTemplateManagerTest
         m_template = new JUnitTemplate(m_manager);
         m_writer = new StringWriter();
         m_template
-            .writeTo(m_writer)
             .autoFlush(false)
             .escapeWith(Escaping.NONE);
     }
@@ -71,7 +70,7 @@ public class JUnitTemplateManagerTest
         throws Exception
     {
         prepareTemplate(null);
-        m_template.render(true,"hello");
+        m_template.render(m_writer, true,"hello");
         checkSuccess();
     }
 
@@ -81,7 +80,7 @@ public class JUnitTemplateManagerTest
         prepareTemplate(new Integer(4));
         m_template
             .setI(4)
-            .render(true,"hello");
+            .render(m_writer, true,"hello");
         checkSuccess();
     }
 
@@ -91,7 +90,7 @@ public class JUnitTemplateManagerTest
         prepareTemplate(new Integer(4));
         try
         {
-            m_template.render(true,"hello");
+            m_template.render(m_writer, true,"hello");
             throw new Exception("all optional arguments not set not caught");
         }
         catch( AssertionFailedError e )
@@ -107,7 +106,7 @@ public class JUnitTemplateManagerTest
         prepareTemplate(null);
         try
         {
-            m_template.setI(3).render(true, "hello");
+            m_template.setI(3).render(m_writer, true, "hello");
             throw new Exception("unexpected optional argument i not caught");
         }
         catch( AssertionFailedError e )
@@ -123,7 +122,7 @@ public class JUnitTemplateManagerTest
         prepareTemplate(null);
         try
         {
-            m_template.render(false,"hello");
+            m_template.render(m_writer, false,"hello");
             throw new Exception("mismatch required argument b not caught");
         }
         catch( AssertionFailedError e )
@@ -140,7 +139,7 @@ public class JUnitTemplateManagerTest
         prepareTemplate(new Integer(4));
         try
         {
-            m_template.setI(3).render(true,"hello");
+            m_template.setI(3).render(m_writer, true,"hello");
             throw new Exception("mismatch optional argument i not caught");
         }
         catch( AssertionFailedError e )

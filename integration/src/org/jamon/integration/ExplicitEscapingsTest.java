@@ -32,10 +32,7 @@ public class ExplicitEscapingsTest
     public void testIt()
         throws Exception
     {
-        ExplicitEscapings escapings =
-            new ExplicitEscapings(getTemplateManager())
-            .writeTo(getWriter());
-        escapings.render();
+        new ExplicitEscapings(getTemplateManager()).render(getWriter());
         checkOutput("HTML:\nit's \"quoted\" &amp; &lt;b&gt;bold&lt;/b&gt;\n\n"
                     + "XML:\nit&apos;s &quot;quoted&quot; &amp; &lt;b&gt;bold&lt;/b&gt;\n\n"
                     + "URL:\nit%27s+%22quoted%22+%26+%3Cb%3Ebold%3C%2Fb%3E%0A\n"

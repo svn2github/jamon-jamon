@@ -33,9 +33,7 @@ public class SingleQuoteTest
     public void testExercise()
         throws Exception
     {
-        new SingleQuotes(getTemplateManager())
-            .writeTo(getWriter())
-            .render();
+        new SingleQuotes(getTemplateManager()).render(getWriter());
     }
 
 }

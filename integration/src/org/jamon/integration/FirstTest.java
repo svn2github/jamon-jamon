@@ -32,9 +32,8 @@ public class FirstTest
         throws Exception
     {
         new TestTemplate(getTemplateManager())
-            .writeTo(getWriter())
             .setX(57)
-            .render(new BigDecimal("34.5324"));
+            .render(getWriter(), new BigDecimal("34.5324"));
 
         checkOutputContains("An external template with a "
                             + "parameterized fragment parameter (farg)"

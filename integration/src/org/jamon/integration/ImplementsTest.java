@@ -33,9 +33,9 @@ public class ImplementsTest
         throws Exception
     {
         Implements i = new Implements(getTemplateManager());
-        i.writeTo(getWriter()).setX(INT);
+        i.setX(INT);
         SomeInterface x = i;
-        x.render(STRING);
+        x.render(getWriter(), STRING);
         checkOutput("" + INT + STRING);
 
 

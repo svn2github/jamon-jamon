@@ -34,18 +34,14 @@ public class MultiFargTest
     public void testSimple()
         throws Exception
     {
-        new MultiFarg(getTemplateManager())
-            .writeTo(getWriter())
-            .render(1);
+        new MultiFarg(getTemplateManager()).render(getWriter(), 1);
         checkOutput("1(2)1(8)1");
     }
 
     public void testComplex()
         throws Exception
     {
-        new MultiFarg2(getTemplateManager())
-            .writeTo(getWriter())
-            .render(2);
+        new MultiFarg2(getTemplateManager()).render(getWriter(), 2);
         checkOutput("0@2!/4/$S$/5/$T$");
     }
 }

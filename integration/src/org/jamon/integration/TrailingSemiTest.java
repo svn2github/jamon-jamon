@@ -29,7 +29,7 @@ public class TrailingSemiTest
     public void testExercise()
         throws Exception
     {
-        new TrailingSemi(getTemplateManager()).writeTo(getWriter()).render();
+        new TrailingSemi(getTemplateManager()).render(getWriter());
         checkOutput("1trues anonFrag namedFrag");
     }
 

@@ -74,14 +74,13 @@ public class EscapingsTest
     private void checkEscaping(Escaping p_escaping)
         throws IOException
     {
-        Escapings escapings = new Escapings(getTemplateManager())
-            .writeTo(getWriter());
+        Escapings escapings = new Escapings(getTemplateManager());
         if (p_escaping != null)
         {
             escapings.escapeWith(p_escaping);
         }
 
-        escapings.render();
+        escapings.render(getWriter());
         checkOutput("Escaping is " + p_escaping,
                     escapedExpected(p_escaping == null
                                     ? Escaping.DEFAULT

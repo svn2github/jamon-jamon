@@ -55,7 +55,7 @@ public class InheritanceTest
     {
         Child child = new Child(getTemplateManager());
         child.setOpt2("o2j");
-        child.writeTo(getWriter()).render(0, new Integer(1), "s", true);
+        child.render(getWriter(), 0, new Integer(1), "s", true);
         String childString = "{s 0 true o1c o5p o7c}";
         checkOutput("0 1 " + childString + " "
                     + childString + " o1c o2j o3p o4p o5p o6p");
@@ -65,8 +65,7 @@ public class InheritanceTest
         throws Exception
     {
         new Child(getTemplateManager())
-            .writeTo(getWriter())
-            .render(0, new Integer(1), "s", true);
+            .render(getWriter(), 0, new Integer(1), "s", true);
         String childString = "{s 0 true o1c o5p o7c}";
         checkOutput("0 1 " + childString + " "
                     + childString + " o1c o2p o3p o4p o5p o6p");
@@ -76,8 +75,7 @@ public class InheritanceTest
         throws Exception
     {
         new Grandchild(getTemplateManager())
-            .writeTo(getWriter())
-            .render(0, new Integer(1), "s", true, Boolean.FALSE);
+            .render(getWriter(), 0, new Integer(1), "s", true, Boolean.FALSE);
         String childString = "{s 0 true {s 1 false o1g o3g o5m o6p o7g o9m o10g} o1g o2m o5m o6p o7g o8m o9m}";
         checkOutput("0 1 " + childString + " " + childString + " o1g o2m o3g o4p o5m o6p");
     }
@@ -87,8 +85,7 @@ public class InheritanceTest
     {
         new Child(getTemplateManager())
             .makeParentRenderer("s", true)
-            .writeTo(getWriter())
-            .render(0, new Integer(1));
+            .render(getWriter(), 0, new Integer(1));
         String childString = "{s 0 true o1c o5p o7c}";
         checkOutput("0 1 " + childString + " "
                     + childString + " o1c o2p o3p o4p o5p o6p");
@@ -100,8 +97,7 @@ public class InheritanceTest
         new Child(getTemplateManager())
             .makeParentRenderer("s", true)
             .setOpt2("o2j")
-            .writeTo(getWriter())
-            .render(0, new Integer(1));
+            .render(getWriter(), 0, new Integer(1));
         String childString = "{s 0 true o1c o5p o7c}";
         checkOutput("0 1 " + childString + " "
                     + childString + " o1c o2j o3p o4p o5p o6p");
@@ -114,8 +110,7 @@ public class InheritanceTest
             .makeParentRenderer(Boolean.FALSE)
             .setOpt2("o2j")
             .makeParentRenderer("s", true)
-            .writeTo(getWriter())
-            .render(0, new Integer(1));
+            .render(getWriter(), 0, new Integer(1));
         String childString = "{s 0 true {s 1 false o1g o3g o5m o6p o7g o9m o10g} o1g o2j o5m o6p o7g o8m o9m}";
         checkOutput("0 1 " + childString + " " + childString + " o1g o2j o3g o4p o5m o6p");
     }
@@ -126,8 +121,7 @@ public class InheritanceTest
         new Grandchild(getTemplateManager())
             .makeParentRenderer(Boolean.FALSE)
             .makeParentRenderer("s", true)
-            .writeTo(getWriter())
-            .render(0, new Integer(1));
+            .render(getWriter(), 0, new Integer(1));
         String childString = "{s 0 true {s 1 false o1g o3g o5m o6p o7g o9m o10g} o1g o2m o5m o6p o7g o8m o9m}";
         checkOutput("0 1 " + childString + " " + childString + " o1g o2m o3g o4p o5m o6p");
     }
@@ -135,9 +129,7 @@ public class InheritanceTest
     public void testFragmentCall()
         throws Exception
     {
-        new ChildFragmentCaller(getTemplateManager())
-            .writeTo(getWriter())
-            .render();
+        new ChildFragmentCaller(getTemplateManager()).render(getWriter());
         checkOutput("s0{s - 1 - g t}2");
     }
 
@@ -188,8 +180,7 @@ public class InheritanceTest
         throws Exception
     {
         new Child(getRecompilingTemplateManager())
-            .writeTo(getWriter())
-            .render(0, new Integer(1), "s", true);
+            .render(getWriter(), 0, new Integer(1), "s", true);
     }
 
     public void testHiddenParentRequiredArgs()

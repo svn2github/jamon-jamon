@@ -57,7 +57,6 @@ public class ComponentCallStatement
                          + "new " + getComponentProxyClassName()
                          +"(this.getTemplateManager())");
         p_writer.indent(2);
-        p_writer.println(".writeTo(this.getWriter())");
         p_writer.println(".escapeWith(this.getEscaping());");
         p_writer.outdent(2);
 
@@ -71,14 +70,10 @@ public class ComponentCallStatement
                                  + "(" + value + ");");
             }
         }
-        p_writer.print(instanceVar + ".render(");
-        boolean argsAlreadyPrinted = false;
+        p_writer.print(instanceVar + ".render(this.getWriter()");
         for (Iterator i = desc.getRequiredArgs().iterator(); i.hasNext(); )
         {
-            if (argsAlreadyPrinted)
-            {
-                p_writer.println(", ");
-            }
+            p_writer.println(", ");
             String name = ((RequiredArgument) i.next()).getName();
             String expr = (String) getParams().remove(name);
             if (expr == null)
@@ -89,11 +84,10 @@ public class ComponentCallStatement
                                          + getPath());
             }
             p_writer.print(expr);
-            argsAlreadyPrinted = true;
         }
         generateFragmentParams(p_writer,
                                desc.getFragmentInterfaces().iterator(),
-                               argsAlreadyPrinted);
+                               true);
         p_writer.println(");");
         checkSuppliedParams();
         p_writer.closeBlock();

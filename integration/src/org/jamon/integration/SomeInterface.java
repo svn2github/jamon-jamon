@@ -9,9 +9,6 @@ public interface SomeInterface {
 //     SomeInterface setX(int x)
 //         throws IOException;
 
-//     SomeInterface writeTo(Writer writer)
-//         throws IOException;
-
-    void render(String s)
+    void render(Writer w, String s)
         throws IOException;
 }

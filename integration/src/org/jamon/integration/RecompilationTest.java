@@ -31,16 +31,13 @@ public class RecompilationTest
     public void testIt()
         throws Exception
     {
-        Recompilation template =
-            new Recompilation(getRecompilingTemplateManager())
-            .writeTo(getWriter());
-        template.render();
+        new Recompilation(getRecompilingTemplateManager()).render(getWriter());
         checkOutput("This is the template");
 
         FileWriter w =
             new FileWriter(new File(SOURCE_DIR,
                                     StringUtils.classNameToFilePath
-                                        (template.getClass().getName())
+                                        (Recompilation.class.getName())
                                     + ".jamon"));
 
         final String STRING = "This is changed\n";
@@ -48,10 +45,7 @@ public class RecompilationTest
         w.write(STRING);
         w.close();
         resetWriter();
-        template =
-            new Recompilation(getRecompilingTemplateManager())
-            .writeTo(getWriter());
-        template.writeTo(getWriter()).render();
+        new Recompilation(getRecompilingTemplateManager()).render(getWriter());
         checkOutput(STRING);
     }
 }

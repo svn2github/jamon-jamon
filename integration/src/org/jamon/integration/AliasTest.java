@@ -33,9 +33,7 @@ public class AliasTest
     public void testExercise()
         throws Exception
     {
-        new Alias(getTemplateManager())
-            .writeTo(getWriter())
-            .render();
+        new Alias(getTemplateManager()).render(getWriter());
         checkOutput("simple simple simple");
     }
 }

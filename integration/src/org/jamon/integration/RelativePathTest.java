@@ -32,7 +32,7 @@ public class RelativePathTest
     public void testRelativePath()
         throws Exception
     {
-        new RelativePath(getTemplateManager()).writeTo(getWriter()).render();
+        new RelativePath(getTemplateManager()).render(getWriter());
         checkOutput("simple");
     }
 

@@ -65,13 +65,13 @@ public class Benchmark
     private static String renderTop(Integer p_k)
         throws IOException
     {
-        StringWriter writer = new StringWriter();
-        Top top = new Top().writeTo(writer);
+        Top top = new Top();
         if (p_k != null)
         {
             top.setK(p_k.intValue());
         }
-        top.render();
+        StringWriter writer = new StringWriter();
+        top.render(writer);
         return writer.toString();
     }
 

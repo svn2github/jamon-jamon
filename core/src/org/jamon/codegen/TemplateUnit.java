@@ -348,7 +348,7 @@ public class TemplateUnit
         }
     }
 
-    private Iterator getParentRenderArgs()
+    public Iterator getParentRenderArgs()
     {
         return new SequentialIterator
             (m_parentDescription.getRequiredArgs().iterator(),

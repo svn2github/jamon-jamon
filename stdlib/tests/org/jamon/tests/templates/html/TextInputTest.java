@@ -30,8 +30,7 @@ public class TextInputTest
     {
         TextInput input = new TextInput("foo", "bar");
         new org.jamon.html.TextInput(getTemplateManager())
-            .writeTo(getWriter())
-            .render(input);
+            .render(getWriter(), input);
         checkOutput("<input type='text'\n       name='"
                     + input.getName()
                     + "'\n       value='"

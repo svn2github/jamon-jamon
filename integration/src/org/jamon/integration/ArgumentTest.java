@@ -37,8 +37,7 @@ public class ArgumentTest
         throws Exception
     {
         new Arguments(getTemplateManager())
-            .writeTo(getWriter())
-            .render(INT, BOOLEAN, STRING);
+            .render(getWriter(), INT, BOOLEAN, STRING);
         checkOutput("" + INT + BOOLEAN + STRING);
     }
 
@@ -47,9 +46,8 @@ public class ArgumentTest
         throws Exception
     {
         new OptionalArguments(getTemplateManager())
-            .writeTo(getWriter())
             .setI(INT)
-            .render(BOOLEAN, STRING);
+            .render(getWriter(), BOOLEAN, STRING);
         checkOutput("" + INT + BOOLEAN + STRING);
     }
 
@@ -57,17 +55,14 @@ public class ArgumentTest
         throws Exception
     {
         new OptionalArguments(getTemplateManager())
-            .writeTo(getWriter())
-            .render(BOOLEAN, STRING);
+            .render(getWriter(), BOOLEAN, STRING);
         checkOutput("" + 0 + BOOLEAN + STRING);
     }
 
     public void testOptionalDef()
         throws Exception
     {
-        new OptionalDefArguments(getTemplateManager())
-            .writeTo(getWriter())
-            .render();
+        new OptionalDefArguments(getTemplateManager()).render(getWriter());
         checkOutput("" + 0 + BOOLEAN + "s"
                     + "\n" + "1" + BOOLEAN + "s");
     }

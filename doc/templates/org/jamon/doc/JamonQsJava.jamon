@@ -7,9 +7,7 @@ public class JamonQs {
     try {
       StandardTemplateManager mgr = new StandardTemplateManager();
       QsTemp template = new QsTemp(mgr);
-      template
-          .writeTo(new OutputStreamWriter(System.out))
-          .render(new Date(0),argv);
+      template.render(new OutputStreamWriter(System.out), new Date(0),argv);
     }
     catch (Exception e) {
       e.printStackTrace();

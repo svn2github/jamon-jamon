@@ -28,8 +28,7 @@ public class ArgumentVisibilityTest
     public void testVisibility()
         throws Exception
     {
-        new ArgumentVisibility(getTemplateManager())
-            .writeTo(getWriter()).render();
+        new ArgumentVisibility(getTemplateManager()).render(getWriter());
         checkOutput("5 5 5 7 8");
     }
 }
