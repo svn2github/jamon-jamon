@@ -9,10 +9,10 @@
  * implied. See the License for the specific language governing
  * rights and limitations under the License.
  *
- * The Original Code is Jamon code, released October, 2002.
+ * The Original Code is Jamon code, released February, 2003.
  *
  * The Initial Developer of the Original Code is Jay Sachs.  Portions
- * created by Jay Sachs are Copyright (C) 2002 Jay Sachs.  All Rights
+ * created by Jay Sachs are Copyright (C) 2003 Jay Sachs.  All Rights
  * Reserved.
  *
  * Contributor(s): Luis O'Shea, Ian Robertson
