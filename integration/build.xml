@@ -39,7 +39,6 @@
 
   <target name="commandlineTemplates"
           depends="compile">
-    <echo message="stage 0"/>
     <java fork="true"
           classpath="${java.lib.jamon}"
           classname="org.jamon.TemplateProcessor"
@@ -51,17 +50,14 @@
       <arg value="${sample.template1}"/>
       <arg value="${sample.template2}"/>
     </java>
-    <echo message="stage 1"/>
     <exec executable="diff" failonerror="true">
       <arg value="${build.src.dir}/${sample.template1}.java"/>
       <arg value="${build.src2.dir}/${sample.template1}.java"/>
     </exec>
-    <echo message="stage 2"/>
     <exec executable="diff" failonerror="true">
       <arg value="${build.src.dir}/${sample.template2}.java"/>
       <arg value="${build.src2.dir}/${sample.template2}.java"/>
     </exec>
-    <echo message="stage 3"/>
   </target>
 
   <target name="compile"
