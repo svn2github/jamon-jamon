@@ -161,13 +161,13 @@ public class ImplGenerator extends BaseGenerator
     private void generateDeclaration()
         throws IOException
     {
-        print("public class ");
-        print(getClassName());
-        println("Impl");
-        print("  extends ");
-        println(BASE_TEMPLATE);
-        print("  implements ");
-        println(getClassName());
+        print  ("public class ");
+        print  (              getClassName());
+        println(                           "Impl");
+        print  ("  extends ");
+        println(           BASE_TEMPLATE);
+        print  ("  implements ");
+        println(              getClassName());
         println("{");
     }
 
@@ -177,7 +177,9 @@ public class ImplGenerator extends BaseGenerator
         print("  public ");
         print(getClassName());
         println("Impl(java.io.Writer p_writer,");
-        println("        org.modusponens.jtt.TemplateManager p_templateManager)");
+        print  ("        ");
+        print  (         TEMPLATE_MANAGER);
+        println(                        " p_templateManager)");
         println("  {");
         println("    super(p_writer, p_templateManager);");
         println("  }");
@@ -185,8 +187,11 @@ public class ImplGenerator extends BaseGenerator
 
     }
 
+    private static final String TEMPLATE_MANAGER =
+        TemplateManager.class.getName();
+
     private static final String BASE_TEMPLATE =
-        "org.modusponens.jtt.AbstractTemplate";
+        AbstractTemplate.class.getName();
 
     private void generateRender()
         throws IOException

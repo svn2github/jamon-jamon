@@ -14,6 +14,8 @@ public class InterfaceGenerator extends BaseGenerator
         AbstractTemplateFactory.class.getName();
     private final static String TEMPLATE_MANAGER =
         TemplateManager.class.getName();
+    private final static String JTT_EXCEPTION =
+        JttException.class.getName();
 
     public InterfaceGenerator(Writer p_writer,
                               String p_packageName,
@@ -67,6 +69,8 @@ public class InterfaceGenerator extends BaseGenerator
         print  ("    public ");
         print  (getClassName());
         println(" getInstance(java.io.Writer p_writer)");
+        print  ("      throws ");
+        println(JTT_EXCEPTION);
         println("    {");
         print  ("      return (");
         print  (getClassName());

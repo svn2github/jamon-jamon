@@ -4,5 +4,6 @@ import java.io.Writer;
 
 public interface TemplateManager
 {
-    public Template getInstance(String p_path, Writer p_writer);
+    public Template getInstance(String p_path, Writer p_writer)
+        throws JttException;
 }

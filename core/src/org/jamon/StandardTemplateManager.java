@@ -109,7 +109,9 @@ public class StandardTemplateManager
             File tf = new File(getTemplateFileName(p_path));
             if (! tf.exists() )
             {
-                throw new RuntimeException("Template file " + p_path + " missing!");
+                throw new JttException("Template file "
+                                       + p_path
+                                       + " missing!");
             }
             if ( tf.lastModified() > f.lastModified() )
             {
@@ -162,8 +164,7 @@ public class StandardTemplateManager
             }
             catch (IOException e)
             {
-                e.printStackTrace();
-                throw new ClassNotFoundException();
+                throw new JttClassNotFoundException(e);
             }
         }
 
@@ -235,10 +236,10 @@ public class StandardTemplateManager
         }
         if (code != 0)
         {
-            throw new IOException("Compilation failed code="
-                                  + code
-                                  + "\n"
-                                  + stderr.getContents());
+            throw new JttException("Compilation failed code="
+                                   + code
+                                   + "\n"
+                                   + stderr.getContents());
         }
     }
 
@@ -315,6 +316,7 @@ public class StandardTemplateManager
 
 
     public Template getInstance(String p_path, Writer p_writer)
+        throws JttException
     {
         try
         {
@@ -326,8 +328,7 @@ public class StandardTemplateManager
         }
         catch (Exception e)
         {
-            e.printStackTrace();
-            throw new RuntimeException(e.getMessage());
+            throw new JttException(e);
         }
     }
 }
