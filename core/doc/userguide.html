@@ -374,7 +374,10 @@ produces <pre class="tty">
       </li>
     </ol>
     <h4>Example</h4>
-    Suppose the template in <code>templates/foo</code> contains
+
+    Suppose the template in
+    <code>templates/org/modusponens/templates/Foo</code> contains
+
     <pre class="template">
 &lt;%args&gt;
   int count;
@@ -390,29 +393,36 @@ produces <pre class="tty">
 &lt;/html&gt;
 </pre>
     This can be processed into a Java interface with the
-    <code>jamon</code> command, e.g.
+    Jamon <code>TemplateProcessor</code> class, e.g.
   <pre class="tty">
-jamon --interface --package-prefix=org.modusponens.templates --output-dir=./gensrc templates/foo
+java org.jamon.TemplateProcessor --destDir=./gensrc --sourceDir=templates templates/org/modusponens/templates/Foo
 </pre>
 which will place the generated Java source file(s) into the
 <code>gensrc</code> directory.
 <p>
 You can then use the template as follows:
         <pre class="code">
-import org.modusponens.templates.foo;
+import org.modusponens.templates.Foo;
 import org.jamon.TemplateManager;
 
   ...
-       TemplateManager templateManager =
+       StandardTemplateManager templateManager =
          new StandardTemplateManager(...);
+       // to be able to dynamically recompile templates:
+       //    templateManager.setSourceDir("templates");
+       //    templateManager.setWorkDir("jamonwork");
        ...
        Writer writer = new OutputStreamWriter(System.out);
-       foo.Factory factory = new foo.Factory(templateManager);
-       factory.getInstance(writer)
+       new Foo(templateManager)
+         .writeTo(writer)
          .setName("Duke")
          .render(3, "Hello");
 </pre>
-    which when executed produces the output
+    <p>
+      When you build your project, be sure to include the java files
+      in the <code>gensrc</code> directory in the compilation command.
+    <p>
+      Execution of the above code snippet produces the output
     <pre class="tty">
 &lt;html&gt;
   &lt;body&gt;
@@ -423,6 +433,6 @@ import org.jamon.TemplateManager;
 &lt;/html&gt;
 </pre>
     <hr>
-    <address><a href="mailto:jay@contravariant.org">Jay Sachs</a></address>
+    <address><a href="mailto:jay@jamon.org">Jay Sachs</a></address>
   </body>
 </html>
