@@ -144,7 +144,8 @@ public class JamonTask
      * Clear the list of files to be compiled and copied..
      */
 
-    protected void resetFileLists() {
+    protected void resetFileLists()
+    {
         compileList = new File[0];
     }
 
