@@ -597,7 +597,7 @@ Now would be a poor time to go sailing.
     In order to pass a fragment argument, the target template or
     subtemplate must declare that it expects a fragment
     argument. This is done using the
-    <code>&lt;%frag <var>name</var>&gt;&lt;/%frag&gt;</code>
+    <code>&lt;%frag <var>name</var>/&gt;</code>
     declaration, which declares that the template or subtemplate
     expects a fragment argument.
 
@@ -613,8 +613,7 @@ Now would be a poor time to go sailing.
     Putting this all together, the template
     <&| _Template &><%LITERAL>
 <%def _lilink>
-  <%frag content>
-  </%frag>
+  <%frag content/>
   <%args>
     String href;
   </%args>
@@ -622,8 +621,7 @@ Now would be a poor time to go sailing.
 </%def>
 
 <%def _big>
-  <%frag stuff>
-  </%frag>
+  <%frag stuff/>
 <font size="+4"><& stuff &></font>
 </%def>
 
