@@ -40,6 +40,7 @@ public class JUnitTemplateManager
     private final Map m_optionalArgs;
     private final Object[] m_requiredArgs;
     private final String m_path;
+    private boolean m_rendered;
 
     public AbstractTemplateProxy.Intf acquireInstance(String p_path)
         throws IOException
@@ -112,6 +113,11 @@ public class JUnitTemplateManager
         // sanity:
         Assert.assertTrue( m_impl == p_proxy );
 
+        if (p_args == null)
+        {
+            p_args = new Object[0];
+        }
+
         // from AbstractTemplateProxy.Intf:
         if ("writeTo".equals(p_method.getName()))
         {
@@ -163,6 +169,7 @@ public class JUnitTemplateManager
             Assert.assertTrue("unexpected optional argument " + argname,
                               m_optionalArgs.containsKey(argname));
             checkArgument(p_method, 0, m_optionalArgs.remove(argname), p_args[0]);
+            m_rendered = true;
             return null;
         }
         else
@@ -171,6 +178,11 @@ public class JUnitTemplateManager
             throw new IllegalArgumentException("Unexpected method "
                                                + p_method);
         }
+    }
+
+    public boolean getWasRendered()
+    {
+        return m_rendered;
     }
 
     private boolean equals(Object p_obj1, Object p_obj2)
