@@ -35,7 +35,7 @@ Helpers
   sp  = ' ';
   nl = lf | cr | cr lf;
   hs = [sp + ht];
-  ws = [[hs + lf] + ff];
+  ws = [[[hs + lf] + ff] + cr];
   argsep = ';'; // could be nl ...
   all = [0x0000 .. 0xFFFF];
   all_except_nl = [all - [lf + cr]];
