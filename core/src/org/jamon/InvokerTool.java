@@ -142,6 +142,7 @@ public class InvokerTool
     }
 
     public static void main(String[] args)
+        throws Exception
     {
         try
         {
@@ -150,10 +151,6 @@ public class InvokerTool
         catch (UsageException e)
         {
             System.err.println("Usage: " + e);
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace(System.err);
         }
     }
 }
