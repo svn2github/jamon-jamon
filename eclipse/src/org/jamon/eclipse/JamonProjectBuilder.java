@@ -116,20 +116,22 @@ public class JamonProjectBuilder extends IncrementalProjectBuilder {
 		getProject().accept(new BuildVisitor());
 	}
 	
-	private static final String JAMON_EXTENSION = "jamon";
-	
+	private JamonNature getNature() throws CoreException {
+		return (JamonNature) getProject().getNature(JamonNature.natureId());
+	}
+
 	private void incrementalBuild(IResourceDelta delta, IProgressMonitor monitor) throws CoreException {
 		BuildVisitor visitor = new BuildVisitor();
 		delta.accept(visitor);
 		System.err.println("Changed templates are " + m_changed);
-		IFolder templateDir = getProject().getFolder(new Path("templates"));
+		IFolder templateDir = getNature().getTemplateSourceFolder();
 		for (Iterator i = m_changed.iterator(); i.hasNext(); ) {
 			IPath s = (IPath) i.next();
 			System.err.println(s  +" changed");
 			Collection c = m_dependencies.getDependenciesOf(s.toString());
 			System.err.println("Things that depend on s are " + c);
 			for (Iterator j = c.iterator(); j.hasNext(); ) {
-				visitor.visit(templateDir.findMember((new Path((String) j.next())).addFileExtension(JAMON_EXTENSION)));
+				visitor.visit(templateDir.findMember((new Path((String) j.next())).addFileExtension(JamonNature.JAMON_EXTENSION)));
 			}
 		}
 	}
@@ -140,10 +142,10 @@ public class JamonProjectBuilder extends IncrementalProjectBuilder {
 	
 	private class BuildVisitor implements IResourceVisitor, IResourceDeltaVisitor {
 		BuildVisitor() throws CoreException  {
-			m_templateDir = getProject().getFolder(new Path("templates"));
+			m_templateDir = getNature().getTemplateSourceFolder();
 			m_source = new ResourceTemplateSource(m_templateDir);
 			m_describer = new TemplateDescriber(m_source, classLoader());
-			m_outFolder = getProject().getFolder(new Path("tsrc"));
+			m_outFolder = getNature().getTemplateOutputFolder();
 		}
 
 		private ClassLoader classLoader() throws CoreException {
@@ -254,7 +256,7 @@ public class JamonProjectBuilder extends IncrementalProjectBuilder {
 		public boolean visit(IResource resource) throws CoreException {
 			if (resource.getType() == IResource.FILE) {
 				IFile file = (IFile) resource;
-				if (JAMON_EXTENSION.equals(file.getFileExtension())) {
+				if (JamonNature.JAMON_EXTENSION.equals(file.getFileExtension())) {
 					if (m_templateDir.getFullPath().isPrefixOf(file.getFullPath())) {
 						IPath path = file.getFullPath().removeFirstSegments(m_templateDir.getFullPath().segmentCount()).removeFileExtension();
 						System.err.println("translating Jamon template /" + path);
