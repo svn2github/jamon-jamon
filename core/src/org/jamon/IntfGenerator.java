@@ -25,7 +25,7 @@ import java.io.PrintWriter;
 import java.io.IOException;
 import java.util.Iterator;
 
-public class IntfGenerator
+public class IntfGenerator extends AbstractGenerator
 {
     public IntfGenerator(TemplateResolver p_resolver,
                          String p_templatePath,
@@ -33,10 +33,9 @@ public class IntfGenerator
                          Writer p_writer)
         throws IOException
     {
+        super(p_writer, p_resolver);
         m_path = p_templatePath;
-        m_resolver = p_resolver;
         m_analyzer = p_analyzer;
-        m_writer = new PrintWriter(p_writer);
     }
 
     public void generateClassSource()
@@ -73,27 +72,7 @@ public class IntfGenerator
         Renderer.class.getName();
 
     private final BaseAnalyzer m_analyzer;
-    private final PrintWriter m_writer;
     private final String m_path;
-    private final TemplateResolver m_resolver;
-
-    private void print(Object p_obj)
-        throws IOException
-    {
-        m_writer.print(p_obj);
-    }
-
-    private void println()
-        throws IOException
-    {
-        m_writer.println();
-    }
-
-    private void println(Object p_obj)
-        throws IOException
-    {
-        m_writer.println(p_obj);
-    }
 
     private String getPath()
     {
@@ -114,12 +93,12 @@ public class IntfGenerator
 
     private String getClassName()
     {
-        return m_resolver.getIntfClassName(getPath());
+        return getResolver().getIntfClassName(getPath());
     }
 
     private String getPackageName()
     {
-        return m_resolver.getIntfPackageName(getPath());
+        return getResolver().getIntfPackageName(getPath());
     }
 
     private void generatePrologue()

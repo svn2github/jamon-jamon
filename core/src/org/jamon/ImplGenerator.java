@@ -15,7 +15,7 @@
  * created by Jay Sachs are Copyright (C) 2002 Jay Sachs.  All Rights
  * Reserved.
  *
- * Contributor(s):
+ * Contributor(s): Ian Robertson
  */
 
 package org.jamon;
@@ -25,15 +25,14 @@ import java.io.PrintWriter;
 import java.io.IOException;
 import java.util.Iterator;
 
-public class ImplGenerator
+public class ImplGenerator extends AbstractGenerator
 {
     public ImplGenerator(Writer p_writer,
                          TemplateResolver p_resolver,
                          TemplateDescriber p_describer,
                          ImplAnalyzer p_analyzer)
     {
-        m_writer = new PrintWriter(p_writer);
-        m_resolver = p_resolver;
+        super(p_writer, p_resolver);
         m_analyzer = p_analyzer;
         m_describer = p_describer;
     }
@@ -59,38 +58,17 @@ public class ImplGenerator
     private final static String WRITER_CLASS =
         Writer.class.getName();
 
-    private final TemplateResolver m_resolver;
     private final TemplateDescriber m_describer;
     private final ImplAnalyzer m_analyzer;
-    private final PrintWriter m_writer;
 
     private final String getPath()
     {
         return m_analyzer.getPath();
     }
 
-    private void print(Object p_obj)
-        throws IOException
-    {
-        m_writer.print(p_obj);
-    }
-
-    private void println()
-        throws IOException
-    {
-        m_writer.println();
-    }
-
-    private void println(Object p_obj)
-        throws IOException
-    {
-        m_writer.println(p_obj);
-    }
-
-
     private String getClassName()
     {
-        return m_resolver.getImplClassName(getPath());
+        return getResolver().getImplClassName(getPath());
     }
 
     private void generateDeclaration()
@@ -101,7 +79,7 @@ public class ImplGenerator
         print  ("  extends ");
         println(           BASE_TEMPLATE);
         print  ("  implements ");
-        print  (m_resolver.getFullyQualifiedIntfClassName(getPath()));
+        print  (getResolver().getFullyQualifiedIntfClassName(getPath()));
         println(".Intf");
         println("{");
         println(m_analyzer.getClassContent());
@@ -143,7 +121,7 @@ public class ImplGenerator
     private void generatePrologue()
         throws IOException
     {
-        String pkgName = m_resolver.getImplPackageName(getPath());
+        String pkgName = getResolver().getImplPackageName(getPath());
         if (pkgName.length() > 0)
         {
             print("package ");
@@ -253,8 +231,8 @@ public class ImplGenerator
                  /* */)
             {
                 print("    ");
-                ((Statement)i.next()).generateSource(m_writer,
-                                                     m_resolver,
+                ((Statement)i.next()).generateSource(getWriter(),
+                                                     getResolver(),
                                                      m_describer,
                                                      m_analyzer);
             }
@@ -293,8 +271,8 @@ public class ImplGenerator
         for (Iterator i = m_analyzer.getStatements().iterator(); i.hasNext(); /* */)
         {
             print("    ");
-            ((Statement)i.next()).generateSource(m_writer,
-                                                 m_resolver,
+            ((Statement)i.next()).generateSource(getWriter(),
+                                                 getResolver(),
                                                  m_describer,
                                                  m_analyzer);
         }
