@@ -121,7 +121,7 @@ Ignored Tokens
 
 Productions
 
-  template = component*;
+  template = component* partial_jline? ;
 
   base_component =
               {body} text
@@ -157,6 +157,8 @@ Productions
   java = java_start java_stmts java_end;
 
   jline = injava expr outjava;
+
+  partial_jline = injava expr;
 
   emit = emit_start emit_expr escape? emit_end;
 

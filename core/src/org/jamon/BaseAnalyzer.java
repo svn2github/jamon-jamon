@@ -250,6 +250,11 @@ public class BaseAnalyzer
             {
                 ((Node)i.next()).apply(this);
             }
+            PPartialJline finalJline = node.getPartialJline();
+            if (finalJline != null)
+            {
+                finalJline.apply(this);
+            }
         }
 
         public void caseAArg(AArg arg)
