@@ -13,6 +13,12 @@
   </head>
 
   <body>
+
+    <div id="logo">
+      <h1 id="logo1">Jamon</h1>
+      <h3 id="logo2">a typed template engine for Java</h3>
+    </div>
+
     <h3 id="tagline">
       <span class="tagline1">refactoring</span> <span class="tagline2">the</span> <span class="tagline3">view</span><br />
     </h3>
