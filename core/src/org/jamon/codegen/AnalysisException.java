@@ -20,9 +20,6 @@
 
 package org.jamon.codegen;
 
-import java.io.File;
-import java.io.IOException;
-
 import org.jamon.JamonTemplateException;
 import org.jamon.node.Token;
 
