@@ -82,6 +82,43 @@ public class InheritanceTest
         checkOutput("0 1 " + childString + " " + childString + " o1g o2m o3g o4p o5m o6p");
     }
 
+    public void testChildWithDefaultsViaParentRenderer()
+        throws Exception
+    {
+        new Child(getTemplateManager())
+            .makeParentRenderer("s", true)
+            .writeTo(getWriter())
+            .render(0, new Integer(1));
+        String childString = "{s 0 true o1c o5p o7c}";
+        checkOutput("0 1 " + childString + " "
+                    + childString + " o1c o2p o3p o4p o5p o6p");
+    }
+
+    public void testChildSettingParentOptionalArgViaParentRenderer()
+        throws Exception
+    {
+        new Child(getTemplateManager())
+            .makeParentRenderer("s", true)
+            .setOpt2("o2j")
+            .writeTo(getWriter())
+            .render(0, new Integer(1));
+        String childString = "{s 0 true o1c o5p o7c}";
+        checkOutput("0 1 " + childString + " "
+                    + childString + " o1cc o2j o3p o4p o5p o6p");
+    }
+
+    public void testGrandchildWithDefaultsViaParentRenderer()
+        throws Exception
+    {
+        new Grandchild(getTemplateManager())
+            .makeParentRenderer(Boolean.FALSE)
+            .makeParentRenderer("s", true)
+            .writeTo(getWriter())
+            .render(0, new Integer(1));
+        String childString = "{s 0 true {s 1 false o1g o3g o5m o6p o7g o9m o10g} o1g o2m o5m o6p o7g o8m o9m}";
+        checkOutput("0 1 " + childString + " " + childString + " o1g o2m o3g o4p o5m o6p");
+    }
+
     public void testFragmentCall()
         throws Exception
     {

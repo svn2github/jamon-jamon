@@ -33,7 +33,6 @@ public class IntfGenerator
                          TemplateResolver p_resolver,
                          TemplateDescriber p_describer,
                          TemplateUnit p_templateUnit)
-        throws IOException
     {
         m_writer = new IndentingWriter(p_writer);
         m_resolver = p_resolver;
@@ -60,9 +59,17 @@ public class IntfGenerator
         {
             generateMakeRenderer();
             generateRender();
-            generateSetWriter();
-            generateEscaping();
-            generateSetAutoFlush();
+            generateSetWriter(getClassName());
+            generateEscaping(getClassName());
+            generateSetAutoFlush(getClassName());
+        }
+        if (m_templateUnit.isParent())
+        {
+            generateParentRendererClass();
+        }
+        if (m_templateUnit.hasParentPath() && ! m_templateUnit.isParent())
+        {
+            generateMakeParentRenderer();
         }
         generateEpilogue();
         m_writer.finish();
@@ -74,7 +81,6 @@ public class IntfGenerator
     private final TemplateUnit m_templateUnit;
 
     private void generateImports()
-        throws IOException
     {
         for (Iterator i = m_templateUnit.getImports();
              i.hasNext(); )
@@ -95,7 +101,6 @@ public class IntfGenerator
     }
 
     private void generatePrologue()
-        throws IOException
     {
         String pkgName = getPackageName();
         if (pkgName.length() > 0)
@@ -107,7 +112,6 @@ public class IntfGenerator
 
 
     private void generateConstructor()
-        throws IOException
     {
         m_writer.println();
         m_writer.println
@@ -120,7 +124,6 @@ public class IntfGenerator
 
     private void generateFragmentInterface(FragmentUnit p_fragmentUnit,
                                            boolean p_inner)
-        throws IOException
     {
         String className = p_fragmentUnit.getFragmentInterfaceName();
         m_writer.println("public static abstract class " + className);
@@ -162,7 +165,6 @@ public class IntfGenerator
     }
 
     private void generateFragmentInterfaces(boolean p_inner)
-        throws IOException
     {
         for (Iterator f = m_templateUnit.getDeclaredFragmentArgs();
              f.hasNext(); )
@@ -175,7 +177,6 @@ public class IntfGenerator
     }
 
     private void generateDeclaration()
-        throws IOException
     {
         m_writer.print("public ");
         if(m_templateUnit.isParent())
@@ -269,7 +270,6 @@ public class IntfGenerator
     }
 
     private void generateRender()
-        throws IOException
     {
         m_writer.print( m_templateUnit.isParent()
                         ? "protected void render("
@@ -295,7 +295,6 @@ public class IntfGenerator
 
 
     private void generateMakeRenderer()
-        throws IOException
     {
         m_writer.print( m_templateUnit.isParent()
                         ? "protected "
@@ -324,7 +323,6 @@ public class IntfGenerator
 
 
     private void generateOptionalArgs()
-        throws IOException
     {
         for (Iterator i = m_templateUnit.getDeclaredOptionalArgs();
              i.hasNext(); )
@@ -360,7 +358,6 @@ public class IntfGenerator
     }
 
     private void generateIntf()
-        throws IOException
     {
         m_writer.println("protected interface Intf");
         m_writer.print("  extends "
@@ -393,9 +390,99 @@ public class IntfGenerator
         m_writer.closeBlock();
     }
 
+    private void generateParentRendererClass()
+    {
+        m_writer.println("public abstract class ParentRenderer");
+        m_writer.openBlock();
+        m_writer.println("protected ParentRenderer() {}");
+
+        for (Iterator i = m_templateUnit.getDeclaredOptionalArgs();
+             i.hasNext(); )
+        {
+            OptionalArgument arg = (OptionalArgument) i.next();
+            m_writer.println();
+            String name = arg.getName();
+            m_writer.print("public final ParentRenderer ");
+            m_writer.println(arg.getSetterName()
+                             + "(" + arg.getType() +" p_" + name + ")");
+            m_writer.print  ("  throws ");
+            m_writer.println(ClassNames.IOEXCEPTION);
+            m_writer.openBlock();
+            m_writer.println(getClassName() + ".this." + arg.getSetterName()
+                             + "(" + "p_" + name + ");");
+            m_writer.println("return this;");
+            m_writer.closeBlock();
+        }
+
+        if (! m_templateUnit.hasParentPath())
+        {
+            m_writer.print("public void render(");
+            m_templateUnit.printDeclaredRequiredArgsDecl(m_writer);
+            m_writer.println(")");
+            m_writer.print("  throws " + ClassNames.IOEXCEPTION);
+            m_writer.openBlock();
+            m_writer.print("renderChild(");
+            m_templateUnit.printDeclaredRequiredArgs(m_writer);
+            m_writer.println(");");
+            m_writer.closeBlock();
+
+            generateSetWriter("ParentRenderer");
+            generateEscaping("ParentRenderer");
+            generateSetAutoFlush("ParentRenderer");
+        }
+        else
+        {
+            generateMakeParentRenderer();
+        }
+
+        m_writer.print("protected abstract void renderChild(");
+        m_templateUnit.printRequiredArgsDecl(m_writer);
+        m_writer.println(")");
+        m_writer.println("  throws " + ClassNames.IOEXCEPTION + ";");
+
+        m_writer.closeBlock();
+    }
+
+    private void generateMakeParentRenderer()
+    {
+        String parentRendererClass =
+            m_resolver.getFullyQualifiedIntfClassName(
+                m_templateUnit.getParentPath()) + ".ParentRenderer";
+        m_writer.print("public " + parentRendererClass
+                       + " makeParentRenderer(");
+        m_templateUnit.printDeclaredRequiredArgsDecl(m_writer);
+        m_writer.println(")");
+        m_writer.println("  throws " + ClassNames.IOEXCEPTION);
+        m_writer.openBlock();
+        m_writer.print("return new " + parentRendererClass + "() ");
+        m_writer.openBlock();
+        m_writer.print("protected void renderChild(");
+        m_templateUnit.printParentRequiredArgsDecl(m_writer);
+        m_writer.println(")");
+        m_writer.println("  throws " + ClassNames.IOEXCEPTION);
+        m_writer.openBlock();
+        if (m_templateUnit.isParent())
+        {
+            m_writer.print
+                (m_resolver.getFullyQualifiedIntfClassName(getClassName())
+                 + ".ParentRenderer.this.renderChild(");
+            m_templateUnit.printRequiredArgs(m_writer);
+            m_writer.println(");");
+        }
+        else
+        {
+            m_writer.print(
+                m_resolver.getFullyQualifiedIntfClassName(getClassName())
+                + ".this.render(");
+            m_templateUnit.printRequiredArgs(m_writer);
+            m_writer.println(");");
+        }
+        m_writer.closeBlock();
+        m_writer.closeBlock(";");
+        m_writer.closeBlock();
+    }
 
     private void generateGetInstance()
-        throws IOException
     {
         m_writer.println();
         m_writer.println("private Intf getInstance()");
@@ -407,7 +494,6 @@ public class IntfGenerator
     }
 
     private void generateGetPath()
-        throws IOException
     {
         if (! m_templateUnit.isParent())
         {
@@ -419,12 +505,11 @@ public class IntfGenerator
         }
     }
 
-    private void generateSetWriter()
-        throws IOException
+    private void generateSetWriter(String p_returnClassName)
     {
         m_writer.println();
-        m_writer.println("public " + getClassName()
-                         + " writeTo(java.io.Writer p_writer)");
+        m_writer.println("public " + p_returnClassName
+                         + " writeTo(" + ClassNames.WRITER + " p_writer)");
         m_writer.print  ("  throws ");
         m_writer.println(ClassNames.IOEXCEPTION);
         m_writer.openBlock();
@@ -433,11 +518,10 @@ public class IntfGenerator
         m_writer.closeBlock();
     }
 
-    private void generateSetAutoFlush()
-        throws IOException
+    private void generateSetAutoFlush(String p_returnClassName)
     {
         m_writer.println();
-        m_writer.println("public " + getClassName()
+        m_writer.println("public " + p_returnClassName
                          + " autoFlush(boolean p_autoFlush)");
         m_writer.print  ("  throws ");
         m_writer.println(ClassNames.IOEXCEPTION);
@@ -447,12 +531,11 @@ public class IntfGenerator
         m_writer.closeBlock();
     }
 
-    private void generateEscaping()
-        throws IOException
+    private void generateEscaping(String p_returnClassName)
     {
         m_writer.println();
-        m_writer.println("public " + getClassName()
-                         + " escaping(org.jamon.escaping.Escaping p_escaping)");
+        m_writer.println("public " + p_returnClassName + " escaping("
+                         + ClassNames.ESCAPING + " p_escaping)");
         m_writer.openBlock();
         m_writer.println("escape(p_escaping);");
         m_writer.println("return this;");
@@ -460,7 +543,6 @@ public class IntfGenerator
     }
 
     private void generateEpilogue()
-        throws IOException
     {
         m_writer.println();
         m_writer.closeBlock();
