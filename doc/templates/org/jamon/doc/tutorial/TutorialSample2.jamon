@@ -36,8 +36,7 @@ Jamon allows the inclusion of any Java code in the template. Through the use of 
 </%LITERAL>
 <p>
 
-Content can be computed using <code>%</code> escaping on each line
-with Java code:
+For small amounts of Java code, using <code>%</code> escaping is useful.
       <&| ../_Template &>
 <%LITERAL>
 % int count = 3;
@@ -48,8 +47,8 @@ with Java code:
 </&>
 
 <p>
-Content can also be computed using <code>&lt;%java></code> ...
-<code>&lt/%java></code> tags:
+For larger chunks of Java code, using <code>&lt;%java></code> ...
+<code>&lt/%java></code> tags may be preferable:
 
       <&| ../_Template &>
 <%LITERAL>
@@ -63,7 +62,9 @@ Content can also be computed using <code>&lt;%java></code> ...
 </&>
 <p>
 
-Java code is great for controlling flow of control, but often it is used for composing text to return from the template, as the previous example computing the time and forecast shows. In order to include string data computed by Java in the text returned by the template, you must use the <em>emit</em> operator. This is the <code>&lt;%</code> ... <code>%></code> tag. :
+In order to include data computed by Java in the text returned by the
+template, you must use the <em>emit</em> operator. This is the
+<code>&lt;%</code> ... <code>%></code> tag. :
 
       <&| ../_Template &>
 <%LITERAL>
