@@ -40,15 +40,10 @@
                         href => "GeneratedTemplates" &>
           <& _menuItem; section => Section.DOC_USERGUIDE;
                         href => "UserGuide" &>
-          <&| _menuItemFrag; section => Section.DOC_PROJECTS;
-                             href => "BuildingProjects" &>
-            <ul class="nav">
-              <& _menuItem; section => Section.DOC_JAMONTASK;
-                            href => "JamonTask" &>
-              <& _menuItem; section => Section.DOC_INVOKERTASK;
-                            href => "InvokerTask" &>
-            </ul>
-          </&>
+          <& _menuItem; section => Section.DOC_PROJECTS;
+                        href => "BuildingProjects" &>
+          <& _menuItem; section => Section.DOC_JAMONTASK;
+                        href => "JamonTask" &>
           <& _menuItem; section => Section.DOC_SERVLETS;
                         href => "Servlets" &>
           <& _menuItem; section => Section.DOC_REFERENCE;
@@ -76,22 +71,13 @@
     Section section;
     String href;
   </%args>
-<&| _menuItemFrag; section => section; href => href; &></&>
-</%def>
-
-<%def _menuItemFrag>
-  <%frag content />
-  <%args>
-    Section section;
-    String href;
-  </%args>
 <li class="nav"\
 % if (section == currentSection()) {
  id="current"\
 % }
 >
 <a href="<& docRootUrl; href => "" &><% href %>.html" \
-><% section %></a><& content &>
+><% section %></a>
 </li>
 </%def>
 
