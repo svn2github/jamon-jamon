@@ -9,41 +9,13 @@
 
 Templates do not exist in a vacuum; templates exist in order to
 display information. In a model-view-controller architecture, that
-information comes from the model, and it is passed to the templates to
-be displayed as arguments to the template.
+information comes from the model and is passed to the templates to
+ as arguments.
+
 <p>
 
-Jamon templates can have <em>required</em> arguments as well as
-<em>optional</em> arguments. The required arguments constitute the
-<em>signature</em> of the template exactly as the types of the
-parameters of a method compose the signature of a method.
-<p>
-Arguments to a Jamon template are declared between <code>&lt;%args></code>
-... <code>&lt;%/args></code> tags:
-      <&| ../_Template &>
-<%LITERAL>
-<%args>
-  java.util.Date effectiveDate;
-  String userName;
-  java.math.BigDecimal totalBalance;
-</%args>
-</%LITERAL>
-</&>
-The above Jamon code declares a template with three parameters:
-<ol>
-<li> a java.util.Date instance
-<li> a String
-<li> a java.math.BigDecimal instance
-</ol>
-
-Any java class that invokes this template <strong>must</strong> provide
-all three arguments, and they must be provided to the <code>render</code>
-method in the order specified in the
-<code>&lt;%args></code> ... <code>&lt;%/args></code> tag.
-
-<h3> Optional Arguments </h3>
-Jamon templates can also declare <em>optional</em> arguments. These are
-declared by specifying the default value after the argument name, as below.
+Arguments to a Jamon template are declared between
+<code>&lt;%args></code> ... <code>&lt;%/args></code> tags:
 
       <&| ../_Template &>
 <%LITERAL>
@@ -57,29 +29,36 @@ declared by specifying the default value after the argument name, as below.
 </%LITERAL>
 </&>
 
-This template declares three required arguments, the same three as the
-first example, and two optional arguments, <code>title</code> and
-<code>alertMessage</code>.
-<p>
-<div class="note">Note: all arguments, both required and optional,
-are translated into Java as <code>final</code> variables. Thus,
-any Java code embedded in the Jamon text <strong>must not</strong> try
-to reassign values to the template arguments.</div>
-<p>
-A java class that calls this template must provide the three required arguments to the render method in order specified in the
+The above Jamon code declares a template with three required and two
+optional arguments.  The required arguemnts are:
+<ol>
+  <li><code>java.util.Date effectiveDate</code></li>
+  <li><code>String userName</code></li>
+  <li><code>java.math.BigDecimal totalBalance</code></li>
+</ol>
+
+Any Java class that invokes this template <strong>must</strong> provide
+these three arguments, and they must be provided to the <code>render</code>
+method in the order specified in the
 <code>&lt;%args></code> ... <code>&lt;%/args></code> tag.
 
-<div class="note">Note: the optional arguments are ignored when
-constructing the signature of the template.</div>
+<p>
+  In addition, there are two optional arguments.  Any java class that
+  invokes this class may provide values to override the default values
+  via the set methods:
+  <ul>
+    <li><code>setTitle(String title)</code></li>
+    <li><code>setAlertMessage(String alertMessage)</code></li>
+  </ul>
+</p>
 
-In order to set values of any optional arguments, the java class
-invoking the template must call <code>set</code> methods for each
-optional argument. Thus, to invoke the sample template shown above,
-the java class should contain the following code:
+The above setter methods return the template, allowing multiple calls
+to be <em>chained</em> together.  Thus, to the sample template
+shown above could be invoked with the following code:
 
 <pre class="java">
     sampleTemplate
-        .setTitle("Most Recent Account Balance);
+        .setTitle("Most Recent Account Balance");
         .render(new OutputStreamWriter(System.out),
                 new Date(), "John Public", new BigDecimal(9.99));
 </pre>
@@ -92,13 +71,26 @@ with the required <code>Writer</code> and the three required arguments.
 <div class="note">Note that the <code>render</code>
 method must be called <em>after</em> after the setter methods for the
 optional arguments.</div>
-<p>
-As a matter of style, the code sample above <em>chains</em> calls to
-template methods. Most template methods return either the template object
-or an instance of an interface appropriate for the return type of the
-method. This allows the programmer simply to chain calls to template
-methods. The current jamon users have found this style of programming
-easier to read.
+
+Note that all arguments, both required and optional, are translated
+into Java as <code>final</code> variables.  Thus, the following Jamon
+code would <em>not</em> work:
+
+<&| ../_Template &><%LITERAL>
+<%args>
+  String message;
+  boolean isError;
+</%args>
+% if (isError) { message = "There was an error"; } // WILL NOT WORK
+<% message %>
+</%LITERAL></&>
+
+<%doc>
+<div class="note">Note: all arguments, both required and optional, are
+translated into Java as <code>final</code> variables. Thus, any Java
+code embedded in the Jamon template <strong>can not</strong> reassign
+values to the template arguments.</div>
+</%doc>
 
 <h3> Putting it all together</h3>
 <ol>
