@@ -253,7 +253,7 @@ public class StandardTemplateManager
         return prefix() + p_path + ".class";
     }
 
-    private void ensureUpToDate(String p_path)
+    private synchronized void ensureUpToDate(String p_path)
         throws IOException
     {
         Collection seen = new HashSet();
