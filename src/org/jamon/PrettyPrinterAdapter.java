@@ -15,12 +15,57 @@ public class PrettyPrinterAdapter extends AnalysisAdapter
         if (arg.getDefault() != null)
         {
             System.out.println(" => " +
-                               ((ADefault) arg.getDefault()).getFragment());
+                               ((ADefault) arg.getDefault()).getFragment().getText());
         }
         else
         {
             System.out.println();
         }
+    }
+
+    public void caseACallComponent(ACallComponent call)
+    {
+        System.out.print("<& ");
+        call.getName().apply(this);
+        System.out.print(" &>");
+    }
+
+    public void caseAImportsComponent(AImportsComponent imports)
+    {
+        System.out.println("<%import>");
+        for (Iterator i = imports.getName().iterator(); i.hasNext(); /* */ )
+        {
+            System.out.print("  ");
+            ((PName)i.next()).apply(this);
+            System.out.println();
+        }
+        System.out.println("</%import>");
+    }
+
+    public void caseAJlineComponent(AJlineComponent jline)
+    {
+        System.out.print("% ");
+        System.out.println(jline.getFragment().getText());
+    }
+
+    public void caseAJavaComponent(AJavaComponent java)
+    {
+        System.out.print("<%java>");
+        for (Iterator i = java.getAny().iterator(); i.hasNext(); /* */ )
+        {
+            System.out.print(((TAny)i.next()).getText());
+        }
+        System.out.print("</%java>");
+    }
+
+    public void caseAEmitComponent(AEmitComponent emit)
+    {
+        System.out.print("<% ");
+        for (Iterator i = emit.getAny().iterator(); i.hasNext(); /* */ )
+        {
+            System.out.print(((TAny)i.next()).getText());
+        }
+        System.out.print(" %>");
     }
 
     public void caseASimpleName(ASimpleName name)
@@ -30,7 +75,7 @@ public class PrettyPrinterAdapter extends AnalysisAdapter
 
     public void caseTIdentifier(TIdentifier id)
     {
-        System.out.print(id);
+        System.out.print(id.getText());
     }
 
     public void caseAQualifiedName(AQualifiedName name)
@@ -74,7 +119,7 @@ public class PrettyPrinterAdapter extends AnalysisAdapter
 
     public void caseABodyComponent(ABodyComponent body)
     {
-        System.out.print(body);
+        System.out.print(body.getAny().getText());
     }
 
     public void defaultCase(Node node)
