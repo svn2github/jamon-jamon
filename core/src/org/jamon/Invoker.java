@@ -105,7 +105,12 @@ public class Invoker
             {
                 throw new UsageException();
             }
-            m_templateClass = Class.forName(args[a]);
+            AbstractTemplateImpl impl = manager.getInstance(args[a]);
+            manager.releaseInstance(impl);
+            String className = impl.getClass().getName();
+            className = className.substring(0,className.length()-4);
+            m_templateClass =
+                manager.getWorkClassLoader().loadClass(className);
             Constructor con = m_templateClass
                 .getConstructor(new Class[] { TemplateManager.class });
             Method writeToMethod =
@@ -345,6 +350,7 @@ public class Invoker
         }
         catch (InvalidTemplateException e)
         {
+            e.printStackTrace();
             displayError(e.getMessage());
         }
         catch (Throwable t)
@@ -379,7 +385,7 @@ public class Invoker
                 + " [-o outputfile] "
                 + " [-s templatesourcedir]"
                 + " [-w workdir]"
-                + " template-name [[arg1=val1] ...]";
+                + " template-path [[arg1=val1] ...]";
         }
     }
 
