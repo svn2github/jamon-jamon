@@ -351,18 +351,9 @@ public class TemplateUnit
         for (Iterator i = getImports(); i.hasNext(); )
         {
             AImport imp = (AImport) i.next();
-            if (imp.getName() instanceof ASimpleName)
-            {
-                ASimpleName name = (ASimpleName) imp.getName();
-                p_writer.printLocation(name.getIdentifier());
-                p_writer.println("import " + name + ";");
-            }
-            else
-            {
-                AQualifiedName name = (AQualifiedName) imp.getName();
-                p_writer.printLocation(name.getIdentifier());
-                p_writer.println("import " + name + ";");
-            }
+            p_writer.println("import "
+                             + NodeUtils.asString(imp.getName())
+                             + ";");
         }
         p_writer.println();
     }

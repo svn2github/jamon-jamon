@@ -38,7 +38,7 @@ public abstract class AbstractArgument
     public AbstractArgument(AArg p_arg)
     {
         this(p_arg.getName().getText(),
-             asText((AType) p_arg.getType()));
+             NodeUtils.asString((AType) p_arg.getType()));
     }
 
     public String getName()
@@ -79,19 +79,6 @@ public abstract class AbstractArgument
     protected void generateImplDataSetterCode(IndentingWriter p_writer)
     {
         p_writer.println("m_" + getName() + " = " + getName() + ";");
-    }
-
-    private static String asText(AType p_type)
-    {
-        StringBuffer str = new StringBuffer();
-        str.append(p_type.getName().toString().trim());
-        for (Iterator i = p_type.getBrackets().iterator();
-             i.hasNext();
-             i.next())
-        {
-            str.append("[]");
-        }
-        return str.toString();
     }
 
     private final String m_name;

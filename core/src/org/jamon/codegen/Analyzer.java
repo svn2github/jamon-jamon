@@ -389,7 +389,8 @@ public class Analyzer
 
         public void caseAImplement(AImplement p_implement)
         {
-            getTemplateUnit().addInterface(p_implement.getName().toString());
+            getTemplateUnit().addInterface(
+                NodeUtils.asString(p_implement.getName()));
         }
 
         public void inAInheritedUse(AInheritedUse p_inheritedUse)
