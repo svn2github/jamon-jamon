@@ -125,7 +125,7 @@ public class JamonTask
             catch (Exception e)
             {
                 throw new BuildException
-                    (e.getMessage(),
+                    (e.getClass().getName() + ":" + e.getMessage(),
                      new Location(files[i].getAbsoluteFile().toString()));
             }
         }
