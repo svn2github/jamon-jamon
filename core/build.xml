@@ -75,6 +75,7 @@
 
   <target name="clean">
     <delete dir="${classes.dir}"/>
+    <delete dir="${tests.classes.dir}"/>
   </target>
 
   <target name="spotless" depends="clean">
