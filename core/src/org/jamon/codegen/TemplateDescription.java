@@ -78,7 +78,8 @@ public class TemplateDescription
     {
         m_requiredArgs = getRequiredArgs(p_intf, "");
         m_optionalArgs = getOptionalArgs(p_intf, "");
-        m_fragmentInterfaces = getFragmentArgs(p_intf, "");
+        m_fragmentInterfaces =
+            getFragmentArgs(p_intf, "", new TemplateUnit(null));
         m_methodUnits = new HashMap();
         String[] methodNames = getStringArray(p_intf, "METHOD_NAMES");
         for (int i = 0; i < methodNames.length; i++)
@@ -96,7 +97,7 @@ public class TemplateDescription
             {
                 method.addOptionalArg((OptionalArgument) j.next());
             }
-            for (Iterator j = getFragmentArgs(p_intf, prefix).iterator();
+            for (Iterator j = getFragmentArgs(p_intf, prefix, method).iterator();
                      j.hasNext(); )
             {
                 method.addFragmentArg((FragmentArgument) j.next());
@@ -141,7 +142,7 @@ public class TemplateDescription
         return args;
     }
 
-    private static List getFragmentArgs(Class p_class, String p_prefix)
+    private static List getFragmentArgs(Class p_class, String p_prefix, Unit p_parentUnit)
         throws NoSuchFieldException, IllegalAccessException
     {
         List fragmentArgs = new LinkedList();
@@ -150,17 +151,17 @@ public class TemplateDescription
         for (int i = 0; i < fragmentArgNames.length; i++)
         {
             FragmentUnit frag =
-                new FragmentUnit(fragmentArgNames[i], null);
-                String[] fragmentArgArgNames = getStringArray
-                    (p_class,
-                     p_prefix + "FRAGMENT_ARG_"
-                     + fragmentArgNames[i] + "_ARG_NAMES");
-                for(int j = 0; j < fragmentArgArgNames.length; j++)
-                {
-                    frag.addRequiredArg
-                        (new RequiredArgument(fragmentArgArgNames[j], null));
-                }
-                fragmentArgs.add(new FragmentArgument(frag));
+                new FragmentUnit(fragmentArgNames[i], p_parentUnit);
+            String[] fragmentArgArgNames = getStringArray
+                (p_class,
+                 p_prefix + "FRAGMENT_ARG_"
+                 + fragmentArgNames[i] + "_ARG_NAMES");
+            for(int j = 0; j < fragmentArgArgNames.length; j++)
+            {
+                frag.addRequiredArg
+                    (new RequiredArgument(fragmentArgArgNames[j], null));
+            }
+            fragmentArgs.add(new FragmentArgument(frag));
         }
         return fragmentArgs;
     }
