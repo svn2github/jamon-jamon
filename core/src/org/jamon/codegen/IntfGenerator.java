@@ -27,8 +27,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.LinkedList;
 
-import org.jamon.util.StringUtils;
-
 public class IntfGenerator
 {
     public IntfGenerator(Writer p_writer,
@@ -51,7 +49,8 @@ public class IntfGenerator
         generateDeclaration();
         generateConstructor();
         generateSignature();
-        generateArgArrays();
+        generateArgArrays(m_templateUnit, "");
+        generateMethodArrays();
         generateIntf();
         generateGetInstance();
         generateGetPath();
@@ -175,41 +174,6 @@ public class IntfGenerator
         m_writer.println();
     }
 
-    private void generateFargInfo()
-        throws IOException
-    {
-        for (Iterator f = m_templateUnit.getDeclaredFragmentArgs();
-             f.hasNext(); )
-        {
-            FragmentUnit fragmentUnit =
-                ((FragmentArgument) f.next()).getFragmentUnit();
-            String name = fragmentUnit.getName();
-            m_writer.print("public static final String[] FARGINFO_" + name
-                             + "_ARG_NAMES = new String[] ");
-            m_writer.openBlock();
-            for (Iterator a = fragmentUnit.getRequiredArgs(); a.hasNext(); )
-            {
-                m_writer.print("\""
-                               + ((RequiredArgument) a.next()).getName()
-                               + "\", ");
-            }
-            m_writer.closeBlock(";");
-
-            m_writer.print("public static final String[] FARGINFO_" + name
-                             + "_ARG_TYPES = new String[] ");
-            m_writer.openBlock();
-            for (Iterator a = fragmentUnit.getRequiredArgs(); a.hasNext(); )
-            {
-                m_writer.print("\""
-                               + ((RequiredArgument) a.next()).getType()
-                               + "\", ");
-            }
-            m_writer.closeBlock(";");
-        }
-        m_writer.println();
-    }
-
-
     private void generateDeclaration()
         throws IOException
     {
@@ -227,24 +191,52 @@ public class IntfGenerator
         m_writer.openBlock();
     }
 
-    private void generateArgArrays()
-        throws IOException
+    private void generateArgArrays(Unit p_unit, String p_prefix)
     {
         List parentRequiredArgs = new LinkedList();
-        printArgNames("REQUIRED", m_templateUnit.getSignatureRequiredArgs());
-        printArgTypes("REQUIRED", m_templateUnit.getSignatureRequiredArgs());
-        printArgNames("OPTIONAL", m_templateUnit.getSignatureOptionalArgs());
-        printArgTypes("OPTIONAL", m_templateUnit.getSignatureOptionalArgs());
+        printArgNames(p_prefix + "REQUIRED",
+                      p_unit.getSignatureRequiredArgs());
+        printArgTypes(p_prefix + "REQUIRED",
+                      p_unit.getSignatureRequiredArgs());
+        printArgNames(p_prefix + "OPTIONAL",
+                      p_unit.getSignatureOptionalArgs());
+        printArgTypes(p_prefix + "OPTIONAL",
+                      p_unit.getSignatureOptionalArgs());
 
-        m_writer.print("public static final String[] FRAGMENT_ARG_NAMES = ");
+        m_writer.print("public static final String[] "
+                       + p_prefix + "FRAGMENT_ARG_NAMES = ");
         m_writer.openBlock();
-        for (Iterator i = m_templateUnit.getFragmentArgs(); i.hasNext(); )
+        for (Iterator i = p_unit.getFragmentArgs(); i.hasNext(); )
         {
             printQuoted(((FragmentArgument) i.next()).getName());
         }
         m_writer.closeBlock(";");
 
-        generateFargInfo();
+        for (Iterator i = p_unit.getFragmentArgs(); i.hasNext(); )
+        {
+            FragmentArgument frag = (FragmentArgument) i.next();
+            printArgNames(p_prefix + "FRAGMENT_ARG_" + frag.getName(),
+                          frag.getFragmentUnit().getRequiredArgs());
+        }
+    }
+
+    private void generateMethodArrays()
+    {
+        m_writer.print("public static final String[] METHOD_NAMES = ");
+        m_writer.openBlock();
+        for (Iterator i = m_templateUnit.getSignatureMethodUnits();
+             i.hasNext(); )
+        {
+            printQuoted(((MethodUnit) i.next()).getName());
+        }
+        m_writer.closeBlock(";");
+        for (Iterator i = m_templateUnit.getSignatureMethodUnits();
+             i.hasNext(); )
+        {
+            MethodUnit methodUnit = (MethodUnit) i.next();
+            generateArgArrays(methodUnit,
+                              "METHOD_" + methodUnit.getName() + "_");
+        }
     }
 
     private void printArgNames(String p_argsType, Iterator p_args)
@@ -347,12 +339,12 @@ public class IntfGenerator
                 m_writer.print(pkgName + ".");
             }
             m_writer.print(getClassName());
-            m_writer.println(" set" + StringUtils.capitalize(name)
+            m_writer.println(" " + arg.getSetterName()
                              + "(" + arg.getType() +" p_" + name + ")");
             m_writer.print  ("  throws ");
             m_writer.println(ClassNames.IOEXCEPTION);
             m_writer.openBlock();
-            m_writer.println("getInstance().set" + StringUtils.capitalize(name)
+            m_writer.println("getInstance()." + arg.getSetterName()
                              + "(" + "p_" + name + ");");
             m_writer.println("return this;");
             m_writer.closeBlock();
@@ -395,7 +387,7 @@ public class IntfGenerator
             OptionalArgument arg = (OptionalArgument) i.next();
             m_writer.println();
             m_writer.println
-                ("void set" + StringUtils.capitalize(arg.getName())
+                ("void " + arg.getSetterName()
                  + "(" + arg.getType() + " " + arg.getName() + ");");
         }
         m_writer.closeBlock();

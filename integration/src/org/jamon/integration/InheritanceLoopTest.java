@@ -22,50 +22,20 @@ package org.jamon.integration;
 
 import org.jamon.JamonException;
 
-public class DisallowedFragmentArgsTest
+public class InheritanceLoopTest
     extends BrokenTestBase
 {
-    public void testFragmentInFragment()
+    public void testInheritanceLoop()
         throws Exception
     {
         try
         {
-            generateSource("test/jamon/broken/FragmentInFragment");
+            generateSource("test/jamon/broken/ParentLoop2");
             fail("No exception thrown");
         }
         catch(JamonException e)
         {
-            assertEquals("fragment 'null' has fragment argument(s)",
-                         e.getMessage());
-        }
-    }
-
-    public void testOptionalArgInFragment()
-        throws Exception
-    {
-        try
-        {
-            generateSource("test/jamon/broken/OptionalArgInFragment");
-            fail("No exception thrown");
-        }
-        catch(JamonException e)
-        {
-            assertEquals("fragment 'null' has optional argument(s)",
-                         e.getMessage());
-        }
-    }
-
-    public void testUnusedArgumentToFragment()
-        throws Exception
-    {
-        try
-        {
-            generateSource("test/jamon/broken/UnusedArgumentToFragment");
-            fail("No exception thrown");
-        }
-        catch(JamonException e)
-        {
-            assertEquals("fragment 'f' doesn't expect args i",
+            assertEquals("/test/jamon/broken/ParentLoop1 extends itself",
                          e.getMessage());
         }
     }

@@ -26,19 +26,21 @@ import java.util.Map;
 
 import org.jamon.JamonException;
 
-public class ComponentCallStatement
+public class MethodCallStatement
     extends AbstractCallStatement
 {
-    ComponentCallStatement(String p_path, Map p_params)
+    MethodCallStatement(String p_path, Map p_params, MethodUnit p_methodUnit)
     {
         super(p_path, p_params);
+        m_methodUnit = p_methodUnit;
     }
+
+    private final MethodUnit m_methodUnit;
 
     protected String getFragmentIntfName(FragmentUnit p_fragmentUnitIntf,
                                        TemplateResolver p_resolver)
     {
-        return p_resolver.getFullyQualifiedIntfClassName(getPath())
-            + "." + p_fragmentUnitIntf.getFragmentInterfaceName();
+        return p_fragmentUnitIntf.getFragmentInterfaceName();
     }
 
     public void generateSource(IndentingWriter p_writer,
@@ -46,31 +48,26 @@ public class ComponentCallStatement
                                TemplateDescriber p_describer)
         throws IOException
     {
-        String componentPath = getPath();
-        p_writer.println("new "
-                         + p_resolver.getFullyQualifiedIntfClassName
-                             (componentPath)
-                         +"(this.getTemplateManager())");
+        p_writer.println(m_methodUnit.getGetterName() + "()");
         p_writer.indent(5);
-        p_writer.println(".writeTo(this.getWriter())");
-        p_writer.println(".escaping(this.getEscaping())");
-
-        TemplateDescription desc =
-            p_describer.getTemplateDescription(componentPath);
-
-        for (Iterator i = desc.getOptionalArgs().iterator(); i.hasNext(); )
+        p_writer.println("._writeTo(this.getWriter())");
+        p_writer.println("._escaping(this.getEscaping())");
+        p_writer.println("._initialize()");
+        for (Iterator o = m_methodUnit.getSignatureOptionalArgs();
+             o.hasNext(); )
         {
-            OptionalArgument arg = (OptionalArgument) i.next();
-            String value = (String) getParams().remove(arg.getName());
-            if (value != null)
+            OptionalArgument arg = (OptionalArgument) o.next();
+            String name = arg.getName();
+            String expr = (String) getParams().remove(name);
+            if (expr != null)
             {
-                p_writer.println("." + arg.getSetterName() + "(" + value + ")");
-                i.remove(); //FIXME - why?
+                p_writer.println("." + arg.getSetterName() + "(" + expr + ")");
             }
         }
         p_writer.print(".render(");
         boolean argsAlreadyPrinted = false;
-        for (Iterator i = desc.getRequiredArgs().iterator(); i.hasNext(); )
+        for (Iterator i = m_methodUnit.getSignatureRequiredArgs();
+             i.hasNext(); )
         {
             if (argsAlreadyPrinted)
             {
@@ -88,7 +85,7 @@ public class ComponentCallStatement
             p_writer.print(expr);
             argsAlreadyPrinted = true;
         }
-        handleFragmentParams(desc.getFragmentInterfaces(),
+        handleFragmentParams(m_methodUnit.getFragmentArgsList(),
                              p_writer,
                              p_resolver,
                              p_describer,

@@ -26,7 +26,7 @@ import java.util.Map;
 
 public class FragmentUnit extends AbstractInnerUnit
 {
-    public FragmentUnit(String p_name, AbstractUnit p_parent)
+    public FragmentUnit(String p_name, Unit p_parent)
     {
         super(p_name, p_parent);
     }

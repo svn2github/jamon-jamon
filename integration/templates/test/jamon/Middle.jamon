@@ -1,9 +1,11 @@
-<%extends /test/jamon/Parent;
-          i;
-          opt1 => "o1m";
-          opt2 => "o2m";
-          opt5 => "o5m";
-          opt6; >\
+<%extends /test/jamon/Parent>\
+<%xargs>
+    i;
+    opt1 => "o1m";
+    opt2 => "o2m";
+    opt5 => "o5m";
+    opt6;
+</%xargs>\
 <%args>
   String a;
   boolean b;

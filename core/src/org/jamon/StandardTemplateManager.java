@@ -41,8 +41,7 @@ import org.jamon.util.StringUtils;
 import org.jamon.util.LifoMultiCache;
 import org.jamon.util.WorkDirClassLoader;
 import org.jamon.codegen.TemplateDescriber;
-import org.jamon.codegen.ImplAnalyzer;
-import org.jamon.codegen.BaseAnalyzer;
+import org.jamon.codegen.Analyzer;
 import org.jamon.codegen.ImplGenerator;
 import org.jamon.codegen.IntfGenerator;
 import org.jamon.codegen.TemplateResolver;
@@ -591,8 +590,7 @@ public class StandardTemplateManager
             trace("generating impl for " + p_path);
         }
 
-        TemplateUnit templateUnit =
-            new ImplAnalyzer(p_path,m_describer).analyze();
+        TemplateUnit templateUnit = new Analyzer(p_path,m_describer).analyze();
 
         File javaFile = getWriteableFile(javaImpl(p_path));
         FileWriter writer = new FileWriter(javaFile);
@@ -648,8 +646,8 @@ public class StandardTemplateManager
     private boolean generateIntfIfChanged(String p_path)
         throws IOException
     {
-        TemplateUnit templateUnit = new BaseAnalyzer(p_path, m_describer)
-                .analyze();
+        TemplateUnit templateUnit = new Analyzer(p_path, m_describer)
+            .analyze();
 
         String oldsig = getIntfSignatureFromClass(p_path);
         if (! templateUnit.getSignature().equals(oldsig))
@@ -717,7 +715,7 @@ public class StandardTemplateManager
             trace("computing dependencies for " + p_path);
         }
 
-        return new ImplAnalyzer(p_path, m_describer)
+        return new Analyzer(p_path, m_describer)
             .analyze()
             .getTemplateDependencies();
     }

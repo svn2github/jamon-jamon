@@ -11,26 +11,36 @@
  *
  * The Original Code is Jamon code, released February, 2003.
  *
- * The Initial Developer of the Original Code is Jay Sachs.  Portions
- * created by Jay Sachs are Copyright (C) 2003 Jay Sachs.  All Rights
+ * The Initial Developer of the Original Code is Ian Robertson.  Portions
+ * created by Ian Robertson are Copyright (C) 2003 Ian Robertson.  All Rights
  * Reserved.
  *
- * Contributor(s): Ian Robertson
+ * Contributor(s):
  */
 
 package org.jamon.codegen;
 
-import org.jamon.JamonException;
-
-public class DefUnit extends AbstractInnerUnit
+public class DeclaredMethodUnit
+    extends AbstractInnerUnit
+    implements MethodUnit
 {
-    public DefUnit(String p_name, Unit p_parent)
+    public DeclaredMethodUnit(String p_name, Unit p_parent)
     {
         super(p_name, p_parent);
     }
 
-    public void printAllArgsDecl(IndentingWriter p_writer)
+    public String getInterfaceName()
     {
-        printArgsDecl(p_writer, getAllArgs());
+        return "__jamon__Method_Intf_" + getName();
+    }
+
+    public String getImplName()
+    {
+        return "__jamon__Method_" + getName();
+    }
+
+    public String getGetterName()
+    {
+        return "__jamon__get_Method_Impl_" + getName();
     }
 }

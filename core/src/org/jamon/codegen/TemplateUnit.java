@@ -23,7 +23,6 @@ package org.jamon.codegen;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.HashMap;
@@ -32,13 +31,13 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.SortedMap;
-import java.util.TreeMap;
 
 import org.jamon.JamonException;
 import org.jamon.util.StringUtils;
 
-public class TemplateUnit extends AbstractUnit
+public class TemplateUnit
+    extends AbstractUnit
+    implements InheritedUnit
 {
     public TemplateUnit(String p_path)
     {
@@ -65,102 +64,63 @@ public class TemplateUnit extends AbstractUnit
         }
     }
 
-    public TemplateUnit processParent(TemplateDescriber p_describer)
-        throws IOException
-    {
-        return processParent(p_describer, new HashSet());
-    }
-
-    //FIXME - should get fargs working too.
-    public TemplateUnit processParent(TemplateDescriber p_describer,
+    public void processParent(TemplateDescriber p_describer,
                                       Set p_children)
         throws IOException
     {
-        if (hasParentPath())
+        if (p_children.contains(getParentPath()))
         {
-            if (p_children.contains(getParentPath()))
-            {
-                throw new JamonException(getParentPath() + " extends itself");
-            }
-            p_children.add(getParentPath());
-            setParentDescription
-                (p_describer.getTemplateDescription(getParentPath(),
-                                                    p_children));
+            throw new JamonException(getParentPath() + " extends itself");
         }
-        return this;
+        p_children.add(getParentPath());
+        setParentDescription
+            (p_describer.getTemplateDescription(getParentPath(),
+                                                p_children));
     }
+
+    /**
+     * public for unit testing purposes
+     **/
 
     public void setParentDescription(TemplateDescription p_parent)
     {
-        m_parentRequiredArgs.addAll(p_parent.getRequiredArgs());
-        m_parentOptionalArgs.addAll(p_parent.getOptionalArgs());
-        m_parentFragmentArgs.addAll(p_parent.getFragmentInterfaces());
+        m_parentDescription = p_parent;
         //FIXME - join them later.
         m_fragmentArgs.addAll(p_parent.getFragmentInterfaces());
 
-        for(Iterator i = new SequentialIterator
-            (p_parent.getRequiredArgs().iterator(),
-             p_parent.getOptionalArgs().iterator());
-            i.hasNext(); )
+        m_inheritedArgs = new InheritedArgs(getName(),
+                                            getParentPath(),
+                                            p_parent.getRequiredArgs(),
+                                            p_parent.getOptionalArgs(),
+                                            p_parent.getFragmentInterfaces());
+
+        for (Iterator i = new SequentialIterator(
+                p_parent.getRequiredArgs().iterator(),
+                p_parent.getOptionalArgs().iterator(),
+                p_parent.getFragmentInterfaces().iterator());
+             i.hasNext(); )
         {
             checkArgName(((AbstractArgument) i.next()));
         }
 
-        m_parentSignature = p_parent.getSignature();
+        for (Iterator i = p_parent.getMethodUnits().keySet().iterator();
+             i.hasNext(); )
+        {
+            checkCallName((String) i.next());
+        }
     }
 
     public void addParentArg(String p_name, String p_default)
     {
-        for(Iterator i = m_parentRequiredArgs.iterator(); i.hasNext(); )
+        if(hasParentPath())
         {
-            RequiredArgument arg = (RequiredArgument) i.next();
-            if(arg.getName().equals(p_name))
-            {
-                if(p_default != null)
-                {
-                    //FIXME - unit test this.
-                    throw new TunnelingException
-                        (getName()
-                         + " gives a default value to inherited required argument "
-                         + p_name);
-                }
-                m_visibleArgs.add(arg);
-                return;
-            }
+            m_inheritedArgs.addParentArg(p_name, p_default);
         }
-
-        for(Iterator i = m_parentOptionalArgs.iterator(); i.hasNext(); )
+        else
         {
-            OptionalArgument arg = (OptionalArgument) i.next();
-            if(arg.getName().equals(p_name))
-            {
-                arg.setDefault(p_default);
-                m_visibleArgs.add(arg);
-                return;
-            }
+            throw new TunnelingException
+                (getName() + " has xargs but does not extend anything");
         }
-
-        for (Iterator i = getFragmentArgs(); i.hasNext(); )
-        {
-            FragmentArgument arg = (FragmentArgument) i.next();
-            if (arg.getName().equals(p_name))
-            {
-                if(p_default != null)
-                {
-                    //FIXME - unit test this.
-                    throw new TunnelingException
-                        (getName()
-                         + " gives a default value to inherited fragment argument "
-                         + p_name);
-                }
-                m_visibleArgs.add(arg);
-                return;
-            }
-        }
-
-        throw new TunnelingException(getName() + " mistakenly thinks that "
-                                     + getParentPath()
-                                     + " has an arg named "  + p_name);
     }
 
     public Iterator getFragmentArgs()
@@ -178,7 +138,6 @@ public class TemplateUnit extends AbstractUnit
         checkArgName(p_arg);
         m_fragmentArgs.add(p_arg);
         m_declaredFragmentArgs.add(p_arg);
-        m_visibleArgs.add(p_arg);
     }
 
     public Iterator getDeclaredFragmentArgs()
@@ -190,38 +149,45 @@ public class TemplateUnit extends AbstractUnit
     {
         checkArgName(p_arg);
         m_declaredRequiredArgs.add(p_arg);
-        m_visibleArgs.add(p_arg);
     }
 
     public void addOptionalArg(OptionalArgument p_arg)
     {
         checkArgName(p_arg);
         m_declaredOptionalArgs.add(p_arg);
-        m_visibleArgs.add(p_arg);
     }
 
     public Iterator getSignatureRequiredArgs()
     {
-        return new SequentialIterator(m_parentRequiredArgs.iterator(),
-                                      m_declaredRequiredArgs.iterator());
+        return new SequentialIterator
+            (m_parentDescription.getRequiredArgs().iterator(),
+             m_declaredRequiredArgs.iterator());
     }
 
     public boolean hasSignatureRequiredArgs()
     {
-        return ! m_parentRequiredArgs.isEmpty()
+        return ! m_parentDescription.getRequiredArgs().isEmpty()
             || ! m_declaredRequiredArgs.isEmpty()
             || ! m_fragmentArgs.isEmpty();
     }
 
     public Iterator getSignatureOptionalArgs()
     {
-        return new SequentialIterator(m_parentOptionalArgs.iterator(),
-                                      m_declaredOptionalArgs.iterator());
+        return new SequentialIterator
+            (m_parentDescription.getOptionalArgs().iterator(),
+             m_declaredOptionalArgs.iterator());
     }
 
     public Iterator getVisibleArgs()
     {
-        return m_visibleArgs.iterator();
+        return m_inheritedArgs == null
+            ? new SequentialIterator(getDeclaredRequiredArgs(),
+                                     getDeclaredOptionalArgs(),
+                                     getDeclaredFragmentArgs())
+            : new SequentialIterator(m_inheritedArgs.getVisibleArgs(),
+                                     getDeclaredRequiredArgs(),
+                                     getDeclaredOptionalArgs(),
+                                     getDeclaredFragmentArgs());
     }
 
     public Iterator getDeclaredRequiredArgs()
@@ -239,8 +205,20 @@ public class TemplateUnit extends AbstractUnit
         return m_dependencies;
     }
 
+    private void checkCallName(String p_name)
+    {
+        if (! m_callNames.add(p_name))
+        {
+            throw new TunnelingException
+                (getName()
+                 + " has multiple defs and/or methods named "
+                 + p_name);
+        }
+    }
+
     public void makeDefUnit(String p_defName)
     {
+        checkCallName(p_defName);
         m_defs.put(p_defName, new DefUnit(p_defName, this));
     }
 
@@ -259,9 +237,55 @@ public class TemplateUnit extends AbstractUnit
         return m_defs.keySet();
     }
 
-    public boolean doesDefExist(String p_name)
+    public void makeMethodUnit(String p_methodName)
     {
-        return m_defs.containsKey(p_name);
+        checkCallName(p_methodName);
+        m_methods.put(p_methodName,
+                      new DeclaredMethodUnit(p_methodName, this));
+    }
+
+    public OverriddenMethodUnit makeOverridenMethodUnit(String p_methodName)
+    {
+        DeclaredMethodUnit methodUnit = (DeclaredMethodUnit)
+            m_parentDescription.getMethodUnits().get(p_methodName);
+        if(methodUnit == null)
+        {
+            //FIXME - unit test
+            throw new TunnelingException
+                (getName() + " attempts to override nonexistant method named "
+                 + p_methodName);
+        }
+
+        OverriddenMethodUnit override =
+            new OverriddenMethodUnit(methodUnit, this);
+        m_overrides.add(override);
+        return override;
+    }
+
+    public MethodUnit getMethodUnit(String p_name)
+    {
+        return
+            (MethodUnit) (m_methods.containsKey(p_name)
+                          ? m_methods.get(p_name)
+                          : m_parentDescription.getMethodUnits().get(p_name));
+    }
+
+    public Iterator getSignatureMethodUnits()
+    {
+        return new SequentialIterator
+            (getDeclaredMethodUnits(),
+             m_parentDescription.getMethodUnits().values().iterator());
+    }
+
+    public Iterator getDeclaredMethodUnits()
+    {
+        return m_methods.values().iterator();
+    }
+
+    public Iterator getImplementedMethodUnits()
+    {
+        return new SequentialIterator(getDeclaredMethodUnits(),
+                                      m_overrides.iterator());
     }
 
     public Iterator getImports()
@@ -320,43 +344,57 @@ public class TemplateUnit extends AbstractUnit
         m_dependencies.add(getAbsolutePath(p_callPath));
     }
 
-    private Set m_visibleArgs = new HashSet();
-    private List m_parentRequiredArgs = new LinkedList();
-    private List m_declaredRequiredArgs = new LinkedList();
+    private InheritedArgs m_inheritedArgs;
+    private TemplateDescription m_parentDescription =
+        TemplateDescription.EMPTY;
+    private final List m_declaredRequiredArgs = new LinkedList();
     private final List m_fragmentArgs = new LinkedList();
-    private Set m_parentOptionalArgs = new HashSet();
-    private Set m_declaredOptionalArgs = new HashSet();
-    private Set m_declaredFragmentArgs = new HashSet();
-    private List m_parentFragmentArgs = new LinkedList();
+    private final Set m_declaredOptionalArgs = new HashSet();
+    private final Set m_declaredFragmentArgs = new HashSet();
 
-    private Map m_defs = new HashMap();
-    private String m_parentSignature = null;
+    private final Map m_defs = new HashMap();
+    private final Map m_methods = new HashMap();
+    private final List m_overrides = new LinkedList();
     private final List m_imports = new LinkedList();
-    private String m_parentPath = null;
+    private String m_parentPath;
     private boolean m_isParent = false;
-    private StringBuffer m_classContent = new StringBuffer();
-    private Set m_dependencies = new HashSet();
+    private final StringBuffer m_classContent = new StringBuffer();
+    private final Set m_dependencies = new HashSet();
+    private final Set m_callNames = new HashSet();
+
+    protected void printRenderBodyEnd(IndentingWriter p_writer)
+    {
+        if(! hasParentPath())
+        {
+            p_writer.println("if (isAutoFlushEnabled())");
+            p_writer.openBlock();
+            p_writer.println("getWriter().flush();");
+            p_writer.closeBlock();
+        }
+    }
 
     public boolean hasRequiredParentArgs()
     {
-        return m_parentRequiredArgs.size() + m_parentFragmentArgs.size() > 0;
+        return ! (m_parentDescription.getRequiredArgs().isEmpty()
+                  && m_parentDescription.getFragmentInterfaces().isEmpty());
     }
 
     public void printParentRequiredArgs(IndentingWriter p_writer)
     {
         printArgs(p_writer,
                   new SequentialIterator
-                      (m_parentRequiredArgs.iterator(),
-                       m_parentFragmentArgs.iterator()));
+                      (m_parentDescription.getRequiredArgs().iterator(),
+                       m_parentDescription.getFragmentInterfaces().iterator())
+                      );
     }
 
     protected void generateInterfaceSummary(StringBuffer p_buf)
     {
         super.generateInterfaceSummary(p_buf);
-        if(m_parentSignature != null)
+        if(m_parentDescription != null)
         {
             p_buf.append("Parent sig: ");
-            p_buf.append(m_parentSignature);
+            p_buf.append(m_parentDescription.getSignature());
             p_buf.append("\n");
         }
         for(Iterator i = getFragmentArgs(); i.hasNext(); )

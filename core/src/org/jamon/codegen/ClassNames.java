@@ -25,6 +25,8 @@ public interface ClassNames
     public final static String IOEXCEPTION =
         java.io.IOException.class.getName();
     public final static String WRITER = java.io.Writer.class.getName();
+    public final static String ESCAPING =
+        org.jamon.escaping.Escaping.class.getName();
     public final static String RENDERER = org.jamon.Renderer.class.getName();
     public final static String TEMPLATE =
         org.jamon.AbstractTemplateProxy.class.getName();

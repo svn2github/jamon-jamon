@@ -24,8 +24,6 @@ import java.io.Writer;
 import java.io.IOException;
 import java.util.Iterator;
 
-import org.jamon.util.StringUtils;
-
 public class ImplGenerator
 {
     public ImplGenerator(Writer p_writer,
@@ -45,11 +43,13 @@ public class ImplGenerator
         generatePrologue();
         generateImports();
         generateDeclaration();
-        generateConstructor();
-        generateInitialize();
+        generateConstructor(getClassName());
+        generateInitialize(m_templateUnit.getSignatureOptionalArgs(),
+                           m_templateUnit.hasParentPath());
         generateRender();
-        generateOptionalArgs();
+        generateOptionalArgs(m_templateUnit.getDeclaredOptionalArgs(), null);
         generateDefs();
+        generateMethods();
         generateEpilogue();
         m_writer.finish();
     }
@@ -90,20 +90,20 @@ public class ImplGenerator
         m_writer.println(m_templateUnit.getClassContent());
     }
 
-    private void generateInitialize()
+    private void generateInitialize(Iterator p_optionalArgs,
+                                    boolean p_hasParent)
         throws IOException
     {
         m_writer.println("protected void initializeDefaultArguments()");
         m_writer.println("  throws Exception");
         m_writer.openBlock();
-        if (m_templateUnit.hasParentPath())
+        if (p_hasParent)
         {
             m_writer.println("super.initializeDefaultArguments();");
         }
-        for (Iterator i = m_templateUnit.getSignatureOptionalArgs();
-             i.hasNext(); )
+        while (p_optionalArgs.hasNext())
         {
-            OptionalArgument arg = (OptionalArgument) i.next();
+            OptionalArgument arg = (OptionalArgument) p_optionalArgs.next();
             if(arg.getDefault() != null)
             {
                 m_writer.println(arg.getObfuscatedName()
@@ -114,10 +114,10 @@ public class ImplGenerator
         m_writer.println();
     }
 
-    private void generateConstructor()
+    private void generateConstructor(String p_className)
         throws IOException
     {
-        m_writer.println("public " +  getClassName()
+        m_writer.println("public " +  p_className
                        + "(" + ClassNames.TEMPLATE_MANAGER
                        + " p_templateManager, String p_path)");
         m_writer.openBlock();
@@ -149,10 +149,12 @@ public class ImplGenerator
         m_writer.closeBlock();
     }
 
-    private void generateDefFargInterface(FragmentUnit p_fragmentUnit)
+    private void generateInnerUnitFargInterface(FragmentUnit p_fragmentUnit,
+                                                boolean p_private)
         throws IOException
     {
-        m_writer.println("private static abstract class "
+        m_writer.println((p_private ? "private" : "protected")
+                         + " static abstract class "
                          + p_fragmentUnit.getFragmentInterfaceName());
         m_writer.println("  extends " + ClassNames.BASE_TEMPLATE);
         m_writer.openBlock();
@@ -177,15 +179,15 @@ public class ImplGenerator
     private void generateDefs()
         throws IOException
     {
-        for (Iterator d = m_templateUnit.getDefUnits();
-             d.hasNext(); )
+        for (Iterator i = m_templateUnit.getDefUnits(); i.hasNext(); )
         {
-            DefUnit defUnit = (DefUnit) d.next();
+            DefUnit defUnit = (DefUnit) i.next();
             m_writer.println();
             for (Iterator f = defUnit.getFragmentArgs(); f.hasNext(); )
             {
-                generateDefFargInterface(((FragmentArgument) f.next())
-                                         .getFragmentUnit());
+                generateInnerUnitFargInterface(((FragmentArgument) f.next())
+                                               .getFragmentUnit(),
+                                               true);
             }
 
             m_writer.print("private void __jamon_def__");
@@ -194,15 +196,108 @@ public class ImplGenerator
             defUnit.printAllArgsDecl(m_writer);
             m_writer.println(")");
             m_writer.print  ("  throws " + ClassNames.IOEXCEPTION);
-            m_writer.openBlock();
-            defUnit.printArgDeobfuscations(m_writer);
-            defUnit.printStatements(m_writer,
-                                    m_resolver,
-                                    m_describer);
-            m_writer.closeBlock();
+            defUnit.generateRenderBody(m_writer, m_resolver, m_describer);
             m_writer.println();
         }
     }
+
+    private void generateMethods()
+        throws IOException
+    {
+        for (Iterator i = m_templateUnit.getDeclaredMethodUnits();
+             i.hasNext(); )
+        {
+            generateMethodIntf((MethodUnit) i.next());
+        }
+        for (Iterator i = m_templateUnit.getImplementedMethodUnits();
+             i.hasNext(); )
+        {
+            generateMethodImpl((MethodUnit) i.next());
+        }
+    }
+
+    private void generateMethodIntf(MethodUnit p_methodUnit)
+        throws IOException
+    {
+        m_writer.println();
+        for (Iterator f = p_methodUnit.getFragmentArgs(); f.hasNext(); )
+        {
+            generateInnerUnitFargInterface(((FragmentArgument) f.next())
+                                           .getFragmentUnit(),
+                                           false);
+        }
+
+        m_writer.println("protected static abstract class "
+                         + p_methodUnit.getInterfaceName()
+                         + " extends " + ClassNames.BASE_TEMPLATE);
+        m_writer.openBlock();
+
+        generateConstructor(p_methodUnit.getInterfaceName());
+
+        // change names so we can return self
+        m_writer.println("public " + p_methodUnit.getInterfaceName()
+                         + " _writeTo(" + ClassNames.WRITER + " p_writer)");
+        m_writer.openBlock();
+        m_writer.println("writeTo(p_writer);");
+        m_writer.println("return this;");
+        m_writer.closeBlock();
+
+        m_writer.println("public " + p_methodUnit.getInterfaceName()
+                         + " _escaping("
+                         + ClassNames.ESCAPING + " p_escaping)");
+        m_writer.openBlock();
+        m_writer.println("escaping(p_escaping);");
+        m_writer.println("return this;");
+        m_writer.closeBlock();
+
+        m_writer.println("public " + p_methodUnit.getInterfaceName()
+                         + " _initialize() throws " + ClassNames.IOEXCEPTION);
+        m_writer.openBlock();
+        m_writer.println("initialize();");
+        m_writer.println("return this;");
+        m_writer.closeBlock();
+
+        m_writer.print("public abstract void render(");
+        p_methodUnit.printRequiredArgsDecl(m_writer);
+        m_writer.println(")");
+        m_writer.println("  throws java.io.IOException;");
+
+
+        generateOptionalArgs(p_methodUnit.getSignatureOptionalArgs(),
+                             p_methodUnit.getInterfaceName());
+
+        m_writer.closeBlock();
+    }
+
+
+    private void generateMethodImpl(MethodUnit p_methodUnit)
+        throws IOException
+    {
+        m_writer.println();
+        m_writer.println("protected static class "
+                         + p_methodUnit.getImplName()
+                         + " extends " + p_methodUnit.getInterfaceName());
+        m_writer.openBlock();
+        generateConstructor(p_methodUnit.getImplName());
+
+        m_writer.print("public void render(");
+        p_methodUnit.printRequiredArgsDecl(m_writer);
+        m_writer.println(")");
+        m_writer.println("  throws java.io.IOException");
+        p_methodUnit.generateRenderBody(m_writer, m_resolver, m_describer);
+
+        generateInitialize(p_methodUnit.getSignatureOptionalArgs(), false);
+        m_writer.closeBlock();
+
+        m_writer.println("protected " +  p_methodUnit.getInterfaceName()
+                         + " " + p_methodUnit.getGetterName() + "()");
+        m_writer.openBlock();
+        m_writer.println("return new " + p_methodUnit.getImplName()
+                         + "(this.getTemplateManager(), \""
+                         + p_methodUnit.getName() + "\");");
+        m_writer.closeBlock();
+    }
+
 
     final static String CHILD_FARG_NAME = "_Jamon_Fragment__CHILD";
 
@@ -222,9 +317,9 @@ public class ImplGenerator
         m_templateUnit.printRequiredArgsDecl(m_writer);
         m_writer.println(")");
         m_writer.println("  throws " + ClassNames.IOEXCEPTION);
-        m_writer.openBlock();
         if(m_templateUnit.hasParentPath())
         {
+            m_writer.openBlock();
             m_writer.println("super.render(");
             m_writer.indent(2);
             m_writer.print("new " + ClassNames.CHILD_FARG
@@ -232,9 +327,9 @@ public class ImplGenerator
             m_writer.openBlock();
             m_writer.println("public void render() throws "
                              + ClassNames.IOEXCEPTION);
-            m_writer.openBlock();
-            generateRenderBody();
-            m_writer.closeBlock();
+            m_templateUnit.generateRenderBody(m_writer,
+                                              m_resolver,
+                                              m_describer);
             if(m_templateUnit.hasRequiredParentArgs())
             {
                 m_writer.closeBlock(",");
@@ -246,43 +341,36 @@ public class ImplGenerator
                 m_writer.closeBlock(");");
             }
             m_writer.outdent(2);
+            m_writer.closeBlock();
         }
         else
         {
-            generateRenderBody();
+            m_templateUnit.generateRenderBody(m_writer,
+                                              m_resolver,
+                                              m_describer);
         }
-        m_writer.closeBlock();
     }
 
-    private void generateRenderBody()
+    private void generateOptionalArgs(Iterator p_args, String p_returnType)
         throws IOException
     {
-        m_templateUnit.printArgDeobfuscations(m_writer);
-        m_templateUnit.printStatements(m_writer,
-                                       m_resolver,
-                                       m_describer);
-        m_writer.println("if (isAutoFlushEnabled())");
-        m_writer.openBlock();
-        m_writer.println("getWriter().flush();");
-        m_writer.closeBlock();
-    }
-
-    private void generateOptionalArgs()
-        throws IOException
-    {
-        for (Iterator i = m_templateUnit.getDeclaredOptionalArgs();
-             i.hasNext(); )
+        while (p_args.hasNext())
         {
             m_writer.println();
-            OptionalArgument arg = (OptionalArgument) i.next();
+            OptionalArgument arg = (OptionalArgument) p_args.next();
             String name = arg.getName();
             String type = arg.getType();
-            m_writer.println
-                ("public void set" + StringUtils.capitalize(name)
-                 + "(" + type + " p_" + name + ")");
+            m_writer.println("public "
+                             + (p_returnType != null ? p_returnType : "void")
+                             + " " + arg.getSetterName()
+                             + "(" + type + " p_" + name + ")");
             m_writer.openBlock();
             m_writer.println(arg.getObfuscatedName()
                              + " = p_" + name + ";");
+            if(p_returnType != null)
+            {
+                m_writer.println("return this;");
+            }
             m_writer.closeBlock();
             m_writer.println();
             m_writer.println("protected " + type + " "

@@ -26,6 +26,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.jamon.JamonException;
+import org.jamon.util.StringUtils;
 
 public class FargCallStatement
     implements Statement
@@ -55,21 +56,27 @@ public class FargCallStatement
         {
             RequiredArgument arg = (RequiredArgument) r.next();
             String name = arg.getName();
-            String expr = (String) m_params.get(name);
+            String expr = (String) m_params.remove(name);
             if (expr == null)
             {
                 throw new JamonException
                     ("No value supplied for required argument " + name);
             }
-            p_writer.print("(");
-            p_writer.print(expr);
-            p_writer.print(")");
+            p_writer.print("(" + expr + ")");
             if (r.hasNext())
             {
                 p_writer.print(", ");
             }
         }
         p_writer.println(");");
+        if( ! m_params.isEmpty() )
+        {
+            StringBuffer message = new StringBuffer("fragment '");
+            message.append(getPath());
+            message.append("' doesn't expect args ");
+            StringUtils.commaJoin(message, m_params.keySet().iterator());
+            throw new JamonException(message.toString());
+        }
     }
 
     private String getPath()

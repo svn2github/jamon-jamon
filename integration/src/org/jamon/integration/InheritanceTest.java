@@ -154,6 +154,19 @@ public class InheritanceTest
         checkCompilationFailure("/test/jamon/broken/OptionalArgSnoopingChild");
     }
 
+    public void testHiddenParentFragmentArgs()
+        throws Exception
+    {
+        checkCompilationFailure("/test/jamon/broken/FragmentArgSnoopingChild");
+    }
+
+    public void testLibOnlyParentFragment()
+        throws Exception
+    {
+            getRecompilingTemplateManager().acquireInstance
+                ("/test/jamon/external/ChildFragment");
+    }
+
     private void checkCompilationFailure(String p_path)
         throws IOException
     {

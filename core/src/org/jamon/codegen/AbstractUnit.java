@@ -29,8 +29,9 @@ import java.util.Set;
 import java.util.TreeMap;
 
 public abstract class AbstractUnit
+    implements Unit
 {
-    public AbstractUnit(String p_name, AbstractUnit p_parent)
+    public AbstractUnit(String p_name, Unit p_parent)
     {
         m_name = p_name;
         m_parent = p_parent;
@@ -41,7 +42,7 @@ public abstract class AbstractUnit
         return m_name;
     }
 
-    public final AbstractUnit getParent()
+    public final Unit getParent()
     {
         return m_parent;
     }
@@ -73,17 +74,43 @@ public abstract class AbstractUnit
         return m_statements;
     }
 
-    public void printStatements(IndentingWriter p_writer,
+    public void generateRenderBody(IndentingWriter p_writer,
+                                   TemplateResolver p_resolver,
+                                   TemplateDescriber p_describer)
+        throws IOException
+    {
+        p_writer.openBlock();
+        printArgDeobfuscations(p_writer);
+        printStatements(p_writer, p_resolver, p_describer);
+        printRenderBodyEnd(p_writer);
+        p_writer.closeBlock();
+    }
+
+    private void printArgDeobfuscations(IndentingWriter p_writer)
+    {
+        for (Iterator i = getVisibleArgs(); i.hasNext(); )
+        {
+            AbstractArgument arg = (AbstractArgument) i.next();
+            p_writer.println("final " + arg.getType() + " " + arg.getName()
+                             + " = " + arg.getObfuscatedName() + ";");
+        }
+    }
+
+    private void printStatements(IndentingWriter p_writer,
                                 TemplateResolver p_resolver,
                                 TemplateDescriber p_describer)
         throws IOException
     {
-        for (Iterator i = getStatements().iterator(); i.hasNext(); /* */)
+        for (Iterator i = getStatements().iterator(); i.hasNext(); )
         {
             ((Statement)i.next()).generateSource(p_writer,
                                                  p_resolver,
                                                  p_describer);
         }
+    }
+
+    protected void printRenderBodyEnd(IndentingWriter p_writer)
+    {
     }
 
     public abstract void addRequiredArg(RequiredArgument p_arg);
@@ -93,7 +120,7 @@ public abstract class AbstractUnit
     public abstract Iterator getVisibleArgs();
 
     private final String m_name;
-    private final AbstractUnit m_parent;
+    private final Unit m_parent;
     private final List m_statements = new LinkedList();
     private final Set m_argNames = new HashSet();
 
@@ -106,6 +133,8 @@ public abstract class AbstractUnit
                  + p_arg.getName());
         }
     }
+
+
 
     public void printRequiredArgsDecl(IndentingWriter p_writer)
     {
@@ -146,16 +175,6 @@ public abstract class AbstractUnit
             {
                 p_writer.print(", ");
             }
-        }
-    }
-
-    public void printArgDeobfuscations(IndentingWriter p_writer)
-    {
-        for (Iterator i = getVisibleArgs(); i.hasNext(); )
-        {
-            AbstractArgument arg = (AbstractArgument) i.next();
-            p_writer.println("final " + arg.getType() + " " + arg.getName()
-                             + " = " + arg.getObfuscatedName() + ";");
         }
     }
 

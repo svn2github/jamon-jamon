@@ -1,0 +1,4 @@
+<%extends MethodParent>\
+{ child: \
+{<& foo; req1 => "req1" &>} {<& foo; req1 => "req1"; opt1 => "po2" &>} \
+{<&| bar &><%args> int j; </%args>passed <% j %></&>} }

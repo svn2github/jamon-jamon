@@ -60,7 +60,6 @@ public class TemplateDescriber
         return getTemplateDescription(p_path, new HashSet());
     }
 
-    //FIXME - need a unit test for finding inheritance loops.
     public TemplateDescription getTemplateDescription(final String p_path,
                                                       final Set p_children)
          throws IOException
@@ -68,7 +67,7 @@ public class TemplateDescriber
          if (m_templateSource.available(p_path))
          {
              return new TemplateDescription
-                 (new BaseAnalyzer(p_path, this, p_children).analyze());
+                 (new Analyzer(p_path, this, p_children).analyze());
          }
          else
          {

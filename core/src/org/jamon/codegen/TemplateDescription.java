@@ -21,7 +21,9 @@
 package org.jamon.codegen;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -36,6 +38,18 @@ public class TemplateDescription
     private final Set m_optionalArgs;
     private final String m_signature;
     private final List m_fragmentInterfaces;
+    private final Map m_methodUnits;
+
+    public final static TemplateDescription EMPTY = new TemplateDescription();
+
+    private TemplateDescription()
+    {
+        m_requiredArgs = Collections.EMPTY_LIST;
+        m_optionalArgs = Collections.EMPTY_SET;
+        m_signature = null;
+        m_fragmentInterfaces = Collections.EMPTY_LIST;
+        m_methodUnits = Collections.EMPTY_MAP;
+    }
 
     public TemplateDescription(TemplateUnit p_templateUnit)
         throws JamonException
@@ -46,6 +60,13 @@ public class TemplateDescription
         addAll(m_optionalArgs, p_templateUnit.getSignatureOptionalArgs() );
         m_signature = p_templateUnit.getSignature();
         m_fragmentInterfaces = p_templateUnit.getFragmentArgsList();
+        m_methodUnits = new HashMap();
+        for (Iterator i = p_templateUnit.getSignatureMethodUnits();
+             i.hasNext(); )
+        {
+            MethodUnit methodUnit = (MethodUnit) i.next();
+            m_methodUnits.put(methodUnit.getName(), methodUnit);
+        }
     }
 
     public TemplateDescription(Class p_intf)
@@ -53,56 +74,34 @@ public class TemplateDescription
     {
         try
         {
-            String[] requiredArgNames =
-                (String[]) p_intf.getField("REQUIRED_ARG_NAMES").get(null);
-            String[] requiredArgTypes =
-                (String[]) p_intf.getField("REQUIRED_ARG_TYPES").get(null);
-            m_requiredArgs = new LinkedList();
-            for(int i = 0; i < requiredArgNames.length; i++)
+            m_requiredArgs = getRequiredArgs(p_intf, "");
+            m_optionalArgs = getOptionalArgs(p_intf, "");
+            m_fragmentInterfaces = getFragmentArgs(p_intf, "");
+            m_methodUnits = new HashMap();
+            String[] methodNames = getStringArray(p_intf, "METHOD_NAMES");
+            for (int i = 0; i < methodNames.length; i++)
             {
-                m_requiredArgs.add
-                    (new RequiredArgument(requiredArgNames[i],
-                                          requiredArgTypes[i]));
-            }
-
-            String[] optionalArgNames =
-                (String[]) p_intf.getField("OPTIONAL_ARG_NAMES").get(null);
-            String[] optionalArgTypes =
-                (String[]) p_intf.getField("OPTIONAL_ARG_TYPES").get(null);
-            m_optionalArgs = new HashSet();
-            for(int i = 0; i < optionalArgNames.length; i++)
-            {
-                m_optionalArgs.add
-                    (new OptionalArgument(optionalArgNames[i],
-                                          optionalArgTypes[i],
-                                          null));
-            }
-
-            m_signature = (String) p_intf.getField("SIGNATURE").get(null);
-
-            m_fragmentInterfaces = new LinkedList();
-            String[] fragmentArgNames =
-                (String []) p_intf.getField("FRAGMENT_ARG_NAMES").get(null);
-            for (int i = 0; i < fragmentArgNames.length; i++)
-            {
-                FragmentUnit fragmentUnit =
-                    new FragmentUnit(fragmentArgNames[i], null);
-                String[] argNames = (String[])
-                    p_intf
-                    .getField("FARGINFO_" + fragmentArgNames[i] + "_ARG_NAMES")
-                    .get(null);
-                String[] argTypes = (String[])
-                    p_intf
-                    .getField("FARGINFO_" + fragmentArgNames[i] + "_ARG_TYPES")
-                    .get(null);
-                for(int j = 0; j < argNames.length; j++)
+                MethodUnit method =
+                    new DeclaredMethodUnit(methodNames[i], null);
+                String prefix = "METHOD_" + methodNames[i] + "_";
+                for (Iterator j = getRequiredArgs(p_intf, prefix).iterator();
+                     j.hasNext(); )
                 {
-                    fragmentUnit.addRequiredArg
-                        (new RequiredArgument(argNames[j], argTypes[j]));
+                    method.addRequiredArg((RequiredArgument) j.next());
                 }
-                m_fragmentInterfaces.add(new FragmentArgument(fragmentUnit));
+                for (Iterator j = getOptionalArgs(p_intf, prefix).iterator();
+                     j.hasNext(); )
+                {
+                    method.addOptionalArg((OptionalArgument) j.next());
+                }
+                for (Iterator j = getFragmentArgs(p_intf, prefix).iterator();
+                     j.hasNext(); )
+                {
+                    method.addFragmentArg((FragmentArgument) j.next());
+                }
+                m_methodUnits.put(method.getName(), method);
             }
-
+            m_signature = (String) p_intf.getField("SIGNATURE").get(null);
         }
         catch (NoSuchFieldException e)
         {
@@ -112,6 +111,69 @@ public class TemplateDescription
         {
             throw new JamonException(e);
         }
+    }
+
+    private static List getRequiredArgs(Class p_class, String p_prefix)
+        throws NoSuchFieldException, IllegalAccessException
+    {
+        List args = new LinkedList();
+        String[] requiredArgNames =
+            getStringArray(p_class, p_prefix + "REQUIRED_ARG_NAMES");
+        String[] requiredArgTypes =
+            getStringArray(p_class, p_prefix + "REQUIRED_ARG_TYPES");
+        for(int i = 0; i < requiredArgNames.length; i++)
+        {
+            args.add(new RequiredArgument(requiredArgNames[i],
+                                            requiredArgTypes[i]));
+        }
+        return args;
+    }
+
+    private static Set getOptionalArgs(Class p_class, String p_prefix)
+        throws NoSuchFieldException, IllegalAccessException
+    {
+        Set args = new HashSet();
+        String[] optionalArgNames =
+            getStringArray(p_class, p_prefix + "OPTIONAL_ARG_NAMES");
+        String[] optionalArgTypes =
+            getStringArray(p_class, p_prefix + "OPTIONAL_ARG_TYPES");
+        for(int i = 0; i < optionalArgNames.length; i++)
+        {
+            args.add(new OptionalArgument(optionalArgNames[i],
+                                          optionalArgTypes[i],
+                                          null));
+        }
+        return args;
+    }
+
+    private static List getFragmentArgs(Class p_class, String p_prefix)
+        throws NoSuchFieldException, IllegalAccessException
+    {
+        List fragmentArgs = new LinkedList();
+        String[] fragmentArgNames =
+            getStringArray(p_class, p_prefix + "FRAGMENT_ARG_NAMES");
+        for (int i = 0; i < fragmentArgNames.length; i++)
+        {
+            FragmentUnit frag =
+                new FragmentUnit(fragmentArgNames[i], null);
+                String[] fragmentArgArgNames = getStringArray
+                    (p_class,
+                     p_prefix + "FRAGMENT_ARG_"
+                     + fragmentArgNames[i] + "_ARG_NAMES");
+                for(int j = 0; j < fragmentArgArgNames.length; j++)
+                {
+                    frag.addRequiredArg
+                        (new RequiredArgument(fragmentArgArgNames[j], null));
+                }
+                fragmentArgs.add(new FragmentArgument(frag));
+        }
+        return fragmentArgs;
+    }
+
+    private static String[] getStringArray(Class p_class, String p_fieldName)
+        throws NoSuchFieldException, IllegalAccessException
+    {
+        return (String[]) p_class.getField(p_fieldName).get(null);
     }
 
     public List getRequiredArgs()
@@ -132,6 +194,11 @@ public class TemplateDescription
     public List getFragmentInterfaces()
     {
         return m_fragmentInterfaces;
+    }
+
+    public Map getMethodUnits()
+    {
+        return m_methodUnits;
     }
 
     private static void addAll(Collection p_collection, Iterator p_iter)

@@ -1,12 +1,14 @@
-<%extends /test/jamon/Middle;
-          a;
-          j;
-          opt1 => "o1g";
-          opt3 => "o3g";
-          opt5;
-          opt6;
-          opt7 => "o7g";
-          opt9;>\
+<%extends /test/jamon/Middle>\
+<%xargs>
+      a;
+      j;
+      opt1 => "o1g";
+      opt3 => "o3g";
+      opt5;
+      opt6;
+      opt7 => "o7g";
+      opt9;
+</%xargs>\
 <%args>
   Boolean x;
   String opt10 => "o10g";

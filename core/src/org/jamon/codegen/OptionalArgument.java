@@ -22,6 +22,7 @@ package org.jamon.codegen;
 
 import org.jamon.node.AArg;
 import org.jamon.node.ADefault;
+import org.jamon.util.StringUtils;
 
 public class OptionalArgument extends AbstractArgument
 {
@@ -45,6 +46,11 @@ public class OptionalArgument extends AbstractArgument
     public String getDefault()
     {
         return m_default;
+    }
+
+    public String getSetterName()
+    {
+        return "set" + StringUtils.capitalize(getName());
     }
 
     private String m_default;

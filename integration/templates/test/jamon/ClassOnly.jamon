@@ -3,3 +3,25 @@
   String foo => "bar";
   Integer j;
 </%args>
+
+<%frag f2>
+</%frag>
+<%frag f1>
+  int k;
+  Boolean[] m;
+  String a1;
+  String a4;
+  String a2;
+  String a3;
+  String a5;
+</%frag>
+
+<%method m>
+  <%args>
+    int mi;
+    int mj => 4;
+  </%args>
+  <%frag mf>
+    int mk;
+  </%frag>
+</%method>

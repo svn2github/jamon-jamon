@@ -56,7 +56,9 @@
              classpath="${java.lib.jamon}"/>
     <jamon destdir="${build.src.dir}" srcdir="templates">
       <exclude name="test/jamon/broken/*"/>
+      <exclude name="test/jamon/external/*"/>
     </jamon>
+    <jamon destdir="${build.src.dir}" srcdir="libTemplates"/>
   </target>
 
   <target name="commandlineTemplates"

@@ -43,6 +43,14 @@ public class SequentialIterator
         this(new Iterator[] {p_iter1, p_iter2, p_iter3});
     }
 
+    public SequentialIterator(Iterator p_iter1,
+                              Iterator p_iter2,
+                              Iterator p_iter3,
+                              Iterator p_iter4)
+    {
+        this(new Iterator[] {p_iter1, p_iter2, p_iter3, p_iter4});
+    }
+
     private final Iterator[] m_iters;
     private int currentIter = 0;
 

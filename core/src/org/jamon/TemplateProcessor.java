@@ -28,7 +28,7 @@ import java.util.List;
 import org.jamon.util.StringUtils;
 import org.jamon.codegen.TemplateDescriber;
 import org.jamon.codegen.TemplateResolver;
-import org.jamon.codegen.ImplAnalyzer;
+import org.jamon.codegen.Analyzer;
 import org.jamon.codegen.ImplGenerator;
 import org.jamon.codegen.IntfGenerator;
 import org.jamon.codegen.TemplateUnit;
@@ -82,7 +82,7 @@ public class TemplateProcessor
                                StringUtils.classNameToFilePath(pkg));
         File javaFile = new File(pkgDir, className + ".java");
 
-        TemplateUnit templateUnit = new ImplAnalyzer
+        TemplateUnit templateUnit = new Analyzer
             ("/" + StringUtils.filePathToTemplatePath(templateName),
              m_describer)
             .analyze();

@@ -22,50 +22,39 @@ package org.jamon.integration;
 
 import org.jamon.JamonException;
 
-public class DisallowedFragmentArgsTest
+public class DuplicateCallNameTest
     extends BrokenTestBase
 {
-    public void testFragmentInFragment()
+    public void testDefAndMethod()
         throws Exception
     {
-        try
-        {
-            generateSource("test/jamon/broken/FragmentInFragment");
-            fail("No exception thrown");
-        }
-        catch(JamonException e)
-        {
-            assertEquals("fragment 'null' has fragment argument(s)",
-                         e.getMessage());
-        }
+        checkTemplate("test/jamon/broken/LikeNamedDefAndMethod");
     }
 
-    public void testOptionalArgInFragment()
+    public void testDefAndDef()
         throws Exception
     {
-        try
-        {
-            generateSource("test/jamon/broken/OptionalArgInFragment");
-            fail("No exception thrown");
-        }
-        catch(JamonException e)
-        {
-            assertEquals("fragment 'null' has optional argument(s)",
-                         e.getMessage());
-        }
+        checkTemplate("test/jamon/broken/LikeNamedDefAndDef");
     }
 
-    public void testUnusedArgumentToFragment()
+    public void testDefAndInheritedMethod()
+        throws Exception
+    {
+        checkTemplate("test/jamon/broken/LikeNamedDefAndInheritedMethod");
+    }
+
+    private void checkTemplate(String p_path)
         throws Exception
     {
         try
         {
-            generateSource("test/jamon/broken/UnusedArgumentToFragment");
+            generateSource(p_path);
             fail("No exception thrown");
         }
         catch(JamonException e)
         {
-            assertEquals("fragment 'f' doesn't expect args i",
+            assertEquals("/" + p_path
+                         + " has multiple defs and/or methods named foo",
                          e.getMessage());
         }
     }

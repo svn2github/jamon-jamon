@@ -24,6 +24,7 @@ import java.io.File;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import junit.framework.TestCase;
 
@@ -31,8 +32,11 @@ import org.jamon.FileTemplateSource;
 
 import org.jamon.codegen.FragmentArgument;
 import org.jamon.codegen.FragmentUnit;
+import org.jamon.codegen.MethodUnit;
+import org.jamon.codegen.AbstractArgument;
 import org.jamon.codegen.RequiredArgument;
 import org.jamon.codegen.TemplateDescriber;
+import org.jamon.codegen.TemplateDescription;
 
 public class TemplateDescriberTest
     extends TestCase
@@ -52,31 +56,22 @@ public class TemplateDescriberTest
     public void testArgumentIntrospection()
         throws Exception
     {
-        List argNames = m_describer
-            .getTemplateDescription("/test/jamon/ClassOnly")
-            .getRequiredArgs() ;
-        assertEquals(2, argNames.size());
-        assertEquals("i", ((RequiredArgument) argNames.get(0)).getName());
-        assertEquals("j", ((RequiredArgument) argNames.get(1)).getName());
+        TemplateDescription desc =
+            m_describer.getTemplateDescription("/test/jamon/ClassOnly");
+        checkArgs(desc.getRequiredArgs().iterator(),
+                  new String[] {"i", "j"},
+                  new String[] {"int", "Integer"});
+        checkArgs(desc.getOptionalArgs().iterator(),
+                  new String[] {"foo"},
+                  new String[] {"String"});
     }
 
-
-    public void testArgumentWithFargIntrospection()
-        throws Exception
-    {
-        List argNames = m_describer
-            .getTemplateDescription("/test/jamon/ClassOnly2")
-            .getRequiredArgs() ;
-        assertEquals(2, argNames.size());
-        assertEquals("i", ((RequiredArgument) argNames.get(0)).getName());
-        assertEquals("j", ((RequiredArgument) argNames.get(1)).getName());
-    }
 
     public void testFragmentUnitIntrospection()
         throws Exception
     {
         List fragmentUnitIntfs =
-            m_describer.getTemplateDescription("/test/jamon/ClassOnly2")
+            m_describer.getTemplateDescription("/test/jamon/ClassOnly")
             .getFragmentInterfaces();
 
         assertEquals(2, fragmentUnitIntfs.size());
@@ -84,28 +79,62 @@ public class TemplateDescriberTest
         FragmentArgument f1 = (FragmentArgument) fragmentUnitIntfs.get(1);
 
         assertEquals("f1", f1.getName());
-        assertTrue(f1.getFragmentUnit().hasRequiredArgs());
-        Iterator f1Args = f1.getFragmentUnit().getRequiredArgs();
-        checkArgument(f1Args,"k","int");
-        checkArgument(f1Args,"m","Boolean[]");
-        checkArgument(f1Args,"a1","String");
-        checkArgument(f1Args,"a4","String");
-        checkArgument(f1Args,"a2","String");
-        checkArgument(f1Args,"a3","String");
-        checkArgument(f1Args,"a5","String");
-        assertTrue(! f1Args.hasNext());
-
         assertEquals("f2", f2.getName());
-        assertTrue(! f2.getFragmentUnit().hasRequiredArgs());
+        checkFragArgArgs
+            (f1, new String[] {"k", "m", "a1", "a4", "a2", "a3", "a5"});
+        checkFragArgArgs(f2, new String[0]);
     }
 
-    private void checkArgument(Iterator p_argIter,
-                               String p_name,
-                               String p_type)
+    public void testMethodUnitIntrospection()
+        throws Exception
     {
-        RequiredArgument a = (RequiredArgument) p_argIter.next();
-        assertEquals(p_name,a.getName());
-        assertEquals(p_type, a.getType());
+        Map methods = m_describer
+            .getTemplateDescription("/test/jamon/ClassOnly")
+            .getMethodUnits();
+        assertEquals(1, methods.size());
+        MethodUnit method = (MethodUnit) methods.get("m");
+
+        assertNotNull(method);
+        assertEquals("m", method.getName());
+        checkArgs(method.getSignatureRequiredArgs(),
+                  new String[] {"mi"},
+                  new String[] {"int"});
+        checkArgs(method.getSignatureOptionalArgs(),
+                  new String[] {"mj"},
+                  new String[] {"int"});
+
+        Iterator fragments = method.getFragmentArgs();
+        assertTrue(fragments.hasNext());
+        FragmentArgument frag = (FragmentArgument) fragments.next();
+        assertTrue(! fragments.hasNext());
+        assertEquals("mf", frag.getName());
+        checkFragArgArgs(frag, new String[] {"mk"});
+    }
+
+    private void checkArgs(Iterator p_args, String[] p_names, String[] p_types)
+    {
+        assertEquals(p_names.length, p_types.length);
+        for (int i = 0; i < p_names.length; i++)
+        {
+            assertTrue(p_args.hasNext());
+            AbstractArgument a = (AbstractArgument) p_args.next();
+            assertEquals(p_names[i], a.getName());
+            assertEquals(p_types[i], a.getType());
+        }
+        assertTrue(! p_args.hasNext());
+    }
+
+    private void checkFragArgArgs(FragmentArgument f, String[] p_names)
+    {
+        Iterator args = f.getFragmentUnit().getRequiredArgs();
+        for (int i = 0; i < p_names.length; i++)
+        {
+            assertTrue(args.hasNext());
+            RequiredArgument a = (RequiredArgument) args.next();
+            assertEquals(p_names[i], a.getName());
+            assertNull(a.getType());
+        }
+        assertTrue(! args.hasNext());
     }
 
 }

@@ -120,6 +120,22 @@ public class ParametersTest
                         "/test/jamon/broken/DuplicateArgument has multiple arguments named opt1");
     }
 
+    public void testDuplicateFragmentArgument()
+        throws Exception
+    {
+        checkForFailure("DuplicateFragmentArgument",
+                        "/test/jamon/broken/DuplicateFragmentArgument has multiple arguments named f");
+    }
+
+    public void testXargsWithoutExtends()
+        throws Exception
+    {
+        checkForFailure("XargsWithoutExtends",
+                        "/test/jamon/broken/XargsWithoutExtends has xargs but does not extend anything");
+    }
+
+
+
     private void checkForFailure(String p_template, String p_message)
         throws Exception
     {

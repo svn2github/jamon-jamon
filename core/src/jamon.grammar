@@ -56,6 +56,8 @@ States
   start,
   body,
   def,
+  method,
+  override,
   imports,
   extends,
   emit,
@@ -82,9 +84,13 @@ Tokens
   {farginit -> body} farg_start_end = ws* '/>';
   {args -> body} args_end = '</%args>';
   {args -> body} farg_end = '</%frag>';
+
   {start -> extends,body -> extends} extends_start = '<%extends' ws+;
-  {extends -> parent_args} extends_args_start = ws* argsep;
-  {parent_args -> body, extends->body} extends_end = ws* '>';
+
+  {start -> parent_args, body -> parent_args}
+         inherited_args_start = '<%xargs>';
+  {parent_args -> body} inherited_args_end = '</%xargs>';
+
   {start -> class,body -> class} class_start = '<%class>' ws*;
   {class -> body} class_end = ws* '</%class>';
   {start -> args, body -> args} args_start = '<%args>';
@@ -94,8 +100,8 @@ Tokens
   {java -> body} java_end = ws* '</%java>';
   {args,imports} dot = period;
   {args -> argexp, parent_args -> parent_argexp} arrow = '=>' hs*;
-  {call,multifragmentcall,multifragmentcallbody,args,farginit,imports, parent_args} white_space = ws*;
-  {call,multifragmentcall,multifragmentcallbody,args,parent_args,farginit,imports,def,extends} identifier = letter letter_or_digit*;
+  {call,multifragmentcall,multifragmentcallbody,args,farginit,imports,parent_args,extends} white_space = ws*;
+  {call,multifragmentcall,multifragmentcallbody,args,parent_args,farginit,imports,def,extends,method,override} identifier = letter letter_or_digit*;
   {call} child_call = '*CHILD';
 
   {start -> emit,body -> emit} emit_start = '<%' ws+;
@@ -181,7 +187,13 @@ Tokens
 
   {start -> def,body -> def} def_start = '<%def' hs+;
   {body,start} def_end = '</%def>';
-  {def -> body} gt = hs* gt;
+  {def -> body, method -> body, override -> body, extends -> body} gt = hs* gt;
+
+  {start -> method,body -> method} method_start = '<%method' hs+;
+  {body,start} method_end = '</%method>';
+
+  {start -> override,body -> override} override_start = '<%override' hs+;
+  {body,start} override_end = '</%override>';
 
   {start -> body,body} doc =
        '<%doc>' ([all - '<']
@@ -218,10 +230,19 @@ Productions
             | {imports} imports
             | {def} def
             | {class} class_tag
-            | {extends} extends_start path extends_use
+            | {extends} extends_start path gt
+            | {method} method
+            | {override} override
+            | {inherited_use} inherited_use
             ;
 
+  override_component = {base} base_component | {inherited_use} inherited_use;
+
   def = def_start identifier gt base_component* def_end;
+
+  method = method_start identifier gt base_component* method_end;
+
+  override = override_start identifier gt override_component* override_end;
 
   call = call_start path param* call_end
        | {child} call_start child_call call_end
@@ -272,5 +293,4 @@ Productions
 
   type = name brackets*;
 
-  extends_use = {none} extends_end
-              | {some} extends_args_start parent_arg* extends_end;
+  inherited_use = inherited_args_start parent_arg* inherited_args_end;

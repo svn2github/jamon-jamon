@@ -29,7 +29,7 @@ import java.util.Set;
 
 public abstract class AbstractInnerUnit extends AbstractUnit
 {
-    public AbstractInnerUnit(String p_name, AbstractUnit p_parent)
+    public AbstractInnerUnit(String p_name, Unit p_parent)
     {
         super(p_name, p_parent);
     }

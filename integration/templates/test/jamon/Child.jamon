@@ -1,4 +1,8 @@
-<%extends /test/jamon/Parent; opt1 => "o1c"; opt5; i;>\
+<%extends /test/jamon/Parent>\
+<%xargs>
+  opt1 => "o1c";
+  opt5; i;
+</%xargs>\
 <%args>
   String a;
   boolean k;

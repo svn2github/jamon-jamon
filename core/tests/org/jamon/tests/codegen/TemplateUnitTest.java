@@ -60,6 +60,7 @@ public class TemplateUnitTest
         parent.addRequiredArg(pr2);
         parent.addOptionalArg(po1);
         parent.addOptionalArg(po2);
+        child.setParentPath(parent.getName());
         child.setParentDescription(new TemplateDescription(parent));
 
         child.addParentArg("pr2", null);
