@@ -1,9 +1,12 @@
 <%frag content/>
 <%args>
   String href;
-  String style => "";
+  String style => null;
 </%args>
-<li><a href="<% href %>"
-       <% style.length() == 0 ? "" : "class=" %>"<% style %>" >
-  <& content &>
-</a></li>
+<li>
+  <a href="<% href %>"
+% if (style != null) {
+ class="<% style %>"
+% }
+  ><& content &></a>
+</li>
