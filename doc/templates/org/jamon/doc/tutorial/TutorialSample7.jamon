@@ -3,10 +3,6 @@
   protected int tutorialStage() { return 7; }
 </%class>
 
-<%args>
-  String output;
-</%args>
-
 <%override title>Jamon Tutorial - Subtemplates: Functional Decomposition of Templates</%override>
 
 <h2>Jamon Tutorial - Subtemplates: Functional Decomposition of Templates</h2>
@@ -73,7 +69,7 @@ same file or other top level templates.
 
   <li>
     The output should be
-    <pre class="tty"><% output %></pre>
+    <& ../_RunJava; className => "SubtemplateTut7" &>
   </li>
 </ol>
 <p>

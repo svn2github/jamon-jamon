@@ -3,10 +3,6 @@
   protected int tutorialStage() { return 2; }
 </%class>
 
-<%args>
-  String output;
-</%args>
-
 <%override title>Jamon Tutorial - Dynamic Content</%override>
 
 <h2>Jamon Tutorial - Dynamic Content</h2>
@@ -120,8 +116,7 @@ Run it:
 
 <li>
 You should see:
-<pre class="tty"><% output %></pre>
-
+<& ../_RunJava; className => "TimeAndTempTut2" &>
 
 </ol>
 

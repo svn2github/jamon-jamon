@@ -3,10 +3,6 @@
   protected int tutorialStage() { return 9; }
 </%class>
 
-<%args>
-  String output;
-</%args>
-
 <%override title>Jamon Tutorial - Template Inheritance: Composing Template Output</%override>
 
 <h2>Jamon Tutorial - Template Inheritance: Composing Template Output</h2>
@@ -60,6 +56,8 @@ This template would be invoked from Java with the class
 InheritanceSimpleTut9.java</a>
     <& ../_JavaInclude; fileName => "tutorial/src/InheritanceSimpleTut9" &>
 
+The output from the template is
+<& ../_RunJava; className => "InheritanceSimpleTut9" &>
 
 <h2>Inheritance with template arguments</h2>
 Both the parent and child templates may take arguments. To specify
@@ -131,6 +129,6 @@ invoking the child template through the second approach described above.
 <& ../_JavaInclude; fileName => "tutorial/src/User" &>
 <p>
 The output from the template is
-<pre class="tty"><% output %></pre>
+<& ../_RunJava; className => "User" &>
 
 <p>

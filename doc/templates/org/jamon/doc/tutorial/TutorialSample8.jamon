@@ -3,10 +3,6 @@
   protected int tutorialStage() { return 8; }
 </%class>
 
-<%args>
-  String output;
-</%args>
-
 <%override title>Jamon Tutorial - Template Fragments</%override>
 
 <h2>Jamon Tutorial - Template Fragments</h2>
@@ -150,6 +146,6 @@ The example template is executed by the
 <& ../_JavaInclude; fileName => "tutorial/src/Holiday" &>
 <p>
 The output from the template is
-<pre class="tty"><% output %></pre>
+<& ../_RunJava; className => "Holiday" &>
 
 </ol>

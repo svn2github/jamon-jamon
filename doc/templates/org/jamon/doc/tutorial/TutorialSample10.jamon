@@ -3,10 +3,6 @@
   protected int tutorialStage() { return 10; }
 </%class>
 
-<%args>
-  String output;
-</%args>
-
 <%override title>Jamon Tutorial - Template Inheritance: Overriding Inherited Methods/Subtemplates</%override>
 
 <h2>Jamon Tutorial - Template Inheritance: Overriding Inherited Methods/Subtemplates</h2>
@@ -85,4 +81,4 @@ required by that instance.
 
 The result of executing this class and template is below.
 
-<pre class="tty"><% output %></pre>
+<& ../_RunJava; className => "User2" &>

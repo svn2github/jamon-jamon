@@ -3,10 +3,6 @@
   protected int tutorialStage() { return 4; }
 </%class>
 
-<%args>
-  String output;
-</%args>
-
 <%override title>Jamon Tutorial - Escaping Text</%override>
 
 <h2>Jamon Tutorial - Escaping Text</h2>
@@ -116,7 +112,8 @@ EscapingTut4.java</a>:
 <& ../_JavaInclude; fileName => "tutorial/src/EscapingTut4" &>
 
 Then the output of the template's <code>render</code> method will be
-    <pre class="tty"><% output %></pre>
+<& ../_RunJava; className => "EscapingTut4" &>
+
 
 <p>
 If the default escaping on the template had been set to

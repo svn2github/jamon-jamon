@@ -3,10 +3,6 @@
   protected int tutorialStage() { return 6; }
 </%class>
 
-<%args>
-  String output;
-</%args>
-
 <%override title>Jamon Tutorial - Calling Another Template From a Template</%override>
 
 <h2>Jamon Tutorial - Calling Another Template From a Template</h2>
@@ -87,4 +83,4 @@ from being output, each Jamon line must end with a backslash.
 </pre>
 
 <li> You should see:
-<pre class="tty"><% output %></pre>
+<& ../_RunJava; className => "JamonCallerTut6" &>
