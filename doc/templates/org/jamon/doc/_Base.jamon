@@ -15,10 +15,10 @@
       <span class="tagline13">refactoring</span> <span class="tagline23">the</span> <span class="tagline33">view</span><br />
     </h3>
 
-    <div class="header" id="header1">&nbsp;</div>
-    <div class="header" id="header2">&nbsp;</div>
-    <div class="header" id="header3">&nbsp;</div>
-    <div class="header" id="header4">&nbsp;</div>
+    <div class="header" id="header1"><span /></div>
+    <div class="header" id="header2"><span /></div>
+    <div class="header" id="header3"><span /></div>
+    <div class="header" id="header4"><span /></div>
 
     <div id="nav">
       <ul class="nav">
