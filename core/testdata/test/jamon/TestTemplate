@@ -5,9 +5,18 @@
 <%args>
   BigDecimal amount
   int x => 3
+  int y => 7
 </%args>
 
 Here is a template. It has two arguments:
 
 x, which is <% x %>,
 and amount, which is <% amount %>.
+<%java>
+  for (int i = 0; i < y; ++i)
+ {
+</%java>
+i is <% i %>.
+<%java> } </%java>
+
+% int j = 4;
