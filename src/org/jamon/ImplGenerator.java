@@ -8,14 +8,14 @@ import java.util.ArrayList;
 import org.modusponens.jtt.node.*;
 import org.modusponens.jtt.analysis.*;
 
-public class Phase2Generator extends BaseGenerator
+public class ImplGenerator extends BaseGenerator
 {
     private List m_body = new ArrayList();
     private StringBuffer m_current = new StringBuffer();
 
-    public Phase2Generator(Writer p_writer,
-                           String p_packageName,
-                           String p_className)
+    public ImplGenerator(Writer p_writer,
+                         String p_packageName,
+                         String p_className)
     {
         super(p_writer,p_packageName,p_className);
     }

@@ -72,7 +72,7 @@ public class StandardTemplateManager
             name = p_path;
         }
         FileWriter w = new FileWriter(getJavaFileName(p_path));
-        Phase2Generator g2 = new Phase2Generator(w,dir,name);
+        ImplGenerator g2 = new ImplGenerator(w,dir,name);
         parser.parse().apply(g2);
         g2.generateClassSource();
         w.close();

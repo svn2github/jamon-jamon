@@ -6,7 +6,7 @@ import java.util.Iterator;
 import org.modusponens.jtt.node.*;
 import org.modusponens.jtt.analysis.*;
 
-public class Phase1Generator extends BaseGenerator
+public class InterfaceGenerator extends BaseGenerator
 {
     private final static String TEMPLATE =
         Template.class.getName();
@@ -15,9 +15,9 @@ public class Phase1Generator extends BaseGenerator
     private final static String TEMPLATE_MANAGER =
         TemplateManager.class.getName();
 
-    public Phase1Generator(Writer p_writer,
-                           String p_packageName,
-                           String p_className)
+    public InterfaceGenerator(Writer p_writer,
+                              String p_packageName,
+                              String p_className)
     {
         super(p_writer,p_packageName,p_className);
     }

@@ -19,10 +19,10 @@ public class TemplateGenerator
             Start tree = parser.parse();
 
             OutputStreamWriter w = new OutputStreamWriter(System.out);
-            Phase1Generator g1 =
-                new Phase1Generator(w,
-                                    "test.jtt",
-                                    "TestTemplate");
+            InterfaceGenerator g1 =
+                new InterfaceGenerator(w,
+                                       "test.jtt",
+                                       "TestTemplate");
             tree.apply(g1);
             g1.generateClassSource();
             w.flush();
