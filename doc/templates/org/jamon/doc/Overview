@@ -9,9 +9,11 @@ To make use of Jamon:
   <li>Create your templates.<li>
 
   <li>
-    Run the template processor on them, either via the command line or
-    the <a href="BuildingProjects.html">Jamon Ant task</a>.
-    This generates Java source files corresponding to the templates.
+    Run the template processor on the templates, either via the
+    command line or the <a href="BuildingProjects.html">Jamon Ant
+    task</a> to generate
+    <a href="GeneratedTemplates.html">Java source files
+    corresponding</a> to the templates.
   </li>
 
   <li>

@@ -1,14 +1,71 @@
 <&| _Base; title => "Jamon Generated Templates"; section => "Documentation" &>
 
-<h2>Generated Templates</h2>
+<h2>Generated Template Classes</h2>
 
-This document describes what the generated templates look like and how
-to use them.
+  Generated classes have the following relationships to the template
+  sources:
+  <ul>
+    <li>
+      The class name is the same as the name of the template
+      source file excluding any filename extension (i.e. a suffix
+      starting with '.')
+    </li>
+    <li>
+      The package of the class maps directly to the directory path
+      from the template source directory to the template.
+    </li>
+    <li>
+      The generated class has a <code>render</code> method whose
+      arguments are the required arguments declared in the
+      template. The order of declaration in the template
+      determines the order in the <code>render</code> method.
+    </li>
+    <li>
+      Optional arguments in the template
+      generate <code>setXXX<code> methods in the class.
+    </li>
+  </ul>
 
-<ul>
-  <li>class name related to template name</li>
-  <li>package related to template path under src dir</li>
-  <li>arguments to render and setter methods related to template args</li>
-</ul>
+For example, suppose there is a template <code>MyTmpl</code> in the
+directory <code>tmpls/org/foo</code>, the template source directory is
+set to <code>tmpls</code>, and <code>MyTmpl</code> contains the
+declarations
+
+<pre><&| /org/jamon/escape/Html &><%LITERAL><%args>
+  int i;
+  String s => "yes";
+  java.math.BigDecimal someNumber => null;
+  boolean b;
+</%args></%LITERAL></&></pre>
+
+A simplified sketch (showing only the pertinent public methods) of the
+generated class would be:
+
+<pre class="java"><&| /org/jamon/escape/Html &>\
+  package org.foo;
+
+  import org.jamon.escaping.Escaping;
+
+  public class MyTmpl
+    extends org.jamon.AbstractTemplateProxy
+  {
+    public void render(int i, boolean b)
+      throws java.io.IOException { ... }
+
+    public Renderer makeRenderer(int i, boolean b)
+      throws java.io.IOException { ... }
+
+    public MyTmpl setS(String s)
+      throws java.io.IOException { ... }
+
+    public MyTmpl setSomeNumber(java.math.BigDecimal someNumber)
+      throws java.io.IOException { ... }
+
+    public MyTmpl writeTo(java.io.Writer p_writer)
+      throws java.io.IOException { ... }
+
+    public MyTmpl escaping(Escaping escaping) { ... }
+
+  }</&></pre>
 
 </&>
