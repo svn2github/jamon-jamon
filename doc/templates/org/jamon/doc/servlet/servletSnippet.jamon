@@ -2,5 +2,5 @@
         throws IOException {
         response.setContentType("text/html");
         HelloTemplate helloTemplate = new HelloTemplate();
-        helloTemplate.writeTo(response.getWriter()).render(10);
+        helloTemplate.render(response.getWriter(), 10);
     }

@@ -20,13 +20,14 @@ template sources:
   </li>
   <li>
     The generated class has a <code>render</code> method whose
-    arguments are the required arguments declared in the template. The
-    order of declaration in the <code>render</code> method is the same
-    as the order of declaration in the template.
+    arguments are a writer, followed by the required arguments
+    declared in the template. The order of declaration in the
+    <code>render</code> method is the same as the order of declaration
+    in the template.
   </li>
   <li>
     The generated class has a <code>makeRenderer</code> method taking
-    the same parameters as <code>render</code>
+    the same parameters as <code>render</code>, except for the writer.
   <li>
     Optional arguments in the template
     generate <code>setXXX</code> methods in the class.
@@ -63,14 +64,12 @@ generated class would be:
     public void render(int i, boolean b)
       throws java.io.IOException { ... }
 
-    public Renderer makeRenderer(int i, boolean b)
+    public Renderer makeRenderer(java.io.Writer writer, int i, boolean b)
       throws java.io.IOException { ... }
 
     public MyTemplate setS(String s) { ... }
 
     public MyTemplate setSomeNumber(java.math.BigDecimal someNumber) { ... }
-
-    public MyTemplate writeTo(java.io.Writer p_writer) { ... }
 
     public MyTemplate escapeWith(Escaping escaping) { ... }
 
@@ -104,9 +103,9 @@ If one template inherits from another, then:
 
     <ul>
       <li>
-        A render method taking the required arguments for the parent
-        template (including any required arguments for the parent
-        template's ancestors, if any).
+        A render method taking a writer, followed by the required
+        arguments for the parent template (including any required
+        arguments for the parent template's ancestors, if any).
       </li>
 
       <li>
@@ -163,10 +162,8 @@ something like:
     {
       public ParentTemplate setS(String s) { ... }
 
-      public void render(int i, Integer count)
+      public void render(java.io.Writer writer, int i, Integer count)
         throws java.io.IOException { ... }
-
-      public ParentRenderer writeTo(java.io.Writer writer) { ... }
 
       public ParentRenderer escapeWith(Escaping escaping) { ... }
 
@@ -200,15 +197,13 @@ something like:
     public ChildTemplate() { ... }
     public ChildTemplate(TemplateManager manager) { ... }
 
-    public void render(int i, Integer count, long t, double x)
+    public void render(java.io.Writer writer, int i, Integer count, long t, double x)
       throws java.io.IOException { ... }
 
     public Renderer makeRenderer(int i, Integer count, long t, double x)
       throws java.io.IOException { ... }
 
     public ChildTemplate setAmount(java.math.BigDecimal amount) { ... }
-
-    public ChildTemplate writeTo(java.io.Writer p_writer) { ... }
 
     public ChildTemplate escapeWith(Escaping escaping) { ... }
 

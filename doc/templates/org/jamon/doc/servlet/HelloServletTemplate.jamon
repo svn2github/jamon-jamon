@@ -30,6 +30,6 @@ public final class HelloServlet
     public void doGet(HttpServletRequest request, HttpServletResponse response)
         throws IOException {
         response.setContentType("text/html");
-        new HelloTemplate().writeTo(response.getWriter()).render();
+        new HelloTemplate().render(response.getWriter());
     }
 }

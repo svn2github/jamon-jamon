@@ -31,7 +31,6 @@ public final class HelloServlet
         throws IOException {
         response.setContentType("text/html");
         HelloTemplate helloTemplate = new HelloTemplate();
-        helloTemplate.writeTo(response.getWriter());
         HelloFormFields formFields = new HelloFormFields(request.getParameterMap());
         if (formFields.hasData()) {
             try {
@@ -42,7 +41,7 @@ public final class HelloServlet
         } else {
             formFields = new HelloFormFields(DEFAULT_NUMBER);
         }
-        helloTemplate.render(formFields);
+        helloTemplate.render(response.getWriter(), formFields);
     }
 
     private static final int DEFAULT_NUMBER = 10;
