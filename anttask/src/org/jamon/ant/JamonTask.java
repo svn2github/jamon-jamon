@@ -156,9 +156,9 @@ public class JamonTask
             catch (JamonParseException e)
             {
                 throw new BuildException(e.getDescription(),
-                                         new Location(e.getFileName(),
-                                                      e.getLine(),
-                                                      e.getColumn()));
+                                         new JamonLocation(e.getFileName(),
+                                                           e.getLine(),
+                                                           e.getColumn()));
             }
             catch (Exception e)
             {
@@ -193,4 +193,25 @@ public class JamonTask
     private File m_destDir;
     private ClassLoader m_classLoader = JamonTask.class.getClassLoader();
     private File m_srcDir;
+
+    public static class JamonLocation extends Location
+    {
+        public JamonLocation(String p_fileName,
+                             int p_lineNumber,
+                             int p_columnNumber)
+        {
+            super(p_fileName, p_lineNumber, p_columnNumber);
+            m_columnNumber = p_columnNumber;
+        }
+
+        public String toString()
+        {
+            StringBuffer buf = new StringBuffer(super.toString());
+            buf.insert(buf.length()-2, ":");
+            buf.insert(buf.length()-2, m_columnNumber);
+            return buf.toString();
+        }
+
+        private final int m_columnNumber;
+    }
 }
