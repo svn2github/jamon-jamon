@@ -130,11 +130,11 @@ public class IntfGenerator
             m_writer.println(" extends " + ClassNames.TEMPLATE_INTF);
             m_writer.openBlock();
             m_writer.print  ("void render(");
-            p_fargInfo.printArgsDecl(m_writer);
+            p_fargInfo.printRequiredArgsDecl(m_writer);
             m_writer.println(")");
             m_writer.println("  throws " + ClassNames.IOEXCEPTION + ";");
             m_writer.print(ClassNames.RENDERER + " makeRenderer(");
-            p_fargInfo.printArgsDecl(m_writer);
+            p_fargInfo.printRequiredArgsDecl(m_writer);
             m_writer.println(");");
             m_writer.closeBlock();
         }
@@ -185,7 +185,7 @@ public class IntfGenerator
             m_writer.print("    static");
             m_writer.openBlock();
             FargInfo info = m_analyzer.getFargInfo(name);
-            for (Iterator a = info.getArgs(); a.hasNext(); /* */)
+            for (Iterator a = info.getRequiredArgs(); a.hasNext(); /* */)
             {
                 Argument arg = (Argument) a.next();
                 m_writer.print("FARGINFO_");

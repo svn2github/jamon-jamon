@@ -128,7 +128,7 @@ public class CallStatement
 
 
         p_writer.print("public " + RENDERER_CLASS + " makeRenderer(");
-        fargInfo.printArgsDecl(p_writer);
+        fargInfo.printRequiredArgsDecl(p_writer);
         p_writer.println(")");
         p_writer.openBlock();
         p_writer.print(  "return new " + RENDERER_CLASS + "()");
@@ -141,14 +141,14 @@ public class CallStatement
         p_writer.openBlock();
         p_writer.println("writeTo(p_writer);");
         p_writer.print  ("render(");
-        fargInfo.printArgs(p_writer);
+        fargInfo.printRequiredArgs(p_writer);
         p_writer.println(");");
         p_writer.closeBlock();
         p_writer.closeBlock(";");
         p_writer.closeBlock();
 
         p_writer.print("public void render(");
-        fargInfo.printArgsDecl(p_writer);
+        fargInfo.printRequiredArgsDecl(p_writer);
         p_writer.print(") throws ");
         p_writer.println(IOEXCEPTION_CLASS);
         p_writer.openBlock();
@@ -244,7 +244,7 @@ public class CallStatement
                 p_writer.print(",");
             }
         }
-        if (unitInfo.hasRequiredArgs())
+        if (unitInfo.hasRequiredArgs() && unitInfo.hasOptionalArgs())
         {
             p_writer.print(",");
         }

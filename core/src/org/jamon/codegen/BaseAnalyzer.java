@@ -58,15 +58,10 @@ public class BaseAnalyzer
         return getFargInfo(MAIN_UNIT_NAME, p_fargName);
     }
 
-    public FargInfo getFargInfo(String p_unitName, String p_fargName)
+    protected FargInfo getFargInfo(String p_unitName, String p_fargName)
     {
-
-        UnitInfo unitInfo = getUnitInfo("#PFRAG#" + p_fargName);
-        if (unitInfo == null)
-        {
-            return null;
-        }
-        return new FargInfo(p_fargName, unitInfo);
+        //FIXME - use the unitName or get rid of it.
+        return (FargInfo) getAbstractUnitInfo("#PFRAG#" + p_fargName);
     }
 
     protected static final String MAIN_UNIT_NAME = "";
@@ -80,6 +75,13 @@ public class BaseAnalyzer
     {
         pushUnitName(p_unitName);
         m_unit.put(p_unitName,new UnitInfo(p_unitName));
+    }
+
+    protected final void pushFargUnit(String p_fragName)
+    {
+        String unitName = "#PFRAG#" + p_fragName;
+        pushUnitName(unitName);
+        m_unit.put(unitName, new FargInfo(p_fragName));
     }
 
     protected final String popUnitName()
@@ -99,7 +101,12 @@ public class BaseAnalyzer
 
     public UnitInfo getUnitInfo(String p_unitName)
     {
-        return (UnitInfo)m_unit.get(p_unitName);
+        return (UnitInfo) getAbstractUnitInfo(p_unitName);
+    }
+
+    public AbstractUnitInfo getAbstractUnitInfo(String p_unitName)
+    {
+        return (AbstractUnitInfo)m_unit.get(p_unitName);
     }
 
     private final List m_imports = new LinkedList();
@@ -177,7 +184,7 @@ public class BaseAnalyzer
             String type = asText(arg.getType());
             if (argDefault == null)
             {
-                getUnitInfo(getUnitName()).addRequiredArg(name, type);
+                getAbstractUnitInfo(getUnitName()).addRequiredArg(name, type);
             }
             else
             {
@@ -212,16 +219,11 @@ public class BaseAnalyzer
             AFargStart start = (AFargStart) f.getFargStart();
 
             String pfragName = start.getIdentifier().getText();
-            pushUnit("#PFRAG#" + pfragName);
+            pushFargUnit(pfragName);
 
             for (Iterator a = f.getArg().iterator(); a.hasNext(); /* */)
             {
                 ((Node)a.next()).apply(this);
-            }
-
-            if (getUnitInfo(getUnitName()).hasOptionalArgs())
-            {
-                throw new UnsupportedOperationException("PFrags cannot have optional arguments");
             }
 
             popUnitName();

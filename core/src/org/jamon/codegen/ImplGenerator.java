@@ -131,12 +131,12 @@ public class ImplGenerator
         m_writer.openBlock();
         m_writer.print  ("void render(");
 
-        p_fargInfo.printArgsDecl(m_writer);
+        p_fargInfo.printRequiredArgsDecl(m_writer);
         m_writer.println(")");
         m_writer.println("  throws java.io.IOException;");
 
         m_writer.print("public " + ClassNames.RENDERER + " makeRenderer(");
-        p_fargInfo.printArgsDecl(m_writer);
+        p_fargInfo.printRequiredArgsDecl(m_writer);
         m_writer.println(");");
         m_writer.closeBlock();
         m_writer.println();

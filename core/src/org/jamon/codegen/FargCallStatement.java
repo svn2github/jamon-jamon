@@ -55,7 +55,7 @@ public class FargCallStatement
         p_writer.println(".escaping(this.getEscaping());");
         p_writer.print  (tn);
         p_writer.print  (".render(");
-        for (Iterator r = m_fargInfo.getArgs(); r.hasNext(); /* */)
+        for (Iterator r = m_fargInfo.getRequiredArgs(); r.hasNext(); /* */)
         {
             Argument arg = (Argument) r.next();
             String name = arg.getName();

@@ -27,20 +27,13 @@ import java.util.List;
 import java.util.LinkedList;
 
 import org.jamon.JamonException;
-import org.jamon.node.ADefault;
 import org.jamon.util.StringUtils;
 
-public class UnitInfo
+public class UnitInfo extends AbstractUnitInfo
 {
     public UnitInfo(String p_name)
     {
-        m_name = p_name;
-    }
-    private final String m_name;
-
-    public String getName()
-    {
-        return m_name;
+        super(p_name);
     }
 
     public void addFarg(String p_name, String p_type)
@@ -49,24 +42,9 @@ public class UnitInfo
         m_fargs.add(p_name);
     }
 
-    public void addRequiredArg(String p_name, String p_type)
-    {
-        m_requiredArgs.add(new Argument(p_name, p_type));
-    }
-
     public void addOptionalArg(String p_name, String p_type, String p_default)
     {
         m_optionalArgs.add(new OptionalArgument(p_name, p_type, p_default));
-    }
-
-    public Iterator getRequiredArgs()
-    {
-        return m_requiredArgs.iterator();
-    }
-
-    public boolean hasRequiredArgs()
-    {
-        return !m_optionalArgs.isEmpty();
     }
 
     public Iterator getOptionalArgs()
@@ -84,44 +62,14 @@ public class UnitInfo
         return m_fargs.iterator();
     }
 
-    public void printRequiredArgsDecl(IndentingWriter p_writer)
-    {
-        printArgsDecl(p_writer, getRequiredArgs());
-    }
-
     public void printAllArgsDecl(IndentingWriter p_writer)
     {
-        printArgsDecl(p_writer, getRequiredArgs());
-        if(hasRequiredArgs())
+        printRequiredArgsDecl(p_writer);
+        if(hasRequiredArgs() && hasOptionalArgs())
         {
             p_writer.println(", ");
         }
         printArgsDecl(p_writer, getOptionalArgs());
-    }
-
-    private static void printArgsDecl(IndentingWriter p_writer, Iterator i)
-    {
-        while(i.hasNext())
-        {
-            Argument arg = (Argument) i.next();
-            p_writer.print("final " + arg.getType() + " " + arg.getName());
-            if (i.hasNext())
-            {
-                p_writer.print(", ");
-            }
-        }
-    }
-
-    public void printRequiredArgs(IndentingWriter p_writer)
-    {
-        for (Iterator i = getRequiredArgs(); i.hasNext(); /* */)
-        {
-            p_writer.print(((Argument)i.next()).getName());
-            if (i.hasNext())
-            {
-                p_writer.print(", ");
-            }
-        }
     }
 
     public String getSignature()
