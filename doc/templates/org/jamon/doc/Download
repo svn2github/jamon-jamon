@@ -5,8 +5,6 @@
   String binZip;
 </%args>
 <&| _Base; title => "Getting Jamon"; section => "Download" &>
-  <h2>Where to get Jamon</h2>
-
     <h3>Download</h3>
 
     <ul>
