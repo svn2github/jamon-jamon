@@ -202,7 +202,7 @@ public class JUnitTemplateManager
         Assert.assertTrue("optional argument " + p_name
                           + (p_defaultNotExpected ? " not" : "")
                           + " set",
-                          Boolean.valueOf(p_defaultNotExpected)
+                          new Boolean(p_defaultNotExpected)
                               .equals(getIsNotDefault(p_name)));
         if(p_defaultNotExpected)
         {
