@@ -88,32 +88,18 @@ public class ImplGenerator
     private void generateInitialize()
         throws IOException
     {
-        println("  private void shutUpWarnings() throws Exception { }");
-
         println("  protected void initializeDefaultArguments()");
-        println("    throws org.jamon.JamonException");
+        println("    throws Exception");
         println("  {");
-        println("    try");
-        println("    {");
-        println("      shutUpWarnings();");
         for (Iterator i = m_analyzer.getOptionalArgNames(); i.hasNext(); /* */)
         {
             String name = (String) i.next();
-            print("      ");
+            print("    ");
             print(name);
             print(" = ");
             print(m_analyzer.getDefault(name));
             println(";");
         }
-        println("    }");
-        println("    catch (RuntimeException e)");
-        println("    {");
-        println("      throw e;");
-        println("    }");
-        println("    catch (Exception e)");
-        println("    {");
-        println("      throw new org.jamon.JamonException(e);");
-        println("    }");
         println("  }");
         println();
     }

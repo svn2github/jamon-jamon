@@ -19,11 +19,30 @@ public abstract class AbstractTemplateImpl
     public final void initialize()
         throws JamonException
     {
-        initializeDefaultArguments();
+        try
+        {
+            initializeDefaultArguments();
+        }
+        catch (Error e)
+        {
+            throw e;
+        }
+        catch (RuntimeException e)
+        {
+            throw e;
+        }
+        catch (JamonException e)
+        {
+            throw e;
+        }
+        catch (Exception e)
+        {
+            throw new JamonException(e);
+        }
     }
 
     protected abstract void initializeDefaultArguments()
-        throws JamonException;
+        throws Exception;
 
     protected void writeEscaped(String p_string)
         throws IOException
