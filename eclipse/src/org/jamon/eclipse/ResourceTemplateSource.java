@@ -22,7 +22,6 @@ public class ResourceTemplateSource implements TemplateSource {
 	}
 
 	public boolean available(String arg0) throws IOException {
-		// TODO Auto-generated method stub
 		return m_templateFolder.findMember(new Path(arg0).addFileExtension("jamon")) != null;
 	}
 
