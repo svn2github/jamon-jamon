@@ -17,6 +17,10 @@
 
   <target name="compile"
           description="Compiles Java files">
+    <dependset>
+      <srcfileset dir="${java.lib.jamon}"/>
+      <targetfileset dir="${classes.dir}"/>
+    </dependset>
     <mkdir dir="${classes.dir}"/>
     <javac destdir="${classes.dir}"
            debug="true"
