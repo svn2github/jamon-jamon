@@ -78,7 +78,7 @@ public class EscapingsTest
             .writeTo(getWriter());
         if (p_escaping != null)
         {
-            escapings.escaping(p_escaping);
+            escapings.escapeWith(p_escaping);
         }
 
         escapings.render();

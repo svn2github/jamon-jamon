@@ -84,7 +84,7 @@ public class StickyEscapingTest
             .writeTo(getWriter());
         if (p_escaping != null)
         {
-            template.escaping(p_escaping);
+            template.escapeWith(p_escaping);
         }
 
         template.render();
