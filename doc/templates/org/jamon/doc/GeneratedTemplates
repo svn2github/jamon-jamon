@@ -1,0 +1,14 @@
+<&| _Base; title => "Jamon Generated Templates"; section => "Documentation" &>
+
+<h2>Generated Templates</h2>
+
+This document describes what the generated templates look like and how
+to use them.
+
+<ul>
+  <li>class name related to template name</li>
+  <li>package related to template path under src dir</li>
+  <li>arguments to render and setter methods related to template args</li>
+</ul>
+
+</&>

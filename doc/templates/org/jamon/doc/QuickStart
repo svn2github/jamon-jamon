@@ -7,9 +7,9 @@
 
 Create a java file <a class="file" href="JamonQs.java">JamonQs.java</a>:
 
-<pre class="java"><& JamonQsJava &></pre>
+<pre class="java"><&| /org/jamon/escape/Html &><& JamonQsJava &></&></pre>
 Create a Jamon template <a href="QsTemp" class="file">QsTemp</a>:
-<pre class="jamon"><& QsTemp &></pre>
+<pre class="jamon"><&| /org/jamon/escape/Html &><& QsTemp &></&></pre>
 
 Set your classpath:
 <&|| _command &>
@@ -19,8 +19,8 @@ Set your classpath:
 
 Process the template:
 <&|| _command &>
- <|windows>java org.jamon.TemplateProcessor --destDir=. --all QsTemp</|>
- <|unix>java org.jamon.TemplateProcessor --destDir=. --all QsTemp</|>
+ <|windows>java org.jamon.TemplateProcessor --destDir=. QsTemp</|>
+ <|unix>java org.jamon.TemplateProcessor --destDir=. QsTemp</|>
 </&>
 
 Compile everything:
@@ -42,14 +42,10 @@ You should see:
 <%def _command>
   <%farg windows></%farg>
   <%farg unix></%farg>
-<table width="100%">
-<tr>
-  <td>Windows</td>
-  <td><pre class="tty">C:\JAMONTMP&gt; <& windows &></pre></td>
-</tr>
-<tr>
-  <td>Unix</td>
-  <td><pre class="tty">% <& unix &></pre></td>
-</tr>
-</table>
+<p>
+  <span class="system">Windows</span>
+  <pre class="tty">C:\JAMONTMP&gt; <& windows &></pre>
+  <span class="system">Unix</span>
+  <pre class="tty">% <& unix &></pre>
+</p>
 </%def>

@@ -131,6 +131,12 @@ li
   font-weight: lighter;
 }
 
+.system
+{
+  font-weight: bold;
+  font-size: 0.5em;
+}
+
 .smell
 {
   border: dashed;

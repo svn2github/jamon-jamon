@@ -96,6 +96,9 @@ the documentation thus taking care of issues such as escaping.
       <param name="template" value="UserGuide" />
     </antcall>
     <antcall target="grind">
+      <param name="template" value="GeneratedTemplates" />
+    </antcall>
+    <antcall target="grind">
       <param name="template" value="Reference" />
     </antcall>
     <antcall target="grind">

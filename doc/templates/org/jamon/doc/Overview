@@ -2,7 +2,7 @@
 
 <h2>Overview</h2>
 
-To make use of Jamon, simply:
+To make use of Jamon:
 
 <ul>
 
@@ -10,13 +10,14 @@ To make use of Jamon, simply:
 
   <li>
     Run the template processor on them, either via the command line or
-    the supplied Ant task. This generates Java source files
-    corresponding to the templates.
+    the <a href="BuildingProjects.html">Jamon Ant task</a>.
+    This generates Java source files corresponding to the templates.
   </li>
 
   <li>
     In your "regular" Java source files, reference templates like any
-    other class.
+    other class. Instantiate a template like any other class
+    (supplying a <code>TemplateManager</code> to the constructor).
   </li>
 
   <li>Include generated files in your build process.</li>

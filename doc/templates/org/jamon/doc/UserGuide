@@ -26,7 +26,7 @@
     <h4>Example</h4>
 
     Suppose the template in
-    <code>templates/org/modusponens/templates/Foo</code> contains
+    <code>templates/org/foo/templates/Foo</code> contains
 
     <pre class="template"><&| /org/jamon/escape/Html &><%LITERAL>
 <%args>
@@ -46,24 +46,20 @@
   <pre class="tty">
 java org.jamon.TemplateProcessor \
      --destDir=./gensrc \
-     --sourceDir=templates \
-     templates/org/modusponens/templates/Foo
+     --srcDir=templates \
+     templates/org/foo/templates/Foo
 </pre>
 which will place the generated Java source file(s) into the
 <code>gensrc</code> directory.
 <p>
 You can then use the template as follows:
         <pre class="code">
-import org.modusponens.templates.Foo;
+import org.foo.templates.Foo;
 import org.jamon.TemplateManager;
 
   ...
        StandardTemplateManager templateManager =
          new StandardTemplateManager(...);
-       // to be able to dynamically recompile templates:
-       //    templateManager.setSourceDir("templates");
-       //    templateManager.setWorkDir("jamonwork");
-       ...
        Writer writer = new OutputStreamWriter(System.out);
        new Foo(templateManager)
          .writeTo(writer)
@@ -104,17 +100,13 @@ different default escaping mechanism.  For example
 </%LITERAL></&></pre>
 Could be called from Java as follows
         <pre class="code">
-import org.modusponens.templates.Foo;
+import org.foo.templates.Foo;
 import org.jamon.TemplateManager;
 <b>import org.jamon.Escaping;</b>
 
   ...
        StandardTemplateManager templateManager =
          new StandardTemplateManager(...);
-       // to be able to dynamically recompile templates:
-       //    templateManager.setSourceDir("templates");
-       //    templateManager.setWorkDir("jamonwork");
-       ...
        Writer writer = new OutputStreamWriter(System.out);
        new Foo(templateManager)
          .writeTo(writer)
