@@ -63,6 +63,9 @@
              deprecation="true">
         <src path="${src.dir}"/>
         <src path="${build.src.dir}"/>
+        <classpath>
+          <pathelement location="${java.lib.junit}"/>
+        </classpath>
       </javac>
       <copy todir="${classes.dir}" >
         <fileset dir="${src.dir}" includes="**/*.properties" />
