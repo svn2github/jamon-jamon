@@ -343,8 +343,9 @@ a good sign for you, <% name %>.
       other subtemplates in the same template, and can be directly or
       indirectly recursive. Arguments to subtemplates can be given
       default values.  Subtemplates can be invoked via the
-      <code>&lt;&amp; <var>subtemplate-name</var>; argument1;
-      ... &amp;&gt;</code> construct.
+      <code><%LITERAL><& <var>subtemplate-name</var>;
+                         <var>argument1</var> => <var>value1</var>; ... &>
+            </%LITERAL></code> construct.
 
       <p>
 
@@ -415,27 +416,36 @@ a good sign for you, <% name %>.
       <p>
 
       Protected templates ("<def>methods</def>") can be declared via
-      the <code>&lt;%method <var>method-name</var>&gt;</code> instruction.
-      A method is similar to a <def>def</def>, but is visible to all
-      descendants of the declaring template.  Moreover, a method
-      declared in an ancestor template can be overriddden via the
-      <code>&lt;%override <var>method-name</var>&gt;</code> instruction.
-      Overridden methods take the same arguments as the method they
-      override, although, as with template inheritance, only those
-      args declared in an <code>&lt;%xargs&gt;</code>
+      the <code>&lt;%method <var>method-name</var>&gt;</code>
+      instruction.  A method is similar to a <def>def</def>, but is
+      visible to all descendants of the declaring template.  Moreover,
+      a method declared in an ancestor template can be overriddden via
+      the <code>&lt;%override <var>method-name</var>&gt;</code>
+      instruction.  Overridden methods take the same arguments as the
+      method they override, although, as with template inheritance,
+      only those args declared in an <code>&lt;%xargs&gt;</code>
       ... <code>&lt;/%xargs&gt;</code> block will be visible within
-      the body of the override.
+      the body of the override.  Finally, an ancestor template may
+      declare an "abstract" protected subtemplate by using
+      <code>&lt;%absmeth <var>method-name</var>&gt;
+      ... &lt;/%absmeth&gt;</code>.  The only things allowed inside an
+      <code>&lt%absmeth&gt;</code> block are
+      <code>&lt;%args&gt;</code> blocks and <code>&lt%frag&gt</code>
+      blocks.  It is an error for a non-abstract template to extend
+      (directly or indirectly) a template with an abstract method, and
+      not have that method overridden by the non-abstract template, or
+      one of it's intermediate ancestors.
 
       For example, suppose <code>/weatherReport</code> contains:
       <&| _Template &><%LITERAL>
 <%abstract>
-<%method title>
+<%method backgroundColor>white</%method>
+<%absmeth title>
   <%args>
     String city;
     String dayOfWeek;
   </%args>
-  <% dayOfWeek %>'s Weather for <% city %>.
-</%method>
+</%absmeth>
 <%args>
   WeatherReport report;
 </%args>
@@ -445,13 +455,21 @@ a good sign for you, <% name %>.
       <& title; city => report.getCity(); dayOfWeek => report.getDay(); &>
     </title>
   </head>
-  <body><& *CHILD  &></body>
+  <body bgcolor="<& backgroundColor &>">
+    <& *CHILD  &>
+  </body>
 </html>
 </%LITERAL></&>
 
       Then <code>/sunny</code> might contain:
 <&| _Template &><%LITERAL>
 <%extends /weatherReport>
+<%override title>
+  <%xargs>
+    dayOfWeek;
+  </%xargs>
+  <% dayOfWeek %> looks Sunny!
+</%override>
 Head for the beach!  It's going to be sunny and beautiful.
 </%LITERAL></&>
 
@@ -460,10 +478,12 @@ Head for the beach!  It's going to be sunny and beautiful.
 <html>
   <head>
     <title>
-      Monday's Weather for Boston
+      Monday looks Sunny!
     </title>
   </head>
-  <body>Head for the beach!  It's going to be sunny and beautiful.</body>
+  <body bgcolor="white">
+    Head for the beach!  It's going to be sunny and beautiful.
+  </body>
 </html>
 </&></pre>
 
@@ -475,6 +495,7 @@ Head for the beach!  It's going to be sunny and beautiful.
   </%xargs>
   Storm Warning for <% city %>
 </%override>
+<%override backgroundColor>grey</%override>
 Now would be a poor time to go sailing.
 </%LITERAL></&>
       resulting in something like
@@ -485,7 +506,9 @@ Now would be a poor time to go sailing.
       Storm Warning for Boston
     </title>
   </head>
-  <body>Now would be a poor time to go sailing.</body>
+  <body bgcolor="grey">
+    Now would be a poor time to go sailing.
+  </body>
 </html>
 </&></pre>
 
