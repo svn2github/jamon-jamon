@@ -31,9 +31,120 @@ import java.lang.reflect.InvocationTargetException;
 
 public class Invoker
 {
-    public Invoker(StandardTemplateManager p_manager, String p_templateName)
+    public static interface ObjectParser
+    {
+        Object parseObject(Class p_type, String p_value)
+            throws TemplateArgumentException;
+    }
+
+    public static class InvalidTemplateException
+        extends JamonException
+    {
+        InvalidTemplateException(String p_templateName)
+        {
+            this(p_templateName, null);
+        }
+
+        InvalidTemplateException(String p_templateName,Throwable t)
+        {
+            super(p_templateName
+                  + " does not appear to be a valid template class",
+                  t);
+        }
+    }
+
+    public static class TemplateArgumentException
+        extends JamonException
+    {
+        TemplateArgumentException(Throwable t)
+        {
+            super(t);
+        }
+
+        TemplateArgumentException(String p_msg)
+        {
+            super(p_msg);
+        }
+    }
+
+    public static class DefaultObjectParser
+        implements ObjectParser
+    {
+        public Object parseObject(Class p_type, String p_string)
+            throws TemplateArgumentException
+        {
+            try
+            {
+                if (p_string == null)
+                {
+                    if (p_type.isPrimitive())
+                    {
+                        throw new TemplateArgumentException
+                            ("primitive types cannot be null");
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                }
+                else if (p_type == String.class)
+                {
+                    return p_string;
+                }
+                else if (p_type == Integer.class || p_type == Integer.TYPE)
+                {
+                    return Integer.valueOf(p_string);
+                }
+                else if (p_type == Float.class || p_type == Float.TYPE)
+                {
+                    return Float.valueOf(p_string);
+                }
+                else if (p_type == Double.class || p_type == Double.TYPE)
+                {
+                    return Double.valueOf(p_string);
+                }
+                else if (p_type == Short.class || p_type == Short.TYPE)
+                {
+                    return Short.valueOf(p_string);
+                }
+                else if (p_type == Byte.class || p_type == Byte.TYPE)
+                {
+                    return Byte.valueOf(p_string);
+                }
+                else
+                {
+                    return p_type
+                        .getConstructor(new Class[] { String.class })
+                        .newInstance(new Object[] { p_string });
+                }
+            }
+            catch (RuntimeException e)
+            {
+                throw e;
+            }
+            catch (Exception e)
+            {
+                throw new TemplateArgumentException(e);
+            }
+        }
+    }
+
+    public Invoker(StandardTemplateManager p_manager,
+                   String p_templateName)
         throws IOException
     {
+        this(p_manager, p_templateName, null);
+    }
+
+    public Invoker(StandardTemplateManager p_manager,
+                   String p_templateName,
+                   ObjectParser p_objectParser)
+        throws IOException
+    {
+        m_objectParser =
+            p_objectParser == null
+            ? new DefaultObjectParser()
+            : p_objectParser;
         m_manager = p_manager;
         AbstractTemplateImpl impl = m_manager.getInstance(p_templateName);
         m_manager.releaseInstance(impl);
@@ -93,9 +204,6 @@ public class Invoker
         }
     }
 
-    private final StandardTemplateManager m_manager;
-    private final Method m_writeToMethod;
-
     public void render(Writer p_writer, Map p_argMap)
         throws InvalidTemplateException,
                IOException
@@ -135,68 +243,19 @@ public class Invoker
         }
     }
 
-    protected Object parse(Class p_type, String p_string)
-        throws TemplateArgumentException
-    {
-        try
-        {
-            if (p_string == null)
-            {
-                if (p_type.isPrimitive())
-                {
-                    throw new TemplateArgumentException
-                        ("primitive types cannot be null");
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            else if (p_type == String.class)
-            {
-                return p_string;
-            }
-            else if (p_type == Integer.class || p_type == Integer.TYPE)
-            {
-                return Integer.valueOf(p_string);
-            }
-            else if (p_type == Float.class || p_type == Float.TYPE)
-            {
-                return Float.valueOf(p_string);
-            }
-            else if (p_type == Double.class || p_type == Double.TYPE)
-            {
-                return Double.valueOf(p_string);
-            }
-            else if (p_type == Short.class || p_type == Short.TYPE)
-            {
-                return Short.valueOf(p_string);
-            }
-            else if (p_type == Byte.class || p_type == Byte.TYPE)
-            {
-                return Byte.valueOf(p_string);
-            }
-            else
-            {
-                return p_type
-                    .getConstructor(new Class[] { String.class })
-                    .newInstance(new Object[] { p_string });
-            }
-        }
-        catch (RuntimeException e)
-        {
-            throw e;
-        }
-        catch (Exception e)
-        {
-            throw new TemplateArgumentException(e);
-        }
-    }
 
     private final Class m_templateClass;
     private final AbstractTemplateProxy m_template;
     private final Method m_renderMethod;
+    private final ObjectParser m_objectParser;
+    private final StandardTemplateManager m_manager;
+    private final Method m_writeToMethod;
 
+    private Object parse(Class p_type, String p_value)
+        throws TemplateArgumentException
+    {
+        return m_objectParser.parseObject(p_type, p_value);
+    }
 
     private void invokeSet(String p_name, String p_value)
         throws TemplateArgumentException
@@ -236,52 +295,6 @@ public class Invoker
         catch (InvocationTargetException e)
         {
             throw new TemplateArgumentException(e);
-        }
-    }
-
-
-    public static class InvalidTemplateException
-        extends JamonException
-    {
-        InvalidTemplateException(String p_templateName)
-        {
-            this(p_templateName, null);
-        }
-
-        InvalidTemplateException(String p_templateName,Throwable t)
-        {
-            super(p_templateName
-                  + " does not appear to be a valid template class",
-                  t);
-        }
-    }
-
-    public static class TemplateArgumentException
-        extends JamonException
-    {
-        TemplateArgumentException(Throwable t)
-        {
-            super(t);
-        }
-
-        TemplateArgumentException(String p_msg)
-        {
-            super(p_msg);
-        }
-    }
-
-
-    private static class UsageException
-        extends Exception
-    {
-        String usage()
-        {
-            return "java "
-                + Invoker.class.getName()
-                + " [-o outputfile] "
-                + " [-s templatesourcedir]"
-                + " [-w workdir]"
-                + " template-path [[arg1=val1] ...]";
         }
     }
 
