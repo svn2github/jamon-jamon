@@ -66,6 +66,7 @@
     <ant dir="integration" target="spotless"/>
     <ant dir="anttask" target="spotless"/>
     <ant dir="stdlib" target="spotless"/>
+    <ant dir="doc" target="spotless"/>
     <delete file="${jarfile}" />
     <delete file=".cvsignore" />
   </target>
