@@ -1,4 +1,8 @@
-<%extends _TutorialBase>
+<%extends _TutorialSampleBase>
+<%class>
+  protected int tutorialStage() { return 6; }
+</%class>
+
 <%args>
   String output;
 </%args>

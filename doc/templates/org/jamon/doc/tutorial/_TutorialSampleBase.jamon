@@ -1,0 +1,39 @@
+<%abstract>
+<%extends _TutorialBase>
+<& tutorialNavBar &>
+<& *CHILD &>
+<& tutorialNavBar &>
+
+<%def tutorialNavBar>
+  <div class="tutorialNav">
+    <div class="tutorialNavNeighbor">
+      <&| if; condition => tutorialStage() > 1 &>
+        <a href="TutorialSample<% tutorialStage() - 1 %>.html">Previous</a>
+      </&>
+    </div>
+    <div class="tutorialNavContents">
+      <a href="TutorialPath.html">Tutorial contents</a>
+    </div>
+    <div class="tutorialNavNeighbor">
+      <&| if; condition => tutorialStage() < 10 &>
+        <a href="TutorialSample<% tutorialStage() + 1 %>.html">Next</a>
+      </&>
+    </div>
+  </div>
+</%def>
+
+<%def if>
+  <%args>
+    boolean condition;
+  </%args>
+  <%frag content/>
+% if (condition) {
+    <& content &>
+% } else {
+    &nbsp;
+% }
+</%def>
+
+<%class>
+  protected abstract int tutorialStage();
+</%class>

@@ -219,6 +219,24 @@ dt
   display: inline;
 }
 
+.tutorialNav
+{
+  text-align: center;
+  width: 100%;
+}
+
+.tutorialNavNeighbor
+{
+  float: left;
+  width: 20%;
+}
+
+.tutorialNavContents
+{
+  float: left;
+  width: 60%;
+}
+
 /*
 h2
 {
