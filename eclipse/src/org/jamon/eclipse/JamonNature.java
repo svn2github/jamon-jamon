@@ -3,6 +3,7 @@ package org.jamon.eclipse;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
@@ -16,7 +17,7 @@ import org.eclipse.jdt.core.JavaCore;
 
 public class JamonNature implements IProjectNature {
 
-	private static String natureId() {
+	static String natureId() {
 		return JamonPlugin.getDefault().pluginId() + ".jamonnature";
 	}
 	
@@ -54,22 +55,42 @@ public class JamonNature implements IProjectNature {
 	}
 
 
-	private IFolder getTemplateOutputFolder() {
+	public IFolder getTemplateOutputFolder() {
 		// TODO: don't hardcode the generated template directory
 		return getProject().getFolder(new Path("tsrc"));
+	}
+
+	private void unsetReadOnly(IContainer p_container) throws CoreException {
+		IResource[] members = p_container.members();
+		for (int i = 0; i < members.length; ++i) {
+			members[i].setReadOnly(false);
+			if (members[i] instanceof IContainer) {
+				unsetReadOnly((IContainer) members[i]);
+			}
+		}
+	}
+	
+	private void removeTsrc() throws CoreException {
+		IFolder tsrc = getTemplateOutputFolder();
+		IJavaProject jp = getJavaProject();
+		ArrayList e = new ArrayList(Arrays.asList(jp.getRawClasspath()));
+		e.remove(JavaCore.newSourceEntry(tsrc.getFullPath()));
+		jp.setRawClasspath((IClasspathEntry[]) e.toArray(new IClasspathEntry[e.size()]), null);
+		if (tsrc.exists()) {
+			unsetReadOnly(tsrc);
+			tsrc.delete(IResource.DEPTH_INFINITE, null);
+		}
 	}
 	
 	public void configure() throws CoreException {
 
 		JamonProjectBuilder.addToProject(getProject());
-		
+		MarkerUpdaterBuilder.addToProject(getProject());
+		removeTsrc();
 		IFolder tsrc = getTemplateOutputFolder();
-		if (tsrc.exists()) {
-			tsrc.delete(IResource.DEPTH_INFINITE, null);
-		}
 		tsrc.create(true, true, null);
 		tsrc.setDerived(true);
-		
+			
 		IJavaProject jp = getJavaProject();
 		ArrayList e = new ArrayList(Arrays.asList(jp.getRawClasspath()));
 		e.add(JavaCore.newSourceEntry(tsrc.getFullPath()));
@@ -80,7 +101,8 @@ public class JamonNature implements IProjectNature {
 		return (IJavaProject) (getProject().getNature(JavaCore.NATURE_ID));
 	}
 
-	public void deconfigure() {
+	public void deconfigure() throws CoreException {
+		removeTsrc();
 	}
 
 	public IProject getProject() {
