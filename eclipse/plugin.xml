@@ -6,6 +6,7 @@
                                   point="org.eclipse.core.resources.natures">
                                <requires-nature id="org.eclipse.jdt.core.javanature"/>
                                <builder id="jamonPlugin.templateBuilder"/>
+                               <builder id="jamonPlugin.markerUpdater"/>
                                <runtime>
                                   <run class="org.jamon.eclipse.JamonNature"/>
                                </runtime>
@@ -25,6 +26,14 @@
                                   point="org.eclipse.core.resources.builders">
                                <builder hasNature="true">
                                   <run class="org.jamon.eclipse.JamonProjectBuilder"/>
+                               </builder>
+                            </extension>
+                            <extension
+                                  id="markerUpdater"
+                                  name="Jamon Marker Updater"
+                                  point="org.eclipse.core.resources.builders">
+                               <builder hasNature="true">
+                                  <run class="org.jamon.eclipse.MarkerUpdaterBuilder"/>
                                </builder>
                             </extension>
 
