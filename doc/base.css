@@ -260,14 +260,13 @@ dt
   height: 2em;
   margin: 0.5em 2px 1em 2px;
   border: 1px solid black;
-  background-color:  #afcfff;
-/*  background-color: #0f2f7f; */
+  background-color: #0f2f7f;
 }
 
 .tutorialNavNeighbor
 {
   float: left;
-  width: 20%;
+  width: 19%;
   margin: 0.25em 0 0 0;
   padding: 0em 0 0.5em 0;
 }
@@ -283,7 +282,6 @@ dt
 *.tutorialNav a
 {
   padding: 0 0.25em 0 0.25em;
-  border: 1px solid black;
   background-color: #0f2f7f;
   color: white;
 }
