@@ -32,65 +32,63 @@ import org.jamon.escaping.Escaping;
 public class JUnitTemplateManagerTest
     extends TestCase
 {
+    private FakeTemplate m_template;
+    private JUnitTemplateManager m_manager;
+    private StringWriter m_writer;
+
+    private void prepareTemplate(Integer p_iValue)
+        throws Exception
+    {
+        HashMap optMap = new HashMap();
+        if (p_iValue != null)
+        {
+            optMap.put("i", p_iValue);
+        }
+        m_manager =
+            new JUnitTemplateManager(FakeTemplate.class,
+                                     optMap,
+                                     new Object[] { Boolean.TRUE, "hello" });
+        m_template = new FakeTemplate(m_manager);
+        m_writer = new StringWriter();
+        m_template
+            .writeTo(m_writer)
+            .autoFlush(false)
+            .escaping(Escaping.NONE);
+    }
+
+    private void checkSuccess()
+        throws Exception
+    {
+        m_writer.flush();
+        assertTrue(m_manager.getWasRendered());
+        assertEquals("", m_writer.toString());
+    }
+
     public void testSuccess1()
         throws Exception
     {
-        JUnitTemplateManager manager =
-            new JUnitTemplateManager(FakeTemplate.class,
-                                     new HashMap(),
-                                     new Object[] { Boolean.TRUE, "hello" });
-        FakeTemplate template = new FakeTemplate(manager);
-        StringWriter writer = new StringWriter();
-        template
-            .writeTo(writer)
-            .autoFlush(false)
-            .escaping(Escaping.NONE)
-            .render(true,"hello");
-        writer.flush();
-        assertEquals("", writer.toString());
+        prepareTemplate(null);
+        m_template.render(true,"hello");
+        checkSuccess();
     }
 
     public void testSuccess2()
         throws Exception
     {
-        HashMap optMap = new HashMap();
-        optMap.put("i", new Integer(4));
-        JUnitTemplateManager manager =
-            new JUnitTemplateManager(FakeTemplate.class,
-                                     optMap,
-                                     new Object[] { Boolean.TRUE, "hello" });
-        FakeTemplate template = new FakeTemplate(manager);
-        StringWriter writer = new StringWriter();
-        template
-            .writeTo(writer)
-            .autoFlush(false)
-            .escaping(Escaping.NONE)
+        prepareTemplate(new Integer(4));
+        m_template
             .setI(4)
             .render(true,"hello");
-        writer.flush();
-        assertTrue(manager.getWasRendered());
-        assertEquals("", writer.toString());
+        checkSuccess();
     }
-
 
     public void testMissingOptionalArg()
         throws Exception
     {
-        HashMap optMap = new HashMap();
-        optMap.put("i", new Integer(4));
-        JUnitTemplateManager manager =
-            new JUnitTemplateManager(FakeTemplate.class,
-                                     optMap,
-                                     new Object[] { Boolean.TRUE, "hello" });
-        FakeTemplate template = new FakeTemplate(manager);
-        StringWriter writer = new StringWriter();
-        template
-            .writeTo(writer)
-            .autoFlush(false)
-            .escaping(Escaping.NONE);
+        prepareTemplate(new Integer(4));
         try
         {
-            template.render(true,"hello");
+            m_template.render(true,"hello");
         }
         catch( AssertionFailedError e )
         {
@@ -102,20 +100,10 @@ public class JUnitTemplateManagerTest
     public void testUnexpectedOptionalArg()
         throws Exception
     {
-        HashMap optMap = new HashMap();
-        JUnitTemplateManager manager =
-            new JUnitTemplateManager(FakeTemplate.class,
-                                     optMap,
-                                     new Object[] { Boolean.TRUE, "hello" });
-        FakeTemplate template = new FakeTemplate(manager);
-        StringWriter writer = new StringWriter();
-        template
-            .writeTo(writer)
-            .autoFlush(false)
-            .escaping(Escaping.NONE);
+        prepareTemplate(null);
         try
         {
-            template.setI(3);
+            m_template.setI(3);
         }
         catch( AssertionFailedError e )
         {
@@ -127,24 +115,14 @@ public class JUnitTemplateManagerTest
     public void testMismatchRequiredArg()
         throws Exception
     {
-        HashMap optMap = new HashMap();
-        JUnitTemplateManager manager =
-            new JUnitTemplateManager(FakeTemplate.class,
-                                     optMap,
-                                     new Object[] { Boolean.FALSE, "hello" });
-        FakeTemplate template = new FakeTemplate(manager);
-        StringWriter writer = new StringWriter();
-        template
-            .writeTo(writer)
-            .autoFlush(false)
-            .escaping(Escaping.NONE);
+        prepareTemplate(null);
         try
         {
-            template.render(true, "hello");
+            m_template.render(false,"hello");
         }
         catch( AssertionFailedError e )
         {
-            assertEquals("render argument[0] expected false, got true",
+            assertEquals("render argument[0] expected true, got false",
                          e.getMessage());
         }
     }
@@ -153,21 +131,10 @@ public class JUnitTemplateManagerTest
     public void testMismatchOptionalArg()
         throws Exception
     {
-        HashMap optMap = new HashMap();
-        optMap.put("i", new Integer(4));
-        JUnitTemplateManager manager =
-            new JUnitTemplateManager(FakeTemplate.class,
-                                     optMap,
-                                     new Object[] { Boolean.FALSE, "hello" });
-        FakeTemplate template = new FakeTemplate(manager);
-        StringWriter writer = new StringWriter();
-        template
-            .writeTo(writer)
-            .autoFlush(false)
-            .escaping(Escaping.NONE);
+        prepareTemplate(new Integer(4));
         try
         {
-            template.setI(3);
+            m_template.setI(3);
         }
         catch( AssertionFailedError e )
         {
