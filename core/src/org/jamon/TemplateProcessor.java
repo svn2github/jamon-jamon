@@ -94,6 +94,18 @@ public class TemplateProcessor
                               writer)
                 .generateClassSource();
         }
+        catch (RuntimeException e)
+        {
+            try
+            {
+                writer.close();
+                javaFile.delete();
+            }
+            finally
+            {
+                throw e;
+            }
+        }
         catch (IOException e)
         {
             try
@@ -101,7 +113,7 @@ public class TemplateProcessor
                 writer.close();
                 javaFile.delete();
             }
-            catch (IOException e2)
+            finally
             {
                 throw e;
             }
@@ -117,6 +129,18 @@ public class TemplateProcessor
                               m_describer,
                               analyzer)
                 .generateSource();
+        }
+        catch (RuntimeException e)
+        {
+            try
+            {
+                writer.close();
+                javaFile.delete();
+            }
+            finally
+            {
+                throw e;
+            }
         }
         catch (IOException e)
         {
