@@ -1,6 +1,6 @@
 <%def foo>\
-<%farg content1></%farg>\
-<%farg content2></%farg>\
+<%frag content1></%frag>\
+<%frag content2></%frag>\
 <%args> int x; </%args>\
 <% x %><& content1 &><% x %><& content2 &><% x %>\
 </%def>\

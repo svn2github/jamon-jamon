@@ -74,10 +74,10 @@ States
 
 Tokens
 
-  {start -> farginit,body -> farginit} farg_start_begin = '<%farg';
+  {start -> farginit,body -> farginit} farg_start_begin = '<%frag';
   {farginit -> args} farg_start_done = '>';
   {args -> body} args_end = '</%args>';
-  {args -> body} farg_end = '</%farg>';
+  {args -> body} farg_end = '</%frag>';
   {start ->class,body -> class} class_start = '<%class>' ws*;
   {class -> body} class_end = ws* '</%class>';
   {start -> args, body -> args} args_start = '<%args>';

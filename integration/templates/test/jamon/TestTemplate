@@ -105,8 +105,8 @@ body3
 </&>
 
 <%def sub1>
-  <%farg f1>
-  </%farg>
+  <%frag f1>
+  </%frag>
   <%args>
     int y => 5;
   </%args>
@@ -120,22 +120,22 @@ Nested frag param calls:
 
 And frag calling frag:
 <%def sub3> \
-<%farg frag></%farg> \
+<%frag frag></%frag> \
 A <& frag &> B <& frag &> C \
 </%def> \
 % class Counter { int i = 0; public int bump() { return i++; } }
 % final Counter c = new Counter();
 <%def sub4> \
-<%farg f2></%farg> \
+<%frag f2></%frag> \
 front<&| sub3 &>before<& f2 &>middle<&f2&>after</&>back</%def> \
 <&| sub4 &> <% c.bump() %> </&>
 
 
 <%def subX>
-  <%farg f>
+  <%frag f>
     int i;
     String s;
-  </%farg>
+  </%frag>
   <& f; i => 3; s => "yes" &>
   <& f; i => 7; s => "no" &>
 </%def>

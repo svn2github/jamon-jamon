@@ -17,8 +17,8 @@
 
   Contributor(s):
 </%doc>\
-<%farg content>
-</%farg>\
+<%frag content>
+</%frag>\
 <%args>
   org.jamon.render.html.Input input;
   int cols => 0;

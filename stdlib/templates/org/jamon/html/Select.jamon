@@ -17,9 +17,9 @@
 
   Contributor(s):
 </%doc>\
-<%farg renderOption>
+<%frag renderOption>
   Object renderable;
-</%farg>\
+</%frag>\
 <%args>
   org.jamon.render.html.Select input;
   boolean multiple => false;

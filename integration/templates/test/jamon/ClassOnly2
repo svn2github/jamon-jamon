@@ -3,9 +3,9 @@
   String foo => "bar";
   Integer j;
 </%args>
-<%farg f2>
-</%farg>
-<%farg f1>
+<%frag f2>
+</%frag>
+<%frag f1>
   int k;
   Boolean[] m;
   String a1;
@@ -13,4 +13,4 @@
   String a2;
   String a3;
   String a5;
-</%farg>
+</%frag>

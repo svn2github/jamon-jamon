@@ -1,4 +1,4 @@
-<%farg content></%farg>\
+<%frag content></%frag>\
 <%args>
   Escaping escaping;
   boolean compose;

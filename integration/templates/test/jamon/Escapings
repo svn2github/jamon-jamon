@@ -1,3 +1,3 @@
 <% "<>&\"'" %><& sub &><&| fsub &><% "<>&\"'" %></&>\
 <%def sub><% "<>&\"'" %></%def>\
-<%def fsub><%farg f></%farg><& f &></%def>
+<%def fsub><%frag f></%frag><& f &></%def>

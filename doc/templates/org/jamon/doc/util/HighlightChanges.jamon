@@ -1,8 +1,8 @@
-<%farg oldContent></%farg>\
-<%farg newContent></%farg>\
-<%farg insertedRenderer>Object text;</%farg>\
-<%farg unchangedRenderer>Object text;</%farg>\
-<%farg deletedRenderer>Object text;</%farg>\
+<%frag oldContent></%frag>\
+<%frag newContent></%frag>\
+<%frag insertedRenderer>Object text;</%frag>\
+<%frag unchangedRenderer>Object text;</%frag>\
+<%frag deletedRenderer>Object text;</%frag>\
 <%import>
   java.util.StringTokenizer;
   bmsi.util.Diff;

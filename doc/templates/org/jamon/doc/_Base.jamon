@@ -1,4 +1,4 @@
-<%farg body></%farg>\
+<%frag body></%frag>\
 <%args>
   String title;
   String section;

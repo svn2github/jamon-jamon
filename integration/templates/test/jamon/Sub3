@@ -1,7 +1,7 @@
 <%args>
   int x;
 </%args>
-<%farg frag></%farg>
+<%frag frag></%frag>
 Above the content
 <& frag &>
 Below the content

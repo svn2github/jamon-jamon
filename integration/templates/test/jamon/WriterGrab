@@ -9,6 +9,6 @@
 % String me = nw.toString();
 % writeTo(old);
 <% me.toUpperCase() %>
-<%def stringify><%farg content></%farg>\
+<%def stringify><%frag content></%frag>\
 <& content &>\
 </%def>

@@ -272,10 +272,10 @@ Your nicknames are
         <p>
           In order to pass a fragment argument, the target template or
           def must declare that it expects a fragment argument. This
-          is done using the <code>&lt;%farg
-          <i>name</i>&gt;&lt;/%farg&gt;</code> declaration, which
-          declares that the template (or def) expects a <b>fragment
-          <b>arg</b>ument.
+          is done using the <code>&lt;%frag
+          <i>name</i>&gt;&lt;/%frag&gt;</code> declaration, which
+          declares that the template (or def) expects a fragment
+          argument.
         <p>
           The fragment can be invoked in the target template or def
           like any other template or def invocation, simply specifying
@@ -284,8 +284,8 @@ Your nicknames are
           Putting this all together, the template
         <&| _template &><%LITERAL>
 <%def _lilink>
-  <%farg content>
-  </%farg>
+  <%frag content>
+  </%frag>
   <%args>
     String href;
   </%args>
@@ -293,8 +293,8 @@ Your nicknames are
 </%def>
 
 <%def _big>
-  <%farg stuff>
-  </%farg>
+  <%frag stuff>
+  </%frag>
 <font size="+4"><& stuff &></font>
 </%def>
 
@@ -323,11 +323,11 @@ Your nicknames are
       <p>
       To pass a parameterized template fragment to a <code>def</code>
       (or another template) the fragment and its parameters must be
-      declared via a <code>&lt;%farg
-      <i>name</i>&gt;</code> <i>parameters</i> <code>&lt;/%farg&gt;</code>,
+      declared via a <code>&lt;%frag
+      <i>name</i>&gt;</code> <i>parameters</i> <code>&lt;/%frag&gt;</code>,
       where each parameter is a type followed by an identifier. Thus
-      a <code>&lt;%farg
-      <i>name</i>&gt;</code>...<code>&lt;/%farg&gt;</code> is similar
+      a <code>&lt;%frag
+      <i>name</i>&gt;</code>...<code>&lt;/%frag&gt;</code> is similar
       to a
       <code>&lt;%args&gt;</code>...<code>&lt;/%args&gt;</code> except
       it has a name and its parameters cannot have default values.
@@ -338,9 +338,9 @@ Your nicknames are
       <p>
       For example <&| _template &><%LITERAL>
 <%def _list>
-  <%farg display>
+  <%frag display>
     float temperature;
-  </%farg>
+  </%frag>
   <%args>
     float[] temps;
   </%args>
@@ -387,6 +387,6 @@ This component has been accessed <% pageViews++ %> times.
   </ol>
 </&>
 
-<%def _template><%farg content></%farg>
+<%def _template><%frag content></%frag>
 <pre class="template"><&| /org/jamon/escape/Html &><& content &></&></pre>
 </%def>

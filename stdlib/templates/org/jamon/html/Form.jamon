@@ -20,8 +20,8 @@
 <%import>
   org.jamon.render.html.Input;
 </%import>\
-<%farg body>
-</%farg>\
+<%frag body>
+</%frag>\
 <%args>
   String action;
   Input submit => null;

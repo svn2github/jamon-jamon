@@ -1,5 +1,5 @@
 <%def subX>\
-<%farg f> int num; </%farg>\
+<%frag f> int num; </%frag>\
 <%args> int[] nums; </%args>\
 % for (int i = 0; i < nums.length; i++) {
 <& f; num => nums[i] &>\
