@@ -15,6 +15,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -36,7 +37,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.launching.JavaRuntime;
@@ -55,6 +55,14 @@ public class TemplateBuilder extends IncrementalProjectBuilder {
 
 	private TemplateDependencies m_dependencies = null;
 	private final Set m_changed = new HashSet();
+	
+	private void logInfo(String p_message) {
+		JamonProjectPlugin.getDefault().logInfo(p_message);
+	}
+	
+	private void logError(Throwable p_error) {
+		JamonProjectPlugin.getDefault().logError(p_error);
+	}
 	
 	private IPath getWorkDir() {
 		return getProject().getWorkingLocation(JamonProjectPlugin.getDefault().pluginId());
@@ -133,7 +141,7 @@ public class TemplateBuilder extends IncrementalProjectBuilder {
 	private void incrementalBuild(IResourceDelta delta, IProgressMonitor monitor) throws CoreException {
 		BuildVisitor visitor = new BuildVisitor();
 		delta.accept(visitor);
-		System.err.println("Changed templates are " + m_changed);
+		logInfo("Changed templates are " + m_changed);
 		IFolder templateDir = getNature().getTemplateSourceFolder();
 		for (Iterator i = m_changed.iterator(); i.hasNext(); ) {
 			IPath s = (IPath) i.next();
@@ -156,45 +164,39 @@ public class TemplateBuilder extends IncrementalProjectBuilder {
 			m_outFolder = getNature().getTemplateOutputFolder();
 		}
 		
-		private ClassLoader classLoader() throws CoreException {
-			String[] entries = JavaRuntime.computeDefaultRuntimeClassPath(getJavaProject());
-			URL[] urls = new URL[entries.length];
-			// TODO: this isn't correct. Need to pay attention to inclusion / exclusion
-			//   patterns, and probably do something special with non-binary entries.
-			//   Also probably should skip source folders.
+		private List classpathUrlsForProject(IJavaProject p_project) throws CoreException {
+			logInfo("Computing classpath for project " + p_project.getProject().getName());
+			List urls = new ArrayList();
+			String[] entries = JavaRuntime.computeDefaultRuntimeClassPath(p_project);
 			for (int i = 0; i < entries.length; ++i) {
-				System.err.println(entries[i]);
+				logInfo("Found entry " + entries[i]);
 				try {
-					urls[i] = new File(entries[i]).toURL();
+					urls.add(new File(entries[i]).toURL());
 				}
 				catch (MalformedURLException e) {
-					throw new RuntimeException(e);
+					logError(e);
 				}
 			}
+			IProject[] dependencies = p_project.getProject().getReferencedProjects();
+			for (int i = 0; i < dependencies.length; ++i) {
+				if (dependencies[i].hasNature(JavaCore.NATURE_ID)) {
+					urls.addAll(classpathUrlsForProject((IJavaProject) dependencies[i].getNature(JavaCore.NATURE_ID)));
+				}
+				else {
+					logInfo("Skipping non-java referenced project " + dependencies[i].getName());
+				}
+			}
+			return urls;
+		}
+		
+		private ClassLoader classLoader() throws CoreException {
+			List urls = classpathUrlsForProject(getJavaProject());
+			logInfo("Classpath URLs are " + urls);
 			// TODO: does this have the proper parent?
-			return new URLClassLoader(urls);
+			return new URLClassLoader((URL[]) urls.toArray(new URL[urls.size()]));
 			
 		}
 
-		private ClassLoader classLoader2() throws CoreException {
-			IClasspathEntry[] entries = getJavaProject().getResolvedClasspath(true);
-			URL[] urls = new URL[entries.length];
-			// TODO: this isn't correct. Need to pay attention to inclusion / exclusion
-			//   patterns, and probably do something special with non-binary entries.
-			//   Also probably should skip source folders.
-			for (int i = 0; i < entries.length; ++i) {
-				System.err.println(entries[i].getPath().makeUNC(true).toFile());
-				try {
-					urls[i] = entries[i].getPath().makeUNC(true).toFile().toURL();
-				}
-				catch (MalformedURLException e) {
-					throw new RuntimeException(e);
-				}
-			}
-			// TODO: does this have the proper parent?
-			return new URLClassLoader(urls);
-		}
-		
 		private final ResourceTemplateSource m_source;
 		private final TemplateDescriber m_describer;
 		private final IFolder m_templateDir;
@@ -288,7 +290,7 @@ public class TemplateBuilder extends IncrementalProjectBuilder {
 				if (JamonNature.JAMON_EXTENSION.equals(file.getFileExtension())) {
 					if (m_templateDir.getFullPath().isPrefixOf(file.getFullPath())) {
 						IPath path = file.getFullPath().removeFirstSegments(m_templateDir.getFullPath().segmentCount()).removeFileExtension();
-						System.err.println("translating Jamon template /" + path);
+						logInfo("translating Jamon template /" + path);
 						IFile pFile = m_outFolder.getFile(path.addFileExtension("java"));
 						delete(pFile);
 						IFile iFile = m_outFolder.getFile(path.removeLastSegments(1).append(path.lastSegment() + "Impl").addFileExtension("java"));
