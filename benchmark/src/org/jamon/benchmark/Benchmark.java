@@ -2,6 +2,7 @@ package org.jamon.benchmark;
 
 import org.jamon.StandardTemplateManager;
 import java.io.IOException;
+import java.io.StringWriter;
 
 public class Benchmark
     implements Runnable
@@ -14,15 +15,31 @@ public class Benchmark
     private static StandardTemplateManager s_manager;
     private static Top s_top;
     private static int s_started;
+    private static String s_expected;
+
+    private static void verify(String p_string, String p_prefix)
+    {
+        String ex = p_prefix + s_expected;
+        if( ! ex.equals( p_string ) )
+        {
+            System.err.println("Expected " + ex + "\ngot " + p_string);
+            System.exit(4);
+        }
+    }
 
     public void run()
     {
         try
         {
-            NullWriter writer = new NullWriter();
-            for (int i = 0; i < m_iterations; ++i)
+            StringWriter writer = new StringWriter();
+            s_top.writeTo(writer).render();
+            verify(writer.toString(),"");
+            for (int i = 1; i <= m_iterations; ++i)
             {
-                s_top.writeTo(writer).render();
+                writer = new StringWriter();
+                s_top.writeTo(writer).setK(i);
+                s_top.render();
+                verify(writer.toString(),i + "");
             }
             synchronized (Benchmark.class)
             {
@@ -47,6 +64,11 @@ public class Benchmark
                 new StandardTemplateManager(new StandardTemplateManager.Data()
                                             .setDynamicRecompilation(false));
             s_top = new Top(s_manager);
+            StringWriter w = new StringWriter();
+            s_top.writeTo(w).render();
+            s_expected = w.toString();
+            int i = s_expected.indexOf('\n');
+            s_expected = s_expected.substring(i);
         }
         catch (IOException e)
         {

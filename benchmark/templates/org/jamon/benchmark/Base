@@ -1,0 +1,3 @@
+<%args>
+  int k => 0;
+</%args><& *CHILD &>
