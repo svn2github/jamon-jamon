@@ -519,7 +519,7 @@ public class Analyzer
         public void caseACall(ACall p_call)
         {
             addStatement(makeCallStatement(p_call.getPath(),
-                                           p_call.getParam(),
+                                           p_call.getParams(),
                                            p_call.getCallStart()));
         }
 
@@ -587,7 +587,7 @@ public class Analyzer
             handleBody();
             CallStatement s = makeCallStatementWithFragments(
                 p_call.getPath(),
-                p_call.getParam(),
+                p_call.getParams(),
                 p_call.getMultiFragmentCallInit());
             addStatement(s);
             pushCallStatement(s);
@@ -615,7 +615,7 @@ public class Analyzer
             handleBody();
             CallStatement s =
                 makeCallStatementWithFragments(p_call.getPath(),
-                                               p_call.getParam(),
+                                               p_call.getParams(),
                                                p_call.getFragmentCallStart());
             addStatement(s);
             s.addFragmentImpl(pushFragmentUnitImpl(null));
@@ -691,10 +691,10 @@ public class Analyzer
     }
 
     private CallStatement makeCallStatementWithFragments(PPath p_path,
-                                                         List p_calls,
+                                                         PParams p_params,
                                                          Token p_token)
     {
-        CallStatement s = makeCallStatement(p_path, p_calls, p_token);
+        CallStatement s = makeCallStatement(p_path, p_params, p_token);
         if (s instanceof FargCallStatement)
         {
             throw new TunnelingException
@@ -704,16 +704,16 @@ public class Analyzer
     }
 
     private CallStatement makeCallStatement(PPath p_path,
-                                            List p_calls,
+                                            PParams p_params,
                                             Token p_token)
     {
         String path = computePath(p_path);
-        FragmentUnit fragmentUnit =
-            getCurrentUnit().getFragmentUnitIntf(path);
+        FragmentUnit fragmentUnit = getCurrentUnit().getFragmentUnitIntf(path);
+        ParamValues paramValues = makeParamValues(p_params, p_token);
         if (fragmentUnit != null)
         {
             return new FargCallStatement(path,
-                                         makeParamMap(p_calls),
+                                         paramValues,
                                          fragmentUnit,
                                          p_token,
                                          m_templateIdentifier);
@@ -724,7 +724,7 @@ public class Analyzer
             if (defUnit != null)
             {
                 return new DefCallStatement(path,
-                                            makeParamMap(p_calls),
+                                            paramValues,
                                             defUnit,
                                             p_token,
                                             m_templateIdentifier);
@@ -736,7 +736,7 @@ public class Analyzer
                 if (methodUnit != null)
                 {
                     return new MethodCallStatement(path,
-                                                   makeParamMap(p_calls),
+                                                   paramValues,
                                                    methodUnit,
                                                    p_token,
                                                    m_templateIdentifier);
@@ -745,7 +745,7 @@ public class Analyzer
                 {
                     getTemplateUnit().addCallPath(getAbsolutePath(path));
                     return new ComponentCallStatement(getAbsolutePath(path),
-                                                      makeParamMap(p_calls),
+                                                      paramValues,
                                                       p_token,
                                                       m_templateIdentifier);
                 }
@@ -753,16 +753,41 @@ public class Analyzer
         }
     }
 
-    private Map makeParamMap(List p_paramList)
+    private ParamValues makeParamValues(PParams p_params, Token p_token)
     {
-        Map paramMap = new HashMap();
-        for (Iterator p = p_paramList.iterator(); p.hasNext(); /* */)
+        if (p_params instanceof ANamedParams)
         {
-            AParam param = (AParam) p.next();
-            paramMap.put(param.getIdentifier().getText(),
-                         param.getParamExpr().getText().trim());
+            final Map paramMap = new HashMap();
+            p_params.apply(new DepthFirstAdapter()
+                {
+                    public void caseANamedParam(ANamedParam p_param)
+                    {
+                        paramMap.put(p_param.getIdentifier().getText(),
+                                     p_param.getParamExpr().getText().trim());
+                    }
+                });
+            return
+                new NamedParamValues(paramMap, p_token, m_templateIdentifier);
         }
-        return paramMap;
+        else if (p_params instanceof AUnnamedParams)
+        {
+            final List params = new LinkedList();
+            p_params.apply(new DepthFirstAdapter()
+                {
+                    public void caseAUnnamedParam(AUnnamedParam p_param)
+                    {
+                        params.add(p_param.getParamExpr().getText().trim());
+                    }
+                });
+            return new UnnamedParamValues(params,
+                                          p_token,
+                                          m_templateIdentifier);
+        }
+        else
+        {
+            throw new IllegalStateException(
+                "Unexpected subtype " + p_params.getClass() + " of PParams");
+        }
     }
 
     private void addStatement(Statement p_statement)

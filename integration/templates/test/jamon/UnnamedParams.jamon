@@ -1,0 +1,40 @@
+<%def noArgs>
+  <%args>
+    int i => 3;
+  </%args>
+  <% i %>\
+</%def>
+
+<%def oneArg>
+  <%args>
+    String first;
+    int i => 3;
+  </%args>
+  <% first %> <% i %>\
+</%def>
+
+<%def twoArgs>
+  <%args>
+    String first;
+    int i => 3;
+    String second;
+  </%args>
+  <% first %> <% second %> <% i %>\
+</%def>
+
+<%def multifrag>
+  <%args>
+    int i;
+  </%args>
+  <%frag f/>
+  <%frag g/>
+  <& f &> <% i %> <& g &>\
+</%def>
+
+<& noArgs: &> \
+<& oneArg: "one" &> <& twoArgs: "one"; "two" &> \
+<& oneArg: "one"; &> <& twoArgs: "one"; "two"; &> \
+<&|| multifrag: 3 &>
+  <|f>f</|>
+  <|g>g</|>
+</&>

@@ -74,6 +74,10 @@ States
   multifragmentcallbody,
   argexp,
   callexp,
+  unnamed_param,
+  multifragment_unnamed_param,
+  param_list,
+  multifragment_param_list,
   args,
   parent_args,
   parent_argexp,
@@ -189,10 +193,23 @@ Tokens
   {call -> callexp, multifragmentcall -> multifragmentcallexp} carrow = '=>' hs*;
   {body -> call} fragment_call_start = '<&|' ws*;
   {body -> call} call_start = '<&' ws*;
-  {multifragmentcall -> multifragmentcallbody, call -> body} call_end = ws* '&>';
-  {callexp -> call, multifragmentcallexp -> multifragmentcall} param_expr =
+  {multifragmentcall -> multifragmentcallbody,
+   multifragment_unnamed_param -> multifragmentcallbody,
+   multifragment_param_list -> multifragmentcallbody,
+   call -> body,
+   unnamed_param -> body,
+   param_list -> body } call_end = ws* '&>';
+  {callexp -> call,
+   multifragmentcallexp -> multifragmentcall,
+   multifragment_unnamed_param -> multifragment_param_list,
+   unnamed_param -> param_list} param_expr =
        ([all - [argsep + [q + '&']]] | quoted | squoted | '&' [all - '>'])*;
-  {multifragmentcall,call,imports,alias} semi = ';';
+  {multifragmentcall,call,imports,alias,
+   param_list -> unnamed_param,
+   multifragment_param_list -> multifragment_unnamed_param}
+     semi = ';';
+  {multifragmentcall -> multifragment_unnamed_param,
+   call -> unnamed_param} colon = ':';
   {multifragmentcall,call,extends,alias} pathsep = slash;
   {multifragmentcall,call,extends,alias} updir = period period slash;
 
@@ -289,13 +306,13 @@ Productions
 
   override = override_start identifier gt override_component* override_end;
 
-  call = call_start path param* semi? call_end
+  call = call_start path params call_end
        | {child} call_start child_call call_end
        ;
 
-  fragment_call = fragment_call_start path param* semi? call_end base_component* fragment_call_end;
+  fragment_call = fragment_call_start path params call_end base_component* fragment_call_end;
 
-  multi_fragment_call = multi_fragment_call_init path param* semi? call_end named_farg* fragment_call_end;
+  multi_fragment_call = multi_fragment_call_init path params call_end named_farg* fragment_call_end;
   named_farg = named_farg_init identifier named_farg_done base_component* named_farg_end;
 
   imports = import_start import* import_end;
@@ -343,7 +360,12 @@ Productions
 
   parent_arg = [name]: identifier default? donearg;
 
-  param = semi identifier carrow param_expr;
+  params = {named} named_param* semi?
+         | {unnamed} colon unnamed_param*;
+
+  named_param = semi identifier carrow param_expr;
+
+  unnamed_param = param_expr semi?;
 
   default = arrow argexpr;
 

@@ -30,33 +30,27 @@
 
     <div id="nav">
       <ul class="nav">
-          <& _menuItem; section => Section.HOME; href => "index" &>
-          <& _menuItem; section => Section.FEATURES; href => "Features" &>
-          <& _menuItem; section => Section.NEWS; href => "News" &>
-          <& _menuItem; section => Section.DOWNLOAD; href => "Download" &>
-          <& _menuItem; section => Section.CONTACT; href => "Contact" &>
-          <& _menuItem; section => Section.ABOUT; href => "About" &>
+          <& _menuItem: Section.HOME; "index" &>
+          <& _menuItem: Section.FEATURES; "Features" &>
+          <& _menuItem: Section.NEWS; "News" &>
+          <& _menuItem: Section.DOWNLOAD; "Download" &>
+          <& _menuItem: Section.CONTACT; "Contact" &>
+          <& _menuItem: Section.ABOUT; "About" &>
         </ul>
 
         <ul class="nav">
           <li class="static">Documentation</li>
-          <& _menuItem; section => Section.DOC_OVERVIEW;
-                        href => "Overview" &>
-          <& _menuItem; section => Section.DOC_TUTORIAL;
-                        href => "tutorial/TutorialPath" &>
-          <& _menuItem; section => Section.DOC_GENERATED;
-                        href => "GeneratedTemplates" &>
-          <& _menuItem; section => Section.DOC_USERGUIDE;
-                        href => "UserGuide" &>
-          <& _menuItem; section => Section.DOC_PROJECTS;
-                        href => "BuildingProjects" &>
-          <& _menuItem; section => Section.DOC_JAMONTASK;
-                        href => "JamonTask" &>
-          <& _menuItem; section => Section.DOC_SERVLETS;
-                        href => "Servlets" &>
-          <& _menuItem; section => Section.DOC_REFERENCE;
-                        href => "Reference" &>
-          <li class="nav"><a href='<& docRootUrl; href => "javadoc/index.html" &>'>Javadoc</a></li>
+          <& _menuItem: Section.DOC_OVERVIEW; "Overview" &>
+          <& _menuItem: Section.DOC_TUTORIAL; "tutorial/TutorialPath" &>
+          <& _menuItem: Section.DOC_GENERATED; "GeneratedTemplates" &>
+          <& _menuItem: Section.DOC_USERGUIDE; "UserGuide" &>
+          <& _menuItem: Section.DOC_PROJECTS; "BuildingProjects" &>
+          <& _menuItem: Section.DOC_JAMONTASK; "JamonTask" &>
+          <& _menuItem: Section.DOC_SERVLETS; "Servlets" &>
+          <& _menuItem: Section.DOC_REFERENCE; "Reference" &>
+          <li class="nav">
+           <a href='<& docRootUrl; href => "javadoc/index.html" &>'>Javadoc</a>
+          </li>
         </ul>
       </div>
       <div id="main">
@@ -80,7 +74,7 @@
     String href;
   </%args>
 <li class="nav"
-    <&| logic//If; condition => section == currentSection() &>id="current"</&>>
+    <&| logic//If: section == currentSection() &>id="current"</&>>
 <a href="<& docRootUrl; href => "" &><% href %>.html" \
 ><% section %></a>
 </li>

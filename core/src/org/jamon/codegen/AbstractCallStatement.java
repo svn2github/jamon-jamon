@@ -34,7 +34,7 @@ public abstract class AbstractCallStatement
     implements CallStatement
 {
     AbstractCallStatement(String p_path,
-                          Map p_params,
+                          ParamValues p_params,
                           Token p_token,
                           String p_templateIdentifier)
     {
@@ -49,7 +49,7 @@ public abstract class AbstractCallStatement
     }
 
     private final String m_path;
-    private final Map m_params;
+    private final ParamValues m_params;
     private final Map m_fragParams = new HashMap();
     private final static String FRAGMENT_IMPL_PREFIX = "__jamon__instanceOf__";
     private static int s_fragmentImplCounter = 0;
@@ -57,25 +57,6 @@ public abstract class AbstractCallStatement
 
     protected abstract String getFragmentIntfName(
         FragmentUnit p_fragmentUnitIntf);
-
-    protected void generateRequiredArgs(Iterator p_args, CodeWriter p_writer)
-        throws IOException
-    {
-        while (p_args.hasNext())
-        {
-            String name = ((RequiredArgument) p_args.next()).getName();
-            String expr = (String) getParams().remove(name);
-            if (expr == null)
-            {
-                throw new AnalysisException(
-                    "No value supplied for required argument " + name,
-                    getTemplateIdentifier(),
-                    getToken());
-            }
-            p_writer.printArg("(" + expr + ")");
-        }
-    }
-
 
     private String getFragmentImplName(FragmentUnit p_fragmentUnitIntf)
     {
@@ -202,23 +183,28 @@ public abstract class AbstractCallStatement
     protected void checkSuppliedParams()
         throws AnalysisException
     {
-        checkSuppliedParams("arguments", m_params);
-        checkSuppliedParams("fragments", m_fragParams);
+        if (getParams().hasUnusedParams())
+        {
+            throw constructExtraParamsException(
+                "arguments", getParams().getUnusedParams());
+        }
+        if (! m_fragParams.isEmpty())
+        {
+            throw constructExtraParamsException(
+                "fragments", m_fragParams.keySet().iterator());
+        }
     }
 
-    private void checkSuppliedParams(String p_paramType, Map p_params)
-        throws AnalysisException
+    AnalysisException constructExtraParamsException(String p_paramType,
+                                                 Iterator p_extraParams)
     {
-        if (! p_params.isEmpty())
-        {
-            StringBuffer message = new StringBuffer("Call provides unused ");
-            message.append(p_paramType);
-            message.append(" ");
-            StringUtils.commaJoin(message, p_params.keySet().iterator());
-            throw new AnalysisException(message.toString(),
-                                        getTemplateIdentifier(),
-                                        getToken());
-        }
+        StringBuffer message = new StringBuffer("Call provides unused ");
+        message.append(p_paramType);
+        message.append(" ");
+        StringUtils.commaJoin(message, p_extraParams);
+        return new AnalysisException(message.toString(),
+                                     getTemplateIdentifier(),
+                                     getToken());
     }
 
     protected final String getPath()
@@ -226,7 +212,7 @@ public abstract class AbstractCallStatement
         return m_path;
     }
 
-    protected final Map getParams()
+    protected final ParamValues getParams()
     {
         return m_params;
     }

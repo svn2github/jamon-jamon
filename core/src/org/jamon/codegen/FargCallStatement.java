@@ -23,7 +23,6 @@ package org.jamon.codegen;
 import java.io.IOException;
 import java.util.List;
 import java.util.Iterator;
-import java.util.Map;
 
 import org.jamon.util.StringUtils;
 import org.jamon.node.Token;
@@ -32,7 +31,7 @@ public class FargCallStatement
     extends AbstractCallStatement
 {
     FargCallStatement(String p_path,
-                      Map p_params,
+                      ParamValues p_params,
                       FragmentUnit p_fragmentUnit,
                       Token p_token,
                       String p_templateIdentifier)
@@ -62,7 +61,8 @@ public class FargCallStatement
         p_writer.print  (tn + ".renderNoFlush");
         p_writer.openList();
         p_writer.printArg(ArgNames.WRITER);
-        generateRequiredArgs(m_fragmentUnit.getRequiredArgs(), p_writer);
+        getParams().generateRequiredArgs(m_fragmentUnit.getRequiredArgs(),
+                                         p_writer);
         p_writer.closeList();
         p_writer.println(";");
         checkSuppliedParams();

@@ -11,112 +11,112 @@
 </%alias>
 
 <h2>Template Reference Manual</h2>
-  <ol>
-    <li><span class="concept">Static content</span>
+<ol>
+  <li><span class="concept">Static content</span>
 
-      In general, any characters appearing in a template are output
-      literally, whitespace included.
+    In general, any characters appearing in a template are output
+    literally, whitespace included.
 
-      This excludes whitespace inside <&| /org/jamon/escape/Html
-      &><%LITERAL> <%args>, <%xargs>, <%import>, <%alias>, <%absmeth>, and
-      <%frag> declarations.  </%LITERAL></&>
+    This excludes whitespace inside <&| /org/jamon/escape/Html
+    &><%LITERAL> <%args>, <%xargs>, <%import>, <%alias>, <%absmeth>, and
+    <%frag> declarations.  </%LITERAL></&>
 
-      Other ignored white space includes whitespace immediately after
-      the following tags:
-      <ul>
-        <li><&| escape//Html &><%LITERAL></%args></%LITERAL></&></li>
-        <li><&| escape//Html &><%LITERAL></%doc></%LITERAL></&></li>
-        <li><&| escape//Html &><%LITERAL></%frag></%LITERAL></&></li>
-        <li><&| escape//Html &><%LITERAL></%xargs></%LITERAL></&></li>
-        <li><&| escape//Html &><%LITERAL><%abstract></%LITERAL></&></li>
-        <li><&| escape//Html &><%LITERAL></%class></%LITERAL></&></li>
-        <li><&| escape//Html &><%LITERAL></%import></%LITERAL></&></li>
-        <li><&| escape//Html &><%LITERAL></%implements></%LITERAL></&></li>
-        <li><&| escape//Html &><%LITERAL></%java></%LITERAL></&></li>
-        <li><&| escape//Html &>
-              <%LITERAL><%def ...> and </%def></%LITERAL>
-            </&></li>
-        <li><&| escape//Html &><%LITERAL></%absmeth></%LITERAL></&></li>
-        <li><&| escape//Html &>
-              <%LITERAL><%method ...> and </%method></%LITERAL></&></li>
-        <li><&| escape//Html &>
-              <%LITERAL><%override ...> and </%override></%LITERAL></&></li>
-        <li><&| escape//Html &><%LITERAL></%alias></%LITERAL></&></li>
-      </ul>
+    Other ignored white space includes whitespace immediately after
+    the following tags:
+    <ul>
+      <li><&| escape//Html &><%LITERAL></%args></%LITERAL></&></li>
+      <li><&| escape//Html &><%LITERAL></%doc></%LITERAL></&></li>
+      <li><&| escape//Html &><%LITERAL></%frag></%LITERAL></&></li>
+      <li><&| escape//Html &><%LITERAL></%xargs></%LITERAL></&></li>
+      <li><&| escape//Html &><%LITERAL><%abstract></%LITERAL></&></li>
+      <li><&| escape//Html &><%LITERAL></%class></%LITERAL></&></li>
+      <li><&| escape//Html &><%LITERAL></%import></%LITERAL></&></li>
+      <li><&| escape//Html &><%LITERAL></%implements></%LITERAL></&></li>
+      <li><&| escape//Html &><%LITERAL></%java></%LITERAL></&></li>
+      <li><&| escape//Html &>
+            <%LITERAL><%def ...> and </%def></%LITERAL>
+          </&></li>
+      <li><&| escape//Html &><%LITERAL></%absmeth></%LITERAL></&></li>
+      <li><&| escape//Html &>
+            <%LITERAL><%method ...> and </%method></%LITERAL></&></li>
+      <li><&| escape//Html &>
+            <%LITERAL><%override ...> and </%override></%LITERAL></&></li>
+      <li><&| escape//Html &><%LITERAL></%alias></%LITERAL></&></li>
+    </ul>
 
-      If you would like to force whitespace to appear after one of the
-      above tags, you can follow the tag with a backslash and a
-      newline; whitespace after that will be emitted.
+    If you would like to force whitespace to appear after one of the
+    above tags, you can follow the tag with a backslash and a
+    newline; whitespace after that will be emitted.
 
-      <br />
-      <b>Newline escape</b><br />
+    <br />
+    <b>Newline escape</b><br />
 
-      One other notable exception is that if a newline is preceded by
-      a backslash, then neither the newline nor the backslash are
-      output.
+    One other notable exception is that if a newline is preceded by
+    a backslash, then neither the newline nor the backslash are
+    output.
 
-    <li><span class="concept">Emit statements</span>
+  <li><span class="concept">Emit statements</span>
 
-      The value of a java expression can be emitted by enclosing the
-      expression in <code>&lt;%...%&gt;</code> pairs, e.g.
-      <&| _Template &><%LITERAL>
+    The value of a java expression can be emitted by enclosing the
+    expression in <code>&lt;%...%&gt;</code> pairs, e.g.
+    <&| _Template &><%LITERAL>
 <% person.getFirstName().substring(0,10) %>
 </%LITERAL></&>
-      Note that there must be at least one whitespace character
-      following the <code>&lt;%</code>.
+    Note that there must be at least one whitespace character
+    following the <code>&lt;%</code>.
 
-      <p>
+    <p>
 
-      Before a Java expression is emitted, the string that represents it
-      is <em>escaped</em>.  The default escaping mechanism is HTML, so for
-      example the following template
+    Before a Java expression is emitted, the string that represents it
+    is <em>escaped</em>.  The default escaping mechanism is HTML, so for
+    example the following template
 
-      <&| _Template &><%LITERAL>this <% "&" %> that</%LITERAL></&>
+    <&| _Template &><%LITERAL>this <% "&" %> that</%LITERAL></&>
 
-      produces
+    produces
 
-      <pre class="tty">this &amp;amp; that</pre>
+    <pre class="tty">this &amp;amp; that</pre>
 
-      However different escaping mechanisms can be specified in the
-      template itself.  A string can be emitted with no escaping as
-      follows:
+    However different escaping mechanisms can be specified in the
+    template itself.  A string can be emitted with no escaping as
+    follows:
 
-      <&| _Template &><%LITERAL>this <% "&" #n %> that</%LITERAL></&>
+    <&| _Template &><%LITERAL>this <% "&" #n %> that</%LITERAL></&>
 
-      producing
+    producing
 
-      <pre class="tty">this &amp; that</pre>
+    <pre class="tty">this &amp; that</pre>
 
-      The available escaping mechanism are
-      <ul>
-        <li>
-          HTML (use <code>#h</code> in the emit block) -- produces
-          output suitable for inclusion in the body of HTML elements
-        </li>
-        <li>
-          Strict HTML (use <code>#H</code> in the emit block) --
-          produces output suitable for use as an HTML attribute value
-          (it is similar to HTML escaping but also escapes quotes and
-          apostrophes)
-        </li>
-        <li>XML (use <code>#x</code> in the emit block)</li>
-        <li>URL (use <code>#u</code> in the emit block)</li>
-        <li>None (use <code>#n</code> in the emit block)</li>
-      </ul>
+    The available escaping mechanism are
+    <ul>
+      <li>
+        HTML (use <code>#h</code> in the emit block) -- produces
+        output suitable for inclusion in the body of HTML elements
+      </li>
+      <li>
+        Strict HTML (use <code>#H</code> in the emit block) --
+        produces output suitable for use as an HTML attribute value
+        (it is similar to HTML escaping but also escapes quotes and
+        apostrophes)
+      </li>
+      <li>XML (use <code>#x</code> in the emit block)</li>
+      <li>URL (use <code>#u</code> in the emit block)</li>
+      <li>None (use <code>#n</code> in the emit block)</li>
+    </ul>
 
-      <p>
+    <p>
 
-      In addition the <em>default</em> escaping mechanism can also be
-      changed, however this is done from outside the template, see the
-      Jamon <a href="UserGuide.html">user's guide</a> for further
-      details.
+    In addition the <em>default</em> escaping mechanism can also be
+    changed, however this is done from outside the template, see the
+    Jamon <a href="UserGuide.html">user's guide</a> for further
+    details.
 
-    <li><span class="concept">Arbitrary Java code</span>
+  <li><span class="concept">Arbitrary Java code</span>
 
-      <p>
-        Arbitrary Java code can be inserted into the template using
-        <code>&lt;%java&gt;...&lt;/%java&gt;</code>, e.g.
-      <&| _Template &><%LITERAL>
+    <p>
+      Arbitrary Java code can be inserted into the template using
+      <code>&lt;%java&gt;...&lt;/%java&gt;</code>, e.g.
+    <&| _Template &><%LITERAL>
 <%java>
   while (iter.hasNext()) {
     Person p = (Person) iter.next();
@@ -127,10 +127,10 @@
     }
   }
 </%java></%LITERAL></&>
-        Alternatively, any line beginning with '<code>%</code>' also is
-        assumed to contain valid Java code. The previous example could
-        be equivalently (and perhaps more clearly) written as
-        <&| _Template &><%LITERAL>
+    Alternatively, any line beginning with '<code>%</code>' also is
+    assumed to contain valid Java code. The previous example could
+    be equivalently (and perhaps more clearly) written as
+    <&| _Template &><%LITERAL>
 %  while (iter.hasNext()) {
 %    Person p = (Person) iter.next();
 %    if (p.getLastName().startsWith("S")) {
@@ -138,29 +138,29 @@
 %    }
 %  }
 </%LITERAL></&>
-      <p>
+    <p>
 
-      The kinds of Java code that can appear is fairly
-      unrestricted. Be warned, however, that code will appear inside a
-      method body. Thus, for example, package declarations and import
-      statements would trigger a compilation error.
+    The kinds of Java code that can appear is fairly
+    unrestricted. Be warned, however, that code will appear inside a
+    method body. Thus, for example, package declarations and import
+    statements would trigger a compilation error.
 
-    <li><span class="concept">Inheritance</span>
+  <li><span class="concept">Inheritance</span>
 
-      Templates can inherit from other templates.  A template is an
-      "abstract" template if it contains a <code>&lt;%abstract&gt;</code>
-      tag.  A template extends another template by
-      means of an <code>&lt;%extends <var>pathToParent</var>&gt;</code>
-      tag.  There can be multiple levels of inheritance:
-      <code>/grandchild</code> can extend <code>/child</code>, which
-      in turn can extend <code>/parent</code>.  When Jamon encounters
-      a <code>&lt;&amp; *CHILD &amp;&gt;</code> tag, it inserts the
-      results of rendering the child template.
+    Templates can inherit from other templates.  A template is an
+    "abstract" template if it contains a <code>&lt;%abstract&gt;</code>
+    tag.  A template extends another template by
+    means of an <code>&lt;%extends <var>pathToParent</var>&gt;</code>
+    tag.  There can be multiple levels of inheritance:
+    <code>/grandchild</code> can extend <code>/child</code>, which
+    in turn can extend <code>/parent</code>.  When Jamon encounters
+    a <code>&lt;&amp; *CHILD &amp;&gt;</code> tag, it inserts the
+    results of rendering the child template.
 
-      <p>
+    <p>
 
-      For example, suppose <code>/restaurant/Menu</code> contains:
-      <&| _Template &><%LITERAL>
+    For example, suppose <code>/restaurant/Menu</code> contains:
+    <&| _Template &><%LITERAL>
 <%abstract>
 <html>
  <body>
@@ -175,8 +175,8 @@
 Sandwich Jamon y Queso
 </%LITERAL></&>
 
-      Then rendering <code>/restaurant/Lunch</code> produces
-      <pre class="tty"><&| escape//Html &><%LITERAL>
+    Then rendering <code>/restaurant/Lunch</code> produces
+    <pre class="tty"><&| escape//Html &><%LITERAL>
 <html>
  <body>
    <h1>Menu</h1>
@@ -185,72 +185,72 @@ Sandwich Jamon y Queso
 </html>
 </%LITERAL></&></pre>
 
-    <li><span class="concept">Class code</span>
+  <li><span class="concept">Class code</span>
 
-      Any code to be included in the generated class should be placed
-      inside a <code>&lt;%class&gt;</code>
-      ... <code>&lt;/%class&gt;</code> block.  If one template
-      inherits from another, there is corresponding inheritance of
-      java classes.  As a result, protected members declared in a
-      parent template's <code>&lt;%class&gt;</code>
-      ... <code>&lt;/%class&gt;</code> block will be visible to the
-      child.
+    Any code to be included in the generated class should be placed
+    inside a <code>&lt;%class&gt;</code>
+    ... <code>&lt;/%class&gt;</code> block.  If one template
+    inherits from another, there is corresponding inheritance of
+    java classes.  As a result, protected members declared in a
+    parent template's <code>&lt;%class&gt;</code>
+    ... <code>&lt;/%class&gt;</code> block will be visible to the
+    child.
 
-      <p>
-      For example:
-      <&| _Template &><%LITERAL>
+    <p>
+    For example:
+    <&| _Template &><%LITERAL>
 <%class>
   static int pageViews = 1;
 </%class>
 This component has been accessed <% pageViews++ %> times.
 </%LITERAL></&>
 
-    <li><span class="concept">Comments</span>
+  <li><span class="concept">Comments</span>
 
-      Any template content between <code>&lt;%doc&gt;</code> and
-      <code>&lt;/%doc&gt;</code> is considered "documentation", and
-      ignored by the template processor
+    Any template content between <code>&lt;%doc&gt;</code> and
+    <code>&lt;/%doc&gt;</code> is considered "documentation", and
+    ignored by the template processor
 
-    <li><span class="concept">Imports</span>
+  <li><span class="concept">Imports</span>
 
-      Java classes or packages to be imported and used in a template
-      should be placed inside an <code>&lt;%import&gt;</code>
-      block. Each package or class should be separated by a semicolon
-      ('<code>;</code>').  Note that imports are not inherited, so if you
-      use an import to aid in the declaration of an argument type in a
-      parent template, you must use the same import in all descendants
-      of that template.
-      <p>
-      For example:
-      <&| _Template &><%LITERAL>
+    Java classes or packages to be imported and used in a template
+    should be placed inside an <code>&lt;%import&gt;</code>
+    block. Each package or class should be separated by a semicolon
+    ('<code>;</code>').  Note that imports are not inherited, so if you
+    use an import to aid in the declaration of an argument type in a
+    parent template, you must use the same import in all descendants
+    of that template.
+    <p>
+    For example:
+    <&| _Template &><%LITERAL>
 <%import>
   java.util.Iterator;
   org.modusponens.myapp.data.*;
 </%import></%LITERAL></&>
 
-    <li><span class="concept">Arguments</span>
+  <li><span class="concept">Arguments</span>
 
-      Arguments to a template are specified in
-      <code>&lt;%args&gt;</code> ... <code>&lt;/%args&gt;</code>
-      blocks. Each argument consists of a type followed by the
-      argument name, optionally followed by <code>=&gt;</code> and a
-      default value. Each argument must appear on a separate line, and
-      each argument declaration must be terminated by a semicolon.
+    Arguments to a template are specified in
+    <code>&lt;%args&gt;</code> ... <code>&lt;/%args&gt;</code>
+    blocks. Each argument consists of a type followed by the
+    argument name, optionally followed by <code>=&gt;</code> and a
+    default value. Each argument must appear on a separate line, and
+    each argument declaration must be terminated by a semicolon.
 
-      <p>
+    <p>
 
-      Arguments are usable inside any java escape or java expression
-      in the template, including those in subtemplates. Top-level
-      visible arguments are also usable inside
-      <code>&lt;%class&gt;</code> ... <code>&lt;%/class&gt;</code>
-      blocks.  Technically, arguments are declared
-      "<code>final</code>", so it is not possible to (re)assign a
-      value to an argument.
+    Arguments are usable inside any java escape or java expression
+    in the template, including those in subtemplates. Top-level
+    visible arguments are also usable inside
+    <code>&lt;%class&gt;</code> ... <code>&lt;%/class&gt;</code>
+    blocks.  Technically, arguments are declared
+    "<code>final</code>", so it is not possible to (re)assign a
+    value to an argument.
 
-      <p>
+    <p>
 
-      For example:
-      <&| _Template &><%LITERAL>
+    For example:
+    <&| _Template &><%LITERAL>
 <%args>
   String[] nicknames => new String[0];
   Address address;
@@ -269,34 +269,34 @@ Your nicknames are
 %   }
 % }
 </%LITERAL></&>
-      Note that for this template to compile, the <code>Address</code>
-      class would need to appear in an <code>&lt;%import&gt;</code>
-      block.
+    Note that for this template to compile, the <code>Address</code>
+    class would need to appear in an <code>&lt;%import&gt;</code>
+    block.
 
-      <p>
+    <p>
 
-      Arguments with default values are optional, and need not be
-      specified when invoking a template. At the top-level
-      (i.e. the interface to "standard" java code), optional
-      arguments are implemented as "setters" on the template
-      object rather than as arguments to the <code>render</code>
-      method.
+    Arguments with default values are optional, and need not be
+    specified when invoking a template. At the top-level
+    (i.e. the interface to "standard" java code), optional
+    arguments are implemented as "setters" on the template
+    object rather than as arguments to the <code>render</code>
+    method.
 
-      <p>
+    <p>
 
-      If a template inherits from another template, the arguments to
-      the template's ancestors are not automatically visible to the
-      child template.  They can be made visible to code in the child
-      template by declaring them in <code>&lt;%xargs&gt;</code>
-      ... <code>&lt;/%xargs&gt;</code> blocks.  Unlike
-      <code>&lt;%args&gt;</code> ... <code>&lt;/%args&gt;</code>
-      blocks, <code>&lt;%xargs&gt;</code>
-      ... <code>&lt;/%xargs&gt;</code> blocks do not specify argument
-      types, since those have already been specified by a parent
-      template.  Optional arguments, however, may have their default
-      values redefined by the child.  For example, if
-      <code>/parent</code> contains:
-      <&| _Template &><%LITERAL>
+    If a template inherits from another template, the arguments to
+    the template's ancestors are not automatically visible to the
+    child template.  They can be made visible to code in the child
+    template by declaring them in <code>&lt;%xargs&gt;</code>
+    ... <code>&lt;/%xargs&gt;</code> blocks.  Unlike
+    <code>&lt;%args&gt;</code> ... <code>&lt;/%args&gt;</code>
+    blocks, <code>&lt;%xargs&gt;</code>
+    ... <code>&lt;/%xargs&gt;</code> blocks do not specify argument
+    types, since those have already been specified by a parent
+    template.  Optional arguments, however, may have their default
+    values redefined by the child.  For example, if
+    <code>/parent</code> contains:
+    <&| _Template &><%LITERAL>
 <%abstract>
 <%args>
   String name;
@@ -310,8 +310,8 @@ Would you like some <% favoriteFood %>?
 Remember, today's lucky number is <% luckyNumber %>.
 </%LITERAL></&>
 
-    then <code>/child</code> might contain:
-    <&| _Template &><%LITERAL>
+  then <code>/child</code> might contain:
+  <&| _Template &><%LITERAL>
 <%extends /parent>
 <%args>
   int temperature;
@@ -329,36 +329,36 @@ Today's temperature is
 a good sign for you, <% name %>.
 </%LITERAL></&>
 
-      Note that it would be an error if <code>/child</code> tried
-      referring to <code>favoriteFood</code>'s argument to
-      <code>/parent</code> without referencing it in an
-      <code>&lt;%xargs&gt;</code> ... <code>&lt;/%xargs&gt;</code>
-      block.
+    Note that it would be an error if <code>/child</code> tried
+    referring to <code>favoriteFood</code>'s argument to
+    <code>/parent</code> without referencing it in an
+    <code>&lt;%xargs&gt;</code> ... <code>&lt;/%xargs&gt;</code>
+    block.
 
-    <li><span class="concept">Subtemplates</span>
+  <li><span class="concept">Subtemplates</span>
 
-      Subtemplates come in two forms, "private" and "protected".
-      Subtemplates may be declared to accept arguments similar to
-      templates by using <code>%args</code>.  Subtemplates can invoke
-      other subtemplates in the same template, and can be directly or
-      indirectly recursive. Arguments to subtemplates can be given
-      default values.  Subtemplates can be invoked via the
-      <code><%LITERAL><& <var>subtemplate-name</var>;
-                         <var>argument1</var> => <var>value1</var>; ... &>
-            </%LITERAL></code> construct.
+    Subtemplates come in two forms, "private" and "protected".
+    Subtemplates may be declared to accept arguments similar to
+    templates by using <code>%args</code>.  Subtemplates can invoke
+    other subtemplates in the same template, and can be directly or
+    indirectly recursive. Arguments to subtemplates can be given
+    default values.  Subtemplates can be invoked via the
+    <code><%LITERAL><& <var>subtemplate-name</var>;
+                       <var>argument1</var> => <var>value1</var>; ... &>
+          </%LITERAL></code> construct.
 
-      <p>
+    <p>
 
-      Private subtemplates ("<def>defs</def>") can be declared via the
-      <code>&lt;%def <var>def-name</var>&gt;</code> instruction, and are
-      only visible within the template in which they are
-      declared.
+    Private subtemplates ("<def>defs</def>") can be declared via the
+    <code>&lt;%def <var>def-name</var>&gt;</code> instruction, and are
+    only visible within the template in which they are
+    declared.
 
 
-      <p>
+    <p>
 
-      For example:
-      <&| _Template &><%LITERAL>
+    For example:
+    <&| _Template &><%LITERAL>
 <%def _row>
   <%args>
     String name;
@@ -383,8 +383,8 @@ a good sign for you, <% name %>.
   <& _row; name => "Minnie"; age => 25 &>
 </table>
 </%LITERAL></&>
-        produces
-        <pre class="tty"><&| escape//Html &><%LITERAL>
+      produces
+      <pre class="tty"><&| escape//Html &><%LITERAL>
 <table>
   <tr>
     <td align="left">Mickey</td>
@@ -413,31 +413,31 @@ a good sign for you, <% name %>.
   </tr>
 </table>
 </%LITERAL></&></pre>
-      <p>
+    <p>
 
-      Protected templates ("<def>methods</def>") can be declared via
-      the <code>&lt;%method <var>method-name</var>&gt;</code>
-      instruction.  A method is similar to a <def>def</def>, but is
-      visible to all descendants of the declaring template.  Moreover,
-      a method declared in an ancestor template can be overriddden via
-      the <code>&lt;%override <var>method-name</var>&gt;</code>
-      instruction.  Overridden methods take the same arguments as the
-      method they override, although, as with template inheritance,
-      only those args declared in an <code>&lt;%xargs&gt;</code>
-      ... <code>&lt;/%xargs&gt;</code> block will be visible within
-      the body of the override.  Finally, an ancestor template may
-      declare an "abstract" protected subtemplate by using
-      <code>&lt;%absmeth <var>method-name</var>&gt;
-      ... &lt;/%absmeth&gt;</code>.  The only things allowed inside an
-      <code>&lt%absmeth&gt;</code> block are
-      <code>&lt;%args&gt;</code> blocks and <code>&lt%frag&gt</code>
-      blocks.  It is an error for a non-abstract template to extend
-      (directly or indirectly) a template with an abstract method, and
-      not have that method overridden by the non-abstract template, or
-      one of it's intermediate ancestors.
+    Protected templates ("<def>methods</def>") can be declared via
+    the <code>&lt;%method <var>method-name</var>&gt;</code>
+    instruction.  A method is similar to a <def>def</def>, but is
+    visible to all descendants of the declaring template.  Moreover,
+    a method declared in an ancestor template can be overriddden via
+    the <code>&lt;%override <var>method-name</var>&gt;</code>
+    instruction.  Overridden methods take the same arguments as the
+    method they override, although, as with template inheritance,
+    only those args declared in an <code>&lt;%xargs&gt;</code>
+    ... <code>&lt;/%xargs&gt;</code> block will be visible within
+    the body of the override.  Finally, an ancestor template may
+    declare an "abstract" protected subtemplate by using
+    <code>&lt;%absmeth <var>method-name</var>&gt;
+    ... &lt;/%absmeth&gt;</code>.  The only things allowed inside an
+    <code>&lt%absmeth&gt;</code> block are
+    <code>&lt;%args&gt;</code> blocks and <code>&lt%frag&gt</code>
+    blocks.  It is an error for a non-abstract template to extend
+    (directly or indirectly) a template with an abstract method, and
+    not have that method overridden by the non-abstract template, or
+    one of it's intermediate ancestors.
 
-      For example, suppose <code>/weatherReport</code> contains:
-      <&| _Template &><%LITERAL>
+    For example, suppose <code>/weatherReport</code> contains:
+    <&| _Template &><%LITERAL>
 <%abstract>
 <%method backgroundColor>white</%method>
 <%absmeth title>
@@ -461,7 +461,7 @@ a good sign for you, <% name %>.
 </html>
 </%LITERAL></&>
 
-      Then <code>/sunny</code> might contain:
+    Then <code>/sunny</code> might contain:
 <&| _Template &><%LITERAL>
 <%extends /weatherReport>
 <%override title>
@@ -473,7 +473,7 @@ a good sign for you, <% name %>.
 Head for the beach!  It's going to be sunny and beautiful.
 </%LITERAL></&>
 
-      resulting in something like
+    resulting in something like
 <pre class="tty"><&| escape//Html &>
 <html>
   <head>
@@ -512,14 +512,14 @@ Now would be a poor time to go sailing.
 </html>
 </&></pre>
 
-    <li><span class="concept">Invoking other templates</span>
+  <li><span class="concept">Invoking other templates</span>
 
-      It is also possible to invoke other templates from within a
-      template. Instead of supplying the subtemplate name, simply
-      supply the path to the template.  For example, suppose
-      <code>/img/spacer</code> contains:
+    It is also possible to invoke other templates from within a
+    template. Instead of supplying the subtemplate name, simply
+    supply the path to the template.  For example, suppose
+    <code>/img/spacer</code> contains:
 
-      <&| _Template &><%LITERAL>
+    <&| _Template &><%LITERAL>
 <%args>
   int width => 1;
   int height => 1;
@@ -529,8 +529,8 @@ Now would be a poor time to go sailing.
      height="<% height %>"
      border="0">
 </%LITERAL></&>
-      This can be invoked from other templates like
-      <&| _Template &><%LITERAL>
+    This can be invoked from other templates like
+    <&| _Template &><%LITERAL>
 <table>
   <tr>
     <td align="left">Name</td>
@@ -541,35 +541,35 @@ Now would be a poor time to go sailing.
 </table>
 </%LITERAL></&>
 
-    <li><span class="concept">Fragment arguments</span>
+  <li><span class="concept">Fragment arguments</span>
 
-      It is possible to pass a "fragment" of a template as an argument
-      to a template or subtemplate.  When passing template fragments,
-      the invocation syntax must look like
-      <code>&lt;&amp;| <var>target</var>; arg1 =&gt; ... &amp;&gt;</code>,
-      and any template content up until a closing
-      <code>&lt;/&amp;&gt;</code> is considered the fragment argument.
+    It is possible to pass a "fragment" of a template as an argument
+    to a template or subtemplate.  When passing template fragments,
+    the invocation syntax must look like
+    <code>&lt;&amp;| <var>target</var>; arg1 =&gt; ... &amp;&gt;</code>,
+    and any template content up until a closing
+    <code>&lt;/&amp;&gt;</code> is considered the fragment argument.
 
-      <p>
+    <p>
 
-      In order to pass a fragment argument, the target template or
-      subtemplate must declare that it expects a fragment
-      argument. This is done using the
-      <code>&lt;%frag <var>name</var>&gt;&lt;/%frag&gt;</code>
-      declaration, which declares that the template or subtemplate
-      expects a fragment argument.
+    In order to pass a fragment argument, the target template or
+    subtemplate must declare that it expects a fragment
+    argument. This is done using the
+    <code>&lt;%frag <var>name</var>&gt;&lt;/%frag&gt;</code>
+    declaration, which declares that the template or subtemplate
+    expects a fragment argument.
 
-      <p>
+    <p>
 
-      The fragment can be invoked in the target template or
-      subtemplate like any other template or subtemplate invocation,
-      simply specifying the name of the fragment argument as the
-      target
+    The fragment can be invoked in the target template or
+    subtemplate like any other template or subtemplate invocation,
+    simply specifying the name of the fragment argument as the
+    target
 
-      <p>
+    <p>
 
-      Putting this all together, the template
-      <&| _Template &><%LITERAL>
+    Putting this all together, the template
+    <&| _Template &><%LITERAL>
 <%def _lilink>
   <%frag content>
   </%frag>
@@ -600,33 +600,33 @@ Now would be a poor time to go sailing.
 </ul>
 </&></pre>
 
-    <li><span class="concept">Parametrized fragment arguments</span>
+  <li><span class="concept">Parametrized fragment arguments</span>
 
-      Template fragments can themselves take arguments.  The
-      invocation syntax is similar to a regular template fragment with
-      the addition of an
-      <code>&lt;%args&gt;</code>...<code>&lt;/%args&gt;</code> inside
-      the fragment.
+    Template fragments can themselves take arguments.  The
+    invocation syntax is similar to a regular template fragment with
+    the addition of an
+    <code>&lt;%args&gt;</code>...<code>&lt;/%args&gt;</code> inside
+    the fragment.
 
-      <p>
+    <p>
 
-      To pass a parameterized template fragment to a template or
-      subtemplate, the fragment and its parameters must be
-      declared via a <code>&lt;%frag
-      <var>name</var>&gt;</code> <var>parameters</var> <code>&lt;/%frag&gt;</code>,
-      where each parameter is a type followed by an identifier. Thus
-      a <code>&lt;%frag
-      <var>name</var>&gt;</code>...<code>&lt;/%frag&gt;</code> is similar
-      to a
-      <code>&lt;%args&gt;</code>...<code>&lt;/%args&gt;</code> except
-      it has a name and its parameters cannot have default values.
-      Inside the template or subtemplate, the parameterized
-      fragment is invoked exactly like a call to a subtemplate
-      whose name is the name of the fragment.
+    To pass a parameterized template fragment to a template or
+    subtemplate, the fragment and its parameters must be
+    declared via a <code>&lt;%frag
+    <var>name</var>&gt;</code> <var>parameters</var> <code>&lt;/%frag&gt;</code>,
+    where each parameter is a type followed by an identifier. Thus
+    a <code>&lt;%frag
+    <var>name</var>&gt;</code>...<code>&lt;/%frag&gt;</code> is similar
+    to a
+    <code>&lt;%args&gt;</code>...<code>&lt;/%args&gt;</code> except
+    it has a name and its parameters cannot have default values.
+    Inside the template or subtemplate, the parameterized
+    fragment is invoked exactly like a call to a subtemplate
+    whose name is the name of the fragment.
 
-      <p>
+    <p>
 
-      For example <&| _Template &><%LITERAL>
+    For example <&| _Template &><%LITERAL>
 <%def _list>
   <%frag display>
     float temperature;
@@ -652,12 +652,40 @@ Now would be a poor time to go sailing.
 % }
 </&>
 </%LITERAL></&>
-produces <pre class="tty"><&| escape//Html &>
+    produces <pre class="tty"><&| escape//Html &>
 <ul>
   <li><b>ice</b>
   <li>water at 34.0 degrees
 </ul>
 </&></pre>
-      (in fact it produces the above with some extra whitespace).
+    (in fact it produces the above with some extra whitespace).
 
-  </ol>
+  <li><span class="concept">Passing unnamed parameters</span>
+
+    When making a call to a template, subtemplate or fragment in which
+    no optional arguments are being passed, there is a more compact
+    alterntaive to the named parameter style (<code>&lt;&amp;
+    <var>template-name</var>; <var>arg1</var> =&gt; <var>val1</var>;
+    <var>arg2</var> =&gt; <var>val2</var> &amp;&gt;</code>).  If the
+    name of the template, subtemplate or fragment is followed with a
+    colon instead of a semicolon, jamon expects the required
+    arguments, and only the required arguments, to follow, separated
+    by semicolons.  The arguments should appear in the order that they
+    are declared by the called template.  An example is shown below:
+
+    <&| _Template &><%LITERAL>
+<%def formatDate>
+  <%args>
+    java.util.Date date;
+    formatString format;
+  </%args>
+  <% new java.text.SimpleDateFormat(format).format(date) %>
+</%def>
+
+<%doc>Named parameter style:</%doc>
+<& formatDate; date => new Date(); format => "yyyy.MM.dd" &>
+<%doc>The same call, in unnamed parameter style:</%doc>
+<& formatDate: Date(); "yyyy.MM.dd" &>
+</%LITERAL></&>
+
+</ol>

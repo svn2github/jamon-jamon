@@ -21,7 +21,6 @@
 package org.jamon.codegen;
 
 import java.io.IOException;
-import java.util.Map;
 
 import org.jamon.node.Token;
 
@@ -29,7 +28,7 @@ public class MethodCallStatement
     extends AbstractInnerUnitCallStatement
 {
     MethodCallStatement(String p_path,
-                        Map p_params,
+                        ParamValues p_params,
                         MethodUnit p_methodUnit,
                         Token p_token,
                         String p_templateIdentifier)

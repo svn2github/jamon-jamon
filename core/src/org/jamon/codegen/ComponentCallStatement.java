@@ -22,7 +22,6 @@ package org.jamon.codegen;
 
 import java.io.IOException;
 import java.util.Iterator;
-import java.util.Map;
 
 import org.jamon.node.Token;
 
@@ -30,7 +29,7 @@ public class ComponentCallStatement
     extends AbstractCallStatement
 {
     ComponentCallStatement(String p_path,
-                           Map p_params,
+                           ParamValues p_params,
                            Token p_token,
                            String p_templateIdentifier)
     {
@@ -66,7 +65,7 @@ public class ComponentCallStatement
         for (Iterator i = desc.getOptionalArgs().iterator(); i.hasNext(); )
         {
             OptionalArgument arg = (OptionalArgument) i.next();
-            String value = (String) getParams().remove(arg.getName());
+            String value = getParams().getOptionalArgValue(arg.getName());
             if (value != null)
             {
                 p_writer.println(instanceVar + "." + arg.getSetterName()
@@ -76,7 +75,8 @@ public class ComponentCallStatement
         p_writer.print(instanceVar + ".renderNoFlush");
         p_writer.openList();
         p_writer.printArg(ArgNames.WRITER);
-        generateRequiredArgs(desc.getRequiredArgs().iterator(), p_writer);
+        getParams().generateRequiredArgs(desc.getRequiredArgs().iterator(),
+                                         p_writer);
         generateFragmentParams(p_writer,
                                desc.getFragmentInterfaces().iterator());
         p_writer.closeList();

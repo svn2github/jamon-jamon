@@ -22,7 +22,6 @@ package org.jamon.codegen;
 
 import java.io.IOException;
 import java.util.Iterator;
-import java.util.Map;
 
 import org.jamon.node.Token;
 
@@ -30,7 +29,7 @@ public abstract class AbstractInnerUnitCallStatement
     extends AbstractCallStatement
 {
     AbstractInnerUnitCallStatement(String p_path,
-                                   Map p_params,
+                                   ParamValues p_params,
                                    Unit p_unit,
                                    Token p_token,
                                    String p_templateIdentifier)
@@ -63,14 +62,14 @@ public abstract class AbstractInnerUnitCallStatement
         p_writer.openList();
         p_writer.printArg(ArgNames.WRITER);
         //FIXME - do we need to surround args with parens?
-        generateRequiredArgs(m_unit.getSignatureRequiredArgs(), p_writer);
+        getParams().generateRequiredArgs(m_unit.getSignatureRequiredArgs(),
+                                         p_writer);
         for (Iterator o = m_unit.getSignatureOptionalArgs(); o.hasNext(); )
         {
             OptionalArgument arg = (OptionalArgument) o.next();
             String name = arg.getName();
-            String expr = (String) getParams().remove(name);
-            p_writer.printArg(
-                "(" + (expr == null ? getDefault(arg) : expr ) + ")");
+            String expr = getParams().getOptionalArgValue(name);
+            p_writer.printArg(expr == null ? getDefault(arg) : expr);
         }
         generateFragmentParams(p_writer,
                                m_unit.getFragmentArgsList().iterator());
