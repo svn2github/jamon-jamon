@@ -1,6 +1,3 @@
-Handle dependencies correctly. Already have the called templates, so just need to compute
-(and persist) the inverse.
-
 Allow setting breakpoints in templates
   - maybe do side-by-side debugging of template and corresponding source
 
@@ -16,3 +13,6 @@ which traverses markers on generated sources and "moves" them to the templates.
 Will need a map from generated source line numbers to template line numbers.
 
 New Jamon project wizard
+
+Add interfaces so that can have Eclipse use Jamon generation classes
+from a project (so can develop Jamon in Eclipse)
