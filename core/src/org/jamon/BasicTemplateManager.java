@@ -48,7 +48,7 @@ public class BasicTemplateManager
      **/
     public BasicTemplateManager()
     {
-        this(true, DEFAULT_ESCAPING);
+        this(true, DEFAULT_ESCAPING, null);
     }
 
     /**
@@ -61,7 +61,7 @@ public class BasicTemplateManager
      **/
     public BasicTemplateManager(boolean p_autoFlush)
     {
-        this(p_autoFlush, DEFAULT_ESCAPING);
+        this(p_autoFlush, DEFAULT_ESCAPING, null);
     }
 
     /**
@@ -73,7 +73,18 @@ public class BasicTemplateManager
      **/
     public BasicTemplateManager(Escaping p_escaping)
     {
-        this(true, p_escaping);
+        this(true, p_escaping, null);
+    }
+
+    /**
+     * Creates a new <code>BasicTemplateManager</code>.
+     *
+     * @param p_classLoader the <code>ClassLoader</code> to use to
+     * load templates.
+     **/
+    public BasicTemplateManager(ClassLoader p_classLoader)
+    {
+        this(true, DEFAULT_ESCAPING, p_classLoader);
     }
 
     /**
@@ -83,11 +94,18 @@ public class BasicTemplateManager
      * writer after renderng
      * @param p_escaping which escaping mechanism to use for the
      * default Escaping.
+     * @param p_classLoader the <code>ClassLoader</code> to use to
+     * load templates.
      **/
-    public BasicTemplateManager(boolean p_autoFlush, Escaping p_escaping)
+    public BasicTemplateManager(boolean p_autoFlush,
+                                Escaping p_escaping,
+                                ClassLoader p_classLoader)
     {
         m_autoFlush = p_autoFlush;
         m_escaping = p_escaping;
+        m_classLoader = p_classLoader == null
+            ? getClass().getClassLoader()
+            : p_classLoader;
     }
 
     public Escaping getDefaultEscaping()
@@ -153,9 +171,11 @@ public class BasicTemplateManager
     private Class getProxyClass(String p_path)
         throws ClassNotFoundException
     {
-        return Class.forName(StringUtils.templatePathToClassName(p_path));
+        return m_classLoader.loadClass
+            (StringUtils.templatePathToClassName(p_path));
     }
 
     private final Escaping m_escaping;
     private final boolean m_autoFlush;
+    private final ClassLoader m_classLoader;
 }
