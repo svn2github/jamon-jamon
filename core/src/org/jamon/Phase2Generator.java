@@ -92,12 +92,12 @@ public class Phase2Generator extends BaseGenerator
                 throw new RuntimeException("Unknown escape " + c);
             }
         }
-
+        expr.append("String.valueOf(");
         for (Iterator i = node.getAny().iterator(); i.hasNext(); /* */)
         {
             expr.append(((TAny)i.next()).getText());
         }
-        expr.append(");");
+        expr.append("));");
         m_body.add(expr);
     }
 
@@ -117,21 +117,12 @@ public class Phase2Generator extends BaseGenerator
         for (int i = 0; i < p_string.length(); ++i)
         {
             char c = p_string.charAt(i);
-            if (c == '\n')
+            switch(c)
             {
-                s.append("\\n");
-            }
-            else if (c == '\t')
-            {
-                s.append("\\t");
-            }
-            else if (c == '\"')
-            {
-                s.append("\\\"");
-            }
-            else
-            {
-                s.append(c);
+              case '\n': s.append("\\n"); break;
+              case '\t': s.append("\\t"); break;
+              case '\"': s.append("\\\""); break;
+              default: s.append(c);
             }
         }
         return s.toString();

@@ -14,79 +14,20 @@ public abstract class AbstractTemplate
         m_templateManager = p_templateManager;
     }
 
-    protected void write(Object p_obj)
+    protected void write(String p_string)
         throws IOException
     {
         // FIXME: need to set default escaping
-        writeHtmlEscaped(p_obj);
+        writeHtmlEscaped(p_string);
     }
 
-    protected void write(long p_long)
-        throws IOException
-    {
-        write(new Long(p_long));
-    }
-
-    protected void writeHtmlEscaped(long p_long)
-        throws IOException
-    {
-        writeHtmlEscaped(new Long(p_long));
-    }
-
-    protected void writeUrlEscaped(long p_long)
-        throws IOException
-    {
-        writeUrlEscaped(new Long(p_long));
-    }
-
-    protected void writeXmlEscaped(long p_long)
-        throws IOException
-    {
-        writeXmlEscaped(new Long(p_long));
-    }
-
-    protected void writeHtmlEscaped(Object p_obj)
-        throws IOException
-    {
-        if (p_obj != null)
-        {
-            writeHtmlEscaped(p_obj.toString());
-        }
-    }
-
-    protected void writeXmlEscaped(Object p_obj)
-        throws IOException
-    {
-        if (p_obj != null)
-        {
-            writeXmlEscaped(p_obj.toString());
-        }
-    }
-
-    protected void writeUrlEscaped(Object p_obj)
-        throws IOException
-    {
-        if (p_obj != null)
-        {
-            writeUrlEscaped(p_obj.toString());
-        }
-    }
-
-    protected void writeUnEscaped(Object p_obj)
-        throws IOException
-    {
-        if (p_obj != null)
-        {
-            m_writer.write(p_obj.toString());
-        }
-    }
 
     protected TemplateManager getTemplateManager()
     {
         return m_templateManager;
     }
 
-    private void writeHtmlEscaped(String p_string)
+    protected void writeHtmlEscaped(String p_string)
         throws IOException
     {
         for (int i = 0;i < p_string.length(); ++i)
@@ -103,7 +44,7 @@ public abstract class AbstractTemplate
         }
     }
 
-    private void writeXmlEscaped(String p_string)
+    protected void writeXmlEscaped(String p_string)
         throws IOException
     {
         for (int i = 0;i < p_string.length(); ++i)
@@ -122,7 +63,13 @@ public abstract class AbstractTemplate
         }
     }
 
-    private void writeUrlEscaped(String p_string)
+    protected void writeUnEscaped(String p_string)
+        throws IOException
+    {
+        m_writer.write(p_string);
+    }
+
+    protected void writeUrlEscaped(String p_string)
         throws IOException
     {
         m_writer.write(URLEncoder.encode(p_string));
