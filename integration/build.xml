@@ -17,11 +17,6 @@
   <property name="java.lib.junit" value="/usr/local/share/java/junit.jar" />
   <property name="java.lib.gnuregexp" value="/usr/local/share/java/gnu-regexp-1.1.4.jar" />
 
-  <property name="junit.fork" value="no" />
-  <property name="junit.timeout" value="1000" />
-  <property name="junit.printsummary" value="off" />
-  <property name="junit.formatter" value="brief" />
-
   <target name="templates"
           depends=""
           description="Compiles the Jamon templates into Java">
@@ -55,29 +50,9 @@
           depends="compile"
           description="Exercises the compiled templates">
     <java fork="true"
-          classpath="${classes.dir}:${java.lib.jamon}"
+          failonerror="true"
+          classpath="${classes.dir}:${java.lib.jamon}:${java.lib.gnuregexp}"
           classname="${test.pkg}.Test1" />
-  </target>
-
-  <target name="test"
-          depends="compile"
-          description="Run the unit tests">
-    <junit printsummary="${junit.printsummary}"
-           fork="${junit.fork}" timeout="${junit.timeout}">
-      <formatter type="${junit.formatter}" usefile="no"/>
-      <classpath>
-        <pathelement location="${classes.dir}"/>
-        <pathelement location="${java.lib.junit}"/>
-        <pathelement location="${java.lib.jamon}"/>
-        <pathelement location="${java.lib.gnuregexp}"/>
-      </classpath>
-      <batchtest>
-        <fileset dir="${src.dir}">
-          <include name="**/*Test.java" />
-          <exclude name="**/Abstract*.java"/>
-        </fileset>
-      </batchtest>
-    </junit>
   </target>
 
   <target name="cvsignores">
