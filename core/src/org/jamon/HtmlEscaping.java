@@ -40,9 +40,6 @@ public class HtmlEscaping
           case '<': p_writer.write("&lt;"); break;
           case '>': p_writer.write("&gt;"); break;
           case '&': p_writer.write("&amp;"); break;
-              // The reason '"' is not escaped to "&quot;" is that it was withdrawn
-              // from the HTML 3.2 DTD (only).  There does not seem to be universal 
-              // agreement as to why this happened.
           default: p_writer.write(p_char);
         }
     }
