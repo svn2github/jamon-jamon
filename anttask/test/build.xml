@@ -45,7 +45,6 @@
              workDir="${work.dir}"
              template="/Foo"
              output ="${temp.file}" />
-    <delete file="${temp.file}" />
   </target>
 
   <target name="cvsignores">
