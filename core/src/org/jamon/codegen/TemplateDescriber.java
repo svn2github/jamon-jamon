@@ -75,10 +75,8 @@ public class TemplateDescriber
              try
              {
                  return new TemplateDescription
-                     (Class.forName
-                      (StringUtils.templatePathToClassName(p_path),
-                       true,
-                       m_classLoader));
+                     (m_classLoader.loadClass
+                      (StringUtils.templatePathToClassName(p_path)));
              }
              catch(ClassNotFoundException e)
              {
