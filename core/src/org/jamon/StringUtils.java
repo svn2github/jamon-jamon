@@ -62,5 +62,24 @@ public class StringUtils
         }
     }
 
+    private static final char [] HEXCHAR =
+    {
+        '0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'
+    };
+
+    public static String byteArrayToHexString(final byte[] bytes)
+    {
+	StringBuffer buffer = new StringBuffer(bytes.length * 2);
+
+	for (int i = 0; i < bytes.length; i++)
+        {
+            buffer.append(HEXCHAR[(bytes[i] & 0xF0) >>  4]);
+            buffer.append(HEXCHAR[bytes[i] & 0x0F]);
+	}
+
+	return buffer.toString();
+    }
+
+
 
 }
