@@ -18,24 +18,39 @@
     <h2>What is Jamón?</h2>
 
     <emph>Jamón</emph> is a succulent spanish pork product, not to be
-    confused with <emph>ham</emph>! Nor confused with <b>Jamon</b>.
+    confused with <emph>ham</emph> (nor with <b>Jamon</b>).
 
     <h2>What isn't Jamon?</h2>
 
     Jamon does not provide the functionality of a controller, nor of a
-    servlet. It does one thing, and does it well: it is a template
-    language for Java.
+    servlet. It is not a content management system. It does one thing,
+    and does it well: it is a powerful template processor for Java.
 
     <h2>Why is Jamon?</h2>
 
     Jamon provides the following advantages over JSP and other technologies:
     <ul>
-      <li>Separate presentation from controller logic
-      <li>General-use; can produce arbitrary output format
-      <li>Not tied to HTML or XML (like Enhydra XMLC)
-      <li>Pass arbitrary objects between template [Tea]
-      <li>Invocation of templates is typed like any other method call
-      <li>Can pass arbitrary dynamic content (i.e. template fragments)
+      <li>
+        Separate presentation from controller logic (unlike JSP)
+      </li>
+      <li>
+        General-use; can produce arbitrary output format (for example,
+        <a href="http://xmlc.enhydra.org">Enhydra XMLC</a> and <a
+        href="http://www.zope.org">Zope</a> are tied to HTML or XML).
+      </li>
+      <li>
+        Pass arbitrary objects between template (only <a
+        href="http://opensource.go.com/Tea/index.html">Tea</a> seems
+        to provide this capability).
+      </li>
+      <li>
+        Invocation of templates is typed like any other method
+        call. This is unique among Java template processors.
+      </li>
+      <li>
+        Templates can pass arbitrary dynamic content (i.e. template
+        fragments) as parameters to other templates.
+      </li>
     </ul>
 
     <h2>How to use Jamon</h2>
