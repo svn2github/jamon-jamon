@@ -11,8 +11,8 @@
  *
  * The Original Code is Jamon code, released October, 2002.
  *
- * The Initial Developer of the Original Code is Jay Sachs.  Portions
- * created by Jay Sachs are Copyright (C) 2002 Jay Sachs.  All Rights
+ * The Initial Developer of the Original Code is Luis O'Shea.  Portions
+ * created by Luis O'Shea are Copyright (C) 2002 Luis O'Shea.  All Rights
  * Reserved.
  *
  * Contributor(s):
@@ -26,13 +26,13 @@ import java.io.IOException;
 
 import org.jamon.Escaping;
 
-import test.jamon.Encodings;
+import test.jamon.Escapings;
 
 /**
- * Test Jamon's encoding mechanisms.
+ * Test Jamon's escaping mechanisms.
  **/
 
-public class EncodingsTest
+public class EscapingsTest
     extends TestBase
 {
     public void testDefault()
@@ -68,7 +68,7 @@ public class EncodingsTest
     private void checkEscaping(Escaping p_escaping)
         throws IOException
     {
-        Encodings encodings = new Encodings(getTemplateManager())
+        Escapings escapings = new Escapings(getTemplateManager())
             .writeTo(getWriter());
         if (p_escaping == null)
         {
@@ -77,9 +77,9 @@ public class EncodingsTest
         else
         {
             // Only set escaping when p_escaping is non-null
-            encodings.escaping(p_escaping);
+            escapings.escaping(p_escaping);
         }
-        encodings.render();
+        escapings.render();
         checkOutput("Escaping is " + p_escaping, escapedExpected(p_escaping));
     }
 
