@@ -1,5 +1,6 @@
 package org.jamon;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -15,11 +16,17 @@ public class JavaCompiler
     }
 
     public JavaCompiler(String p_classPath)
+        throws IOException
     {
-        this(System.getProperty("java.home") + "/../bin/javac", p_classPath);
+        // FIXME: does this work on windows? mac?
+        this(new File(new File(System.getProperty("java.home")).getParent(),
+                      "bin" + File.separator +"javac")
+                 .getCanonicalPath(),
+             p_classPath);
     }
 
     public JavaCompiler()
+        throws IOException
     {
         this(System.getProperty("java.class.path"));
     }
