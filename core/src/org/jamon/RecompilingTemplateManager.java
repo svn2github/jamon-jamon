@@ -499,11 +499,11 @@ public class RecompilingTemplateManager
                 continue;
             }
 
-            File jm = new File(javaImpl(path));
-            long ts = jm.lastModified();
             boolean intfGenerated = false;
             long modTime = m_templateSource.lastModified(path);
-            if (jm.lastModified() < modTime)
+
+            File ji = new File(javaIntf(path));
+            if (ji.lastModified() < modTime)
             {
                 intfGenerated = generateIntfIfChanged(path, p_describer);
                 if (intfGenerated)
@@ -512,19 +512,35 @@ public class RecompilingTemplateManager
                 }
                 else
                 {
-                    // FIXME:
-                    // should we really remove .java corresponding to intf?
-                    // should we also remove .class(es) corresponding to intf?
-                    new File(javaIntf(path)).delete();
+                    try
+                    {
+                        m_classLoader.loadClass
+                            (StringUtils.templatePathToClassName(path));
+                        new File(javaIntf(path)).delete();
+                        // FIXME:
+                        // we should also remove .class(es)
+                        //   corresponding to the intf
+                        // something like any file matching
+                        //   templateName\$.*\.class
+                    }
+                    catch (ClassNotFoundException e)
+                    {
+                        // it's ok, just don't delete anything
+                    }
                 }
+            }
+
+            File jm = new File(javaImpl(path));
+            long ts = jm.lastModified();
+            if (jm.lastModified() < modTime)
+            {
                 m_dependencyCache.put
                     (path,
                      new DependencyEntry(generateImpl(path,p_describer)));
                 ts = System.currentTimeMillis();
             }
-            if (new File(classImpl(path)).lastModified() < ts
-                || (intfGenerated
-                    && new File(classIntf(path)).lastModified() < ts))
+
+            if (new File(classImpl(path)).lastModified() < ts || intfGenerated)
             {
                 outOfDateJavaFiles.add(javaImpl(path));
             }
@@ -634,6 +650,11 @@ public class RecompilingTemplateManager
             .analyze();
 
         String oldsig = getIntfSignatureFromClass(p_path);
+        if (TRACE)
+        {
+            trace("old sig is " + oldsig
+                  + " and new sig is " + templateUnit.getSignature());
+        }
         if (! templateUnit.getSignature().equals(oldsig))
         {
             if (TRACE)
