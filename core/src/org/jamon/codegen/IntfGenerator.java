@@ -54,6 +54,7 @@ public class IntfGenerator
         generateArgArrays();
         generateIntf();
         generateGetInstance();
+        generateGetPath();
         generateOptionalArgs();
         generateFragmentInterfaces(false);
         if (! m_templateUnit.isParent())
@@ -410,22 +411,18 @@ public class IntfGenerator
         m_writer.openBlock();
         m_writer.println("return (Intf) getUntypedInstance();");
         m_writer.closeBlock();
+    }
 
-        if(! m_templateUnit.isParent())
+    private void generateGetPath()
+        throws IOException
+    {
+        if (! m_templateUnit.isParent())
         {
-            m_writer.println("protected " + ClassNames.TEMPLATE_INTF
-                             + " getUntypedInstance()");
-            m_writer.println("  throws " + ClassNames.IOEXCEPTION);
+            m_writer.println();
+            m_writer.println("protected String getPath()");
             m_writer.openBlock();
-            m_writer.println("return getInstance(\""
-                             + m_templateUnit.getName() + "\");");
+            m_writer.println("return \"" + m_templateUnit.getName() + "\";");
             m_writer.closeBlock();
-        }
-        else if(! m_templateUnit.hasParentPath())
-        {
-            m_writer.println("abstract protected " + ClassNames.TEMPLATE_INTF
-                             + " getUntypedInstance()");
-            m_writer.println("  throws " + ClassNames.IOEXCEPTION + ";");
         }
     }
 

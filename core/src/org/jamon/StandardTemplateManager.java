@@ -253,10 +253,10 @@ public class StandardTemplateManager
         }
     }
 
-    public AbstractTemplateIntf getInstance(String p_path)
+    public AbstractTemplateIntf acquireInstance(String p_path)
         throws IOException
     {
-        return getInstance(p_path, this);
+        return acquireInstance(p_path, this);
     }
 
     public void releaseInstance(AbstractTemplateIntf p_impl)
@@ -286,8 +286,8 @@ public class StandardTemplateManager
      *
      * @exception IOException if something goes wrong
      */
-    public AbstractTemplateIntf getInstance(String p_path,
-                                            TemplateManager p_manager)
+    public AbstractTemplateIntf acquireInstance(String p_path,
+                                                TemplateManager p_manager)
         throws IOException
     {
         try

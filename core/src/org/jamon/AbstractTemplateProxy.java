@@ -31,6 +31,7 @@ public abstract class AbstractTemplateProxy
     {
         void writeTo(Writer p_writer);
         void escaping(Escaping p_escaping);
+        void initialize() throws IOException;
     }
 
     protected AbstractTemplateProxy(TemplateManager p_templateManager)
@@ -52,15 +53,17 @@ public abstract class AbstractTemplateProxy
         m_escaping = p_escaping;
     }
 
-    protected final Intf getInstance(String p_path)
+    protected abstract String getPath();
+
+    protected final Intf getUntypedInstance()
         throws IOException
     {
         Intf instance = (Intf) m_instance.get();
         if (instance == null)
         {
-            instance = (Intf) getTemplateManager().getInstance(p_path);
+            instance = (Intf) getTemplateManager().acquireInstance(getPath());
+            instance.initialize();
             m_instance.set(instance);
-            ((AbstractTemplateIntf)instance).initialize();
         }
         if (m_escaping != null)
         {

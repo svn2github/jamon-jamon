@@ -159,7 +159,7 @@ public class InheritanceTest
     {
         try
         {
-            getRecompilingTemplateManager().getInstance(p_path);
+            getRecompilingTemplateManager().acquireInstance(p_path);
             fail("recompilation of Troubled child threw no exception");
         }
         catch(IOException e)

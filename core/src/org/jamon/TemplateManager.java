@@ -39,7 +39,7 @@ public interface TemplateManager
      *
      * @exception IOException if something goes wrong
      */
-    public AbstractTemplateIntf getInstance(String p_path)
+    public AbstractTemplateIntf acquireInstance(String p_path)
         throws IOException;
 
 

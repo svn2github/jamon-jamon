@@ -20,9 +20,6 @@ package org.jamon;
 
 public interface AbstractTemplateIntf
 {
-    void initialize()
-        throws java.io.IOException;
-
     java.io.Writer getWriter();
 
     String getPath();
