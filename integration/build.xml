@@ -24,13 +24,13 @@
   <property name="junit.printsummary" value="off" />
   <property name="junit.formatter" value="brief" />
 
-  <taskdef name="jamon"
-           classname="org.jamon.ant.JamonTask"
-           classpath="${java.lib.jamon}" />
 
 
   <target name="templates">
     <mkdir dir="${build.src.dir}" />
+    <taskdef name="jamon"
+             classname="org.jamon.ant.JamonTask"
+             classpath="${java.lib.jamon}" />
     <jamon destdir="${build.src.dir}" generateImpls="true">
       <src path="templates"/>
     </jamon>

@@ -15,9 +15,7 @@
   <target name="test"
           depends="jar"
           description="Run the demo">
-    <ant dir="integration" target="test">
-      <property name="java.lib.jamon" value="${basedir}/core/build/classes"/>
-    </ant>
+    <ant dir="integration" target="test"/>
   </target>
 
   <target name="core" description="Build the core template engine">

@@ -18,12 +18,12 @@
   <property name="java.lib.jamon-anttask" value="../anttask/build/classes"/>
   <property name="java.lib.junit" value="/usr/local/share/java/junit.jar" />
 
-  <taskdef name="jamon"
-           classname="org.jamon.ant.JamonTask"
-           classpath="${java.lib.jamon-anttask}:${java.lib.jamon}" />
 
   <target name="templates">
     <mkdir dir="${build.src.dir}" />
+    <taskdef name="jamon"
+             classname="org.jamon.ant.JamonTask"
+             classpath="${java.lib.jamon-anttask}:${java.lib.jamon}" />
     <jamon destdir="${build.src.dir}" generateImpls="true">
       <src path="templates"/>
     </jamon>

@@ -32,6 +32,8 @@ build.properties
   </target>
 
   <target name="spotless">
+    <delete dir="${build.dir}" />
     <delete file=".cvsignore" />
   </target>
+
 </project>

@@ -62,8 +62,8 @@ ${jarfile}
   </target>
 
   <target name="spotless"
-          depends="clean"
           description="Restores work area to its state after checking out">
+    <delete dir="${build.dir}"/>
     <ant dir="test" target="spotless"/>
     <delete file=".cvsignore" />
     <delete file="${jarfile}" />
