@@ -37,6 +37,9 @@
       <arg value="${test.pkg}/SubTemplate" />
       <arg value="${test.pkg}/Sub2" />
       <arg value="${test.pkg}/JavaEscape" />
+      <arg value="${test.pkg}/Arguments" />
+      <arg value="${test.pkg}/OptionalArguments" />
+      <arg value="${test.pkg}/PrivateMethods" />
     </java>
   </target>
 
