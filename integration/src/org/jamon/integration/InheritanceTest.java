@@ -213,8 +213,8 @@ public class InheritanceTest
     public void testLibOnlyParentFragment()
         throws Exception
     {
-            getRecompilingTemplateManager().acquireInstance
-                ("/test/jamon/external/ChildFragment");
+        getRecompilingTemplateManager().constructProxy
+            ("/test/jamon/external/ChildFragment");
     }
 
     private void checkCompilationFailure(String p_path)
@@ -222,7 +222,7 @@ public class InheritanceTest
     {
         try
         {
-            getRecompilingTemplateManager().acquireInstance(p_path);
+            getRecompilingTemplateManager().constructProxy(p_path);
             fail("recompilation of Troubled child threw no exception");
         }
         catch(IOException e)

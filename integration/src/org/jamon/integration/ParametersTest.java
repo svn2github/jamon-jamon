@@ -95,8 +95,9 @@ public class ParametersTest
     public void testMissingRequiredArgumentForDef()
         throws Exception
     {
-        checkForFailure("MissingRequiredArgument",
-                        "No value supplied for required argument x");
+        checkForFailure(
+            "MissingRequiredArgument",
+            "No value supplied for required argument x in call to foo");
     }
 
     public void testMissingRequiredArgumentForTemplate()

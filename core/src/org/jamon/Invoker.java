@@ -150,21 +150,8 @@ public class Invoker
             ? new DefaultObjectParser()
             : p_objectParser;
         m_manager = p_manager;
-        AbstractTemplateProxy.Intf impl =
-            m_manager.acquireInstance(p_templateName);
-        m_manager.releaseInstance(impl);
-        String className = impl.getClass().getName();
-        className = className.substring(0,className.length()-4);
-        try
-        {
-            m_templateClass =
-                m_manager.getWorkClassLoader().loadClass(className);
-        }
-        catch (ClassNotFoundException e)
-        {
-            throw new InvalidTemplateException(p_templateName,e);
-        }
-
+        m_template = m_manager.constructProxy(p_templateName);
+        m_templateClass = m_template.getClass();
         try
         {
             Constructor con = m_templateClass
@@ -187,36 +174,10 @@ public class Invoker
                 throw new InvalidTemplateException(p_templateName);
             }
             m_renderMethod = renderMethod;
-            m_template = (AbstractTemplateProxy)
-                con.newInstance(new Object[]{ m_manager });
-        }
-        catch (IllegalAccessException e)
-        {
-            throw new InvalidTemplateException(p_templateName,e);
-        }
-        catch (InvocationTargetException e)
-        {
-            Throwable t = e.getTargetException();
-            if (t instanceof Error)
-            {
-                throw (Error) t;
-            }
-            else if (t instanceof RuntimeException)
-            {
-                throw (RuntimeException) t;
-            }
-            else
-            {
-                throw new InvalidTemplateException(p_templateName, t);
-            }
         }
         catch (NoSuchMethodException e)
         {
             throw new InvalidTemplateException(p_templateName,e);
-        }
-        catch (InstantiationException e)
-        {
-            throw new InvalidTemplateException(m_templateClass.getName(),e);
         }
     }
 

@@ -144,13 +144,6 @@ public class TemplateUnit
              m_declaredRequiredArgs.iterator());
     }
 
-    public boolean hasSignatureRequiredArgs()
-    {
-        return ! m_parentDescription.getRequiredArgs().isEmpty()
-            || ! m_declaredRequiredArgs.isEmpty()
-            || ! m_fragmentArgs.isEmpty();
-    }
-
     public Iterator getSignatureOptionalArgs()
     {
         return new SequentialIterator
@@ -203,11 +196,6 @@ public class TemplateUnit
     public DefUnit getDefUnit(String p_name)
     {
         return (DefUnit) m_defs.get(p_name);
-    }
-
-    public Set getDefNames()
-    {
-        return m_defs.keySet();
     }
 
     public void makeMethodUnit(String p_methodName)
@@ -264,11 +252,6 @@ public class TemplateUnit
     public Iterator getImports()
     {
         return m_imports.iterator();
-    }
-
-    public Iterator getInterfaces()
-    {
-        return m_interfaces.iterator();
     }
 
     public void addImport(String p_import)
@@ -357,12 +340,6 @@ public class TemplateUnit
         }
     }
 
-    public boolean hasRequiredParentArgs()
-    {
-        return ! (m_parentDescription.getRequiredArgs().isEmpty()
-                  && m_parentDescription.getFragmentInterfaces().isEmpty());
-    }
-
     private Iterator getParentRequiredArgs()
     {
         return new SequentialIterator
@@ -380,10 +357,22 @@ public class TemplateUnit
         printArgsDecl(p_writer, getParentRequiredArgs());
     }
 
+    public Iterator getRequiredArgs()
+    {
+        return new SequentialIterator(getParentRequiredArgs(),
+                                      getDeclaredRequiredArgs());
+    }
+
     public Iterator getDeclaredRequiredArgs()
     {
         return new SequentialIterator(m_declaredRequiredArgs.iterator(),
                                       m_declaredFragmentArgs.iterator());
+    }
+
+    public Iterator getDeclaredArgs()
+    {
+        return new SequentialIterator(getDeclaredRequiredArgs(),
+                                      m_declaredOptionalArgs.iterator());
     }
 
     public void printDeclaredRequiredArgs(IndentingWriter p_writer)
@@ -435,6 +424,11 @@ public class TemplateUnit
             p_buf.append((String) i.next());
             p_buf.append("\n");
         }
+    }
+
+    protected void printArgDeobfuscations(IndentingWriter p_writer)
+    {
+        // nope
     }
 
     public String getSignature()

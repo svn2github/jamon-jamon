@@ -51,12 +51,13 @@ public class ProxyGenerator
         generateArgArrays(m_templateUnit, "");
         generateMethodArrays();
         generateIntf();
-        generateGetInstance();
         generateGetPath();
+        generateImplData();
         generateOptionalArgs();
         generateFragmentInterfaces(false);
         if (! m_templateUnit.isParent())
         {
+            generateConstructImpl();
             generateMakeRenderer();
             generateRender();
             generateSetWriter(getClassName());
@@ -277,25 +278,78 @@ public class ProxyGenerator
         m_writer.print("\"" + p_string + "\", ");
     }
 
-    private void generateRender()
+    private void generateConstructImpl()
     {
-        m_writer.print( m_templateUnit.isParent()
-                        ? "protected void render("
-                        : "public void render(" );
-        m_templateUnit.printRequiredArgsDecl(m_writer);
-        m_writer.println(")");
-
-        m_writer.println("  throws java.io.IOException");
+        m_writer.println();
+        m_writer.print(
+            "protected " + ClassNames.BASE_TEMPLATE + " constructImpl"
+            + "(Class p_class, "
+            + ClassNames.TEMPLATE_MANAGER + " p_manager)");
+        m_writer.println("  throws " + ClassNames.IOEXCEPTION);
         m_writer.openBlock();
         m_writer.println("try");
         m_writer.openBlock();
-        m_writer.print  ("getInstance().render(");
-        m_templateUnit.printRequiredArgs(m_writer);
-        m_writer.println(");");
+        m_writer.println("return (" + ClassNames.BASE_TEMPLATE + ") p_class");
+        m_writer.indent(2);
+        m_writer.println(".getConstructor(new Class [] { "
+                         + ClassNames.TEMPLATE_MANAGER + ".class"
+                         + ", String.class, ImplData.class })");
+        m_writer.println(".newInstance(new Object [] "
+                         + "{ p_manager, getPath(), getImplData() });");
+        m_writer.outdent(2);
+        m_writer.closeBlock();
+        m_writer.println("catch (RuntimeException e)");
+        m_writer.openBlock();
+        m_writer.println("throw e;");
+        m_writer.closeBlock();
+        m_writer.println("catch (Exception e)");
+        m_writer.openBlock();
+        m_writer.println("throw new " + ClassNames.JAMON_EXCEPTION + "(e);");
+        m_writer.closeBlock();
+        m_writer.closeBlock();
+
+        m_writer.println();
+        m_writer.print(
+            "protected " + ClassNames.BASE_TEMPLATE + " constructImpl("
+            + ClassNames.TEMPLATE_MANAGER + " p_manager)");
+        m_writer.println("  throws " + ClassNames.IOEXCEPTION);
+        m_writer.openBlock();
+        m_writer.println(
+            "return new "
+            + m_resolver.getImplClassName(m_templateUnit.getName())
+            + "(p_manager, getPath(), (ImplData) getImplData());");
+        m_writer.closeBlock();
+    }
+
+    private void generateRender()
+    {
+        m_writer.print((m_templateUnit.isParent() ? "protected" : "public")
+                       + " void render(");
+        m_templateUnit.printRequiredArgsDecl(m_writer);
+        m_writer.println(")");
+
+        m_writer.println("  throws " + ClassNames.IOEXCEPTION);
+        m_writer.openBlock();
+        m_writer.println("ImplData implData = (ImplData) getImplData();");
+        for (Iterator i = m_templateUnit.getRequiredArgs(); i.hasNext(); )
+        {
+            AbstractArgument arg = (AbstractArgument) i.next();
+            m_writer.println("implData." + arg.getSetterName()
+                             + "(" + arg.getObfuscatedName() + ");");
+        }
+
+        m_writer.println(
+            "Intf instance = (Intf) getTemplateManager().constructImpl(this);"
+            );
+
+        m_writer.println("instance.escapeWith(getEscaping());");
+        m_writer.println("try");
+        m_writer.openBlock();
+        m_writer.print  ("instance.render();");
         m_writer.closeBlock();
         m_writer.println("finally");
         m_writer.openBlock();
-        m_writer.println("releaseInstance();");
+        m_writer.println("reset();");
         m_writer.closeBlock();
         m_writer.closeBlock();
         m_writer.println();
@@ -328,7 +382,38 @@ public class ProxyGenerator
         m_writer.println();
     }
 
+    private void generateImplData()
+    {
+        m_writer.println("protected static class ImplData");
+        m_writer.println("  extends ");
+        if(m_templateUnit.hasParentPath())
+        {
+            m_writer.println(m_resolver.getFullyQualifiedIntfClassName(
+                m_templateUnit.getParentPath())
+                             + ".ImplData");
+        }
+        else
+        {
+            m_writer.println(ClassNames.IMPL_DATA);
+        }
+        m_writer.println();
+        m_writer.openBlock();
+        for (Iterator i = m_templateUnit.getDeclaredArgs(); i.hasNext(); )
+        {
+            ((AbstractArgument) i.next()).generateImplDataCode(m_writer);
+        }
+        m_writer.closeBlock();
 
+
+        if (! m_templateUnit.isParent())
+        {
+            m_writer.println("protected " + ClassNames.IMPL_DATA
+                             + " makeImplData()");
+            m_writer.openBlock();
+            m_writer.println("return new ImplData();");
+            m_writer.closeBlock();
+        }
+    }
 
     private void generateOptionalArgs()
     {
@@ -337,7 +422,8 @@ public class ProxyGenerator
         {
             OptionalArgument arg = (OptionalArgument) i.next();
             m_writer.println();
-            String name = arg.getName();
+            m_writer.println("protected " + arg.getType() + " "
+                             + arg.getName() + ";");
             m_writer.print("public final ");
             String pkgName = getPackageName();
             if (pkgName.length() > 0)
@@ -345,13 +431,15 @@ public class ProxyGenerator
                 m_writer.print(pkgName + ".");
             }
             m_writer.print(getClassName());
-            m_writer.println(" " + arg.getSetterName()
-                             + "(" + arg.getType() +" p_" + name + ")");
+            m_writer.println(
+                " " + arg.getSetterName()
+                + "(" + arg.getType() +" p_" + arg.getName() + ")");
             m_writer.print  ("  throws ");
             m_writer.println(ClassNames.IOEXCEPTION);
             m_writer.openBlock();
-            m_writer.println("getInstance()." + arg.getSetterName()
-                             + "(" + "p_" + name + ");");
+            m_writer.println(
+                "((ImplData) getImplData())."
+                + arg.getSetterName() + "(p_" + arg.getName() + ");");
             m_writer.println("return this;");
             m_writer.closeBlock();
         }
@@ -379,21 +467,9 @@ public class ProxyGenerator
 
         if(! m_templateUnit.isParent())
         {
-            m_writer.print("void render(");
-            m_templateUnit.printRequiredArgsDecl(m_writer);
-            m_writer.println(")");
-            m_writer.println("  throws java.io.IOException;");
+            m_writer.println(
+                "void render() throws " + ClassNames.IOEXCEPTION + ";");
             m_writer.println();
-        }
-
-        for (Iterator i = m_templateUnit.getDeclaredOptionalArgs();
-             i.hasNext(); )
-        {
-            OptionalArgument arg = (OptionalArgument) i.next();
-            m_writer.println();
-            m_writer.println
-                ("void " + arg.getSetterName()
-                 + "(" + arg.getType() + " " + arg.getName() + ");");
         }
         m_writer.closeBlock();
     }
@@ -490,17 +566,6 @@ public class ProxyGenerator
         m_writer.closeBlock();
     }
 
-    private void generateGetInstance()
-    {
-        m_writer.println();
-        m_writer.println("private Intf getInstance()");
-        m_writer.print("  throws " + ClassNames.IOEXCEPTION);
-        m_writer.println();
-        m_writer.openBlock();
-        m_writer.println("return (Intf) getUntypedInstance();");
-        m_writer.closeBlock();
-    }
-
     private void generateGetPath()
     {
         if (! m_templateUnit.isParent())
@@ -521,7 +586,7 @@ public class ProxyGenerator
         m_writer.print  ("  throws ");
         m_writer.println(ClassNames.IOEXCEPTION);
         m_writer.openBlock();
-        m_writer.println("getInstance().writeTo(p_writer);");
+        m_writer.println("getImplData().setWriter(p_writer);");
         m_writer.println("return this;");
         m_writer.closeBlock();
     }
@@ -534,7 +599,7 @@ public class ProxyGenerator
         m_writer.print  ("  throws ");
         m_writer.println(ClassNames.IOEXCEPTION);
         m_writer.openBlock();
-        m_writer.println("getInstance().autoFlush(p_autoFlush);");
+        m_writer.println("getImplData().setAutoFlush(p_autoFlush);");
         m_writer.println("return this;");
         m_writer.closeBlock();
     }

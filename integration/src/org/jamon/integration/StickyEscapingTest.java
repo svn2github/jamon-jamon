@@ -36,11 +36,6 @@ import test.jamon.Sticky;
 public class StickyEscapingTest
     extends TestBase
 {
-    protected int cacheSize()
-    {
-        return 0; // disable caching - make sure we get a new instance
-    }
-
     public void testDefault()
         throws Exception
     {

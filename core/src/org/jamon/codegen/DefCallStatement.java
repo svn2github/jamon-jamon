@@ -21,85 +21,22 @@
 package org.jamon.codegen;
 
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.Map;
 
 import org.jamon.JamonException;
 
 public class DefCallStatement
-    extends AbstractCallStatement
+    extends AbstractInnerUnitCallStatement
 {
     DefCallStatement(String p_path, Map p_params, DefUnit p_defUnit)
     {
-        super(p_path, p_params);
-        m_defUnit = p_defUnit;
+        super(p_path, p_params, p_defUnit);
     }
 
-    private final DefUnit m_defUnit;
-
-    protected String getFragmentIntfName(FragmentUnit p_fragmentUnitIntf,
-                                       TemplateResolver p_resolver)
-    {
-        return p_fragmentUnitIntf.getFragmentInterfaceName();
-    }
-
-    public void generateSource(IndentingWriter p_writer,
-                               TemplateResolver p_resolver,
-                               TemplateDescriber p_describer)
+    protected void printDefault(IndentingWriter p_writer,
+                                         OptionalArgument p_arg)
         throws IOException
     {
-        p_writer.println("__jamon_def__" + getPath() + "(");
-        p_writer.indent(2);
-        boolean argsAlreadyPrinted = false;
-        for (Iterator r = m_defUnit.getRequiredArgs(); r.hasNext(); /* */)
-        {
-            if (argsAlreadyPrinted)
-            {
-                p_writer.println(",");
-            }
-            argsAlreadyPrinted = true;
-            RequiredArgument arg = (RequiredArgument) r.next();
-            String name = arg.getName();
-            String expr = (String) getParams().remove(name);
-            if (expr == null)
-            {
-                throw new JamonException
-                    ("No value supplied for required argument " + name);
-            }
-            p_writer.print("(" + expr + ")");
-        }
-        for (Iterator o = m_defUnit.getOptionalArgs(); o.hasNext(); /* */ )
-        {
-            if (argsAlreadyPrinted)
-            {
-                p_writer.println(",");
-            }
-            argsAlreadyPrinted = true;
-            OptionalArgument arg = (OptionalArgument) o.next();
-            String name = arg.getName();
-            p_writer.print("(");
-            String expr = (String) getParams().remove(name);
-            if (expr == null)
-            {
-                p_writer.print(arg.getDefault());
-            }
-            else
-            {
-                p_writer.print(expr);
-            }
-            p_writer.print(")");
-            if (o.hasNext())
-            {
-                p_writer.println(",");
-            }
-        }
-        handleFragmentParams(m_defUnit.getFragmentArgsList(),
-                             p_writer,
-                             p_resolver,
-                             p_describer,
-                             argsAlreadyPrinted);
-        p_writer.outdent(2);
-        p_writer.println(");");
-        checkSuppliedParams();
+        p_writer.print(p_arg.getDefault());
     }
 }

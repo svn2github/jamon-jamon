@@ -41,11 +41,6 @@ public abstract class TestBase
         resetWriter();
     }
 
-    protected int cacheSize()
-    {
-        return 10;
-    }
-
     protected final boolean doDynamicRecompilation()
     {
         return false;
@@ -117,7 +112,6 @@ public abstract class TestBase
                  .setSourceDir(SOURCE_DIR)
                  .setClasspath(System.getProperty
                                ("org.jamon.integration.classpath"))
-                 .setCacheSize(cacheSize())
                  .setWorkDir(WORK_DIR));
     }
 

@@ -30,8 +30,22 @@ import java.io.IOException;
 public interface TemplateManager
 {
     /**
-     * Given a template path, return an appropriate instance which
-     * corresponds to the executable code for that template.
+     * Given a proxy, return an instance of the executable code for
+     * that proxy's template.
+     *
+     * @param p_proxy a proxy for the template
+     *
+     * @return a <code>Template</code> instance
+     *
+     * @exception IOException if something goes wrong
+     **/
+    public AbstractTemplateProxy.Intf constructImpl(
+        AbstractTemplateProxy p_proxy)
+        throws IOException;
+
+
+    /**
+     * Given a template path, return a proxy for that template.
      *
      * @param p_path the path to the template
      *
@@ -39,18 +53,6 @@ public interface TemplateManager
      *
      * @exception IOException if something goes wrong
      */
-    public AbstractTemplateProxy.Intf acquireInstance(String p_path)
+    public AbstractTemplateProxy constructProxy(String p_path)
         throws IOException;
-
-
-    /**
-     * Return a previously acquired template implementation.
-     *
-     * @param p_impl the template implementation instance
-     *
-     * @exception IOException if something goes wrong
-     */
-    public void releaseInstance(AbstractTemplateProxy.Intf p_impl)
-        throws IOException;
-
 }

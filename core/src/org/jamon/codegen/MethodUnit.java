@@ -22,7 +22,6 @@ package org.jamon.codegen;
 
 public interface MethodUnit extends Unit
 {
-    String getInterfaceName();
-    String getImplName();
-    String getGetterName();
+    String getOptionalArgDefaultMethod(OptionalArgument p_arg);
+    public void printAllArgsDecl(IndentingWriter p_writer);
 }

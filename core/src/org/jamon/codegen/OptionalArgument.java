@@ -48,9 +48,28 @@ public class OptionalArgument extends AbstractArgument
         return m_default;
     }
 
-    public String getSetterName()
+    public String getIsNotDefaultName()
     {
-        return "set" + StringUtils.capitalize(getName());
+        return "get" + StringUtils.capitalize(getName()) + "__IsNotDefault";
+    }
+
+    public void generateImplDataCode(IndentingWriter p_writer)
+    {
+        super.generateImplDataCode(p_writer);
+
+        p_writer.println("public boolean " + getIsNotDefaultName() + "()");
+        p_writer.openBlock();
+        p_writer.println("return m_" + getName() + "__IsNotDefault;");
+        p_writer.closeBlock();
+
+        p_writer.println("private boolean m_" + getName() + "__IsNotDefault;");
+    }
+
+    protected void generateImplDataSetterCode(IndentingWriter p_writer)
+    {
+        super.generateImplDataSetterCode(p_writer);
+        p_writer.println("m_" + getName() + "__IsNotDefault = true;");
+
     }
 
     private String m_default;

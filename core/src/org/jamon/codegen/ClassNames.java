@@ -33,6 +33,7 @@ public interface ClassNames
     public final static String TEMPLATE =
         org.jamon.AbstractTemplateProxy.class.getName();
     public final static String TEMPLATE_INTF = TEMPLATE + ".Intf";
+    public final static String IMPL_DATA = TEMPLATE + ".ImplData";
     public final static String TEMPLATE_MANAGER =
         org.jamon.TemplateManager.class.getName();
     public static final String BASE_TEMPLATE =

@@ -29,11 +29,34 @@ public abstract class AbstractTemplateProxy
 {
     public interface Intf
     {
-        void writeTo(Writer p_writer);
         void escapeWith(Escaping p_escaping);
-        void initialize() throws IOException;
-        void autoFlush(boolean p_autoflush);
         String getPath();
+    }
+
+    protected static class ImplData
+    {
+        public final void setWriter(Writer p_writer)
+        {
+            m_writer = p_writer;
+        }
+
+        public final Writer getWriter()
+        {
+            return m_writer;
+        }
+
+        public final void setAutoFlush(boolean p_autoFlush)
+        {
+            m_autoFlush = p_autoFlush;
+        }
+
+        public final boolean getAutoFlush()
+        {
+            return m_autoFlush;
+        }
+
+        private Writer m_writer;
+        private boolean m_autoFlush = true;
     }
 
     public static void setTemplateManagerSourceClassName(String p_className)
@@ -79,39 +102,45 @@ public abstract class AbstractTemplateProxy
         return m_templateManager;
     }
 
-    private Escaping m_escaping;
+    private Escaping m_escaping = Escaping.DEFAULT;
     private final TemplateManager m_templateManager;
-    private final ThreadLocal m_instance = new ThreadLocal();
+    private final ThreadLocal m_implData = new ThreadLocal();
 
     protected final void escape(Escaping p_escaping)
     {
         m_escaping = p_escaping;
     }
 
-    protected abstract String getPath();
-
-    protected final Intf getUntypedInstance()
-        throws IOException
+    protected final Escaping getEscaping()
     {
-        Intf instance = (Intf) m_instance.get();
-        if (instance == null)
-        {
-            instance = (Intf) getTemplateManager().acquireInstance(getPath());
-            instance.initialize();
-            m_instance.set(instance);
-        }
-        if (m_escaping != null)
-        {
-            instance.escapeWith(m_escaping);
-        }
-        return instance;
+        return m_escaping;
     }
 
-    protected final void releaseInstance()
-        throws IOException
+    protected abstract String getPath();
+
+    protected abstract AbstractTemplateImpl constructImpl(
+        Class p_class, TemplateManager p_manager)
+        throws IOException;
+
+    protected abstract AbstractTemplateImpl constructImpl(
+        TemplateManager p_manager)
+        throws IOException;
+
+    protected abstract ImplData makeImplData();
+
+    protected final ImplData getImplData()
     {
-        Intf instance = (Intf) m_instance.get();
-        getTemplateManager().releaseInstance(instance);
-        m_instance.set(null);
+        ImplData implData = (ImplData) m_implData.get();
+        if (implData == null)
+        {
+            implData = makeImplData();
+            m_implData.set(implData);
+        }
+        return implData;
+    }
+
+    public final void reset()
+    {
+        m_implData.set(null);
     }
 }

@@ -91,6 +91,7 @@
       <srcfileset dir="${build.src.dir}" includes="**/*.java"/>
       <targetfileset dir="${classes.dir}" includes="**/*.class"/>
     </dependset>
+    <delete dir="${build.dir}/src/test/jamon/broken"/>
     <mkdir dir="${classes.dir}"/>
     <javac destdir="${classes.dir}"
            debug="true"

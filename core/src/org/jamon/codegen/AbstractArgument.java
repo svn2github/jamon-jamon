@@ -25,6 +25,7 @@ import java.util.Iterator;
 import org.jamon.node.AArg;
 import org.jamon.node.AType;
 import org.jamon.node.PName;
+import org.jamon.util.StringUtils;
 
 public abstract class AbstractArgument
 {
@@ -53,6 +54,36 @@ public abstract class AbstractArgument
     public String getType()
     {
         return m_type;
+    }
+
+    public String getSetterName()
+    {
+        return "set" + StringUtils.capitalize(getName());
+    }
+
+    public String getGetterName()
+    {
+        return "get" + StringUtils.capitalize(getName());
+    }
+
+    public void generateImplDataCode(IndentingWriter p_writer)
+    {
+        p_writer.println( "public void " + getSetterName()
+                          + "(" + getType() + " " + getName() + ")");
+        p_writer.openBlock();
+        generateImplDataSetterCode(p_writer);
+        p_writer.closeBlock();
+
+        p_writer.println("public " + getType() + " " + getGetterName() + "()");
+        p_writer.openBlock();
+        p_writer.println("return m_" + getName() + ";");
+        p_writer.closeBlock();
+        p_writer.println("private " + getType() + " m_" + getName() + ";");
+    }
+
+    protected void generateImplDataSetterCode(IndentingWriter p_writer)
+    {
+        p_writer.println("m_" + getName() + " = " + getName() + ";");
     }
 
     private static String asText(AType p_type)

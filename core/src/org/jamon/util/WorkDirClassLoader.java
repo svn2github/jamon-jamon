@@ -48,7 +48,6 @@ public class WorkDirClassLoader
     public synchronized void invalidate()
     {
         m_loader = null;
-        m_classMap.clear();
     }
 
 
@@ -58,6 +57,9 @@ public class WorkDirClassLoader
         {
             super(WorkDirClassLoader.this);
         }
+
+        private final Map m_cache = new HashMap();
+
         private byte [] readBytesForClass(String p_name)
             throws IOException
         {
@@ -96,15 +98,25 @@ public class WorkDirClassLoader
             }
             else
             {
-                try
+                Class c = (Class) m_cache.get(p_name);
+                if (c == null)
                 {
-                    byte [] bytecode = readBytesForClass(p_name);
-                    return this.defineClass(p_name,bytecode,0,bytecode.length);
+                    try
+                    {
+                        byte [] code = readBytesForClass(p_name);
+                        c = this.defineClass(p_name, code, 0, code.length);
+                        if (p_resolve)
+                        {
+                            this.resolveClass(c);
+                        }
+                        m_cache.put(p_name, c);
+                    }
+                    catch (IOException e)
+                    {
+                        throw new ClassNotFoundException(e.getMessage());
+                    }
                 }
-                catch (IOException e)
-                {
-                    throw new ClassNotFoundException(e.getMessage());
-                }
+                return c;
             }
         }
 
@@ -117,26 +129,15 @@ public class WorkDirClassLoader
         {
             return super.loadClass(p_name, p_resolve);
         }
-
-        Class c = (Class) m_classMap.get(p_name);
-        if (c != null)
+        else
         {
-            return c;
+            if (m_loader == null)
+            {
+                m_loader = new Loader();
+            }
+            return m_loader.loadClass(p_name, p_resolve);
         }
-        if (m_loader == null)
-        {
-            m_loader = new Loader();
-        }
-
-        c = m_loader.loadClass(p_name);
-        if (p_resolve)
-        {
-            resolveClass(c);
-        }
-        m_classMap.put(p_name,c);
-        return c;
     }
 
-    private ClassLoader m_loader;
-    private final Map m_classMap = new HashMap();
+    private Loader m_loader;
 }

@@ -18,21 +18,24 @@
  * Contributor(s):
  */
 
-package org.jamon.tests.testutils;
+package org.jamon.integration;
 
 import java.io.StringWriter;
+import java.util.Collections;
 import java.util.HashMap;
 
 import junit.framework.TestCase;
 import junit.framework.AssertionFailedError;
 
-import org.jamon.testutils.JUnitTemplateManager;
+import org.jamon.JUnitTemplateManager;
 import org.jamon.escaping.Escaping;
+
+import test.jamon.JUnitTemplate;
 
 public class JUnitTemplateManagerTest
     extends TestCase
 {
-    private FakeTemplate m_template;
+    private JUnitTemplate m_template;
     private JUnitTemplateManager m_manager;
     private StringWriter m_writer;
 
@@ -45,15 +48,15 @@ public class JUnitTemplateManagerTest
             optMap.put("i", p_iValue);
         }
         m_manager =
-            new JUnitTemplateManager(FakeTemplate.class,
+            new JUnitTemplateManager(JUnitTemplate.class,
                                      optMap,
                                      new Object[] { Boolean.TRUE, "hello" });
-        m_template = new FakeTemplate(m_manager);
+        m_template = new JUnitTemplate(m_manager);
         m_writer = new StringWriter();
         m_template
             .writeTo(m_writer)
             .autoFlush(false)
-            .escaping(Escaping.NONE);
+            .escapeWith(Escaping.NONE);
     }
 
     private void checkSuccess()
@@ -89,10 +92,11 @@ public class JUnitTemplateManagerTest
         try
         {
             m_template.render(true,"hello");
+            throw new Exception("all optional arguments not set not caught");
         }
         catch( AssertionFailedError e )
         {
-            assertEquals("all optional arguments not set before render",
+            assertEquals("optional argument i not set",
                          e.getMessage());
         }
     }
@@ -103,11 +107,12 @@ public class JUnitTemplateManagerTest
         prepareTemplate(null);
         try
         {
-            m_template.setI(3);
+            m_template.setI(3).render(true, "hello");
+            throw new Exception("unexpected optional argument i not caught");
         }
         catch( AssertionFailedError e )
         {
-            assertEquals("unexpected optional argument i",
+            assertEquals("optional argument i set",
                          e.getMessage());
         }
     }
@@ -119,10 +124,11 @@ public class JUnitTemplateManagerTest
         try
         {
             m_template.render(false,"hello");
+            throw new Exception("mismatch required argument b not caught");
         }
         catch( AssertionFailedError e )
         {
-            assertEquals("render argument[0] expected true, got false",
+            assertEquals("required argument b expected:<true> but was:<false>",
                          e.getMessage());
         }
     }
@@ -134,13 +140,25 @@ public class JUnitTemplateManagerTest
         prepareTemplate(new Integer(4));
         try
         {
-            m_template.setI(3);
+            m_template.setI(3).render(true,"hello");
+            throw new Exception("mismatch optional argument i not caught");
         }
         catch( AssertionFailedError e )
         {
-            assertEquals("setI argument[0] expected 4, got 3",
+            assertEquals("optional argument i expected:<4> but was:<3>",
                          e.getMessage());
         }
     }
 
+    public void testConstructProxy()
+        throws Exception
+    {
+        assertEquals(JUnitTemplate.class,
+                     new JUnitTemplateManager(JUnitTemplate.class,
+                                              Collections.EMPTY_MAP,
+                                              new Object[0])
+                         .constructProxy(
+                             "/test/jamon/JUnitTemplate")
+                         .getClass());
+    }
 }

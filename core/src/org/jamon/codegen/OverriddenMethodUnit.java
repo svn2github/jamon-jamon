@@ -54,21 +54,6 @@ public class OverriddenMethodUnit
     private final DeclaredMethodUnit m_declaredMethodUnit;
     private final InheritedArgs m_inheritedArgs;
 
-    public String getInterfaceName()
-    {
-        return m_declaredMethodUnit.getInterfaceName();
-    }
-
-    public String getImplName()
-    {
-        return m_declaredMethodUnit.getImplName();
-    }
-
-    public String getGetterName()
-    {
-        return m_declaredMethodUnit.getGetterName();
-    }
-
     public Iterator getFragmentArgs()
     {
         return m_declaredMethodUnit.getFragmentArgs();
@@ -82,6 +67,16 @@ public class OverriddenMethodUnit
     public Iterator getSignatureOptionalArgs()
     {
         return m_declaredMethodUnit.getSignatureOptionalArgs();
+    }
+
+    public String getOptionalArgDefaultMethod(OptionalArgument p_arg)
+    {
+        return m_declaredMethodUnit.getOptionalArgDefaultMethod(p_arg);
+    }
+
+    public void printAllArgsDecl(IndentingWriter p_writer)
+    {
+        m_declaredMethodUnit.printAllArgsDecl(p_writer);
     }
 
     public void addFragmentArg(org.jamon.codegen.FragmentArgument p_arg)

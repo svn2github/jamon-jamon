@@ -38,7 +38,6 @@ import java.util.HashSet;
 import org.jamon.escaping.Escaping;
 import org.jamon.util.JavaCompiler;
 import org.jamon.util.StringUtils;
-import org.jamon.util.LifoMultiCache;
 import org.jamon.util.WorkDirClassLoader;
 import org.jamon.codegen.TemplateDescriber;
 import org.jamon.codegen.Analyzer;
@@ -80,9 +79,6 @@ import org.jamon.codegen.TemplateUnit;
  *   <li><b>setDynamicRecompilation</b> - determines whether classes
  *   corresponding to templates should be dynamically recompiled as
  *   necessary. Default is true; set to false for production.
-
- *   <li><b>setCacheSize</b> - used to set the maximum number of
- *   template instances cached. Default is 50.
 
  *   <li><b>setJavaCompiler</b> - determines what program to execute
  *   to compile the generated Java source files. Default is
@@ -151,13 +147,6 @@ public class StandardTemplateManager
         }
         private boolean dynamicRecompilation = true;
 
-        public Data setCacheSize(int p_cacheSize)
-        {
-            cacheSize = p_cacheSize;
-            return this;
-        }
-        private int cacheSize = 50;
-
         public Data setJavaCompiler(String p_javaCompiler)
         {
             javaCompiler = p_javaCompiler;
@@ -211,7 +200,6 @@ public class StandardTemplateManager
             ? getClass().getClassLoader()
             : p_data.classLoader;
         m_dynamicRecompilation = p_data.dynamicRecompilation;
-        m_cache = new LifoMultiCache(p_data.cacheSize);
         if (m_dynamicRecompilation)
         {
             m_workDir = p_data.workDir == null
@@ -252,51 +240,67 @@ public class StandardTemplateManager
         }
     }
 
-    public AbstractTemplateProxy.Intf acquireInstance(String p_path)
+    public AbstractTemplateProxy.Intf constructImpl(
+        AbstractTemplateProxy p_proxy)
         throws IOException
     {
-        return acquireInstance(p_path, this);
-    }
-
-    public void releaseInstance(AbstractTemplateProxy.Intf p_impl)
-    {
-        m_cache.put(p_impl.getPath(), p_impl);
+        return constructImpl(p_proxy, this);
     }
 
     /**
      * Provided for subclasses and composing classes. Given a template
-     * path, return an appropriate instance which corresponds to the
-     * executable code for that template.
+     * proxy path, return an instance of the executable code for that
+     * proxy's template.
      *
-     * @param p_path the path to the template
+     * @param p_proxy a proxy for the template
      * @param p_manager the {@link TemplateManager} to supply to the
      * template
      *
      * @return a <code>Template</code> instance
      *
      * @exception IOException if something goes wrong
-     */
-    public AbstractTemplateProxy.Intf acquireInstance(String p_path,
-                                                      TemplateManager p_manager)
+     **/
+    public AbstractTemplateProxy.Intf constructImpl(
+        AbstractTemplateProxy p_proxy, TemplateManager p_manager)
+        throws IOException
+    {
+        //FIXME - don't require the path name for impl construction
+        if(m_dynamicRecompilation)
+        {
+            try
+            {
+                return p_proxy.constructImpl(getImplClass(p_proxy.getPath()),
+                                             p_manager);
+            }
+            catch (ClassNotFoundException e)
+            {
+                throw new JamonException(e);
+            }
+        }
+        else
+        {
+            return p_proxy.constructImpl(p_manager);
+        }
+    }
+
+    /**
+     * Given a template path, return a proxy for that template.
+     *
+     * @param p_path the path to the template
+     *
+     * @return a <code>Template</code> proxy instance
+     *
+     * @exception IOException if something goes wrong
+     **/
+    public AbstractTemplateProxy constructProxy(String p_path)
         throws IOException
     {
         try
         {
             // need to do this first to check dependencies if so enabled
-            Class cls = getImplementationClass(p_path);
-
-            AbstractTemplateImpl impl =
-                (AbstractTemplateImpl) m_cache.get(p_path);
-            if (impl == null)
-            {
-                impl = (AbstractTemplateImpl) cls
-                    .getConstructor(new Class [] { TemplateManager.class,
-                                                   String.class })
-                    .newInstance(new Object [] { p_manager, p_path });
-                impl.escapeWith(m_escaping);
-                impl.autoFlush(m_autoFlush);
-            }
-            return impl;
+            return (AbstractTemplateProxy) getProxyClass(p_path)
+                .getConstructor(new Class [] { TemplateManager.class })
+                .newInstance(new Object [] { this });
         }
         catch (IOException e)
         {
@@ -317,15 +321,9 @@ public class StandardTemplateManager
         System.err.println(p_message);
     }
 
-    private String getClassName(String p_path)
+    private static String getImplClassName(String p_path)
     {
         return StringUtils.templatePathToClassName(p_path) + "Impl";
-    }
-
-    private Class loadAndResolveClass(String p_path)
-        throws ClassNotFoundException
-    {
-        return m_loader.loadClass(getClassName(p_path));
     }
 
     private static String getDefaultWorkDir()
@@ -426,18 +424,33 @@ public class StandardTemplateManager
             + "javac";
     }
 
-    private Class getImplementationClass(String p_path)
+    private Class getImplClass(String p_path)
+        throws IOException,
+               ClassNotFoundException
+    {
+        return getTemplateClass(p_path, getImplClassName(p_path));
+    }
+
+    private Class getProxyClass(String p_path)
+        throws IOException,
+               ClassNotFoundException
+    {
+        return getTemplateClass(p_path,
+                                StringUtils.templatePathToClassName(p_path));
+    }
+
+    private Class getTemplateClass(String p_path, String p_className)
         throws IOException,
                ClassNotFoundException
     {
         if (m_dynamicRecompilation)
         {
             ensureUpToDate(p_path);
-            return loadAndResolveClass(p_path);
+            return m_loader.loadClass(p_className);
         }
         else
         {
-            return m_classLoader.loadClass(getClassName(p_path));
+            return m_classLoader.loadClass(p_className);
         }
     }
 
@@ -456,7 +469,6 @@ public class StandardTemplateManager
     private final JavaCompiler m_javaCompiler;
     private final WorkDirClassLoader m_loader;
     private final boolean m_autoFlush;
-    private final LifoMultiCache m_cache;
 
     private String prefix()
     {
@@ -556,15 +568,9 @@ public class StandardTemplateManager
 
         if (!outOfDateJavaFiles.isEmpty())
         {
-            purgeCache();
             compile(outOfDateJavaFiles);
             m_loader.invalidate();
         }
-    }
-
-    private void purgeCache()
-    {
-        m_cache.clear();
     }
 
     private File getWriteableFile(String p_filename)

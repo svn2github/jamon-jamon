@@ -18,24 +18,18 @@
  * Contributor(s):
  */
 
-package org.jamon.codegen;
+package org.jamon.integration;
 
-public class DeclaredMethodUnit
-    extends AbstractInnerUnit
-    implements MethodUnit
+import test.jamon.ArgumentVisibility;
+
+public class ArgumentVisibilityTest
+    extends TestBase
 {
-    public DeclaredMethodUnit(String p_name, Unit p_parent)
+    public void testVisibility()
+        throws Exception
     {
-        super(p_name, p_parent);
-    }
-
-    public String getOptionalArgDefaultMethod(OptionalArgument p_arg)
-    {
-        return "__jamon__get_Method_Opt_" + p_arg.getName() + "_default";
-    }
-
-    public void printAllArgsDecl(IndentingWriter p_writer)
-    {
-        printArgsDecl(p_writer, getAllArgs());
+        new ArgumentVisibility(getTemplateManager())
+            .writeTo(getWriter()).render();
+        checkOutput("5 5 5 7 8");
     }
 }

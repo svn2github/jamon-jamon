@@ -47,6 +47,15 @@ public abstract class AbstractTemplateImpl
         m_path = p_path;
     }
 
+    protected AbstractTemplateImpl(TemplateManager p_templateManager,
+                                   String p_path,
+                                   AbstractTemplateProxy.ImplData p_implData)
+    {
+        this(p_templateManager, p_path);
+        writeTo(p_implData.getWriter());
+        autoFlush(p_implData.getAutoFlush());
+    }
+
     public final String getPath()
     {
         return m_path;
@@ -65,33 +74,6 @@ public abstract class AbstractTemplateImpl
     public void escapeWith(Escaping p_escaping)
     {
         m_escaping = p_escaping;
-    }
-
-    public final void initialize()
-        throws IOException
-    {
-        try
-        {
-            initializeDefaultArguments();
-        }
-        catch (RuntimeException e)
-        {
-            throw e;
-        }
-        catch (IOException e)
-        {
-            throw e;
-        }
-        catch (Exception e)
-        {
-            throw new JamonException(e);
-        }
-    }
-
-    protected void initializeDefaultArguments()
-        throws Exception
-    {
-        // override me
     }
 
     protected void write(String p_string)
@@ -158,7 +140,7 @@ public abstract class AbstractTemplateImpl
     }
 
     private Writer m_writer;
-    private Escaping m_escaping = Escaping.DEFAULT;
+    private Escaping m_escaping;
     private final TemplateManager m_templateManager;
     private final String m_path;
     private boolean m_autoFlush = true;

@@ -86,7 +86,7 @@ public abstract class AbstractUnit
         p_writer.closeBlock();
     }
 
-    private void printArgDeobfuscations(IndentingWriter p_writer)
+    protected void printArgDeobfuscations(IndentingWriter p_writer)
     {
         for (Iterator i = getVisibleArgs(); i.hasNext(); )
         {
