@@ -1,4 +1,5 @@
 import java.io.OutputStreamWriter;
+import java.util.Date;
 import org.jamon.StandardTemplateManager;
 
 public class JamonQs {
@@ -8,7 +9,7 @@ public class JamonQs {
       QsTemp template = new QsTemp(mgr);
       template
           .writeTo(new OutputStreamWriter(System.out))
-          .render(argv);
+          .render(new Date(),argv);
     }
     catch (Exception e) {
       e.printStackTrace();

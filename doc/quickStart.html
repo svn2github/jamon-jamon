@@ -13,6 +13,7 @@ Create a java file <a class="file" href="JamonQs.java">JamonQs.java</a>:
 
 <pre class="java">
 import java.io.OutputStreamWriter;
+import java.util.Date;
 import org.jamon.StandardTemplateManager;
 
 public class JamonQs {
@@ -22,7 +23,7 @@ public class JamonQs {
       QsTemp template = new QsTemp(mgr);
       template
           .writeTo(new OutputStreamWriter(System.out))
-          .render(argv);
+          .render(new Date(), argv);
     }
     catch (Exception e) {
       e.printStackTrace();
@@ -33,9 +34,10 @@ public class JamonQs {
 Create a Jamon template <a href="QsTemp" class="file">QsTemp</a>:
 <pre class="jamon">
 &lt;%args&gt;
+  java.util.Date date;
   String [] s;
 &lt;/%args&gt;
-Hello, world
+Hello, world on &lt;% date %&gt;.
 The arguments are:
 % for (int i = 0; i &lt; s.length; ++i) {
 &lt;% s[i] %&gt;
@@ -62,9 +64,10 @@ Run it:
 % java JamonQs here we go
 </pre>
 
-You should see:
+You should see (modulo the exact date/time):
 <pre class="tty">
-Hello, world
+Hello, world on Wed Oct 09 06:06:52 GMT+04:00 2002.
+The arguments are:
 here
 we
 go
