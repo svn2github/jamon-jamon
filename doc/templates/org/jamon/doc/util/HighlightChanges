@@ -29,4 +29,4 @@
 </%java>\
 <% renderer.render(new BracketingPrinter(),
                    new BracketingPrinter(beginInsert, endInsert),
-                   new DiscardingPrinter()) %>
+                   new DiscardingPrinter()) #n %>
