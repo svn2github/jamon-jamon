@@ -164,25 +164,45 @@ public class Analyzer
     private final Set m_children;
     private final Set m_defNames = new HashSet();
     private final LinkedList m_callStatements = new LinkedList();
+    private final Map m_aliases = new HashMap();
 
     private String computePath(PPath p_node)
     {
-        if (p_node instanceof ARelPath)
-        {
-            return pathToString((ARelativePath) ((ARelPath) p_node).getRelativePath());
-        }
-        else if (p_node instanceof AAbsPath)
-        {
-            return pathToString((AAbsolutePath) ((AAbsPath)p_node).getAbsolutePath());
-        }
-        else
-        {
-            AAliasedPath path =
-                (AAliasedPath) ((AAliasPath)p_node).getAliasedPath();
-            String alias = path.getIdentifier() == null
-                ? "/"
-                : path.getIdentifier().getText().trim();
+        PathAdapter adapter = new PathAdapter();
+        p_node.apply(adapter);
+        return adapter.getPath();
+    }
 
+    private class PathAdapter extends DepthFirstAdapter
+    {
+        private final StringBuffer m_path = new StringBuffer();
+
+        public String getPath()
+        {
+            return m_path.toString();
+        }
+
+        public void inARelativePath(ARelativePath p_relativePath)
+        {
+            m_path.append(p_relativePath.getIdentifier().getText());
+        }
+
+        // FIXME: can we pull in the de-relativizing code from TemplateUnit?
+//         public void inARelPath(ARelPath p_relPath)
+//         {
+//             m_path.append( the current template path );
+//         }
+
+        public void inAAbsolutePath(AAbsolutePath p_absPath)
+        {
+            m_path.append("/");
+        }
+
+        public void inAAliasedPath(AAliasedPath p_aliasedPath)
+        {
+            String alias = p_aliasedPath.getIdentifier() == null
+                ? "/"
+                : p_aliasedPath.getIdentifier().getText().trim();
             String prefix = (String) m_aliases.get(alias);
             if (prefix == null)
             {
@@ -190,30 +210,10 @@ public class Analyzer
             }
             else
             {
-                return prefix + pathToString((AAbsolutePath) path.getAbsolutePath());
+                m_path.append(prefix);
             }
         }
     }
-
-    private static String pathToString(ARelativePath p_path)
-    {
-        return p_path.getIdentifier().getText()
-            + pathToString((AAbsolutePath) p_path.getAbsolutePath());
-    }
-
-    private static String pathToString(AAbsolutePath p_path)
-    {
-        if (p_path == null)
-        {
-            return "";
-        }
-        else
-        {
-            return "/" + pathToString((ARelativePath) p_path.getRelativePath());
-        }
-    }
-
-    private Map m_aliases = new HashMap();
 
     private class AliasAdapter extends AnalysisAdapter
     {
