@@ -107,6 +107,19 @@ public class InheritanceTest
                     + childString + " o1c o2j o3p o4p o5p o6p");
     }
 
+    public void testMiddleParentRenderSettingParentOptionalArg()
+        throws Exception
+    {
+        new Grandchild(getTemplateManager())
+            .makeParentRenderer(Boolean.FALSE)
+            .setOpt2("o2j")
+            .makeParentRenderer("s", true)
+            .writeTo(getWriter())
+            .render(0, new Integer(1));
+        String childString = "{s 0 true {s 1 false o1g o3g o5m o6p o7g o9m o10g} o1g o2j o5m o6p o7g o8m o9m}";
+        checkOutput("0 1 " + childString + " " + childString + " o1g o2j o3g o4p o5m o6p");
+    }
+
     public void testGrandchildWithDefaultsViaParentRenderer()
         throws Exception
     {

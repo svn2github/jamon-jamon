@@ -397,7 +397,7 @@ public class ProxyGenerator
         m_writer.openBlock();
         m_writer.println("protected ParentRenderer() {}");
 
-        for (Iterator i = m_templateUnit.getDeclaredOptionalArgs();
+        for (Iterator i = m_templateUnit.getSignatureOptionalArgs();
              i.hasNext(); )
         {
             OptionalArgument arg = (OptionalArgument) i.next();
