@@ -64,4 +64,8 @@
     <ant dir="anttask" target="clean"/>
   </target>
 
+  <target name="release" depends="core">
+    <ant dir="core" target="release" />
+  </target>
+
 </project>
