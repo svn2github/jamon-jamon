@@ -303,20 +303,26 @@ public class Analyzer
                     ("a template cannot extend multiple templates",
                      p_extends.getExtendsStart());
             }
-            getTemplateUnit().setParentPath
-                (getAbsolutePath(computePath(p_extends.getPath())));
-            if (m_children.contains(getTemplateUnit().getParentPath()))
+            String parentPath =
+                getAbsolutePath(computePath(p_extends.getPath()));
+            getTemplateUnit().setParentPath(parentPath);
+            if (m_children.contains(parentPath))
             {
                 throw new TunnelingException(
-                    "cyclic inheritance involving "
-                    + getTemplateUnit().getParentPath(),
+                    "cyclic inheritance involving " + parentPath,
                     p_extends.getExtendsStart());
             }
             else
             {
+                m_children.add(parentPath);
                 try
                 {
-                    getTemplateUnit().processParent(m_describer, m_children);
+                    getTemplateUnit().setParentDescription(
+                        m_describer.getTemplateDescription(
+                            parentPath,
+                            p_extends.getExtendsStart(),
+                            m_templateIdentifier,
+                            m_children));
                 }
                 catch (IOException e)
                 {

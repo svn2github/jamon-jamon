@@ -54,7 +54,6 @@ public class TemplateDescription
     }
 
     public TemplateDescription(TemplateUnit p_templateUnit)
-        throws JamonException
     {
         m_requiredArgs = new LinkedList();
         addAll(m_requiredArgs, p_templateUnit.getSignatureRequiredArgs() );
@@ -77,49 +76,38 @@ public class TemplateDescription
     }
 
     public TemplateDescription(Class p_intf)
-        throws JamonException
+        throws NoSuchFieldException, IllegalAccessException
     {
-        try
+        m_requiredArgs = getRequiredArgs(p_intf, "");
+        m_optionalArgs = getOptionalArgs(p_intf, "");
+        m_fragmentInterfaces = getFragmentArgs(p_intf, "");
+        m_methodUnits = new HashMap();
+        String[] methodNames = getStringArray(p_intf, "METHOD_NAMES");
+        for (int i = 0; i < methodNames.length; i++)
         {
-            m_requiredArgs = getRequiredArgs(p_intf, "");
-            m_optionalArgs = getOptionalArgs(p_intf, "");
-            m_fragmentInterfaces = getFragmentArgs(p_intf, "");
-            m_methodUnits = new HashMap();
-            String[] methodNames = getStringArray(p_intf, "METHOD_NAMES");
-            for (int i = 0; i < methodNames.length; i++)
+            DeclaredMethodUnit method =
+                new DeclaredMethodUnit(methodNames[i], null);
+            String prefix = "METHOD_" + methodNames[i] + "_";
+            for (Iterator j = getRequiredArgs(p_intf, prefix).iterator();
+                 j.hasNext(); )
             {
-                DeclaredMethodUnit method =
-                    new DeclaredMethodUnit(methodNames[i], null);
-                String prefix = "METHOD_" + methodNames[i] + "_";
-                for (Iterator j = getRequiredArgs(p_intf, prefix).iterator();
-                     j.hasNext(); )
-                {
-                    method.addRequiredArg((RequiredArgument) j.next());
-                }
-                for (Iterator j = getOptionalArgs(p_intf, prefix).iterator();
-                     j.hasNext(); )
-                {
-                    method.addOptionalArg((OptionalArgument) j.next());
-                }
-                for (Iterator j = getFragmentArgs(p_intf, prefix).iterator();
-                     j.hasNext(); )
-                {
-                    method.addFragmentArg((FragmentArgument) j.next());
-                }
-                m_methodUnits.put(method.getName(), method);
+                method.addRequiredArg((RequiredArgument) j.next());
             }
-            m_signature = (String) p_intf.getField("SIGNATURE").get(null);
-            m_inheritanceDepth =
-                ((Integer) p_intf.getField("INHERITANCE_DEPTH").get(null)).intValue();
+            for (Iterator j = getOptionalArgs(p_intf, prefix).iterator();
+                 j.hasNext(); )
+            {
+                method.addOptionalArg((OptionalArgument) j.next());
+            }
+            for (Iterator j = getFragmentArgs(p_intf, prefix).iterator();
+                     j.hasNext(); )
+            {
+                method.addFragmentArg((FragmentArgument) j.next());
+            }
+            m_methodUnits.put(method.getName(), method);
         }
-        catch (NoSuchFieldException e)
-        {
-            throw new JamonException(e);
-        }
-        catch (IllegalAccessException e)
-        {
-            throw new JamonException(e);
-        }
+        m_signature = (String) p_intf.getField("SIGNATURE").get(null);
+        m_inheritanceDepth =
+            ((Integer) p_intf.getField("INHERITANCE_DEPTH").get(null)).intValue();
     }
 
     private static List getRequiredArgs(Class p_class, String p_prefix)

@@ -36,6 +36,7 @@ import org.jamon.JamonException;
 import org.jamon.TemplateSource;
 import org.jamon.util.StringUtils;
 import org.jamon.node.Start;
+import org.jamon.node.Token;
 import org.jamon.parser.Parser;
 import org.jamon.parser.ParserException;
 import org.jamon.lexer.Lexer;
@@ -53,14 +54,21 @@ public class TemplateDescriber
     private final TemplateSource m_templateSource;
     private final ClassLoader m_classLoader;
 
-    public TemplateDescription getTemplateDescription(final String p_path)
-         throws IOException
+    public TemplateDescription getTemplateDescription(
+        String p_path, Token p_token, String p_templateIdentifier)
+        throws IOException
     {
-        return getTemplateDescription(p_path, new HashSet());
+        return getTemplateDescription(p_path,
+                                      p_token,
+                                      p_templateIdentifier,
+                                      new HashSet());
     }
 
-    public TemplateDescription getTemplateDescription(final String p_path,
-                                                      final Set p_children)
+    public TemplateDescription getTemplateDescription(
+        final String p_path,
+        final Token p_token,
+        final String p_templateIdentifier,
+        final Set p_children)
          throws IOException
      {
          if (m_templateSource.available(p_path))
@@ -78,11 +86,25 @@ public class TemplateDescriber
              }
              catch(ClassNotFoundException e)
              {
-                 throw new JamonException
-                     ("Unable to find template or class for " + p_path);
+                 throw new AnalysisException
+                     ("Unable to find template or class for " + p_path,
+                      p_templateIdentifier,
+                      p_token);
+             }
+             catch (NoSuchFieldException e)
+             {
+                 throw new AnalysisException("Malformed class for " + p_path,
+                                             p_templateIdentifier,
+                                             p_token);
+             }
+             catch (IllegalAccessException e)
+             {
+                 throw new AnalysisException("Malformed class for " + p_path,
+                                             p_templateIdentifier,
+                                             p_token);
              }
          }
-    }
+     }
 
     public Start parseTemplate(String p_path)
         throws IOException

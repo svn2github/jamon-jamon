@@ -47,16 +47,6 @@ public class TemplateUnit
         super(p_path, null);
     }
 
-    public void processParent(TemplateDescriber p_describer,
-                                      Set p_children)
-        throws IOException
-    {
-        p_children.add(getParentPath());
-        setParentDescription
-            (p_describer.getTemplateDescription(getParentPath(),
-                                                p_children));
-    }
-
     public int getInheritanceDepth()
     {
         return m_parentDescription == null
@@ -408,7 +398,6 @@ public class TemplateUnit
     }
 
     public String getSignature()
-        throws JamonException
     {
         try
         {
@@ -420,7 +409,7 @@ public class TemplateUnit
         }
         catch (NoSuchAlgorithmException e)
         {
-            throw new JamonException(e);
+            throw new RuntimeException("Unable to get md5 instance");
         }
     }
 }

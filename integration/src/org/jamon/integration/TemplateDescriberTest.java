@@ -57,7 +57,9 @@ public class TemplateDescriberTest
         throws Exception
     {
         TemplateDescription desc =
-            m_describer.getTemplateDescription("/test/jamon/ClassOnly");
+            m_describer.getTemplateDescription("/test/jamon/ClassOnly",
+                                               null,
+                                               null);
         checkArgs(desc.getRequiredArgs().iterator(),
                   new String[] {"i", "j"},
                   new String[] {"int", "Integer"});
@@ -71,7 +73,8 @@ public class TemplateDescriberTest
         throws Exception
     {
         List fragmentUnitIntfs =
-            m_describer.getTemplateDescription("/test/jamon/ClassOnly")
+            m_describer.getTemplateDescription(
+                "/test/jamon/ClassOnly", null, null)
             .getFragmentInterfaces();
 
         assertEquals(2, fragmentUnitIntfs.size());
@@ -89,7 +92,7 @@ public class TemplateDescriberTest
         throws Exception
     {
         Map methods = m_describer
-            .getTemplateDescription("/test/jamon/ClassOnly")
+            .getTemplateDescription("/test/jamon/ClassOnly", null, null)
             .getMethodUnits();
         assertEquals(1, methods.size());
         MethodUnit method = (MethodUnit) methods.get("m");

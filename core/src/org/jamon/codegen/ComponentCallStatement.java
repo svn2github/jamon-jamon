@@ -50,7 +50,9 @@ public class ComponentCallStatement
     {
         p_writer.openBlock();
         TemplateDescription desc =
-            p_describer.getTemplateDescription(getPath());
+            p_describer.getTemplateDescription(getPath(),
+                                               getToken(),
+                                               getTemplateIdentifier());
 
         makeFragmentImplClasses(desc.getFragmentInterfaces(),
                                 p_writer,
