@@ -128,4 +128,43 @@ public class StringUtilsTest
         assertEquals("prefix foo, bar, baz", buf.toString());
     }
 
+
+    public void testTemplatePathToFileDir()
+        throws Exception
+    {
+        assertEquals("", StringUtils.templatePathToFileDir("abcd"));
+        assertEquals("", StringUtils.templatePathToFileDir("/abcd"));
+        assertEquals(File.separator + "a",
+                     StringUtils.templatePathToFileDir("/a/bcd"));
+        assertEquals(File.separator + "ab",
+                     StringUtils.templatePathToFileDir("/ab/cd"));
+        assertEquals(File.separator + "a" + File.separator + "b",
+                     StringUtils.templatePathToFileDir("/a/b/cd"));
+        assertEquals(File.separator + "a"
+                     + File.separator + "b" + File.separator + "c",
+                     StringUtils.templatePathToFileDir("/a/b/c/d"));
+    }
+
+    public void testIsGeneratedClassFilename()
+        throws Exception
+    {
+        assertTrue(StringUtils.isGeneratedClassFilename("abc",
+                                                        "abc.class"));
+        assertTrue(StringUtils.isGeneratedClassFilename("abc",
+                                                        "abc$1.class"));
+        assertTrue(StringUtils.isGeneratedClassFilename("abc",
+                                                        "abc$asdf$1.class"));
+        assertTrue(! StringUtils.isGeneratedClassFilename("abc",
+                                                          "abc.java"));
+        assertTrue(! StringUtils.isGeneratedClassFilename("abc",
+                                                          "ab.class"));
+        assertTrue(! StringUtils.isGeneratedClassFilename("abc",
+                                                          "ab1.class"));
+        assertTrue(! StringUtils.isGeneratedClassFilename("abc",
+                                                          "abc1.class"));
+        assertTrue(! StringUtils.isGeneratedClassFilename("abc",
+                                                          "abc1$123.class"));
+        assertTrue(! StringUtils.isGeneratedClassFilename("abc",
+                                                          "abc1$123$4.class"));
+    }
 }

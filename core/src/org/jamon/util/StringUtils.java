@@ -32,6 +32,53 @@ public class StringUtils
         return pathToClassName(p_path, File.separator);
     }
 
+    /**
+     * Return the directory part of a template path, in filesystem
+     * format (i.e. using <code>File.separator</code>).
+     *
+     * @param p_path the template path
+     *
+     * @return the name of the directory part of that path
+     */
+
+    public static String templatePathToFileDir(String p_path)
+    {
+        int k = p_path.lastIndexOf('/');
+        if (k <= 0)
+        {
+            return "";
+        }
+
+        StringBuffer sb = new StringBuffer(p_path.substring(0,k));
+        int j = 1;
+        for (int i = 0; i < sb.length() - 1; ++i)
+        {
+            if (sb.substring(i,j).equals("/"))
+            {
+                sb.replace(i,j,File.separator);
+            }
+            j++;
+        }
+        return sb.toString();
+    }
+
+    public static boolean isGeneratedClassFilename(String p_className,
+                                                   String p_fileName)
+    {
+        if (p_fileName.endsWith(".class"))
+        {
+            if (p_fileName.startsWith(p_className))
+            {
+                String rest = p_fileName.substring(p_className.length());
+                if (rest.equals(".class") || rest.charAt(0) == '$')
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     public static String templatePathToClassName(String p_path)
     {
         return pathToClassName(p_path, "/");
