@@ -15,15 +15,39 @@ body
   z-order: -100;
 }
 
-#header
+.header
 {
   width: 100%;
   border-bottom: solid;
-  height: 4em;
+  clear: both;
   padding: 0 0 0 0;
   margin: 0 0 0 0;
-  clear: both;
 }
+
+#header1
+{
+  height: 4em;
+  border-bottom-color: #3f5faf;
+}
+
+#header2
+{
+  height: 0em;
+  border-bottom-color: #2f4f9f;
+}
+
+#header3
+{
+  height: 0em;
+  border-bottom-color: #1f3f8f;
+}
+
+#header4
+{
+  height: 0em;
+  border-bottom-color: #0f2f7f;
+}
+
 
 #logo
 {
@@ -77,8 +101,9 @@ body
 #nav
 {
   background-color: #eeeeee;
+  border: 1px solid;
   padding: 0 0 0 0em;
-  margin: 0em 0 0em 0.5em;
+  margin: 1em 0 0em 0.5em;
   position: absolute;
   left: 0;
   width: 8.5em;
@@ -119,7 +144,7 @@ ul ul li.nav
 
 #current
 {
-  background-color: #3faf8f !important;
+  background-color: #3f5faf !important;
 }
 
 #current a
@@ -186,9 +211,41 @@ li
   font-weight: bold
 }
 
-.tagline
+.tagline11
 {
-  color: black
+  color: #000000;
+}
+.tagline21
+{
+  color: #000050;
+}
+.tagline31
+{
+  color: #0000A0;
+}
+.tagline12
+{
+  color: #005000;
+}
+.tagline22
+{
+  color: #005050;
+}
+.tagline32
+{
+  color: #0050A0;
+}
+.tagline13
+{
+  color: #00A000;
+}
+.tagline23
+{
+  color: #00A050;
+}
+.tagline33
+{
+  color: #00A0A0;
 }
 
 .deleted
