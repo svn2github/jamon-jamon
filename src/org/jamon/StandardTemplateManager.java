@@ -105,7 +105,19 @@ public class StandardTemplateManager
         }
         else
         {
-            return f.lastModified();
+            File tf = new File(getTemplateFileName(p_path));
+            if (! tf.exists() )
+            {
+                throw new RuntimeException("Template file " + p_path + " missing!");
+            }
+            if ( tf.lastModified() > f.lastModified() )
+            {
+                return createJavaFile(p_path);
+            }
+            else
+            {
+                return f.lastModified();
+            }
         }
     }
 
