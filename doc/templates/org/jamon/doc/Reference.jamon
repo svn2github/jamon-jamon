@@ -7,7 +7,7 @@
         In general, any characters appearing in a template are output
         literally, whitespace included.
 
-      <li><span class="concept">Java escapes</span>
+      <li><span class="concept">Emit statements</span>
 
         The value of a java expression can be emitted by enclosing the
         expression in <code>&lt;%...%&gt;</code> pairs, e.g.
@@ -16,39 +16,6 @@
 </%LITERAL></&>
         Note that there must be at least one whitespace character
         following the <code>&lt;%</code>.
-
-        <p>
-          Arbitrary Java code can be inserted into the template using
-          <code>&lt;%java&gt;...&lt;/%java&gt;</code>, e.g.
-        <&| _template &><%LITERAL>
-<%java>
-  while (iter.hasNext()) {
-    Person p = (Person) iter.next();
-    if (p.getLastName().startsWith("S")) {
-</%java>
-      <% p.getLastName() %>'s last name doesn't start with 'X'.
-<%java>
-    }
-  }
-</%java></%LITERAL></&>
-        Alternatively, any line beginning with '<code>%</code>' also is
-        assumed to contain valid Java code. The previous example could
-        be equivalently (and perhaps more clearly) written as
-        <&| _template &><%LITERAL>
-%  while (iter.hasNext()) {
-%    Person p = (Person) iter.next();
-%    if (p.getLastName().startsWith("S")) {
-      <% p.getLastName() %>'s last name doesn't start with 'X'.
-%    }
-%  }
-</%LITERAL></&>
-    <p>
-
-      The kinds of Java code that can appear in an escape is fairly
-      unrestricted. Be warned, however, that code is emitted inside a
-      method body. Thus, for example, package declarations and import
-      statements would trigger a compilation error.
-
     <p>
       Before a Java expression is emitted, the string that represents it
       is <em>escaped</em>.  The default escaping mechanism is HTML, so for
@@ -90,6 +57,42 @@ this &amp; that
      Jamon <a href="UserGuide.html">user's guide</a> for further
      details.
 
+
+    <li><span class="concept">Arbitrary Java code</span>
+
+        <p>
+          Arbitrary Java code can be inserted into the template using
+          <code>&lt;%java&gt;...&lt;/%java&gt;</code>, e.g.
+        <&| _template &><%LITERAL>
+<%java>
+  while (iter.hasNext()) {
+    Person p = (Person) iter.next();
+    if (p.getLastName().startsWith("S")) {
+</%java>
+      <% p.getLastName() %>'s last name doesn't start with 'X'.
+<%java>
+    }
+  }
+</%java></%LITERAL></&>
+        Alternatively, any line beginning with '<code>%</code>' also is
+        assumed to contain valid Java code. The previous example could
+        be equivalently (and perhaps more clearly) written as
+        <&| _template &><%LITERAL>
+%  while (iter.hasNext()) {
+%    Person p = (Person) iter.next();
+%    if (p.getLastName().startsWith("S")) {
+      <% p.getLastName() %>'s last name doesn't start with 'X'.
+%    }
+%  }
+</%LITERAL></&>
+    <p>
+
+      The kinds of Java code that can appear is fairly
+      unrestricted. Be warned, however, that code will appear inside a
+      method body. Thus, for example, package declarations and import
+      statements would trigger a compilation error.
+
+
     <li><span class="concept">Comments</span>
 
       Any template content between <code>&lt;%doc&gt;</code> and
@@ -109,18 +112,6 @@ this &amp; that
   java.util.Iterator;
   org.modusponens.myapp.data.*;
 </%import></%LITERAL></&>
-
-    <li><span class="concept">Class code</span> Any code to be
-      included in the generated class should be placed inside a
-      <code>&lt;%class&gt;</code> block.
-      <p>
-      For example:
-      <&| _template &><%LITERAL>
-<%class>
-  static int pageViews = 1;
-</%class>
-This component has been accessed <% pageViews++ %> times.
-</%LITERAL></&>
 
     <li><span class="concept">Arguments</span>
 
@@ -283,8 +274,8 @@ Your nicknames are
           def must declare that it expects a fragment argument. This
           is done using the <code>&lt;%farg
           <i>name</i>&gt;&lt;/%farg&gt;</code> declaration, which
-          declares that the template (or def) expects a fragment
-          argument.
+          declares that the template (or def) expects a <b>fragment
+          <b>arg</b>ument.
         <p>
           The fragment can be invoked in the target template or def
           like any other template or def invocation, simply specifying
@@ -318,7 +309,7 @@ Your nicknames are
 <ul>
   <li><a href="index.html">Home</a></li>
   <li><a href="faq.html"><b>FAQ</b></a></li>
-  <li><a href="toc.html"><font size="+5">Table of contents</font></a></li>
+  <li><a href="toc.html"><font size="+4">Table of contents</font></a></li>
 </ul>
 </&></pre>
 
@@ -378,6 +369,20 @@ produces <pre class="tty"><&| /org/jamon/escape/Html &>
 </ul>
 </&></pre>
 (in fact it produces the above with some extra whitsepace).
+
+
+    <li><span class="concept">Class code</span> Any code to be
+      included in the generated class should be placed inside a
+      <code>&lt;%class&gt;</code> block.
+      <p>
+      For example:
+      <&| _template &><%LITERAL>
+<%class>
+  static int pageViews = 1;
+</%class>
+This component has been accessed <% pageViews++ %> times.
+</%LITERAL></&>
+
 
   </ol>
 </&>

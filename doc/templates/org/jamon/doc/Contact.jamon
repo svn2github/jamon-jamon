@@ -25,4 +25,6 @@
   <%args>
     String name;
   </%args>\
-<a href="mailman/listinfo/jamon-<% name %>">jamon-<% name %></a></%def>
+jamon-<% name %>: <a href="mailman/listinfo/jamon-<% name %>">Info &amp; signup</a>
+<a href="pipermail/jamon-<% name %>">Archives</a>
+</%def>

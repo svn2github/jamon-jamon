@@ -30,6 +30,7 @@ the documentation thus taking care of issues such as escaping.
   <target name="init">
     <mkdir dir="${doc.dir}"/>
     <copy file="base.css" todir="${doc.dir}" />
+    <copy file="robots.txt" todir="${doc.dir}" />
     <taskdef name="invoker"
              classname="org.jamon.ant.InvokerTask"
              classpath="${java.lib.jamon}" />
@@ -65,6 +66,9 @@ the documentation thus taking care of issues such as escaping.
           output="${temp.file}" >
       <arg line="one two three" />
     </java>
+    <zip destfile="${www.dir}/JamonQs.zip"
+         basedir="${www.dir}"
+         includes="JamonQs.java,QsTemp.jamon" />
     <loadfile property="quickstart.output" srcFile="${temp.file}" />
     <invoker classpath="${java.lib.jamon}"
              workDir="${work.dir}"

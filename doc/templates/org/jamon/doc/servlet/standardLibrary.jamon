@@ -1,17 +1,20 @@
 <span class="concept">Using the Standard Library</span>
 
-Jamon comes with a library of classes and templates to aid in the systematic 
-development of web applications.  The library consists of "input" objects
-and corresponding templates to render them.  The idea behind these input
-objects is that they encapsulate the name of a CGI paramater and its value.
-For example the <code>org.jamon.render.html.TextInput</code> input object consists
-(more or less) of a name (a string), a value (a string) and its maxlength (an 
-integer).  There is a corresponding template, <code>org.jamon.html.TextInput</code>, 
-which takes as parameters 
+Jamon comes with a library of classes and templates to aid in the
+systematic development of web applications.  The library consists of
+"input" objects and corresponding templates to render them.  The idea
+behind these input objects is that they encapsulate the name of a CGI
+parameter and its value.  For example
+the <code>org.jamon.render.html.TextInput</code> input object consists
+(more or less) of a name (a string), a value (a string) and its
+maxlength (an integer).  There is a corresponding
+template, <code>org.jamon.html.TextInput</code>, which takes as
+parameters
 <ul>
   <li>an object of the above input type</li>
   <li>the size of the input element (an integer)</li>
-  <li>the type of the input element, for example "text" or "password" (a string)</li>
+  <li>the type of the input element, for example "text" or "password"
+  (a string)</li>
 </ul>
 Since it is the controller that will be receiving and parsing the data from
 the form it is natural that it decide what the name of each CGI parameter
@@ -22,9 +25,9 @@ needs access to the names of the parameters it natural to place all this in
 one class.  This is a <code>FormFields</code> class.
 <p>
 For example, here is a FormFields class suitable for use in our "Hello World"
-application (you can also download a 
-<a href="example2/foobar.zip">zipfile</a> with all the 
-sources from this section, or a <a href="example2/foobar.war">WAR file</a> 
+application (you can also download a
+<a href="example2/foobar.zip">zipfile</a> with all the
+sources from this section, or a <a href="example2/foobar.war">WAR file</a>
 ready for deployment):
 
   <pre class="code"><& FormFieldsTemplate &></pre>
@@ -39,14 +42,14 @@ and the corresponding template should look like:
 
 There are a few things to note about the above example.
 <ul>
-  <li><code>HelloFormFields</code> produces 
+  <li><code>HelloFormFields</code> produces
     <code class="code">org.jamon.render.html.TextInput</code>
-    objects which are rendered as HTML input elements by the 
+    objects which are rendered as HTML input elements by the
     <code class="template">/org/jamon/html/TextInput</code>
     template</li>
-  <li>If the user makes an error while entering their data (for example, 
+  <li>If the user makes an error while entering their data (for example,
 by typing "13q") then they will be presented with an error message together
-with the data they entered, so they can edit it (in this case they could just 
+with the data they entered, so they can edit it (in this case they could just
 delete the "q" and resubmit).</li>
 </ul>
 
@@ -56,9 +59,9 @@ If you are interested in improving the above, here are some exercises:
 <ol>
   <li>Make the error messages more fine-grained (for example, indicate
     when a number is negative)</li>
-  <li>Indicate what the maximum allowable number is (the challenge is to find the 
+  <li>Indicate what the maximum allowable number is (the challenge is to find the
     "right" place to put the data)</li>
-  <li>In the example above the same template was used to both gather user input 
+  <li>In the example above the same template was used to both gather user input
     and display the result.
     It is probably better to have two different templates, one dedicated to
     each task.</li>

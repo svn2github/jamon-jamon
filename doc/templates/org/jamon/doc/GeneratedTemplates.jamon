@@ -2,8 +2,8 @@
 
 <h2>Generated Template Classes</h2>
 
-  Generated classes have the following relationships to the template
-  sources:
+  Generated classes are the output of the processor, and have the
+  following relationships to the template sources:
   <ul>
     <li>
       The class name is the same as the name of the template
