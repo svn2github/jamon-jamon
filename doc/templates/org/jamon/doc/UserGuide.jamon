@@ -18,10 +18,11 @@
         source files in the build process.
       </li>
       <li>
+        <i>Optional</i>
         Create a TemplateManager instance (e.g. the
-        <a
-        href="javadoc/org/jamon/StandardTemplateManager.html">StandardTemplateManager</a>),
-        and configure it appropriately
+        <a href="javadoc/org/jamon/RecompilingTemplateManager.html"
+        >RecompilingTemplateManager</a>), and configure it
+        appropriately
       </li>
       <li>
         Create an instance of the template, set any
@@ -60,12 +61,12 @@ which will place the generated Java source file(s) into the
 You can then use the template as follows:
         <pre class="code">
 import org.foo.templates.Foo;
-import org.jamon.StandardTemplateManager;
+import org.jamon.RecompilingTemplateManager;
 import org.jamon.TemplateManager;
 import org.jamon.TemplateManagerSource;
 
   ...
-       TemplateManager manager = new StandardTemplateManager(...);
+       TemplateManager manager = new RecompilingTemplateManager(...);
        TemplateManagerSource.setTemplateManager(manager);
        Writer writer = new OutputStreamWriter(System.out);
        Foo foo = new Foo();
@@ -124,10 +125,8 @@ import org.jamon.TemplateManager;
 <b>import org.jamon.Escaping;</b>
 
   ...
-       StandardTemplateManager templateManager =
-         new StandardTemplateManager(...);
        Writer writer = new OutputStreamWriter(System.out);
-       new Foo(templateManager)
+       new Foo()
          <b>.escapeWith(Escaping.NONE)</b>
          .setName("Duke & Co.")
          .render(writer, 3, "Hello");
