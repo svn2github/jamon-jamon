@@ -644,15 +644,20 @@ public class Analyzer
         {
             handleBody();
             AEscape escape = (AEscape) p_emit.getEscape();
-            EscapingDirective directive =
-                escape == null
-                ? EscapingDirective.DEFAULT
-                : EscapingDirective.get(escape.getEscapeCode().getText());
-            addStatement(new WriteStatement(p_emit.getEmitExpr().getText(),
-                                            directive,
-                                            p_emit.getEmitStart(),
-                                            m_templateIdentifier));
+            addStatement(new WriteStatement
+                         (p_emit.getEmitExpr().getText(),
+                          EscapingDirective.get
+                          (escape == null
+                           ? getDefaultEscaping()
+                           : escape.getEscapeCode().getText()),
+                          p_emit.getEmitStart(),
+                          m_templateIdentifier));
         }
+    }
+
+    private String getDefaultEscaping()
+    {
+        return "h";
     }
 
     private void handleBody()

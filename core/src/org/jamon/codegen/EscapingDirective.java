@@ -25,12 +25,6 @@ import java.util.HashMap;
 
 public class EscapingDirective
 {
-
-    public boolean isDefault()
-    {
-        return m_java == null;
-    }
-
     public String toJava()
     {
         return m_java;
@@ -43,12 +37,10 @@ public class EscapingDirective
     public static final EscapingDirective NONE =
         new EscapingDirective(PREFIX + "NONE");
 
-    public static final EscapingDirective DEFAULT =
-        new EscapingDirective(PREFIX + "HTML");
-
     public static EscapingDirective get(String p_abbreviation)
     {
-        EscapingDirective result = (EscapingDirective) s_standardDirectives.get(p_abbreviation);
+        EscapingDirective result =
+            (EscapingDirective) s_standardDirectives.get(p_abbreviation);
         if (result == null)
         {
             throw new RuntimeException("No escaping directive found with abbreviation '"
