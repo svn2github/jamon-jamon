@@ -13,8 +13,6 @@ import org.apache.tools.ant.util.SourceFileScanner;
 import org.apache.tools.ant.taskdefs.MatchingTask;
 
 import org.jamon.TemplateProcessor;
-import org.jamon.TemplateDescriber;
-import org.jamon.TemplateResolver;
 import org.jamon.StringUtils;
 import org.jamon.parser.ParserException;
 
@@ -122,10 +120,7 @@ public class JamonTask
         }
 
         TemplateProcessor processor =  new TemplateProcessor
-            (m_destDir,
-             new TemplateDescriber(new File(m_src.toString())),
-             new TemplateResolver(),
-             m_generateImpls);
+            (m_destDir, new File(m_src.toString()), m_generateImpls);
 
         try
         {

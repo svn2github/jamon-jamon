@@ -1,3 +1,23 @@
+/*
+ * The contents of this file are subject to the Mozilla Public
+ * License Version 1.1 (the "License"); you may not use this file
+ * except in compliance with the License. You may obtain a copy of
+ * the License at http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS
+ * IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
+ * implied. See the License for the specific language governing
+ * rights and limitations under the License.
+ *
+ * The Original Code is Jamon code, released ??.
+ *
+ * The Initial Developer of the Original Code is Jay Sachs.  Portions
+ * created by Jay Sachs are Copyright (C) 2002 Jay Sachs.  All Rights
+ * Reserved.
+ *
+ * Contributor(s):
+ */
+
 package org.jamon;
 
 import java.io.File;
@@ -14,18 +34,17 @@ import org.jamon.parser.ParserException;
 
 public class TemplateProcessor
 {
-    public TemplateProcessor(File p_destdir,
-                             TemplateDescriber p_describer,
-                             TemplateResolver p_resolver,
+    public TemplateProcessor(File p_destDir,
+                             File p_sourceDir,
                              boolean p_generateImpls)
     {
-        m_destdir = p_destdir;
-        m_describer=p_describer;
-        m_resolver=p_resolver;
-        m_generateImpls=p_generateImpls;
+        m_destDir = p_destDir;
+        m_describer = new TemplateDescriber(p_sourceDir);
+        m_resolver = new TemplateResolver();
+        m_generateImpls = p_generateImpls;
     }
 
-    private File m_destdir;
+    private File m_destDir;
     private TemplateDescriber m_describer;
     private TemplateResolver m_resolver;
     private boolean m_generateImpls;
@@ -50,7 +69,7 @@ public class TemplateProcessor
                 templateName.substring(fsPos+File.separator.length());
         }
 
-        File pkgDir = new File(m_destdir, StringUtils.classNameToPath(pkg));
+        File pkgDir = new File(m_destDir, StringUtils.classNameToPath(pkg));
         File javaFile = new File(pkgDir, templateName + ".java");
 
         BaseAnalyzer analyzer =
@@ -168,10 +187,7 @@ public class TemplateProcessor
             }
 
             TemplateProcessor processor =
-                new TemplateProcessor(destDir,
-                                      new TemplateDescriber(sourceDir),
-                                      new TemplateResolver(),
-                                      doBoth);
+                new TemplateProcessor(destDir, sourceDir, doBoth);
 
             while (arg < args.length)
             {
