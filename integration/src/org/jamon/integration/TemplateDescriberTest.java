@@ -15,7 +15,7 @@
  * created by Ian Robertson are Copyright (C) 2002 Ian Robertson.  All Rights
  * Reserved.
  *
- * Contributor(s):
+ * Contributor(s): Jay Sachs
  */
 
 package org.jamon.integration;
