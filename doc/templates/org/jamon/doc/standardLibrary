@@ -56,6 +56,10 @@ If you are interested in improving the above, here are some exercises:
 <ol>
   <li>Make the error messages more fine-grained (for example, indicate
     when a number is negative)</li>
-  <li>Indicate what the maximum number is (the challenge is to find the 
-    "right" place to put the data</li>
+  <li>Indicate what the maximum allowable number is (the challenge is to find the 
+    "right" place to put the data)</li>
+  <li>In the example above the same template was used to both gather user input 
+    and display the result.
+    It is probably better to have two different templates, one dedicated to
+    each task.</li>
 </ol>
