@@ -101,7 +101,7 @@ public class StandardTemplateManager
             autoFlush = p_autoFlush;
             return this;
         }
-        private boolean autoFlush;
+        private boolean autoFlush = true;
 
         public Data setSourceDir(String p_sourceDir)
         {
@@ -167,6 +167,11 @@ public class StandardTemplateManager
         private Escaping escaping = Escaping.DEFAULT;
     }
 
+    public StandardTemplateManager()
+        throws IOException
+    {
+        this(new Data());
+    }
 
     public StandardTemplateManager(Data p_data)
         throws IOException
@@ -690,10 +695,8 @@ public class StandardTemplateManager
         }
     }
 
-
     private static final boolean TRACE =
         Boolean.valueOf(System.getProperty
                         (StandardTemplateManager.class.getName()
                          + ".trace" )).booleanValue();
-
 }
