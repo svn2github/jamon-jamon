@@ -198,6 +198,7 @@ public class TemplateProcessor
         catch (JamonParseException e)
         {
             System.err.println(e.getStandardMessage());
+            System.exit(2);
         }
         catch (Throwable t)
         {
