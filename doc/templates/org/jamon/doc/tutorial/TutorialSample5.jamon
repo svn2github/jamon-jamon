@@ -77,11 +77,11 @@ This component has been accessed <% pageViews++ %> times.
 </%LITERAL></&>
     generates a Java file looking something like
 <pre class="java">
-public class SomeTemplate
+public class SomeTemplateImpl
 {
   static int pageViews = 1;
 
-  public void render throws java.io.IOException
+  public void render() throws java.io.IOException
   {
     this.write("\nThis component has been accessed ");
     this.writeEscaped(this.valueOf(pageViews++ ));
