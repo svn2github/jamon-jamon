@@ -63,6 +63,7 @@ public class IntfGenerator
             generateRender();
             generateSetWriter();
             generateEscaping();
+            generateSetAutoFlush();
         }
         generateEpilogue();
         m_writer.finish();
@@ -436,6 +437,20 @@ public class IntfGenerator
         m_writer.println(ClassNames.IOEXCEPTION);
         m_writer.openBlock();
         m_writer.println("getInstance().writeTo(p_writer);");
+        m_writer.println("return this;");
+        m_writer.closeBlock();
+    }
+
+    private void generateSetAutoFlush()
+        throws IOException
+    {
+        m_writer.println();
+        m_writer.println("public " + getClassName()
+                         + " autoFlush(boolean p_autoFlush)");
+        m_writer.print  ("  throws ");
+        m_writer.println(ClassNames.IOEXCEPTION);
+        m_writer.openBlock();
+        m_writer.println("getInstance().autoFlush(p_autoFlush);");
         m_writer.println("return this;");
         m_writer.closeBlock();
     }

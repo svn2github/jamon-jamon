@@ -261,6 +261,10 @@ public class ImplGenerator
         m_templateUnit.printStatements(m_writer,
                                        m_resolver,
                                        m_describer);
+        m_writer.println("if (isAutoFlushEnabled())");
+        m_writer.openBlock();
+        m_writer.println("getWriter().flush();");
+        m_writer.closeBlock();
     }
 
     private void generateOptionalArgs()

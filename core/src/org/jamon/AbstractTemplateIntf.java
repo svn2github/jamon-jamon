@@ -20,7 +20,5 @@ package org.jamon;
 
 public interface AbstractTemplateIntf
 {
-    java.io.Writer getWriter();
-
     String getPath();
 }

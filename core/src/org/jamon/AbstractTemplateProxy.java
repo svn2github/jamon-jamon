@@ -32,6 +32,7 @@ public abstract class AbstractTemplateProxy
         void writeTo(Writer p_writer);
         void escaping(Escaping p_escaping);
         void initialize() throws IOException;
+        void autoFlush(boolean p_autoflush);
     }
 
     protected AbstractTemplateProxy(TemplateManager p_templateManager)

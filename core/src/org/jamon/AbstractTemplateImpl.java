@@ -57,6 +57,11 @@ public abstract class AbstractTemplateImpl
         m_writer = p_writer;
     }
 
+    public final void autoFlush(boolean p_autoFlush)
+    {
+        m_autoFlush = p_autoFlush;
+    }
+
     public void escaping(Escaping p_escaping)
     {
         m_escaping = p_escaping;
@@ -147,8 +152,14 @@ public abstract class AbstractTemplateImpl
         return String.valueOf(p_bool);
     }
 
+    protected final boolean isAutoFlushEnabled()
+    {
+        return m_autoFlush;
+    }
+
     private Writer m_writer;
     private Escaping m_escaping = Escaping.DEFAULT;
     private final TemplateManager m_templateManager;
     private final String m_path;
+    private boolean m_autoFlush = true;
 }

@@ -260,17 +260,8 @@ public class StandardTemplateManager
     }
 
     public void releaseInstance(AbstractTemplateIntf p_impl)
-        throws IOException
     {
-        if (m_autoFlush)
-        {
-            Writer writer = p_impl.getWriter();
-            if (writer != null)
-            {
-                writer.flush();
-            }
-            m_cache.put(p_impl.getPath(), p_impl);
-        }
+        m_cache.put(p_impl.getPath(), p_impl);
     }
 
     /**
@@ -304,6 +295,7 @@ public class StandardTemplateManager
                                                    String.class })
                     .newInstance(new Object [] { p_manager, p_path });
                 impl.escaping(m_escaping);
+                impl.autoFlush(m_autoFlush);
             }
             return impl;
         }
