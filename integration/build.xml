@@ -34,9 +34,7 @@
               value="${jamon.top.dir}/core/build/classes:${jamon.top.dir}/stdlib/build/classes:${jamon.top.dir}/anttask/build/classes" />
   </target>
 
-  <target name="init" depends="jamon-libs-use-jar,jamon-libs-use-work">
-    <echo message="${java.lib.jamon}" />
-  </target>
+  <target name="init" depends="jamon-libs-use-jar,jamon-libs-use-work" />
 
   <target name="template-src" depends="init">
     <echo file="templates/test/jamon/Recompilation"
@@ -46,7 +44,7 @@
 
   <target name="templates" depends="template-src">
     <dependset>
-      <srcfileset dir="../core/build/classes"/>
+      <srcfileset dir="${jamon.top.dir}/core/build/classes"/>
       <targetfileset dir="${build.src.dir}"/>
     </dependset>
     <mkdir dir="${build.src.dir}" />
@@ -108,13 +106,19 @@
           description="Run the unit tests">
     <dirname property="template.src.dir" file="${ant.file}" />
     <property name="build.sysclasspath" value="last" />
+    <path id="org.jamon.integration.classpath">
+      <pathelement path="${java.lib.jamon}" />
+      <pathelement location="${template.src.dir}/${classes.dir}" />
+    </path>
+    <property name="org.jamon.integration.classpath"
+              refid="org.jamon.integration.classpath" />
     <junit printsummary="${junit.printsummary}"
            timeout="${junit.timeout}"
            failureproperty="org.jamon.junit.failuresOccured">
       <sysproperty key="org.jamon.integration.basedir"
                    value="${template.src.dir}" />
       <sysproperty key="org.jamon.integration.classpath"
-                   value="${java.lib.jamon}:${template.src.dir}/${classes.dir}" />
+                   value="${org.jamon.integration.classpath}" />
       <formatter classname="${junit.formatter}" usefile="no"/>
       <classpath>
         <pathelement location="${classes.dir}"/>
