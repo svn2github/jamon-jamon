@@ -64,7 +64,7 @@ public class TemplateProcessor
         }
         else if (fsPos > 0)
         {
-            pkg = StringUtils.templatePathToClassName
+            pkg = StringUtils.filePathToClassName
                 (p_filename.substring(0,fsPos));
             templateName =
                 templateName.substring(fsPos+File.separator.length());
@@ -76,7 +76,7 @@ public class TemplateProcessor
 
         BaseAnalyzer analyzer =
             m_generateImpls
-            ? new ImplAnalyzer(p_filename,
+            ? new ImplAnalyzer(StringUtils.filePathToTemplatePath(p_filename),
                                m_describer.parseTemplate(p_filename))
             : new BaseAnalyzer(m_describer.parseTemplate(p_filename));
 
@@ -86,7 +86,7 @@ public class TemplateProcessor
         try
         {
             new IntfGenerator(m_resolver,
-                              "/" + p_filename,
+                              StringUtils.filePathToTemplatePath("/" + p_filename),
                               analyzer,
                               writer)
                 .generateClassSource();

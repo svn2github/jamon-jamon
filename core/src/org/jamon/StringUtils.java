@@ -48,6 +48,42 @@ public class StringUtils
         return sb.toString();
     }
 
+    public static String filePathToTemplatePath(String p_path)
+    {
+        StringBuffer sb = new StringBuffer(p_path);
+        final int len = File.separator.length();
+        int j = len;
+        for (int i = 0; i < sb.length() - len; ++i)
+        {
+            if (sb.substring(i,j).equals(File.separator))
+            {
+                sb.replace(i,j,"/");
+            }
+            j++;
+        }
+        return sb.toString();
+    }
+
+    public static String filePathToClassName(String p_path)
+    {
+        StringBuffer sb = new StringBuffer(p_path);
+        final int len = File.separator.length();
+        while (sb.length() > 0 && File.separator.equals(sb.substring(0,len)))
+        {
+            sb.delete(0,len);
+        }
+        int j = len;
+        for (int i = 0; i < sb.length() - len; ++i)
+        {
+            if (sb.substring(i,j).equals(File.separator))
+            {
+                sb.replace(i,j,".");
+            }
+            j++;
+        }
+        return sb.toString();
+    }
+
     public static String classNameToFilePath(String p_className)
     {
         StringBuffer sb = new StringBuffer(File.separator);
