@@ -13,6 +13,8 @@ import org.apache.tools.ant.util.SourceFileScanner;
 import org.apache.tools.ant.taskdefs.MatchingTask;
 
 import org.jamon.TemplateProcessor;
+import org.jamon.TemplateDescriber;
+import org.jamon.TemplateResolver;
 import org.jamon.StringUtils;
 import org.jamon.parser.ParserException;
 
@@ -112,25 +114,24 @@ public class JamonTask
             scanDir(srcDir, m_destDir, files);
         }
 
-        String[] relativeFilenames = new String[compileList.length];
-        for (int i = 0; i < compileList.length; i++)
+        m_destDir.mkdirs();
+        if (! m_destDir.exists() || ! m_destDir.isDirectory())
         {
-            relativeFilenames[i] = relativize(basePath, compileList[i]);
+            throw new BuildException("Unable to create destination dir "
+                                     + m_destDir);
         }
+
+        TemplateProcessor processor =  new TemplateProcessor
+            (m_destDir,
+             new TemplateDescriber(new File(m_src.toString())),
+             new TemplateResolver(),
+             m_generateImpls);
 
         try
         {
-            if (m_generateImpls)
+            for (int i = 0; i < compileList.length; i++)
             {
-                TemplateProcessor.generateImplAndInterfaces(m_destDir,
-                                                            m_src.toString(),
-                                                            relativeFilenames);
-            }
-            else
-            {
-                TemplateProcessor.generateInterfaces(m_destDir,
-                                                     m_src.toString(),
-                                                     relativeFilenames);
+                processor.generateSource(relativize(basePath, compileList[i]));
             }
         }
         catch (Exception e)

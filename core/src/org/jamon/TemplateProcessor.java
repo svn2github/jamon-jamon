@@ -14,13 +14,23 @@ import org.jamon.parser.ParserException;
 
 public class TemplateProcessor
 {
-    private static final String FILESEP =
-        System.getProperty("file.separator");
+    public TemplateProcessor(File p_destdir,
+                             TemplateDescriber p_describer,
+                             TemplateResolver p_resolver,
+                             boolean p_generateImpls)
+    {
+        m_destdir = p_destdir;
+        m_describer=p_describer;
+        m_resolver=p_resolver;
+        m_generateImpls=p_generateImpls;
+    }
 
-    private static void generateImplAndInterface(File p_destdir,
-                                                 TemplateDescriber p_describer,
-                                                 TemplateResolver p_resolver,
-                                                 String p_filename)
+    private File m_destdir;
+    private TemplateDescriber m_describer;
+    private TemplateResolver m_resolver;
+    private boolean m_generateImpls;
+
+    public void generateSource(String p_filename)
         throws IOException,
                ParserException,
                LexerException
@@ -28,7 +38,7 @@ public class TemplateProcessor
         System.out.println(p_filename);
         String templateName = p_filename;
         String pkg = "";
-        int fsPos = templateName.lastIndexOf(FILESEP);
+        int fsPos = templateName.lastIndexOf(File.separator);
         if (fsPos == 0)
         {
             throw new IOException("Can only use relative paths");
@@ -36,22 +46,25 @@ public class TemplateProcessor
         else if (fsPos > 0)
         {
             pkg = StringUtils.pathToClassName(p_filename.substring(0,fsPos));
-            templateName = templateName.substring(fsPos+FILESEP.length());
+            templateName =
+                templateName.substring(fsPos+File.separator.length());
         }
 
-        File pkgDir = new File(p_destdir, StringUtils.classNameToPath(pkg));
+        File pkgDir = new File(m_destdir, StringUtils.classNameToPath(pkg));
         File javaFile = new File(pkgDir, templateName + ".java");
 
-        ImplAnalyzer analyzer =
-            new ImplAnalyzer(p_filename,
-                             p_describer.parseTemplate(p_filename));
+        BaseAnalyzer analyzer =
+            m_generateImpls
+            ? new ImplAnalyzer(p_filename,
+                               m_describer.parseTemplate(p_filename))
+            : new BaseAnalyzer(m_describer.parseTemplate(p_filename));
 
         pkgDir.mkdirs();
         FileWriter writer = new FileWriter(javaFile);
 
         try
         {
-            new IntfGenerator(p_resolver,
+            new IntfGenerator(m_resolver,
                               "/" + p_filename,
                               analyzer,
                               writer)
@@ -71,143 +84,34 @@ public class TemplateProcessor
         }
         writer.close();
 
-        javaFile = new File(pkgDir, templateName + "Impl.java");
-        writer = new FileWriter(javaFile);
-        try
+        if (m_generateImpls)
         {
-            new ImplGenerator(writer,
-                              p_resolver,
-                              p_describer,
-                              analyzer)
-                .generateSource();
-        }
-        catch (IOException e)
-        {
+            javaFile = new File(pkgDir, templateName + "Impl.java");
+            writer = new FileWriter(javaFile);
             try
             {
-                writer.close();
-                javaFile.delete();
+                new ImplGenerator(writer,
+                                  m_resolver,
+                                  m_describer,
+                                  (ImplAnalyzer)analyzer)
+                    .generateSource();
             }
-            finally
+            catch (IOException e)
             {
-                e.printStackTrace();
-                throw e;
+                try
+                {
+                    writer.close();
+                    javaFile.delete();
+                }
+                finally
+                {
+                    e.printStackTrace();
+                    throw e;
+                }
             }
-        }
-        writer.close();
-
-    }
-
-
-    private static void generateInterface(File p_destdir,
-                                          TemplateDescriber p_describer,
-                                          TemplateResolver p_resolver,
-                                          String p_filename)
-        throws IOException,
-               ParserException,
-               LexerException
-    {
-        System.out.println(p_filename);
-        String templateName = p_filename;
-        String pkg = "";
-        int fsPos = templateName.lastIndexOf(FILESEP);
-        if (fsPos == 0)
-        {
-            throw new IOException("Can only use relative paths");
-        }
-        else if (fsPos > 0)
-        {
-            pkg = StringUtils.pathToClassName(p_filename.substring(0,fsPos));
-            templateName = templateName.substring(fsPos+FILESEP.length());
-        }
-
-        File pkgDir = new File(p_destdir, StringUtils.classNameToPath(pkg));
-        File javaFile = new File(pkgDir, templateName + ".java");
-
-        BaseAnalyzer analyzer =
-            new BaseAnalyzer(p_describer.parseTemplate(p_filename));
-
-        pkgDir.mkdirs();
-        FileWriter writer = new FileWriter(javaFile);
-
-        try
-        {
-            new IntfGenerator(p_resolver,
-                              "/" + p_filename,
-                              analyzer,
-                              writer)
-                .generateClassSource();
-        }
-        catch (IOException e)
-        {
-            try
-            {
-                writer.close();
-                javaFile.delete();
-            }
-            finally
-            {
-                throw e;
-            }
-        }
-        writer.close();
-    }
-
-
-    public static void generateImplAndInterfaces(File p_destDir,
-                                                 String p_srcDir,
-                                                 String[] p_relativeFilenames)
-        throws IOException,
-               ParserException,
-               LexerException
-    {
-        p_destDir.mkdirs();
-        if (! p_destDir.exists() || ! p_destDir.isDirectory())
-        {
-            throw new IOException("Unable to create destination dir "
-                                  + p_destDir);
-        }
-
-        TemplateResolver resolver = new TemplateResolver();
-        TemplateDescriber describer =
-            new TemplateDescriber(new File(p_srcDir));
-
-        for (int i = 0; i < p_relativeFilenames.length; i++)
-        {
-            generateImplAndInterface(p_destDir,
-                                     describer,
-                                     resolver,
-                                     p_relativeFilenames[i]);
+            writer.close();
         }
     }
-
-    public static void generateInterfaces(File p_destDir,
-                                          String p_srcDir,
-                                          String[] p_relativeFilenames)
-        throws IOException,
-               ParserException,
-               LexerException
-    {
-        p_destDir.mkdirs();
-        if (! p_destDir.exists() || ! p_destDir.isDirectory())
-        {
-            throw new IOException("Unable to create destination dir "
-                                  + p_destDir);
-        }
-
-        TemplateResolver resolver = new TemplateResolver();
-        TemplateDescriber describer =
-            new TemplateDescriber(new File(p_srcDir));
-
-        for (int i = 0; i < p_relativeFilenames.length; i++)
-        {
-            generateInterface(p_destDir,
-                              describer,
-                              resolver,
-                              p_relativeFilenames[i]);
-        }
-    }
-
 
     private static void showHelp()
     {
@@ -263,26 +167,15 @@ public class TemplateProcessor
                                       + destDir);
             }
 
-            TemplateResolver resolver = new TemplateResolver();
-            TemplateDescriber describer = new TemplateDescriber(sourceDir);
+            TemplateProcessor processor =
+                new TemplateProcessor(destDir,
+                                      new TemplateDescriber(sourceDir),
+                                      new TemplateResolver(),
+                                      doBoth);
 
             while (arg < args.length)
             {
-                String template = args[arg++];
-                if (doBoth)
-                {
-                    generateImplAndInterface(destDir,
-                                             describer,
-                                             resolver,
-                                             template);
-                }
-                else
-                {
-                    generateInterface(destDir,
-                                      describer,
-                                      resolver,
-                                      template);
-                }
+                processor.generateSource(args[arg++]);
             }
         }
         catch (Throwable t)
