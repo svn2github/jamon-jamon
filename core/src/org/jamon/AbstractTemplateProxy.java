@@ -27,7 +27,7 @@ public abstract class AbstractTemplateProxy
     public interface Intf
     {
         void writeTo(Writer p_writer);
-        void encoding(Encoding p_encoding);
+        void escaping(Escaping p_escaping);
     }
 
     protected AbstractTemplateProxy(TemplateManager p_templateManager)

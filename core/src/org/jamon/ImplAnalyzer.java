@@ -170,22 +170,17 @@ public class ImplAnalyzer extends BaseAnalyzer
             handleBody();
             AEmit emit = (AEmit) node.getEmit();
             TEscape escape = emit.getEscape();
-            Encoding encoding = Encoding.DEFAULT;
-            if (escape != null)
+            EscapingDirective directive;
+            if (escape == null)
             {
-                char c = escape.getText().trim().charAt(1);
-                switch (c)
-                {
-                  case 'h': encoding = Encoding.HTML; break;
-                  case 'u': encoding = Encoding.URL; break;
-                  case 'n': encoding = Encoding.NONE; break;
-                  case 'x': encoding = Encoding.XML; break;
-                  default:
-                    throw new RuntimeException("Unknown escape " + c);
-                }
+                directive = EscapingDirective.DEFAULT;
+            }
+            else
+            {
+                directive = EscapingDirective.get(escape.getText().trim());
             }
             addStatement(new WriteStatement(emit.getEmitExpr().getText(),
-                                            encoding));
+                                            directive));
         }
 
         private FargInfo maybeGetFargInfo(String p_path)
@@ -282,7 +277,7 @@ public class ImplAnalyzer extends BaseAnalyzer
                          ("\""
                           + javaEscape(newlineEscape(m_current.toString()))
                           + "\"",
-                          Encoding.NONE));
+                          EscapingDirective.NONE));
             m_current = new StringBuffer();
         }
     }

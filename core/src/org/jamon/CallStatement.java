@@ -131,7 +131,7 @@ public class CallStatement
         p_writer.print(tVar);
         p_writer.println(".writeTo(this.getWriter());");
         p_writer.print(tVar);
-        p_writer.println(".encoding(this.getEncoding());");
+        p_writer.println(".escaping(this.getEscaping());");
 
         List requiredArgs = p_describer.getRequiredArgNames(p_absPath);
 

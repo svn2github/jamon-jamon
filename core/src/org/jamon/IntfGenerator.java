@@ -54,7 +54,7 @@ public class IntfGenerator
         generateFargInfo();
         generateGetInstance();
         generateSetWriter();
-        generateEncoding();
+        generateEscaping();
         generateEpilogue();
     }
 
@@ -440,17 +440,17 @@ public class IntfGenerator
         println("  }");
     }
 
-    private void generateEncoding()
+    private void generateEscaping()
         throws IOException
     {
         println();
         print  ("  public ");
         print  (getClassName());
-        println(" encoding(org.jamon.Encoding p_encoding)");
+        println(" escaping(org.jamon.Escaping p_escaping)");
         print  ("    throws ");
         println(JAMON_EXCEPTION);
         println("  {");
-        println("    getInstance().encoding(p_encoding);");
+        println("    getInstance().escaping(p_escaping);");
         println("    return this;");
         println("  }");
     }

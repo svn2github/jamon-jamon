@@ -132,7 +132,7 @@ public class FragmentCallStatement
         p_writer.print(fragVar);
         p_writer.println(".writeTo(this.getWriter());");
         p_writer.print(fragVar);
-        p_writer.println(".encoding(this.getEncoding());");
+        p_writer.println(".escaping(this.getEscaping());");
         m_params.put(fargName, fragVar);
 
         super.generateSource(p_writer,p_resolver,p_describer,p_analyzer);

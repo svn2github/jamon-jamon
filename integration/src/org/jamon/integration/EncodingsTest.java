@@ -20,7 +20,13 @@
 
 package org.jamon.integration;
 
+import java.io.Writer;
+import java.io.StringWriter;
 import java.io.IOException;
+
+import org.jamon.Escaping;
+
+import test.jamon.Encodings;
 
 /**
  * Test Jamon's encoding mechanisms.
@@ -32,24 +38,62 @@ public class EncodingsTest
     public void testDefault()
         throws Exception
     {
-        new test.jamon.Encodings(getTemplateManager())
-            .writeTo(getWriter())
-            .render();
-        checkOutput("Default encoding", "&lt;&gt;&amp;&#34;&#39;" + 
-                                        "&lt;&gt;&amp;&#34;&#39;" + 
-                                        "&lt;&gt;&amp;&#34;&#39;");
+        checkEscaping(null);
     }
 
     public void testNone()
         throws IOException
     {
-        new test.jamon.Encodings(getTemplateManager())
-            .writeTo(getWriter())
-            .encoding(org.jamon.Encoding.NONE)
-            .render();
-        checkOutput("Encoding NONE", "<>&\"'" + 
-                                     "<>&\"'" + 
-                                     "<>&\"'");
+        checkEscaping(Escaping.NONE);
     }
+
+    public void testHtml()
+        throws IOException
+    {
+        checkEscaping(Escaping.HTML);
+    }
+
+    public void testUrl()
+        throws IOException
+    {
+        checkEscaping(Escaping.URL);
+    }
+
+    public void testXml()
+        throws IOException
+    {
+        checkEscaping(Escaping.XML);
+    }
+
+    private void checkEscaping(Escaping p_escaping)
+        throws IOException
+    {
+        Encodings encodings = new Encodings(getTemplateManager())
+            .writeTo(getWriter());
+        if (p_escaping == null)
+        {
+            p_escaping = Escaping.DEFAULT; // Ooo! Feels kinda naughty.
+        }
+        else
+        {
+            // Only set escaping when p_escaping is non-null
+            encodings.escaping(p_escaping);
+        }
+        encodings.render();
+        checkOutput("Escaping is " + p_escaping, escapedExpected(p_escaping));
+    }
+
+    private String escapedExpected(Escaping p_escaping)
+        throws IOException
+    {
+        Writer writer = new StringWriter();
+        // write it three times because that is what the template does
+        p_escaping.write(TEMPLATE_TEXT, writer);
+        p_escaping.write(TEMPLATE_TEXT, writer);
+        p_escaping.write(TEMPLATE_TEXT, writer);
+        return writer.toString();
+    }
+
+    private static final String TEMPLATE_TEXT = "<>&\"'";
 
 }

@@ -15,36 +15,38 @@
  * created by Jay Sachs are Copyright (C) 2002 Jay Sachs.  All Rights
  * Reserved.
  *
- * Contributor(s):
+ * Contributor(s): Luis O'Shea
  */
 
 package org.jamon;
 
 import java.io.PrintWriter;
-import java.io.IOException;
 
 public class WriteStatement
     implements Statement
 {
-    WriteStatement(String p_expr, Encoding p_encoding)
+    WriteStatement(String p_expr, EscapingDirective p_escapingDirective)
     {
         m_expr = p_expr;
-        m_encoding = p_encoding;
+        m_escapingDirective = p_escapingDirective;
     }
 
     public void generateSource(PrintWriter p_writer,
                                TemplateResolver p_resolver,
                                TemplateDescriber p_describer,
                                ImplAnalyzer p_analyzer)
-        throws IOException
     {
-        p_writer.println("this.write"
-                         + m_encoding
-                         + "Escaped(this.valueOf("
-                         + m_expr
-                         + "));");
+        p_writer.print("this.writeEscaped(this.valueOf(");
+        p_writer.print(m_expr);
+        p_writer.print(")");
+        if (!m_escapingDirective.isDefault())
+        {
+            p_writer.print(", ");
+            p_writer.print(m_escapingDirective.toJava());
+        }
+        p_writer.println(");");
     }
 
     private final String m_expr;
-    private final Encoding m_encoding;
+    private final EscapingDirective m_escapingDirective;
 }

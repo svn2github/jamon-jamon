@@ -15,7 +15,7 @@
  * created by Jay Sachs are Copyright (C) 2002 Jay Sachs.  All Rights
  * Reserved.
  *
- * Contributor(s):
+ * Contributor(s): Luis O'Shea
  */
 
 package org.jamon;
@@ -43,9 +43,9 @@ public abstract class AbstractTemplateImpl
         m_writer = p_writer;
     }
 
-    public final void encoding(Encoding p_encoding)
+    public void escaping(Escaping p_escaping)
     {
-        m_encoding = p_encoding;
+        m_escaping = p_escaping;
     }
 
     public final void initialize()
@@ -78,26 +78,13 @@ public abstract class AbstractTemplateImpl
     protected void writeEscaped(String p_string)
         throws IOException
     {
-        if (getEncoding().equals(Encoding.HTML))
-        {
-            writeHtmlEscaped(p_string);
-        }
-        else if (getEncoding().equals(Encoding.NONE))
-        {
-            writeUnEscaped(p_string);
-        }
-        else if (getEncoding().equals(Encoding.XML))
-        {
-            writeXmlEscaped(p_string);
-        }
-        else if (getEncoding().equals(Encoding.URL))
-        {
-            writeUrlEscaped(p_string);
-        }
-        else
-        {
-            throw new JamonException("Encoding " + getEncoding() + " is not supported");
-        }
+        writeEscaped(p_string, m_escaping);
+    }
+
+    protected void writeEscaped(String p_string, Escaping p_escaping)
+        throws IOException
+    {
+        p_escaping.write(p_string, m_writer);
     }
 
     protected TemplateManager getTemplateManager()
@@ -110,62 +97,9 @@ public abstract class AbstractTemplateImpl
         return m_writer;
     }
 
-    protected Encoding getEncoding()
+    protected Escaping getEscaping()
     {
-        return m_encoding;
-    }
-
-    protected void writeHtmlEscaped(String p_string)
-        throws IOException
-    {
-        for (int i = 0;i < p_string.length(); ++i)
-        {
-            char c = p_string.charAt(i);
-            switch (c)
-            {
-              case '<': m_writer.write("&lt;"); break;
-              case '>': m_writer.write("&gt;"); break;
-              case '&': m_writer.write("&amp;"); break;
-                // The reason '"' is not escaped to "&quot;" is that it was withdrawn
-                // from the HTML 3.2 DTD (only).  There does not seem to be universal 
-                // agreement as to why this happened.
-              case '"': m_writer.write("&#34;"); break;
-              case '\'': m_writer.write("&#39;"); break;
-                // FIXME: numerically escape other chars
-              default: m_writer.write(c);
-            }
-        }
-    }
-
-    protected void writeXmlEscaped(String p_string)
-        throws IOException
-    {
-        for (int i = 0;i < p_string.length(); ++i)
-        {
-            char c = p_string.charAt(i);
-            switch (c)
-            {
-              case '<': m_writer.write("&lt;"); break;
-              case '>': m_writer.write("&gt;"); break;
-              case '&': m_writer.write("&amp;"); break;
-              case '"': m_writer.write("&quot;"); break;
-              case '\'': m_writer.write("&apos;"); break;
-                // FIXME: numerically escape other chars
-              default: m_writer.write(c);
-            }
-        }
-    }
-
-    protected void writeUnEscaped(String p_string)
-        throws IOException
-    {
-        m_writer.write(p_string);
-    }
-
-    protected void writeUrlEscaped(String p_string)
-        throws IOException
-    {
-        m_writer.write(URLEncoder.encode(p_string));
+        return m_escaping;
     }
 
     protected String valueOf(Object p_obj)
@@ -194,7 +128,7 @@ public abstract class AbstractTemplateImpl
     }
 
     private Writer m_writer;
-    private Encoding m_encoding = Encoding.HTML;
+    private Escaping m_escaping = Escaping.DEFAULT;
     private final TemplateManager m_templateManager;
     private final String m_path;
 }
