@@ -31,21 +31,44 @@ import java.io.IOException;
  *     from its escaped version), and
  *   <li>the escaped version is gauranteed to satisfy certain constraints
  * </ul>
- * Typically, the constraints are that a certain set of characters cannot appear
- * in the escaped string.
+ * Typically, the constraints are that a certain set of characters
+ * cannot appear in the escaped string.
  * <p>
  * Examples of escaping mechanisms are HTML escaping, URL escaping.
- */
+ **/
 
 public interface Escaping
 {
-
     void write(String p_string, Writer p_writer)
         throws IOException;
 
+    /**
+     * An escaping mechanism which escapes suitable for inclusion in
+     * HTML documents.
+     **/
     public static final Escaping HTML = new HtmlEscaping();
+
+    /**
+     * An escaping mechanism which escapes suitable for inclusion
+     * inside html attributes.
+     **/
     public static final Escaping STRICT_HTML = new StrictHtmlEscaping();
+
+    /**
+     * An escaping mechanism which passes through strings without change.
+     **/
     public static final Escaping NONE = new NoneEscaping();
+
+
+    /**
+     * An escaping mechanism which escapes suitable for inclusion in
+     * URLs.
+     **/
     public static final Escaping URL = new UrlEscaping();
+
+    /**
+     * An escaping mechanism which escapes suitable for inclusion in
+     * XML documents.
+     **/
     public static final Escaping XML = new XmlEscaping();
 }
