@@ -1,0 +1,46 @@
+package foo.bar;
+
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.jamon.StandardTemplateManager;
+
+public final class HelloServlet
+    extends HttpServlet {
+
+    public void init()
+        throws ServletException 
+    {
+        StandardTemplateManager manager = new StandardTemplateManager();
+        manager.setSourceDir("templates");
+        manager.setWorkDir("build/work");
+        helloTemplate = new HelloTemplate(manager);
+    }
+
+    public void doGet(HttpServletRequest request, HttpServletResponse response)
+	throws IOException
+    {
+        response.setContentType("text/html");
+        helloTemplate.writeTo(response.getWriter());
+        HelloFormFields formFields = new HelloFormFields(request.getParameterMap());
+        if (formFields.hasData()) {
+            try {
+                helloTemplate.setNum(formFields.parse());
+            } catch (HelloFormFields.ValidationException e) {
+                helloTemplate.setErrors(e.getErrors());
+            }
+        } else {
+            formFields = new HelloFormFields(DEFAULT_NUMBER);
+        }
+        helloTemplate.render(formFields);
+    }
+
+    private HelloTemplate helloTemplate;
+
+    private static final int DEFAULT_NUMBER = 10;
+
+}

@@ -21,6 +21,41 @@ renders the view.  Furthermore since parsing the data that comes back also
 needs access to the names of the parameters it natural to place all this in
 one class.  This is a <code>FormFields</code> class.
 <p>
-For example
-<pre class="code">
-</pre>
+For example, here is a FormFields class suitable for use in our "Hello World"
+application (you can also download a 
+<a href="example2/foobar.zip">zipfile</a> with all the 
+sources from this section, or a <a href="example2/foobar.war">WAR file</a> 
+ready for deployment):
+
+  <pre class="code"><& FormFieldsTemplate &></pre>
+
+Here is a servlet that will use the above class:
+
+  <pre class="code"><& HelloServlet2Template &></pre>
+
+and the corresponding template should look like:
+
+  <pre class="template"><&| /org/jamon/escape/Html &><& Hello2TemplateTemplate &></&></pre>
+
+There are a few things to note about the above example.
+<ul>
+  <li><code>HelloFormFields</code> produces 
+    <code class="code">org.jamon.render.html.TextInput</code>
+    objects which are rendered as HTML input elements by the 
+    <code class="template">/org/jamon/html/TextInput</code>
+    template</li>
+  <li>If the user makes an error while entering their data (for example, 
+by typing "13q") then they will be presented with an error message together
+with the data they entered, so they can edit it (in this case they could just 
+delete the "q" and resubmit).</li>
+</ul>
+
+<p>
+
+If you are interested in improving the above, here are some exercises:
+<ol>
+  <li>Make the error messages more fine-grained (for example, indicate
+    when a number is negative)</li>
+  <li>Indicate what the maximum number is (the challenge is to find the 
+    "right" place to put the data</li>
+</ol>

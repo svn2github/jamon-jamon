@@ -1,11 +1,30 @@
 <span class="concept">Hello World</span>
-Create a file called <a href="templates/foo/bar/HelloTemplate">HelloTemplate</a> (you may need to
-hold down the shift key while clicking in order to save the file)
-in a directory <span class="file">foo/bar</span>.
+In this section we will create the simplest possible servlet that displays
+a page using Jamon.  To this end we will present the complete code for a
+servlet, a (Jamon) template, a deployment descriptor 
+(i.e., the <code>web.xml</code>) file, and an Ant script to build the project.
+In addition the exact directory layout will be specified.  Evidently, in your
+own projects you are free to use your own layout.  Note that
+<ul>
+  <li>All paths are relative to some directory of you choice where you choose 
+    to try out this tutorial.  For example if that path is 
+    <code>/home/alice/tutorial</code>, then a reference to a directory 
+    <code>templates/foo/bar</code> means 
+    <code>/home/alice/tutorial/templates/foo/bar</code>.  A reference
+    a file <code>web.xml</code> means <code>/home/alice/tutorial/web.xml</code></li>
+  <li>If you wish to avoid typing in the examples in this section all the source 
+    code is available in a <a href="foobar.zip">zipfile</a></li>
+</ul>
+
+<p>
+
+In directory <code class="file">templates/foo/bar</code> create a file called 
+<a href="templates/foo/bar/HelloTemplate">HelloTemplate</a> (you should <em>save</em>
+this file since your browser may not display it correctly) containing:
 
 <pre class="template"><&| /org/jamon/escape/Html &><& hello &></&></pre>
 
-Inside your code tree, in directory <span class="file">foo/bar</span> create
+In directory <code class="file">src/foo/bar</code> create
 a file <a href="src/foo/bar/HelloServlet.java">HelloServlet.java</a> containing:
 
 <pre class="code"><& HelloServletTemplate &></pre>
@@ -15,17 +34,24 @@ called <a href="web.xml">web.xml</a>:
 
 <pre class="webxml"><&| /org/jamon/escape/Html &><& webxml &></&></pre>
 
-The following <a href="build.xml">Ant script</a> will compile the Java 
-and Jamon sources and generate a WAR file:
+Create an Ant script by placing the following in a file called
+<a href="build.xml">build.xml</a>:
 
 <pre class="ant"><&| /org/jamon/escape/Html &><& buildxml &></&></pre>
 
-Execute it by typing
+In order to run this script you need to tell Ant where to find the Jamon libraries
+and the servlet APIs.  For example, say the jamon JAR file is in 
+<code>/usr/share/java/jamon.jar</code> and the servlet APIs are in 
+<code>/somewhere/else/servlet.jar</code>, then you would execute it by typing:
 
-<pre class="tty">% ant</pre>
+<pre class="tty">% ant -Djava.lib.jamon=/usr/share/java/jamon.jar -Djava.lib.servlet=/somewhere/else/servlet.jar</pre>
 
-(You can download a copy of the <a href="foobar.war">WAR</a> file if you like.)
-and start the servlet container.  Assuming you deployed the above servlet into
+This will translate the Jamon source into Java, compile them and the servlet, and
+place it all into a WAR file called <code>foobar.war</code>.
+(You can download a copy of the <a href="foobar.war">WAR file</a> if you like.)
+Place the WAR file where your servlet container expects to find web applications 
+and start the container.
+Assuming you deployed the above servlet into
 a context called "foobar" and that the container listens for HTTP requests on port 8080,
 you should receive a worldly greeting by pointing a browser to 
 <a href="http://localhost:8080/foobar/hello">http://localhost:8080/foobar/hello</a>.
