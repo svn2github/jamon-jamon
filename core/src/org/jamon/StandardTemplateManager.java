@@ -79,11 +79,16 @@ public class StandardTemplateManager
                                   1024)));
         int i = p_path.lastIndexOf('/');
         String dir, name;
-        if (i >= 0)
+        if (i >= 1)
         {
             new File(m_workDir + p_path.substring(0,i)).mkdirs();
             dir = p_path.substring(1,i).replace('/','.');
             name = p_path.substring(i+1);
+        }
+        else if (i == 0)
+        {
+            dir = "";
+            name = p_path.substring(1);
         }
         else
         {

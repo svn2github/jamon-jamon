@@ -186,7 +186,15 @@ public class ImplGenerator extends BaseGenerator
 
     private String getInterfaceClassName()
     {
-        return m_packagePrefix + getPackageName() + "." + getClassName();
+        String pkgName = getPackageName();
+        if (pkgName.length() > 0)
+        {
+            return m_packagePrefix + pkgName + "." + getClassName();
+        }
+        else
+        {
+            return m_packagePrefix + getClassName();
+        }
     }
 
     private void generateDeclaration()
@@ -438,9 +446,23 @@ public class ImplGenerator extends BaseGenerator
         private final Map m_params;
         private String getAbsolutePath()
         {
-            return (m_path.charAt(0) == '/')
-                ? m_path
-                : "/" + getPackageName().replace('.','/') + '/' + m_path;
+            if (m_path.charAt(0) == '/')
+            {
+                return m_path;
+            }
+            else
+            {
+                String pkgName = getPackageName();
+                if (pkgName.length() > 0)
+                {
+                    return "/" + pkgName.replace('.','/') + '/' + m_path;
+                }
+                else
+                {
+                    return "/" + m_path;
+                }
+            }
+
         }
 
         private String getClassName()

@@ -269,10 +269,13 @@ public class BaseGenerator extends AnalysisAdapter
     protected void generatePrologue()
         throws IOException
     {
-        print("package ");
-        print(getPackageName());
-        println(";");
-        println();
+        if (getPackageName().length() > 0)
+        {
+            print("package ");
+            print(getPackageName());
+            println(";");
+            println();
+        }
     }
 
     protected void generateImports()

@@ -35,9 +35,17 @@ public class TemplateGenerator
                 }
                 else if (slash > 0)
                 {
-                    pkg = pkgPrefix +
-                        templateName.substring(0,slash).replace('/','.');
+                    pkg = pkgPrefix
+                        + templateName.substring(0,slash).replace('/','.');
                     templateName = templateName.substring(slash+1);
+                }
+                else
+                {
+                    int dot = pkg.lastIndexOf('.');
+                    if (dot == pkg.length() - 1)
+                    {
+                        pkg = pkg.substring(0,dot);
+                    }
                 }
 
                 System.out.println("Generating interface for "
