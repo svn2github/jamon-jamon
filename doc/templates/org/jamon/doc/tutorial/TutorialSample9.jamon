@@ -7,14 +7,22 @@
 
 <h2>Jamon Tutorial - Template Inheritance: Composing Template Output</h2>
 
-A Jamon template can extend another Jamon template. Inheritance in Jamon, however, works differently than in Java. A parent (super) template declares that it will <em>include</em> the output of a sub-template by including the tag <code>&lt;&amp; *CHILD &amp;></code> in the Jamon text. The output of the child template will then be inserted in the location of this tag.
+A Jamon template can extend another Jamon template. Inheritance in Jamon, however, works differently than in Java. A parent (super) template declares that it will <em>include</em> the output of a sub-template by
+<ol>
+<li>
+    declaring it is a parent template by specifying the
+    <code>&lt;%abstract></code> tag
+<li>
+    including the tag <code>&lt;&amp; *CHILD &amp;></code> in the Jamon
+    text where the output of the child template should be inserted.
+</ol>
 
 <p>
 For example, the template <a href="InheritanceParent.jamon" class="file">
 <code>InheritanceParent</code></a>, shown below, declares the
 <code>&lt;&amp; *CHILD &amp;></code> where it wants to include the
-child template's output. Notice that the parent template takes care of the
-HTML header as well as the header banner of the page while the child
+child template's output. The parent template takes care of the
+HTML header as well as the page's header banner while the child
 template simply fills in the body.
 
     <& _TutorialTemplateInclude; fileName => "InheritanceParent"; &>
@@ -39,10 +47,21 @@ This template would be invoked from Java with the class
 InheritanceSimpleTut9.java</a>
     <& _TutorialJavaFileInclude; fileName => "InheritanceSimpleTut9" &>
 
-Notice that the Java code first calls <code>makeParentRenderer()</code>
-on the template to get the renderer for the <em>derived</em> template, and
-then calls <code>render()</code> on the object returned by the
-<code>makeParentRenderer()</code> call.
+To invoke a derived template, the Java class has two options:
+<ol><li>
+call the <code>render()</code> method on the derived template and
+provide <em>all</em> the arguments required by both the derived
+and parent template, or
+<li>
+call <code>makeParentRenderer()</code> on the derived template, passing
+the arguments required by the derived template only and then call
+<code>render()</code> on the object returned by
+<code>makeParentRenderer()</code>, providing the arguments expected by
+the parent template.
+</ol>
+In the above example, the code calls <code>makeParentRenderer()</code>
+and then <code>render()</code>, passing the required <code>Writer</code>
+instance to <code>render</code>.
 
 <h2>Inheritance with template arguments</h2>
 Both the parent and child templates may take arguments. To specify
@@ -87,17 +106,16 @@ is below.
 
 
 <h3>Invoking a derived template</h3>
-The Java code that invokes the derived template has two choices for
-displaying the derived template:
+The two choices for invoking a derived template, as described earlier, are
 <ol>
 <li>
-   The Java code can call the <code>render()</code> method on the derived
+   the Java code can call the <code>render()</code> method on the derived
    template and provide <em>all</em> the arguments that are required
-   by the child template as well as all templates that the child
-   template inherits from.
-<li>The code may also call the <code>makeParentRenderer()</code> method on
+   by the child template as well as all arguments required by the parent
+   template, or
+<li>the code may also call the <code>makeParentRenderer()</code> method on
    the derived template, provide the arguments required by the
-   derived template, and then call render on the
+   child template, and then call render on the
    <code>InheritanceParentWArgs.ParentRenderer</code> object returned
    by <code>makeParentRenderer()</code> method and provide the arguments
    required by the parent template.
