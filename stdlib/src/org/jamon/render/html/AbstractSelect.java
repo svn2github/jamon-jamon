@@ -21,19 +21,58 @@
 package org.jamon.render.html;
 
 import java.util.Iterator;
+import java.util.ArrayList;
 
 public abstract class AbstractSelect
     extends AbstractInput
     implements Select
 {
-    protected AbstractSelect(String p_name)
+    public interface ItemMaker
     {
-        super(p_name);
+        Item makeItem(Object data);
     }
 
-    public abstract Iterator getValues();
+    protected AbstractSelect(String p_name,
+                             Object[] p_data,
+                             ItemMaker p_maker)
+    {
+        this(p_name, new Item[p_data.length]);
+        for(int i = 0; i < m_items.length; ++i)
+        {
+            m_items[i] = p_maker.makeItem(p_data[i]);
+        }
+    }
 
-    public abstract Object getRenderable(Object p_value);
+    private static Item[] create( Iterator p_data, ItemMaker p_maker)
+    {
+        ArrayList items = new ArrayList();
+        while( p_data.hasNext() )
+        {
+            items.add( p_maker.makeItem( p_data.next() ) );
+        }
+        return (Item[]) items.toArray(new Item[0]);
+    }
 
-    public abstract boolean isSelected(Object p_value);
+    protected AbstractSelect(String p_name,
+                             Iterator p_data,
+                             ItemMaker p_maker)
+    {
+        this(p_name, create(p_data, p_maker));
+    }
+
+    protected AbstractSelect(String p_name,
+                             Item[] p_items)
+    {
+        super(p_name);
+        m_items = p_items;
+    }
+
+    public abstract boolean isSelected(Item item);
+
+    public Item[] getItems()
+    {
+        return m_items;
+    }
+
+    private final Item[] m_items;
 }

@@ -17,24 +17,22 @@
 
   Contributor(s):
 </%doc>\
-<%farg renderOption>
-  Object renderable;
-</%farg>\
 <%args>
-  org.jamon.render.html.Select input;
-  boolean multiple => false;
+  org.jamon.render.html.CheckboxInput input;
+  String cssClass => null;
+  String style => null;
+  Boolean selected => null;
 </%args>\
-<select name="<% input.getName() %>" \
-% if (multiple) {
-  multiple \
+<input type='checkbox'
+       name='<% input.getName() %>'
+       value='<% input.getValue() %>'
+% if (cssClass != null) {
+       class='<% cssClass %>'
 % }
->
-% org.jamon.render.html.Select.Item[] items = input.getItems();
-% for (int i = 0; i < items.length; ++i ) {
-  <option value="<% items[i].getValue() %>" \
-% if (input.isSelected(items[i])) {
-  selected \
+% if (style != null) {
+       style='<% style %>'
 % }
-  ><& renderOption; renderable => items[i].getRenderable() &>\
+% if (selected == null ? input.getIsSelected() : selected.booleanValue()) {
+      selected \
 % }
-</select>
+/>

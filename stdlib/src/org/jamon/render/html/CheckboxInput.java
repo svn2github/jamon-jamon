@@ -20,19 +20,29 @@
 
 package org.jamon.render.html;
 
-import java.util.Iterator;
-
-public interface Select
+public class CheckboxInput
+    extends Input
 {
-    interface Item
+    public CheckboxInput(String p_name)
     {
-        Object getRenderable();
-        String getValue();
+        this(p_name, null);
     }
 
-    String getName();
+    public CheckboxInput(String p_name, String p_value)
+    {
+        this(p_name, p_value, false);
+    }
 
-    boolean isSelected(Item item);
+    public CheckboxInput(String p_name, String p_value, boolean p_selected)
+    {
+        super(p_name, p_value);
+        m_selected = p_selected;
+    }
 
-    Item[] getItems();
+    public boolean getIsSelected()
+    {
+        return m_selected;
+    }
+
+    private final boolean m_selected;
 }

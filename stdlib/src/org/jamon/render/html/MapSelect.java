@@ -20,39 +20,32 @@
 
 package org.jamon.render.html;
 
-import java.util.Iterator;
 import java.util.Map;
 
 public class MapSelect
-    extends AbstractSelect
+    extends SingleSelect
 {
-    public MapSelect(String p_name, Map p_options, Object p_default)
+    public MapSelect(String p_name, final Map p_options)
     {
-        super(p_name);
-        m_options = p_options;
-        m_default = p_default;
+        this(p_name, p_options,null);
     }
 
-    public MapSelect(String p_name, Map p_options)
+    public MapSelect(String p_name, final Map p_options, Object p_default)
     {
-        this(p_name, p_options, null);
+        super(p_name,
+              p_default == null ? null : p_default.toString(),
+              p_options.keySet().iterator(),
+              new ItemMaker() {
+                  public Item makeItem(final Object p_data)
+                  {
+                      return new Item()
+                          {
+                              public Object getRenderable()
+                                  { return p_options.get(p_data); }
+                              public String getValue()
+                                  { return p_data.toString(); }
+                          };
+                  }
+              } );
     }
-
-    public Iterator getValues()
-    {
-        return m_options.keySet().iterator();
-    }
-
-    public Object getRenderable(Object p_value)
-    {
-        return m_options.get(p_value);
-    }
-
-    public boolean isSelected(Object p_value)
-    {
-        return m_default != null && m_default.equals(p_value);
-    }
-
-    private final Map m_options;
-    private final Object m_default;
 }
