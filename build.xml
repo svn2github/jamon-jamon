@@ -11,7 +11,7 @@
   <property file="build.properties"/>
   <property file="${user.home}/.ant.properties"/>
   <property name="jarfile" value="jamon.jar" />
-  <property name="classes.dir" value="core/build/classes" />
+  <property name="core.classes.dir" value="core/build/classes" />
 
   <target name="test"
           depends="jar"
@@ -69,21 +69,21 @@
     <exec executable="java"
           outputproperty="currentversion">
       <arg value="-cp" />
-      <arg value="${classes.dir}" />
+      <arg value="${core.classes.dir}" />
       <arg value="org.jamon.ShowVersion" />
       <arg value="minor" />
     </exec>
     <exec executable="java"
           outputproperty="majorversion">
       <arg value="-cp" />
-      <arg value="${classes.dir}" />
+      <arg value="${core.classes.dir}" />
       <arg value="org.jamon.ShowVersion" />
       <arg value="major" />
     </exec>
     <exec executable="java"
           outputproperty="nextversion">
       <arg value="-cp" />
-      <arg value="${classes.dir}" />
+      <arg value="${core.classes.dir}" />
       <arg value="org.jamon.ShowVersion" />
       <arg value="nextminor" />
     </exec>
