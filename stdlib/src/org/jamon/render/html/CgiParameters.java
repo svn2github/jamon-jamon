@@ -24,7 +24,7 @@ import java.util.ArrayList;
 
 public class CgiParameters
 {
-    public CgiParameters add( String p_name, Object p_value )
+    public CgiParameters add( String p_name, String p_value )
     {
         m_inputs.add( new Input( p_name, p_value ) );
         return this;

@@ -28,18 +28,18 @@ public class TextInput
         this(p_name,null);
     }
 
-    public TextInput(String p_name, Object p_value)
+    public TextInput(String p_name, String p_value)
     {
         this(p_name, p_value, 0);
     }
 
-    public TextInput(String p_name, Object p_value, int p_maxLength)
+    public TextInput(String p_name, String p_value, int p_maxLength)
     {
         this(p_name, p_value, p_maxLength, false);
     }
 
     public TextInput(String p_name,
-                     Object p_value,
+                     String p_value,
                      int p_maxLength,
                      boolean p_isUpperCaseOnly)
     {

@@ -28,10 +28,10 @@ public class Input
         this(p_name,null);
     }
 
-    public Input(String p_name, Object p_value)
+    public Input(String p_name, String p_value)
     {
         super(p_name);
-        m_value = p_value == null ? null : p_value.toString();
+        m_value = p_value;
     }
 
     public String getValue()
