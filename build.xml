@@ -12,6 +12,8 @@
   <property file="${user.home}/.ant.properties"/>
   <property name="jarfile" value="jamon.jar" />
   <property name="core.classes.dir" value="core/build/classes" />
+  <property name="stage.dir" value="stagesite" />
+
 
   <target name="test"
           depends="jar"
@@ -134,6 +136,8 @@
     <tar tarfile="${tarfile.src}">
       <tarfileset dir=".">
         <exclude name="${jarfile}" />
+        <exclude name="${stage.dir}" />
+        <exclude name="${stage.dir}/**" />
         <exclude name="${tarball.bin}" />
         <exclude name="${tarfile.bin}" />
         <exclude name="${tarball.src}" />
@@ -144,6 +148,40 @@
       </tarfileset>
     </tar>
     <gzip src="${tarfile.src}" zipfile="${tarball.src}" />
+  </target>
+
+
+  <target name="stage" depends="srcdist, bindist" >
+    <mkdir dir="${stage.dir}" />
+    <copy todir="${stage.dir}" >
+      <fileset dir="doc" />
+      <fileset dir="." includes="${tarball.bin}" />
+      <fileset dir="." includes="${tarball.src}" />
+      <fileset dir="core/build" includes="javadoc/**" />
+    </copy>
+  </target>
+
+  <target name="push" depends="stage">
+    <exec dir="${stage.dir}" executable="rsync">
+      <arg value="--verbose" />
+      <arg value="--recursive" />
+      <arg value="--relative" />
+      <arg value="--cvs-exclude" />
+      <arg value="--delete" />
+      <arg value="--compress" />
+      <arg value="." />
+      <arg value="${push.dest}" />
+    </exec>
+  </target>
+
+  <target name="pushstage">
+    <property name="push.dest" value="jamon.org:/home/jamon/www/stage" />
+    <ant target="push" />
+  </target>
+
+  <target name="pushlive">
+    <property name="push.dest" value="jamon.org:/home/jamon/www" />
+    <ant target="push" />
   </target>
 
 </project>
