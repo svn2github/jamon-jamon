@@ -1,0 +1,44 @@
+<&| /org/jamon/doc/_Base; title => "Servlets with Jamon"; section => "Documentation" &>
+    <h1>Servlets with Jamon</h1>
+
+    The goal of this document is to guide the reader through the
+    process of developing and deploying servlets that use Jamon to
+    generate the HTML (i.e., for their <em>view</em>, in <a
+    href="http://ootips.org/mvc-pattern.html">MVC</a> parlance).  Thus
+    the servlets will be kept simple but nevertheless representative
+    of a typical development environment.
+    <p>
+    <ol>
+
+      <li><& prerequisites &></li>
+
+      <li><& helloWorld &></li>
+
+      <li><& parametersAndInput &></li>
+
+      <li><& standardLibrary &></li>
+
+      <h2>Appendix</h2>
+
+      <li value="1" type="A"><& usingTomcat &></li>
+
+      <li type="A"><& inputElements &></li>
+
+      <li type="A"><& _colophon &></li>
+
+    </ol>
+</&>
+<%def _colophon><span class="concept">Colophon</span>
+  This entire document was generated with the aid of Jamon.  Issues such as
+  <ul>
+    <li>HTML escaping of templates and XML,</li>
+    <li>highlighting changes in snippets of Java or Jamon code, and</li>
+    <li>generation of source files (Java and Jamon) that exactly reflect what is
+      is in this document</li>
+  </ul>
+  were dealt with automatically.  Furthermore, part of the process of
+  generating this documentation was compiling some of the examples and
+  placing the classes in WAR files.  So you can be sure the examples
+  at least compile.  In particular this also means that Jamon is being
+  used to autogenerate Jamon sources!
+</%def>

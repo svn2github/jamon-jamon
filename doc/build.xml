@@ -38,22 +38,22 @@ the documentation thus taking care of issues such as escaping.
 
   <target name="quickstart" depends="init" >
     <property name="build.sysclasspath" value="last" />
-    <copy file="templates/org/jamon/doc/JamonQsJava"
+    <copy file="templates/org/jamon/doc/JamonQsJava.jamon"
           tofile="${doc.dir}/JamonQs.java" />
     <copy file="${doc.dir}/JamonQs.java"
           todir="${work.dir}" />
     <invoker classpath="${java.lib.jamon}"
              workDir="${work.dir}"
              sourceDir="templates"
-             output="${doc.dir}/QsTemp"
+             output="${doc.dir}/QsTemp.jamon"
              template="/org/jamon/doc/QsTemp" />
-    <copy file="${doc.dir}/QsTemp" todir="${work.dir}" />
+    <copy file="${doc.dir}/QsTemp.jamon" todir="${work.dir}" />
     <java classname="org.jamon.TemplateProcessor"
           failonerror="true"
           fork="yes"
           dir="${work.dir}"
           classpath="${java.lib.jamon}">
-      <arg line="--destDir=. --all QsTemp" />
+      <arg line="--destDir=. QsTemp" />
     </java>
     <javac destdir="${work.dir}"
            srcdir="${work.dir}"
@@ -79,13 +79,13 @@ the documentation thus taking care of issues such as escaping.
   <target name="doc"
           description="Generates all the documentation"
           depends="init" >
+    <property name="template.src.prefix" value="" />
     <dependset>
       <srcfilelist dir="templates/org/jamon/doc" files="_Base" />
       <targetfileset dir="${doc.dir}" includes="*.html" />
     </dependset>
     <dependset>
-      <srcfilelist dir="templates/org/jamon/doc" files="FormFieldsTemplate,_showDiff,buildxml,inputElements,parametersAndInput,prerequisites,standardLibrary,usingTomcat,webxml" />
-      <srcfileset dir="templates/org/jamon/doc" includes="servletSnippet*,hello*,Hello*" />
+      <srcfileset dir="templates/org/jamon/doc/servlet" includes="*" />
       <targetfilelist dir="${doc.dir}" files="Servlets.html" />
     </dependset>
     <antcall target="quickstart" />
@@ -133,33 +133,34 @@ the documentation thus taking care of issues such as escaping.
       <param name="template" value="News" />
     </antcall>
     <antcall target="grind">
+      <param name="template.src.prefix" value="servlet/" />
       <param name="template" value="Servlets" />
     </antcall>
     <!-- Generate the first template example -->
     <invoker classpath="${java.lib.jamon}:${java.lib.diff}"
              workDir="${work.dir}"
              sourceDir="templates"
-             output="${www.dir}/templates/foo/bar/HelloTemplate"
-             template="/org/jamon/doc/hello" />
+             output="${www.dir}/templates/foo/bar/HelloTemplate.jamon"
+             template="/org/jamon/doc/servlet/hello" />
     <!-- Generate the first servlet example -->
     <property name="servlet.src.dir" value="${www.dir}/src/foo/bar" />
     <invoker classpath="${java.lib.jamon}:${java.lib.diff}"
              workDir="${work.dir}"
              sourceDir="templates"
              output="${servlet.src.dir}/HelloServlet.java"
-             template="/org/jamon/doc/HelloServletTemplate" />
+             template="/org/jamon/doc/servlet/HelloServletTemplate" />
     <!-- Generate the ant script -->
     <invoker classpath="${java.lib.jamon}:${java.lib.diff}"
              workDir="${work.dir}"
              sourceDir="templates"
              output="${www.dir}/build.xml"
-             template="/org/jamon/doc/buildxml" />
+             template="/org/jamon/doc/servlet/buildxml" />
     <!-- Generate the deployment descriptor -->
     <invoker classpath="${java.lib.jamon}:${java.lib.diff}"
              workDir="${work.dir}"
              sourceDir="templates"
              output="${www.dir}/web.xml"
-             template="/org/jamon/doc/webxml" />
+             template="/org/jamon/doc/servlet/webxml" />
     <!-- Now do the second example -->
     <!-- Generate the second servlet example -->
     <property name="servlet.src2.dir" value="${www.dir}/example2/src/foo/bar" />
@@ -167,19 +168,19 @@ the documentation thus taking care of issues such as escaping.
              workDir="${work.dir}"
              sourceDir="templates"
              output="${servlet.src2.dir}/HelloServlet.java"
-             template="/org/jamon/doc/HelloServlet2Template" />
+             template="/org/jamon/doc/servlet/HelloServlet2Template" />
     <!-- Generate the form fields class for the second example -->
     <invoker classpath="${java.lib.jamon}:${java.lib.diff}"
              workDir="${work.dir}"
              sourceDir="templates"
              output="${servlet.src2.dir}/HelloFormFields.java"
-             template="/org/jamon/doc/FormFieldsTemplate" />
+             template="/org/jamon/doc/servlet/FormFieldsTemplate" />
     <!-- Generate the second template example -->
     <invoker classpath="${java.lib.jamon}:${java.lib.diff}"
              workDir="${work.dir}"
              sourceDir="templates"
              output="${www.dir}/example2/templates/foo/bar/HelloTemplate"
-             template="/org/jamon/doc/Hello2TemplateTemplate" />
+             template="/org/jamon/doc/servlet/Hello2TemplateTemplate" />
     <!-- To get a web.xml and build.xml for the example we just copy
          them from the first example -->
     <copy file="${www.dir}/web.xml" todir="${www.dir}/example2" />
@@ -198,7 +199,7 @@ the documentation thus taking care of issues such as escaping.
   <target name="checkgrind">
     <echo>Checking templates/org/jamon/doc/${template}</echo>
     <uptodate property="grindnotneeded"
-              srcfile="templates/org/jamon/doc/${template}"
+              srcfile="templates/org/jamon/doc/${template.src.prefix}${template}.jamon"
               targetfile="${doc.dir}/${template}.html" />
   </target>
 
@@ -208,7 +209,7 @@ the documentation thus taking care of issues such as escaping.
              workDir="${work.dir}"
              sourceDir="templates"
              output="${doc.dir}/${template}.html"
-             template="/org/jamon/doc/${template}" />
+             template="/org/jamon/doc/${template.src.prefix}${template}" />
   </target>
 
   <target name="war"

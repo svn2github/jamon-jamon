@@ -81,7 +81,7 @@ pre
   background-color: #efffdf
 }
 
-.java, .code
+pre.java, pre.code
 {
   background-color: #ffdfdf
 }

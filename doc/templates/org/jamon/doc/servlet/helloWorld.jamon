@@ -1,6 +1,6 @@
 <span class="concept">Hello World</span>
 In this section we will create a very simple servlet that displays
-a page generated using Jamon.  To this end we will present 
+a page generated using Jamon.  To this end we will present
 <ul>
   <li>the complete code for a servlet,</li>
   <li>a (Jamon) template,</li>
@@ -11,20 +11,20 @@ In addition the exact directory layout will be specified.  Evidently, in your
 own projects you are free to use your own layout.  Note that
 <ul>
 <%def root>/home/alice/tutorial</%def>
-  <li>All paths are relative to some directory of your choice where you choose 
+  <li>All paths are relative to some directory of your choice where you choose
     to try out this tutorial.  For example if that path is
-    <code><& root &></code>, then a reference to a directory 
-    <code>templates/foo/bar</code> means 
+    <code><& root &></code>, then a reference to a directory
+    <code>templates/foo/bar</code> means
     <code><& root &>/templates/foo/bar</code>.  A reference to
     a file <code>web.xml</code> means <code><& root &>/web.xml</code></li>
-  <li>If you wish to avoid typing in the examples in this section all the source 
+  <li>If you wish to avoid typing in the examples in this section all the source
     code is available in a <a href="foobar.zip">zipfile</a>.</li>
 </ul>
 
 <p>
 
-In directory <code class="file">templates/foo/bar</code> create a file called 
-<a href="templates/foo/bar/HelloTemplate">HelloTemplate</a> (you should <em>save</em>
+In directory <code class="file">templates/foo/bar</code> create a file called
+<a class="file" href="templates/foo/bar/HelloTemplate.jamon">HelloTemplate.jamon</a> (you should <em>save</em>
 this file since your browser may not display it correctly) containing:
 
 <pre class="template"><&| /org/jamon/escape/Html &><& hello &></&></pre>
@@ -45,8 +45,8 @@ Create an Ant script by placing the following in a file called
 <pre class="ant"><&| /org/jamon/escape/Html &><& buildxml &></&></pre>
 
 In order to run this script you need to tell Ant where to find the Jamon libraries
-and the servlet APIs.  For example, say the jamon JAR file is in 
-<code>/usr/share/java/jamon.jar</code> and the servlet APIs are in 
+and the servlet APIs.  For example, say the jamon JAR file is in
+<code>/usr/share/java/jamon.jar</code> and the servlet APIs are in
 <code>/somewhere/else/servlet.jar</code>, then you would execute it by typing:
 
 <pre class="tty">% ant -Djava.lib.jamon=/usr/share/java/jamon.jar -Djava.lib.servlet=/somewhere/else/servlet.jar</pre>
@@ -54,9 +54,9 @@ and the servlet APIs.  For example, say the jamon JAR file is in
 This will translate the Jamon source into Java, compile them and the servlet, and
 place it all into a WAR file called <code>foobar.war</code>.
 (You can download a copy of the <a href="foobar.war">WAR file</a> if you like.)
-Place the WAR file where your servlet container expects to find web applications 
+Place the WAR file where your servlet container expects to find web applications
 and start the container.
 Assuming you deployed the above servlet into
 a context called "foobar" and that the container listens for HTTP requests on port 8080,
-you should receive a worldly greeting by pointing a browser to 
+you should receive a worldly greeting by pointing a browser to
 <a href="http://localhost:8080/foobar/hello">http://localhost:8080/foobar/hello</a>.
