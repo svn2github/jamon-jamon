@@ -224,20 +224,25 @@ public class BaseAnalyzer
         public void caseAArgsBaseComponent(AArgsBaseComponent args)
         {
             AArgs a = (AArgs) args.getArgs();
-            PArgsStart start = a.getArgsStart();
-            if (start instanceof AArgsWithFragArgsStart)
-            {
-                // FIXME: we want to ensure that this is the first argument
-                // FIXME: this doesn't handle multiple occurrences AT ALL.
-                AArgsWithFragArgsStart farg = (AArgsWithFragArgsStart) start;
-                getUnitInfo(getUnitName())
-                    .addArg(farg.getIdentifier().getText(),
-                            Fragment.class.getName(),
-                            null);
-            }
             for (Iterator i = a.getArg().iterator(); i.hasNext(); /**/ )
             {
                 ((Node)i.next()).apply(this);
+            }
+        }
+
+        public void caseAFargBaseComponent(AFargBaseComponent farg)
+        {
+            AFarg f = (AFarg) farg.getFarg();
+            AFargStart start = (AFargStart) f.getFargStart();
+            // FIXME: we want to ensure that this is the first argument
+            // FIXME: this doesn't handle multiple occurrences AT ALL.
+            getUnitInfo(getUnitName())
+                .addArg(start.getIdentifier().getText(),
+                        Fragment.class.getName(),
+                        null);
+            if (! f.getArg().isEmpty())
+            {
+                throw new UnsupportedOperationException("Parameterized fragment parameters not implemented");
             }
         }
 

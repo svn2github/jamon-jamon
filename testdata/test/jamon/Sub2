@@ -1,4 +1,6 @@
-<%args frag>
+<%farg frag>
+</%farg>
+<%args>
   int x;
 </%args>
 Above the content

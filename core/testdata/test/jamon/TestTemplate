@@ -103,7 +103,9 @@ body3
 </&>
 
 <%def sub1>
-  <%args frag>
+  <%farg frag>
+  </%farg>
+  <%args>
     int y => 5;
   </%args>
   A def component (<% y+1 %>) with frag param: <|frag|>.\
@@ -116,12 +118,12 @@ Nested frag param calls:
 
 And frag calling frag:
 <%def sub3> \
-<%args frag></%args> \
+<%farg frag></%farg> \
 A <|frag|> B <|frag|> C \
 </%def> \
 % class Counter { int i = 0; public int bump() { return i++; } }
 % final Counter c = new Counter();
 <%def sub4> \
-<%args f2></%args> \
+<%farg f2></%farg> \
 front<|& sub3 &>before<|f2|>middle<|f2|>after</&>back</%def> \
 <|& sub4 &> <% c.bump() %> </&>

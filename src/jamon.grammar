@@ -42,21 +42,23 @@ States
   inherit,
   args,
   content,
-  argsinit;
+  farginit;
 
 Tokens
 
-  {start -> argsinit,body -> argsinit} args_start_begin = '<%args';
-  {argsinit -> args} args_start_done = '>';
+  {start -> farginit,body -> farginit} farg_start_begin = '<%farg';
+  {farginit -> args} farg_start_done = '>';
   {args -> body} args_end = '</%args>';
+  {args -> body} farg_end = '</%farg>';
+  {start -> args, body -> args} args_start = '<%args>';
   {start ->imports,body -> imports} import_start = '<%import>';
   {imports -> body} import_end = '</%import>';
   {start ->java,body -> java} java_start = '<%java>' ws*;
   {java -> body} java_end = ws* '</%java>';
   {args,imports} dot = period;
   {args -> argexp} arrow = '=>' hs*;
-  {call,args,argsinit,content,inherit,imports} white_space = ws*;
-  {call,args,argsinit,content,imports,inherit,def} identifier = letter letter_or_digit*;
+  {call,args,farginit,content,inherit,imports} white_space = ws*;
+  {call,args,farginit,content,imports,inherit,def} identifier = letter letter_or_digit*;
 
   {start -> emit,body -> emit} emit_start = '<%' ws+;
   {emit -> body} emit_end = ws* '%>';
@@ -142,6 +144,7 @@ Productions
             | {call} call
             | {fragment_call} fragment_call
             | {args} args
+            | {farg} farg
             ;
 
   component = base_component
@@ -161,9 +164,9 @@ Productions
 
   args = args_start arg* args_end;
 
-  args_start =
-      {args_start} args_start_begin args_start_done
-    | {args_with_frag} args_start_begin identifier args_start_done;
+  farg = farg_start arg* farg_end;
+
+  farg_start = farg_start_begin identifier farg_start_done;
 
   java = java_start java_stmts java_end;
 
