@@ -36,6 +36,7 @@
       <arg value="${test.pkg}/TestTemplate" />
       <arg value="${test.pkg}/SubTemplate" />
       <arg value="${test.pkg}/Sub2" />
+      <arg value="${test.pkg}/JavaEscape" />
     </java>
   </target>
 
