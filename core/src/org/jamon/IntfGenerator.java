@@ -142,6 +142,23 @@ public class IntfGenerator
         {
             generateFargInterface(m_analyzer.getFargInfo((String)f.next()));
         }
+        println("  public static final String[] FARGNAMES = {");
+        for (Iterator f = m_analyzer.getFargNames(); f.hasNext(); /* */)
+        {
+            print("    \"");
+            print((String)f.next());
+            print("\"");
+            if (f.hasNext())
+            {
+                println(",");
+            }
+            else
+            {
+                println();
+            }
+        }
+        println("  };");
+        println();
     }
 
 
