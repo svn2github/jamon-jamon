@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServlet;
 
 import org.jamon.Invoker;
-import org.jamon.StandardTemplateManager;
+import org.jamon.RecompilingTemplateManager;
 import org.jamon.TemplateManager;
 import org.jamon.JamonTemplateException;
 
@@ -57,8 +57,8 @@ public class JamonDocServlet
         m_parameters.put("version", "3.14");
         m_parameters.put("output", "whatever");
 
-        m_manager = new StandardTemplateManager
-            (new StandardTemplateManager.Data()
+        m_manager = new RecompilingTemplateManager
+            (new RecompilingTemplateManager.Data()
                 .setWorkDir("build/work")
                 .setSourceDir("templates")
                 .setJavaCompiler("jikes"));
