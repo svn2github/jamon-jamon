@@ -61,9 +61,9 @@ Tokens
   {start,body -> start} newline = nl;
 
   {args} brackets = '[' (hs)* ']';
-  {start -> body,body} call2_end = '</&>';
+  {start -> body,body} fragment_call_end = '</&>';
   {call -> callexp} carrow = '=>' hs*;
-  {start -> call, body -> call} call2_start = '<|&' ws*;
+  {start -> call, body -> call} fragment_call_start = '<|&' ws*;
   {start -> call,body -> call} call_start = '<&' ws*;
   {call -> body} call_end = ws* '&>';
   {callexp -> call} param_expr = ([all - [';' + '&']] | '&' [all-'>'])*;
@@ -88,6 +88,8 @@ Tokens
               | '</%do' [all-'c']
               | '</%doc' [all-'>'])* '</%doc>';
 
+  {body,start -> body} content = '<||>';
+
 Ignored Tokens
 
   white_space,doc;
@@ -99,12 +101,13 @@ Productions
   base_component =
               {body} text
             | {child} child
+            | {content} content
             | {newline} newline
             | {java} java
             | {jline} jline
             | {emit} emit
             | {call} call
-            | {call2} call2
+            | {fragment_call} fragment_call
             ;
 
   unit_component =
@@ -121,7 +124,7 @@ Productions
 
   call = call_start path param* call_end;
 
-  call2 = call2_start path param* call_end base_component* call2_end;
+  fragment_call = fragment_call_start path param* call_end base_component* fragment_call_end;
 
   imports = import_start name* import_end;
 

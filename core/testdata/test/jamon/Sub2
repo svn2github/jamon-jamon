@@ -1,0 +1,6 @@
+<%args>
+  int x;
+</%args>
+Above the content
+<||>
+Below the content

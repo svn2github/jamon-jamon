@@ -64,8 +64,23 @@ A call to a def: <& foo; qq => "yes" &>.
   in def foo. <% rr %></%def>
 
 A call with a template fragment: \
-% int i = 3;
+% final int i = 3;
 <|& Sub2; x => 5 &>This is the body <% i %>
-<& foo; qq=>'yes'; rr => i+1 &>
+<& foo; qq=>"yes"; rr => i+1 &>
 <& SubTemplate; z => 77; y => "icky" &>
+</&>
+
+<%import>
+  java.util.LinkedList
+</%import>
+3 more fragment calls:\
+% final LinkedList list = new LinkedList();
+<|& Sub2; x => 5 &>This is the body <% list.size() %>
+% list.add(new Integer(x));
+</&>
+<|& Sub2; x => 5 &>This is the body <% list.size() %>
+% list.add(new Integer(x));
+</&>
+<|& Sub2; x => 5 &>This is the body <% list.size() %>
+% list.add(new Integer(x));
 </&>

@@ -20,6 +20,15 @@ public class ImplGenerator extends BaseGenerator
     private final Set m_calls = new HashSet();
     private final String m_packagePrefix;
 
+    private final static String FRAGMENT_CLASS =
+        Fragment.class.getName();
+
+    private final static String IOEXCEPTION_CLASS =
+        IOException.class.getName();
+
+    private final static String WRITER_CLASS =
+        Writer.class.getName();
+
     public ImplGenerator(Writer p_writer,
                          String p_packagePrefix,
                          String p_packageName,
@@ -123,6 +132,12 @@ public class ImplGenerator extends BaseGenerator
         addStatement(new WriteStatement(expr.toString(), encoding));
     }
 
+    public void caseAContentBaseComponent(AContentBaseComponent node)
+    {
+        handleBody();
+        addStatement(new RawStatement("getFragment().render();\n"));
+    }
+
     public void caseACallBaseComponent(ACallBaseComponent node)
     {
         handleBody();
@@ -134,20 +149,19 @@ public class ImplGenerator extends BaseGenerator
 
     private int fragments = 0;
 
-    public void caseACall2BaseComponent(ACall2BaseComponent node)
+    public void caseAFragmentCallBaseComponent(AFragmentCallBaseComponent node)
     {
-        System.err.println("got a call2");
         handleBody();
         pushUnitName("#" + (fragments++));
         m_unitStatements.put(getUnitName(),new ArrayList());
-        ACall2 call = (ACall2) node.getCall2();
+        AFragmentCall call = (AFragmentCall) node.getFragmentCall();
         String path = asText(call.getPath());
         m_calls.add(path);
         for (Iterator i = call.getBaseComponent().iterator(); i.hasNext(); /* */)
         {
             ((Node)i.next()).apply(this);
         }
-        Statement s = new Call2Statement(path,
+        Statement s = new FragmentCallStatement(path,
                                          call.getParam(),
                                          getStatements(getUnitName()));
         popUnitName();
@@ -263,7 +277,9 @@ public class ImplGenerator extends BaseGenerator
     {
         print("  public ");
         print(getClassName());
-        println("Impl(java.io.Writer p_writer,");
+        print("Impl(");
+        print(WRITER_CLASS);
+        println(" p_writer,");
         print  ("        ");
         print  (         TEMPLATE_MANAGER);
         println(                        " p_templateManager)");
@@ -313,7 +329,8 @@ public class ImplGenerator extends BaseGenerator
                 print(arg);
             }
             println(")");
-            println("    throws java.io.IOException");
+            print  ("    throws ");
+            println(IOEXCEPTION_CLASS);
             println("  {");
             for (Iterator i = getStatements(name).iterator();
                  i.hasNext();
@@ -352,7 +369,8 @@ public class ImplGenerator extends BaseGenerator
         }
         println(")");
 
-        println("    throws java.io.IOException");
+        print  ("    throws ");
+        println(IOEXCEPTION_CLASS);
         println("  {");
         for (Iterator i = getStatements(MAIN_UNIT_NAME).iterator();
              i.hasNext();
@@ -479,10 +497,10 @@ public class ImplGenerator extends BaseGenerator
         }
     }
 
-    private class Call2Statement
+    private class FragmentCallStatement
         extends CallStatement
     {
-        Call2Statement(String p_path, List p_params, List p_fragment)
+        FragmentCallStatement(String p_path, List p_params, List p_fragment)
         {
             super(p_path, p_params);
             m_fragment = p_fragment;
@@ -498,11 +516,26 @@ public class ImplGenerator extends BaseGenerator
             s.append("  call to ");
             s.append(getAbsolutePath());
             s.append("\n");
+            s.append("*/\n");
+            s.append("    ");
+            s.append(FRAGMENT_CLASS);
+            s.append(" f =\n");
+            s.append("      new ");
+            s.append(FRAGMENT_CLASS);
+            s.append(" () {\n");
+            s.append("       public void render() throws ");
+            s.append(IOEXCEPTION_CLASS);
+            s.append(" {\n");
             for (Iterator i = m_fragment.iterator(); i.hasNext(); /* */)
             {
                 s.append(((Statement)i.next()).asString());
+                s.append("\n");
             }
-            s.append("*/\n");
+            s.append("    }\n");
+            s.append("  };\n");
+            s.append(componentCallPreRender());
+            s.append(" ((org.modusponens.jtt.AbstractTemplate)c).setFragment(f);\n");
+            s.append(componentCallRender());
             s.append("}\n");
             return s.toString();
         }
@@ -567,7 +600,7 @@ public class ImplGenerator extends BaseGenerator
             throws JttException
         {
             StringBuffer s = new StringBuffer();
-            s.append("this.$def$");
+            s.append("$def$");
             s.append(m_path);
             s.append("(");
             int argNum = 0;
@@ -610,18 +643,9 @@ public class ImplGenerator extends BaseGenerator
             return s.toString();
         }
 
-        protected String asComponentCall()
+        protected List getRequiredArgs()
             throws JttException
         {
-            StringBuffer s = new StringBuffer();
-            s.append("{\n      ");
-            s.append(getInterfaceClassName());
-            s.append(" c = (");
-            s.append(getInterfaceClassName());
-            s.append(") getTemplateManager().getInstance(\"");
-            s.append(getAbsolutePath());
-            s.append("\", getWriter());\n");
-
             List requiredArgs = new ArrayList();
             try
             {
@@ -629,6 +653,7 @@ public class ImplGenerator extends BaseGenerator
                 requiredArgs.addAll
                     (Arrays.asList
                      ((String []) c.getField("RENDER_ARGS").get(null)));
+                return requiredArgs;
             }
             catch (ClassNotFoundException e)
             {
@@ -642,6 +667,21 @@ public class ImplGenerator extends BaseGenerator
             {
                 throw new JttException(e);
             }
+        }
+
+        protected String componentCallPreRender()
+            throws JttException
+        {
+            StringBuffer s = new StringBuffer();
+            s.append("{\n      ");
+            s.append(getInterfaceClassName());
+            s.append(" c = (");
+            s.append(getInterfaceClassName());
+            s.append(") getTemplateManager().getInstance(\"");
+            s.append(getAbsolutePath());
+            s.append("\", getWriter());\n");
+
+            List requiredArgs = getRequiredArgs();
 
             for (Iterator i = m_params.keySet().iterator();
                  i.hasNext();
@@ -657,8 +697,15 @@ public class ImplGenerator extends BaseGenerator
                     s.append(");\n");
                 }
             }
+            return s.toString();
+        }
+
+        protected String componentCallRender()
+            throws JttException
+        {
+            StringBuffer s = new StringBuffer();
             s.append("      c.render(");
-            for (Iterator i = requiredArgs.iterator(); i.hasNext(); /* */)
+            for (Iterator i = getRequiredArgs().iterator(); i.hasNext(); /* */)
             {
                 String name = (String) i.next();
                 String expr = (String) m_params.get(name);
@@ -675,6 +722,12 @@ public class ImplGenerator extends BaseGenerator
             s.append(");\n");
             s.append("    }\n");
             return s.toString();
+        }
+
+        protected String asComponentCall()
+            throws JttException
+        {
+            return componentCallPreRender() + componentCallRender();
         }
     }
 }

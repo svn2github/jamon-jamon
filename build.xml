@@ -102,6 +102,7 @@
       <arg value="foo.bar." />
       <arg value="${test.pkg}/TestTemplate" />
       <arg value="${test.pkg}/SubTemplate" />
+      <arg value="${test.pkg}/Sub2" />
     </java>
   </target>
 
