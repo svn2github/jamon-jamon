@@ -141,21 +141,99 @@ the documentation thus taking care of issues such as escaping.
          includes="*.java,*.jamon" />
   </target>
 
+  <target name="grind">
+    <invoker classpath="${work.dir}:${this.dir}:${java.lib.jamon}:${java.lib.diff}"
+             dynamicRecompilation="false"
+             output="${this.dir}/${doc.dir}/${template.html}"
+             template="/org/jamon/doc/${template}" />
+  </target>
+
   <target name="doc"
           description="Generates all the documentation"
           depends="init" >
     <antcall target="overview-files" />
     <antcall target="tutorial" />
+    <echo message="compiling templates"/>
     <javac destdir="${work.dir}"
            classpath="${java.lib.jamon}:${java.lib.diff}:${work.dir}"
-           includes="*.java" >
+           includes="**/*.java" >
       <src path="${work.dir}" />
     </javac>
-    <antcall target="compile-docbuilder" />
-    <java className="org.jamon.doc.DocBuilder">
-      <classpath path="${java.lib.jamon}:${work.dir}:${java.lib.diff}:${this.dir}"/>
-      <arg value="${this.dir}/${doc.dir}"/>
-    </java>
+    <antcall target="grind">
+      <param name="template" value="Contact" />
+    </antcall>
+    <antcall target="grind">
+      <param name="template" value="Overview" />
+    </antcall>
+    <antcall target="grind">
+      <param name="template" value="BuildingProjects" />
+    </antcall>
+    <antcall target="grind">
+      <param name="template" value="UserGuide" />
+    </antcall>
+    <antcall target="grind">
+      <param name="template" value="GeneratedTemplates" />
+    </antcall>
+    <antcall target="grind">
+      <param name="template" value="Reference" />
+    </antcall>
+    <antcall target="grind">
+      <param name="template" value="index" />
+    </antcall>
+    <antcall target="grind">
+      <param name="template" value="JamonTask" />
+    </antcall>
+    <antcall target="grind">
+      <param name="template" value="InvokerTask" />
+    </antcall>
+    <antcall target="grind">
+      <param name="template" value="About" />
+    </antcall>
+    <antcall target="grind">
+      <param name="template" value="News" />
+    </antcall>
+    <antcall target="grind">
+      <param name="template" value="Features" />
+    </antcall>
+    <antcall target="grind">
+      <param name="template" value="Download" />
+    </antcall>
+    <antcall target="grind">
+      <param name="template" value="Servlets" />
+    </antcall>
+    <antcall target="grind">
+      <param name="template" value="tutorial/TutorialPath" />
+    </antcall>
+    <antcall target="grind">
+      <param name="template" value="tutorial/TutorialSample1" />
+    </antcall>
+    <antcall target="grind">
+      <param name="template" value="tutorial/TutorialSample2" />
+    </antcall>
+    <antcall target="grind">
+      <param name="template" value="tutorial/TutorialSample3" />
+    </antcall>
+    <antcall target="grind">
+      <param name="template" value="tutorial/TutorialSample4" />
+    </antcall>
+    <antcall target="grind">
+      <param name="template" value="tutorial/TutorialSample5" />
+    </antcall>
+    <antcall target="grind">
+      <param name="template" value="tutorial/TutorialSample6" />
+    </antcall>
+    <antcall target="grind">
+      <param name="template" value="tutorial/TutorialSample7" />
+    </antcall>
+    <antcall target="grind">
+      <param name="template" value="tutorial/TutorialSample8" />
+    </antcall>
+    <antcall target="grind">
+      <param name="template" value="tutorial/TutorialSample9" />
+    </antcall>
+    <antcall target="grind">
+      <param name="template" value="tutorial/TutorialSample10" />
+    </antcall>
   </target>
 
   <target name="war" depends="doc">
@@ -206,18 +284,6 @@ the documentation thus taking care of issues such as escaping.
            deprecation="true"
            classpath="${java.lib.jamon}:${tomcat.common.lib}/servlet.jar"
            srcdir="${src.dir}"
-           includes="**/JamonDocServlet.java"
-           failonerror="true"/>
-  </target>
-
-  <target name="compile-docbuilder"
-          description="Compile the DocBuilder">
-    <javac destdir="${work.dir}"
-           debug="true"
-           deprecation="true"
-           classpath="${java.lib.jamon}:${java.lib.diff}:${work.dir}:${this.dir}"
-           srcdir="${src.dir}"
-           includes="**/DocBuilder.java"
            failonerror="true"/>
   </target>
 
