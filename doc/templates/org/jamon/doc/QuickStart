@@ -5,47 +5,49 @@
 
 <h2>Quick Start Mini-Tutorial</h2>
 
-Create a java file <a class="file" href="JamonQs.java">JamonQs.java</a>:
+<ol>
 
-<pre class="java"><&| /org/jamon/escape/Html &><& JamonQsJava &></&></pre>
+<li>
 Create a Jamon template <a href="QsTemp" class="file">QsTemp</a>:
 <pre class="jamon"><&| /org/jamon/escape/Html &><& QsTemp &></&></pre>
 
+<li>
+Create a java file <a class="file" href="JamonQs.java">JamonQs.java</a>:
+<pre class="java"><&| /org/jamon/escape/Html &><& JamonQsJava &></&></pre>
+
+<li>
 Set your classpath:
-<&|| _command &>
- <|windows>SET CLASSPATH=.;\path\to\jamon.jar</|>
- <|unix>export CLASSPATH=.:/path/to/jamon.jar</|>
-</&>
+<table>
+  <tr>
+    <td class="system">Windows</td>
+   <td class="tty">C:\JAMONTMP&gt; SET CLASSPATH=.;\path\to\jamon.jar</td>
+  </tr>
+  <tr>
+    <td class="system">Unix (sh, bash, zsh, ksh)</td>
+    <td class="tty">$ export CLASSPATH=.:/path/to/jamon.jar</td>
+  </tr>
+  <tr>
+    <td class="system">Unix (csh, tcsh)</td>
+    <td class="tty">% setenv CLASSPATH .:/path/to/jamon.jar</td>
+  </tr>
+</table>
 
+<li>
 Process the template:
-<&|| _command &>
- <|windows>java org.jamon.TemplateProcessor --destDir=. QsTemp</|>
- <|unix>java org.jamon.TemplateProcessor --destDir=. QsTemp</|>
-</&>
+<pre class="tty">java org.jamon.TemplateProcessor --destDir=. QsTemp</pre>
 
+<li>
 Compile everything:
-<&|| _command &>
- <|windows>javac JamonQs.java QsTemp*.java</|>
- <|unix>javac JamonQs.java QsTemp*.java</|>
-</&>
+<pre class="tty">javac JamonQs.java QsTemp*.java</pre>
 
+<li>
 Run it:
-<&|| _command &>
- <|windows>java JamonQs one two three</|>
- <|unix>java JamonQs one two three</|>
-</&>
+<pre class="tty">java JamonQs one two three</pre>
 
+<li>
 You should see:
 <pre class="tty"><% output %></pre>
-</&>
 
-<%def _command>
-  <%farg windows></%farg>
-  <%farg unix></%farg>
-<p>
-  <span class="system">Windows</span>
-  <pre class="tty">C:\JAMONTMP&gt; <& windows &></pre>
-  <span class="system">Unix</span>
-  <pre class="tty">% <& unix &></pre>
-</p>
-</%def>
+</ol>
+
+</&>

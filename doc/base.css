@@ -86,8 +86,10 @@ pre
   background-color: #ffdfdf
 }
 
-pre.tty
+.tty
 {
+  padding: 0 0.5em 0 0.5em;
+  font-family: Monospace;
   background-color: #e0e0e0
 }
 
@@ -115,7 +117,7 @@ li
 
 .file
 {
-  font-family: monospace
+  font-family: monospaced
 }
 
 .changed
@@ -134,7 +136,7 @@ li
 .system
 {
   font-weight: bold;
-  font-size: 0.5em;
+  font-size: 0.8em;
 }
 
 .smell

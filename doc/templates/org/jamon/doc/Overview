@@ -6,7 +6,7 @@ To make use of Jamon:
 
 <ul>
 
-  <li>Create your templates.<li>
+  <li>Create your templates.</li>
 
   <li>
     Run the template processor on the templates, either via the
@@ -18,8 +18,12 @@ To make use of Jamon:
 
   <li>
     In your "regular" Java source files, reference templates like any
-    other class. Instantiate a template like any other class
-    (supplying a <code>TemplateManager</code> to the constructor).
+    other class. Instantiate a template supplying
+    a <code>StandardTemplateManager</code> to the constructor.
+    <p>
+      <b>NOTE:</b> you should have exactly one instance of
+      a <code>StandardTemplateManager</code> in use (per template
+      source directory).
   </li>
 
   <li>Include generated files in your build process.</li>

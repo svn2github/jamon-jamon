@@ -21,6 +21,9 @@
       determines the order in the <code>render</code> method.
     </li>
     <li>
+      A <code>makeRenderable</code> method taking the same parameters as <code>render</code>
+    <!-- make mention of makeRenderable -->
+    <li>
       Optional arguments in the template
       generate <code>setXXX<code> methods in the class.
     </li>
@@ -67,5 +70,8 @@ generated class would be:
     public MyTmpl escaping(Escaping escaping) { ... }
 
   }</&></pre>
+
+An instantiated template is a <b>thread-safe</b> object, and may
+safely be used by concurrent threads.
 
 </&>
