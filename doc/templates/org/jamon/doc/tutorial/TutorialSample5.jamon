@@ -46,7 +46,7 @@ Jamon templates are translated into Java classes and interfaces. Jamon provides 
   <li><span class="concept">Class scope declarations</span>
     The Java code included in the template by the <code>%</code> and
     <code>&lt;%java></code> ... <code>&lt;/%java></code> escapes
-    is translated into statements inside methods on the Java class
+    is translated into statements inside methods on a Java class
     created from the template.
     <p>
     For example, the template fragment below
@@ -58,7 +58,7 @@ Jamon templates are translated into Java classes and interfaces. Jamon provides 
 % }
 </%LITERAL>
 </&>
-    is translated into the following Java code inside a method:
+    is translated into Java code inside a method that looks something like:
 
 <pre class="code">
     int count = 3;
@@ -66,25 +66,29 @@ Jamon templates are translated into Java classes and interfaces. Jamon provides 
     this.write("    Hello world!\n");
     }
 </pre>
-    To declare a construct at the class level, use the
-    <code>&lt;%class></code> ... <code>&lt;/%class></code> tag. For example, the following Jamon code
-      <&| ../_Template &><%LITERAL>
+    To add variables or methods to the class which contains these
+    methods, use the <code>&lt;%class></code> ... <code>&lt;/%class></code>
+    tag. For example, the following Jamon template
+    <&| ../_Template &><%LITERAL>
 <%class>
   static int pageViews = 1;
 </%class>
 This component has been accessed <% pageViews++ %> times.
 </%LITERAL></&>
-    is translated into the Java code
+    generates a Java file looking something like
 <pre class="java">
+public class SomeTemplate
+{
   static int pageViews = 1;
-</pre>
-    at the class level and
-<pre class="java">
+
+  public void render throws java.io.IOException
+  {
     this.write("\nThis component has been accessed ");
     this.writeEscaped(this.valueOf(pageViews++ ));
     this.write(" times.\n\n");
+  }
+}
 </pre>
-    at the method level.
  <p>
     Any Java code that is legal at the class level, including fields, methods, and classes, may be declared in a Jamon template between the <code>&lt;%class></code> ... <code>&lt;/%class></code> tags.
 </ol>
