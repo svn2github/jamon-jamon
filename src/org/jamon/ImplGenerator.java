@@ -467,7 +467,7 @@ public class ImplGenerator extends BaseGenerator
 
         private String getClassName()
         {
-            return getAbsolutePath().substring(1).replace('/','.');
+            return PathUtils.pathToClassName(getAbsolutePath());
         }
 
         private String getInterfaceClassName()
@@ -545,7 +545,7 @@ public class ImplGenerator extends BaseGenerator
             List requiredArgs = new ArrayList();
             try
             {
-                Class c = Class.forName(m_packagePrefix + getClassName());
+                Class c = Class.forName(getInterfaceClassName());
                 requiredArgs.addAll
                     (Arrays.asList
                      ((String []) c.getField("RENDER_ARGS").get(null)));
