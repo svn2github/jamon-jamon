@@ -1,0 +1,7 @@
+<%def foo>\
+<%farg content></%farg>\
+<%args> int x; </%args>\
+<% x %><& content &><% x %>\
+</%def>\
+<%args> int x; </%args>\
+<|& foo; x => x &>(<% x + 1 %>)</&>
