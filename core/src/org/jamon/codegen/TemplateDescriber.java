@@ -34,7 +34,6 @@ import java.io.PushbackReader;
 
 import org.jamon.JamonException;
 import org.jamon.TemplateSource;
-import org.jamon.JamonParseException;
 import org.jamon.util.StringUtils;
 import org.jamon.node.Start;
 import org.jamon.parser.Parser;

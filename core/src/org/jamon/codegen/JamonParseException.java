@@ -18,11 +18,12 @@
  * Contributor(s): Ian Robertson
  */
 
-package org.jamon;
+package org.jamon.codegen;
 
 import java.io.File;
 import java.io.IOException;
 
+import org.jamon.JamonTemplateException;
 import org.jamon.parser.ParserException;
 import org.jamon.lexer.LexerException;
 import org.jamon.node.Token;
