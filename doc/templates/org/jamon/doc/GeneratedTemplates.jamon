@@ -62,19 +62,15 @@ generated class would be:
     public Renderer makeRenderer(int i, boolean b)
       throws java.io.IOException { ... }
 
-    public MyTmpl setS(String s)
-      throws java.io.IOException { ... }
+    public MyTmpl setS(String s) { ... }
 
-    public MyTmpl setSomeNumber(java.math.BigDecimal someNumber)
-      throws java.io.IOException { ... }
+    public MyTmpl setSomeNumber(java.math.BigDecimal someNumber) { ... }
 
-    public MyTmpl writeTo(java.io.Writer p_writer)
-      throws java.io.IOException { ... }
+    public MyTmpl writeTo(java.io.Writer p_writer) { ... }
 
     public MyTmpl escapeWith(Escaping escaping) { ... }
 
-    public MyTmpl autoFlush(boolean autoFlush)
-      throws java.io.IOException { ... }
+    public MyTmpl autoFlush(boolean autoFlush) { ... }
 
   }</&></pre>
 
@@ -157,24 +153,20 @@ something like:
   public abstract class ParentTmpl
     extends org.jamon.AbstractTemplateProxy
   {
-    public ParentTmpl setS(String s)
-      throws java.io.IOException { ... }
+    public ParentTmpl setS(String s) { ... }
 
     public abstract class ParentRenderer
     {
-      public ParentTmpl setS(String s)
-        throws java.io.IOException { ... }
+      public ParentTmpl setS(String s) { ... }
 
       public void render(int i, Integer count)
         throws java.io.IOException { ... }
 
-      public ParentRenderer writeTo(java.io.Writer writer)
-        throws java.io.IOException { ... }
+      public ParentRenderer writeTo(java.io.Writer writer) { ... }
 
       public ParentRenderer escapeWith(Escaping escaping) { ... }
 
-      public ParentRenderer autoFlush(boolean autoFlush)
-        throws java.io.IOException { ... }
+      public ParentRenderer autoFlush(boolean autoFlush) { ... }
     }
   }</&></pre>
 
@@ -205,16 +197,13 @@ something like:
     public Renderer makeRenderer(int i, Integer count, long t, double x)
       throws java.io.IOException { ... }
 
-    public ChildTmpl setAmount(java.math.BigDecimal amount)
-      throws java.io.IOException { ... }
+    public ChildTmpl setAmount(java.math.BigDecimal amount) { ... }
 
-    public ChildTmpl writeTo(java.io.Writer p_writer)
-      throws java.io.IOException { ... }
+    public ChildTmpl writeTo(java.io.Writer p_writer) { ... }
 
     public ChildTmpl escapeWith(Escaping escaping) { ... }
 
-    public ChildTmpl autoFlush(boolean autoFlush)
-      throws java.io.IOException { ... }
+    public ChildTmpl autoFlush(boolean autoFlush) { ... }
 
     public ParentTmpl.ParentRenderer makeParentRenderer(long t, double x)
       throws java.io.IOException { ... }

@@ -442,8 +442,6 @@ public class ProxyGenerator
             m_writer.println(
                 " " + arg.getSetterName()
                 + "(" + arg.getType() +" p_" + arg.getName() + ")");
-            m_writer.print  ("  throws ");
-            m_writer.println(ClassNames.IOEXCEPTION);
             m_writer.openBlock();
             m_writer.println(
                 "((ImplData) getImplData())."
@@ -505,8 +503,6 @@ public class ProxyGenerator
             m_writer.print("public final ParentRenderer ");
             m_writer.println(arg.getSetterName()
                              + "(" + arg.getType() +" p_" + name + ")");
-            m_writer.print  ("  throws ");
-            m_writer.println(ClassNames.IOEXCEPTION);
             m_writer.openBlock();
             m_writer.println(getClassName() + ".this." + arg.getSetterName()
                              + "(" + "p_" + name + ");");
@@ -552,7 +548,6 @@ public class ProxyGenerator
                        + " makeParentRenderer(");
         m_templateUnit.printDeclaredRequiredArgsDecl(m_writer);
         m_writer.println(")");
-        m_writer.println("  throws " + ClassNames.IOEXCEPTION);
         m_writer.openBlock();
         m_writer.print("return new " + parentRendererClass + "() ");
         m_writer.openBlock();
@@ -587,8 +582,6 @@ public class ProxyGenerator
         m_writer.println();
         m_writer.println("public " + p_returnClassName
                          + " writeTo(" + ClassNames.WRITER + " p_writer)");
-        m_writer.print  ("  throws ");
-        m_writer.println(ClassNames.IOEXCEPTION);
         m_writer.openBlock();
         m_writer.println("getImplData().setWriter(p_writer);");
         m_writer.println("return this;");
@@ -600,8 +593,6 @@ public class ProxyGenerator
         m_writer.println();
         m_writer.println("public " + p_returnClassName
                          + " autoFlush(boolean p_autoFlush)");
-        m_writer.print  ("  throws ");
-        m_writer.println(ClassNames.IOEXCEPTION);
         m_writer.openBlock();
         m_writer.println("getImplData().setAutoFlush(p_autoFlush);");
         m_writer.println("return this;");
