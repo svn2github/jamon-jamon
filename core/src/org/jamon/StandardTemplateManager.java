@@ -122,6 +122,13 @@ public class StandardTemplateManager
         }
         private String sourceDir;
 
+        public Data setTemplateSource(TemplateSource p_templateSource)
+        {
+            templateSource = p_templateSource;
+            return this;
+        }
+        private TemplateSource templateSource;
+
         public Data setWorkDir(String p_workDir)
         {
             workDir = p_workDir;
@@ -210,15 +217,26 @@ public class StandardTemplateManager
                                               p_data.classpath,
                                               p_data.javaCompilerNeedsRtJar,
                                               m_classLoader));
-            m_describer =
-                new TemplateDescriber(new File(p_data.sourceDir == null
-                                               ? System.getProperty("user.dir")
-                                               : p_data.sourceDir));
+
+            if (p_data.templateSource != null)
+            {
+                m_templateSource = p_data.templateSource;
+            }
+            else
+            {
+                m_templateSource =
+                    new FileTemplateSource(p_data.sourceDir == null
+                                           ? System.getProperty("user.dir")
+                                           : p_data.sourceDir);
+            }
+
+            m_describer = new TemplateDescriber(m_templateSource);
             m_loader = new WorkDirClassLoader(m_classLoader, m_workDir);
         }
         else
         {
             m_describer = null;
+            m_templateSource = null;
             m_javaCompiler = null;
             m_workDir = null;
             m_loader = null;
@@ -428,6 +446,7 @@ public class StandardTemplateManager
         return m_loader;
     }
 
+    private final TemplateSource m_templateSource;
     private final boolean m_dynamicRecompilation;
     private final TemplateDescriber m_describer;
     private final Escaping m_escaping;
@@ -480,8 +499,7 @@ public class StandardTemplateManager
             }
             seen.add(path);
 
-            File tf = m_describer.getTemplateFile(path);
-            if (!tf.exists())
+            if (! m_templateSource.available(path))
             {
                 if (TRACE)
                 {
@@ -493,7 +511,8 @@ public class StandardTemplateManager
             File jm = new File(javaImpl(path));
             long ts = jm.lastModified();
             boolean intfGenerated = false;
-            if (jm.lastModified() < tf.lastModified())
+            long modTime = m_templateSource.lastModified(path);
+            if (jm.lastModified() < modTime)
             {
                 intfGenerated = generateIntfIfChanged(path);
                 if (intfGenerated)
@@ -519,7 +538,7 @@ public class StandardTemplateManager
             }
 
             DependencyEntry d = (DependencyEntry) m_dependencyCache.get(path);
-            if (d == null || d.lastUpdated() < tf.lastModified())
+            if (d == null || d.lastUpdated() < modTime)
             {
                 d = new DependencyEntry(computeDependencies(path));
                 m_dependencyCache.put(path, d);

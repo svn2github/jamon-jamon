@@ -30,10 +30,10 @@ import org.jamon.node.Token;
 public class JamonParseException
     extends JamonException
 {
-    public JamonParseException(File p_file, LexerException p_exception)
+    public JamonParseException(String p_fileName, LexerException p_exception)
     {
         super(p_exception.getMessage());
-        m_fileName = p_file.getAbsolutePath();
+        m_fileName = p_fileName;
         String message = p_exception.getMessage();
         int i = message.indexOf(',');
         m_line = Integer.parseInt(message.substring(1, i));
@@ -42,10 +42,10 @@ public class JamonParseException
         m_description = message.substring(j+2);
     }
 
-    public JamonParseException(File p_file, ParserException p_exception)
+    public JamonParseException(String p_fileName, ParserException p_exception)
     {
         super(p_exception.getMessage());
-        m_fileName = p_file.getAbsolutePath();
+        m_fileName = p_fileName;
         Token token = p_exception.getToken();
         m_line = token.getLine();
         m_column = token.getPos();

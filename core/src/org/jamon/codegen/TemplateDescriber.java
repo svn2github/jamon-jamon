@@ -28,12 +28,13 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.StringTokenizer;
 import java.io.File;
-import java.io.FileReader;
+import java.io.Reader;
 import java.io.IOException;
 import java.io.FileNotFoundException;
 import java.io.PushbackReader;
 
 import org.jamon.JamonException;
+import org.jamon.TemplateSource;
 import org.jamon.JamonParseException;
 import org.jamon.util.StringUtils;
 import org.jamon.node.Start;
@@ -44,12 +45,12 @@ import org.jamon.lexer.LexerException;
 
 public class TemplateDescriber
 {
-    public TemplateDescriber(File p_templateSourceDir)
+    public TemplateDescriber(TemplateSource p_templateSource)
     {
-        m_templateSourceDir = p_templateSourceDir;
+        m_templateSource = p_templateSource;
     }
 
-    private final File m_templateSourceDir;
+    private final TemplateSource m_templateSource;
 
     public FargInfo getFargInfo(String p_path, String p_fargName)
         throws IOException
@@ -116,12 +117,6 @@ public class TemplateDescriber
         }
     }
 
-    public File getTemplateFile(String p_path)
-    {
-        return new File(m_templateSourceDir,
-                        templatePathToFilePath(p_path));
-    }
-
     private String templatePathToFilePath(String p_path)
     {
         StringTokenizer tokenizer = new StringTokenizer(p_path, "/");
@@ -180,8 +175,7 @@ public class TemplateDescriber
     public Start parseTemplate(String p_path)
         throws IOException
     {
-        File file = getTemplateFile(p_path);
-        FileReader reader = new FileReader(file);
+        Reader reader = m_templateSource.getReaderFor(p_path);
         try
         {
             return new Parser(new Lexer
@@ -191,11 +185,13 @@ public class TemplateDescriber
         }
         catch (ParserException e)
         {
-            throw new JamonParseException(file,e);
+            throw new JamonParseException
+                (m_templateSource.getExternalIdentifier(p_path),e);
         }
         catch (LexerException e)
         {
-            throw new JamonParseException(file,e);
+            throw new JamonParseException
+                (m_templateSource.getExternalIdentifier(p_path),e);
         }
         finally
         {

@@ -45,7 +45,8 @@ public class TemplateProcessor
                              boolean p_generateImpls)
     {
         m_destDir = p_destDir;
-        m_describer = new TemplateDescriber(p_sourceDir);
+        m_describer =
+            new TemplateDescriber(new FileTemplateSource(p_sourceDir));
         m_resolver = new TemplateResolver();
         m_generateImpls = p_generateImpls;
     }
