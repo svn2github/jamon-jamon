@@ -108,8 +108,31 @@ public class ParametersTest
     public void testFictionalParentArgument()
         throws Exception
     {
-        checkForFailure("FictionalParentArgument",
-                        "/test/jamon/broken/FictionalParentArgument mistakenly thinks that /test/jamon/Parent has an arg named nosucharg");
+        expectTemplateException(
+            "test/jamon/broken/FictionalParentArgument",
+            "/test/jamon/Parent does not have an arg named nosucharg",
+            3,
+            3);
+    }
+
+    public void testSettingDefaultForInheritedRequiredArg()
+        throws Exception
+    {
+        expectTemplateException(
+            "test/jamon/broken/DefaultForInheritedRequiredArg",
+            "i is an inherited required argument, and may not be given a default value",
+            3,
+            5);
+    }
+
+    public void testSettingDefaultForInheritedFragmentArg()
+        throws Exception
+    {
+        expectTemplateException(
+            "test/jamon/broken/DefaultForInheritedFragmentArg",
+            "f is an inherited fragment argument, and may not be given a default value",
+            3,
+            5);
     }
 
     public void testDuplicateArgument()

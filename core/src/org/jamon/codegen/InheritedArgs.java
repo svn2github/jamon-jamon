@@ -25,6 +25,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.jamon.node.AParentArg;
+import org.jamon.node.ADefault;
 public class InheritedArgs
 {
     public InheritedArgs(String p_unitName,
@@ -57,20 +59,19 @@ public class InheritedArgs
         return m_visibleArgs.contains(p_arg);
     }
 
-    public void addParentArg(String p_name, String p_default)
+    public void addParentArg(AParentArg p_arg)
     {
+        String name = p_arg.getName().getText();
         for (Iterator i = m_requiredArgs.iterator(); i.hasNext(); )
         {
             RequiredArgument arg = (RequiredArgument) i.next();
-            if(arg.getName().equals(p_name))
+            if(arg.getName().equals(name))
             {
-                if(p_default != null)
+                if(p_arg.getDefault() != null)
                 {
-                    //FIXME - unit test this.
                     throw new TunnelingException
-                        (m_name
-                         + " gives a default value to inherited required argument "
-                         + p_name);
+                        (name + " is an inherited required argument, and may not be given a default value",
+                         ((ADefault) p_arg.getDefault()).getArrow());
                 }
                 m_visibleArgs.add(arg);
                 return;
@@ -80,9 +81,13 @@ public class InheritedArgs
         for (Iterator i = m_optionalArgs.iterator(); i.hasNext(); )
         {
             OptionalArgument arg = (OptionalArgument) i.next();
-            if(arg.getName().equals(p_name))
+            if(arg.getName().equals(name))
             {
-                arg.setDefault(p_default);
+                if(p_arg.getDefault() != null)
+                {
+                    arg.setDefault(((ADefault) p_arg.getDefault())
+                                   .getArgexpr().getText().trim());
+                }
                 m_visibleArgs.add(arg);
                 return;
             }
@@ -91,15 +96,13 @@ public class InheritedArgs
         for (Iterator i = m_fragmentArgs.iterator(); i.hasNext(); )
         {
             FragmentArgument arg = (FragmentArgument) i.next();
-            if (arg.getName().equals(p_name))
+            if (arg.getName().equals(name))
             {
-                if(p_default != null)
+                if (p_arg.getDefault() != null)
                 {
-                    //FIXME - unit test this.
                     throw new TunnelingException
-                        (m_name
-                         + " gives a default value to inherited fragment argument "
-                         + p_name);
+                        (name + " is an inherited fragment argument, and may not be given a default value",
+                         ((ADefault) p_arg.getDefault()).getArrow());
                 }
                 m_visibleArgs.add(arg);
                 return;
@@ -107,7 +110,7 @@ public class InheritedArgs
         }
 
         throw new TunnelingException
-            (m_name + " mistakenly thinks that " + m_parentName
-             + " has an arg named "  + p_name);
+            (m_parentName + " does not have an arg named " + name,
+             p_arg.getName());
     }
 }

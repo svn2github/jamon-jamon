@@ -360,11 +360,7 @@ public class Analyzer
         public void caseAParentArg(AParentArg p_arg)
         {
             ADefault argDefault = (ADefault) p_arg.getDefault();
-            ((InheritedUnit) getCurrentUnit()).addParentArg
-                (p_arg.getName().getText(),
-                 (argDefault != null
-                  ? argDefault.getArgexpr().toString().trim()
-                  : null));
+            ((InheritedUnit) getCurrentUnit()).addParentArg(p_arg);
         }
 
         public void caseAFargStart(AFargStart p_fargStart)

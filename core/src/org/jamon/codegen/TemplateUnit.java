@@ -33,8 +33,9 @@ import java.util.Map;
 import java.util.Set;
 
 import org.jamon.JamonException;
-import org.jamon.node.TIdentifier;
 import org.jamon.node.AOverride;
+import org.jamon.node.AParentArg;
+import org.jamon.node.TIdentifier;
 import org.jamon.util.StringUtils;
 
 public class TemplateUnit
@@ -96,9 +97,9 @@ public class TemplateUnit
         m_callNames.addAll(p_parent.getMethodUnits().keySet());
     }
 
-    public void addParentArg(String p_name, String p_default)
+    public void addParentArg(AParentArg p_arg)
     {
-        m_inheritedArgs.addParentArg(p_name, p_default);
+        m_inheritedArgs.addParentArg(p_arg);
     }
 
     public Iterator getFragmentArgs()

@@ -41,6 +41,11 @@ import org.jamon.codegen.TemplateUnit;
 import org.jamon.codegen.TemplateDescription;
 import org.jamon.codegen.TunnelingException;
 
+import org.jamon.node.ADefault;
+import org.jamon.node.AParentArg;
+import org.jamon.node.TArgexpr;
+import org.jamon.node.TIdentifier;
+
 public class TemplateUnitTest
     extends TestCase
 {
@@ -78,8 +83,11 @@ public class TemplateUnitTest
         child.setParentPath(parent.getName());
         child.setParentDescription(new TemplateDescription(parent));
 
-        child.addParentArg("pr2", null);
-        child.addParentArg("po2", "oc2");
+        child.addParentArg(new AParentArg(new TIdentifier("pr2"), null, null));
+        child.addParentArg(new AParentArg(new TIdentifier("po2"),
+                                          new ADefault(null,
+                                                       new TArgexpr("oc2")),
+                                          null));
         child.addRequiredArg(cr3);
         child.addOptionalArg(co3);
 

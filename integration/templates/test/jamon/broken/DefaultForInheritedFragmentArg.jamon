@@ -1,0 +1,4 @@
+<%extends ../ParentFragment>
+<%xargs>
+  f => 4;
+</%xargs>

@@ -20,7 +20,9 @@
 
 package org.jamon.codegen;
 
+import org.jamon.node.AParentArg;
+
 public interface InheritedUnit
 {
-    void addParentArg(String p_name, String p_default);
+    void addParentArg(AParentArg p_arg);
 }

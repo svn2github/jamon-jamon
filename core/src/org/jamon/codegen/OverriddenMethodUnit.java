@@ -23,6 +23,8 @@ package org.jamon.codegen;
 import java.util.Iterator;
 import java.util.List;
 
+import org.jamon.node.AParentArg;
+
 public class OverriddenMethodUnit
     extends AbstractUnit
     implements MethodUnit, InheritedUnit
@@ -41,9 +43,9 @@ public class OverriddenMethodUnit
 
     }
 
-    public void addParentArg(String p_name, String p_default)
+    public void addParentArg(AParentArg p_arg)
     {
-        m_inheritedArgs.addParentArg(p_name, p_default);
+        m_inheritedArgs.addParentArg(p_arg);
     }
 
     public Iterator getVisibleArgs()
