@@ -127,6 +127,10 @@ public class StandardTemplateManager
         m_javaCompiler = null;
     }
 
+    public void setDynamicRecompilation(boolean p_dynamicRecompilation)
+    {
+        m_dynamicRecompilation = p_dynamicRecompilation;
+    }
 
     private synchronized void initialize()
         throws IOException
@@ -225,14 +229,21 @@ public class StandardTemplateManager
         throws IOException,
                ClassNotFoundException
     {
-
-        ensureUpToDate(p_path);
-        return loadAndResolveClass(p_path);
+        if (m_dynamicRecompilation)
+        {
+            ensureUpToDate(p_path);
+            return loadAndResolveClass(p_path);
+        }
+        else
+        {
+            return m_classLoader.loadClass(getClassName(p_path));
+        }
     }
 
     private static final String PS = System.getProperty("path.separator");
     private static final String FS = System.getProperty("file.separator");
 
+    private boolean m_dynamicRecompilation = true;
     private TemplateDescriber m_describer;
     private String m_workDir;
     private String m_templateSourceDir;
