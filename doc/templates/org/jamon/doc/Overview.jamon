@@ -22,22 +22,19 @@ To make use of Jamon:
 
   <li>
     In your "regular" Java source files, reference templates like any
-    other class. Instantiate a template supplying
-    a <code>StandardTemplateManager</code> to the constructor.
-    <p>
-      <b>NOTE:</b> you should have exactly one instance of
-      a <code>StandardTemplateManager</code> in use (per template
-      source directory).
+    other class.
   </li>
 
   <li>Include generated files in your build process.</li>
 
   <li>
-    At runtime, changes made to the template sources are automatically
-    reflected in the running application. This is accomplished by
-    regeneration and recompilation of the sources corresponding to
-    your templates. This default behavior can be turned off for
-    production deployment.
+    If you would like changes made to the template sources to be
+    automatically reflected in the running application at runtime,
+    create a <a
+    href="javadoc/org/jamon/RecompilingTemplateManager.html"
+    >RecompilingTemplateManager</a> and pass it to <a
+    href="javadoc/org/jamon/TemplateManagerSource.html#setTemplateManager"
+    >TemplateManagerSource.setTemplateManager()</a>.
   </li>
 
 </ul>
