@@ -113,8 +113,8 @@ If one template inherits from another, then:
       </li>
 
       <li>
-        <code>setXXX</code> methods for each of the parent templates
-        optional argument (including any optional arguments for the
+        <code>setXXX</code> methods for each of the parent template's
+        optional arguments (including any optional arguments for the
         parent template's ancestors, if any).
       </li>
 
