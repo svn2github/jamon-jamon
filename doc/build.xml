@@ -205,6 +205,7 @@ the documentation thus taking care of issues such as escaping.
     <invoker classpath="${java.lib.jamon}"
              workDir="${work.dir}"
              sourceDir="templates"
+             compiler="jikes"
              output="${doc.dir}/${page.name}.html"
              template="${tutorial.path}/${page.name}" >
       <arg name="output" value="${template.output}" />
