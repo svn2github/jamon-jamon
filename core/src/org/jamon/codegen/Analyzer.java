@@ -427,8 +427,8 @@ public class Analyzer
         public void caseALiteralBaseComponent(ALiteralBaseComponent node)
         {
             handleBody();
-            addStatement(new LiteralStatement(node.getLiteralText().getText(),
-                                              false));
+            addStatement
+                (new LiteralStatement(node.getLiteralText().getText()));
         }
 
         public void caseABodyBaseComponent(ABodyBaseComponent node)
@@ -438,7 +438,23 @@ public class Analyzer
 
         public void caseANewlineBaseComponent(ANewlineBaseComponent node)
         {
-            m_current.append(node.getNewline().getText());
+            int len = m_current.length();
+            if (len == 0)
+            {
+                m_current.append(node.getNewline().getText());
+            }
+            else
+            {
+                char c = m_current.charAt(len-1);
+                if (c == '\\')
+                {
+                    m_current.deleteCharAt(len-1);
+                }
+                else
+                {
+                    m_current.append(node.getNewline().getText());
+                }
+            }
         }
 
         public void inAMultiFragmentCall(AMultiFragmentCall p_call)
@@ -522,7 +538,7 @@ public class Analyzer
     {
         if (m_current.length() > 0)
         {
-            addStatement(new LiteralStatement(m_current.toString(),true));
+            addStatement(new LiteralStatement(m_current.toString()));
             m_current = new StringBuffer();
         }
     }

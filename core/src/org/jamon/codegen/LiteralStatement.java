@@ -25,9 +25,9 @@ import org.jamon.util.StringUtils;
 public class LiteralStatement
     implements Statement
 {
-    LiteralStatement(String p_text, boolean p_escapeNewline)
+    LiteralStatement(String p_text)
     {
-        m_text = javaEscape(p_escapeNewline ? newlineEscape(p_text) : p_text);
+        m_text = javaEscape(p_text);
     }
 
     public void generateSource(IndentingWriter p_writer,
@@ -71,26 +71,6 @@ public class LiteralStatement
                   }
             }
         }
-        return s.toString();
-    }
-
-    private static String newlineEscape(String p_string)
-    {
-        // assert p_string != null
-        if (p_string.length() < 2)
-        {
-            return p_string;
-        }
-        StringBuffer s = new StringBuffer();
-        int j = 0;
-        int i = p_string.indexOf("\\\n");
-        while (i >= 0)
-        {
-            s.append(p_string.substring(j,i));
-            j = i+2;
-            i = p_string.indexOf("\\\n",j);
-        }
-        s.append(p_string.substring(j));
         return s.toString();
     }
 
