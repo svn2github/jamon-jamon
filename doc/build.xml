@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<project name="Jamon dcumentation" default="build">
+<project name="Jamon documentation" default="build">
 
   <description>----------------------------------------------------------------
 Documentation for the Jamon project.  Jamon itself is used to build
@@ -11,6 +11,7 @@ the documentation thus taking care of issues such as escaping.
   <property file="${user.home}/.ant.properties"/>
 
   <property name="build.dir" value="build"/>
+  <property name="work.dir" value="${build.dir}/work"/>
   <property name="www.dir" value="${build.dir}/www"/>
   <property name="classes.dir" value="${www.dir}/classes"/>
   <property name="java.lib.jamon" location="../jamon.jar"/>
@@ -28,7 +29,7 @@ the documentation thus taking care of issues such as escaping.
       <arg value="-s" />
       <arg value="templates" />
       <arg value="-w" />
-      <arg value="build/work" />
+      <arg value="${work.dir}" />
       <arg value="-o" />
       <arg value="${www.dir}/rainbow.html" />
       <arg value="/org/jamon/doc/RainbowTemplate" />
@@ -41,7 +42,7 @@ the documentation thus taking care of issues such as escaping.
       <arg value="-s" />
       <arg value="templates" />
       <arg value="-w" />
-      <arg value="build/work" />
+      <arg value="${work.dir}" />
       <arg value="-o" />
       <arg value="${www.dir}/templates/foo/bar/HelloTemplate" />
       <arg value="/org/jamon/doc/hello" />
@@ -55,7 +56,7 @@ the documentation thus taking care of issues such as escaping.
       <arg value="-s" />
       <arg value="templates" />
       <arg value="-w" />
-      <arg value="build/work" />
+      <arg value="${work.dir}" />
       <arg value="-o" />
       <arg value="${servlet.src.dir}/HelloServlet.java" />
       <arg value="/org/jamon/doc/HelloServletTemplate" />
@@ -67,7 +68,7 @@ the documentation thus taking care of issues such as escaping.
       <arg value="-s" />
       <arg value="templates" />
       <arg value="-w" />
-      <arg value="build/work" />
+      <arg value="${work.dir}" />
       <arg value="-o" />
       <arg value="${www.dir}/build.xml" />
       <arg value="/org/jamon/doc/buildxml" />
@@ -79,7 +80,7 @@ the documentation thus taking care of issues such as escaping.
       <arg value="-s" />
       <arg value="templates" />
       <arg value="-w" />
-      <arg value="build/work" />
+      <arg value="${work.dir}" />
       <arg value="-o" />
       <arg value="${www.dir}/web.xml" />
       <arg value="/org/jamon/doc/webxml" />
@@ -94,7 +95,7 @@ the documentation thus taking care of issues such as escaping.
       <arg value="-s" />
       <arg value="templates" />
       <arg value="-w" />
-      <arg value="build/work" />
+      <arg value="${work.dir}" />
       <arg value="-o" />
       <arg value="${servlet.src2.dir}/HelloServlet.java" />
       <arg value="/org/jamon/doc/HelloServlet2Template" />
@@ -106,7 +107,7 @@ the documentation thus taking care of issues such as escaping.
       <arg value="-s" />
       <arg value="templates" />
       <arg value="-w" />
-      <arg value="build/work" />
+      <arg value="${work.dir}" />
       <arg value="-o" />
       <arg value="${servlet.src2.dir}/HelloFormFields.java" />
       <arg value="/org/jamon/doc/FormFieldsTemplate" />
@@ -119,7 +120,7 @@ the documentation thus taking care of issues such as escaping.
       <arg value="-s" />
       <arg value="templates" />
       <arg value="-w" />
-      <arg value="build/work" />
+      <arg value="${work.dir}" />
       <arg value="-o" />
       <arg value="${www.dir}/example2/templates/foo/bar/HelloTemplate" />
       <arg value="/org/jamon/doc/Hello2TemplateTemplate" />
