@@ -89,7 +89,22 @@ public class UnitInfo
 
     public void printRequiredArgsDecl(IndentingWriter p_writer)
     {
-        for (Iterator i = getRequiredArgs(); i.hasNext(); /* */)
+        printArgsDecl(p_writer, getRequiredArgs());
+    }
+
+    public void printAllArgsDecl(IndentingWriter p_writer)
+    {
+        printArgsDecl(p_writer, getRequiredArgs());
+        if(hasRequiredArgs())
+        {
+            p_writer.println(", ");
+        }
+        printArgsDecl(p_writer, getOptionalArgs());
+    }
+
+    private static void printArgsDecl(IndentingWriter p_writer, Iterator i)
+    {
+        while(i.hasNext())
         {
             Argument arg = (Argument) i.next();
             p_writer.print("final " + arg.getType() + " " + arg.getName());

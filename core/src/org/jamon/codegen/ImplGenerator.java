@@ -181,23 +181,7 @@ public class ImplGenerator
             m_writer.print("private void __jamon_def__");
             m_writer.print(name);
             m_writer.print("(");
-            int argNum = 0;
-            unitInfo.printRequiredArgsDecl(m_writer);
-            if(unitInfo.hasRequiredArgs())
-            {
-                m_writer.print(", ");
-            }
-            for (Iterator a = unitInfo.getOptionalArgs();
-                 a.hasNext();
-                 /* */)
-            {
-                Argument arg = (Argument) a.next();
-                m_writer.print(arg.getType() + " " + arg.getName());
-                if(a.hasNext())
-                {
-                    m_writer.print(", ");
-                }
-            }
+            unitInfo.printAllArgsDecl(m_writer);
             m_writer.println(")");
             m_writer.print  ("  throws " + ClassNames.IOEXCEPTION);
             m_writer.openBlock();
