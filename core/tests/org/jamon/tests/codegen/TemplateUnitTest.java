@@ -44,6 +44,20 @@ import org.jamon.codegen.TunnelingException;
 public class TemplateUnitTest
     extends TestCase
 {
+
+    public void testInheritanceDepth() throws Exception
+    {
+        TemplateUnit parent = new TemplateUnit("/parent");
+        TemplateUnit child = new TemplateUnit("/child");
+        TemplateUnit grandchild = new TemplateUnit("/grandchild");
+        child.setParentDescription(new TemplateDescription(parent));
+        grandchild.setParentDescription(new TemplateDescription(child));
+
+        assertEquals(0, parent.getInheritanceDepth());
+        assertEquals(1, child.getInheritanceDepth());
+        assertEquals(2, grandchild.getInheritanceDepth());
+    }
+
     public void testParentArgs() throws Exception
     {
         TemplateUnit parent = new TemplateUnit("/parent");

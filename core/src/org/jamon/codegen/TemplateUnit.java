@@ -58,6 +58,14 @@ public class TemplateUnit
                                                 p_children));
     }
 
+    public int getInheritanceDepth()
+    {
+        return m_parentDescription == null
+            ? 0
+            : 1 + m_parentDescription.getInheritanceDepth();
+    }
+
+
     /**
      * public for unit testing purposes
      **/

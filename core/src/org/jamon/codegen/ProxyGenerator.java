@@ -50,6 +50,7 @@ public class ProxyGenerator
         generateSignature();
         generateArgArrays(m_templateUnit, "");
         generateMethodArrays();
+        generateInheritanceDepth();
         generateIntf();
         generateImplData();
         generateOptionalArgs();
@@ -458,6 +459,14 @@ public class ProxyGenerator
         m_writer.print("public static final String SIGNATURE = \"");
         m_writer.print(m_templateUnit.getSignature());
         m_writer.println("\";");
+    }
+
+    private void generateInheritanceDepth()
+        throws IOException
+    {
+        m_writer.print("public static final int INHERITANCE_DEPTH = ");
+        m_writer.print(String.valueOf(m_templateUnit.getInheritanceDepth()));
+        m_writer.println(";");
     }
 
     private void generateIntf()

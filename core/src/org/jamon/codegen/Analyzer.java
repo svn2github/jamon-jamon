@@ -397,20 +397,9 @@ public class Analyzer
 
         public void caseAChildCall(AChildCall p_childCall)
         {
-            getTemplateUnit().setIsParent();
-            addStatement(new Statement() {
-                    public void generateSource(IndentingWriter p_writer,
-                                               TemplateResolver p_resolver,
-                                               TemplateDescriber p_describer)
-                    {
-                        p_writer.println(ImplGenerator.CHILD_FARG_NAME
-                                         + ".writeTo(this.getWriter());");
-                        p_writer.println(ImplGenerator.CHILD_FARG_NAME
-                                         + ".escapeWith(this.getEscaping());");
-                        p_writer.println(ImplGenerator.CHILD_FARG_NAME
-                                         + ".render();");
-                    }
-                });
+            TemplateUnit unit = getTemplateUnit();
+            unit.setIsParent();
+            addStatement(new ChildCallStatement(unit.getInheritanceDepth()+1));
         }
 
         public void inAClassComponent(AClassComponent node)

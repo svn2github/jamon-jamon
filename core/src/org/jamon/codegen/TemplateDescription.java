@@ -39,6 +39,7 @@ public class TemplateDescription
     private final String m_signature;
     private final List m_fragmentInterfaces;
     private final Map m_methodUnits;
+    private final int m_inheritanceDepth;
 
     public final static TemplateDescription EMPTY = new TemplateDescription();
 
@@ -49,6 +50,7 @@ public class TemplateDescription
         m_signature = null;
         m_fragmentInterfaces = Collections.EMPTY_LIST;
         m_methodUnits = Collections.EMPTY_MAP;
+        m_inheritanceDepth = -1;
     }
 
     public TemplateDescription(TemplateUnit p_templateUnit)
@@ -71,6 +73,7 @@ public class TemplateDescription
             MethodUnit methodUnit = (MethodUnit) i.next();
             m_methodUnits.put(methodUnit.getName(), methodUnit);
         }
+        m_inheritanceDepth = p_templateUnit.getInheritanceDepth();
     }
 
     public TemplateDescription(Class p_intf)
@@ -106,6 +109,8 @@ public class TemplateDescription
                 m_methodUnits.put(method.getName(), method);
             }
             m_signature = (String) p_intf.getField("SIGNATURE").get(null);
+            m_inheritanceDepth =
+                ((Integer) p_intf.getField("INHERITANCE_DEPTH").get(null)).intValue();
         }
         catch (NoSuchFieldException e)
         {
@@ -203,6 +208,11 @@ public class TemplateDescription
     public Map getMethodUnits()
     {
         return m_methodUnits;
+    }
+
+    public int getInheritanceDepth()
+    {
+        return m_inheritanceDepth;
     }
 
     private static void addAll(Collection p_collection, Iterator p_iter)

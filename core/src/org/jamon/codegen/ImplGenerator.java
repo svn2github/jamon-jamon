@@ -274,42 +274,35 @@ public class ImplGenerator
         }
     }
 
-
-    final static String CHILD_FARG_NAME = "_Jamon_Fragment__CHILD";
-
     private void generateRender()
         throws IOException
     {
-        m_writer.print("public void render(");
-        if(m_templateUnit.isParent())
+        if (m_templateUnit.hasParentPath())
         {
-            m_writer.print("final " + ClassNames.CHILD_FARG + " "
-                           + CHILD_FARG_NAME);
-        }
-        m_writer.println(")");
-        m_writer.println("  throws " + ClassNames.IOEXCEPTION);
-        if(m_templateUnit.hasParentPath())
-        {
-            m_writer.openBlock();
-            m_writer.println("super.render(");
-            m_writer.indent(2);
-            m_writer.print("new " + ClassNames.CHILD_FARG
-                           + "(this.getTemplateManager()) ");
-            m_writer.openBlock();
-            m_writer.println("public void render() throws "
+            m_writer.println("protected void child_render_"
+                             + m_templateUnit.getInheritanceDepth()
+                             + "() throws "
                              + ClassNames.IOEXCEPTION);
-            m_templateUnit.generateRenderBody(m_writer,
-                                              m_resolver,
-                                              m_describer);
-            m_writer.closeBlock(");");
-            m_writer.outdent(2);
-            m_writer.closeBlock();
         }
         else
         {
-            m_templateUnit.generateRenderBody(m_writer,
-                                              m_resolver,
-                                              m_describer);
+            m_writer.println("public void render() throws "
+                             + ClassNames.IOEXCEPTION);
+        }
+        m_templateUnit.generateRenderBody(m_writer,
+                                          m_resolver,
+                                          m_describer);
+
+
+        m_writer.println();
+        if (m_templateUnit.isParent())
+        {
+            m_writer.println("protected abstract void child_render_"
+                             + (m_templateUnit.getInheritanceDepth() + 1)
+                             + "() throws "
+                             + ClassNames.IOEXCEPTION
+                             + ";");
+            m_writer.println();
         }
     }
 
