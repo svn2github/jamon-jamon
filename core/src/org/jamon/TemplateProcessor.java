@@ -30,7 +30,7 @@ import org.jamon.codegen.TemplateDescriber;
 import org.jamon.codegen.TemplateResolver;
 import org.jamon.codegen.Analyzer;
 import org.jamon.codegen.ImplGenerator;
-import org.jamon.codegen.IntfGenerator;
+import org.jamon.codegen.ProxyGenerator;
 import org.jamon.codegen.TemplateUnit;
 import org.jamon.lexer.Lexer;
 import org.jamon.lexer.LexerException;
@@ -91,7 +91,7 @@ public class TemplateProcessor
 
         try
         {
-            new IntfGenerator(writer, m_resolver, m_describer, templateUnit)
+            new ProxyGenerator(writer, m_resolver, m_describer, templateUnit)
                 .generateClassSource();
         }
         catch (RuntimeException e)

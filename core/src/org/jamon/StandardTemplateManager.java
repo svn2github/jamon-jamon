@@ -43,7 +43,7 @@ import org.jamon.util.WorkDirClassLoader;
 import org.jamon.codegen.TemplateDescriber;
 import org.jamon.codegen.Analyzer;
 import org.jamon.codegen.ImplGenerator;
-import org.jamon.codegen.IntfGenerator;
+import org.jamon.codegen.ProxyGenerator;
 import org.jamon.codegen.TemplateResolver;
 import org.jamon.codegen.TemplateUnit;
 
@@ -660,10 +660,10 @@ public class StandardTemplateManager
             FileWriter writer = new FileWriter(javaFile);
             try
             {
-                new IntfGenerator(writer,
-                                  new TemplateResolver(),
-                                  m_describer,
-                                  templateUnit)
+                new ProxyGenerator(writer,
+                                   new TemplateResolver(),
+                                   m_describer,
+                                   templateUnit)
                     .generateClassSource();
                 writer.close();
             }

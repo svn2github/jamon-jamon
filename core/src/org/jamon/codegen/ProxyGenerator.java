@@ -27,12 +27,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.LinkedList;
 
-public class IntfGenerator
+public class ProxyGenerator
 {
-    public IntfGenerator(Writer p_writer,
-                         TemplateResolver p_resolver,
-                         TemplateDescriber p_describer,
-                         TemplateUnit p_templateUnit)
+    public ProxyGenerator(Writer p_writer,
+                          TemplateResolver p_resolver,
+                          TemplateDescriber p_describer,
+                          TemplateUnit p_templateUnit)
     {
         m_writer = new IndentingWriter(p_writer);
         m_resolver = p_resolver;
