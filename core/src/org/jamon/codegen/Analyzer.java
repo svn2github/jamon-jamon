@@ -71,11 +71,18 @@ public class Analyzer
     private void preAnalyze(Start p_start)
         throws IOException
     {
+        preAnalyze(p_start, new AliasAdapter());
+        preAnalyze(p_start, new PreliminaryAdapter());
+    }
+
+    private void preAnalyze(Start p_start, AnalysisAdapter p_adapter)
+        throws IOException
+    {
         for (Iterator i = ((ATemplate) p_start.getPTemplate())
                  .getComponent().iterator();
              i.hasNext(); )
         {
-            ((PComponent) i.next()).apply(new PreliminaryAdapter());
+            ((PComponent) i.next()).apply(p_adapter);
         }
 
     }
@@ -175,11 +182,12 @@ public class Analyzer
         }
     }
 
-    private class PreliminaryAdapter extends AnalysisAdapter
+    private class AliasAdapter extends AnalysisAdapter
     {
         public void caseAAliasComponent(AAliasComponent p_alias)
         {
-            for (Iterator a = ((AAliases)p_alias.getAliases()).getAlias().iterator();
+            for (Iterator a = ((AAliases)p_alias.getAliases())
+                     .getAlias().iterator();
                  a.hasNext(); )
             {
                 AAlias alias = (AAlias) a.next();
@@ -188,7 +196,10 @@ public class Analyzer
                      computePath(alias.getPath()));
             }
         }
+    }
 
+    private class PreliminaryAdapter extends AnalysisAdapter
+    {
         public void caseAExtendsComponent(AExtendsComponent p_extends)
         {
             getTemplateUnit().setParentPath(computePath(p_extends.getPath()));
