@@ -140,7 +140,9 @@ public class StandardTemplateManager
                     + "jamon"
                     + (new java.util.Random().nextInt(100000000))
                     + ".tmp";
-                new File(m_workDir).mkdirs();
+                File workDir = new File(m_workDir);
+                workDir.mkdirs();
+                workDir.deleteOnExit();
             }
             m_loader = new WorkDirClassLoader(m_classLoader, m_workDir);
             m_describer =
