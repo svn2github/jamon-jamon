@@ -39,10 +39,20 @@ public class Phase2Generator extends BaseGenerator
 
     public void caseAJavaComponent(AJavaComponent node)
     {
+        handleBody();
+        StringBuffer buf = new StringBuffer();
+        for (Iterator i = node.getAny().iterator(); i.hasNext(); /* */)
+        {
+            buf.append(((TAny)i.next()).getText());
+        }
+        m_body.add(buf.toString());
     }
 
     public void caseAJlineComponent(AJlineComponent node)
     {
+        handleBody();
+        System.err.println("fragment is " + node.getFragment().getText());
+        m_body.add(node.getFragment().getText());
     }
 
     private void handleBody()
