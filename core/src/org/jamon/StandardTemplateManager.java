@@ -168,11 +168,8 @@ public class StandardTemplateManager
                 }
             }
         }
-        else
-        {
-            cp.append(PS);
-            cp.append(System.getProperty("java.class.path"));
-        }
+        cp.append(PS);
+        cp.append(System.getProperty("java.class.path"));
 
         if (m_includeRtJar)
         {
