@@ -35,16 +35,13 @@ import org.jamon.FileTemplateSource;
 public class TemplateDescriberTest
     extends TestCase
 {
-    private static final String BASEDIR =
-        System.getProperty("org.jamon.integration.basedir");
-    protected static final String SOURCE_DIR =
-        BASEDIR + File.separator + "templates";
-
     public void testArgumentIntrospection()
         throws Exception
     {
+        File nonexistent = File.createTempFile("jamontest",null);
+        nonexistent.deleteOnExit();
         TemplateDescriber describer = new TemplateDescriber
-            (new FileTemplateSource(SOURCE_DIR));
+            (new FileTemplateSource(nonexistent));
         List argNames = describer.getRequiredArgNames("/test/jamon/ClassOnly");
         assertEquals(2, argNames.size());
         assertEquals("i", argNames.get(0));
