@@ -16,7 +16,7 @@ Helpers
   nl = lf | cr | cr lf;
   hs = [sp + ht];
   ws = [[hs + lf] + ff];
-  argend = ';'; // could be nl ...
+  argsep = ';'; // could be nl ...
   all = [0x0000 .. 0xFFFF];
   all_except_nl = [all - [lf + cr]];
   q = '"';
@@ -60,7 +60,7 @@ Tokens
 
   {start -> emit,body -> emit} emit_start = '<%' ws+;
   {emit -> body} emit_end = ws* '%>';
-  {emit} escape = pipe ('h' | 'u' | 'x' | 'n');
+  {emit} escape = pipe lower;
 
   {emit} emit_expr =
       ( [all - [[q + pct] + pipe]]
@@ -74,8 +74,8 @@ Tokens
   {jline -> start} outjava = hs* nl;
   {jline} expr = all_except_nl*;
    // fixme: line ending ...
-  {argexp} argexpr = ([all - [argend+q]] | quoted)*;
-  {argexp -> args,args} donearg = hs* argend ws*;
+  {argexp} argexpr = ([all - [argsep+q]] | quoted)*;
+  {argexp -> args,args} donearg = hs* argsep ws*;
 
   {java} java_stmts =
        ( [all - [q + lt]]
@@ -98,7 +98,7 @@ Tokens
   {start -> call,body -> call} call_start = '<&' ws*;
   {call -> body} call_end = ws* '&>';
   {callexp -> call} param_expr =
-       ([all - [argend + [q + '&']]] | quoted | '&' [all - '>'])*;
+       ([all - [argsep + [q + '&']]] | quoted | '&' [all - '>'])*;
   {call} semi = ';';
   {call,inherit} pathsep = slash;
 
