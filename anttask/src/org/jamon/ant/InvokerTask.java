@@ -157,7 +157,6 @@ public class InvokerTask
 
     public void setDynamicRecompilation(boolean p_dynamicRecompilation)
     {
-        System.out.println("settting dynamic recompilation to " + p_dynamicRecompilation);
         m_templateManagerData.setDynamicRecompilation(p_dynamicRecompilation);
     }
 
