@@ -81,4 +81,6 @@
           (progn (goto-char p) (jj-closest-position 1))
           '(1 . 1)))))
 
+(provide 'jamon-java)
+
 ;;}}}
