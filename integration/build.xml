@@ -17,7 +17,6 @@
   <property name="sample.template2" value="test/jamon/Arguments"/>
   <property name="java.lib.jamon" value="../jamon.jar"/>
   <property name="java.lib.junit" value="/usr/local/share/java/junit.jar" />
-  <property name="java.lib.gnuregexp" value="/usr/local/share/java/gnu-regexp-1.1.4.jar" />
 
   <property name="junit.fork" value="yes" />
   <property name="junit.timeout" value="15000" />
@@ -65,7 +64,7 @@
     <mkdir dir="${classes.dir}"/>
     <javac destdir="${classes.dir}"
            debug="true"
-           classpath="${java.lib.jamon}:${java.lib.gnuregexp}"
+           classpath="${java.lib.jamon}"
            deprecation="true">
       <src path="${src.dir}"/>
       <src path="${build.src.dir}"/>
@@ -76,7 +75,7 @@
           depends="compile"
           description="Exercises the compiled templates">
     <java fork="true"
-          classpath="${classes.dir}:${java.lib.jamon}:${java.lib.gnuregexp}"
+          classpath="${classes.dir}:${java.lib.jamon}"
           classname="org.jamon.Invoker">
       <arg value="test.jamon.TestTemplate" />
       <arg value="amount=4.5" />
@@ -94,7 +93,6 @@
         <pathelement location="${classes.dir}"/>
         <pathelement location="${java.lib.junit}"/>
         <pathelement path="${java.lib.jamon}"/>
-        <pathelement location="${java.lib.gnuregexp}"/>
       </classpath>
       <batchtest>
         <fileset dir="${src.dir}">

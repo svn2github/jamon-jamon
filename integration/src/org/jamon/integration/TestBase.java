@@ -26,8 +26,6 @@ import java.io.IOException;
 
 import junit.framework.TestCase;
 
-import gnu.regexp.RE;
-
 import org.jamon.StandardTemplateManager;
 import org.jamon.TemplateManager;
 
@@ -50,6 +48,12 @@ public class TestBase
         return m_writer;
     }
 
+    protected void checkOutputContains(String p_expected)
+        throws IOException
+    {
+        assertTrue(getOutput().indexOf(p_expected) >= 0);
+    }
+
     protected void checkOutput(String p_expected)
         throws IOException
     {
@@ -60,12 +64,6 @@ public class TestBase
         throws IOException
     {
         assertEquals(p_message, p_expected, getOutput());
-    }
-
-    protected void checkOutput(RE p_regexp)
-        throws Exception
-    {
-        assertTrue(p_regexp.isMatch(getOutput()));
     }
 
     protected TemplateManager getTemplateManager()

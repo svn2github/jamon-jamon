@@ -1,8 +1,5 @@
 # where to find JUnit
 java.lib.junit=/usr/local/share/java/junit.jar
 
-# where to find GNU regexp
-java.lib.gnuregexp=/usr/local/share/java/gnu-regexp-1.1.4.jar
-
 # use this to run integration tests against built classes instead of jar
 java.lib.jamon=../core/build/classes:../anttask/build/classes
