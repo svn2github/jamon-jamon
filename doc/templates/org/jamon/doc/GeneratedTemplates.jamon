@@ -38,7 +38,7 @@ directory <code>tmpls/org/foo</code>, the template source directory is
 set to <code>tmpls</code>, and <code>MyTemplate</code> contains the
 declarations
 
-<pre><&| /org/jamon/escape/Html &><%LITERAL><%args>
+<pre class="jamon""><&| /org/jamon/escape/Html &><%LITERAL><%args>
   int i;
   String s => "yes";
   java.math.BigDecimal someNumber => null;
@@ -140,7 +140,7 @@ If one template inherits from another, then:
 For example, if <code>/org/foo/ParentTemplate</code> contained the
 declarations
 
-<pre><&| /org/jamon/escape/Html &><%LITERAL><%args>
+<pre class="jamon"><&| /org/jamon/escape/Html &><%LITERAL><%args>
   int i;
   String s => "yes";
   Integer count;
@@ -177,7 +177,8 @@ something like:
 Moreover, if <code>/org/foo/ChildTemplate</code> contained the
 declarations
 
-<pre><&| /org/jamon/escape/Html &><%LITERAL><%extends ParentTemplate>
+<pre class="jamon"
+><&| /org/jamon/escape/Html &><%LITERAL><%extends ParentTemplate>
 <%args>
   long t;
   java.math.BigDecimal amount => new BigDecimal(0);
