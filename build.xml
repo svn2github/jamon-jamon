@@ -21,8 +21,10 @@
 
   <target name="test"
           depends="jar"
-          description="Run the demo">
+          description="Run tests">
+    <ant dir="core" target="test"/>
     <ant dir="integration" target="test"/>
+    <ant dir="stdlib" target="test"/>
   </target>
 
   <target name="core" description="Build the core template engine">
