@@ -35,9 +35,9 @@ the documentation thus taking care of issues such as escaping.
     <antcall target="grind">
       <param name="template" value="Reference" />
     </antcall>
-    <!-- Generate the big Rainbow document -->
+    <!-- Generate the Servlets document -->
     <antcall target="grind">
-      <param name="template" value="RainbowTemplate" />
+      <param name="template" value="Servlets" />
     </antcall>
     <!-- Generate the first template example -->
     <invoker classpath="${java.lib.jamon}:${java.lib.diff}"

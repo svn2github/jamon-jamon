@@ -38,11 +38,11 @@
           <li>generation of source files (Java and Jamon) that exactly reflect what is
             is in this document</li>
         </ul>
-        were dealt with automatically.  Furthermore, part of the process of generating this 
+        were dealt with automatically.  Furthermore, part of the process of generating this
         documentation was compiling some of the examples and placing the classes in WAR files.
-        So you can be sure the examples at least compile.  In particular this also means that 
+        So you can be sure the examples at least compile.  In particular this also means that
         Jamon is being used to autogenerate Jamon sources!
-      </li>     
+      </li>
 
     </ol>
   </body>
