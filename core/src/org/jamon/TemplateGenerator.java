@@ -158,6 +158,40 @@ public class TemplateGenerator
     }
 
 
+    public static void generateImplAndInterfaces(File p_destDir,
+                                                 String[] p_relativeFilenames,
+                                                 String[] p_absoluteFilenames)
+        throws IOException,
+               ParserException,
+               LexerException
+    {
+        if (p_relativeFilenames.length != p_absoluteFilenames.length)
+        {
+            throw new IllegalArgumentException
+                ("Relative and absolute filename arrays length mismatch");
+        }
+
+        p_destDir.mkdirs();
+        if (! p_destDir.exists() || ! p_destDir.isDirectory())
+        {
+            throw new IOException("Unable to create destination dir "
+                                  + p_destDir);
+        }
+
+        TemplateResolver resolver = new TemplateResolver();
+        TemplateDescriber describer = new TemplateDescriber("");
+
+        for (int i = 0; i < p_relativeFilenames.length; i++)
+        {
+            generateImplAndInterface(p_destDir,
+                                     describer,
+                                     resolver,
+                                     p_relativeFilenames[i],
+                                     p_absoluteFilenames[i]);
+        }
+    }
+
+
     public static void generateInterfaces(File p_destDir,
                                           String[] p_relativeFilenames,
                                           String[] p_absoluteFilenames)
