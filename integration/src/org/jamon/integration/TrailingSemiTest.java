@@ -30,7 +30,7 @@ public class TrailingSemiTest
         throws Exception
     {
         new TrailingSemi(getTemplateManager()).render(getWriter());
-        checkOutput("1trues anonFrag namedFrag");
+        checkOutput("1truesanonFragnamedFrag");
     }
 
 }

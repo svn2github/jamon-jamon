@@ -83,29 +83,29 @@ Tokens
 
   {start -> farginit,body -> farginit} farg_start_begin = '<%frag';
   {farginit -> args} farg_start_done = '>';
-  {farginit -> body} farg_start_end = ws* '/>';
-  {args -> body} args_end = '</%args>';
-  {args -> body} farg_end = '</%frag>';
+  {farginit -> body} farg_start_end = ws* '/>' ws*;
+  {args -> body} args_end = '</%args>' ws*;
+  {args -> body} farg_end = '</%frag>' ws*;
 
   {start -> extends,body -> extends} extends_start = '<%extends' ws+;
 
   {start -> abstract,body -> abstract} abstract_start = '<%abstract';
   {abstract} fixed = ws+ 'fixed';
-  {abstract -> body} abstract_end = '>';
+  {abstract -> body} abstract_end = '>' ws*;
 
   {start -> parent_args, body -> parent_args}
          inherited_args_start = '<%xargs>';
-  {parent_args -> body} inherited_args_end = '</%xargs>';
+  {parent_args -> body} inherited_args_end = '</%xargs>' ws*;
 
   {start -> class,body -> class} class_start = '<%class>' ws*;
-  {class -> body} class_end = ws* '</%class>';
+  {class -> body} class_end = ws* '</%class>' ws*;
   {start -> args, body -> args} args_start = '<%args>';
   {start -> imports,body -> imports} import_start = '<%import>';
-  {imports -> body} import_end = '</%import>';
+  {imports -> body} import_end = '</%import>' ws*;
   {start -> imports,body -> imports} implements_start = '<%implements>';
-  {imports -> body} implements_end = '</%implements>';
+  {imports -> body} implements_end = '</%implements>' ws*;
   {start ->java,body -> java} java_start = '<%java>' ws*;
-  {java -> body} java_end = ws* '</%java>';
+  {java -> body} java_end = ws* '</%java>' ws*;
   {args,imports} dot = period;
   {args -> argexp, parent_args -> parent_argexp,alias} arrow = '=>' hs*;
   {call,multifragmentcall,multifragmentcallbody,args,farginit,imports,parent_args,extends,alias} white_space = ws*;
@@ -196,14 +196,14 @@ Tokens
   {body -> multifragmentcallbody} named_farg_end = '</|>';
 
   {start -> def,body -> def} def_start = '<%def' hs+;
-  {body,start} def_end = '</%def>';
-  {def -> body, method -> body, override -> body, extends -> body} gt = hs* gt;
+  {body,start} def_end = '</%def>' ws*;
+  {def -> body, method -> body, override -> body, extends -> body} gt = hs* gt ws*;
 
   {start -> method,body -> method} method_start = '<%method' hs+;
-  {body,start} method_end = '</%method>';
+  {body,start} method_end = '</%method>' ws*;
 
   {start -> override,body -> override} override_start = '<%override' hs+;
-  {body,start} override_end = '</%override>';
+  {body,start} override_end = '</%override>' ws*;
 
   {start -> body,body} doc =
        '<%doc>' ([all - '<']
@@ -212,10 +212,10 @@ Tokens
               | '</%' [all-'d']
               | '</%d' [all-'o']
               | '</%do' [all-'c']
-              | '</%doc' [all-'>'])* '</%doc>';
+              | '</%doc' [all-'>'])* '</%doc>' ws*;
 
   {start -> alias, body -> alias} alias_start = '<%aliases>';
-  {alias -> body} alias_end = '</%aliases>';
+  {alias -> body} alias_end = '</%aliases>' ws*;
 
 Ignored Tokens
 

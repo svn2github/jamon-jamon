@@ -37,9 +37,9 @@ public class FirstTest
 
         checkOutputContains("An external template with a "
                             + "parameterized fragment parameter (farg)"
-                            + "\n\n  \n  \n"
+                            + "\n\n  \n"
                             + "  i is 3 and s is yes."
-                            + "\n\n  \n  \n"
+                            + "\n\n  \n"
                             + "  i is 7 and s is no");
     }
 
