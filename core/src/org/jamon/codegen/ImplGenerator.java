@@ -22,16 +22,19 @@ package org.jamon.codegen;
 
 import java.io.Writer;
 import java.util.Iterator;
+import org.jamon.emit.EmitMode;
 
 public class ImplGenerator
 {
     public ImplGenerator(Writer p_writer,
                          TemplateDescriber p_describer,
-                         TemplateUnit p_templateUnit)
+                         TemplateUnit p_templateUnit,
+                         EmitMode p_emitMode)
     {
         m_writer = new CodeWriter(p_writer);
         m_describer = p_describer;
         m_templateUnit = p_templateUnit;
+        m_emitMode = p_emitMode;
     }
 
     public void generateSource()
@@ -53,6 +56,7 @@ public class ImplGenerator
     private final CodeWriter m_writer;
     private final TemplateDescriber m_describer;
     private final TemplateUnit m_templateUnit;
+    private final EmitMode m_emitMode;
 
     private final String getPath()
     {
@@ -185,7 +189,7 @@ public class ImplGenerator
             m_writer.closeList();
             m_writer.println();
             m_writer.println("  throws " + ClassNames.IOEXCEPTION);
-            defUnit.generateRenderBody(m_writer, m_describer);
+            defUnit.generateRenderBody(m_writer, m_describer, m_emitMode);
             m_writer.println();
         }
     }
@@ -237,7 +241,7 @@ public class ImplGenerator
         }
         else
         {
-            p_methodUnit.generateRenderBody(m_writer, m_describer);
+            p_methodUnit.generateRenderBody(m_writer, m_describer, m_emitMode);
         }
         m_writer.println();
 
@@ -271,7 +275,7 @@ public class ImplGenerator
                              + ArgNames.WRITER_DECL + ") throws "
                              + ClassNames.IOEXCEPTION);
         }
-        m_templateUnit.generateRenderBody(m_writer, m_describer);
+        m_templateUnit.generateRenderBody(m_writer, m_describer, m_emitMode);
 
         m_writer.println();
         if (m_templateUnit.isParent())

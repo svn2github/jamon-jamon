@@ -30,21 +30,25 @@ import org.jamon.codegen.Analyzer;
 import org.jamon.codegen.ImplGenerator;
 import org.jamon.codegen.ProxyGenerator;
 import org.jamon.codegen.TemplateUnit;
+import org.jamon.emit.EmitMode;
 
 public class TemplateProcessor
 {
     public TemplateProcessor(File p_destDir,
                              File p_sourceDir,
-                             ClassLoader p_classLoader)
+                             ClassLoader p_classLoader,
+                             EmitMode p_emitMode)
     {
         m_destDir = p_destDir;
+        m_emitMode = p_emitMode;
         m_describer =
             new TemplateDescriber(new FileTemplateSource(p_sourceDir),
                                   p_classLoader);
     }
 
-    private File m_destDir;
-    private TemplateDescriber m_describer;
+    private final File m_destDir;
+    private final TemplateDescriber m_describer;
+    private final EmitMode m_emitMode;
 
     public void generateSource(String p_filename)
         throws IOException
@@ -113,7 +117,7 @@ public class TemplateProcessor
         writer = new FileWriter(javaFile);
         try
         {
-            new ImplGenerator(writer, m_describer, templateUnit)
+            new ImplGenerator(writer, m_describer, templateUnit, m_emitMode)
                 .generateSource();
         }
         catch (RuntimeException e)
@@ -158,6 +162,7 @@ public class TemplateProcessor
 
     private static final String DESTDIR = "--destDir=";
     private static final String SRCDIR = "--srcDir=";
+    private static final String EMITMODE = "--emitMode=";
 
     public static void main(String [] args)
     {
@@ -166,6 +171,7 @@ public class TemplateProcessor
             int arg = 0;
             File sourceDir = new File(".");
             File destDir = null;
+            EmitMode emitMode = EmitMode.STANDARD;
             while (arg<args.length && args[arg].startsWith("-"))
             {
                 if ("-h".equals(args[arg]) || "--help".equals(args[arg]))
@@ -176,6 +182,17 @@ public class TemplateProcessor
                 else if (args[arg].startsWith(DESTDIR))
                 {
                     destDir = new File(args[arg].substring(DESTDIR.length()));
+                }
+                else if (args[arg].startsWith(EMITMODE))
+                {
+                    String modeName = args[arg].substring(EMITMODE.length());
+                    emitMode = EmitMode.fromString(modeName);
+                    if (emitMode == null)
+                    {
+                        System.err.println("Unknown emit mode: " + modeName);
+                        showHelp();
+                        System.exit(1);
+                    }
                 }
                 else if (args[arg].startsWith(SRCDIR))
                 {
@@ -206,7 +223,8 @@ public class TemplateProcessor
             TemplateProcessor processor =
                 new TemplateProcessor(destDir,
                                       sourceDir,
-                                      TemplateProcessor.class.getClassLoader());
+                                      TemplateProcessor.class.getClassLoader(),
+                                      emitMode);
 
             while (arg < args.length)
             {

@@ -29,6 +29,7 @@ import java.util.TreeMap;
 
 import org.jamon.node.TIdentifier;
 import org.jamon.node.AArg;
+import org.jamon.emit.EmitMode;
 
 public abstract class AbstractUnit
     implements Unit
@@ -77,20 +78,24 @@ public abstract class AbstractUnit
     }
 
     public void generateRenderBody(CodeWriter p_writer,
-                                   TemplateDescriber p_describer)
+                                   TemplateDescriber p_describer,
+                                   EmitMode p_emitMode)
     {
         p_writer.openBlock();
-        printStatements(p_writer, p_describer);
+        printStatements(p_writer, p_describer, p_emitMode);
         printRenderBodyEnd(p_writer);
         p_writer.closeBlock();
     }
 
     private void printStatements(CodeWriter p_writer,
-                                 TemplateDescriber p_describer)
+                                 TemplateDescriber p_describer,
+                                 EmitMode p_emitMode)
     {
         for (Iterator i = getStatements().iterator(); i.hasNext(); )
         {
-            ((Statement)i.next()).generateSource(p_writer, p_describer);
+            ((Statement)i.next()).generateSource(p_writer,
+                                                 p_describer,
+                                                 p_emitMode);
         }
     }
 

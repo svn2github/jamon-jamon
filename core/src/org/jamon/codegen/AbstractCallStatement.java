@@ -27,6 +27,7 @@ import java.util.HashMap;
 
 import org.jamon.node.Token;
 import org.jamon.util.StringUtils;
+import org.jamon.emit.EmitMode;
 
 public abstract class AbstractCallStatement
     extends AbstractStatement
@@ -71,7 +72,8 @@ public abstract class AbstractCallStatement
 
     private void makeFragmentImplClass(FragmentUnit p_fragmentUnitIntf,
                                        CodeWriter p_writer,
-                                       TemplateDescriber p_describer)
+                                       TemplateDescriber p_describer,
+                                       EmitMode p_emitMode)
     {
         final FragmentUnit fragmentUnitImpl =
             (FragmentUnit) m_fragParams.remove(p_fragmentUnitIntf.getName());
@@ -120,14 +122,15 @@ public abstract class AbstractCallStatement
         fragmentUnitImpl.printRenderArgsDecl(p_writer);
         p_writer.closeList();
         p_writer.println(" throws "+ ClassNames.IOEXCEPTION);
-        fragmentUnitImpl.generateRenderBody(p_writer, p_describer);
+        fragmentUnitImpl.generateRenderBody(p_writer, p_describer, p_emitMode);
 
         p_writer.closeBlock();
     }
 
     protected void makeFragmentImplClasses(List p_fragmentInterfaces,
                                            CodeWriter p_writer,
-                                           TemplateDescriber p_describer)
+                                           TemplateDescriber p_describer,
+                                           EmitMode p_emitMode)
     {
         if (m_fragParams.size() == 1
             && m_fragParams.keySet().iterator().next() == null)
@@ -159,7 +162,8 @@ public abstract class AbstractCallStatement
             makeFragmentImplClass
                 (((FragmentArgument) i.next()).getFragmentUnit(),
                  p_writer,
-                 p_describer);
+                 p_describer,
+                 p_emitMode);
         }
     }
 

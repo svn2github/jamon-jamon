@@ -24,6 +24,7 @@ import java.util.Iterator;
 
 import org.jamon.JamonRuntimeException;
 import org.jamon.node.Token;
+import org.jamon.emit.EmitMode;
 
 public class ComponentCallStatement
     extends AbstractCallStatement
@@ -43,7 +44,8 @@ public class ComponentCallStatement
     }
 
     public void generateSource(CodeWriter p_writer,
-                               TemplateDescriber p_describer)
+                               TemplateDescriber p_describer,
+                               EmitMode p_emitMode)
     {
         generateSourceLine(p_writer);
         p_writer.openBlock();
@@ -61,7 +63,8 @@ public class ComponentCallStatement
 
         makeFragmentImplClasses(desc.getFragmentInterfaces(),
                                 p_writer,
-                                p_describer);
+                                p_describer,
+                                p_emitMode);
         String instanceVar = getUniqueName();
         p_writer.println(getComponentProxyClassName() + " "
                          + instanceVar + " = "

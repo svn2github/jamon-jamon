@@ -25,6 +25,7 @@ import java.util.Iterator;
 
 import org.jamon.util.StringUtils;
 import org.jamon.node.Token;
+import org.jamon.emit.EmitMode;
 
 public class FargCallStatement
     extends AbstractCallStatement
@@ -52,7 +53,8 @@ public class FargCallStatement
     }
 
     public void generateSource(CodeWriter p_writer,
-                               TemplateDescriber p_describer)
+                               TemplateDescriber p_describer,
+                               EmitMode p_emitMode)
     {
         generateSourceLine(p_writer);
         String tn = getPath();

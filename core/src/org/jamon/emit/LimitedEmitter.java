@@ -18,25 +18,15 @@
  * Contributor(s):
  */
 
-package org.jamon.codegen;
+package org.jamon.emit;
 
-import org.jamon.emit.EmitMode;
-
-public class ChildCallStatement
-    implements Statement
+public final class LimitedEmitter
+    extends BaseEmitter
 {
-    ChildCallStatement(int p_depth)
-    {
-        m_depth = p_depth;
-    }
+    public static final String NAME = "limited";
 
-    public void generateSource(CodeWriter p_writer,
-                               TemplateDescriber p_describer,
-                               EmitMode p_emitMode)
+    private LimitedEmitter()
     {
-        p_writer.println(
-            "child_render_" + m_depth + "(" + ArgNames.WRITER + ");");
+        // non instantiable
     }
-
-    private final int m_depth;
 }

@@ -23,6 +23,7 @@ package org.jamon.codegen;
 import java.util.Iterator;
 import java.util.List;
 
+import org.jamon.emit.EmitMode;
 import org.jamon.node.TIdentifier;
 import org.jamon.node.AArg;
 
@@ -43,5 +44,6 @@ public interface Unit
 
     void printRenderArgsDecl(CodeWriter p_writer);
     void generateRenderBody(CodeWriter p_writer,
-                            TemplateDescriber p_describer);
+                            TemplateDescriber p_describer,
+                            EmitMode p_emitMode);
 }

@@ -20,6 +20,7 @@
 
 package org.jamon.codegen;
 
+import org.jamon.emit.EmitMode;
 
 /**
  * A <code>Statement</code> represents a generatable java statement
@@ -32,8 +33,10 @@ public interface Statement
      * emitting the code to the specified writer.
      *
      * @param p_writer where to emit the java source
-     * @param p_resolver the <code>TemplateResolver</code> to use
      * @param p_describer the <code>TemplateDescriber</code> to use
+     * @param p_emitMode the <code>EmitMode</code> to use
      */
-    void generateSource(CodeWriter p_writer, TemplateDescriber p_describer);
+    void generateSource(CodeWriter p_writer,
+                        TemplateDescriber p_describer,
+                        EmitMode p_emitMode);
 }

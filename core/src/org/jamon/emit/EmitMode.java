@@ -1,0 +1,68 @@
+/*
+ * The contents of this file are subject to the Mozilla Public
+ * License Version 1.1 (the "License"); you may not use this file
+ * except in compliance with the License. You may obtain a copy of
+ * the License at http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS
+ * IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
+ * implied. See the License for the specific language governing
+ * rights and limitations under the License.
+ *
+ * The Original Code is Jamon code, released February, 2003.
+ *
+ * The Initial Developer of the Original Code is Jay Sachs.  Portions
+ * created by Jay Sachs are Copyright (C) 2003 Jay Sachs.  All Rights
+ * Reserved.
+ *
+ * Contributor(s):
+ */
+
+package org.jamon.emit;
+
+import java.util.Map;
+import java.util.HashMap;
+
+public class EmitMode
+{
+    private static Map s_modes = new HashMap();
+
+    public static final EmitMode STANDARD = new EmitMode("Standard");
+    public static final EmitMode LIMITED = new EmitMode("Limited");
+    public static final EmitMode STRICT = new EmitMode("Strict");
+
+    public static EmitMode fromString(String p_string)
+    {
+        return (EmitMode) s_modes.get(p_string);
+    }
+
+    public boolean equals(Object p_obj)
+    {
+        return (p_obj instanceof EmitMode)
+            && ((EmitMode)p_obj).m_name.equals(m_name);
+    }
+
+    public int hashCode()
+    {
+        return m_name.hashCode();
+    }
+
+    public String getName()
+    {
+        return m_name;
+    }
+
+    public String toString()
+    {
+        return "EmitMode{" + m_name + "}";
+    }
+
+
+    private EmitMode(String p_name)
+    {
+        m_name = p_name;
+        s_modes.put(m_name, this);
+    }
+
+    private final String m_name;
+}

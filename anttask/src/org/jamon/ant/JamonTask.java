@@ -38,6 +38,7 @@ import org.apache.tools.ant.taskdefs.MatchingTask;
 
 import org.jamon.TemplateProcessor;
 import org.jamon.JamonTemplateException;
+import org.jamon.emit.EmitMode;
 
 /**
  * Ant task to convert Jamon templates into Java.
@@ -57,6 +58,14 @@ public class JamonTask
         m_srcDir = p_srcDir;
     }
 
+    public void setEmitMode(String p_emitMode)
+    {
+        m_emitMode = EmitMode.fromString(p_emitMode);
+        if (m_emitMode == null)
+        {
+            throw new BuildException("Unknown emit mode " + p_emitMode);
+        }
+    }
 
     public void setClasspath(Path p_classpath)
         throws IOException
@@ -147,8 +156,10 @@ public class JamonTask
                 + " template" + (files.length == 1 ? "" : "s")
                 + " to " + m_destDir);
 
-            TemplateProcessor processor =
-                new TemplateProcessor(m_destDir, m_srcDir, m_classLoader);
+            TemplateProcessor processor = new TemplateProcessor(m_destDir,
+                                                                m_srcDir,
+                                                                m_classLoader,
+                                                                m_emitMode);
 
             for (int i = 0; i < files.length; i++)
             {
@@ -203,4 +214,5 @@ public class JamonTask
     private File m_srcDir;
     private boolean m_listFiles;
     private ClassLoader m_classLoader = JamonTask.class.getClassLoader();
+    private EmitMode m_emitMode = EmitMode.STANDARD;
 }

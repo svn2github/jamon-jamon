@@ -22,6 +22,7 @@ package org.jamon.codegen;
 
 import java.util.Iterator;
 
+import org.jamon.emit.EmitMode;
 import org.jamon.node.Token;
 
 public abstract class AbstractInnerUnitCallStatement
@@ -50,12 +51,15 @@ public abstract class AbstractInnerUnitCallStatement
     }
 
     public void generateSource(CodeWriter p_writer,
-                               TemplateDescriber p_describer)
+                               TemplateDescriber p_describer,
+                               EmitMode p_emitMode)
     {
         generateSourceLine(p_writer);
         p_writer.openBlock();
-        makeFragmentImplClasses(
-            m_unit.getFragmentArgsList(), p_writer, p_describer);
+        makeFragmentImplClasses(m_unit.getFragmentArgsList(),
+                                p_writer,
+                                p_describer,
+                                p_emitMode);
         p_writer.print("__jamon_innerUnit__" + getPath());
         p_writer.openList();
         p_writer.printArg(ArgNames.WRITER);

@@ -18,25 +18,17 @@
  * Contributor(s):
  */
 
-package org.jamon.codegen;
+package org.jamon.emit;
 
-import org.jamon.emit.EmitMode;
-
-public class ChildCallStatement
-    implements Statement
+public class StrictEmitter
 {
-    ChildCallStatement(int p_depth)
+    StrictEmitter()
     {
-        m_depth = p_depth;
+        // non instantiable
     }
 
-    public void generateSource(CodeWriter p_writer,
-                               TemplateDescriber p_describer,
-                               EmitMode p_emitMode)
+    public static String valueOf(String p_string)
     {
-        p_writer.println(
-            "child_render_" + m_depth + "(" + ArgNames.WRITER + ");");
+        return p_string != null ? p_string : "";
     }
-
-    private final int m_depth;
 }
