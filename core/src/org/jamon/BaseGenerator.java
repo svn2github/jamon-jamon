@@ -38,6 +38,7 @@ public class BaseGenerator extends AnalysisAdapter
     public void caseStart(Start start)
     {
         start.getPTemplate().apply(this);
+        start.getEOF().apply(this);
     }
 
     protected Iterator getImports()
