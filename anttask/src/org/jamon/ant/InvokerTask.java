@@ -58,7 +58,7 @@ public class InvokerTask
     public void execute()
         throws BuildException
     {
-        Properties sysprops = System.getProperties();
+        Properties sysprops = (Properties) System.getProperties().clone();
         try
         {
             for (Iterator p = m_sysprops.iterator(); p.hasNext(); )
