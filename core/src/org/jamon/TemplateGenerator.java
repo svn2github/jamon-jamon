@@ -149,7 +149,7 @@ public class TemplateGenerator
                 writer.close();
                 javaFile.delete();
             }
-            catch (IOException e2)
+            finally
             {
                 throw e;
             }
