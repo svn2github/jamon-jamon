@@ -21,11 +21,8 @@
 package org.jamon;
 
 import java.io.File;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PushbackReader;
-import java.io.Writer;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Collection;
@@ -36,7 +33,6 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.Set;
 import java.util.HashSet;
-import org.jamon.node.Start;
 
 /**
  * The standard implementation of the @{link TemplateManager}
@@ -359,7 +355,7 @@ public class StandardTemplateManager
         StringBuffer cp = new StringBuffer(m_workDir);
         if (m_classpath != null)
         {
-            cp.append(PS);
+            cp.append(File.pathSeparator);
             cp.append(m_classpath);
         }
 
@@ -372,17 +368,17 @@ public class StandardTemplateManager
                 String url = urls[i].toExternalForm();
                 if (url.startsWith("file:"))
                 {
-                    cp.append(PS);
+                    cp.append(File.pathSeparator);
                     cp.append(url.substring(5));
                 }
             }
         }
-        cp.append(PS);
-        cp.append(System.getProperty("java.class.path"));
+        cp.append(File.pathSeparator);
+        cp.append(System.getProperty("sun.boot.class.path"));
 
         if (m_includeRtJar)
         {
-            cp.append(PS);
+            cp.append(File.pathSeparator);
             cp.append(getRtJarPath());
         }
 
@@ -397,20 +393,35 @@ public class StandardTemplateManager
     private String getRtJarPath()
     {
         StringBuffer path = new StringBuffer(System.getProperty("java.home"));
-        path.append(FS);
+        path.append(File.separator);
         path.append("lib");
-        path.append(FS);
+        path.append(File.separator);
         path.append("rt.jar");
         return path.toString();
     }
 
     private JavaCompiler getJavaCompiler()
+        throws IOException
     {
         if (m_javaCompiler == null)
         {
+            if (m_javac == null)
+            {
+                m_javac = getDefaultJavac();
+            }
             m_javaCompiler = new JavaCompiler(m_javac, getClassPath());
         }
         return m_javaCompiler;
+    }
+
+    private String getDefaultJavac()
+        throws IOException
+    {
+        // FIXME: does this work on windows? mac?
+        return new File(new File(System.getProperty("java.home")).getParent(),
+                        "bin").getCanonicalPath()
+            + File.separator
+            + "javac";
     }
 
     private Class getImplementationClass(String p_path)
@@ -428,15 +439,11 @@ public class StandardTemplateManager
         }
     }
 
-    private static final String PS = System.getProperty("path.separator");
-    private static final String FS = System.getProperty("file.separator");
-
     private boolean m_dynamicRecompilation = true;
     private TemplateDescriber m_describer;
     private String m_workDir;
     private String m_templateSourceDir;
-    private String m_javac =
-        System.getProperty("java.home") + FS + ".." + FS + "bin" + FS +"javac";
+    private String m_javac;
     private boolean m_includeRtJar = false;
     private String m_classpath = null;
     private ClassLoader m_classLoader = getClass().getClassLoader();
