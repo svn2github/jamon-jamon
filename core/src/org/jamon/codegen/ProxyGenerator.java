@@ -46,7 +46,7 @@ public class ProxyGenerator
         generatePrologue();
         generateImports();
         generateDeclaration();
-        generateConstructor();
+        generateConstructors();
         generateSignature();
         generateArgArrays(m_templateUnit, "");
         generateMethodArrays();
@@ -111,7 +111,7 @@ public class ProxyGenerator
     }
 
 
-    private void generateConstructor()
+    private void generateConstructors()
     {
         m_writer.println();
         m_writer.println
@@ -120,6 +120,13 @@ public class ProxyGenerator
         m_writer.openBlock();
         m_writer.println(" super(p_manager);");
         m_writer.closeBlock();
+
+        m_writer.println();
+        m_writer.println("public " + getClassName() + "()");
+        m_writer.openBlock();
+        m_writer.println(" super();");
+        m_writer.closeBlock();
+        m_writer.println();
     }
 
     private void generateFragmentInterface(FragmentUnit p_fragmentUnit,

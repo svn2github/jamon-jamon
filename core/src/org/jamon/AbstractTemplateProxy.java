@@ -36,6 +36,39 @@ public abstract class AbstractTemplateProxy
         String getPath();
     }
 
+    public static void setTemplateManagerSourceClassName(String p_className)
+    {
+        s_templateManagerSourceName = p_className;
+    }
+
+    private static String s_templateManagerSourceName =
+        System.getProperty("org.jamon.TemplateManagerSource",
+                           org.jamon.DefaultTemplateManagerSource.class.getName());
+
+    protected AbstractTemplateProxy()
+    {
+        TemplateManagerSource source = null;
+        try
+        {
+            Class tmsClass = getClass().getClassLoader()
+                .loadClass(s_templateManagerSourceName);
+            source = (TemplateManagerSource) tmsClass.newInstance();
+            m_templateManager = source.getTemplateManager();
+        }
+        catch (ClassNotFoundException e)
+        {
+            throw new JamonRuntimeException(e);
+        }
+        catch (IllegalAccessException e)
+        {
+            throw new JamonRuntimeException(e);
+        }
+        catch (InstantiationException e)
+        {
+            throw new JamonRuntimeException(e);
+        }
+    }
+
     protected AbstractTemplateProxy(TemplateManager p_templateManager)
     {
         m_templateManager = p_templateManager;
