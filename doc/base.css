@@ -153,6 +153,14 @@ pre
   background-color: #efffdf
 }
 
+li.incompatible:before
+{
+  color: #ff0000;
+  background-color: #dddddd;
+  display: marker;
+  content: "[INCOMPATIBLE]" ;
+}
+
 pre.java, pre.code
 {
   background-color: #ffdfdf
