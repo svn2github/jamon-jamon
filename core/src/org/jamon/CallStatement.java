@@ -93,6 +93,11 @@ public class CallStatement
             ? p_analyzer.getFargInfo(fargName)
             : p_describer.getFargInfo(p_analyzer.getAbsolutePath(getPath()),fargName);
 
+        if (fargInfo == null)
+        {
+            throw new JamonException("Unknown fragment arg " + fargName);
+        }
+
         p_writer.print("    final ");
 
         String fargIntf = fargInfo.getFargInterfaceName();
