@@ -40,9 +40,16 @@ public abstract class AbstractTemplateImpl
             throws java.io.IOException;
     }
 
-    protected AbstractTemplateImpl(TemplateManager p_templateManager)
+    private AbstractTemplateImpl(TemplateManager p_templateManager)
     {
         m_templateManager = p_templateManager;
+    }
+
+    protected AbstractTemplateImpl(TemplateManager p_templateManager,
+                                   Escaping p_escaping)
+    {
+        this(p_templateManager);
+        escapeWith(p_escaping);
     }
 
     protected AbstractTemplateImpl(TemplateManager p_templateManager,

@@ -149,17 +149,6 @@ public class ImplGenerator
         }
     }
 
-
-    // FIXME - copied from IntfGenerator
-    private void generateTemplateImplConstructor(String p_className)
-    {
-        m_writer.println("protected " + p_className
-                         + "(" + ClassNames.TEMPLATE_MANAGER + " p_manager)");
-        m_writer.openBlock();
-        m_writer.println("super(p_manager);");
-        m_writer.closeBlock();
-    }
-
     private void generateInnerUnitFargInterface(FragmentUnit p_fragmentUnit,
                                                 boolean p_private)
     {
@@ -168,8 +157,14 @@ public class ImplGenerator
                          + p_fragmentUnit.getFragmentInterfaceName());
         m_writer.println("  extends " + ClassNames.BASE_TEMPLATE);
         m_writer.openBlock();
-        generateTemplateImplConstructor(
-            p_fragmentUnit.getFragmentInterfaceName());
+        m_writer.println("protected "
+                         + p_fragmentUnit.getFragmentInterfaceName()
+                         + "(" + ClassNames.TEMPLATE_MANAGER + " p_manager, "
+                         + ClassNames.ESCAPING + " p_escaping)");
+        m_writer.openBlock();
+        m_writer.println("super(p_manager, p_escaping);");
+        m_writer.closeBlock();
+
         m_writer.println();
         m_writer.print  ("abstract public void render(");
 

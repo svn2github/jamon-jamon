@@ -1,0 +1,8 @@
+<%def foo>\
+<%frag content></%frag>\
+<%args> int x; </%args>\
+% String s = content.makeRenderer().asString();
+<% x %><% s %><% x %>\
+</%def>\
+<%args> int x; </%args>\
+<&| foo; x => x &>(<% x + 1 %>)</&>

@@ -15,12 +15,13 @@
  * created by Jay Sachs are Copyright (C) 2003 Jay Sachs.  All Rights
  * Reserved.
  *
- * Contributor(s):
+ * Contributor(s):Ian Robertson
  */
 
 package org.jamon.integration;
 
 import test.jamon.Fragment;
+import test.jamon.RenderedFragment;
 import test.jamon.RepeatedFragmentName;
 
 /**
@@ -39,6 +40,17 @@ public class FragmentTest
             .render(1);
         checkOutput("1(2)1");
     }
+
+    public void testMakeRenderer()
+        throws Exception
+    {
+        new RenderedFragment(getTemplateManager())
+            .writeTo(getWriter())
+            .render(1);
+        checkOutput("1(2)1");
+    }
+
+
 
     public void testRepeatedFragmentNameExercise()
         throws Exception

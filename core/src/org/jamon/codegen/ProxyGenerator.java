@@ -153,14 +153,14 @@ public class ProxyGenerator
             m_writer.println("  extends " + getClassName() + ".Intf."
                              + className);
             m_writer.openBlock();
-            generateTemplateImplConstructor(className);
+            generateFragmentConstructor(className);
             m_writer.closeBlock();
         }
         else
         {
             m_writer.println(" extends " + ClassNames.BASE_TEMPLATE);
             m_writer.openBlock();
-            generateTemplateImplConstructor(className);
+            generateFragmentConstructor(className);
             m_writer.println();
             m_writer.print  ("abstract public void render(");
             p_fragmentUnit.printRequiredArgsDecl(m_writer);
@@ -175,12 +175,13 @@ public class ProxyGenerator
         m_writer.println();
     }
 
-    private void generateTemplateImplConstructor(String p_className)
+    private void generateFragmentConstructor(String p_className)
     {
         m_writer.println("protected " + p_className
-                         + "(" + ClassNames.TEMPLATE_MANAGER + " p_manager)");
+                         + "(" + ClassNames.TEMPLATE_MANAGER + " p_manager, "
+                         + ClassNames.ESCAPING + " p_escaping)");
         m_writer.openBlock();
-        m_writer.println("super(p_manager);");
+        m_writer.println("super(p_manager, p_escaping);");
         m_writer.closeBlock();
     }
 
