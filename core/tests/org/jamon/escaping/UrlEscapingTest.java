@@ -40,19 +40,24 @@ public class UrlEscapingTest
                 || c == '*'
                 || c == '_')
             {
-                check(Character.toString(c), Character.toString(c));
+                check(charToString(c), charToString(c));
             }
             else if (c == ' ')
             {
-                check(Character.toString(c), "+");
+                check(charToString(c), "+");
             }
             else {
-                check(Character.toString(c),
+                check(charToString(c),
                       "%"
                       + ((c < 0x10) ? "0" : "")
                       + Integer.toHexString(c).toUpperCase());
             }
         }
+    }
+
+    private static String charToString(char c)
+    {
+        return new String(new char[] {c});
     }
 
     public void testNonAscii() throws IOException
