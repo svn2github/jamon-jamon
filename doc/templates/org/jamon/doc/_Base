@@ -18,7 +18,7 @@
 
     <div id="header"></div>
     <div id="nav">
-      <ul id="navul">
+      <ul>
         <& _menuItem; section => "Home"; href => "index"; current => section &>
         <& _menuItem; section => "News"; href => "News"; current => section &>
         <& _menuItem; section => "Download"; href => "Download"; current => section &>
@@ -38,7 +38,7 @@
     String current;
     String href;
   </%args>
-<li class="nav">
+<li>
   <a href="<% href #u %>.html" \
 % if (section.equals(current)) {
   id="current"\
