@@ -8,14 +8,22 @@
   </head>
 
   <body>
-    <h1 id="logo">Jamon</h1>
+    <div id="logo">
+    <h1 id="logo1">Jamon</h1>
+    <h3 id="logo2">a typed template engine for Java</h3>
+    </div>
 
-    <h3 id="tagline">a typed text template engine for Java</h3>
+    <h3 id="tagline">
+      <span class="tagline">refactoring</span> the view<br />
+      refactoring <span class="tagline">the</span> view<br />
+      refactoring the <span class="tagline">view</span><br />
+    </h3>
 
     <div id="header"></div>
     <div id="nav">
       <ul>
         <& _menuItem; section => Section.HOME; href => "index" &>
+        <& _menuItem; section => Section.FEATURES; href => "Features" &>
         <& _menuItem; section => Section.NEWS; href => "News" &>
         <& _menuItem; section => Section.DOWNLOAD; href => "Download" &>
         <& _menuItem; section => Section.DOCUMENTATION; href => "Documentation" &>
@@ -63,6 +71,7 @@
 
     public static Section HOME = new Section("Home");
     public static Section NEWS = new Section("News");
+    public static Section FEATURES = new Section("Features");
     public static Section DOWNLOAD = new Section("Download");
     public static Section DOCUMENTATION = new Section("Documentation");
     public static Section CONTACT = new Section("Contact");

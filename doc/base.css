@@ -13,8 +13,22 @@ body
 
 #logo
 {
-  font-size: 2em;
   float: left;
+  padding-top: 0;
+  margin-top: 0;
+  margin-bottom: 0.5em;
+}
+
+#logo1
+{
+  font-size: 2em;
+  padding-top: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+#logo2
+{
+  font-size: 1em;
   padding-top: 0;
   margin-top: 0;
   margin-bottom: 0;
@@ -22,13 +36,15 @@ body
 
 #tagline
 {
+  color: #777777;
   font-size: 1em;
   float: right;
   margin-top: 0;
   margin-bottom: 0;
   padding-bottom: 0;
-  padding-top: 1em;
+  padding-top: 0em;
   text-transform: lowercase;
+  font-style: italic;
 }
 
 #nav ul
@@ -123,6 +139,11 @@ li
 .changed
 {
   font-weight: bold
+}
+
+.tagline
+{
+  color: black
 }
 
 .deleted
