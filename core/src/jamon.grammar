@@ -90,7 +90,7 @@ Tokens
   {escape} escape_code = letter;
 
   {emit} emit_expr =
-      ( [all - [[[q + pct] + pipe] + hash]]
+      ( [all - [[q + pct] + hash]]
       | quoted
       | pct [all - gt]
       )*;

@@ -36,7 +36,7 @@ public class JavaTest
         new JavaEscape(getTemplateManager())
             .writeTo(getWriter())
             .render();
-        checkOutput("0\n1\n2\n");
+        checkOutput("0\n1\n2\ntrue");
     }
 
 }
