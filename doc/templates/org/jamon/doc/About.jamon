@@ -1,0 +1,28 @@
+<&| _Base; title => "About Jamon"; section => "About" &>
+
+<h2>Credits</h2>
+
+<h4>Project lead</h4>
+
+<ul>
+  <li>Jay Sachs</li>
+</ul>
+
+<h4>Contributors</h4>
+
+<ul>
+  <li>Ian Robertson</li>
+  <li>Luis O' Shea</li>
+</ul>
+
+<h2>License</h2>
+
+Jamon is provided "as is" and without any express or implied
+warranties, including, without limitation, the implied warranties of
+merchantibility and fitness for a particular purpose.
+
+Jamon is licensed under the <a href="http://www.mozilla.org/MPL/">Mozilla
+Public License</a>.
+
+
+</&>

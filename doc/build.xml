@@ -135,7 +135,7 @@ the documentation thus taking care of issues such as escaping.
       <param name="template" value="Contact" />
     </antcall>
     <antcall target="grind">
-      <param name="template" value="Credits" />
+      <param name="template" value="About" />
     </antcall>
     <antcall target="grind">
       <param name="template" value="News" />
