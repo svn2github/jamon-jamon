@@ -20,6 +20,7 @@
 
 package org.jamon.codegen;
 
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.LinkedList;
@@ -50,6 +51,31 @@ public abstract class AbstractUnitInfo
     public boolean hasRequiredArgs()
     {
         return !m_requiredArgs.isEmpty();
+    }
+
+    public void addStatement(Statement p_statement)
+    {
+        m_statements.add(p_statement);
+    }
+
+    public List getStatements()
+    {
+        return m_statements;
+    }
+
+    public void printStatements(IndentingWriter p_writer,
+                                TemplateResolver p_resolver,
+                                TemplateDescriber p_describer,
+                                ImplAnalyzer p_analyzer)
+        throws IOException
+    {
+        for (Iterator i = getStatements().iterator(); i.hasNext(); /* */)
+        {
+            ((Statement)i.next()).generateSource(p_writer,
+                                                 p_resolver,
+                                                 p_describer,
+                                                 p_analyzer);
+        }
     }
 
     public void printRequiredArgsDecl(IndentingWriter p_writer)
@@ -83,4 +109,5 @@ public abstract class AbstractUnitInfo
     }
 
     private final List m_requiredArgs = new LinkedList();
+    private final List m_statements = new LinkedList();
 }

@@ -37,7 +37,6 @@ import org.jamon.JamonException;
 
 public class ImplAnalyzer extends BaseAnalyzer
 {
-    private final Map m_unitStatements = new HashMap();
     private StringBuffer m_current = new StringBuffer();
     private StringBuffer m_classContent = new StringBuffer();
     private final Set m_calls = new HashSet();
@@ -47,7 +46,6 @@ public class ImplAnalyzer extends BaseAnalyzer
     public ImplAnalyzer(String p_templatePath, Start p_start)
         throws IOException
     {
-        m_unitStatements.put(MAIN_UNIT_NAME,new ArrayList());
         m_path = p_templatePath;
         try
         {
@@ -113,17 +111,10 @@ public class ImplAnalyzer extends BaseAnalyzer
 
     }
 
-    public List getStatements(String p_unitName)
+    private List getStatements(String p_unitName)
     {
-        return (List) m_unitStatements.get(p_unitName);
+        return getAbstractUnitInfo(p_unitName).getStatements();
     }
-
-    public List getStatements()
-    {
-        return getStatements(MAIN_UNIT_NAME);
-    }
-
-
 
     protected class Adapter extends BaseAnalyzer.Adapter
     {
@@ -258,8 +249,9 @@ public class ImplAnalyzer extends BaseAnalyzer
             {
                 ANamedFarg farg = (ANamedFarg) f.next();
                 pushUnit("#fragment#" + (fragments++));
-                m_unitStatements.put(getUnitName(),new ArrayList());
-                for (Iterator i = farg.getBaseComponent().iterator(); i.hasNext(); /* */)
+                for (Iterator i = farg.getBaseComponent().iterator();
+                     i.hasNext();
+                     /* */)
                 {
                     ((Node) i.next()).apply(this);
                 }
@@ -282,7 +274,6 @@ public class ImplAnalyzer extends BaseAnalyzer
             m_calls.add(path);
 
             pushUnit("#fragment#" + (fragments++));
-            m_unitStatements.put(getUnitName(),new ArrayList());
             for (Iterator i = call.getBaseComponent().iterator(); i.hasNext(); /* */)
             {
                 ((Node) i.next()).apply(this);
@@ -307,7 +298,6 @@ public class ImplAnalyzer extends BaseAnalyzer
         public void caseTDefStart(TDefStart node)
         {
             handleBody();
-            m_unitStatements.put(getUnitName(),new ArrayList());
         }
 
     }
@@ -361,7 +351,7 @@ public class ImplAnalyzer extends BaseAnalyzer
 
     private void addStatement(Statement p_statement)
     {
-        getStatements(getUnitName()).add(p_statement);
+        getAbstractUnitInfo(getUnitName()).addStatement(p_statement);
     }
 
 }

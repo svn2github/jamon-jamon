@@ -165,15 +165,11 @@ public class ImplGenerator
             m_writer.println(")");
             m_writer.print  ("  throws " + ClassNames.IOEXCEPTION);
             m_writer.openBlock();
-            for (Iterator i = m_analyzer.getStatements(name).iterator();
-                 i.hasNext();
-                 /* */)
-            {
-                ((Statement)i.next()).generateSource(m_writer,
-                                                     m_resolver,
-                                                     m_describer,
-                                                     m_analyzer);
-            }
+            m_analyzer.getAbstractUnitInfo(name).printStatements(m_writer,
+                                                                 m_resolver,
+                                                                 m_describer,
+                                                                 m_analyzer);
+
             m_writer.closeBlock();
             m_writer.println();
         }
@@ -197,13 +193,10 @@ public class ImplGenerator
                               +  " = "
                               + obfuscateOptionalArgName(arg.getName()) + ";");
         }
-        for (Iterator i = m_analyzer.getStatements().iterator(); i.hasNext(); /* */)
-        {
-            ((Statement)i.next()).generateSource(m_writer,
+        m_analyzer.getUnitInfo().printStatements(m_writer,
                                                  m_resolver,
                                                  m_describer,
                                                  m_analyzer);
-        }
         m_writer.closeBlock();
     }
 
