@@ -61,8 +61,8 @@ public class CallStatement
             String expr = (String) m_params.get(name);
             if (expr == null)
             {
-                throw new JttException("No value supplied for required argument "
-                                       + name);
+                throw new JamonException
+                    ("No value supplied for required argument " + name);
             }
             p_writer.print("(");
             p_writer.print(expr);
@@ -135,10 +135,10 @@ public class CallStatement
             String expr = (String) m_params.get(name);
             if (expr == null)
             {
-                throw new JttException("No parameter supplied for argument "
-                                       + name
-                                       + " in call to "
-                                       + getPath());
+                throw new JamonException("No parameter supplied for argument "
+                                         + name
+                                         + " in call to "
+                                         + getPath());
             }
             p_writer.print(expr);
             if (i.hasNext())

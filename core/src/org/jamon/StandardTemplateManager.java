@@ -23,7 +23,7 @@ public class StandardTemplateManager
     implements TemplateManager
 {
     public Template getInstance(String p_path, Writer p_writer)
-        throws JttException
+        throws JamonException
     {
         return getInstance(p_path, p_writer, this);
     }
@@ -31,7 +31,7 @@ public class StandardTemplateManager
     public Template getInstance(String p_path,
                                 Writer p_writer,
                                 TemplateManager p_manager)
-        throws JttException
+        throws JamonException
     {
         try
         {
@@ -49,7 +49,7 @@ public class StandardTemplateManager
         }
         catch (Exception e)
         {
-            throw new JttException(e);
+            throw new JamonException(e);
         }
     }
 
@@ -249,7 +249,7 @@ public class StandardTemplateManager
             File tf = m_describer.getTemplateFile(path);
             if (!tf.exists())
             {
-                throw new JttException("Missing template " + path);
+                throw new JamonException("Missing template " + path);
             }
 
             File jm = new File(javaImpl(path));

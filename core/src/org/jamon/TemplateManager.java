@@ -39,8 +39,8 @@ public interface TemplateManager
      *
      * @return a <code>Template</code> instance
      *
-     * @exception JttException if something goes wrong
+     * @exception JamonException if something goes wrong
      */
     public Template getInstance(String p_path, Writer p_writer)
-        throws JttException;
+        throws JamonException;
 }

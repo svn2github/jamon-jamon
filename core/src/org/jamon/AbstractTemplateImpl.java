@@ -13,14 +13,14 @@ public abstract class AbstractTemplate
     }
 
     public final void initialize(Writer p_writer)
-        throws JttException
+        throws JamonException
     {
         m_writer = p_writer;
         initializeDefaultArguments();
     }
 
     protected abstract void initializeDefaultArguments()
-        throws JttException;
+        throws JamonException;
 
     protected void writeEscaped(String p_string)
         throws IOException

@@ -22,7 +22,7 @@ public class FragmentCallStatement
 
     private Object getFargName(ImplAnalyzer p_analyzer,
                                TemplateDescriber p_describer)
-        throws JttException
+        throws JamonException
     {
         if (isDefCall(p_analyzer))
         {

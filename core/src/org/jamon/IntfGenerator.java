@@ -37,8 +37,8 @@ public class IntfGenerator
         AbstractTemplateFactory.class.getName();
     private final static String TEMPLATE_MANAGER =
         TemplateManager.class.getName();
-    private final static String JTT_EXCEPTION =
-        JttException.class.getName();
+    private final static String JAMON_EXCEPTION =
+        JamonException.class.getName();
     private final static String IOEXCEPTION_CLASS =
         IOException.class.getName();
     private final static String WRITER_CLASS =
@@ -165,7 +165,7 @@ public class IntfGenerator
         print  (getClassName());
         println(" getInstance(java.io.Writer p_writer)");
         print  ("      throws ");
-        println(JTT_EXCEPTION);
+        println(JAMON_EXCEPTION);
         println("    {");
         print  ("      return (");
         print  (getClassName());

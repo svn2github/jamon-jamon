@@ -40,8 +40,8 @@ public class FargCallStatement
             String expr = (String) m_params.get(name);
             if (expr == null)
             {
-                throw new JttException("No value supplied for required argument "
-                                       + name);
+                throw new JamonException
+                    ("No value supplied for required argument " + name);
             }
             p_writer.print("(");
             p_writer.print(expr);

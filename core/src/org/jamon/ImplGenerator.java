@@ -88,7 +88,7 @@ public class ImplGenerator
         throws IOException
     {
         println("  protected void initializeDefaultArguments()");
-        println("    throws org.jamon.JttException");
+        println("    throws org.jamon.JamonException");
         println("  {");
         println("    try");
         println("    {");
@@ -108,7 +108,7 @@ public class ImplGenerator
         println("    }");
         println("    catch (Exception e)");
         println("    {");
-        println("      throw new org.jamon.JttException(e);");
+        println("      throw new org.jamon.JamonException(e);");
         println("    }");
         println("  }");
         println();

@@ -1,20 +1,20 @@
 package org.jamon;
 
-public class JttException
+public class JamonException
     extends java.io.IOException
 {
-    public JttException(String p_msg)
+    public JamonException(String p_msg)
     {
         this(p_msg,null);
     }
 
-    public JttException(String p_msg, Throwable p_rootCause)
+    public JamonException(String p_msg, Throwable p_rootCause)
     {
         super(p_msg);
         m_rootCause = p_rootCause;
     }
 
-    public JttException(Throwable p_rootCause)
+    public JamonException(Throwable p_rootCause)
     {
         this(p_rootCause.getMessage(),p_rootCause);
     }

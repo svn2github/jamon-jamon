@@ -36,7 +36,7 @@ public class TemplateDescriber
     }
 
     public Iterator getFargNames(String p_path)
-        throws JttException
+        throws JamonException
     {
         try
         {
@@ -44,7 +44,7 @@ public class TemplateDescriber
         }
         catch (IOException e)
         {
-            throw new JttException(e);
+            throw new JamonException(e);
         }
     }
 
@@ -54,7 +54,7 @@ public class TemplateDescriber
     }
 
     public List getRequiredArgNames(final String p_path)
-        throws JttException
+        throws JamonException
     {
         try
         {
@@ -68,7 +68,7 @@ public class TemplateDescriber
         }
         catch (IOException e)
         {
-            throw new JttException(e);
+            throw new JamonException(e);
         }
     }
 
@@ -85,11 +85,11 @@ public class TemplateDescriber
         }
         catch (ParserException e)
         {
-            throw new JttException(e);
+            throw new JamonException(e);
         }
         catch (LexerException e)
         {
-            throw new JttException(e);
+            throw new JamonException(e);
         }
     }
 }

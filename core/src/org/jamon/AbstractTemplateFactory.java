@@ -17,7 +17,7 @@ public abstract class AbstractTemplateFactory
     }
 
     protected Template getInstance(String p_path, Writer p_writer)
-        throws JttException
+        throws JamonException
     {
         return getTemplateManager().getInstance(p_path, p_writer);
     }
