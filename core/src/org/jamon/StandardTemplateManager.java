@@ -35,6 +35,8 @@ import java.util.HashMap;
 import java.util.Set;
 import java.util.HashSet;
 
+import org.apache.tools.ant.AntClassLoader;
+
 /**
  * The standard implementation of the @{link TemplateManager}
  * interface.  The <code>StandardTemplateManager</code> actually
@@ -194,7 +196,7 @@ public class StandardTemplateManager
                 new JavaCompiler(p_data.javaCompiler == null
                                  ? getDefaultJavac()
                                  : p_data.javaCompiler,
-                                 getClassPath(m_workDir,
+                                 getClasspath(m_workDir,
                                               p_data.classpath,
                                               p_data.javaCompilerNeedsRtJar,
                                               m_classLoader));
@@ -310,7 +312,35 @@ public class StandardTemplateManager
         return workDir.getCanonicalPath();
     }
 
-    private static String getClassPath(String p_start,
+
+    private static void extractClasspath(ClassLoader p_classLoader,
+                                         StringBuffer p_classpath)
+    {
+        if (p_classLoader instanceof URLClassLoader)
+        {
+            URL[] urls = ((URLClassLoader)p_classLoader).getURLs();
+            for (int i = 0; i < urls.length; ++i)
+            {
+                String url = urls[i].toExternalForm();
+                if (url.startsWith("file:"))
+                {
+                    p_classpath.append(File.pathSeparator);
+                    p_classpath.append(url.substring(5));
+                }
+            }
+        }
+        else if (p_classLoader instanceof AntClassLoader)
+        {
+            p_classpath.append(File.pathSeparator);
+            p_classpath.append(((AntClassLoader)p_classLoader).getClasspath());
+        }
+        if (p_classLoader.getParent() != null)
+        {
+            extractClasspath(p_classLoader.getParent(), p_classpath);
+        }
+    }
+
+    private static String getClasspath(String p_start,
                                        String p_classpath,
                                        boolean p_includeRtJar,
                                        ClassLoader p_classLoader)
@@ -322,20 +352,7 @@ public class StandardTemplateManager
             cp.append(p_classpath);
         }
 
-        ClassLoader loader = p_classLoader;
-        if (loader instanceof URLClassLoader)
-        {
-            URL[] urls = ((URLClassLoader)loader).getURLs();
-            for (int i = 0; i < urls.length; ++i)
-            {
-                String url = urls[i].toExternalForm();
-                if (url.startsWith("file:"))
-                {
-                    cp.append(File.pathSeparator);
-                    cp.append(url.substring(5));
-                }
-            }
-        }
+        extractClasspath(p_classLoader, cp);
         cp.append(File.pathSeparator);
         cp.append(System.getProperty("sun.boot.class.path"));
         cp.append(File.pathSeparator);
