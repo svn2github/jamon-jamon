@@ -1,8 +1,12 @@
 package org.jamon.eclipse;
 
-import org.eclipse.ui.plugin.*;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
+
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
-import java.util.*;
 
 /**
  * The main plugin class to be used in the desktop.
@@ -48,7 +52,15 @@ public class JamonProjectPlugin extends AbstractUIPlugin {
 	public static JamonProjectPlugin getDefault() {
 		return plugin;
 	}
+	
+	public void logInfo(String p_message) {
+		getLog().log(new Status(IStatus.INFO, pluginId(), 0, p_message, null));
+	}
 
+	public void logError(Throwable p_error) {
+		getLog().log(new Status(IStatus.ERROR, pluginId(), 0, p_error.getMessage(), p_error));
+	}
+	
 	/**
 	 * Returns the string from the plugin's resource bundle,
 	 * or 'key' if not found.
