@@ -87,7 +87,7 @@
     <ant dir="anttask" target="clean"/>
   </target>
 
-  <target name="major-release">
+  <target name="major-release" depends="core">
     <exec executable="java"
           outputproperty="jamon.version.next">
       <arg value="-cp" />
@@ -95,10 +95,10 @@
       <arg value="org.jamon.ShowVersion" />
       <arg value="nextmajor" />
     </exec>
-    <antcall target=" release" />
+    <antcall target="release" />
   </target>
 
-  <target name="minor-release">
+  <target name="minor-release" depends="core">
     <exec executable="java"
           outputproperty="jamon.version.next">
       <arg value="-cp" />
@@ -106,10 +106,10 @@
       <arg value="org.jamon.ShowVersion" />
       <arg value="nextminor" />
     </exec>
-    <antcall target=" release" />
+    <antcall target="release" />
   </target>
 
-  <target name="bugfix-release">
+  <target name="bugfix-release" depends="core">
     <exec executable="java"
           outputproperty="jamon.version.next">
       <arg value="-cp" />
@@ -117,10 +117,10 @@
       <arg value="org.jamon.ShowVersion" />
       <arg value="nextsub" />
     </exec>
-    <antcall target=" release" />
+    <antcall target="release" />
   </target>
 
-  <target name=" release" depends="core" if="{jamon.version.next}" >
+  <target name="release" if="jamon.version.next" >
     <echo message="Current version: ${org.jamon.version}" />
     <echo message="Next version: ${jamon.version.next}" />
     <input message="Press enter to continue ..." />
@@ -133,6 +133,7 @@
              token="release=false"
              value="release=true" />
     <cvs command="commit -m 'version bump to ${jamon.version.next}' ${file}" />
+    <antcall target="jar" />
     <exec executable="java"
           outputproperty="jamon.version.cvs">
       <arg value="-cp" />
