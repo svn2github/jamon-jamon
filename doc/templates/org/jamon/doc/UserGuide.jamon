@@ -15,7 +15,9 @@
       </li>
       <li>
         Create a TemplateManager instance (e.g. the
-        StandardTemplateManager), and configure it appropriately
+        <a
+        href="javadoc/org/jamon/StandardTemplateManager.html">StandardTemplateManager</a>),
+        and configure it appropriately
       </li>
       <li>
         Create an instance of the template, call
@@ -63,18 +65,20 @@ import org.jamon.TemplateManager;
        Writer writer = new OutputStreamWriter(System.out);
        Foo foo = new Foo(templateManager);
        foo.writeTo(writer)
-         .setName("Billy Strayhorn")
-         .render(4, "Chelsea Bridge");
+         .setName("Duke & Co.")
+         .render(3, "Hello");
 
        // alternatively:
-       foo.setName("John Coltrane");
-       org.jamon.Renderer r = foo.makeRenderer(68, "Naima");
+       foo.setName("Duke & Co.");
+       org.jamon.Renderer r = foo.makeRenderer(3, "Hello");
        ...
        foo.renderTo(writer);
 
        // or even:
-       foo.setName("Thelonious Monk");
-       String value = foo.makeRenderer(3, "Ugly Beauty").asString();
+       foo.setName("Duke & Co.");
+       String value = foo.makeRenderer(3, "Hello").asString();
+       ...
+       writer.write(value);
 </pre>
 
     <p>
