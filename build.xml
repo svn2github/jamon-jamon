@@ -107,6 +107,7 @@
     </exec>
     <echo message="Current version: ${majorversion}.${currentversion}" />
     <echo message="Next version: ${majorversion}.${nextversion}" />
+    <input message="Press enter to continue ..." />
     <property name="file" value="core/src/org/jamon/Resources.properties" />
     <cvs command="edit ${file}"/>
     <replace file="${file}"
