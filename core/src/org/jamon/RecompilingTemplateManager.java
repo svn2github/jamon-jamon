@@ -251,8 +251,6 @@ public class RecompilingTemplateManager
      * template
      *
      * @return a <code>Template</code> instance
-     *
-     * @exception IOException if something goes wrong
      **/
     public AbstractTemplateProxy.Intf constructImpl(
         AbstractTemplateProxy p_proxy, TemplateManager p_manager)
@@ -267,8 +265,6 @@ public class RecompilingTemplateManager
      * @param p_path the path to the template
      *
      * @return a <code>Template</code> proxy instance
-     *
-     * @exception IOException if something goes wrong
      **/
     public AbstractTemplateProxy constructProxy(String p_path)
     {
