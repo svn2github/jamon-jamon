@@ -96,8 +96,8 @@ public class TemplateProcessor
             }
             finally
             {
-                throw e;
             }
+            throw e;
         }
         catch (IOException e)
         {
@@ -108,8 +108,8 @@ public class TemplateProcessor
             }
             finally
             {
-                throw e;
             }
+            throw e;
         }
         out.close();
 
@@ -129,8 +129,8 @@ public class TemplateProcessor
             }
             finally
             {
-                throw e;
             }
+            throw e;
         }
         catch (IOException e)
         {
@@ -141,8 +141,8 @@ public class TemplateProcessor
             }
             finally
             {
-                throw e;
             }
+            throw e;
         }
         out.close();
     }
