@@ -47,9 +47,13 @@ public class FirstTest
         t.render(new BigDecimal("34.5324"));
         w.flush();
 
-        // This is expected to fail
-         RE re = new RE("^a.b$");
-         assertTrue(re.isMatch(w.toString()));
+        RE re = new RE(".*An external template with a parameterized fragment parameter \\(farg\\)" +
+                       "\\s*" +
+                       "i is 3 and s is yes." +
+                       "\\s*" +
+                       "i is 7 and s is no.*",
+                       RE.REG_DOT_NEWLINE);
+        assertTrue(re.isMatch(w));
     }
 
 }
