@@ -85,10 +85,11 @@ public class ImplGenerator extends BaseGenerator
     {
         if (m_current.length() > 0)
         {
-            addStatement(new WriteStatement("\""
-                                          + javaEscape(m_current.toString())
-                                          + "\"",
-                                          Encoding.NONE));
+            addStatement(new WriteStatement
+                         ("\""
+                          + javaEscape(newlineEscape(m_current.toString()))
+                          + "\"",
+                          Encoding.NONE));
             m_current = new StringBuffer();
         }
     }
@@ -116,7 +117,7 @@ public class ImplGenerator extends BaseGenerator
         {
             expr.append(((TAny)i.next()).getText());
         }
-        addStatement(new WriteStatement(expr.toString(),encoding));
+        addStatement(new WriteStatement(expr.toString(), encoding));
     }
 
     public void caseACallComponent(ACallComponent node)
@@ -166,7 +167,27 @@ public class ImplGenerator extends BaseGenerator
         m_unitStatements.put(getUnitName(),new ArrayList());
     }
 
-    private String javaEscape(String p_string)
+    private static String newlineEscape(String p_string)
+    {
+        // assert p_string != null
+        if (p_string.length() < 2)
+        {
+            return p_string;
+        }
+        StringBuffer s = new StringBuffer();
+        int j = 0;
+        int i = p_string.indexOf("\\\n");
+        while (i >= 0)
+        {
+            s.append(p_string.substring(j,i));
+            j = i+2;
+            i = p_string.indexOf("\\\n",j);
+        }
+        s.append(p_string.substring(j));
+        return s.toString();
+    }
+
+    private static String javaEscape(String p_string)
     {
         // assert p_string != null
         StringBuffer s = new StringBuffer();
