@@ -85,7 +85,7 @@ the documentation thus taking care of issues such as escaping.
       <targetfileset dir="${doc.dir}" includes="*.html" />
     </dependset>
     <dependset>
-      <srcfilelist dir="templates/org/jamon/doc" files="FormFieldsTemplate,_showDiff,buildxml,inputElements,parametersAndInput,prerequiesites,standardLibrary,usingTomcat,webxml" />
+      <srcfilelist dir="templates/org/jamon/doc" files="FormFieldsTemplate,_showDiff,buildxml,inputElements,parametersAndInput,prerequisites,standardLibrary,usingTomcat,webxml" />
       <srcfileset dir="templates/org/jamon/doc" includes="servletSnippet*,hello*,Hello*" />
       <targetfilelist dir="${doc.dir}" files="Servlets.html" />
     </dependset>
@@ -187,15 +187,14 @@ the documentation thus taking care of issues such as escaping.
     </copy>
   </target>
 
-  <target name="grind">
-    <echo>Grinding templates/org/jamon/doc/${template}</echo>
+  <target name="checkgrind">
+    <echo>Checking templates/org/jamon/doc/${template}</echo>
     <uptodate property="grindnotneeded"
               srcfile="templates/org/jamon/doc/${template}"
               targetfile="${doc.dir}/${template}.html" />
-    <antcall target="dogrind" />
   </target>
 
-  <target name="dogrind" unless="grindnotneeded">
+  <target name="grind" depends="checkgrind" unless="grindnotneeded">
     <echo>Generating ${doc.dir}/${template}.html</echo>
     <invoker classpath="${java.lib.jamon}:${java.lib.diff}"
              workDir="${work.dir}"
