@@ -1,5 +1,9 @@
 <%abstract>
 <%extends _TutorialBase>
+<%alias>
+  logic => /org/jamon/logic;
+</%alias>
+
 <& tutorialNavBar &>
 
 <h2><& title &></h2>
@@ -10,7 +14,7 @@
 <%def tutorialNavBar>
   <div class="tutorialNav">
     <span class="tutorialNavNeighbor">
-      <&| if; condition => tutorialStage() > 1 &>
+      <&| logic//If; condition => tutorialStage() > 1 &>
         <a href="TutorialSample<% tutorialStage() - 1 %>.html">Previous</a>
       </&>
     </span>
@@ -18,23 +22,11 @@
       <a href="TutorialPath.html">Tutorial contents</a>
     </span>
     <span class="tutorialNavNeighbor">
-      <&| if; condition => tutorialStage() < 10 &>
+      <&| logic//If; condition => tutorialStage() < 10 &>
         <a href="TutorialSample<% tutorialStage() + 1 %>.html">Next</a>
       </&>
     </span>
   </div>
-</%def>
-
-<%def if>
-  <%args>
-    boolean condition;
-  </%args>
-  <%frag content/>
-% if (condition) {
-    <& content &>
-% } else {
-    &nbsp;
-% }
 </%def>
 
 <%class>

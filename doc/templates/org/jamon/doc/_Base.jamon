@@ -1,4 +1,8 @@
 <%abstract>
+<%alias>
+  logic => /org/jamon/logic;
+</%alias>
+
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
   <head>
@@ -71,11 +75,8 @@
     Section section;
     String href;
   </%args>
-<li class="nav"\
-% if (section == currentSection()) {
- id="current"\
-% }
->
+<li class="nav"
+    <&| logic//If; condition => section == currentSection() &>id="current"</&>>
 <a href="<& docRootUrl; href => "" &><% href %>.html" \
 ><% section %></a>
 </li>
