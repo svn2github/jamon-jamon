@@ -1,9 +1,9 @@
-package test.jtt;
+package test.jamon;
 
-import foo.bar.test.jtt.TestTemplate;
+import foo.bar.test.jamon.TestTemplate;
 import java.io.*;
 import java.math.*;
-import org.modusponens.jtt.*;
+import org.jamon.*;
 
 public class Test1
 {

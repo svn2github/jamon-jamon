@@ -1,5 +1,5 @@
 Package
-  org.modusponens.jtt;
+  org.jamon;
 
 Helpers
   lower = ['a'..'z'];

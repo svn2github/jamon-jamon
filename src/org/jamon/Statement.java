@@ -18,7 +18,7 @@
  * Contributor(s):
  */
 
-package org.modusponens.jtt;
+package org.jamon;
 
 import java.io.PrintWriter;
 import java.io.IOException;

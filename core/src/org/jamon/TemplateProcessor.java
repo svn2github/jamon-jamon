@@ -1,4 +1,4 @@
-package org.modusponens.jtt;
+package org.jamon;
 
 import java.io.File;
 import java.io.FileReader;
@@ -6,11 +6,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PushbackReader;
 import java.util.List;
-import org.modusponens.jtt.lexer.Lexer;
-import org.modusponens.jtt.lexer.LexerException;
-import org.modusponens.jtt.node.Start;
-import org.modusponens.jtt.parser.Parser;
-import org.modusponens.jtt.parser.ParserException;
+import org.jamon.lexer.Lexer;
+import org.jamon.lexer.LexerException;
+import org.jamon.node.Start;
+import org.jamon.parser.Parser;
+import org.jamon.parser.ParserException;
 
 public class TemplateGenerator
 {

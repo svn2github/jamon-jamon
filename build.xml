@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<project name="JttCompiler" default="build">
+<project name="Jamon" default="build">
 
   <description>
     A compiler that turns typed templates in Java code.
@@ -16,11 +16,11 @@
   <property name="tests.src.dir" value="tests"/>
   <property name="test.dir" value="test" />
   <property name="test.src.dir" value="${test.dir}/src" />
-  <property name="test.pkg" value="test/jtt"/>
+  <property name="test.pkg" value="test/jamon"/>
   <property name="test.src2.dir" value="${test.src.dir}/${test.pkg}" />
   <property name="test.classes.dir" value="${test.dir}/classes" />
   <property name="testdata.dir" value="testdata/${test.pkg}" />
-  <property name="jarfile" value="jtt.jar" />
+  <property name="jarfile" value="jamon.jar" />
   <property name="java.lib.junit" value="junit.jar" />
 
   <property name="junit.fork" value="no" />
@@ -39,8 +39,8 @@
 
   <target name="check-parser">
     <uptodate property="parser.uptodate"
-              targetfile="${build.src.dir}/org/modusponens/jtt/node/Node.java">
-      <srcfiles dir="src" includes="jtt.grammar"/>
+              targetfile="${build.src.dir}/org/jamon/node/Node.java">
+      <srcfiles dir="src" includes="jamon.grammar"/>
     </uptodate>
   </target>
 
@@ -51,7 +51,7 @@
     <taskdef name="sablecc" classname="org.sablecc.ant.taskdef.Sablecc"
              classpath="${java.lib.sablecctask}:${java.lib.sablecc}"/>
     <sablecc src="src" outputdirectory="${build.src.dir}">
-        <include name="jtt.grammar"/>
+        <include name="jamon.grammar"/>
     </sablecc>
  </target>
 
@@ -97,7 +97,7 @@
     <java fork="true"
           dir="testdata"
           classpath="${classes.dir}:${java.lib.sablecc}"
-          classname="org.modusponens.jtt.TemplateGenerator">
+          classname="org.jamon.TemplateGenerator">
       <arg value="../${test.src.dir}" />
       <arg value="foo.bar." />
       <arg value="${test.pkg}/TestTemplate" />

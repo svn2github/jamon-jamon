@@ -18,7 +18,7 @@
  * Contributor(s):
  */
 
-package org.modusponens.jtt;
+package org.jamon;
 
 /**
  * An enumerated type class representing various encodings.

@@ -18,7 +18,7 @@
  * Contributor(s):
  */
 
-package org.modusponens.jtt;
+package org.jamon;
 
 /**
  * Marker interface for all generated template interfaces.

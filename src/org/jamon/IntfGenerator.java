@@ -1,4 +1,4 @@
-package org.modusponens.jtt;
+package org.jamon;
 
 import java.io.Writer;
 import java.io.PrintWriter;

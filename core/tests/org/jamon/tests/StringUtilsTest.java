@@ -2,7 +2,7 @@ package org.modusponens.tests.jtt;
 
 import junit.framework.TestCase;
 
-import org.modusponens.jtt.StringUtils;
+import org.jamon.StringUtils;
 
 public class StringUtilsTest
     extends TestCase

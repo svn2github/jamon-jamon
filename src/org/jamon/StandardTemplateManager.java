@@ -1,4 +1,4 @@
-package org.modusponens.jtt;
+package org.jamon;
 
 import java.io.File;
 import java.io.FileReader;
@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.Set;
 import java.util.HashSet;
-import org.modusponens.jtt.node.Start;
+import org.jamon.node.Start;
 
 
 public class StandardTemplateManager

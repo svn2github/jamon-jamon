@@ -18,7 +18,7 @@
  * Contributor(s):
  */
 
-package org.modusponens.jtt;
+package org.jamon;
 
 /**
  * A <code>TemplateResolver</code> provides methods to translate

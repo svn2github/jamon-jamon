@@ -1,4 +1,4 @@
-package org.modusponens.jtt;
+package org.jamon;
 
 import java.util.Iterator;
 import java.util.ArrayList;

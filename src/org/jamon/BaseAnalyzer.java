@@ -1,4 +1,4 @@
-package org.modusponens.jtt;
+package org.jamon;
 
 import java.io.IOException;
 import java.util.List;
@@ -6,8 +6,8 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Iterator;
-import org.modusponens.jtt.node.*;
-import org.modusponens.jtt.analysis.*;
+import org.jamon.node.*;
+import org.jamon.analysis.*;
 
 public class BaseAnalyzer
 {

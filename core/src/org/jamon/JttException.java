@@ -1,4 +1,4 @@
-package org.modusponens.jtt;
+package org.jamon;
 
 public class JttException
     extends java.io.IOException

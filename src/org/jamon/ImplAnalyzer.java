@@ -1,4 +1,4 @@
-package org.modusponens.jtt;
+package org.jamon;
 
 import java.io.Writer;
 import java.io.PrintWriter;
@@ -11,7 +11,7 @@ import java.util.Set;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.HashMap;
-import org.modusponens.jtt.node.*;
+import org.jamon.node.*;
 
 public class ImplAnalyzer extends BaseAnalyzer
 {

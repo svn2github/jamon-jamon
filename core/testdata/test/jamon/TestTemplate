@@ -52,7 +52,7 @@ No lines should be between here
 \
 and here.
 
-This is a call: <& /test/jtt/SubTemplate; z => 3; y => "yes" &>
+This is a call: <& /test/jamon/SubTemplate; z => 3; y => "yes" &>
 So is this: <& SubTemplate; z => 12; y => "no"; x => 1 &>
 
 A call to a def: <& foo; qq => "yes" &>.
