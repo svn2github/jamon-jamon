@@ -22,8 +22,17 @@ package org.jamon.util;
 
 import java.io.IOException;
 
+/**
+ * A <code>JavaCompiler</code> is an object which knows how to compile
+ * Java source files.
+ */
 public interface JavaCompiler
 {
-    public void compile(String [] p_javaFiles)
+    /**
+     * Compile the specified java source files.
+     *
+     * @param p_javaFiles the source files to compile
+     */
+    void compile(String [] p_javaFiles)
         throws IOException;
 }
