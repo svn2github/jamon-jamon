@@ -18,7 +18,7 @@
   <property name="java.lib.gnuregexp" value="/usr/local/share/java/gnu-regexp-1.1.4.jar" />
 
   <property name="junit.fork" value="yes" />
-  <property name="junit.timeout" value="5000" />
+  <property name="junit.timeout" value="15000" />
   <property name="junit.printsummary" value="off" />
   <property name="junit.formatter" value="brief" />
 
