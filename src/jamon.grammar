@@ -141,21 +141,17 @@ Productions
             | {emit} emit
             | {call} call
             | {fragment_call} fragment_call
-            ;
-
-  unit_component =
-              base_component
             | {args} args
             ;
 
-  component = unit_component
+  component = base_component
             | {imports} imports
             | {def} def
             ;
 
   content = content_start identifier content_end;
 
-  def = def_start identifier gt unit_component* def_end;
+  def = def_start identifier gt base_component* def_end;
 
   call = call_start path param* call_end;
 

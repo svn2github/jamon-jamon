@@ -194,11 +194,6 @@ public class BaseAnalyzer
 
         public void caseAComponent(AComponent node)
         {
-            node.getUnitComponent().apply(this);
-        }
-
-        public void caseAUnitComponent(AUnitComponent node)
-        {
             node.getBaseComponent().apply(this);
         }
 
@@ -226,7 +221,7 @@ public class BaseAnalyzer
             }
         }
 
-        public void caseAArgsUnitComponent(AArgsUnitComponent args)
+        public void caseAArgsBaseComponent(AArgsBaseComponent args)
         {
             AArgs a = (AArgs) args.getArgs();
             PArgsStart start = a.getArgsStart();
@@ -254,7 +249,7 @@ public class BaseAnalyzer
             pushUnitName(unitName);
             m_unit.put(getUnitName(),new UnitInfo(getUnitName()));
             def.getDefStart().apply(this);
-            for (Iterator i = def.getUnitComponent().iterator(); i.hasNext(); /* */ )
+            for (Iterator i = def.getBaseComponent().iterator(); i.hasNext(); /* */ )
             {
                 ((Node)i.next()).apply(this);
             }
