@@ -36,8 +36,9 @@ public class TestBase
     public void setUp()
         throws Exception
     {
-        m_templateManager = new StandardTemplateManager()
-            .setDynamicRecompilation(false);
+        m_templateManager = new StandardTemplateManager
+            (new StandardTemplateManager.Data()
+                 .setDynamicRecompilation(false));
         m_writer = new StringWriter();
     }
 

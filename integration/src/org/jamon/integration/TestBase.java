@@ -37,9 +37,10 @@ public class TestBase
     public void setUp()
         throws Exception
     {
-        m_templateManager = new StandardTemplateManager()
-            .setSourceDir(SOURCE_DIR)
-            .setWorkDir(WORK_DIR);
+        m_templateManager = new StandardTemplateManager
+            (new StandardTemplateManager.Data()
+                 .setSourceDir(SOURCE_DIR)
+                 .setWorkDir(WORK_DIR));
         resetWriter();
     }
 

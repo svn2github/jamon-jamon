@@ -94,6 +94,110 @@ import java.util.HashSet;
 public class StandardTemplateManager
     implements TemplateManager
 {
+    public static class Data
+    {
+        public Data setAutoFlush(boolean p_autoFlush)
+        {
+            autoFlush = p_autoFlush;
+            return this;
+        }
+        private boolean autoFlush;
+
+        public Data setSourceDir(String p_sourceDir)
+        {
+            sourceDir = p_sourceDir;
+            return this;
+        }
+        private String sourceDir;
+
+        public Data setWorkDir(String p_workDir)
+        {
+            workDir = p_workDir;
+            return this;
+        }
+        private String workDir;
+
+        public Data setDynamicRecompilation(boolean p_dynamicRecompilation)
+        {
+            dynamicRecompilation = p_dynamicRecompilation;
+            return this;
+        }
+        private boolean dynamicRecompilation = true;
+
+        public Data setCacheSize(int p_cacheSize)
+        {
+            cacheSize = p_cacheSize;
+            return this;
+        }
+        private int cacheSize = 50;
+
+        public Data setJavaCompiler(String p_javaCompiler)
+        {
+            javaCompiler = p_javaCompiler;
+            return this;
+        }
+        private String javaCompiler;
+
+        public Data setJavaCompilerNeedsRtJar(boolean p_javaCompilerNeedsRtJar)
+        {
+            javaCompilerNeedsRtJar = p_javaCompilerNeedsRtJar;
+            return this;
+        }
+        private boolean javaCompilerNeedsRtJar;
+
+        public Data setClasspath(String p_classpath)
+        {
+            classpath = p_classpath;
+            return this;
+        }
+        private String classpath;
+
+        public Data setClassLoader(ClassLoader p_classLoader)
+        {
+            classLoader = p_classLoader;
+            return this;
+        }
+        private ClassLoader classLoader = getClass().getClassLoader();
+
+        public Data setDefaultEscaping(Escaping p_escaping)
+        {
+            escaping = p_escaping;
+            return this;
+        }
+        private Escaping escaping = Escaping.DEFAULT;
+    }
+
+
+    public StandardTemplateManager(Data p_data)
+        throws IOException
+    {
+        m_autoFlush = p_data.autoFlush;
+        m_escaping = p_data.escaping == null
+            ? Escaping.DEFAULT
+            : p_data.escaping;
+        m_classLoader = p_data.classLoader == null
+            ? getClass().getClassLoader()
+            : p_data.classLoader;
+        m_dynamicRecompilation = p_data.dynamicRecompilation;
+        m_workDir = p_data.workDir == null
+            ? getDefaultWorkDir()
+            : p_data.workDir;
+        m_javaCompiler =
+            new JavaCompiler(p_data.javaCompiler == null
+                             ? getDefaultJavac()
+                             : p_data.javaCompiler,
+                             getClassPath(m_workDir,
+                                          p_data.classpath,
+                                          p_data.javaCompilerNeedsRtJar,
+                                          m_classLoader));
+        m_loader = new WorkDirClassLoader(m_classLoader, m_workDir);
+        m_describer =
+            new TemplateDescriber(new File(p_data.sourceDir == null
+                                           ? System.getProperty("user.dir")
+                                           : p_data.sourceDir));
+        m_cache = new LifoMultiCache(p_data.cacheSize);
+    }
+
     public AbstractTemplateImpl getInstance(String p_path)
         throws IOException
     {
@@ -133,8 +237,6 @@ public class StandardTemplateManager
     {
         try
         {
-            initialize();
-
             // need to do this first to check dependencies if so enabled
             Class cls = getImplementationClass(p_path);
 
@@ -164,200 +266,9 @@ public class StandardTemplateManager
         }
     }
 
-    /**
-     * Set whether templates automatically flush the writer after
-     * rendering. Default is true.
-     *
-     * @param p_autoFlush whether template instances should flush automatically
-     *
-     * @return this
-     */
-
-    public StandardTemplateManager setAutoFlush(boolean p_autoFlush)
-    {
-        m_autoFlush = p_autoFlush;
-        return this;
-    }
-
-    /**
-     * Set default escaping. Default is null.
-     *
-     * @param p_escaping the default escaping
-     *
-     * @return this
-     */
-
-    public StandardTemplateManager setDefaultEscaping(Escaping p_escaping)
-    {
-        m_escaping = p_escaping;
-        return this;
-    }
-
-    /**
-     * Set the parent class loader for template instances. Default is
-     * use the class laoder of the
-     * <code>StandardTemplateManager</code> instance.
-     *
-     * @param p_classLoader the <code>ClassLoader</code> to use.
-     *
-     * @return this
-     */
-
-    public StandardTemplateManager setClassLoader(ClassLoader p_classLoader)
-    {
-        m_classLoader = p_classLoader;
-        m_initialized = false;
-        return this;
-    }
-
-    /**
-     * Set the maximum number of * template instances cached. Default
-     * is 50.
-     *
-     * @param p_cacheSize the cache size
-     *
-     * @return this
-     */
-
-    public StandardTemplateManager setCacheSize(int p_cacheSize)
-    {
-        m_cacheSize = p_cacheSize;
-        m_initialized = false;
-        return this;
-    }
-
-    /**
-     * Determines where to look for template source
-     * files. Default is the current directory, which is most likely
-     * unsuitable for most situations.
-     *
-     * @param p_templateSourceDir where to look for template sources
-     *
-     * @return this
-     */
-    public StandardTemplateManager setSourceDir(String p_templateSourceDir)
-    {
-        m_templateSourceDir = p_templateSourceDir;
-        m_initialized = false;
-        return this;
-    }
-
-    /**
-     * Set where the generated Java source files corresponding to
-     * templates are placed. Default is uniquely generated subdirectory
-     * under the directory specified by the system property
-     * <tt>java.io.tmpdir</tt>.
-     *
-     * @param p_workDir where to place generated java files
-     *
-     * @return this
-     */
-    public StandardTemplateManager setWorkDir(String p_workDir)
-    {
-        m_workDir = p_workDir;
-        m_initialized = false;
-        return this;
-    }
-
-    /**
-     *  Set what program to execute to compile the generated Java
-     *  source files. Default is <tt>bin/javac</tt> under the
-     *  directory specified by the system property <tt>java.home</tt>.
-     *
-     * @param p_javac the java compiler program path
-     *
-     * @return this
-     */
-    public StandardTemplateManager setJavaCompiler(String p_javac)
-    {
-        m_javac = p_javac;
-        m_javaCompiler = null;
-        return this;
-    }
-
-    /**
-     * Set whether rt.jar needs to be explicitly supplied in the
-     * classpath when compiling generated Java source files; this is
-     * useful to enable compilation via <code>Jikes</code>. Default is
-     * false.
-     *
-     * @param p_includertJar whether to include <code>rt.jar</code> in
-     * the classpath supplied to the java compiler
-     *
-     * @return this
-     */
-    public StandardTemplateManager setJavaCompilerNeedsRtJar(boolean p_includeRtJar)
-    {
-        m_includeRtJar = p_includeRtJar;
-        m_javaCompiler = null;
-        return this;
-    }
-
-    /**
-     * Specify additional components to prepend to the classpath when
-     * compiling generated Java source files. Default is null.
-     *
-     * @param p_classpath classpath components prepended to the
-     * classpath supplied to the java compiler
-     *
-     * @return this
-     */
-    public StandardTemplateManager setClasspath(String p_classpath)
-    {
-        m_classpath = p_classpath;
-        m_javaCompiler = null;
-        return this;
-    }
-    /**
-     * Determines whether classes
-     * corresponding to templates should be dynamically recompiled as
-     * necessary. Default is true; set to false for production.
-     *
-     * @param p_dynamicRecompilation whether to dynamically regenerate
-     * and recompile changed templates
-     *
-     * @return this
-     */
-
-    public StandardTemplateManager setDynamicRecompilation(boolean p_dynamicRecompilation)
-    {
-        m_dynamicRecompilation = p_dynamicRecompilation;
-        return this;
-    }
-
-    private void trace(String p_message)
+    private static void trace(String p_message)
     {
         System.err.println(p_message);
-    }
-
-    private synchronized void initialize()
-        throws IOException
-    {
-        if (! m_initialized)
-        {
-            if (TRACE)
-            {
-                trace("initializing std template mgr");
-            }
-            if (m_workDir == null)
-            {
-                File workDir =
-                    new File(System.getProperty("java.io.tmpdir"),
-                             "jamon"
-                             + (new java.util.Random().nextInt(100000000))
-                             + ".tmp");
-                m_workDir = workDir.getCanonicalPath();
-                workDir.mkdirs();
-                workDir.deleteOnExit();
-            }
-            m_loader = new WorkDirClassLoader(m_classLoader, m_workDir);
-            m_describer =
-                new TemplateDescriber(new File(m_templateSourceDir == null
-                                               ? System.getProperty("user.dir")
-                                               : m_templateSourceDir));
-            m_cache = new LifoMultiCache(m_cacheSize);
-            m_initialized = true;
-        }
     }
 
     private String getClassName(String p_path)
@@ -371,16 +282,32 @@ public class StandardTemplateManager
         return m_loader.loadClass(getClassName(p_path));
     }
 
-    private String getClassPath()
+    private static String getDefaultWorkDir()
+        throws IOException
     {
-        StringBuffer cp = new StringBuffer(m_workDir);
-        if (m_classpath != null)
+        File workDir =
+            new File(System.getProperty("java.io.tmpdir"),
+                     "jamon"
+                     + (new java.util.Random().nextInt(100000000))
+                     + ".tmp");
+        workDir.mkdirs();
+        workDir.deleteOnExit();
+        return workDir.getCanonicalPath();
+    }
+
+    private static String getClassPath(String p_start,
+                                       String p_classpath,
+                                       boolean p_includeRtJar,
+                                       ClassLoader p_classLoader)
+    {
+        StringBuffer cp = new StringBuffer(p_start);
+        if (p_classpath != null)
         {
             cp.append(File.pathSeparator);
-            cp.append(m_classpath);
+            cp.append(p_classpath);
         }
 
-        ClassLoader loader = getClass().getClassLoader();
+        ClassLoader loader = p_classLoader;
         if (loader instanceof URLClassLoader)
         {
             URL[] urls = ((URLClassLoader)loader).getURLs();
@@ -399,7 +326,7 @@ public class StandardTemplateManager
         cp.append(File.pathSeparator);
         cp.append(System.getProperty("java.class.path"));
 
-        if (m_includeRtJar)
+        if (p_includeRtJar)
         {
             cp.append(File.pathSeparator);
             cp.append(getRtJarPath());
@@ -413,7 +340,7 @@ public class StandardTemplateManager
         return cp.toString();
     }
 
-    private String getRtJarPath()
+    private static String getRtJarPath()
     {
         StringBuffer path = new StringBuffer(System.getProperty("java.home"));
         path.append(File.separator);
@@ -423,21 +350,7 @@ public class StandardTemplateManager
         return path.toString();
     }
 
-    private JavaCompiler getJavaCompiler()
-        throws IOException
-    {
-        if (m_javaCompiler == null)
-        {
-            if (m_javac == null)
-            {
-                m_javac = getDefaultJavac();
-            }
-            m_javaCompiler = new JavaCompiler(m_javac, getClassPath());
-        }
-        return m_javaCompiler;
-    }
-
-    private String getDefaultJavac()
+    private static String getDefaultJavac()
         throws IOException
     {
         // FIXME: does this work on windows?
@@ -475,25 +388,18 @@ public class StandardTemplateManager
     protected ClassLoader getWorkClassLoader()
         throws IOException
     {
-        initialize();
         return m_loader;
     }
 
-    private boolean m_dynamicRecompilation = true;
-    private TemplateDescriber m_describer;
-    private Escaping m_escaping = Escaping.DEFAULT;
-    private String m_workDir;
-    private String m_templateSourceDir;
-    private String m_javac;
-    private boolean m_includeRtJar = false;
-    private String m_classpath = null;
-    private ClassLoader m_classLoader = getClass().getClassLoader();
-    private JavaCompiler m_javaCompiler;
-    private WorkDirClassLoader m_loader;
-    private boolean m_initialized;
-    private boolean m_autoFlush = true;
-    private LifoMultiCache m_cache;
-    private int m_cacheSize = 32;
+    private final boolean m_dynamicRecompilation;
+    private final TemplateDescriber m_describer;
+    private final Escaping m_escaping;
+    private final String m_workDir;
+    private final ClassLoader m_classLoader;
+    private final JavaCompiler m_javaCompiler;
+    private final WorkDirClassLoader m_loader;
+    private final boolean m_autoFlush;
+    private final LifoMultiCache m_cache;
 
     private String prefix()
     {
@@ -599,10 +505,9 @@ public class StandardTemplateManager
         }
     }
 
-
     private void purgeCache()
     {
-        m_cache = new LifoMultiCache(m_cacheSize);
+        m_cache.clear();
     }
 
     private File getWriteableFile(String p_filename)
@@ -743,7 +648,7 @@ public class StandardTemplateManager
         {
             trace(buf.toString());
         }
-        getJavaCompiler()
+        m_javaCompiler
             .compile((String []) p_sourceFiles.toArray(new String [0]));
     }
 

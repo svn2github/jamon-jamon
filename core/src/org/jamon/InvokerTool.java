@@ -59,20 +59,21 @@ public class InvokerTool
         throws UsageException, IOException
     {
         int a = 0;
-        StandardTemplateManager manager = new StandardTemplateManager();
+        StandardTemplateManager.Data data =
+            new StandardTemplateManager.Data();
         String outFile = null;
         while (a < args.length && args[a].startsWith("-"))
         {
             if (args[a].startsWith("--workdir="))
             {
-                manager.setWorkDir(args[a].substring(10));
+                data.setWorkDir(args[a].substring(10));
             }
             else if (args[a].equals("-w"))
             {
                 a++;
                 if (a < args.length)
                 {
-                    manager.setWorkDir(args[a]);
+                    data.setWorkDir(args[a]);
                 }
                 else
                 {
@@ -81,14 +82,14 @@ public class InvokerTool
             }
             else if (args[a].startsWith("--srcdir="))
             {
-                manager.setSourceDir(args[a].substring(9));
+                data.setSourceDir(args[a].substring(9));
             }
             else if (args[a].equals("-s"))
             {
                 a++;
                 if (a < args.length)
                 {
-                    manager.setSourceDir(args[a]);
+                    data.setSourceDir(args[a]);
                 }
                 else
                 {
@@ -134,7 +135,9 @@ public class InvokerTool
             ? new OutputStreamWriter(System.out)
             : new FileWriter(outFile);
 
-        new Invoker(manager, templateName, p_objectParser)
+        new Invoker(new StandardTemplateManager(data),
+                    templateName,
+                    p_objectParser)
             .render(writer, argMap);
     }
 

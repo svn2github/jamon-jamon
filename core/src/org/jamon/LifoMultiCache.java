@@ -45,6 +45,12 @@ public class LifoMultiCache
         m_keyList = new LinkedList();
     }
 
+    public synchronized void clear()
+    {
+        m_cache.clear();
+        m_keyList.clear();
+    }
+
     /**
      * Get a value from the cache corresponding to the given key. If
      * multiple values exist for the key, return the value most

@@ -47,7 +47,7 @@ public class InvokerTask
 {
     public InvokerTask()
     {
-        m_templateManager = new StandardTemplateManager();
+        m_templateManagerData = new StandardTemplateManager.Data();
     }
 
     public void execute()
@@ -71,7 +71,8 @@ public class InvokerTask
                 }
                 writer = new FileWriter(m_output);
             }
-            new Invoker(m_templateManager,m_path)
+            new Invoker(new StandardTemplateManager(m_templateManagerData),
+                        m_path)
                 .render(m_output == null
                         ? new OutputStreamWriter(System.out)
                         : new FileWriter(m_output),
@@ -103,20 +104,20 @@ public class InvokerTask
         {
             urls[i] = new URL("file",null, paths[i]);
         }
-        m_templateManager
+        m_templateManagerData
             .setClassLoader(new URLClassLoader(urls,
                                                getClass().getClassLoader()));
-        m_templateManager.setClasspath(p_classpath.toString());
+        m_templateManagerData.setClasspath(p_classpath.toString());
     }
 
     public void setWorkDir(File p_workDir)
     {
-        m_templateManager.setWorkDir(p_workDir.getAbsolutePath());
+        m_templateManagerData.setWorkDir(p_workDir.getAbsolutePath());
     }
 
     public void setSourceDir(File p_sourceDir)
     {
-        m_templateManager.setSourceDir(p_sourceDir.getAbsolutePath());
+        m_templateManagerData.setSourceDir(p_sourceDir.getAbsolutePath());
     }
 
     public void setOutput(File p_output)
@@ -130,7 +131,7 @@ public class InvokerTask
         m_path = p_path;
     }
 
-    private final StandardTemplateManager m_templateManager;
+    private final StandardTemplateManager.Data m_templateManagerData;
     private String m_path;
     private HashMap m_args = new HashMap();
     private File m_output;
