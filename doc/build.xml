@@ -80,6 +80,15 @@ the documentation thus taking care of issues such as escaping.
   <target name="doc"
           description="Generates all the documentation"
           depends="init" >
+    <dependset>
+      <srcfilelist dir="templates/org/jamon/doc" files="_Base" />
+      <targetfileset dir="${doc.dir}" includes="*.html" />
+    </dependset>
+    <dependset>
+      <srcfilelist dir="templates/org/jamon/doc" files="FormFieldsTemplate,_showDiff,buildxml,inputElements,parametersAndInput,prerequiesites,standardLibrary,usingTomcat,webxml" />
+      <srcfileset dir="templates/org/jamon/doc" includes="servletSnippet*,hello*,Hello*" />
+      <targetfilelist dir="${doc.dir}" files="Servlets.html" />
+    </dependset>
     <antcall target="quickstart" />
     <antcall target="grind">
       <param name="template" value="BuildingProjects" />
