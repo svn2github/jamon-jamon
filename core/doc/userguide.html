@@ -1,0 +1,209 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+    <title>Jamon User's Guide</title>
+    <style type="text/css" media="screen">
+    <!--
+      pre.template { background-color: #dfdfdf; padding: 0.5em }
+      pre.code { background-color: #ffdfdf; padding: 0.5em }
+      pre.tty { background-color: #333333; color: #ffffff; padding: 0.5em }
+      li { padding-top: 0.5em }
+    -->
+    </style>
+  </head>
+
+  <body>
+    <h1>Jamon User's Guide</h1>
+
+    <h2>Jamon templates</h2>
+
+    <ol>
+
+      <li>Static content<br />
+
+        In general, any characters appearing in a template are output
+        literally, whitespace included.
+
+      <li>Java escapes<br />
+
+        The value of a java expression can be emitted by enclosing the
+        expression in <code>&lt;%...%&gt;</code> pairs, e.g.
+        <pre class="template">
+&lt;% person.getFirstName().substring(0,10) %&gt;
+</pre>
+
+        <p>
+          Arbitrary Java code can be inserted into the template using
+          <code>&lt;%java&gt;...&lt;/%java&gt;</code>, e.g.
+        <pre class="template">
+&lt;%java&gt;
+  while (iter.hasNext()) {
+    Person p = (Person) iter.next();
+    if (p.getLastName().startsWith("S")) {
+&lt;/%java&gt;
+      &lt;% p.getLastName() %&gt;'s last name doesn't start with 'X'.
+&lt;%java&gt;
+    }
+  }
+&lt;/%java&gt;
+</pre>
+        Alternatively, any line beginning with '<code>%</code>' also is
+        assumed to contain valid Java code. The previous example could
+        be equivalently (and perhaps more clearly) written as
+        <pre class="template">
+%  while (iter.hasNext()) {
+%    Person p = (Person) iter.next();
+%    if (p.getLastName().startsWith("S")) {
+      &lt;% p.getLastName() %&gt;'s last name doesn't start with 'X'.
+%    }
+%  }
+</pre>
+    <p>
+
+      The kinds of Java code that can appear in an escape is fairly
+      unrestricted. Be warned, however, that code is emitted inside a
+      method body. Thus, for example, package declarations and import
+      statements are invalid.
+
+    <li>Comments<br />
+
+      Any template content between <code>&lt;%doc&gt;</code> and
+      <code>&lt;/%doc&gt;</code> is considered "documentation", and
+      ignored by the template processor
+
+    <li>Imports <br />
+
+      Java classes or packages to be imported and used in a template
+      should be placed inside an <code>&lt;import&gt;</code>
+      block. Each package or class should appear on a new line,
+      optionally separated by a semicolon ('<code>;</code>').
+      <p>
+      For example:
+      <pre class="template">
+&lt;%import&gt;
+  java.util.Iterator
+  org.modusponens.myapp.data.*
+&lt;/%import&gt;
+</pre>
+
+    <li>Arguments<br />
+
+      Arguments to a template are specified in
+      <code>&lt;%args&gt;</code> ... <code>&lt;/%args&gt;</code>
+      blocks. Each argument consists of a type followed by the
+      argument name, optionally followed by <code>=&gt;</code> and a
+      default value. Each argument must appear on a separate line, and
+      each argument declaration must be terminated by a semicolon.
+
+    <p>
+      Arguments are usable inside any (top-level) java escape or java
+      expression in the template. Technically, they are declared
+      "<code>final</code>", so it is not possible to (re)assign a
+      value to a template argument.
+
+    <p>
+      For example:
+      <pre class="template">
+&lt;%args&gt;
+  String[] nicknames => new String[0];
+  Address address;
+  java.util.Iterator friends;
+&lt;/%args&gt;
+Your nicknames are
+&lt;ul&gt;
+% for (int i = 0; i &lt; nicknames.length; ++i) {
+    &lt;li&gt; &lt;% nicknames[i] %&gt;
+% }
+&lt;/ul&gt;
+% while (friends.hasNext()) {
+%   Person p = (Person) friends.next();
+%   if (p.getAddress().getPostalCode().equals(address.getPostalCode())) {
+      Hey, guess what? &lt;% p.getName() %&gt; lives close by!
+%   }
+% }
+</pre>
+    Note that for this template to compile, the <code>Address</code>
+    class would need to appear in an <code>&lt;%import&gt;</code>
+    block.
+
+    <li>Private methods <br />
+
+    <li>Calling methods and other templates <br />
+
+    <li>Fragment arguments<br />
+
+  </ol>
+
+
+    <h2>Invoking templates from Java</h2>
+
+    <ol>
+      <li>
+        First, make sure you have preprocessed the top-level templates
+        into their Java interface equivalents.
+      </li>
+      <li>
+        When building your project, be sure to include the generate
+        interface source files in the build process.
+      </li>
+      <li>
+        Create a TemplateManager instance (e.g. the StandardTemplateManager).
+      </li>
+      <li>
+        Create a Writer.
+      </li>
+      <li>
+        Then obtain an instance of the template via its Factory,
+        and invoke its render method.
+      </li>
+    </ol>
+    <h4>Example</h4>
+    Suppose the template in <code>templates/foo</code> contains
+    <pre class="template">
+&lt;%args&gt;
+  int count;
+  String greeting;
+&lt;/%args&gt;
+&lt;html&gt;
+  &lt;body&gt;
+%   for (int i = 1; i &lt;= count; ++i) {
+    &lt;% i %&gt;. &lt; greeting &gt; &lt;br /&gt;
+%   }
+  &lt;/body&gt;
+&lt;/html&gt;
+</pre>
+    This can be processed into a Java interface with the
+    <code>jamon</code> command, e.g.
+    <pre class="tty">
+jamon --interface --package-prefix=org.modusponens.templates --output-dir=./gensrc templates/foo
+</pre>
+which will place the generated Java source file(s) into the
+<code>gensrc</code> directory.
+<p>
+You can then use the template as follows:
+        <pre class="code">
+import org.modusponens.templates.foo;
+import org.jamon.TemplateManager;
+
+  ...
+       TemplateManager templateManager =
+         new StandardTemplateManager(...);
+       ...
+       Writer writer = new OutputStreamWriter(System.out);
+       foo.Factory factory = new foo.Factory(templateManager);
+       factory.getInstance(writer).render(3, "Hello");
+</pre>
+    which when executed produces the output
+    <pre class="tty">
+&lt;html&gt;
+  &lt;body&gt;
+    1. Hello &lt;br /&gt;
+    2. Hello &lt;br /&gt;
+    3. Hello &lt;br /&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+</pre>
+    <hr>
+    <address><a href="mailto:jay@contravariant.org">Jay Sachs</a></address>
+  </body>
+</html>
