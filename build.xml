@@ -14,8 +14,11 @@
   <property name="core.classes.dir" value="core/build/classes" />
   <property name="stage.dir" value="site" />
   <property name="doc.zip" value="jamondoc.zip" />
-  <property name="tarball.src" value="jamon-src.tgz" />
-  <property name="tarball.bin" value="jamon-bin.tgz" />
+  <property file="core/src/org/jamon/Resources.properties" />
+  <property name="tarfilebase"
+            value="jamon-${org.jamon.version.major}.${org.jamon.version.minor}" />
+  <property name="tarball.src" value="${tarfilebase}-src.tgz" />
+  <property name="tarball.bin" value="${tarfilebase}-bin.tgz" />
 
   <target name="test"
           depends="jar"
@@ -139,12 +142,15 @@
   <target name="bindist" depends="jar,doczip">
     <tar tarfile="${tarball.bin}"
          baseDir="."
+         prefix="jamon-${org.jamon.version.major}.${org.jamon.version.minor}"
          compression="gzip"
          includes="${doc.zip},${jarfile}" />
   </target>
 
   <target name="srcdist">
-    <tar tarfile="${tarball.src}" compression="gzip" >
+    <tar tarfile="${tarball.src}"
+         compression="gzip"
+         prefix="jamon-${org.jamon.version.major}.${org.jamon.version.minor}" >
       <tarfileset dir="." prefix="jamon-alpha" >
         <exclude name="${jarfile}" />
         <exclude name="${stage.dir}" />
@@ -169,7 +175,7 @@
     </copy>
   </target>
 
-  <target name="push" depends="stage">
+  <target name="push" depends="stage" if="push.dest" >
     <exec dir="${stage.dir}" executable="rsync">
       <arg value="-e" />
       <arg value="ssh" />

@@ -77,19 +77,23 @@ public class ShowVersion
             ResourceBundle resources =
                 ResourceBundle.getBundle("org.jamon.Resources");
 
-            int major = Integer.parseInt(resources.getString("version.major"));
-            int minor = Integer.parseInt(resources.getString("version.minor"));
+            int major = Integer.parseInt(resources.getString
+                                         ("org.jamon.version.major"));
+            int minor = Integer.parseInt(resources.getString
+                                         ("org.jamon.version.minor"));
             if ( cmd.equals(CMD_SHOW) )
             {
                 boolean isDev =
-                    ! "true".equalsIgnoreCase(resources.getString("version.release"));
+                    ! "true".equalsIgnoreCase(resources.getString
+                                              ("org.jamon.version.release"));
                 System.out.println( "Jamon version "
                                     + MAJOR_FORMAT.format(major)
                                     + "."
                                     + MINOR_FORMAT.format(minor)
                                     + ( isDev ? "dev" : "")
                                     + " ("
-                                    + resources.getString("cvsversion")
+                                    + resources.getString
+                                        ("org.jamon.version.cvs")
                                     + ")" );
             }
             else if ( cmd.equals(CMD_MAJOR) )

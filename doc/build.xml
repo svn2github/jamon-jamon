@@ -20,6 +20,13 @@ the documentation thus taking care of issues such as escaping.
   <property name="java.lib.diff" value="/usr/local/share/java/diff.jar"/>
   <property name="invoker.class" value="org.jamon.InvokerTool" />
 
+  <property file="../core/src/org/jamon/Resources.properties" />
+  <property name="tarfilebase"
+            value="jamon-${org.jamon.version.major}.${org.jamon.version.minor}" />
+  <property name="tarball.src" value="${tarfilebase}-src.tgz" />
+  <property name="tarball.bin" value="${tarfilebase}-bin.tgz" />
+
+
   <taskdef name="invoker"
            classname="org.jamon.ant.InvokerTask"
            classpath="${java.lib.jamon}" />
@@ -84,11 +91,16 @@ the documentation thus taking care of issues such as escaping.
     <antcall target="grind">
       <param name="template" value="index" />
     </antcall>
+    <invoker classpath="${java.lib.jamon}"
+             workDir="${work.dir}"
+             sourceDir="templates"
+             output="${doc.dir}/Download.html"
+             template="/org/jamon/doc/Download">
+      <arg name="binTarball" value="${tarball.bin}" />
+      <arg name="srcTarball" value="${tarball.src}" />
+    </invoker>
     <antcall target="grind">
       <param name="template" value="Documentation" />
-    </antcall>
-    <antcall target="grind">
-      <param name="template" value="Download" />
     </antcall>
     <antcall target="grind">
       <param name="template" value="Contact" />
