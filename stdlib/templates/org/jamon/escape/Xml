@@ -1,0 +1,7 @@
+<%farg content>
+</%farg>\
+<%args>
+  boolean replace => true;
+</%args>\
+<&| _escape; replace => replace; 
+             escaping => org.jamon.Escaping.XML &><& content &></&>\

@@ -1,0 +1,43 @@
+<%farg content></%farg><%args>
+  Escaping escaping;
+  boolean compose => false;
+</%args><%import>
+  java.io.Writer;
+  java.io.StringWriter;
+  org.jamon.Escaping;
+</%import><%java>
+  Escaping oldEscaping = getEscaping();
+  Writer oldWriter = getWriter();
+  final StringWriter buffer = new StringWriter();
+  try
+  {
+    writeTo(buffer);
+    if (! compose)
+    {
+      escaping(escaping);
+    }
+</%java><& content &><%java>
+  }
+  finally
+  {
+    escaping(oldEscaping);
+    writeTo(oldWriter);
+  }
+  try
+  {
+    if (compose)
+    {
+      escaping(escaping);
+    }
+    else
+    {
+      escaping(Escaping.NONE);
+    }
+    String s = buffer.toString();
+</%java><% buffer.toString() %><%java>
+  }
+  finally
+  {
+    escaping(oldEscaping);
+  }
+</%java>
