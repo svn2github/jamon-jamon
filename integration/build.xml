@@ -37,7 +37,8 @@
     </jamon>
   </target>
 
-  <target name="commandlineTemplates">
+  <target name="commandlineTemplates"
+          depends="compile">
     <echo message="stage 0"/>
     <java fork="true"
           classpath="${java.lib.jamon}"
