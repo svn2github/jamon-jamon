@@ -13,9 +13,7 @@ Here is a template. It has two arguments:
 
 x, which is <% x %>,
 and amount, which is <% amount %>.
-<%java>
-  for (int i = 0; i < y; ++i)
- {
-</%java>
+%  for (int i = 0; i < y; ++i)
+% {
 i is <% i %>.
 <%java> } </%java>

@@ -34,7 +34,12 @@ public class Phase2Generator extends BaseGenerator
 
     public void caseABodyComponent(ABodyComponent node)
     {
-        m_current.append(node.getAny().getText());
+        m_current.append(node.getText().getText());
+    }
+
+    public void caseANewlineComponent(ANewlineComponent node)
+    {
+        m_current.append(node.getNewline().getText());
     }
 
     public void caseAJavaComponent(AJavaComponent node)
@@ -51,7 +56,6 @@ public class Phase2Generator extends BaseGenerator
     public void caseAJlineComponent(AJlineComponent node)
     {
         handleBody();
-        System.err.println("fragment is " + node.getFragment().getText());
         m_body.add(node.getFragment().getText());
     }
 

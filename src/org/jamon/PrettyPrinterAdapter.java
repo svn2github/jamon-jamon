@@ -131,7 +131,12 @@ public class PrettyPrinterAdapter extends AnalysisAdapter
 
     public void caseABodyComponent(ABodyComponent body)
     {
-        System.out.print(body.getAny().getText());
+        System.out.print(body.getText().getText());
+    }
+
+    public void caseANewlineComponent(ANewlineComponent newline)
+    {
+        System.out.print(newline.getNewline().getText());
     }
 
     public void defaultCase(Node node)

@@ -20,6 +20,7 @@ Helpers
   all_except_nl = [all - [lf + cr]];
 
 States
+  start,
   body,
   imports,
   emit,
@@ -31,11 +32,11 @@ States
   args;
 
 Tokens
-  {body -> args} args_start = '<%args>';
+  {start -> args,body -> args} args_start = '<%args>';
   {args -> body} args_end = '</%args>';
-  {body -> imports} import_start = '<%import>';
+  {start ->imports,body -> imports} import_start = '<%import>';
   {imports -> body} import_end = '</%import>';
-  {body -> java} java_start = '<%java>' ws*;
+  {start ->java,body -> java} java_start = '<%java>' ws*;
   {java -> body} java_end = ws* '</%java>';
   {args,imports} dot = period;
   {args -> argexp} arrow = '=>' hs*;
@@ -43,20 +44,22 @@ Tokens
   {call,args,imports} identifier = letter letter_or_digit*;
 
 
-  {body -> emit} emit_start = '<%' ws*;
+  {start -> emit,body -> emit} emit_start = '<%' ws*;
   {emit -> body} emit_end = ws* '%>';
 
-  // this isn't quite right -- it doesn't handle the first line of a file
-  {body -> jline} injava = nl percent hs*;
-  {jline -> body} outjava = hs* nl;
+  {start -> jline} injava = percent hs*;
+  {jline -> start} outjava = hs* nl;
   {jline,argexp} fragment = all_except_nl*;
   {argexp -> args} donearg = hs* nl;
 
-  {body,emit,java} any = all;
+  {emit,java} any = all;
+  {body,start -> body} text = all_except_nl;
+  {start,body -> start} newline = nl;
+
   {args} brackets = '[' (hs)* ']';
 
   {call -> callexp} carrow = '=>' hs*;
-  {body -> call} call_start = '<&' ws*;
+  {start -> call,body -> call} call_start = '<&' ws*;
   {call -> body} call_end = ws* '&>';
   {callexp -> call} param_expr = ([all - [';' + '&']] | '&' [all-'>'])*;
   {call} semi = ';';
@@ -69,7 +72,7 @@ Productions
 
   template = component*;
 
-  component = {body} any
+  component = {body} text | {newline} newline
             | {imports} import_start name* import_end
             | {args} args_start arg* args_end
             | {java} java_start any* java_end
