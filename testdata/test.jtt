@@ -12,16 +12,19 @@ bar
   String foo
   Bar.Baz x
   int [] [ ] y
-  Integer i => 3
+  Integer i =>     3
 </%args>
 
-<% xyz %>
+<%     
+  xyz
+                  %>
 
 %             x
 
 
 bar
-       yyy <& other &> zzz
+       yyy <&     other
+      &> zzz
 <%java>
      trew  </%java>
 
