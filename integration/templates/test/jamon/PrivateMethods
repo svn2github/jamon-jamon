@@ -1,0 +1,7 @@
+<%def unary><%args>
+    int num;
+</%args><%java>
+  if (num > 0)
+  {
+</%java>1<& unary; num => num - 1 &><%java>
+  }</%java></%def>7=<& unary; num => 7 &>
