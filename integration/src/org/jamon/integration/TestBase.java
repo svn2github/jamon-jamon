@@ -99,10 +99,25 @@ public abstract class TestBase
         return m_templateManager;
     }
 
+
+    private String removeCrs(StringBuffer p_string)
+    {
+        StringBuffer buffer = new StringBuffer(p_string.length());
+        for (int i = 0; i < p_string.length(); ++i)
+        {
+            char c = p_string.charAt(i);
+            if (c != '\r')
+            {
+                buffer.append(c);
+            }
+        }
+        return buffer.toString();
+    }
+
     protected String getOutput()
     {
         m_writer.flush();
-        return m_writer.toString();
+        return removeCrs(m_writer.getBuffer());
     }
 
     private TemplateManager m_templateManager;
