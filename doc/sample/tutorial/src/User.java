@@ -24,7 +24,8 @@ public class User
       users[0] = new User("John Public", false);
       users[1] = new User("John Rockerfeller", true);
 
-      TemplateManagerSource.setTemplateManager(new StandardTemplateManager());
+      TemplateManagerSource
+          .setTemplateManager(new StandardTemplateManager());
 
       for (int i=0; i<users.length; i++)
       {

@@ -10,7 +10,8 @@ public class SubtemplateTut7 {
         "John Doe", "Mary Jane", "Bonnie Blue", "Johnny Reb" };
        String accountInfoUrl = "http://www.bank.com/accountInfo";
        // call the template ...
-       TemplateManagerSource.setTemplateManager(new StandardTemplateManager());
+       TemplateManagerSource
+           .setTemplateManager(new StandardTemplateManager());
        new SubtemplateTemplate()
          .setCgiParamName("username")
          .render(new OutputStreamWriter(System.out),

@@ -9,7 +9,8 @@ public class JamonCallerTut6 {
         "John Public", "Mary Private", "Lee Protected"};
        String[] phoneNumbers = new String[] {
         "7750324", "4135549232", "4135551212" };
-       TemplateManagerSource.setTemplateManager(new StandardTemplateManager());
+       TemplateManagerSource
+           .setTemplateManager(new StandardTemplateManager());
        new JamonCallerTemplate()
            .render(new OutputStreamWriter(System.out), names, phoneNumbers);
     }
