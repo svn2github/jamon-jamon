@@ -3,13 +3,14 @@ package org.modusponens.jtt;
 import java.io.File;
 import java.io.Writer;
 import java.io.PushbackReader;
-import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.net.URLClassLoader;
+import java.net.URL;
 import org.modusponens.jtt.parser.Parser;
 import org.modusponens.jtt.parser.ParserException;
 import org.modusponens.jtt.lexer.Lexer;
@@ -29,11 +30,17 @@ public class StandardTemplateManager
     private String m_packagePrefix = "";
 
     public StandardTemplateManager(ClassLoader p_parentLoader)
+        throws IOException
     {
-        m_loader = new Loader(p_parentLoader);
+        m_loader = new URLClassLoader(new URL []
+                                      {
+                                          new URL("file:" + m_workDir + "/")
+                                      },
+                                      p_parentLoader);
     }
 
     public StandardTemplateManager()
+        throws IOException
     {
         this(ClassLoader.getSystemClassLoader());
     }
@@ -157,57 +164,7 @@ public class StandardTemplateManager
         }
     }
 
-    private class Loader
-        extends ClassLoader
-    {
-        Loader(ClassLoader p_parent)
-        {
-            super(p_parent);
-        }
-
-        private byte [] readBytesForClass(String p_name)
-            throws IOException
-        {
-            FileInputStream s =
-                new FileInputStream(getClassFileNameForClass(p_name));
-            final byte [] buf = new byte[1024];
-            byte [] bytes = new byte[0];
-            while (true)
-            {
-                int i = s.read(buf);
-                if (i <= 0)
-                {
-                    break;
-                }
-                byte [] newbytes = new byte[bytes.length + i];
-                System.arraycopy(bytes,0,newbytes,0,bytes.length);
-                System.arraycopy(buf,0,newbytes,bytes.length,i);
-                bytes = newbytes;
-            }
-            return bytes;
-        }
-
-        private String getClassFileNameForClass(String p_name)
-        {
-            return m_workDir + "/" + p_name.replace('.','/') + ".class";
-        }
-
-        protected Class findClass(String p_name)
-            throws ClassNotFoundException
-        {
-            try
-            {
-                byte [] bytecode = readBytesForClass(p_name);
-                return defineClass(p_name,bytecode,0,bytecode.length);
-            }
-            catch (IOException e)
-            {
-                throw new JttClassNotFoundException(e);
-            }
-        }
-    }
-
-    private final Loader m_loader;
+    private final ClassLoader m_loader;
 
     private String getClassName(String p_path)
     {
@@ -329,7 +286,7 @@ public class StandardTemplateManager
         }
     }
 
-    private Class getClass(String p_path)
+    private Class getImplementationClass(String p_path)
         throws IOException,
                ParserException,
                LexerException,
@@ -349,11 +306,15 @@ public class StandardTemplateManager
     {
         try
         {
-            Class c = getClass(p_path);
+            Class c = getImplementationClass(p_path);
             Constructor con =
                 c.getConstructor(new Class [] { Writer.class,
                                                 TemplateManager.class });
             return (Template) con.newInstance(new Object [] { p_writer, this });
+        }
+        catch (RuntimeException e)
+        {
+            throw e;
         }
         catch (Exception e)
         {
