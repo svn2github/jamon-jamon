@@ -1,17 +1,50 @@
 <span class="concept">Using Tomcat as your Servlet Container</span>
+
 The reference implementation of Sun's servlet specification is 
-<a href="http://jakarta.apache.org/tomcat/">Tomcat</a>.
-You can use the following two targets from an Ant build script to start and stop your
-container:
+<a href="http://jakarta.apache.org/tomcat/">Tomcat</a>.  On a Linux
+based system, web applications are often placed in the directory
+<code class="file">/var/tomcat4/webapps/</code> so you could 
+test a WAR file called <code class="file">foobar.war</code> (located
+in the current directory) by typing the following as superuser:
+<pre class="tty">
+# /sbin/service tomcat4 stop
+# cp foorbar.war /var/tomcat4/webapps
+# /sbin/service tomcat4 start
+</pre>
+(make sure that <code class="file">/var/tomcat4/webapps/</code> is writable
+by the user that that Tomcat runs as so that it can expand the WAR file.)
+
+<p>
+
+However it is very convenient to run a servlet container as unprivilged user.
+This can be done directly from an Ant script by placing the following targets
+in your script:
 <pre class="ant">\
 <&| /org/jamon/escape/Html &>\
+
+  <target name="init-tomcat">
+    <property name="tomcat.install.dir" value="/var/tomcat4"/>
+    <property name="tomcat.home.dir" value="${basedir}/${build.dir}/tomcat"/>
+    <property name="java.lib.tomcat" value="${tomcat.install.dir}/bin/bootstrap.jar"/>
+    <property name="tomcat.main.class" value="org.apache.catalina.startup.Bootstrap"/>
+    <property name="tmp.dir" value="${build.dir}"/>
+    <mkdir dir="${tomcat.home.dir}/webapps"/>
+    <mkdir dir="${tomcat.home.dir}/logs"/>
+    <filter token="CONTAINER_PORT" value="${port}"/>
+    <filter token="TOMCAT_HOME" value="${tomcat.home.dir}"/>
+    <filter token="TOMCAT_INSTALL" value="${tomcat.install.dir}"/>
+    <copy file="resources/server.xml" todir="${tomcat.home.dir}/conf" filtering="on"/>
+    <copy file="resources/tomcat-users.xml" todir="${tomcat.home.dir}/conf"/>
+    <copy file="resources/catalina.policy" todir="${tomcat.home.dir}/conf"/>
+    <copy file="resources/default-web.xml" tofile="${tomcat.home.dir}/conf/web.xml"/>
+  </target>
+
   <target name="start-tomcat"
-          depends="init-tomcat,prepare-tomcat"
-          description="Starts the tomcat servlet container">
-    <java classname="${tomcat.main.class}" fork="yes">
-      <classpath>
-         <pathelement location="${java.lib.tomcat}"/>
-      </classpath>
+          depends="init-tomcat"
+          description="Starts the Tomcat servlet container">
+    <java classname="${tomcat.main.class}"
+          classpath="${java.lib.tomcat}"
+          fork="yes">
       <sysproperty key="java.endorsed.dirs" value=""/>
       <sysproperty key="catalina.base" value="${tomcat.home.dir}"/>
       <sysproperty key="catalina.home" value="${tomcat.install.dir}"/>
@@ -21,8 +54,8 @@ container:
   </target>
 
   <target name="stop-tomcat"
-          depends="init-tomcat,prepare-tomcat"
-          description="Stops the tomcat servlet container">
+          depends="init-tomcat"
+          description="Stops the Tomcat servlet container">
     <java classname="${tomcat.main.class}"
           classpath="${java.lib.tomcat}"
           fork="yes">
@@ -35,4 +68,20 @@ container:
   </target>
 </&>\
 </pre>
-This will allow you to start and stop the container as an unprivileged user.
+You may need to customize the above (in particular make sure that the
+<code>tomcat.install.dir</code> is correct for your system).  Also
+download copies of <a href="server.xml">server.xml</a>, 
+<a href="tomcat-users.xml">tomcat-users.xml</a>,
+<a href="catalina.policy">catalina.policy</a>,
+<a href="default-web.xml">default-web.xml</a> (this is distinct from the usual deployment
+descriptor that comes with a web application).  Place them in a directory
+called <code class="file">resources</code>.
+Then you can start up Tomcat by typing
+
+  <pre class="tty">% ant start-tomcat</pre>
+
+and stop it by typing
+
+  <pre class="tty">% ant stop-tomcat</pre>
+
+without ever needing super user privileges.
