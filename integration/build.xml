@@ -92,7 +92,6 @@
     <dirname property="template.src.dir" file="${ant.file}" />
     <property name="build.sysclasspath" value="last" />
     <junit printsummary="${junit.printsummary}"
-           fork="yes"
            timeout="${junit.timeout}"
            failureproperty="org.jamon.junit.failuresOccured">
       <sysproperty key="org.jamon.integration.basedir"

@@ -68,7 +68,6 @@
           description="Run the unit tests">
     <property name="build.sysclasspath" value="last" />
     <junit printsummary="${junit.printsummary}"
-           fork="yes"
            timeout="${junit.timeout}"
            failureproperty="org.jamon.junit.failuresOccured">
       <formatter classname="${junit.formatter}" usefile="no"/>
