@@ -26,7 +26,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.HashMap;
 
-import org.jamon.JamonException;
 import org.jamon.node.Token;
 import org.jamon.util.StringUtils;
 
@@ -187,14 +186,14 @@ public abstract class AbstractCallStatement
     }
 
     protected void checkSuppliedParams()
-        throws JamonException
+        throws AnalysisException
     {
         checkSuppliedParams("arguments", m_params);
         checkSuppliedParams("fragments", m_fragParams);
     }
 
     private void checkSuppliedParams(String p_paramType, Map p_params)
-        throws JamonException
+        throws AnalysisException
     {
         if (! p_params.isEmpty())
         {

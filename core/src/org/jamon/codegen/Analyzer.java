@@ -29,7 +29,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.jamon.JamonException;
 import org.jamon.JamonTemplateException;
 import org.jamon.node.*;
 import org.jamon.analysis.AnalysisAdapter;
@@ -59,8 +58,7 @@ public class Analyzer
     public TemplateUnit analyze()
         throws IOException
     {
-        Start start =
-            m_describer.parseTemplate(m_templateUnit.getName());
+        Start start = m_describer.parseTemplate(m_templateUnit.getName());
         try
         {
             preAnalyze(start);
@@ -69,32 +67,26 @@ public class Analyzer
         }
         catch (TunnelingException e)
         {
-            if(e.getRootCause() instanceof JamonTemplateException)
+            if(e.getRootCause() != null)
             {
-                throw (JamonTemplateException) e.getRootCause();
+                throw e.getRootCause();
             }
-            else if(e.getToken() != null)
+            else
             {
                 throw new AnalysisException(e.getMessage(),
                                             m_templateIdentifier,
                                             e.getToken());
             }
-            else
-            {
-                throw new JamonException(e.getMessage());
-            }
         }
     }
 
     private void preAnalyze(Start p_start)
-        throws IOException
     {
         preAnalyze(p_start, new AliasAdapter());
         preAnalyze(p_start, new PreliminaryAdapter());
     }
 
     private void preAnalyze(Start p_start, AnalysisAdapter p_adapter)
-        throws IOException
     {
         for (Iterator i = ((ATemplate) p_start.getPTemplate())
                  .getComponent().iterator();
@@ -106,7 +98,6 @@ public class Analyzer
     }
 
     private void mainAnalyze(Start p_start)
-        throws IOException
     {
         p_start.apply(new Adapter());
     }
@@ -324,9 +315,14 @@ public class Analyzer
                             m_templateIdentifier,
                             m_children));
                 }
-                catch (IOException e)
+                catch (JamonTemplateException e)
                 {
                     throw new TunnelingException(e);
+                }
+                catch (IOException e)
+                {
+                    throw new TunnelingException(e.getMessage(),
+                                                 p_extends.getExtendsStart());
                 }
             }
         }

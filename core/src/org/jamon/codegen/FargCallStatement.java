@@ -25,7 +25,6 @@ import java.util.List;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.jamon.JamonException;
 import org.jamon.util.StringUtils;
 import org.jamon.node.Token;
 

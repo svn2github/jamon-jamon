@@ -24,7 +24,6 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.jamon.JamonException;
 import org.jamon.node.Token;
 
 public class ComponentCallStatement

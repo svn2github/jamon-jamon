@@ -20,8 +20,6 @@
 
 package org.jamon.codegen;
 
-import org.jamon.JamonException;
-
 public class DefUnit extends AbstractInnerUnit
 {
     public DefUnit(String p_name, Unit p_parent)

@@ -30,8 +30,6 @@ import java.util.Set;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.jamon.JamonException;
-
 public class TemplateDescription
 {
     private final List m_requiredArgs;

@@ -32,7 +32,6 @@ import java.io.Reader;
 import java.io.IOException;
 import java.io.PushbackReader;
 
-import org.jamon.JamonException;
 import org.jamon.TemplateSource;
 import org.jamon.util.StringUtils;
 import org.jamon.node.Start;
