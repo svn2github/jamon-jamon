@@ -44,7 +44,7 @@ public interface Escaping
         throws IOException;
 
     public static final Escaping HTML = new HtmlEscaping();
-    public static final Escaping STRICT_HTML = new HtmlEscaping();
+    public static final Escaping STRICT_HTML = new StrictHtmlEscaping();
     public static final Escaping NONE = new NoneEscaping();
     public static final Escaping URL = new UrlEscaping();
     public static final Escaping XML = new XmlEscaping();

@@ -23,11 +23,11 @@ package org.jamon;
 import java.io.Writer;
 import java.io.IOException;
 
-public class HtmlEscaping
-    extends AbstractCharacterEscaping
+public class StrictHtmlEscaping
+    extends HtmlEscaping
 {
 
-    HtmlEscaping()
+    StrictHtmlEscaping()
     {
         // package scope constructor
     }
@@ -37,13 +37,10 @@ public class HtmlEscaping
     {
         switch (p_char)
         {
-          case '<': p_writer.write("&lt;"); break;
-          case '>': p_writer.write("&gt;"); break;
-          case '&': p_writer.write("&amp;"); break;
-              // The reason '"' is not escaped to "&quot;" is that it was withdrawn
-              // from the HTML 3.2 DTD (only).  There does not seem to be universal 
-              // agreement as to why this happened.
-          default: p_writer.write(p_char);
+          case '"': p_writer.write("&#34;"); break;
+          case '\'': p_writer.write("&#39;"); break;
+              // FIXME: numerically escape other chars
+          default: super.write(p_char, p_writer);
         }
     }
 
