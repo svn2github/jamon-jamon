@@ -267,9 +267,9 @@ public class BaseAnalyzer
         public void caseAImportsComponent(AImportsComponent imports)
         {
             AImports imps = (AImports) imports.getImports();
-            for (Iterator i = imps.getName().iterator(); i.hasNext(); /* */ )
+            for (Iterator i = imps.getImport().iterator(); i.hasNext(); /* */ )
             {
-                m_imports.add(asText((PName) i.next()));
+                m_imports.add(asText(((AImport) i.next()).getName()));
             }
         }
 

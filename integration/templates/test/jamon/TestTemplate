@@ -2,7 +2,7 @@
 is some starting doc.
     </%doc>The very top!
 <%import>
-  java.math.BigDecimal
+  java.math.BigDecimal;
 </%import>
 
 <%args>
@@ -79,7 +79,7 @@ A call with a template fragment: \
 </&>
 
 <%import>
-  java.util.LinkedList
+  java.util.LinkedList;
 </%import>
 3 more fragment calls:\
 % final LinkedList list = new LinkedList();

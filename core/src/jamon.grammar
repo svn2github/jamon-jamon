@@ -99,7 +99,7 @@ Tokens
   {call -> body} call_end = ws* '&>';
   {callexp -> call} param_expr =
        ([all - [argsep + [q + '&']]] | quoted | '&' [all - '>'])*;
-  {call} semi = ';';
+  {call,imports} semi = ';';
   {call} pathsep = slash;
 
   {start -> def,body -> def} def_start = '<%def' hs+;
@@ -146,7 +146,9 @@ Productions
 
   fragment_call = fragment_call_start path param* call_end base_component* fragment_call_end;
 
-  imports = import_start name* import_end;
+  imports = import_start import* import_end;
+
+  import = name semi;
 
   args = args_start arg* args_end;
 

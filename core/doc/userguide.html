@@ -77,14 +77,14 @@
 
       Java classes or packages to be imported and used in a template
       should be placed inside an <code>&lt;%import&gt;</code>
-      block. Each package or class should appear on a new line,
-      optionally separated by a semicolon ('<code>;</code>').
+      block. Each package or class should be separated by a semicolon
+      ('<code>;</code>').
       <p>
       For example:
       <pre class="template">
 &lt;%import&gt;
-  java.util.Iterator
-  org.modusponens.myapp.data.*
+  java.util.Iterator;
+  org.modusponens.myapp.data.*;
 &lt;/%import&gt;
 </pre>
 
@@ -290,14 +290,14 @@ Your nicknames are
 
     <li><span class="concept">Parametrized fragment arguments</span>
       Template fragments can themselves take arguments.  The invocation syntax is similar
-      to a regular template fragment with the addition of an 
+      to a regular template fragment with the addition of an
       <code>&lt;%args&gt;</code>...<code>&lt;/%args&gt;</code> inside the fragment.
       <p>
       To pass a parameterized template fragment to a <code>def</code> (or another template)
       the fragment and its parameters must be declared via a <code>&lt;%farg
       <i>name</i>&gt;</code> <i>parameters</i> <code>&lt;/%farg&gt;</code>, where
       each parameter is a type followed by an identifier. Thus a <code>&lt;%farg
-      <i>name</i>&gt;</code>...<code>&lt;/%farg&gt;</code> is similar to a 
+      <i>name</i>&gt;</code>...<code>&lt;/%farg&gt;</code> is similar to a
       <code>&lt;%args&gt;</code>...<code>&lt;/%args&gt;</code> except it has a name
       and its parameters cannot have default values.  Inside the <code>def</code>
       (or template) the parameterized fragment is invoked exactly like a call

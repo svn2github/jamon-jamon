@@ -1,7 +1,6 @@
 package test.jamon;
 
 import gnu.regexp.RE;
-import gnu.regexp.RESyntax;
 
 import java.io.Writer;
 import java.io.StringWriter;
@@ -20,8 +19,9 @@ public class Test1
     {
         Writer w = new StringWriter();
         StandardTemplateManager m =
-            new StandardTemplateManager("templates",
-                                        "build/work");
+            new StandardTemplateManager();
+        m.setSourceDir("templates");
+        m.setWorkDir("build/work");
         TestTemplate.Factory f = new TestTemplate.Factory(m);
         TestTemplate t = f.getInstance(w);
         t.setX(57);
@@ -29,11 +29,12 @@ public class Test1
         w.flush();
 
         // Now perform some tests
-        RE re = new RE(".*An external template with a parameterized fragment parameter \\(farg\\)" +
-                       "\\s*" +
-                       "i is 3 and s is yes." +
-                       "\\s*" +
-                       "i is 7 and s is no.*",
+        RE re = new RE(".*An external template with a "
+                       + "parameterized fragment parameter \\(farg\\)"
+                       + "\\s*"
+                       + "i is 3 and s is yes."
+                       + "\\s*"
+                       + "i is 7 and s is no.*",
                        RE.REG_DOT_NEWLINE);
         if (!re.isMatch(w))
         {

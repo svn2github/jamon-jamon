@@ -22,25 +22,6 @@ import org.jamon.node.Start;
 public class StandardTemplateManager
     implements TemplateManager
 {
-    public StandardTemplateManager(ClassLoader p_parentLoader,
-                                   String p_templateSourceDir,
-                                   String p_workDir)
-        throws IOException
-    {
-        m_workDir = p_workDir;
-        m_loader = new WorkDirClassLoader(p_parentLoader, m_workDir);
-        m_describer = new TemplateDescriber(p_templateSourceDir);
-    }
-
-    public StandardTemplateManager(String p_templateSourceDir,
-                                   String p_workDir)
-        throws IOException
-    {
-        this(ClassLoader.getSystemClassLoader(),
-             p_templateSourceDir,
-             p_workDir);
-    }
-
     public Template getInstance(String p_path, Writer p_writer)
         throws JttException
     {
@@ -54,6 +35,7 @@ public class StandardTemplateManager
     {
         try
         {
+            initialize();
             AbstractTemplate template = (AbstractTemplate)
                 getImplementationClass(p_path)
                     .getConstructor(new Class [] { TemplateManager.class })
@@ -69,6 +51,24 @@ public class StandardTemplateManager
         {
             throw new JttException(e);
         }
+    }
+
+    public void setClassLoader(ClassLoader p_classLoader)
+    {
+        m_classLoader = p_classLoader;
+        m_initialized = false;
+    }
+
+    public void setSourceDir(String p_templateSourceDir)
+    {
+        m_templateSourceDir = p_templateSourceDir;
+        m_initialized = false;
+    }
+
+    public void setWorkDir(String p_workDir)
+    {
+        m_workDir = p_workDir;
+        m_initialized = false;
     }
 
     public void setJavaCompiler(String p_javac)
@@ -87,6 +87,29 @@ public class StandardTemplateManager
     {
         m_classpath = p_classpath;
         m_javaCompiler = null;
+    }
+
+
+    private synchronized void initialize()
+        throws IOException
+    {
+        if (! m_initialized)
+        {
+            System.err.println("initializing std template mgr");
+            String workDir = m_workDir;
+            if (workDir == null)
+            {
+                File tmpdir = File.createTempFile("jamon",null);
+                tmpdir.mkdirs();
+                workDir = tmpdir.toString();
+            }
+            m_loader = new WorkDirClassLoader(m_classLoader, workDir);
+            m_describer =
+                new TemplateDescriber(m_templateSourceDir == null
+                                      ? System.getProperty("user.dir")
+                                      : m_templateSourceDir);
+            m_initialized = true;
+        }
     }
 
     private String getClassName(String p_path)
@@ -172,16 +195,17 @@ public class StandardTemplateManager
     private static final String PS = System.getProperty("path.separator");
     private static final String FS = System.getProperty("file.separator");
 
-    private final TemplateDescriber m_describer;
-    private final String m_workDir;
+    private TemplateDescriber m_describer;
+    private String m_workDir;
+    private String m_templateSourceDir;
     private String m_javac =
         System.getProperty("java.home") + FS + ".." + FS + "bin" + FS +"javac";
     private boolean m_includeRtJar = false;
     private String m_classpath = null;
     private ClassLoader m_classLoader = ClassLoader.getSystemClassLoader();
     private JavaCompiler m_javaCompiler;
-    private final WorkDirClassLoader m_loader;
-
+    private WorkDirClassLoader m_loader;
+    private boolean m_initialized;
 
     private String prefix()
     {

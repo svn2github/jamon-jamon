@@ -17,20 +17,88 @@ public class TemplateGenerator
     private static final String FILESEP =
         System.getProperty("file.separator");
 
-
-    private static void generateInterface(File p_destdir,
-                                          TemplateDescriber p_describer,
-                                          TemplateResolver p_resolver,
-                                          String p_filename)
+    private static void generateImplAndInterface(File p_destdir,
+                                                 TemplateDescriber p_describer,
+                                                 TemplateResolver p_resolver,
+                                                 String p_filename,
+                                                 String p_absoluteFilename)
         throws IOException,
                ParserException,
                LexerException
     {
-        generateInterface(p_destdir,
-                          p_describer,
-                          p_resolver,
-                          p_filename,
-                          p_filename);
+        System.out.println(p_filename);
+        String templateName = p_filename;
+        String pkg = "";
+        int fsPos = templateName.lastIndexOf(FILESEP);
+        if (fsPos == 0)
+        {
+            throw new IOException("Can only use relative paths");
+        }
+        else if (fsPos > 0)
+        {
+            pkg = StringUtils.pathToClassName(p_filename.substring(0,fsPos));
+            templateName = templateName.substring(fsPos+FILESEP.length());
+        }
+
+        File pkgDir = new File(p_destdir, StringUtils.classNameToPath(pkg));
+
+        File javaFile = new File(pkgDir, templateName + ".java");
+
+        ImplAnalyzer analyzer =
+            new ImplAnalyzer(p_filename,
+                             p_describer.parseTemplate(p_absoluteFilename));
+
+        pkgDir.mkdirs();
+        FileWriter writer = new FileWriter(javaFile);
+
+        try
+        {
+            new IntfGenerator(p_resolver,
+                              "/" + p_filename,
+                              analyzer,
+                              writer)
+                .generateClassSource();
+        }
+        catch (IOException e)
+        {
+            try
+            {
+                writer.close();
+                javaFile.delete();
+            }
+            catch (IOException e2)
+            {
+                throw e;
+            }
+        }
+        writer.close();
+
+
+        javaFile = new File(pkgDir, templateName + "Impl.java");
+        writer = new FileWriter(javaFile);
+        try
+        {
+            new ImplGenerator(writer,
+                              p_resolver,
+                              p_describer,
+                              analyzer)
+                .generateSource();
+        }
+        catch (IOException e)
+        {
+            try
+            {
+                writer.close();
+                javaFile.delete();
+            }
+            catch (IOException e2)
+            {
+                throw e;
+            }
+        }
+        writer.close();
+
+
     }
 
 
@@ -43,6 +111,7 @@ public class TemplateGenerator
                ParserException,
                LexerException
     {
+        System.out.println(p_filename);
         String templateName = p_filename;
         String pkg = "";
         int fsPos = templateName.lastIndexOf(FILESEP);
@@ -59,9 +128,7 @@ public class TemplateGenerator
         File pkgDir = new File(p_destdir, StringUtils.classNameToPath(pkg));
         File javaFile = new File(pkgDir, templateName + ".java");
 
-        System.out.println(p_filename + " => " + javaFile);
-
-        BaseAnalyzer bg =
+        BaseAnalyzer analyzer =
             new BaseAnalyzer(p_describer.parseTemplate(p_absoluteFilename));
 
         pkgDir.mkdirs();
@@ -71,15 +138,21 @@ public class TemplateGenerator
         {
             new IntfGenerator(p_resolver,
                               "/" + p_filename,
-                              bg,
+                              analyzer,
                               writer)
                 .generateClassSource();
         }
         catch (IOException e)
         {
-            writer.close();
-            javaFile.delete();
-            throw e;
+            try
+            {
+                writer.close();
+                javaFile.delete();
+            }
+            catch (IOException e2)
+            {
+                throw e;
+            }
         }
         writer.close();
     }
@@ -94,7 +167,8 @@ public class TemplateGenerator
     {
         if (p_relativeFilenames.length != p_absoluteFilenames.length)
         {
-            throw new RuntimeException("Arrays of relative and absolute filenames have different length");
+            throw new IllegalArgumentException
+                ("Relative and absolute filename arrays length mismatch");
         }
 
         p_destDir.mkdirs();
@@ -123,6 +197,13 @@ public class TemplateGenerator
         try
         {
             int arg = 0;
+            boolean doBoth = false;
+            if ("-a".equals(args[arg]))
+            {
+                doBoth = true;
+                arg++;
+            }
+
             File destdir = new File(args[arg++]);
             destdir.mkdirs();
             if (! destdir.exists() || ! destdir.isDirectory())
@@ -132,12 +213,27 @@ public class TemplateGenerator
             }
 
             TemplateResolver resolver = new TemplateResolver();
-
             TemplateDescriber describer = new TemplateDescriber("");
 
             while (arg < args.length)
             {
-                generateInterface(destdir, describer, resolver, args[arg++]);
+                String template = args[arg++];
+                if (doBoth)
+                {
+                    generateImplAndInterface(destdir,
+                                             describer,
+                                             resolver,
+                                             template,
+                                             template);
+                }
+                else
+                {
+                    generateInterface(destdir,
+                                      describer,
+                                      resolver,
+                                      template,
+                                      template);
+                }
             }
         }
         catch (Throwable t)

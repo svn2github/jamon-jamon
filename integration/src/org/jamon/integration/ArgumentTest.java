@@ -1,61 +1,44 @@
 package org.jamon.integration;
 
-import java.io.Writer;
-import java.io.StringWriter;
-import java.io.IOException;
-
-import junit.framework.TestCase;
-
-import org.jamon.StandardTemplateManager;
-import org.jamon.StringUtils;
-import org.jamon.JttException;
-
 import test.jamon.Arguments;
 import test.jamon.OptionalArguments;
 
-/************************************************************************************
- *
- * Test Jamon's parameterized templates.  See "Jamon User's Guide", section 5.
- *
- ************************************************************************************/
+/**
+ * Test Jamon's parameterized templates.  See "Jamon User's Guide",
+ * section 5.
+ **/
 
 public class ArgumentTest
-    extends TestCase
+    extends TestBase
 {
 
     public void testExercise()
-        throws IOException,
-               JttException
+        throws Exception
     {
-        Writer w = new StringWriter();
-        StandardTemplateManager m =
-            new StandardTemplateManager("templates",
-                                        "build/work");
-        Arguments.Factory f = new Arguments.Factory(m);
-        Arguments t = f.getInstance(w);
-        t.render(INT, BOOLEAN, STRING);
-        w.flush();
-        assertEquals("" + INT + BOOLEAN + STRING, w.toString());
+        new Arguments.Factory(getTemplateManager())
+            .getInstance(getWriter())
+            .render(INT, BOOLEAN, STRING);
+        checkOutput("" + INT + BOOLEAN + STRING);
     }
 
 
-    public void testOptional()
-        throws IOException,
-               JttException
+    public void testOptional1()
+        throws Exception
     {
-        Writer w = new StringWriter();
-        StandardTemplateManager m =
-            new StandardTemplateManager("templates",
-                                        "build/work");
-        OptionalArguments.Factory f = new OptionalArguments.Factory(m);
-        OptionalArguments t = f.getInstance(w);
-        t.render(BOOLEAN, STRING);
-        t.setI(INT);
-        t.render(BOOLEAN, STRING);
-        w.flush();
-        assertEquals("" + 0 + BOOLEAN + STRING +
-                     INT + BOOLEAN + STRING,
-                     w.toString());
+        new OptionalArguments.Factory(getTemplateManager())
+            .getInstance(getWriter())
+            .setI(INT)
+            .render(BOOLEAN, STRING);
+        checkOutput("" + INT + BOOLEAN + STRING);
+    }
+
+    public void testOptional2()
+        throws Exception
+    {
+        new OptionalArguments.Factory(getTemplateManager())
+            .getInstance(getWriter())
+            .render(BOOLEAN, STRING);
+        checkOutput("" + 0 + BOOLEAN + STRING);
     }
 
     private static final int INT = 3;
