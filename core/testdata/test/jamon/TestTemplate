@@ -17,3 +17,13 @@ and amount, which is <% amount %>.
 % {
 i is <% i %>.
 <%java> } </%java>
+
+Some escaping stuff:
+
+HTML Escaped: <% "&" %> <% ">" %> <% "<" %> <% "'" %> <% "\"" %>
+
+XML escaped: <% "&"   |x  %> <% ">" |x%> <% "<"   |x %> <% "'" |x%> <% "\"" |x %>
+
+URL escaped: <% "&"   |u  %> <% ">" |u%> <% "<"   |u %> <% "'" |u%> <% "\"" |u %>
+
+Not escaped: <% "&"   |n  %> <% ">" |n%> <% "<"   |n %> <% "'" |n%> <% "\"" |n %>

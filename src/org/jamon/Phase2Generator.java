@@ -74,7 +74,25 @@ public class Phase2Generator extends BaseGenerator
     {
         handleBody();
         StringBuffer expr = new StringBuffer();
-        expr.append("    write(");
+        TEscape escape = node.getEscape();
+        if (escape == null)
+        {
+            expr.append("    write(");
+        }
+        else
+        {
+            char c = escape.getText().trim().charAt(1);
+            switch (c)
+            {
+              case 'h': expr.append("    writeHtmlEscaped("); break;
+              case 'u': expr.append("    writeUrlEscaped("); break;
+              case 'n': expr.append("    writeUnEscaped("); break;
+              case 'x': expr.append("    writeXmlEscaped("); break;
+              default:
+                throw new RuntimeException("Unknown escape " + c);
+            }
+        }
+
         for (Iterator i = node.getAny().iterator(); i.hasNext(); /* */)
         {
             expr.append(((TAny)i.next()).getText());
