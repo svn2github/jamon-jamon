@@ -104,7 +104,7 @@
       method body. Thus, for example, package declarations and import
       statements would trigger a compilation error.
 
-    <li><span class="conecpt">Inheritance</span>
+    <li><span class="concept">Inheritance</span>
 
       Templates can inherit from other templates.  A template is an
       "abstract" template if it contains a <code>&lt;&amp; *CHILD
@@ -420,11 +420,12 @@ Head for the beach!  It's going to be sunny and beautiful.
     </title>
   </head>
   <body>Head for the beach!  It's going to be sunny and beautiful.</body>
+</html>
 </&></pre>
 
     However, <code>/stormWarning</code> could contain:
       <&| _template &><%LITERAL>
-<override title>
+<%override title>
   <%xargs>
     city;
   </%xargs>
@@ -441,6 +442,7 @@ Now would be a poor time to go sailing.
     </title>
   </head>
   <body>Now would be a poor time to go sailing.</body>
+</html>
 </&></pre>
 
     <li><span class="concept">Invoking other templates</span>
