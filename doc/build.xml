@@ -73,6 +73,14 @@ the documentation thus taking care of issues such as escaping.
     <jamon destdir="${work.dir}" srcdir="${work.dir}">
       <include name="QsTemp.jamon"/>
     </jamon>
+<!--    <java classname="org.jamon.TemplateProcessor"
+          failonerror="true"
+          fork="yes"
+          dir="${work.dir}"
+          classpath="${java.lib.jamon}">
+      <arg line="- -destDir=. QsTemp" />
+    </java>
+-->
     <javac destdir="${work.dir}"
            srcdir="${work.dir}"
            classpath="${java.lib.jamon}"
@@ -97,6 +105,174 @@ the documentation thus taking care of issues such as escaping.
     </invoker>
   </target>
 
+  <target name="tutorial" depends="init" >
+    <property name="build.sysclasspath" value="last" />
+    <copy todir="${doc.dir}" >
+      <fileset dir="templates/org/jamon/doc">
+        <include name="**/*Java.jamon"/>
+      </fileset>
+      <mapper type="glob" from="*Java.jamon" to="*.java" />
+    </copy>
+    <copy todir="${work.dir}" >
+      <fileset dir="${doc.dir}">
+        <include name="**/*.java"/>
+      </fileset>
+    </copy>
+    <antcall target="processTemplate">
+      <param name="template.name" value="HelloTemplate" />
+    </antcall>
+    <antcall target="processTemplate">
+      <param name="template.name" value="TimeAndTempTemplate" />
+    </antcall>
+    <antcall target="processTemplate">
+      <param name="template.name" value="AccountSummaryTemplate" />
+    </antcall>
+    <antcall target="processTemplate">
+      <param name="template.name" value="EscapingTemplate" />
+    </antcall>
+    <antcall target="processTemplate">
+      <param name="template.name" value="ClassExampleTemplate" />
+    </antcall>
+    <antcall target="processTemplate">
+      <param name="template.name" value="StdPhoneNumberFormat" />
+    </antcall>
+    <antcall target="processTemplate">
+      <param name="template.name" value="JamonCallerTemplate" />
+    </antcall>
+    <antcall target="processTemplate">
+      <param name="template.name" value="SubtemplateTemplate" />
+    </antcall>
+    <antcall target="processTemplate">
+      <param name="template.name" value="LiRef" />
+    </antcall>
+    <antcall target="processTemplate">
+      <param name="template.name" value="FragmentCallerTemplate" />
+    </antcall>
+    <antcall target="processTemplate">
+      <param name="template.name" value="AlternatingList" />
+    </antcall>
+    <antcall target="processTemplate">
+      <param name="template.name" value="FragmentExampleTemplate" />
+    </antcall>
+    <antcall target="processTemplate">
+      <param name="template.name" value="InheritanceParent" />
+    </antcall>
+    <antcall target="processTemplate">
+      <param name="template.name" value="InheritanceChild" />
+    </antcall>
+    <antcall target="processTemplate">
+      <param name="template.name" value="InheritanceParentWArgs" />
+    </antcall>
+    <antcall target="processTemplate">
+      <param name="template.name" value="InheritanceChildWArgs" />
+    </antcall>
+    <antcall target="processTemplate">
+      <param name="template.name" value="InheritanceParentProtected" />
+    </antcall>
+    <antcall target="processTemplate">
+      <param name="template.name" value="InheritanceChildProtected" />
+    </antcall>
+    <javac destdir="${work.dir}"
+           srcdir="${work.dir}"
+           classpath="${java.lib.jamon}"
+           includes="*.java" />
+    <antcall target="generateOutput">
+      <param name="arg.line" value="" />
+      <param name="template.name" value="HelloTut1" />
+      <param name="page.name" value="TutorialSample1" />
+    </antcall>
+    <antcall target="generateOutput">
+      <param name="arg.line" value="" />
+      <param name="template.name" value="TimeAndTempTut2" />
+      <param name="page.name" value="TutorialSample2" />
+    </antcall>
+    <antcall target="generateOutput">
+      <param name="arg.line" value="" />
+      <param name="template.name" value="AccountSummaryTut3" />
+      <param name="page.name" value="TutorialSample3" />
+    </antcall>
+    <antcall target="generateOutput">
+      <param name="arg.line" value="" />
+      <param name="template.name" value="EscapingTut4" />
+      <param name="page.name" value="TutorialSample4" />
+    </antcall>
+    <antcall target="generateOutput">
+      <param name="arg.line" value="" />
+      <param name="template.name" value="ClassExampleTut5" />
+      <param name="page.name" value="TutorialSample5" />
+    </antcall>
+    <antcall target="generateOutput">
+      <param name="arg.line" value="" />
+      <param name="template.name" value="JamonCallerTut6" />
+      <param name="page.name" value="TutorialSample6" />
+    </antcall>
+    <antcall target="generateOutput">
+      <param name="arg.line" value="" />
+      <param name="template.name" value="SubtemplateTut7" />
+      <param name="page.name" value="TutorialSample7" />
+    </antcall>
+    <antcall target="generateOutput">
+      <param name="arg.line" value="" />
+      <param name="template.name" value="Holiday" />
+      <param name="page.name" value="TutorialSample8" />
+    </antcall>
+    <!-- there are two examples for tutorial 9 -->
+    <antcall target="generateOutput">
+      <param name="arg.line" value="" />
+      <param name="template.name" value="InheritanceSimpleTut9" />
+      <param name="page.name" value="TutorialSample9" />
+    </antcall>
+    <antcall target="generateOutput">
+      <param name="arg.line" value="" />
+      <param name="template.name" value="User" />
+      <param name="page.name" value="TutorialSample9" />
+    </antcall>
+    <antcall target="generateOutput">
+      <param name="arg.line" value="" />
+      <param name="template.name" value="User2" />
+      <param name="page.name" value="TutorialSample10" />
+    </antcall>
+    <zip destfile="${www.dir}/Tutorial.zip"
+         basedir="${www.dir}"
+         includes="*.java,*.jamon" />
+  </target>
+
+  <target name="processTemplate">
+    <echo message="${template.name}"/>
+    <invoker classpath="${java.lib.jamon}"
+             workDir="${work.dir}"
+             sourceDir="templates"
+             output="${doc.dir}/${template.name}.jamon"
+             template="/org/jamon/doc/${template.name}" />
+    <copy file="${doc.dir}/${template.name}.jamon" todir="${work.dir}" />
+    <java classname="org.jamon.TemplateProcessor"
+          failonerror="true"
+          fork="yes"
+          dir="${work.dir}"
+          classpath="${java.lib.jamon}">
+      <arg line="--destDir=. ${template.name}" />
+    </java>
+  </target>
+
+  <target name="generateOutput">
+    <tempfile property="${template.name}.temp" destdir="${work.dir}"/>
+    <java classname="${template.name}"
+          failonerror="true"
+          classpath="${work.dir}:${java.lib.jamon}"
+          output="${template.name}.temp" >
+      <arg line="${arg.line}" />
+    </java>
+    <loadfile property="${page.name}.output" srcFile="${template.name}.temp" />
+    <echo message="${page.name}.output"/>
+    <invoker classpath="${java.lib.jamon}"
+             workDir="${work.dir}"
+             sourceDir="templates"
+             output="${doc.dir}/${page.name}.html"
+             template="/org/jamon/doc/${page.name}" >
+      <arg name="output" value="${page.name}.output" />
+    </invoker>
+  </target>
+
   <target name="doc"
           description="Generates all the documentation"
           depends="init" >
@@ -109,6 +285,7 @@ the documentation thus taking care of issues such as escaping.
       <targetfilelist dir="${doc.dir}" files="Servlets.html" />
     </dependset>
     <antcall target="quickstart" />
+    <antcall target="tutorial" />
     <antcall target="grind">
       <param name="template" value="BuildingProjects" />
     </antcall>
@@ -161,6 +338,9 @@ the documentation thus taking care of issues such as escaping.
     </antcall>
     <antcall target="grind">
       <param name="template" value="Servlets" />
+    </antcall>
+    <antcall target="grind">
+      <param name="template" value="TutorialPath" />
     </antcall>
     <!-- Generate the first template example -->
     <invoker classpath="${java.lib.jamon}:${java.lib.diff}"

@@ -1,0 +1,70 @@
+<%extends _DocumentationBase>
+<%args>
+  String output;
+</%args>
+
+<%override title>Jamon Tutorial - Getting Started with Hello World</%override>
+
+<h2>Jamon Tutorial - Getting Started with Hello World</h2>
+
+The source files mentioned in this tutorial are available individually
+where first referenced, or bundled in a <a href="JamonTutorial.zip">zip
+file</a>.
+
+<div class="note">
+  <b>NOTE</b>: If you have a Java Runtime (JRE) installed in addition
+  to a Software Development Kit (SDK), be sure that the binaries
+  (i.e. java, javac, etc) of the SDK come <emph>first</emph> in your
+  PATH.
+</div>
+
+<ol>
+
+<li>
+Create a Jamon template <a href="HelloTemplate.jamon" class="file">HelloTemplate.jamon</a>:
+<pre class="jamon"><&| /org/jamon/escape/Html &><& HelloTemplate &></&></pre>
+
+<li>
+Create a java file <a class="file" href="HelloTut1.java">HelloTut1.java</a>:
+<pre class="java"><&| /org/jamon/escape/Html &><& HelloTut1Java &></&></pre>
+Notice that the Java file creates a <code>StandardTemplateManager</code>, 
+which is passed to the template constructor. The code then calls the
+<code>render()</code> method on the template, providing a 
+<code>Writer</code> that the template will use to output its content.
+
+<li>
+Set your classpath:
+<table>
+  <tr>
+    <td class="system">Windows</td>
+   <td class="tty">C:\JAMONTMP&gt; SET CLASSPATH=.;\path\to\jamon.jar</td>
+  </tr>
+  <tr>
+    <td class="system">Unix (sh, bash, zsh, ksh)</td>
+    <td class="tty">$ export CLASSPATH=.:/path/to/jamon.jar</td>
+  </tr>
+  <tr>
+    <td class="system">Unix (csh, tcsh)</td>
+    <td class="tty">% setenv CLASSPATH .:/path/to/jamon.jar</td>
+  </tr>
+</table>
+
+<li>
+Process the template:
+<pre class="tty">java org.jamon.TemplateProcessor --destDir=. HelloTemplate</pre>
+
+<li>
+Compile everything:
+<pre class="tty">javac HelloTut1.java HelloTemplate*.java</pre>
+
+<li>
+Run it:
+<pre class="tty">java HelloTut1</pre>
+
+<li>
+You should see:
+<pre class="tty"><% output %></pre>
+
+</ol>
+<p>
+&nbsp;

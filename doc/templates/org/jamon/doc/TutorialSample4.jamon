@@ -1,0 +1,139 @@
+<%extends _DocumentationBase>
+<%args>
+  String output;
+</%args>
+
+<%override title>Jamon Tutorial - Escaping Text</%override>
+
+<h2>Jamon Tutorial - Escaping Text</h2>
+
+Templates usually construct text in a structured language such as HTML or XML, or even URLs. Each of these languages has restrictions on allowed characters or sequence of characters. Escaping modifies a string to adhere to the rules of the particular language in which the string will be expressed.
+
+<h3> Rules for escaping text </h3>
+
+  <ol>
+    <li><span class="concept">Static content</span>
+
+      In general, any characters appearing in a template are output
+      literally, whitespace included.  One notable exception is that
+      if a newline is preceded by a backslash, then neither the newline nor
+      the backslash are output.
+
+    <li><span class="concept">Emit statements</span>
+
+      The value of a java expression can be emitted by enclosing the
+      expression in <code>&lt;%...%&gt;</code> pairs, e.g.
+      <&| _template &><%LITERAL>
+<% person.getFirstName().substring(0,10) %>
+</%LITERAL></&>
+      <p>
+      <span class="note">&nbsp;Note that there must be at least one
+      whitespace character following the <code>&lt;%</code>.&nbsp;</span>
+
+      <p>
+
+      Before a Java expression is emitted, the string that represents it
+      is <em>escaped</em>.  The default escaping mechanism is HTML, so for
+      example the following template
+
+      <&| _template &><%LITERAL>this <% "&" %> that</%LITERAL></&>
+
+      produces
+
+      <pre class="tty">this &amp;amp; that</pre>
+
+      However different escaping mechanisms can be specified in the
+      template itself.  A string can be emitted with no escaping as
+      follows:
+
+      <&| _template &><%LITERAL>this <% "&" #n %> that</%LITERAL></&>
+
+      producing
+
+      <pre class="tty">this &amp; that</pre>
+
+      The available escaping mechanism are
+      <ul>
+        <li>
+          HTML (use <code>#h</code> in the emit block) -- produces
+          output suitable for inclusion in the body of HTML elements
+        </li>
+        <li>
+          Strict HTML (use <code>#H</code> in the emit block) --
+          produces output suitable for use as an HTML attribute value
+          (it is similar to HTML escaping but also escapes quotes and
+          apostrophes)
+        </li>
+        <li>XML (use <code>#x</code> in the emit block)</li>
+        <li>URL (use <code>#u</code> in the emit block)</li>
+        <li>None (use <code>#n</code> in the emit block)</li>
+      </ul>
+
+      <p>
+
+      In addition the <em>default</em> escaping mechanism can also be
+      changed, however this is done from outside the template, see the
+      Jamon <a href="UserGuide.html">user's guide</a> for further
+      details.
+
+    <li><span class="concept">Setting the default escaping mechanism</span>
+       The default escaping rule for a tempalte is HTML. This default
+       can be changed by the Java code that invokes the template by
+       calling the <code>escaping()</code> method on the template with the
+       desired escaping mode.  For example, the following code fragment
+       sets the escaping on the template <code>Foo</code> to
+       <code>Escaping.NONE</code>.
+
+        <pre class="code">
+import org.foo.templates.Foo;
+import org.jamon.TemplateManager;
+<b>import org.jamon.Escaping;</b>
+
+  ...
+       StandardTemplateManager templateManager =
+         new StandardTemplateManager(...);
+       Writer writer = new OutputStreamWriter(System.out);
+       new Foo(templateManager)
+         <b>.escaping(Escaping.NONE)</b>
+         .setName("Duke & Co.")
+         .render(writer, 3, "Hello");
+</pre>
+
+
+    </ol>
+
+
+
+    <h4>Example</h4>
+
+    Suppose the template
+     <a href="EscapingTemplate.jamon" class="file">
+        <code>EscapingTemplate</code>
+     </a>contains
+    <pre class="template"><&| /org/jamon/escape/Html &><& EscapingTemplate &></&></pre>
+
+<p>
+If this template is called by the java code
+<a class="file" href="EscapingTut4.java">EscapingTut4.java</a>:
+<pre class="java"><&| /org/jamon/escape/Html &><& EscapingTut4Java &></&></pre>
+
+Then the output of the template's <code>render</code> method will be
+    <pre class="tty"><&| /org/jamon/escape/Html &><% output %></&></pre>
+
+<p>
+If the default escaping on the template had been set to
+<code>Escaping.NONE</code>, then the output of the template would have been
+
+    <pre class="tty"><&| /org/jamon/escape/Html &>
+<html>
+  <body>
+    1. Hello Duke & Co.<br />
+    2. Hello Duke & Co.<br />
+    3. Hello Duke & Co.<br />
+  </body>
+</html></&></pre>
+
+
+<%def _template><%frag content></%frag>
+<pre class="template"><&| /org/jamon/escape/Html &><& content &></&></pre>
+</%def>

@@ -1,0 +1,142 @@
+<%extends _DocumentationBase>
+<%args>
+  String output;
+</%args>
+
+<%override title>Jamon Tutorial - Template Fragments</%override>
+
+<h2>Jamon Tutorial - Templates Fragments</h2>
+
+<ol>
+<li> <span class="concept"> Passing fragment arguments</span>
+
+In addition to template arguments, Jamon allows passing a block, or
+"fragment," of Jamon text to a template. When passing template
+fragments, the invocation syntax must look like <code>&lt;&amp;|
+target; arg1 => ... &amp;> [fragment of Jamon text] &lt;&amp;></code>,
+and any template content after the start tag, <code>&lt;&amp;| target;
+arg1 => ... &amp;></code>, up to the closing tag,
+<code>&lt;/&amp;></code>, is considered the fragment argument.
+<p>
+In this example,
+<a href="FragmentCallerTemplate.jamon" class="file">
+     <code>FragmentCallerTemplate</code></a>,
+    <pre class="template"><&| /org/jamon/escape/Html &>
+    <& FragmentCallerTemplate &></&></pre>
+
+a block of HTML text is passed to a template that expects a fragment
+and constructs a list item and HTML anchor using the fragment text as
+the anchor text.
+<p>
+Because the content of the anchor is passed as
+a fragment, the template author can naturally describe the text
+in HTML and Jamon and then let the called template process the fragment
+appropriately.
+
+<div class="note">
+A template fragment is translated by Jamon into an <em>inner</em> class of
+the template that contains the fragment text. This means that the
+<strong>only</strong> variables in the containing template that can be
+accessed by fragment text are
+<ul><li>
+        class scope variables declared within <code>&lt;%class>&lt;/%class></code> tags
+<li>
+        final variables and arguments to the template. (Note that all
+        arguments to the template are implemented as <code>final</code>
+        fields in the translated Java class, and, hence, are visible
+        to inner classes.)
+<ul>
+</div>
+
+<li> <span class="concept"> Accepting fragment arguments</span>
+
+A template declares that it accepts template fragments by including the
+<code>&lt;%frag argName>&lt;/%frag> </code> tag. The <code>argName</code>
+argument is the name of the variable holding the template framgent. The
+template that accepts the fragment accesses this variable to output the
+fragment contents.
+<p>
+The template below, <a href="LiRef.jamon" class="file">
+     <code>LiRef</code></a>,
+    <pre class="template"><&| /org/jamon/escape/Html &>
+    <& LiRef &></&></pre>
+
+formats the <code>content</code> fragment text as an HTML
+anchor inside a list item.
+
+<li><span class="concept">Parameterized Template Fragments</span>
+A template fragment is a template and can have arguments just like a template.
+<p>
+To add arguments to a fragment, simply include a <code>&lt;%args></code> ...
+<code>&lt;/%args></code> tag at the beginning of the fragment.
+<&| _template &><%LITERAL>
+% DateFormat dateFormat = new SimpleDateFormat("MM/dd");
+We offer the following holidays:
+<&| alternatingList; items => holidays.iterator() &>
+  <%args>
+    Object holidayObj;
+  </%args>
+  Holiday holiday = (Holiday) holidayObj;
+  <td><% dateFormat.format(holiday.getDate()) %></td>
+  <td><% holiday.getName() %></td>
+</&>
+</%LITERAL></&>
+This fragment expects a single <code>holidayObj</code>
+argument to be provided each time it is executed.
+
+<div class="note">
+The signature of the arguments to the fragment, that is the types
+of the arguments and their order, must match the signature
+of the fragment arguments as defined in the template that
+accepts the fragment.
+</div>
+
+<p>
+To declare a template that expects a fragment with arguments,
+just add parameters within the
+<code>&lt;%frag name> <em> parameters </em> &lt;/%frag></code> tag.
+Thus
+      a <code>&lt;%frag
+      <i>name</i>&gt;</code>...<code>&lt;/%frag&gt;</code> is similar
+      to a
+      <code>&lt;%args&gt;</code>...<code>&lt;/%args&gt;</code> except
+      it has a name and its parameters cannot have default values.
+
+    <pre class="template"><&| /org/jamon/escape/Html &>
+    <& AlternatingList &></&></pre>
+
+<li><span class="concept">A Template Fragment Example</span>
+
+The template <a href="FragmentExampleTemplate.jamon" class = "file">
+<code>FragmentExampleTemplate</code></a> produces a table listing
+the name and date of the holidays recognized by the template author.
+The template formats the row it would like to see for each line of
+output, and
+then calls a template requiring a fragment to actually format
+all the entries into a table with alternating background colors
+for each row.
+<p>
+The fragment requires an argument, the <code>holidayObj</code> object
+to display and format. Note that the fragment argument is declared as
+type <code>Object</code>. This is because the template that will process
+the fragment,
+<code>AlternatingList</code>, is designed to be called with any fragment
+written to display one row of table data, and that the type of the
+data object containing the data for the row cannot be known beforehand.
+<p>
+    <pre class="template"><&| /org/jamon/escape/Html &>
+    <& FragmentExampleTemplate &></&></pre>
+<p>
+The example template is executed by the
+<a href="Holiday.java" class="file"> <code>Holiday</code></a> Java class.
+<pre class="java"><&| /org/jamon/escape/Html &><& HolidayJava &></&></pre>
+<p>
+The output from the template is
+<pre class="tty"><% output %></pre>
+
+</ol>
+&nbsp;
+
+<%def _template><%frag content></%frag>
+<pre class="template"><&| /org/jamon/escape/Html &><& content &></&></pre>
+</%def>

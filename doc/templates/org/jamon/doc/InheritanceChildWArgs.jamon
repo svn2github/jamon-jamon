@@ -1,0 +1,16 @@
+<%LITERAL>
+<%extends InheritanceParentWArgs>
+<%args>
+  String special;
+</%args>
+<%xargs>
+  userAccount;
+  title => "special of the week";
+</%xargs>
+
+<h2>Weekly Special</h2>
+<% userAccount == null ? "You" : (userAccount.getName() + ", you") %>\
+ qualify for the special of the week!
+<blink><% special %></blink>
+
+</%LITERAL>

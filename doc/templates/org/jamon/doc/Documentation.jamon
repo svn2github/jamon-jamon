@@ -4,6 +4,7 @@
 <ul>
   <li><a href="Overview.html">Overview</a></li>
   <li><a href="QuickStart.html">Quick start mini-tutorial</a></li>
+  <li><a href="TutorialPath.html">10 Step Jamon Tutorial</a></li>
   <li><a href="GeneratedTemplates.html">Generated classes description</a></li>
   <li><a href="UserGuide.html">User's Guide</a></li>
   <li><a href="BuildingProjects.html">Integrating Jamon and Ant</a>

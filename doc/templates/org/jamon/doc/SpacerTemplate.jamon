@@ -1,0 +1,10 @@
+<%LITERAL>
+<%args>
+  int width => 1;
+  int height => 1;
+</%args>
+<img src="transparentpixel.gif"
+     width="<% width %>"
+     height="<% height %>"
+     border="0">
+</%LITERAL>

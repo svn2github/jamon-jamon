@@ -1,0 +1,14 @@
+<%LITERAL>
+<%frag content></%frag>\
+<%class>
+ private String escapeHtml(String text) {
+   return text.replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;");
+ }
+</%class>
+<%java>
+  String text = content.makeRenderer().asString();
+</%java>
+<% escapeHtml(text) %>
+</%LITERAL>

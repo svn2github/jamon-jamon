@@ -1,0 +1,68 @@
+<%extends _DocumentationBase>
+<%args>
+  String output;
+</%args>
+
+<%override title>Jamon Tutorial - Sub-templates: Functional Decomposition of Templates</%override>
+
+<h2>Jamon Tutorial - Sub-templates: Functional Decomposition of Templates</h2>
+
+Jamon templates can define <em>sub</em> templates. These are exactly analogous to methods of a class, except that they are sub-templates that are called from the main template or other sub-templates and they output text to the same output stream as the main template.
+
+<blockquote>
+There are actually two types of sub-templates: private and protected. Private sub-templates are described in this document. Private sub-templates are accessible <em>only</em> from the template in which they are defined. Protected sub-templates are described in the tutorial section on inheritance.
+</blockquote>
+<p>
+
+Subtemplates are declared in a template file with the
+<code>&lt;%def subtemplate-name></code> ... <code>&lt;/%def></code> tag.
+Inside this tag, the subtemplate can declare arguments just as
+a top level template can by using the
+<code>&lt;%args></code> ... <code>&lt;/%args></code> tag.
+These arguments may have default
+values just as arguments to top level templates can.
+
+<p>
+Subtemplates are called just like any other template, however
+subtemplates defined with the
+<code>&lt%;def subtemplate-name></code> ... <code>&lt;/%def></code> tag
+are only visible <em>within</em> the template that defined them.
+Subtemplates can call themselves as well as other subtemplates in the
+same file or other top level templates.
+
+<h3>An Example</h3>
+<ol>
+  <li>
+    The template <a href="SubtemplateTemplate.jamon" class="file">
+    <code>SubtemplateTemplate</code></a>, shown below, uses two
+    subtemplates to help format a table of user account information.
+    The top level template builds a table with a row for each entry
+    in an array of names provided as an argument to the top level
+    template. It calls the subtemplate <code>_row</code> to generate
+    each row of table data. The subtemplate <code>_row</code>
+    calls the subtemplate <code>_generateLink</code> to compose a
+    URL for each user account.
+
+    <pre class="template">
+    <&| /org/jamon/escape/Html &><& SubtemplateTemplate &></&></pre>
+
+  <li>
+    This template is called from the Java class
+     <a class="file" href="SubtemplateTut7">SubtemplateTut7.java</a>:
+<pre class="java"><&| /org/jamon/escape/Html &><& SubtemplateTut7Java &></&></pre>.
+
+  <li>
+    Process the template and Java class with the following commands.
+    <pre class="tty">
+        export CLASSPATH=.:/path/to/jamon.jar
+        java org.jamon.TemplateProcessor --destDir=. SubtemplateTemplate
+        javac SubtemplateTut7.java SubtemplateTemplate*.java
+        java SubtemplateTut7
+    </pre>
+
+  <li>
+    The output should be
+    <pre class="tty"><% output %></pre>
+<ol>
+<p>
+&nbsp;

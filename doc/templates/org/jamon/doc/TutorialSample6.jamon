@@ -1,0 +1,87 @@
+<%extends _DocumentationBase>
+<%args>
+  String output;
+</%args>
+
+<%override title>Jamon Tutorial - Calling Another Template From a Template</%override>
+
+<h2>Jamon Tutorial - Calling Another Template From a Template</h2>
+
+Jamon templates can call other templates. The semantics are exactly the same as a method call in Java. The only difference is the syntax.
+<p>
+In Jamon, a template calls another template with the <code>&lt;& templateName ; arguments &></code> tag. (Notice that the tag delimeters are <code>&lt;&</code> and <code>&></code> -- <em>not</em> <code>&lt;%</code> and <code>%></code>.) Some examples of calling templates from a template are shown below.
+
+      <&| _template &>
+<%LITERAL>
+  <%import>
+    java.util.Date;
+  </%import>
+
+  <& header &>
+  <& /org/foo/weather/ForecastTemplate; time => new Date();
+     message => "Thank you for using our wearther service!" &>
+  <& /com/tripleclick/ads/Advertisement &>
+  <& footer &> </%LITERAL> </&> This template calls the
+<code>header</code> and <code>footer</code> templates from the same
+package (directory) as this template. It also calls the
+<code>org.foo.weather.ForcastTemplate</code> in the
+<code>org.foo.weather</code> package and the
+<code>com.tripleclick.ads.Advertisement</code> template in the
+<code>com.tripleclick.ads</code> package. The call to the
+<code>ForecastTemplate</code> provides arguments to the call. These
+arguments may be required or they may be optional; there is no
+distinction between the two types of arguments except that required
+arguments must be provided.  <p> Arguments to template calls are
+assigned by name. The name of the argument is the name specified in
+the <code>&lt;%args></code> ... <code>&lt;/%args></code> tag. The name
+should be followed by <code>=></code> and then the value of the
+argument. The value is evaluated as Java code, so it may be a Java
+variable, a call to a Java method, or any Java expression.
+
+<h3>An Example</h3>
+
+    The template below, <a href="JamonCallerTemplate.jamon" class="file">
+     <code>JamonCallerTemplate</code></a>, outputs several rows
+    of names and telephone numbers.
+    <pre class="template"><&| /org/jamon/escape/Html &>
+    <& JamonCallerTemplate &></&></pre>
+
+    It calls the template <a href="StdPhoneNumberFormat.jamon" class="file">
+     <code>StdPhoneNumberFormat</code></a> (below) to format the telephone
+    number into a specified format.
+    The argument to the <code>StdPhoneNumberFormat</code> is
+    optional, so the <code>JamonCallerTemplate</code> only has to provide
+    a value to override the default.
+
+    <pre class="template"><&| /org/jamon/escape/Html &>
+    <& StdPhoneNumberFormat &></&></pre>
+
+<div class="note">Notice that the <code>StdPhoneNumberFormat</code> template
+adds backslashes, '\', at the end of each line that outputs text (the non-java code lines). The backslash at the end of the line escapes the new-line on
+that line. Jamon outputs text exactly as it appears in the template,
+including new-lines. To prevent new-lines from being output, the author
+must end the line with a backslash.
+</div>
+
+    The top level template, <code>JamonCallerTemplate</code> is called
+    from the Java class
+     <a class="file" href="JamonCallerTut6.java">JamonCallerTut6.java</a>:
+<pre class="java"><&| /org/jamon/escape/Html &><& JamonCallerTut6Java &></&></pre>
+<li> To process and run the template, execute the following commands:
+<pre class="tty">
+    export CLASSPATH=.:/path/to/jamon.jar
+    java org.jamon.TemplateProcessor --destDir=. JamonCallerTemplate SpacerTemplate
+    javac JamonCallerTut6.java JamonCallerTemplate*.java SpacerTemplate*.java
+    java JamonCallerTut6
+</pre>
+
+<li> You should see:
+<pre class="tty"><% output %></pre>
+
+
+<%def _template>
+<%frag content></%frag>
+<pre class="template"><&| /org/jamon/escape/Html &><& content &></&></pre>
+</%def>
+
+

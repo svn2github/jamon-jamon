@@ -1,0 +1,127 @@
+<%extends _DocumentationBase>
+<%args>
+  String output;
+</%args>
+
+<%override title>Jamon Tutorial - Template Inheritance: Composing Template Output</%override>
+
+<h2>Jamon Tutorial - Template Inheritance: Composing Template Output</h2>
+
+A Jamon template can extend another Jamon template. Inheritance in Jamon, however, works differently than in Java. A parent (super) template declares that it will <em>include</em> the output of a sub-template by including the tag <code>&lt;&amp; *CHILD &amp;></code> in the Jamon text. The output of the child template will then be inserted in the location of this tag.
+
+<p>
+For example, the template <a href="InheritanceParent.jamon" class="file">
+<code>InheritanceParent</code></a>, shown below, declares the
+<code>&lt;&amp; *CHILD &amp;></code> where it wants to include the
+child template's output. Notice that the parent template takes care of the
+HTML header as well as the header banner of the page while the child
+template simply fills in the body.
+
+    <pre class="template">
+    <&| /org/jamon/escape/Html; &><& InheritanceParent; &></&></pre>
+<p>
+The child template declares that it extends the parent template by including the tag
+<pre class="template">
+<code>&lt;%extends InheritanceParent></code>
+</pre>
+If the parent template is in a different directory, then the <code>extends</code> tag must specify the path to the parent template.
+<pre class="template">
+<code>&lt;%extends ../InheritanceParent></code>
+</pre>
+The example template below,
+<a href="InheritanceChild.jamon" class="file">
+<code>InheritanceChild</code></a> extends <code>InheritanceTemplate</code>
+and provides subject text that is included in the output of the parent template.
+
+    <pre class="template"><&| /org/jamon/escape/Html &><& InheritanceChild &></&></pre>
+
+This template would be invoked from Java with the class
+<a href="InheritanceSimpleTut9.java" class="file">
+InheritanceSimpleTut9.java</a>
+    <pre class="java"><&| /org/jamon/escape/Html &>
+    <& InheritanceSimpleTut9Java &></&></pre>
+
+Notice that the Java code first calls <code>makeParentRenderer()</code>
+on the template to get the renderer for the <em>derived</em> template, and
+then calls <code>render()</code> on the object returned by the
+<code>makeParentRenderer()</code> call.
+
+<h2>Inheritance with template arguments</h2>
+Both the parent and child templates may take arguments. To specify
+arguments, the parent and child templates simply include a
+<code>&lt;%args></code> ... <code>&lt;/%args></code> tag.
+<p>
+By default, arguments in the parent template are not visible to
+the child template.
+They can be made visible to code in the child
+      template by declaring them in <code>&lt;%xargs&gt;</code>
+      ... <code>&lt;/%xargs&gt;</code> blocks.
+<p>
+For example, consider the parent template
+<a href="InheritanceParentWArgs.jamon" class="file">
+<code>InheritanceParentWArgs</code></a>. It defines arguments
+<code>userAccount</code> and <code>title</code>.
+
+    <pre class="template"><&| /org/jamon/escape/Html &>
+    <& InheritanceParentWArgs &></&></pre>
+
+The child template can only access these arguments by including
+<pre class="template">
+<%LITERAL>
+<%xargs>
+  userAccount;
+  title => "special of the week";
+&lt/%xargs>
+</%LITERAL>
+</pre>
+
+Notice that only the name of the arguments should be
+listed. This is because the types of the arguments are already
+specified in the parent class. Also note, however, that any
+<em>optional</em> arguments can have their default values redefined in
+the child template.
+<p>
+A complete example of a child template,
+<a href="InheritanceChildWArgs.jamon" class="file">
+<code>InheritanceChildWArgs</code></a>.
+is below.
+
+    <pre class="template"><&| /org/jamon/escape/Html &>
+    <& InheritanceChildWArgs &></&></pre>
+
+
+<h3>Invoking a derived template</h3>
+The Java code that invokes the derived template has two choices for
+displaying the derived template:
+<ol>
+<li>
+   The Java code can call the <code>render()</code> method on the derived
+   template and provide <em>all</em> the arguments that are required
+   by the child template as well as all templates that the child
+   template inherits from.
+<li>The code may also call the <code>makeParentRenderer()</code> method on
+   the derived template, provide the arguments required by the
+   derived template, and then call render on the
+   <code>InheritanceParentWArgs.ParentRenderer</code> object returned
+   by <code>makeParentRenderer()</code> method and provide the arguments
+   required by the parent template.
+</ol>
+
+The second approach allows the developer to separate the handling of
+the derived template from the parent template. This allows the generic
+processing of the parent template to be handled in a controller object
+while the specific processing of the child templates can be handled in
+separate Java classes.
+
+<p>
+The class <a href="User.java" class="file"><code>User</code></a> implements
+invoking the child template through the second approach described above.
+
+<pre class="java"><&| /org/jamon/escape/Html &><& UserJava &></&></pre>
+<p>
+The output from the template is
+<pre class="tty"><% output %></pre>
+
+<p>
+&nbsp;
+

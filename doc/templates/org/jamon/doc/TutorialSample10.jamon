@@ -1,0 +1,80 @@
+<%extends _DocumentationBase>
+<%args>
+  String output;
+</%args>
+
+<%override title>Jamon Tutorial - Template Inheritance: Overriding Inherited Methods/Sub-Templates</%override>
+
+<h2>Jamon Tutorial - Template Inheritance: Overriding Inherited Methods/Sub-Templates</h2>
+
+As explained in the section on
+<a href="TutorialSample7.html">sub-templates</a>, a sub-template can
+either be <em>private</em> or <em>protected</em>. Sub-templates defined
+with the <code>&lt;%def subTempName></code> ... <doce>&lt;/%def></code> tag are
+<em>private</em> and can be accessed <strong>only</strong> within the
+template that defined the sub-template.
+<p>
+
+Subtemplates defined with the
+<code>&lt;%method subTempName></code> ... <code>&lt;/%method></code>
+tag, however, are <em>protected</em> and can be accessed by templates
+that inherit from the template with this subtemplate definition.
+To invoke a protected subtemplate defined in a parent, simply invoke it
+like any other subtemplate
+<pre class="template"><%LITERAL><& subTempName &></%LITERAL></pre>
+Usually, however, it is the parent template that invokes the subtemplate,
+and the parent makes the template protected so that the child can
+override it. For example, the template
+<a href="InheritanceParentProtected.jamon" class="file">
+InheritanceParentProtected</a> declares a <code>title</code> subtemplate
+for the expressed purpose of allowing the child template to
+override the subtemplate in order to replace the title.
+
+<pre class="template"><&| /org/jamon/escape/Html &><& InheritanceParentProtected &></&></pre>
+
+<p>
+The template that derives this template would override the <code>title</code>
+subtemplate by using the <code>&lt;%override title></code> ... <code>&lt;/%override></code> tag.
+
+<pre class="template">
+<%LITERAL>
+<%override title>
+  <%xargs>
+    name;
+  &lt;/%xargs>
+  Jamon Specials for <% name %>
+&lt;/%override>
+</%LITERAL>
+</pre>
+
+Overridden methods take the same arguments as the method they
+override, although, as with template inheritance, only those
+args declared in an <code>&lt;%xargs&gt;</code>
+... <code>&lt;/%xargs&gt;</code> block will be visible within
+the body of the override. Also, as with template inheritance,
+only the names of the arguments are listed within the
+<code>&lt;%xargs></code> ... <code>&lt;/%xargs></code> tag,
+because the types of the arguments are declared in the parent template's
+definition.
+<p>
+The template <a href="InheritanceChildProtected.jamon" class="file">
+InheritanceChildProtected</a> extends
+<a href="InheritanceParentProtected.jamon" class="file">
+InheritanceParentProtected</a> and overrides the subtemplate
+<code>title</code>. By overriding <code>title</code>
+<code>InheritanceChildProtected</code> replaces the title that the
+parent template generates.
+
+<pre class="template"><&| /org/jamon/escape/Html &><& InheritanceChildProtected &></&></pre>
+
+<p>
+To invoke this template, the class <a href="User2.java" class="file">
+User2.java</a> calls <code>makeParentRenderer()</code> on
+the template and then passes the object returned to a controller,
+which invokes <code>render()</code> on the returned object.
+
+<pre class="java"><&| /org/jamon/escape/Html &><& User2Java &></&></pre>
+
+The result of executing this class and template is below.
+
+<pre class="tty><% output %></pre>

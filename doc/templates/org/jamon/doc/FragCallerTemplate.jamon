@@ -1,0 +1,12 @@
+<%LITERAL>
+<%doc>Output the sample HTML file<%doc>
+Below is a sample HTML page:<br>
+<&| myHtmlEscape &>
+ <html>
+   <head><title>Sample HTML Page</title></head>
+   <body>
+     <h2>Sample HTML Page</h2>
+   </body>
+ </html>
+</&>
+</%LITERAL>
