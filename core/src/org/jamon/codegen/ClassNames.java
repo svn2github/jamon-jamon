@@ -28,6 +28,8 @@ public interface ClassNames
         org.jamon.JamonException.class.getName();
     public final static String WRITER = java.io.Writer.class.getName();
     public final static String RENDERER = org.jamon.Renderer.class.getName();
+    public final static String ABSTRACT_RENDERER =
+        org.jamon.AbstractRenderer.class.getName();
     public final static String TEMPLATE =
         org.jamon.AbstractTemplateProxy.class.getName();
     public final static String TEMPLATE_INTF = TEMPLATE + ".Intf";

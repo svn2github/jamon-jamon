@@ -120,7 +120,7 @@ public abstract class AbstractCallStatement
         p_writer.closeList();
         p_writer.println();
         p_writer.openBlock();
-        p_writer.print(  "return new " + ClassNames.RENDERER + "()");
+        p_writer.print(  "return new " + ClassNames.ABSTRACT_RENDERER + "()");
         p_writer.openBlock();
         p_writer.println("public void renderTo(" + ArgNames.WRITER_DECL + ")");
         p_writer.println("  throws " + ClassNames.IOEXCEPTION);

@@ -361,7 +361,7 @@ public class ProxyGenerator
         m_writer.println();
 
         m_writer.openBlock();
-        m_writer.print(  "return new " + ClassNames.RENDERER + "() ");
+        m_writer.print(  "return new " + ClassNames.ABSTRACT_RENDERER + "() ");
         m_writer.openBlock();
         m_writer.println("public void renderTo(" + ArgNames.WRITER_DECL + ")");
         m_writer.println(  "  throws " + ClassNames.IOEXCEPTION);
