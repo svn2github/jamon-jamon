@@ -1,0 +1,34 @@
+<&| _Base; title => "Jamon Overview"; section => "Documentation" &>
+
+<h2>Overview</h2>
+
+To make use of Jamon, simply:
+
+<ul>
+
+  <li>Create your templates.<li>
+
+  <li>
+    Run the template processor on them, either via the command line or
+    the supplied Ant task. This generates Java source files
+    corresponding to the templates.
+  </li>
+
+  <li>
+    In your "regular" Java source files, reference templates like any
+    other class.
+  </li>
+
+  <li>Include generated files in your build process.</li>
+
+  <li>
+    At runtime, changes made to the template sources are automatically
+    reflected in the running application. This is accomplished by
+    regeneration and recompilation of the sources corresponding to
+    your templates. This default behavior can be turned off for
+    production deployment.
+  </li>
+
+</ul>
+
+</&>
