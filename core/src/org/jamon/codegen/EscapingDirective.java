@@ -70,5 +70,7 @@ public class EscapingDirective
                                  new EscapingDirective("URL"));
         s_standardDirectives.put("x",
                                  new EscapingDirective("XML"));
+        s_standardDirectives.put("j",
+                                 new EscapingDirective("JAVASCRIPT"));
     }
 }

@@ -84,6 +84,13 @@
 
     <pre class="tty"><&| escape//Html &><& reference/unescapedEmit &></&></pre>
 
+    JavaScript escaping is also available
+
+    <& _TemplateInclude: "/templates/org/jamon/doc/reference/javascriptEscapedEmit" &>
+    producing <& reference/javascriptEscapedEmit &>
+
+    <pre class="tty"><&| escape//Html &><& reference/javascriptEscapedEmit &></&></pre>
+
     The available escaping mechanism are
     <ul>
       <li>
@@ -95,6 +102,10 @@
         produces output suitable for use as an HTML attribute value
         (it is similar to HTML escaping but also escapes quotes and
         apostrophes)
+      </li>
+      <li>
+        JavaScript (use <code>#j</code> in the emit block) --
+        produces output suitable for use in a JavaScript string literal
       </li>
       <li>XML (use <code>#x</code> in the emit block)</li>
       <li>URL (use <code>#u</code> in the emit block)</li>

@@ -71,4 +71,10 @@ public interface Escaping
      * XML documents.
      **/
     public static final Escaping XML = new XmlEscaping();
+
+    /**
+     * An escaping mechanism which escapes suitable for inclusion in
+     * in Javascript.  Note that it does not do any HTML escaping.
+     **/
+    public static final Escaping JAVASCRIPT = new JavascriptEscaping();
 }
