@@ -34,6 +34,7 @@ States
   def,
   imports,
   emit,
+  class,
   java,
   jline,
   call,
@@ -48,6 +49,8 @@ Tokens
   {farginit -> args} farg_start_done = '>';
   {args -> body} args_end = '</%args>';
   {args -> body} farg_end = '</%farg>';
+  {start ->class,body -> class} class_start = '<%class>' ws*;
+  {class -> body} class_end = ws* '</%class>';
   {start -> args, body -> args} args_start = '<%args>';
   {start ->imports,body -> imports} import_start = '<%import>';
   {imports -> body} import_end = '</%import>';
@@ -87,6 +90,18 @@ Tokens
        | '</%ja' [all - 'v']
        | '</%jav' [all - 'a']
        | '</%java' [all - gt] )*;
+
+  {class} class_content =
+       ( [all - [q + lt]]
+       | quoted
+       | '<' [all - slash]
+       | '</' [all - '%']
+       | '</%' [all - 'c']
+       | '</%c' [all - 'l']
+       | '</%cl' [all - 'a']
+       | '</%cla' [all - 's']
+       | '</%clas' [all - 's']
+       | '</%class' [all - gt] )*;
 
   {body,start -> body} text = all_except_nl;
   {start,body -> start} newline = nl;
@@ -138,6 +153,7 @@ Productions
   component = base_component
             | {imports} imports
             | {def} def
+            | {class} class_tag
             ;
 
   def = def_start identifier gt base_component* def_end;
@@ -151,6 +167,8 @@ Productions
   import = name semi;
 
   args = args_start arg* args_end;
+
+  class_tag = class_start class_content* class_end;
 
   farg = farg_start arg* farg_end;
 

@@ -83,6 +83,7 @@ public class ImplGenerator
         print  (m_resolver.getFullyQualifiedIntfClassName(getPath()));
         println(".Intf");
         println("{");
+        println(m_analyzer.getClassContent());
     }
 
     private void generateInitialize()

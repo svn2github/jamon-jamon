@@ -37,6 +37,7 @@ public class ImplAnalyzer extends BaseAnalyzer
 {
     private final Map m_unitStatements = new HashMap();
     private StringBuffer m_current = new StringBuffer();
+    private StringBuffer m_classContent = new StringBuffer();
     private final Set m_calls = new HashSet();
 
     private final String m_path;
@@ -47,6 +48,11 @@ public class ImplAnalyzer extends BaseAnalyzer
         m_unitStatements.put(MAIN_UNIT_NAME,new ArrayList());
         m_path = p_templatePath;
         p_start.apply(new Adapter());
+    }
+
+    public String getClassContent()
+    {
+        return m_classContent.toString();
     }
 
     public Collection getCalledTemplateNames()
@@ -112,6 +118,17 @@ public class ImplAnalyzer extends BaseAnalyzer
 
     protected class Adapter extends BaseAnalyzer.Adapter
     {
+        public void caseAClassComponent(AClassComponent node)
+        {
+            handleBody();
+            for(Iterator i=((AClassTag)node.getClassTag()).getClassContent()
+                    .iterator();
+                i.hasNext();)
+            {
+                m_classContent.append(((TClassContent)i.next()).getText());
+            }
+        }
+
         public void caseABodyBaseComponent(ABodyBaseComponent node)
         {
             m_current.append(node.getText().getText());
