@@ -454,7 +454,7 @@ public class StandardTemplateManager
         }
     }
 
-    ClassLoader getWorkClassLoader()
+    private ClassLoader getWorkClassLoader()
         throws IOException
     {
         return m_loader;

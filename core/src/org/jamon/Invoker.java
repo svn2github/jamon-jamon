@@ -133,24 +133,20 @@ public class Invoker
         }
     }
 
-    public Invoker(StandardTemplateManager p_manager,
+    public Invoker(TemplateManager p_manager,
                    String p_templateName)
         throws IOException
     {
-        this(p_manager, p_templateName, null);
+        this(p_manager, p_templateName, new DefaultObjectParser());
     }
 
-    public Invoker(StandardTemplateManager p_manager,
+    public Invoker(TemplateManager p_manager,
                    String p_templateName,
                    ObjectParser p_objectParser)
         throws IOException
     {
-        m_objectParser =
-            p_objectParser == null
-            ? new DefaultObjectParser()
-            : p_objectParser;
-        m_manager = p_manager;
-        m_template = m_manager.constructProxy(p_templateName);
+        m_objectParser = p_objectParser;
+        m_template = p_manager.constructProxy(p_templateName);
         m_templateClass = m_template.getClass();
         try
         {
@@ -238,7 +234,6 @@ public class Invoker
     private final AbstractTemplateProxy m_template;
     private final Method m_renderMethod;
     private final ObjectParser m_objectParser;
-    private final StandardTemplateManager m_manager;
     private final Method m_writeToMethod;
 
     private Object parse(Class p_type, String p_value)
