@@ -28,7 +28,7 @@
   String onClick => null;
 </%args>
 
-<%method type></%method>
+<%absmeth type></%absmeth>
 
 <%def ifNotNull>
   <%args>
