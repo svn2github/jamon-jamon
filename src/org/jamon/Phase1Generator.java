@@ -35,6 +35,13 @@ public class Phase1Generator extends BaseGenerator
         print  ("    extends ");
         println(BASE_FACTORY);
         println("  {");
+        print  ("    public Factory(");
+        print  (TEMPLATE_MANAGER);
+        println(" p_templateManager)");
+        println("    {");
+        println("      super(p_templateManager);");
+        println("    }");
+        println();
         print  ("    public ");
         print  (getClassName());
         println(" getInstance(java.io.Writer p_writer)");
