@@ -33,7 +33,7 @@ public class FragmentUnit extends AbstractInnerUnit
 
     public String getFragmentInterfaceName()
     {
-        if(getParent() instanceof DefUnit)
+        if(getParent() instanceof AbstractInnerUnit)
         {
             return "Fragment_" + getParent().getName()
                 + "__jamon__" + getName();

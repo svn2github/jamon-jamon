@@ -1,0 +1,7 @@
+<%doc>
+  No test to go with this - just checking that the generated fragment
+  classes all have different names.
+</%doc>
+<%frag f/>
+<%def d><%frag f/></%def>
+<%method m><%frag f/></%method>
