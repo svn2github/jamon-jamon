@@ -22,9 +22,11 @@
   String cssClass => null;
   String style => null;
   Boolean selected => null;
+  String onClick => null;
 </%args>\
 <& _Selectable; type => "checkbox";
                 input => input;
                 cssClass => cssClass;
                 style => style;
-                selected => selected &>
+                selected => selected;
+                onClick => onClick &>

@@ -23,6 +23,7 @@
   String cssClass => null;
   String style => null;
   Boolean selected => null;
+  String onClick => null;
 </%args>\
 <input type='<% type %>'
        name='<% input.getName() %>'
@@ -35,5 +36,8 @@
 % }
 % if (selected == null ? input.isSelected() : selected.booleanValue()) {
       checked \
+% }
+% if (onClick != null) {
+      onClick='<% onClick %>'
 % }
 />
