@@ -99,6 +99,11 @@ public abstract class AbstractTemplateImpl
               case '<': m_writer.write("&lt;"); break;
               case '>': m_writer.write("&gt;"); break;
               case '&': m_writer.write("&amp;"); break;
+                // The reason '"' is not escaped to "&quot;" is that it was withdrawn
+                // from the HTML 3.2 DTD (only).  There does not seem to be universal 
+                // agreement as to why this happened.
+              case '"': m_writer.write("&#34;"); break;
+              case '\'': m_writer.write("&#39;"); break;
                 // FIXME: numerically escape other chars
               default: m_writer.write(c);
             }
