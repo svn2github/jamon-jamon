@@ -39,6 +39,10 @@
         <li><%LITERAL><%/aliases></%LITERAL></li>
       </ul>
 
+      If you would like to force whitespace to appear after one of the
+      above tags, you can follow the tag with a backslash and a
+      newline; whitespace after that will be emitted.
+
       <br />
       <b>Newline escape</b><br />
 
