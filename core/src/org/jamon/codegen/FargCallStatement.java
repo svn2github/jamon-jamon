@@ -52,7 +52,6 @@ public class FargCallStatement
                                TemplateDescriber p_describer)
         throws IOException
     {
-        // FIXME!
         String tn = getPath();
         p_writer.println(tn + ".writeTo(this.getWriter());");
         p_writer.println(tn + ".escapeWith(this.getEscaping());");
@@ -74,7 +73,7 @@ public class FargCallStatement
             }
         }
         p_writer.println(");");
-        if( ! m_params.isEmpty() )
+        if (! m_params.isEmpty())
         {
             StringBuffer message = new StringBuffer("fragment '");
             message.append(getPath());
