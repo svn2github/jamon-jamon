@@ -71,7 +71,8 @@ public class CallStatement
         }
         else if (isDefCall(p_analyzer))
         {
-            return (String) p_analyzer.getFargNames(getPath()).next();
+            return (String)
+                p_analyzer.getUnitInfo(getPath()).getFargNames().next();
         }
         else
         {
@@ -253,14 +254,11 @@ public class CallStatement
         p_writer.print("__jamon_def__");
         p_writer.print(getPath());
         p_writer.print("(");
-        int argNum = 0;
-        for (Iterator r = p_analyzer.getRequiredArgNames(getPath()); r.hasNext(); )
+        UnitInfo unitInfo = p_analyzer.getUnitInfo(getPath());
+        for (Iterator r = unitInfo.getRequiredArgs(); r.hasNext(); /* */)
         {
-            if (argNum++ > 0)
-            {
-                p_writer.print(",");
-            }
-            String name = (String) r.next();
+            Argument arg = (Argument) r.next();
+            String name = arg.getName();
             String expr = (String) m_params.get(name);
             if (expr == null)
             {
@@ -270,25 +268,34 @@ public class CallStatement
             p_writer.print("(");
             p_writer.print(expr);
             p_writer.print(")");
-        }
-        for (Iterator o = p_analyzer.getOptionalArgNames(getPath()); o.hasNext(); )
-        {
-            if (argNum++ > 0)
+            if (r.hasNext())
             {
                 p_writer.print(",");
             }
-            String name = (String) o.next();
+        }
+        if (unitInfo.hasRequiredArgs())
+        {
+            p_writer.print(",");
+        }
+        for (Iterator o = unitInfo.getOptionalArgs(); o.hasNext(); /* */ )
+        {
+            OptionalArgument arg = (OptionalArgument) o.next();
+            String name = arg.getName();
             p_writer.print("(");
             String expr = (String) m_params.get(name);
             if (expr == null)
             {
-                p_writer.print(p_analyzer.getDefault(getPath(),name));
+                p_writer.print(arg.getDefault());
             }
             else
             {
                 p_writer.print(expr);
             }
             p_writer.print(")");
+            if (o.hasNext())
+            {
+                p_writer.print(",");
+            }
         }
         p_writer.println(");");
     }

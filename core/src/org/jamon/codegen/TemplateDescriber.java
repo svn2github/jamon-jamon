@@ -86,7 +86,8 @@ public class TemplateDescriber
     {
         try
         {
-            return new BaseAnalyzer(parseTemplate(p_path)).getFargNames();
+            return new BaseAnalyzer(parseTemplate(p_path))
+                .getUnitInfo().getFargNames();
         }
         catch (FileNotFoundException fnfe)
         {
@@ -143,9 +144,11 @@ public class TemplateDescriber
         {
             LinkedList list = new LinkedList();
             BaseAnalyzer g = new BaseAnalyzer(parseTemplate(p_path));
-            for (Iterator i = g.getRequiredArgNames(); i.hasNext(); /* */)
+            for (Iterator i = g.getUnitInfo().getRequiredArgs();
+                 i.hasNext();
+                 /* */)
             {
-                list.add(i.next());
+                list.add(((Argument)i.next()).getName());
             }
             return list;
         }

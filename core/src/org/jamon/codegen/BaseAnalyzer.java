@@ -60,21 +60,21 @@ public class BaseAnalyzer
     {
         StringBuffer buf = new StringBuffer();
         buf.append("Required\n");
-        for (Iterator i = getRequiredArgNames(); i.hasNext(); /* */)
+        for (Iterator i = getUnitInfo().getRequiredArgs(); i.hasNext(); /* */)
         {
-            String name = (String) i.next();
-            buf.append(name);
+            Argument arg = (Argument) i.next();
+            buf.append(arg.getName());
             buf.append(":");
-            buf.append(getArgType(name));
+            buf.append(arg.getType());
             buf.append("\n");
         }
         buf.append("Optional\n");
-        for (Iterator i = getOptionalArgNames(); i.hasNext(); /* */)
+        for (Iterator i = getUnitInfo().getOptionalArgs(); i.hasNext(); /* */)
         {
-            String name = (String) i.next();
-            buf.append(name);
+            Argument arg = (Argument) i.next();
+            buf.append(arg.getName());
             buf.append(":");
-            buf.append(getArgType(name));
+            buf.append(arg.getType());
             buf.append("\n");
         }
         return StringUtils.byteArrayToHexString
@@ -91,31 +91,6 @@ public class BaseAnalyzer
         return m_imports.iterator();
     }
 
-    public Iterator getRequiredArgNames()
-    {
-        return getRequiredArgNames(MAIN_UNIT_NAME);
-    }
-
-    public Iterator getRequiredArgNames(String p_unitName)
-    {
-        return getUnitInfo(p_unitName).getRequiredArgNames();
-    }
-
-    public Iterator getOptionalArgNames()
-    {
-        return getOptionalArgNames(MAIN_UNIT_NAME);
-    }
-
-    public Iterator getOptionalArgNames(String p_unitName)
-    {
-        return getUnitInfo(p_unitName).getOptionalArgNames();
-    }
-
-    public String getArgType(String p_unitName,String p_argName)
-    {
-        return getUnitInfo(p_unitName).getArgType(p_argName);
-    }
-
     public FargInfo getFargInfo(String p_fargName)
     {
         return getFargInfo(MAIN_UNIT_NAME, p_fargName);
@@ -129,34 +104,7 @@ public class BaseAnalyzer
         {
             return null;
         }
-        return new FargInfo(p_fargName,
-                            unitInfo.getRequiredArgNames(),
-                            unitInfo.getArgumentMap());
-    }
-
-    public Iterator getFargNames()
-    {
-        return getFargNames(MAIN_UNIT_NAME);
-    }
-
-    public Iterator getFargNames(String p_unitName)
-    {
-        return getUnitInfo(p_unitName).getFargNames();
-    }
-
-    public String getDefault(String p_unitName,String p_argName)
-    {
-        return getUnitInfo(p_unitName).getDefault(p_argName);
-    }
-
-    public String getArgType(String p_argName)
-    {
-        return getArgType(MAIN_UNIT_NAME,p_argName);
-    }
-
-    public String getDefault(String p_argName)
-    {
-        return getDefault(MAIN_UNIT_NAME,p_argName);
+        return new FargInfo(p_fargName, unitInfo);
     }
 
     protected static final String MAIN_UNIT_NAME = "";
@@ -300,7 +248,7 @@ public class BaseAnalyzer
                 ((Node)a.next()).apply(this);
             }
 
-            if (getOptionalArgNames(getUnitName()).hasNext())
+            if (getUnitInfo(getUnitName()).hasOptionalArgs())
             {
                 throw new UnsupportedOperationException("PFrags cannot have optional arguments");
             }

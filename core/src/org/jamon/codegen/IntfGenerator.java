@@ -164,7 +164,9 @@ public class IntfGenerator
     private void generateFargInterfaces(boolean p_inner)
         throws IOException
     {
-        for (Iterator f = m_analyzer.getFargNames(); f.hasNext(); /* */)
+        for (Iterator f = m_analyzer.getUnitInfo().getFargNames();
+             f.hasNext();
+             /* */)
         {
             generateFargInterface(m_analyzer.getFargInfo((String)f.next()),
                                   p_inner);
@@ -177,7 +179,9 @@ public class IntfGenerator
     {
         m_writer.print("public static final String[] FARGNAMES = ");
         m_writer.openBlock();
-        for (Iterator f = m_analyzer.getFargNames(); f.hasNext(); /* */)
+        for (Iterator f = m_analyzer.getUnitInfo().getFargNames();
+             f.hasNext();
+             /* */)
         {
             m_writer.print("\"" + (String)f.next() + "\"");
             if (f.hasNext())
@@ -188,7 +192,9 @@ public class IntfGenerator
         }
         m_writer.closeBlock(";");
         m_writer.println();
-        for (Iterator f = m_analyzer.getFargNames(); f.hasNext(); /* */)
+        for (Iterator f = m_analyzer.getUnitInfo().getFargNames();
+             f.hasNext();
+             /* */)
         {
             String name = (String)f.next();
             m_writer.print("public static final java.util.Map FARGINFO_");
@@ -254,9 +260,11 @@ public class IntfGenerator
         m_writer.print("public static final String[] REQUIRED_ARGS =");
         m_writer.openBlock();
 
-        for (Iterator i = m_analyzer.getRequiredArgNames(); i.hasNext(); /* */)
+        for (Iterator i = m_analyzer.getUnitInfo().getRequiredArgs();
+             i.hasNext();
+             /* */)
         {
-            m_writer.print("\"" + (String) i.next() + "\"");
+            m_writer.print("\"" + ((Argument) i.next()).getName() + "\"");
             if (i.hasNext())
             {
                 m_writer.print(",");
@@ -297,10 +305,13 @@ public class IntfGenerator
     private void generateOptionalArgs()
         throws IOException
     {
-        for (Iterator i = m_analyzer.getOptionalArgNames(); i.hasNext(); /* */)
+        for (Iterator i = m_analyzer.getUnitInfo().getOptionalArgs();
+             i.hasNext();
+             /* */)
         {
             m_writer.println();
-            String name = (String) i.next();
+            Argument arg = (Argument) i.next();
+            String name = arg.getName();
             m_writer.print("public ");
             String pkgName = getPackageName();
             if (pkgName.length() > 0)
@@ -310,7 +321,7 @@ public class IntfGenerator
             m_writer.print(getClassName());
             m_writer.println(" set" + StringUtils.capitalize(name)
                              + "("
-                             + m_analyzer.getArgType(name) +" p_" + name
+                             + arg.getType() +" p_" + name
                              + ")");
             m_writer.print  ("  throws ");
             m_writer.println(ClassNames.IOEXCEPTION);
@@ -344,13 +355,15 @@ public class IntfGenerator
         m_writer.println(")");
         m_writer.println("  throws java.io.IOException;");
         m_writer.println();
-        for (Iterator i = m_analyzer.getOptionalArgNames(); i.hasNext(); /* */)
+        for (Iterator i = m_analyzer.getUnitInfo().getOptionalArgs();
+             i.hasNext();
+             /* */)
         {
             m_writer.println();
-            String name = (String) i.next();
-            m_writer.println("void set" + StringUtils.capitalize(name)
+            Argument arg = (Argument) i.next();
+            m_writer.println("void set" + StringUtils.capitalize(arg.getName())
                              + "("
-                             + m_analyzer.getArgType(name) + " " + name
+                             + arg.getType() + " " + arg.getName()
                              + ");");
         }
         m_writer.closeBlock();

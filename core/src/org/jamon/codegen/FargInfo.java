@@ -22,10 +22,24 @@ package org.jamon.codegen;
 
 import java.util.Iterator;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 class FargInfo
 {
+    public FargInfo(String p_name, UnitInfo p_unitInfo)
+    {
+        m_name = p_name;
+        m_args = new HashMap();
+        m_argNames = new ArrayList();
+        for(Iterator i = p_unitInfo.getRequiredArgs(); i.hasNext(); /**/)
+        {
+            Argument arg = (Argument) i.next();
+            m_argNames.add(arg.getName());
+            m_args.put(arg.getName(), arg.getType());
+        }
+    }
+
     public FargInfo(String p_name, Iterator p_argNames, Map p_args)
     {
         m_name = p_name;

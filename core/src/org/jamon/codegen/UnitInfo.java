@@ -51,15 +51,12 @@ public class UnitInfo
     {
         if (p_default == null)
         {
-            m_requiredArgs.add(p_name);
-            m_argTypes.put(p_name, p_type);
+            m_requiredArgs.add(new Argument(p_name, p_type));
         }
         else
         {
-            m_optionalArgs.add(p_name);
-            m_argTypes.put(p_name,p_type);
-            m_default.put(p_name,
-                          p_default.getArgexpr().toString().trim());
+            m_optionalArgs.add(new OptionalArgument
+                (p_name, p_type, p_default.getArgexpr().toString().trim()));
         }
     }
 
@@ -68,22 +65,31 @@ public class UnitInfo
         return (String) m_argTypes.get(p_argName);
     }
 
-    public String getDefault(String p_argName)
-    {
-        return (String) m_default.get(p_argName);
-    }
-    public Iterator getRequiredArgNames()
+    public Iterator getRequiredArgs()
     {
         return m_requiredArgs.iterator();
     }
-    public Iterator getOptionalArgNames()
+
+    public boolean hasRequiredArgs()
+    {
+        return !m_optionalArgs.isEmpty();
+    }
+
+    public Iterator getOptionalArgs()
     {
         return m_optionalArgs.iterator();
     }
+
+    public boolean hasOptionalArgs()
+    {
+        return !m_optionalArgs.isEmpty();
+    }
+
     public Iterator getFargNames()
     {
         return m_fargs.iterator();
     }
+
     public Map getArgumentMap()
     {
         return m_argTypes;
@@ -91,10 +97,10 @@ public class UnitInfo
 
     public void printRequiredArgsDecl(IndentingWriter p_writer)
     {
-        for (Iterator i = getRequiredArgNames(); i.hasNext(); /* */)
+        for (Iterator i = getRequiredArgs(); i.hasNext(); /* */)
         {
-            String name = (String) i.next();
-            p_writer.print("final " + getArgType(name) + " " + name);
+            Argument arg = (Argument) i.next();
+            p_writer.print("final " + arg.getType() + " " + arg.getName());
             if (i.hasNext())
             {
                 p_writer.print(", ");
@@ -104,9 +110,9 @@ public class UnitInfo
 
     public void printRequiredArgs(IndentingWriter p_writer)
     {
-        for (Iterator i = getRequiredArgNames(); i.hasNext(); /* */)
+        for (Iterator i = getRequiredArgs(); i.hasNext(); /* */)
         {
-            p_writer.print((String) i.next());
+            p_writer.print(((Argument)i.next()).getName());
             if (i.hasNext())
             {
                 p_writer.print(", ");

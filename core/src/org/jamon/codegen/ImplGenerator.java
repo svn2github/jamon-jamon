@@ -86,10 +86,12 @@ public class ImplGenerator
         m_writer.println("protected void initializeDefaultArguments()");
         m_writer.println("  throws Exception");
         m_writer.openBlock();
-        for (Iterator i = m_analyzer.getOptionalArgNames(); i.hasNext(); /* */)
+        for (Iterator i = m_analyzer.getUnitInfo().getOptionalArgs();
+             i.hasNext();
+             /* */)
         {
-            String name = (String) i.next();
-            m_writer.println(name + " = " + m_analyzer.getDefault(name) + ";");
+            OptionalArgument arg = (OptionalArgument) i.next();
+            m_writer.println(arg.getName() + " = " + arg.getDefault() + ";");
         }
         m_writer.closeBlock();
         m_writer.println();
@@ -166,9 +168,9 @@ public class ImplGenerator
         for (Iterator d = m_analyzer.getDefNames().iterator(); d.hasNext(); /* */)
         {
             String name = (String) d.next();
+            UnitInfo unitInfo = m_analyzer.getUnitInfo(name);
             m_writer.println();
-
-            for (Iterator f = m_analyzer.getFargNames(name);
+            for (Iterator f = unitInfo.getFargNames();
                  f.hasNext();
                  /* */)
             {
@@ -179,28 +181,21 @@ public class ImplGenerator
             m_writer.print(name);
             m_writer.print("(");
             int argNum = 0;
-            for (Iterator a = m_analyzer.getRequiredArgNames(name);
-                 a.hasNext();
-                 /* */)
+            unitInfo.printRequiredArgsDecl(m_writer);
+            if(unitInfo.hasRequiredArgs())
             {
-                if (argNum++ > 0)
-                {
-                    m_writer.print(",");
-                }
-                String arg = (String) a.next();
-                m_writer.print("final " + m_analyzer.getArgType(name,arg)
-                               + " " + arg);
+                m_writer.print(", ");
             }
-            for (Iterator a = m_analyzer.getOptionalArgNames(name);
+            for (Iterator a = unitInfo.getOptionalArgs();
                  a.hasNext();
                  /* */)
             {
-                if (argNum++ > 0)
+                Argument arg = (Argument) a.next();
+                m_writer.print(arg.getType() + " " + arg.getName());
+                if(a.hasNext())
                 {
-                    m_writer.print(",");
+                    m_writer.print(", ");
                 }
-                String arg = (String) a.next();
-                m_writer.print(m_analyzer.getArgType(name,arg) + " " + arg);
             }
             m_writer.println(")");
             m_writer.print  ("  throws " + ClassNames.IOEXCEPTION);
@@ -241,11 +236,14 @@ public class ImplGenerator
     private void generateOptionalArgs()
         throws IOException
     {
-        for (Iterator i = m_analyzer.getOptionalArgNames(); i.hasNext(); /* */)
+        for (Iterator i = m_analyzer.getUnitInfo().getOptionalArgs();
+             i.hasNext();
+             /* */)
         {
             m_writer.println();
-            String name = (String) i.next();
-            String type = m_analyzer.getArgType(name);
+            OptionalArgument arg = (OptionalArgument) i.next();
+            String name = arg.getName();
+            String type = arg.getType();
             m_writer.println("public void set" + StringUtils.capitalize(name)
                              + "(" + type + " p_" + name + ")");
             m_writer.openBlock();

@@ -193,7 +193,9 @@ public class ImplAnalyzer extends BaseAnalyzer
         private FargInfo maybeGetFargInfo(String p_path)
         {
             String unitName = getUnitName();
-            for (Iterator f = getFargNames(unitName); f.hasNext(); /* */)
+            for (Iterator f = getUnitInfo(unitName).getFargNames();
+                 f.hasNext();
+                 /* */)
             {
                 String name = (String) f.next();
                 if (p_path.equals(name))
