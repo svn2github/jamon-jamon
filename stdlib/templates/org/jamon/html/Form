@@ -17,15 +17,26 @@
 
   Contributor(s):
 </%doc>\
+<%import>
+  org.jamon.render.html.Input;
+</%import>\
 <%farg body>
 </%farg>\
 <%args>
   String action;
-  org.jamon.render.html.Input submit;
+  Input submit;
+  org.jamon.render.html.CgiParameters hiddenParams => null;
   String method => "GET";
 </%args>\
 \
 <form method='<% method %>' action='<% action %>'>
   <& HiddenInput; input => submit &>
+% if( hiddenParams != null ) {
+%   Input[] inputs = hiddenParams.getInputs();
+%   for( int i = 0; i < inputs.length; ++i )
+%   {
+      <& HiddenInput; input => inputs[i] &>
+%   }
+% }
   <& body &>
 </form>
