@@ -28,6 +28,24 @@ public class TemplateDescriber
 
     private final String m_templateSourceDir;
 
+    public FargInfo getFargInfo(String p_path, String p_fargName)
+    {
+        return new FargInfo(p_fargName);
+    }
+
+    public Iterator getFargNames(String p_path)
+        throws JttException
+    {
+        try
+        {
+            return new BaseAnalyzer(parseTemplate(p_path)).getFargNames();
+        }
+        catch (IOException e)
+        {
+            throw new JttException(e);
+        }
+    }
+
     public File getTemplateFile(String p_path)
     {
         return new File(getTemplateFileName(p_path));

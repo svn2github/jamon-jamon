@@ -77,6 +77,11 @@ public class ImplAnalyzer extends BaseAnalyzer
 
     }
 
+    public FargInfo getFargInfo(String p_unitName, String p_fargName)
+    {
+        return new FargInfo(p_fargName);
+    }
+
     public List getStatements(String p_unitName)
     {
         return (List) m_unitStatements.get(p_unitName);

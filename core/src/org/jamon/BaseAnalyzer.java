@@ -55,6 +55,26 @@ public class BaseAnalyzer
         return getUnitInfo(p_unitName).getArgType(p_argName);
     }
 
+    public FargInfo getFargInfo(String p_fargName)
+    {
+        return getFargInfo(MAIN_UNIT_NAME, p_fargName);
+    }
+
+    public FargInfo getFargInfo(String p_unitName, String p_fargName)
+    {
+        return new FargInfo(p_fargName);
+    }
+
+    public Iterator getFargNames()
+    {
+        return getFargNames(MAIN_UNIT_NAME);
+    }
+
+    public Iterator getFargNames(String p_unitName)
+    {
+        return getUnitInfo(p_unitName).getFargNames();
+    }
+
     public String getDefault(String p_unitName,String p_argName)
     {
         return getUnitInfo(p_unitName).getDefault(p_argName);
@@ -103,6 +123,14 @@ public class BaseAnalyzer
         {
             return m_name;
         }
+
+
+        void addFarg(String p_name, String p_type, ADefault p_default)
+        {
+            addArg(p_name, p_type, p_default);
+            m_fargs.add(p_name);
+        }
+
         void addArg(String p_name, String p_type, ADefault p_default)
         {
             if (p_default == null)
@@ -134,15 +162,20 @@ public class BaseAnalyzer
         {
             return m_optionalArgs.iterator();
         }
+        Iterator getFargNames()
+        {
+            return m_fargs.iterator();
+        }
         private final Map m_default = new HashMap();
         private final Map m_argTypes = new HashMap();
-        private List m_requiredArgs = new LinkedList();
-        private List m_optionalArgs = new LinkedList();
+        private final List m_requiredArgs = new LinkedList();
+        private final List m_optionalArgs = new LinkedList();
+        private final List m_fargs = new LinkedList();
     }
 
-    private List m_imports = new LinkedList();
-    private Map m_unit = new HashMap();
-    private List m_defNames = new LinkedList();
+    private final List m_imports = new LinkedList();
+    private final Map m_unit = new HashMap();
+    private final List m_defNames = new LinkedList();
     private final LinkedList m_unitNames = new LinkedList();
 
 
@@ -255,9 +288,9 @@ public class BaseAnalyzer
             // FIXME: this doesn't handle multiple occurrences AT ALL.
 
             getUnitInfo(getUnitName())
-                .addArg(pfragName,
-                        Fragment.class.getName(),
-                        null);
+                .addFarg(pfragName,
+                         Fragment.class.getName(),
+                         null);
 
         }
 

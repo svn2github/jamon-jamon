@@ -23,13 +23,21 @@ public class FragmentCallStatement
     private final static String IOEXCEPTION_CLASS =
         IOException.class.getName();
 
-    private Object getFirstArgName(ImplAnalyzer p_analyzer,TemplateDescriber p_describer)
+    private Object getFargName(ImplAnalyzer p_analyzer,
+                               TemplateDescriber p_describer)
         throws JttException
     {
-        return isDefCall(p_analyzer)
-            ? p_analyzer.getRequiredArgNames(getPath()).next()
-            : p_describer.getRequiredArgNames(p_analyzer.getAbsolutePath(getPath())).get(0);
+        if (isDefCall(p_analyzer))
+        {
+            return p_analyzer.getFargNames(getPath()).next();
+        }
+        else
+        {
+            return p_describer
+                .getFargNames(p_analyzer.getAbsolutePath(getPath())).next();
+        }
     }
+
 
 
     public void generateSource(PrintWriter p_writer,
@@ -39,14 +47,21 @@ public class FragmentCallStatement
         throws IOException
     {
         String fragVar = p_analyzer.newVarName();
+
+        String fargName = (String) getFargName(p_analyzer, p_describer);
+        FargInfo fargInfo =
+            isDefCall(p_analyzer)
+            ? p_analyzer.getFargInfo(fargName)
+            : p_describer.getFargInfo(getPath(),fargName);
+
         p_writer.println("{");
         p_writer.print("    final ");
-        p_writer.print(FRAGMENT_CLASS);
+        p_writer.print(fargInfo.getFargInterfaceName());
         p_writer.print(" ");
         p_writer.print(fragVar);
         p_writer.println(" =");
         p_writer.print("      new ");
-        p_writer.print(FRAGMENT_CLASS);
+        p_writer.print(fargInfo.getFargInterfaceName());
         p_writer.println(" () {");
         p_writer.print("       public void render() throws ");
         p_writer.print(IOEXCEPTION_CLASS);
@@ -62,7 +77,7 @@ public class FragmentCallStatement
         p_writer.println("    }");
         p_writer.println("  };");
 
-        m_params.put(getFirstArgName(p_analyzer,p_describer),fragVar);
+        m_params.put(fargName, fragVar);
 
         super.generateSource(p_writer,p_resolver,p_describer,p_analyzer);
 
