@@ -17,7 +17,7 @@ import org.eclipse.jdt.core.JavaCore;
 public class JamonNature implements IProjectNature {
 
 	private static String natureId() {
-		return JamonPlugin.getDefault().getBundle().getSymbolicName() + ".jamonnature";
+		return JamonPlugin.getDefault().pluginId() + ".jamonnature";
 	}
 	
 	public static boolean projectHasNature(IProject p_project) throws CoreException {
