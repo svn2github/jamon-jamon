@@ -165,18 +165,11 @@ public abstract class AbstractCallStatement
     }
 
     protected void generateFragmentParams(IndentingWriter p_writer,
-                                          Iterator p_fragmentInterfaces,
-                                          boolean p_argsAlreadyPrinted)
+                                          Iterator p_fragmentInterfaces)
     {
         while (p_fragmentInterfaces.hasNext())
         {
-            if (p_argsAlreadyPrinted)
-            {
-                p_writer.println(", ");
-            }
-            p_argsAlreadyPrinted = true;
-
-            p_writer.print(
+            p_writer.printArg(
                 "new "
                 + getFragmentImplName(
                     (((FragmentArgument) p_fragmentInterfaces.next())

@@ -59,16 +59,11 @@ public abstract class AbstractInnerUnitCallStatement
         p_writer.openBlock();
         makeFragmentImplClasses(
             m_unit.getFragmentArgsList(), p_writer, p_describer);
-        p_writer.println("__jamon_innerUnit__" + getPath() + "(");
-        p_writer.indent(2);
-        boolean argsAlreadyPrinted = false;
+        p_writer.print("__jamon_innerUnit__" + getPath());
+        p_writer.openList();
+        //FIXME - do we need to surround args with parens?
         for (Iterator r = m_unit.getSignatureRequiredArgs(); r.hasNext(); )
         {
-            if (argsAlreadyPrinted)
-            {
-                p_writer.println(",");
-            }
-            argsAlreadyPrinted = true;
             RequiredArgument arg = (RequiredArgument) r.next();
             String name = arg.getName();
             String expr = (String) getParams().remove(name);
@@ -79,43 +74,23 @@ public abstract class AbstractInnerUnitCallStatement
                     getTemplateIdentifier(),
                     getToken());
             }
-            p_writer.print("(" + expr + ")");
+            p_writer.printArg("(" + expr + ")");
         }
         for (Iterator o = m_unit.getSignatureOptionalArgs(); o.hasNext(); )
         {
-            if (argsAlreadyPrinted)
-            {
-                p_writer.println(",");
-            }
-            argsAlreadyPrinted = true;
             OptionalArgument arg = (OptionalArgument) o.next();
             String name = arg.getName();
-            p_writer.print("(");
             String expr = (String) getParams().remove(name);
-            if (expr == null)
-            {
-                printDefault(p_writer, arg);
-            }
-            else
-            {
-                p_writer.print(expr);
-            }
-            p_writer.print(")");
-            if (o.hasNext())
-            {
-                p_writer.println(",");
-            }
+            p_writer.printArg(
+                "(" + (expr == null ? getDefault(arg) : expr ) + ")");
         }
         generateFragmentParams(p_writer,
-                               m_unit.getFragmentArgsList().iterator(),
-                               argsAlreadyPrinted);
-        p_writer.outdent(2);
-        p_writer.println(");");
+                               m_unit.getFragmentArgsList().iterator());
+        p_writer.closeList();
+        p_writer.println(";");
         checkSuppliedParams();
         p_writer.closeBlock();
     }
 
-    protected abstract void printDefault(IndentingWriter p_writer,
-                                         OptionalArgument p_arg)
-        throws IOException;
+    protected abstract String getDefault(OptionalArgument p_arg);
 }

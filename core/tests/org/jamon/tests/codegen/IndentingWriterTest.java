@@ -61,21 +61,75 @@ public class IndentingWriterTest
                     + "line9" + nl);
     }
 
-    public void testFinish()
+    public void testFinishIndentCheck()
     {
         m_indentingWriter.openBlock();
+        try
+        {
+            m_indentingWriter.finish();
+            fail("no exception thrown");
+        }
+        catch(IllegalStateException e) {}
+        m_indentingWriter.closeBlock();
+        m_indentingWriter.finish();
+    }
+
+    public void testFinishListCheck()
+    {
+        m_indentingWriter.openList();
         boolean exceptionThrown = false;
         try
         {
             m_indentingWriter.finish();
+            fail("no exception thrown");
         }
-        catch(IllegalStateException e)
-        {
-            exceptionThrown = true;
-        }
-        assertTrue(exceptionThrown);
-        m_indentingWriter.closeBlock();
+        catch(IllegalStateException e) {}
+        m_indentingWriter.closeList();
         m_indentingWriter.finish();
+    }
+
+    public void testClosingUnopenedList()
+    {
+        try
+        {
+            m_indentingWriter.closeList();
+            fail("no exception thrown");
+        }
+        catch(IllegalStateException e) {}
+    }
+
+    public void testNoArgList()
+    {
+        m_indentingWriter.openList();
+        m_indentingWriter.closeList();
+        checkOutput("()");
+    }
+
+    public void testOneArgList()
+    {
+        m_indentingWriter.openList();
+        m_indentingWriter.printArg("foo");
+        m_indentingWriter.closeList();
+        checkOutput("(foo)");
+    }
+
+    public void testTwoArgList()
+    {
+        m_indentingWriter.openList();
+        m_indentingWriter.printArg("foo");
+        m_indentingWriter.printArg("bar");
+        m_indentingWriter.closeList();
+        checkOutput("(foo, bar)");
+    }
+
+    public void testThreeArgList()
+    {
+        m_indentingWriter.openList();
+        m_indentingWriter.printArg("foo");
+        m_indentingWriter.printArg("bar");
+        m_indentingWriter.printArg("baz");
+        m_indentingWriter.closeList();
+        checkOutput("(foo, bar, baz)");
     }
 
     private void checkOutput(String p_expected)

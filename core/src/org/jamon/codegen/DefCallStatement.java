@@ -37,10 +37,8 @@ public class DefCallStatement
         super(p_path, p_params, p_defUnit, p_token, p_templateIdentifier);
     }
 
-    protected void printDefault(IndentingWriter p_writer,
-                                OptionalArgument p_arg)
-        throws IOException
+    protected String getDefault(OptionalArgument p_arg)
     {
-        p_writer.print(p_arg.getDefault());
+        return p_arg.getDefault();
     }
 }

@@ -33,6 +33,8 @@ public class IndentingWriter
 
     private final PrintWriter m_writer;
     private int m_indentation = 0;
+    private boolean m_inList;
+    private boolean m_argAlreadyPrinted;
     private boolean beginingOfLine = true;
     private static final int BASIC_OFFSET = 2;
     private static final String SPACES =
@@ -94,12 +96,48 @@ public class IndentingWriter
         }
     }
 
+    public void openList()
+    {
+        if(m_inList)
+        {
+            throw new IllegalStateException("Nested lists not supported");
+        }
+        m_inList = true;
+        m_argAlreadyPrinted = false;
+        print("(");
+    }
+
+    public void closeList()
+    {
+        if(! m_inList)
+        {
+            throw new IllegalStateException("Attempt to close unopened list");
+        }
+        m_inList = false;
+        print(")");
+    }
+
+    public void printArg(Object p_arg)
+    {
+        if(m_argAlreadyPrinted)
+        {
+            print(", ");
+        }
+        m_argAlreadyPrinted = true;
+        print(p_arg);
+    }
+
+
     public void finish() throws IllegalStateException
     {
         if(m_indentation != 0)
         {
             throw new IllegalStateException("indentation is " + m_indentation
                                             + " at end of file");
+        }
+        if(m_inList)
+        {
+            throw new IllegalStateException("in a list at end of file");
         }
     }
 

@@ -61,7 +61,8 @@ public class FargCallStatement
         String tn = getPath();
         p_writer.println(tn + ".writeTo(this.getWriter());");
         p_writer.println(tn + ".escapeWith(this.getEscaping());");
-        p_writer.print  (tn + ".render(");
+        p_writer.print  (tn + ".render");
+        p_writer.openList();
         for (Iterator r = m_fragmentUnit.getRequiredArgs(); r.hasNext(); /* */)
         {
             RequiredArgument arg = (RequiredArgument) r.next();
@@ -74,13 +75,10 @@ public class FargCallStatement
                      getTemplateIdentifier(),
                      getToken());
             }
-            p_writer.print("(" + expr + ")");
-            if (r.hasNext())
-            {
-                p_writer.print(", ");
-            }
+            p_writer.printArg("(" + expr + ")");
         }
-        p_writer.println(");");
+        p_writer.closeList();
+        p_writer.println(";");
         if (! m_params.isEmpty())
         {
             StringBuffer message = new StringBuffer("fragment ");

@@ -76,10 +76,11 @@ public class ComponentCallStatement
                                  + "(" + value + ");");
             }
         }
-        p_writer.print(instanceVar + ".render(this.getWriter()");
+        p_writer.print(instanceVar + ".render");
+        p_writer.openList();
+        p_writer.printArg("this.getWriter()");
         for (Iterator i = desc.getRequiredArgs().iterator(); i.hasNext(); )
         {
-            p_writer.println(", ");
             String name = ((RequiredArgument) i.next()).getName();
             String expr = (String) getParams().remove(name);
             if (expr == null)
@@ -89,12 +90,12 @@ public class ComponentCallStatement
                     getTemplateIdentifier(),
                     getToken());
             }
-            p_writer.print(expr);
+            p_writer.printArg(expr);
         }
         generateFragmentParams(p_writer,
-                               desc.getFragmentInterfaces().iterator(),
-                               true);
-        p_writer.println(");");
+                               desc.getFragmentInterfaces().iterator());
+        p_writer.closeList();
+        p_writer.println(";");
         checkSuppliedParams();
         p_writer.closeBlock();
     }

@@ -37,12 +37,10 @@ public class MethodCallStatement
         super(p_path, p_params, p_methodUnit, p_token, p_templateIdentifier);
     }
 
-    protected void printDefault(IndentingWriter p_writer,
-                                OptionalArgument p_arg)
-        throws IOException
+    protected String getDefault(OptionalArgument p_arg)
     {
-        p_writer.print(
-            ((MethodUnit) getUnit()).getOptionalArgDefaultMethod(p_arg)
-            + "()");
+        return ((MethodUnit) getUnit())
+            .getOptionalArgDefaultMethod(p_arg)
+            + "()";
     }
 }
