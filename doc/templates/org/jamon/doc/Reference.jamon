@@ -528,4 +528,20 @@ a good sign for you, <% name %>.
 <& legal/Disclaimer &> -- calls /attorneys/documents/Disclaimer
 </%LITERAL></&>
 
+  <li><span class="concept">Character encoding</span>
+
+    By default, Jamon template source files are read using the default
+    encoding of the running Java platform. The specific character
+    encoding can be specified in the template by including an
+    &lt;%encoding ...&gt; declaration at the very beginning of the
+    template. For example, the following declaration indicates that
+    the source of the template should be parsed in UTF-8:
+
+    <&| _Template &><%LITERAL><%encoding UTF-8 ></%LITERAL></&>
+
+    The available encodings are exactly those supported by the JRE in
+    use.
+
+  </li>
+
 </ol>

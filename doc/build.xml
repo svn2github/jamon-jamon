@@ -199,6 +199,9 @@ the documentation thus taking care of issues such as escaping.
       <param name="template" value="Changes11to12" />
     </antcall>
     <antcall target="grind">
+      <param name="template" value="Changes12to13" />
+    </antcall>
+    <antcall target="grind">
       <param name="template" value="Features" />
     </antcall>
     <antcall target="grind">

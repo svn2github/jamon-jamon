@@ -1,0 +1,27 @@
+<%extends _Base>
+<%abstract>
+<%override title>Jamon Changes from 1.2 to 1.3</%override>
+<%class>
+  protected Section currentSection() { return Section.NEWS; }
+</%class>
+
+<h2><& title &></h2>
+
+<ul>
+
+<& *CHILD &>
+
+</ul>
+
+<%method change>
+  <%frag content />
+  <%args>
+    boolean incompatible => false;
+  </%args>
+  <li>
+%   if (incompatible) {
+      <span class="incompatible">[INCOMPATIBLE]</span>
+%   }
+    <& content &>
+  </li>
+</%method>
