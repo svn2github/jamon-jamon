@@ -55,6 +55,7 @@
         <srcfileset dir="${src.dir}" includes="**/*.java" />
         <srcfileset dir="${build.src.dir}" includes="**/*.java" />
         <targetfileset dir="${classes.dir}" includes="**/*.class" />
+        <targetfileset dir="${tests.classes.dir}" includes="**/*.class" />
       </dependset>
       <javac destdir="${classes.dir}"
              debug="true"
