@@ -74,8 +74,17 @@ public class StandardTemplateManager
         FileWriter w = new FileWriter(getJavaFileName(p_path));
         ImplGenerator g2 = new ImplGenerator(w,dir,name);
         parser.parse().apply(g2);
-        g2.generateClassSource();
-        w.close();
+        try
+        {
+            g2.generateClassSource();
+            w.close();
+        }
+        catch (IOException e)
+        {
+            w.close();
+            new File(getJavaFileName(p_path)).delete();
+            throw e;
+        }
         return System.currentTimeMillis();
     }
 
@@ -171,8 +180,12 @@ public class StandardTemplateManager
         public Class load(String p_name, boolean p_resolve)
             throws ClassNotFoundException
         {
-            Class c = findClass(p_name);
-            resolveClass(c);
+            Class c = findLoadedClass(p_name + "Impl");
+            if (c == null)
+            {
+                c = findClass(p_name);
+                resolveClass(c);
+            }
             return c;
 
         }
