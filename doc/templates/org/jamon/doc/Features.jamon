@@ -44,10 +44,10 @@
   </li>
 
   <li>
-    Templates are compiled into Java and then into bytecode, and
-    are referred to in application code just like any other Java
-    class.  See the <a href="QuickStart.html">quick start
-    tutorial</a> for a simple but complete working example.
+    Templates are compiled into Java and then into bytecode, and are
+    referred to in application code just like any other Java class.
+    See the <a href="Overview.html">overview</a> for a simple but
+    complete working example.
   </li>
 
   <li>
