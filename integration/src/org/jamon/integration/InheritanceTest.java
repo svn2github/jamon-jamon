@@ -238,6 +238,11 @@ public class InheritanceTest
         {
             // Excellent, Smithers.
         }
+        catch(NoClassDefFoundError e)
+        {
+            // Yikes.  If we're compiling with jikes, then we might
+            // not get an error.
+        }
     }
 
     private void assertEquals(String[] p_expected, String[] p_actual)
