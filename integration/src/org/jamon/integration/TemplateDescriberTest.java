@@ -21,10 +21,14 @@
 package org.jamon.integration;
 
 import java.io.File;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import junit.framework.TestCase;
 
+import org.jamon.codegen.Argument;
+import org.jamon.codegen.FargInfo;
 import org.jamon.codegen.TemplateDescriber;
 import org.jamon.FileTemplateSource;
 
@@ -35,17 +39,74 @@ import org.jamon.FileTemplateSource;
 public class TemplateDescriberTest
     extends TestCase
 {
-    public void testArgumentIntrospection()
+    private TemplateDescriber m_describer;
+
+    public void setUp()
         throws Exception
     {
         File nonexistent = File.createTempFile("jamontest",null);
         nonexistent.deleteOnExit();
-        TemplateDescriber describer = new TemplateDescriber
-            (new FileTemplateSource(nonexistent));
-        List argNames = describer.getRequiredArgNames("/test/jamon/ClassOnly");
+        m_describer =
+            new TemplateDescriber(new FileTemplateSource(nonexistent));
+    }
+
+    public void testArgumentIntrospection()
+        throws Exception
+    {
+        List argNames =
+            m_describer.getRequiredArgNames("/test/jamon/ClassOnly");
         assertEquals(2, argNames.size());
         assertEquals("i", argNames.get(0));
         assertEquals("j", argNames.get(1));
+    }
+
+
+    public void testArgumentWithFargIntrospection()
+        throws Exception
+    {
+        List argNames =
+            m_describer.getRequiredArgNames("/test/jamon/ClassOnly2");
+        assertEquals(4, argNames.size());
+        assertEquals("i", argNames.get(0));
+        assertEquals("j", argNames.get(1));
+        assertEquals("f2", argNames.get(2));
+        assertEquals("f1", argNames.get(3));
+    }
+
+    public void testFargNameIntrospection()
+        throws Exception
+    {
+        LinkedList fargNames = new LinkedList();
+        for (Iterator f = m_describer.getFargNames("/test/jamon/ClassOnly2");
+            f.hasNext(); )
+        {
+            fargNames.add(f.next());
+        }
+        assertEquals(2, fargNames.size());
+        assertEquals("f2", fargNames.get(0));
+        assertEquals("f1", fargNames.get(1));
+    }
+
+
+    public void testFargInfoIntrospection()
+        throws Exception
+    {
+        FargInfo info = m_describer.getFargInfo("/test/jamon/ClassOnly2","f1");
+        assertEquals("f1", info.getName());
+        assertTrue(info.hasRequiredArgs());
+        Iterator i = info.getRequiredArgs();
+        Argument a = (Argument) i.next();
+        assertEquals("k",a.getName());
+        assertEquals("int", a.getType());
+        a = (Argument) i.next();
+        assertEquals("m",a.getName());
+        assertEquals("Boolean[]", a.getType());
+
+        info = m_describer.getFargInfo("/test/jamon/ClassOnly2","f2");
+        assertEquals("f2", info.getName());
+        assertTrue(! info.hasRequiredArgs());
+        i = info.getRequiredArgs();
+        assertTrue(! i.hasNext());
     }
 
 }
