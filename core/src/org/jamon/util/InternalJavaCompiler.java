@@ -35,6 +35,7 @@ public class InternalJavaCompiler
     private final String m_classPath;
     private final Method m_compile;
     private final Class m_compilerClass;
+    private Object m_compiler;
 
     public InternalJavaCompiler(String p_classPath)
         throws Exception
@@ -42,11 +43,11 @@ public class InternalJavaCompiler
         m_classPath = p_classPath;
 
         m_compilerClass = Class.forName("com.sun.tools.javac.Main");
-        Object compiler = m_compilerClass.newInstance();
+        m_compiler = m_compilerClass.newInstance();
         m_compile = m_compilerClass.getMethod
             ("compile", new Class [] {(new String [0]).getClass()});
         // check if we can invoke the compile method
-        m_compile.invoke(compiler, new String[0]);
+        m_compile.invoke(m_compiler, new String[0]);
     }
 
     public void compile(String [] p_javaFiles)
@@ -62,9 +63,12 @@ public class InternalJavaCompiler
         PrintStream oldErr = System.err;
         try
         {
-            Object compiler = m_compilerClass.newInstance();
+            if (m_compiler == null)
+            {
+                m_compiler = m_compilerClass.newInstance();
+            }
             System.setErr(new PrintStream(err));
-            int code = ((Integer) m_compile.invoke(compiler,
+            int code = ((Integer) m_compile.invoke(m_compiler,
                                                    new Object[] { cmdline }))
                         .intValue();
             if (code != 0)
@@ -85,6 +89,7 @@ public class InternalJavaCompiler
         }
         catch (InvocationTargetException e)
         {
+            m_compiler = null;
             throw new JamonException(e.getTargetException());
         }
         finally
