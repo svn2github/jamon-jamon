@@ -276,9 +276,11 @@ public class StandardTemplateManager
 
             File jm = new File(javaImpl(path));
             long ts = jm.lastModified();
+            boolean intfGenerated = false;
             if (jm.lastModified() < tf.lastModified())
             {
-                if (generateIntfIfChanged(path))
+                intfGenerated = generateIntfIfChanged(path);
+                if (intfGenerated)
                 {
                     outOfDateJavaFiles.add(javaIntf(path));
                 }
@@ -289,14 +291,13 @@ public class StandardTemplateManager
                     // should we also remove .class(es) corresponding to intf?
                     new File(javaIntf(path)).delete();
                 }
-                m_dependencyCache.put(path,
-                                      new DependencyEntry(generateImpl(path)));
+                m_dependencyCache.put
+                    (path, new DependencyEntry(generateImpl(path)));
                 ts = System.currentTimeMillis();
-
             }
-            File cm = new File(classImpl(path));
-            File ci = new File(classIntf(path));
-            if (cm.lastModified() < ts || ci.lastModified() < ts)
+            if (new File(classImpl(path)).lastModified() < ts
+                || (intfGenerated
+                    && new File(classIntf(path)).lastModified() < ts))
             {
                 outOfDateJavaFiles.add(javaImpl(path));
             }
