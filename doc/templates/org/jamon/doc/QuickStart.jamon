@@ -9,6 +9,13 @@ The source files mentioned in this tutorial are available individually
 where first referenced, or bundled in a <a href="JamonQs.zip">zip
 file</a>.
 
+<div class="note">
+  <b>NOTE</b>: If you have a Java Runtime (JRE) installed in addition
+  to a Software Development Kit (SDK), be sure that the binaries
+  (i.e. java, javac, etc) of the SDK come <emph>first</emph> in your
+  PATH.
+</div>
+
 <ol>
 
 <li>

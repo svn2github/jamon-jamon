@@ -150,6 +150,18 @@ li
   padding: .2em;
 }
 
+.note
+{
+  border: solid;
+  border-width: thin;
+  margin-left: 5em;
+  margin-right: 5em;
+  margin-top: 1em;
+  margin-bottom: 1em;
+  padding: .2em;
+  background-color: cccccc;
+}
+
 dt
 {
   font-weight: bold
