@@ -1,3 +1,23 @@
+/*
+ * The contents of this file are subject to the Mozilla Public
+ * License Version 1.1 (the "License"); you may not use this file
+ * except in compliance with the License. You may obtain a copy of
+ * the License at http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS
+ * IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
+ * implied. See the License for the specific language governing
+ * rights and limitations under the License.
+ *
+ * The Original Code is Jamon code, released ??.
+ *
+ * The Initial Developer of the Original Code is Jay Sachs.  Portions
+ * created by Jay Sachs are Copyright (C) 2002 Jay Sachs.  All Rights
+ * Reserved.
+ *
+ * Contributor(s):
+ */
+
 package org.jamon;
 
 import java.io.IOException;
@@ -6,18 +26,57 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
 import org.jamon.node.*;
 import org.jamon.analysis.*;
 
 public class BaseAnalyzer
 {
     public BaseAnalyzer(Start p_start)
+        throws IOException
     {
+        this();
         p_start.apply(new Adapter());
     }
 
     protected BaseAnalyzer()
+        throws IOException
     {
+        try
+        {
+            m_md5 = MessageDigest.getInstance("MD5");
+        }
+        catch (NoSuchAlgorithmException e)
+        {
+            throw new JamonException(e);
+        }
+    }
+
+    public String getSignature()
+    {
+        StringBuffer buf = new StringBuffer();
+        buf.append("Required\n");
+        for (Iterator i = getRequiredArgNames(); i.hasNext(); /* */)
+        {
+            String name = (String) i.next();
+            buf.append(name);
+            buf.append(":");
+            buf.append(getArgType(name));
+            buf.append("\n");
+        }
+        buf.append("Optional\n");
+        for (Iterator i = getOptionalArgNames(); i.hasNext(); /* */)
+        {
+            String name = (String) i.next();
+            buf.append(name);
+            buf.append(":");
+            buf.append(getArgType(name));
+            buf.append("\n");
+        }
+        return StringUtils.byteArrayToHexString
+            (m_md5.digest(buf.toString().getBytes()));
     }
 
     public List getDefNames()
@@ -191,6 +250,7 @@ public class BaseAnalyzer
     private final Map m_unit = new HashMap();
     private final List m_defNames = new LinkedList();
     private final LinkedList m_unitNames = new LinkedList();
+    private MessageDigest m_md5;
 
 
 
