@@ -40,7 +40,7 @@
   <target name="init" depends="jamon-libs-use-jar,jamon-libs-use-work"/>
 
   <target name="template-src" depends="init">
-    <echo file="templates/test/jamon/Recompilation"
+    <echo file="templates/test/jamon/Recompilation.jamon"
           append="false">This is the template</echo>
     <echo>File created</echo>
   </target>

@@ -40,7 +40,8 @@ public class RecompilationTest
         FileWriter w =
             new FileWriter(new File(SOURCE_DIR,
                                     StringUtils.classNameToFilePath
-                                        (template.getClass().getName())));
+                                        (template.getClass().getName())
+                                    + ".jamon"));
 
         final String STRING = "This is changed\n";
 
