@@ -60,7 +60,6 @@
       </dependset>
       <javac destdir="${classes.dir}"
              debug="true"
-             depend="true"
              deprecation="true">
         <src path="${src.dir}"/>
         <src path="${build.src.dir}"/>
