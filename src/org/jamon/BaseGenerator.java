@@ -260,6 +260,17 @@ public class BaseGenerator extends AnalysisAdapter
     public void caseAArgsUnitComponent(AArgsUnitComponent args)
     {
         AArgs a = (AArgs) args.getArgs();
+        PArgsStart start = a.getArgsStart();
+        if (start instanceof AArgsWithFragArgsStart)
+        {
+            // FIXME: we want to ensure that this is the first argument
+            // FIXME: this doesn't handle multiple occurrences AT ALL.
+            AArgsWithFragArgsStart farg = (AArgsWithFragArgsStart) start;
+            getUnitInfo(getUnitName()).addArg(farg.getIdentifier().getText(),
+                                              Fragment.class.getName(),
+                                              null);
+
+        }
         for (Iterator i = a.getArg().iterator(); i.hasNext(); /**/ )
         {
             ((Node)i.next()).apply(this);

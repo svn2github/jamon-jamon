@@ -14,20 +14,6 @@ public abstract class AbstractTemplate
         m_templateManager = p_templateManager;
     }
 
-
-    protected Fragment getFragment()
-    {
-        return m_fragment;
-    }
-
-    private Fragment m_fragment = Fragment.NULL;
-
-    public void setFragment(Fragment p_fragment)
-    {
-        m_fragment = p_fragment;
-    }
-
-
     protected void writeEscaped(String p_string)
         throws IOException
     {

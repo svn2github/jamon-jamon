@@ -84,3 +84,19 @@ A call with a template fragment: \
 <|& Sub2; x => 5 &>This is the body <% list.size() %>
 % list.add(new Integer(x));
 </&>
+
+
+And now some def frag calls:
+  <|& sub1 &><% i %>
+body
+</&>
+  <|& sub1; y => 3 &>
+body3
+</&>
+
+<%def sub1>
+  <%args frag>
+    int y => 5;
+  </%args>
+  A def component (<% y+1 %>) with frag param: <|frag|>.\
+</%def>
