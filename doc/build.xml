@@ -265,6 +265,7 @@ the documentation thus taking care of issues such as escaping.
 
   <target name="clean">
     <delete dir="${build.dir}"/>
+    <delete dir="work"/> <!-- servlet work dir -->
     <delete dir="${build.classes.dir}"/>
   </target>
 
