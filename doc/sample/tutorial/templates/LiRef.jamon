@@ -1,7 +1,10 @@
 <%frag content/>
 <%args>
   String href;
+  String style => "";
 </%args>
 <li>
-<a href="<% href %>"><& content &></a>
+<a href="<% href %>"
+   <% style.length() == 0 ? "" : "class=" %>"<% style %>" >
+<& content &></a>
 </li>

@@ -23,13 +23,12 @@ In this example,
      <code>FragmentCallerTemplate</code></a>,
     <& _TutorialTemplateInclude; fileName => "FragmentCallerTemplate" &>
 
-a block of HTML text is passed to a template that constructs a list
-item with an HTML anchor using the fragment text as the anchor text
-(the template <code>LiRef</code> is shown below).
+a block of HTML text is passed to a subtemplate that constructs a list
+item with an HTML anchor using the fragment text as the anchor text.
 
 <p>
-Because the content of the anchor is passed as
-a fragment, the template author can naturally describe the text
+Because the content of the anchor is specified in the calling template
+and passed as a fragment, the template author can naturally describe the text
 in HTML and Jamon and then let the called template process the fragment
 appropriately.
 
@@ -43,7 +42,7 @@ accessed by fragment text are
 <li>
         final variables and arguments to the template. (Note that all
         arguments to the template are implemented as <code>final</code>
-        fields in the translated Java class, and, hence, are visible
+        fields in the translated Java class and, hence, are visible
         to inner classes.)
 <ul>
 </div>
@@ -54,14 +53,15 @@ A template declares that it accepts template fragments by including
 the <code>&lt;%frag <em>fragmentName</em>/&gt;</code> tag. The
 <code><em>fragmentName</em></code> argument is the name of the
 fragment template. The template that accepts the fragment
-calls it as it would any other template to output its contents.
+calls the fragment as it would any other template to output its contents.
 <p>
 The template below, <a href="LiRef.jamon" class="file">
-     <code>LiRef</code></a>,
+     <code>LiRef</code></a>, is a more elaborate version of the
+subtemplate in the above example.
     <& _TutorialTemplateInclude; fileName => "LiRef" &>
 
-formats the <code>content</code> fragment text as an HTML
-anchor inside a list item.
+It formats the <code>content</code> fragment text with the specified
+stylesheet style as an HTML anchor inside a list item.
 
 <li><span class="concept">Parameterized Template Fragments</span>
 A template fragment is a template and can have arguments just like a template.
@@ -72,7 +72,7 @@ tag at the beginning of the fragment.
 <&| ../_Template &><%LITERAL>
 % DateFormat dateFormat = new SimpleDateFormat("MM/dd");
 We offer the following holidays:
-<&| alternatingList; items => holidays.iterator() &>
+<&| AlternatingList; items => holidays.iterator() &>
   <%args>
     Object holidayObj;
   </%args>
@@ -98,33 +98,39 @@ just add parameters within the
 tag.
 Thus
       a <nobr><code>&lt;%frag
-      <i>name</i>&gt;</code>...<code>&lt;/%frag&gt;</code></nobr> is similar
+      name&gt;</code>...<code>&lt;/%frag&gt;</code></nobr> is similar
       to a
       <nobr><code>&lt;%args&gt;</code>...<code>&lt;/%args&gt;</code></nobr>
       except it has a name and its parameters cannot have default values.
 
     <& _TutorialTemplateInclude; fileName => "AlternatingList" &>
 
+This template, <a href="AlternatingList.jamon" >
+AltneratingList</a>, loops through all the objects that were passed to
+it, and assigns each one in turn to the fragment parameter
+<code>renderable</code> when it calls the template fragment.
+By using template fragments, <code>AlternatingList</code> can
+format a table to have rows with alternating background colors
+and yet can execute the block of Jamon code contained in the fragment
+to fill in each row.
+<p>
 <li><span class="concept">A Template Fragment Example</span>
 
 The template <a href="FragmentExampleTemplate.jamon" class = "file">
-<code>FragmentExampleTemplate</code></a> produces a table listing
+<code>FragmentExampleTemplate</code></a>, below, produces a table listing
 the name and date of the holidays recognized by the template author.
 The template formats the row it would like to see for each line of
 output, and
 then calls a template requiring a fragment to actually format
-all the entries into a table with alternating background colors
+all the rows into a table with alternating background colors
 for each row.
 <p>
-The fragment requires an argument, the <code>holidayObj</code> object
-to display and format. Note that the fragment argument is declared as
-type <code>Object</code>. This is because the template that will process
-the fragment,
-<code>AlternatingList</code>, is designed to be called with any fragment
-written to display one row of table data, and that the type of the
-data object containing the data for the row cannot be known beforehand.
-<p>
-    <& _TutorialTemplateInclude; fileName => "FragmentExampleTemplate" &>
+
+    <& _TutorialTemplateInclude; fileName => "FragmentExampleTemplate"&>
+The use of <code>AlternatingList</code> in the template above shows
+a common use of template fragments: passing a block of text to a
+library template.
+
 <p>
 The example template is executed by the
 <a href="Holiday.java" class="file"> <code>Holiday</code></a> Java class.

@@ -1,12 +1,12 @@
   <%import>
     java.util.Iterator;
   </%import>
-  <%args>
-    Iterator items;
-  </%args>
   <%frag content>
     Object renderable;
   </%frag>
+  <%args>
+    Iterator items;
+  </%args>
 % int row = 0;
   <table>
 % while (items.hasNext())
