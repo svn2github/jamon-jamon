@@ -103,14 +103,7 @@ public class InvokerTask
             TemplateInspector inspector =
                 new TemplateInspector(manager, m_path);
 
-            InvokerTool.ObjectParser parser =
-                new InvokerTool.DefaultObjectParser();
-            for (Iterator i = m_args.entrySet().iterator(); i.hasNext(); )
-            {
-                Map.Entry entry = (Map.Entry) i.next();
-                entry.setValue(parser.parseObject(inspector.getArgumentType((String) entry.getKey()),
-                                                  (String)entry.getValue()));
-            }
+            convertArguments(inspector);
 
             inspector.render(writer, m_args);
             if (m_outputPropertyName != null)
@@ -137,6 +130,22 @@ public class InvokerTask
         finally
         {
             System.setProperties(sysprops);
+        }
+    }
+
+
+    private void convertArguments(TemplateInspector p_inspector)
+        throws InvokerTool.TemplateArgumentException
+    {
+        InvokerTool.ObjectParser parser =
+            new InvokerTool.DefaultObjectParser();
+        for (Iterator i = m_args.entrySet().iterator(); i.hasNext(); )
+        {
+            Map.Entry entry = (Map.Entry) i.next();
+            entry.setValue
+                (parser.parseObject
+                 (p_inspector.getArgumentType((String) entry.getKey()),
+                  (String)entry.getValue()));
         }
     }
 
