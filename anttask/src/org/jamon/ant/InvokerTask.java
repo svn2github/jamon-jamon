@@ -52,6 +52,7 @@ public class InvokerTask
     public InvokerTask()
     {
         m_templateManagerData = new StandardTemplateManager.Data();
+        m_templateManagerData.setCleanWorkDir(false);
     }
 
     public void execute()
