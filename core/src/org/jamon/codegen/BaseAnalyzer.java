@@ -267,8 +267,8 @@ public class BaseAnalyzer
 
             popUnitName();
 
-            // FIXME: we want to ensure that this is the first argument
-            // FIXME: this doesn't handle multiple occurrences AT ALL.
+            // FIXME: this doesn't handle multiple occurrences of a
+            // frag name (say, in different def components) AT ALL.
 
             getUnitInfo(getUnitName())
                 .addFarg(pfragName, "Fragment_" + pfragName);

@@ -93,6 +93,8 @@ A call with a template fragment: \
 % list.add(new Integer(x));
 </&>
 
+Call to a template with args declared before frags:
+<&| Sub3; x => 5 &>Body</&>
 
 And now some def frag calls:
   <&| sub1 &><% i %>
