@@ -23,7 +23,6 @@ package org.jamon.util;
 import org.jamon.JamonException;
 import org.jamon.JamonRuntimeException;
 
-import java.io.IOException;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.lang.reflect.Method;
@@ -51,7 +50,6 @@ public class InternalJavaCompiler
     }
 
     public String compile(String [] p_javaFiles)
-        throws IOException
     {
         String [] cmdline = new String[p_javaFiles.length + 2];
         System.arraycopy(p_javaFiles,0,cmdline,2,p_javaFiles.length);
