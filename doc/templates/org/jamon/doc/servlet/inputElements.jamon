@@ -1,4 +1,4 @@
-<span class="concept">Some More Elements From the Standard Library</span>
+<span class="concept"><a name="appendixB">Some More Elements From the Standard Library</a></span>
 
 <h5>Checkbox</h5>
 To have an HTML checkbox element appear in a form, create an object of type
