@@ -49,7 +49,9 @@ public class EncodingReaderTest
     public void testUtf16()
         throws Exception
     {
-        doTest("utf-16", "abcdefg12345!@#$%^\u00B2\u00EC\u3092");
+        // use utf-16be not utf-16 since jdk1.3 is broken
+        //  and insists on a byte-order mark for "vanilla" utf-16
+        doTest("UTF-16BE", "abcdefg12345!@#$%^\u00B2\u00EC\u3092");
     }
 
     private void doTest(final String p_encoding, final String p_stuff)
