@@ -24,8 +24,9 @@ the documentation thus taking care of issues such as escaping.
   <property name="tarfilebase"
             value="jamon-${org.jamon.version.major}.${org.jamon.version.minor}" />
   <property name="tarball.src" value="${tarfilebase}-src.tgz" />
-  <property name="tarball.bin" value="${tarfilebase}-bin.tgz" />
-
+  <property name="tarball.bin" value="${tarfilebase}.tgz" />
+  <property name="zip.src" value="${tarfilebase}-src.zip" />
+  <property name="zip.bin" value="${tarfilebase}.zip" />
 
   <taskdef name="invoker"
            classname="org.jamon.ant.InvokerTask"
@@ -101,6 +102,8 @@ the documentation thus taking care of issues such as escaping.
              template="/org/jamon/doc/Download">
       <arg name="binTarball" value="${tarball.bin}" />
       <arg name="srcTarball" value="${tarball.src}" />
+      <arg name="binZip" value="${zip.bin}" />
+      <arg name="srcZip" value="${zip.src}" />
     </invoker>
     <antcall target="grind">
       <param name="template" value="Documentation" />

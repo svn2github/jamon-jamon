@@ -13,12 +13,13 @@
   <property name="jarfile" value="jamon.jar" />
   <property name="core.classes.dir" value="core/build/classes" />
   <property name="stage.dir" value="site" />
-  <property name="doc.zip" value="jamondoc.zip" />
   <property file="core/src/org/jamon/Resources.properties" />
   <property name="tarfilebase"
             value="jamon-${org.jamon.version.major}.${org.jamon.version.minor}" />
   <property name="tarball.src" value="${tarfilebase}-src.tgz" />
-  <property name="tarball.bin" value="${tarfilebase}-bin.tgz" />
+  <property name="tarball.bin" value="${tarfilebase}.tgz" />
+  <property name="zip.src" value="${tarfilebase}-src.zip" />
+  <property name="zip.bin" value="${tarfilebase}.zip" />
 
   <target name="test"
           depends="jar"
@@ -70,9 +71,10 @@
   </target>
 
   <target name="localclean">
-    <delete file="${doc.zip}" />
     <delete file="${tarball.src}" />
     <delete file="${tarball.bin}" />
+    <delete file="${zip.src}" />
+    <delete file="${zip.bin}" />
     <delete dir="${stage.dir}" />
   </target>
 
@@ -133,19 +135,17 @@
     <ant dir="doc" target="build" />
   </target>
 
-  <target name="doczip" depends="javadoc">
-    <zip zipfile="${doc.zip}">
-      <zipfileset dir="doc" prefix="doc" />
-      <zipfileset dir="core/build/javadoc" prefix="doc/javadoc" />
-    </zip>
-  </target>
-
-  <target name="bindist" depends="jar,doczip">
+  <target name="bindist" depends="jar,doc,javadoc">
     <tar tarfile="${tarball.bin}" compression="gzip" >
-      <tarfileset dir="."
-                  prefix="${tarfilebase}"
-                  includes="${doc.zip},${jarfile}" />
+      <tarfileset dir="." prefix="${tarfilebase}" includes="${jarfile}" />
+      <tarfileset dir="doc/build/www" prefix="${tarfilebase}/doc" includes="**" />
+      <tarfileset dir="core/build" prefix="${tarfilebase}" includes="javadoc/**" />
     </tar>
+    <zip zipfile="${zip.bin}" >
+      <zipfileset dir="." prefix="${tarfilebase}" includes="${jarfile}" />
+      <zipfileset dir="doc/build/www" prefix="${tarfilebase}/doc" includes="**" />
+      <zipfileset dir="core/build" prefix="${tarfilebase}" includes="javadoc/**" />
+    </zip>
   </target>
 
   <target name="srcdist">
@@ -156,11 +156,27 @@
         <exclude name="${stage.dir}/**" />
         <exclude name="${tarball.bin}" />
         <exclude name="${tarball.src}" />
+        <exclude name="${zip.bin}" />
+        <exclude name="${zip.src}" />
         <exclude name="**/build.properties" />
         <exclude name="**/build" />
         <exclude name="**/build/**" />
       </tarfileset>
     </tar>
+    <zip destfile="${zip.src}" >
+      <zipfileset dir="." prefix="${tarfilebase}" >
+        <exclude name="${jarfile}" />
+        <exclude name="${stage.dir}" />
+        <exclude name="${stage.dir}/**" />
+        <exclude name="${zip.bin}" />
+        <exclude name="${zip.src}" />
+        <exclude name="${tarball.bin}" />
+        <exclude name="${tarball.src}" />
+        <exclude name="**/build.properties" />
+        <exclude name="**/build" />
+        <exclude name="**/build/**" />
+      </zipfileset>
+    </zip>
   </target>
 
 

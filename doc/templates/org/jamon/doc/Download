@@ -1,6 +1,9 @@
 <%args>
   String srcTarball;
+  String srcZip;
   String binTarball;
+  String binZip;
+  String javadocZip;
 </%args>
 <&| _Base; title => "Getting Jamon"; section => "Download" &>
   <h2>Where to get Jamon</h2>
@@ -8,8 +11,11 @@
     <h3>Download</h3>
 
     <ul>
-      <li><a href="<% srcTarball %>">Source</a></li>
-      <li><a href="<% binTarball %>">Binaries</a></li>
+      <li>Binary <a href="<% binTarball %>">[tgz]</a>
+      <a href="<% binZip %>">[zip]</a></li>
+      <li>Source <a href="<% srcTarball %>">[tgz]</a>
+          <a href="<% srcZip %>">[zip]</a></li>
+      <li><a href="<% javadocZip %>">Javadoc (zip)</a></li>
     </ul>
 
     <h3>CVS access</h3>
