@@ -32,7 +32,8 @@ import java.util.LinkedList;
 public class LifoMultiCache
 {
     /**
-     * Construct a <code>LifoMultiCache</code>.
+     * Construct a <code>LifoMultiCache</code> of a given maximum
+     * size.
      *
      * @param p_maxSize the maximum number of values in the cache
      */
@@ -47,7 +48,7 @@ public class LifoMultiCache
     /**
      * Get a value from the cache corresponding to the given key. If
      * multiple values exist for the key, return the value most
-     * recently {@link put()}.
+     * recently {@link #put}.
      *
      * @param p_key the key to find
      *
@@ -68,8 +69,9 @@ public class LifoMultiCache
     }
 
     /**
-     * Put a value into the cache corresponding to the given key. More
-     * than one value may be in the cache corresponding to a key.
+     * Put a value into the cache corresponding to the given key. Note
+     * that more than one value may be in the cache corresponding to a
+     * given key.
      *
      * @param p_key the key
      * @param p_value the value to put
