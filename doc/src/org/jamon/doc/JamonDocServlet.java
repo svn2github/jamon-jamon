@@ -61,6 +61,7 @@ public class JamonDocServlet
         {
             m_manager = new StandardTemplateManager
                 (new StandardTemplateManager.Data()
+                    .setCleanWorkDir(false)
                     .setWorkDir("build/work")
                     .setSourceDir("templates")
                     .setJavaCompiler("jikes"));
