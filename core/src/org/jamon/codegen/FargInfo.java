@@ -31,20 +31,6 @@ public class FargInfo extends AbstractUnitInfo
         super(p_name);
     }
 
-    public void addOptionalArg(String p_name,
-                                        String p_type,
-                                        String p_default)
-    {
-        throw new UnsupportedOperationException
-            ("Frags cannot have optional arguments");
-    }
-
-    public void addFarg(String p_name, String p_type)
-    {
-        // nor can grafs have garfs...
-        throw new UnsupportedOperationException("Frags cannot have fargs");
-    }
-
     public String getFargInterfaceName()
     {
         return "Fragment_" + getName();

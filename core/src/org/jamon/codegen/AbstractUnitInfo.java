@@ -37,8 +37,6 @@ public abstract class AbstractUnitInfo
         return m_name;
     }
 
-    public abstract void addFarg(String p_name, String p_type);
-
     public void addRequiredArg(String p_name, String p_type)
     {
         m_requiredArgs.add(new Argument(p_name, p_type));
@@ -53,10 +51,6 @@ public abstract class AbstractUnitInfo
     {
         return !m_requiredArgs.isEmpty();
     }
-
-    public abstract void addOptionalArg(String p_name,
-                                        String p_type,
-                                        String p_default);
 
     public void printRequiredArgsDecl(IndentingWriter p_writer)
     {
