@@ -47,7 +47,12 @@ public class FargCallStatement
         throws IOException
     {
         // FIXME!
-        p_writer.print  (getPath());
+        String tn = getPath();
+        p_writer.print  (tn);
+        p_writer.println(".writeTo(this.getWriter());");
+        p_writer.print  (tn);
+        p_writer.println(".escaping(this.getEscaping());");
+        p_writer.print  (tn);
         p_writer.print  (".render(");
         int argNum = 0;
         for (Iterator r = m_fargInfo.getArgumentNames(); r.hasNext(); /* */)
