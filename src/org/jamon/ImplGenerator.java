@@ -5,8 +5,11 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Set;
 import java.util.HashSet;
+import java.util.Map;
+import java.util.HashMap;
 import org.modusponens.jtt.node.*;
 import org.modusponens.jtt.analysis.*;
 
@@ -107,6 +110,7 @@ public class ImplGenerator extends BaseGenerator
 
     public void caseACallComponent(ACallComponent node)
     {
+        handleBody();
         String path = asText(node.getPath());
         m_calls.add(path);
         addStatement(new CallStatement(path,node.getParam()));
@@ -290,7 +294,8 @@ public class ImplGenerator extends BaseGenerator
 
     private static interface Statement
     {
-        String asString();
+        String asString()
+            throws JttException;
     }
 
     private static class WriteStatement
@@ -323,36 +328,98 @@ public class ImplGenerator extends BaseGenerator
         }
     }
 
-    private static class Param
-    {
-        Param(String p_name, String p_expr)
-        {
-            m_name = p_name;
-            m_expr = p_expr;
-        }
-        private final String m_name;
-        private final String m_expr;
-    }
-
-    private static class CallStatement
+    private class CallStatement
         implements Statement
     {
         CallStatement(String p_path,List p_params)
         {
             m_path = p_path;
-            m_params = new Param[p_params.size()];
-            for (int i = 0; i < m_params.length; ++i)
+            m_params = new HashMap();
+            for (Iterator p = p_params.iterator(); p.hasNext(); /* */)
             {
-                AParam p = (AParam) p_params.get(i);
-                m_params[i] = new Param(p.getIdentifier().getText(),
-                                        p.getParamExpr().getText());
+                AParam param = (AParam) p.next();
+                m_params.put(param.getIdentifier().getText(),
+                             param.getParamExpr().getText().trim());
             }
         }
         private final String m_path;
-        private final Param [] m_params;
-        public String asString()
+        private final Map m_params;
+        private String getAbsolutePath()
         {
-            return "/* call to " + m_path + " goes here */";
+            return (m_path.charAt(0) == '/')
+                ? m_path
+                : "/" + getPackageName().replace('.','/') + '/' + m_path;
+        }
+
+        private String getClassName()
+        {
+            return getAbsolutePath().substring(1).replace('/','.');
+        }
+        public String asString()
+            throws JttException
+        {
+            StringBuffer s = new StringBuffer();
+            s.append("{\n  ");
+            s.append(getClassName());
+            s.append(" c = (");
+            s.append(getClassName());
+            s.append(") getTemplateManager().getInstance(\"");
+            s.append(getAbsolutePath());
+            s.append("\", getWriter());\n");
+
+            List requiredArgs = new ArrayList();
+            try
+            {
+                Class c = Class.forName(getClassName());
+                requiredArgs.addAll
+                    (Arrays.asList
+                     ((String []) c.getField("RENDER_ARGS").get(null)));
+            }
+            catch (ClassNotFoundException e)
+            {
+                throw new JttException("Class " + e.getMessage() + " not found",e);
+            }
+            catch (IllegalAccessException e)
+            {
+                throw new JttException(e);
+            }
+            catch (NoSuchFieldException e)
+            {
+                throw new JttException(e);
+            }
+
+            for (Iterator i = m_params.keySet().iterator();
+                 i.hasNext();
+                 /* */ )
+            {
+                String name = (String) i.next();
+                if (! requiredArgs.contains(name) )
+                {
+                    s.append("  c.set");
+                    s.append(capitalize(name));
+                    s.append("(");
+                    s.append(m_params.get(name));
+                    s.append(");\n");
+                }
+            }
+            s.append("  c.render(");
+            for (Iterator i = requiredArgs.iterator(); i.hasNext(); /* */)
+            {
+                String name = (String) i.next();
+                String expr = (String) m_params.get(name);
+                if (expr == null)
+                {
+                    throw new JttException("No parameter supplied for argument " + name + " in call to " + m_path);
+                }
+                s.append(expr);
+                if (i.hasNext())
+                {
+                    s.append(",");
+                }
+            }
+            s.append(");\n");
+            s.append("}\n");
+            return s.toString();
         }
     }
 }
