@@ -76,17 +76,16 @@ public class EscapingsTest
     {
         Escapings escapings = new Escapings(getTemplateManager())
             .writeTo(getWriter());
-        if (p_escaping == null)
+        if (p_escaping != null)
         {
-            p_escaping = Escaping.DEFAULT; // Ooo! Feels kinda naughty.
-        }
-        else
-        {
-            // Only set escaping when p_escaping is non-null
             escapings.escaping(p_escaping);
         }
+
         escapings.render();
-        checkOutput("Escaping is " + p_escaping, escapedExpected(p_escaping));
+        checkOutput("Escaping is " + p_escaping,
+                    escapedExpected(p_escaping == null
+                                    ? Escaping.NONE
+                                    : p_escaping));
     }
 
     private String escapedExpected(Escaping p_escaping)
