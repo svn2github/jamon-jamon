@@ -135,7 +135,7 @@ the documentation thus taking care of issues such as escaping.
     <javac destdir="${work.dir}"
            classpath="${java.lib.jamon}"
            includes="*.java" >
-      <src path="sample/tutorial/src" />
+      <src path="${tutorial.src}" />
       <src path="${work.dir}" />
     </javac>
     <antcall target="generateHtmlFormat">
@@ -199,12 +199,14 @@ the documentation thus taking care of issues such as escaping.
   </target>
 
   <target name="generateHtmlFormat">
+    <dirname property="this.dir" file="build.xml" />
     <invoker classpath="${java.lib.jamon}"
              workDir="${work.dir}"
              compiler="${org.jamon.invoker.compiler}"
              sourceDir="templates"
              output="${doc.dir}/tutorial/${tutorial.page}.html"
              template="/org/jamon/doc/tutorial/${tutorial.page}" >
+      <sysproperty key="org.jamon.doc.dir" value="${this.dir}" />
     </invoker>
   </target>
 
