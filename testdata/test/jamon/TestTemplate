@@ -1,4 +1,6 @@
-The very top!
+<%doc>here
+is some starting doc.
+    </%doc>The very top!
 <%import>
   java.math.BigDecimal
 </%import>
@@ -11,6 +13,11 @@ The very top!
 
 Here is a template. It has two arguments:
 
+<%doc></%doc>
+<%doc>here
+is some doc.
+    </%doc>
+<%doc>  asdfasdf  </%doc>
 x, which is <% x %>,
 and amount, which is <% amount %>.
 %  for (int i = 0; i < y; ++i)
@@ -30,3 +37,11 @@ Not escaped: <% "&"   |n  %> <% ">" |n%> <% "<"   |n %> <% "'" |n%> <% "\"" |n %
 
 This is a call: <& /test/jtt/SubTemplate; z => 3; y => "yes" &>
 So is this: <& SubTemplate; z => 12; y => "no"; x => 1 &>
+
+<%def foo>
+  <%args>
+    String qq
+    int rr => 7
+  </%args>
+  this should not show up.
+</%def>
