@@ -9,10 +9,8 @@ public class HelloTut1Alternate {
       // set the template manager once for all time ...
       TemplateManagerSource.setTemplateManager(new StandardTemplateManager());
       // now create templates without specifying a template manager
-      new HelloTemplate()
-        .render(new OutputStreamWriter(System.out));
-    }
-    catch (Exception e) {
+      new HelloTemplate().render(new OutputStreamWriter(System.out));
+    } catch (Exception e) {
       e.printStackTrace();
     }
   }

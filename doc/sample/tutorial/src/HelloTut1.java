@@ -6,8 +6,7 @@ public class HelloTut1 {
     try {
       StandardTemplateManager mgr = new StandardTemplateManager();
       new HelloTemplate(mgr).render(new OutputStreamWriter(System.out));
-    }
-    catch (Exception e) {
+    } catch (Exception e) {
       e.printStackTrace();
     }
   }

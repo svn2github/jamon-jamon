@@ -6,12 +6,10 @@ public class InheritanceSimpleTut9
 {
   public static void main(String[] args)
   {
-    try
-    {
+    try {
       TemplateManagerSource.setTemplateManager(new StandardTemplateManager());
       new InheritanceChild().render(new OutputStreamWriter(System.out));
-    }
-    catch (Exception e) {
+    } catch (Exception e) {
       e.printStackTrace();
     }
   }

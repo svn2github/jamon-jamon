@@ -13,8 +13,7 @@ public class Holiday {
 
   static private DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 
-  public Holiday (String p_name, Date p_date)
-  {
+  public Holiday (String p_name, Date p_date) {
     name = p_name;
     date = p_date;
   }
@@ -30,13 +29,11 @@ public class Holiday {
       holidays.add(new Holiday("Thanksgiving", format.parse("2003-11-17")));
       holidays.add(new Holiday("Christmas", format.parse("2003-12-25")));
       // set the template manager once for all time ...
-      TemplateManagerSource
-          .setTemplateManager(new StandardTemplateManager());
+      TemplateManagerSource.setTemplateManager(new StandardTemplateManager());
       // now create templates without specifying a template manager
       new FragmentExampleTemplate()
-          .render(new OutputStreamWriter(System.out), holidays);
-    }
-    catch (Exception e) {
+        .render(new OutputStreamWriter(System.out), holidays);
+    } catch (Exception e) {
       e.printStackTrace();
     }
   }

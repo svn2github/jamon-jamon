@@ -11,8 +11,7 @@ public class InheritanceSimple
       TemplateManagerSource.setTemplateManager(new StandardTemplateManager());
       new InheritanceChild()
           .makeParentRenderer().render(new OutputStreamWriter(System.out));
-    }
-    catch (Exception e) {
+    } catch (Exception e) {
       e.printStackTrace();
     }
   }
