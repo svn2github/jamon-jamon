@@ -37,6 +37,7 @@ import java.util.HashSet;
 
 import org.jamon.escaping.Escaping;
 import org.jamon.util.JavaCompiler;
+import org.jamon.util.ExternalJavaCompiler;
 import org.jamon.util.StringUtils;
 import org.jamon.util.WorkDirClassLoader;
 import org.jamon.codegen.TemplateDescriber;
@@ -189,6 +190,41 @@ public class StandardTemplateManager
         this(new Data());
     }
 
+    private static String getDefaultJavac()
+        throws IOException
+    {
+        // FIXME: does this work on windows?
+        // FIXME: should we just use the javac in the default path?
+        String bindir;
+        if( "Mac OS X".equals( System.getProperty( "os.name" ) ) )
+        {
+            bindir = "Commands";
+        }
+        else
+        {
+            bindir = "bin";
+        }
+        return new File(new File(System.getProperty("java.home")).getParent(),
+                        bindir).getCanonicalPath()
+            + File.separator
+            + "javac";
+    }
+
+    private static JavaCompiler makeCompiler(Data p_data,
+                                             String p_workDir,
+                                             ClassLoader p_classLoader)
+        throws IOException
+    {
+        return new ExternalJavaCompiler
+            (p_data.javaCompiler == null
+             ? getDefaultJavac()
+             : p_data.javaCompiler,
+             getClasspath(p_workDir,
+                          p_data.classpath,
+                          p_data.javaCompilerNeedsRtJar,
+                          p_classLoader));
+    }
+
     public StandardTemplateManager(Data p_data)
         throws IOException
     {
@@ -205,14 +241,7 @@ public class StandardTemplateManager
             m_workDir = p_data.workDir == null
                 ? getDefaultWorkDir()
                 : p_data.workDir;
-            m_javaCompiler =
-                new JavaCompiler(p_data.javaCompiler == null
-                                 ? getDefaultJavac()
-                                 : p_data.javaCompiler,
-                                 getClasspath(m_workDir,
-                                              p_data.classpath,
-                                              p_data.javaCompilerNeedsRtJar,
-                                              m_classLoader));
+            m_javaCompiler = makeCompiler(p_data, m_workDir, m_classLoader);
 
             if (p_data.templateSource != null)
             {
@@ -397,26 +426,6 @@ public class StandardTemplateManager
         path.append(File.separator);
         path.append("rt.jar");
         return path.toString();
-    }
-
-    private static String getDefaultJavac()
-        throws IOException
-    {
-        // FIXME: does this work on windows?
-        // FIXME: should we just use the javac in the default path?
-        String bindir;
-        if( "Mac OS X".equals( System.getProperty( "os.name" ) ) )
-        {
-            bindir = "Commands";
-        }
-        else
-        {
-            bindir = "bin";
-        }
-        return new File(new File(System.getProperty("java.home")).getParent(),
-                        bindir).getCanonicalPath()
-            + File.separator
-            + "javac";
     }
 
     private Class getImplClass(Class p_proxyClass)
