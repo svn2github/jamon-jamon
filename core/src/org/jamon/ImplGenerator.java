@@ -53,6 +53,12 @@ public class ImplGenerator extends BaseGenerator
         m_current.append(node.getNewline().getText());
     }
 
+    public void caseADefComponent(ADefComponent node)
+    {
+        handleBody();
+        super.caseADefComponent(node);
+    }
+
     public void caseAJavaComponent(AJavaComponent node)
     {
         handleBody();
@@ -72,6 +78,12 @@ public class ImplGenerator extends BaseGenerator
 
     private void handleBody()
     {
+        if (getCurrentDef() != null)
+        {
+            // FIXME
+            System.err.println("in def body");
+            return;
+        }
         if (m_current.length() > 0)
         {
             addStatement(new WriteStatement("\""

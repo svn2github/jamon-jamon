@@ -118,20 +118,44 @@ public class BaseGenerator extends AnalysisAdapter
         }
     }
 
+    protected void addRequiredArg(String p_name, String p_type)
+    {
+        if (getCurrentDef() == null)
+        {
+            m_requiredArgs.add(p_name);
+            m_argTypes.put(p_name, p_type);
+        }
+    }
+
+    protected void addOptionalArg(String p_name, String p_type, String p_expr)
+    {
+        if (getCurrentDef() == null)
+        {
+            m_optionalArgs.add(p_name);
+            m_argTypes.put(p_name,p_type);
+            m_default.put(p_name, p_expr);
+        }
+    }
+
+    private String m_currentDef;
+
+    protected String getCurrentDef()
+    {
+        return m_currentDef;
+    }
+
     public void caseAArg(AArg arg)
     {
         String name = arg.getName().getText();
         if (arg.getDefault() == null)
         {
-            m_requiredArgs.add(name);
-            m_argTypes.put(name, asText(arg.getType()));
+            addRequiredArg(name, asText(arg.getType()));
         }
         else
         {
-            m_optionalArgs.add(name);
-            m_argTypes.put(name,asText(arg.getType()));
-            m_default.put(name,
-                          ((ADefault)arg.getDefault()).getFragment().toString().trim());
+            addOptionalArg(name,
+                           asText(arg.getType()),
+                           ((ADefault)arg.getDefault()).getFragment().toString().trim());
         }
     }
 
