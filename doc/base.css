@@ -1,0 +1,9 @@
+pre { margin-left: 5em; margin-right: 5em; padding: 0.5em; border: solid; border-width: thin }
+pre.template { background-color: #efffdf }
+pre.jamon { background-color: #efffdf }
+pre.java { background-color: #ffdfdf }
+pre.code { background-color: #ffdfdf }
+pre.tty { background-color: #e0e0e0;  }
+li { padding-top: 0.5em }
+.concept { font-weight: bold; display: block; padding-bottom: 0.5em }
+.file { font-family: monospace }
