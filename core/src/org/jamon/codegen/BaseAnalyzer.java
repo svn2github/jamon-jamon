@@ -53,17 +53,6 @@ public class BaseAnalyzer
         return m_imports.iterator();
     }
 
-    public FargInfo getFargInfo(String p_fargName)
-    {
-        return getFargInfo(MAIN_UNIT_NAME, p_fargName);
-    }
-
-    protected FargInfo getFargInfo(String p_unitName, String p_fargName)
-    {
-        //FIXME - use the unitName or get rid of it.
-        return (FargInfo) getAbstractUnitInfo("#PFRAG#" + p_fargName);
-    }
-
     protected static final String MAIN_UNIT_NAME = "";
 
     protected final void pushUnitName(String p_unitName)
@@ -77,7 +66,13 @@ public class BaseAnalyzer
         m_unit.put(p_unitName,new UnitInfo(p_unitName));
     }
 
-    protected final void pushFargUnit(String p_fragName)
+    private final void pushDefUnit(String p_defName)
+    {
+        pushUnitName(p_defName);
+        m_unit.put(p_defName, new DefInfo(p_defName));
+    }
+
+    private final void pushFargUnit(String p_fragName)
     {
         String unitName = "#PFRAG#" + p_fragName;
         pushUnitName(unitName);
@@ -92,6 +87,22 @@ public class BaseAnalyzer
     protected String getUnitName()
     {
         return (String) m_unitNames.getLast();
+    }
+
+    public DefInfo getDefInfo(String p_defName)
+    {
+        return (DefInfo) getAbstractUnitInfo(p_defName);
+    }
+
+    public FargInfo getFargInfo(String p_fargName)
+    {
+        return getFargInfo(MAIN_UNIT_NAME, p_fargName);
+    }
+
+    protected FargInfo getFargInfo(String p_unitName, String p_fargName)
+    {
+        //FIXME - use the unitName or get rid of it.
+        return (FargInfo) getAbstractUnitInfo("#PFRAG#" + p_fargName);
     }
 
     public UnitInfo getUnitInfo()
@@ -241,7 +252,7 @@ public class BaseAnalyzer
             ADef def = (ADef) node.getDef();
             String unitName = def.getIdentifier().getText();
             m_defNames.add(unitName);
-            pushUnit(unitName);
+            pushDefUnit(unitName);
             def.getDefStart().apply(this);
             for (Iterator i = def.getBaseComponent().iterator(); i.hasNext(); /* */ )
             {

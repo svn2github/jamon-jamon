@@ -62,16 +62,6 @@ public class UnitInfo extends AbstractUnitInfo
         return m_fargs.iterator();
     }
 
-    public void printAllArgsDecl(IndentingWriter p_writer)
-    {
-        printRequiredArgsDecl(p_writer);
-        if(hasRequiredArgs() && hasOptionalArgs())
-        {
-            p_writer.println(", ");
-        }
-        printArgsDecl(p_writer, getOptionalArgs());
-    }
-
     public String getSignature()
         throws JamonException
     {

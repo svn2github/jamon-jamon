@@ -149,7 +149,7 @@ public class ImplGenerator
         for (Iterator d = m_analyzer.getDefNames().iterator(); d.hasNext(); /* */)
         {
             String name = (String) d.next();
-            UnitInfo unitInfo = m_analyzer.getUnitInfo(name);
+            DefInfo unitInfo = m_analyzer.getDefInfo(name);
             m_writer.println();
             for (Iterator f = unitInfo.getFargNames();
                  f.hasNext();

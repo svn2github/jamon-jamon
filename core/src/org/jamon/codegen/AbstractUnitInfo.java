@@ -20,14 +20,9 @@
 
 package org.jamon.codegen;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.LinkedList;
-
-import org.jamon.JamonException;
-import org.jamon.util.StringUtils;
 
 public abstract class AbstractUnitInfo
 {
