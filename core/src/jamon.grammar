@@ -80,6 +80,4 @@ Productions
   name = {simple} identifier
        | {qualified} name dot identifier;
 
-  emit_expr = any;
-
   type = name brackets*;
