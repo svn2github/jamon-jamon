@@ -134,14 +134,8 @@ public class InvokerTool
             ? new OutputStreamWriter(System.out)
             : new FileWriter(outFile);
 
-        new Invoker(manager, templateName,p_objectParser)
-            .render(writer,argMap);
-    }
-
-
-    private static void displayError(String p_message)
-    {
-        System.err.println(p_message);
+        new Invoker(manager, templateName, p_objectParser)
+            .render(writer, argMap);
     }
 
     public static void main(String[] args)
@@ -152,7 +146,7 @@ public class InvokerTool
         }
         catch (UsageException e)
         {
-            displayError("Usage: " + e);
+            System.err.println("Usage: " + e);
         }
         catch (Exception e)
         {
