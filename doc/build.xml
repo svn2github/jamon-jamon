@@ -120,6 +120,9 @@ the documentation thus taking care of issues such as escaping.
     <property name="build.sysclasspath" value="last" />
     <property name="tutorial.src" value="sample/tutorial/src" />
     <property name="tutorial.jamon" value="sample/tutorial/templates" />
+    <zip destfile="${doc.dir}/tutorial/JamonTutorial.zip"
+         basedir="sample/tutorial"
+         includes="**/*"/>
     <copy todir="${doc.dir}/tutorial" >
       <fileset dir="${tutorial.src}">
         <include name="**/*.java"/>
@@ -141,16 +144,9 @@ the documentation thus taking care of issues such as escaping.
     <antcall target="generateHtmlFormat">
       <param name="tutorial.page" value="TutorialPath" />
     </antcall>
-    <antcall target="generateHtmlFormat">
-      <param name="tutorial.page" value="TutorialSample1a" />
-    </antcall>
     <antcall target="generateOutput">
       <param name="sample.template" value="HelloTut1" />
       <param name="tutorial.page" value="TutorialSample1" />
-    </antcall>
-    <antcall target="generateOutput">
-      <param name="sample.template" value="HelloTut1" />
-      <param name="tutorial.page" value="TutorialSample1a" />
     </antcall>
     <antcall target="generateOutput">
       <param name="sample.template" value="TimeAndTempTut2" />
