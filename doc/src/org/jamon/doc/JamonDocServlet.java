@@ -30,13 +30,19 @@ public class JamonDocServlet
         String templatePath = p_request.getServletPath();
         templatePath = templatePath.substring(0,templatePath.length()-5);
         new Invoker(m_manager, "/org/jamon/doc" + templatePath)
-            .render(writer, makeParameters(templatePath));
+            .render(writer, m_parameters, true);
         writer.close();
     }
 
     public void init(ServletConfig p_config)
         throws ServletException
     {
+        m_parameters.put("srcTarball", "jamon-src.tgz");
+        m_parameters.put("srcZip", "jamon-src.zip");
+        m_parameters.put("binTarball", "jamon.tgz");
+        m_parameters.put("binZip", "jamon.zip");
+        m_parameters.put("version", "3.14");
+
         try
         {
             m_manager = new StandardTemplateManager
@@ -50,20 +56,6 @@ public class JamonDocServlet
         }
     }
 
-    private Map makeParameters(String p_pathInfo)
-    {
-        Map parameters = new HashMap();
-        if (p_pathInfo.equals("/Download"))
-        {
-            parameters.put("srcTarball", "jamon-src.tgz");
-            parameters.put("srcZip", "jamon-src.zip");
-            parameters.put("binTarball", "jamon.tgz");
-            parameters.put("binZip", "jamon.zip");
-            parameters.put("version", "3.14");
-        }
-        return parameters;
-    }
-
     private void expireResponse(HttpServletResponse p_response)
         throws IOException,
                ServletException
@@ -74,5 +66,6 @@ public class JamonDocServlet
         p_response.setHeader("Pragma", "no-cache");
     }
 
+    private final Map m_parameters = new HashMap();
     private TemplateManager m_manager;
 }
