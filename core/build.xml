@@ -115,4 +115,34 @@
     </junit>
   </target>
 
+
+  <property name="javadoc.dir" value="${build.dir}/javadoc" />
+  <property name="javadoc.zip.file" value="jamon-api.zip" />
+  <property name="javadoc.zip" value="${javadoc.zip.file}" />
+
+  <target name="javadoc.check" depends="init">
+    <uptodate property="javadoc.build.notrequired"
+              targetfile="${javadoc.dir}/index.html" >
+      <srcfiles dir="${src.dir}" includes="**/*.java" />
+    </uptodate>
+  </target>
+
+  <target name="javadoc"
+          depends="javadoc.check"
+          unless="javadoc.build.notrequired" >
+    <mkdir dir="${javadoc.dir}" />
+    <javadoc packagenames="org.jamon"
+             sourcepath="${src.dir}:${build.src.dir}"
+             defaultexcludes="yes"
+             destdir="${javadoc.dir}"
+             author="true"
+             version="true"
+             failonerror="true"
+             use="true"
+             windowtitle="Jamon API Specification">
+      <doctitle><![CDATA[<h1>Jamon API</h1>]]></doctitle>
+      <link  href="http://java.sun.com/products/jdk/1.3/docs/api/"/>
+    </javadoc>
+  </target>
+
 </project>
