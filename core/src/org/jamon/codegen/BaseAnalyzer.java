@@ -220,9 +220,10 @@ public class BaseAnalyzer
             }
             else if (isFarg(getUnitName()))
             {
-                AbstractUnitInfo info = getAbstractUnitInfo(getUnitName());
                 throw new TunnelingException
-                    ("farg '" + info.getName() + "' has optional argument(s)");
+                    ("farg '"
+                     + getAbstractUnitInfo(getUnitName()).getName()
+                     + "' has optional argument(s)");
             }
             else
             {
