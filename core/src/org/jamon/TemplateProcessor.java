@@ -171,6 +171,12 @@ public class TemplateProcessor
                 {
                     sourceDir = new File(args[arg].substring(SRCDIR.length()));
                 }
+                else
+                {
+                    System.err.println("Unknown option: " + args[arg]);
+                    showHelp();
+                    System.exit(1);
+                }
                 arg++;
             }
             if (destDir==null)
