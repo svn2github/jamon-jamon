@@ -33,7 +33,7 @@ public class JavaTest
     public void testExercise()
         throws Exception
     {
-        new JavaEscape(getTemplateManager()).render(getWriter());
+        new JavaEscape().render(getWriter());
         checkOutput("0\n1\n2\ntrue");
     }
 

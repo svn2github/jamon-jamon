@@ -34,7 +34,7 @@ public class ParametrizedFragmentTest
     public void testExercise()
         throws Exception
     {
-        new ParametrizedFragment(getTemplateManager())
+        new ParametrizedFragment()
             .render(getWriter(), new int[] { -2, 0, 15 });
         checkOutput("-0+");
     }

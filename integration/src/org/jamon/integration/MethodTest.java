@@ -30,14 +30,14 @@ public class MethodTest
     public void testSimpleMethod()
         throws Exception
     {
-        new Method(getTemplateManager()).render(getWriter());
+        new Method().render(getWriter());
         checkOutput("{foo: req1, po1} {foo: req1, po2} {bar: passed 1}");
     }
 
     public void testInheritedMethod()
         throws Exception
     {
-        new MethodChild(getTemplateManager()).render(getWriter());
+        new MethodChild().render(getWriter());
         final String methodsOutput =
             "{foo: req1, po1} {foo: req1, po2} {bar: passed 1}";
         checkOutput("{ parent: " + methodsOutput + " }{ child: "
@@ -47,7 +47,7 @@ public class MethodTest
     public void testOverriddenMethod()
         throws Exception
     {
-        new MethodOverride(getTemplateManager()).render(getWriter());
+        new MethodOverride().render(getWriter());
         final String methodsOutput =
             "{fooOverride: req1, co3} {fooOverride: req1, po2}"
             + " {barOverride: passed 2}";

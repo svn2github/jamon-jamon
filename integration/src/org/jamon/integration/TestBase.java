@@ -39,7 +39,6 @@ public abstract class TestBase
 {
     public void setUp()
     {
-        m_templateManager = null;
         m_recompilingTemplateManager = null;
         resetWriter();
     }
@@ -79,16 +78,6 @@ public abstract class TestBase
         throws IOException
     {
         assertEquals(p_message, p_expected, getOutput());
-    }
-
-    protected TemplateManager getTemplateManager()
-        throws IOException
-    {
-        if(m_templateManager == null)
-        {
-            m_templateManager = new StaticTemplateManager();
-        }
-        return m_templateManager;
     }
 
     protected TemplateManager getRecompilingTemplateManager()
@@ -192,7 +181,6 @@ public abstract class TestBase
              ("org.jamon.integration.verbose","false")).booleanValue();
     }
 
-    private TemplateManager m_templateManager;
     private TemplateManager m_recompilingTemplateManager;
     private StringWriter m_writer;
 }

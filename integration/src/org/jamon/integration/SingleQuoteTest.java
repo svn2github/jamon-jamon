@@ -33,7 +33,7 @@ public class SingleQuoteTest
     public void testExercise()
         throws Exception
     {
-        new SingleQuotes(getTemplateManager()).render(getWriter());
+        new SingleQuotes().render(getWriter());
     }
 
 }

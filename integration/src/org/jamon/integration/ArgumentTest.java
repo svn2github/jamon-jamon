@@ -36,8 +36,7 @@ public class ArgumentTest
     public void testExercise()
         throws Exception
     {
-        new Arguments(getTemplateManager())
-            .render(getWriter(), INT, BOOLEAN, STRING);
+        new Arguments().render(getWriter(), INT, BOOLEAN, STRING);
         checkOutput("" + INT + BOOLEAN + STRING);
     }
 
@@ -45,24 +44,21 @@ public class ArgumentTest
     public void testOptional1()
         throws Exception
     {
-        new OptionalArguments(getTemplateManager())
-            .setI(INT)
-            .render(getWriter(), BOOLEAN, STRING);
+        new OptionalArguments().setI(INT).render(getWriter(), BOOLEAN, STRING);
         checkOutput("" + INT + BOOLEAN + STRING);
     }
 
     public void testOptional2()
         throws Exception
     {
-        new OptionalArguments(getTemplateManager())
-            .render(getWriter(), BOOLEAN, STRING);
+        new OptionalArguments().render(getWriter(), BOOLEAN, STRING);
         checkOutput("" + 0 + BOOLEAN + STRING);
     }
 
     public void testOptionalDef()
         throws Exception
     {
-        new OptionalDefArguments(getTemplateManager()).render(getWriter());
+        new OptionalDefArguments().render(getWriter());
         checkOutput("" + 0 + BOOLEAN + "s"
                     + "\n" + "1" + BOOLEAN + "s");
     }

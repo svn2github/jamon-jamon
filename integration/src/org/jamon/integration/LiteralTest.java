@@ -28,7 +28,7 @@ public class LiteralTest
     public void testLiteral()
         throws Exception
     {
-        new Literal(getTemplateManager()).render(getWriter());
+        new Literal().render(getWriter());
         checkOutput("<%args>xxx</%args></%def><%def>\n"
                     +"<%import><%java>\\\n"
                     +"</%java></%import>\n"

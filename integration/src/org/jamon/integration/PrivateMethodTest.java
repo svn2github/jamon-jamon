@@ -33,7 +33,7 @@ public class PrivateMethodTest
     public void testExercise()
         throws Exception
     {
-        new PrivateMethods(getTemplateManager()).render(getWriter());
+        new PrivateMethods().render(getWriter());
         checkOutput("7=1111111");
     }
 

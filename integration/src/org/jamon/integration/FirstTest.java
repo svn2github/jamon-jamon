@@ -31,7 +31,7 @@ public class FirstTest
     public void testExercise()
         throws Exception
     {
-        new TestTemplate(getTemplateManager())
+        new TestTemplate()
             .setX(57)
             .render(getWriter(), new BigDecimal("34.5324"));
 

@@ -36,28 +36,28 @@ public class FragmentTest
     public void testExercise()
         throws Exception
     {
-        new Fragment(getTemplateManager()).render(getWriter(), 1);
+        new Fragment().render(getWriter(), 1);
         checkOutput("1(2)1");
     }
 
     public void testMakeRenderer()
         throws Exception
     {
-        new RenderedFragment(getTemplateManager()).render(getWriter());
+        new RenderedFragment().render(getWriter());
         checkOutput("<");
     }
 
     public void testEscaping()
         throws Exception
     {
-        new EscapedFragment(getTemplateManager()).render(getWriter());
+        new EscapedFragment().render(getWriter());
         checkOutput("<&lt;");
     }
 
     public void testRepeatedFragmentNameExercise()
         throws Exception
     {
-        new RepeatedFragmentName(getTemplateManager()).render(getWriter());
+        new RepeatedFragmentName().render(getWriter());
         checkOutput("d1:d1,d2:d2,d3:d3 - 7");
     }
 

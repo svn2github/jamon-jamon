@@ -33,7 +33,7 @@ public class WriterTest
     public void testExercise()
         throws Exception
     {
-        new WriterGrab(getTemplateManager()).render(getWriter());
+        new WriterGrab().render(getWriter());
         checkOutput("SECRET MESSAGE\n");
     }
 

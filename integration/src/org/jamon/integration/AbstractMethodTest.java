@@ -35,7 +35,7 @@ public class AbstractMethodTest
     public void testAbstractMethod()
         throws Exception
     {
-        new ConcreteMethod(getTemplateManager()).render(getWriter());
+        new ConcreteMethod().render(getWriter());
         checkOutput("3 some content");
     }
 

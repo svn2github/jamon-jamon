@@ -30,7 +30,7 @@ public class EscapeTest
     public void testExercise()
         throws Exception
     {
-        new test.jamon.Escapes(getTemplateManager()).render(getWriter());
+        new test.jamon.Escapes().render(getWriter());
         checkOutput("This is how to escape a newline in Java: \\n\nThis is how to escape a newline in Java: \\\"\nAnd this mess \\\" \\n \\\\ is on one line.\\");
     }
 

@@ -27,11 +27,10 @@ package org.jamon.integration;
 public class JLineTest
     extends TestBase
 {
-
     public void testExercise()
         throws Exception
     {
-        new test.jamon.JLineTest(getTemplateManager()).render(getWriter(),3);
+        new test.jamon.JLineTest().render(getWriter(),3);
         checkOutput(" % j is 3");
     }
 

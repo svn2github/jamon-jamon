@@ -53,7 +53,7 @@ public class InheritanceTest
     public void testChildSettingParentOptionalArg()
         throws Exception
     {
-        Child child = new Child(getTemplateManager());
+        Child child = new Child();
         child.setOpt2("o2j");
         child.render(getWriter(), 0, new Integer(1), "s", true);
         String childString = "{s 0 true o1c o5p o7c}";
@@ -64,8 +64,7 @@ public class InheritanceTest
     public void testChildWithDefaults()
         throws Exception
     {
-        new Child(getTemplateManager())
-            .render(getWriter(), 0, new Integer(1), "s", true);
+        new Child().render(getWriter(), 0, new Integer(1), "s", true);
         String childString = "{s 0 true o1c o5p o7c}";
         checkOutput("0 1 " + childString + " "
                     + childString + " o1c o2p o3p o4p o5p o6p");
@@ -74,7 +73,7 @@ public class InheritanceTest
     public void testGrandchildWithDefaults()
         throws Exception
     {
-        new Grandchild(getTemplateManager())
+        new Grandchild()
             .render(getWriter(), 0, new Integer(1), "s", true, Boolean.FALSE);
         String childString = "{s 0 true {s 1 false o1g o3g o5m o6p o7g o9m o10g} o1g o2m o5m o6p o7g o8m o9m}";
         checkOutput("0 1 " + childString + " " + childString + " o1g o2m o3g o4p o5m o6p");
@@ -83,7 +82,7 @@ public class InheritanceTest
     public void testChildWithDefaultsViaParentRenderer()
         throws Exception
     {
-        new Child(getTemplateManager())
+        new Child()
             .makeParentRenderer("s", true)
             .render(getWriter(), 0, new Integer(1));
         String childString = "{s 0 true o1c o5p o7c}";
@@ -94,7 +93,7 @@ public class InheritanceTest
     public void testChildSettingParentOptionalArgViaParentRenderer()
         throws Exception
     {
-        new Child(getTemplateManager())
+        new Child()
             .makeParentRenderer("s", true)
             .setOpt2("o2j")
             .render(getWriter(), 0, new Integer(1));
@@ -106,7 +105,7 @@ public class InheritanceTest
     public void testMiddleParentRenderSettingParentOptionalArg()
         throws Exception
     {
-        new Grandchild(getTemplateManager())
+        new Grandchild()
             .makeParentRenderer(Boolean.FALSE)
             .setOpt2("o2j")
             .makeParentRenderer("s", true)
@@ -118,7 +117,7 @@ public class InheritanceTest
     public void testGrandchildWithDefaultsViaParentRenderer()
         throws Exception
     {
-        new Grandchild(getTemplateManager())
+        new Grandchild()
             .makeParentRenderer(Boolean.FALSE)
             .makeParentRenderer("s", true)
             .render(getWriter(), 0, new Integer(1));
@@ -129,7 +128,7 @@ public class InheritanceTest
     public void testFragmentCall()
         throws Exception
     {
-        new ChildFragmentCaller(getTemplateManager()).render(getWriter());
+        new ChildFragmentCaller().render(getWriter());
         checkOutput("s0{s - 1 - g t}2");
     }
 

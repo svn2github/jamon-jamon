@@ -29,7 +29,7 @@ public class TrailingSemiTest
     public void testExercise()
         throws Exception
     {
-        new TrailingSemi(getTemplateManager()).render(getWriter());
+        new TrailingSemi().render(getWriter());
         checkOutput("1truesanonFragnamedFrag");
     }
 

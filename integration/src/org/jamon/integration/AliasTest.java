@@ -29,11 +29,10 @@ import test.jamon.Alias;
 public class AliasTest
     extends TestBase
 {
-
     public void testExercise()
         throws Exception
     {
-        new Alias(getTemplateManager()).render(getWriter());
+        new Alias().render(getWriter());
         checkOutput("simple simple simple");
     }
 }

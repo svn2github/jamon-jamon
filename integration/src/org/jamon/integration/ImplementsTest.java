@@ -32,7 +32,7 @@ public class ImplementsTest
     public void testImplements()
         throws Exception
     {
-        Implements i = new Implements(getTemplateManager());
+        Implements i = new Implements();
         i.setX(INT);
         SomeInterface x = i;
         x.render(getWriter(), STRING);
@@ -41,7 +41,7 @@ public class ImplementsTest
 
         // FIXME: want to do
 
-        // SomeInterface x = new Implements(getTemplateManager());
+        // SomeInterface x = new Implements();
         // x.writeTo(getWriter()).setX(INT).render(STRING);
     }
 

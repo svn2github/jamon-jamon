@@ -68,9 +68,7 @@ public class EscapingsTest
     private void checkEscaping(Escaping p_escaping)
         throws IOException
     {
-        new Escapings(getTemplateManager())
-            .escapeWith(p_escaping)
-            .render(getWriter());
+        new Escapings().escapeWith(p_escaping).render(getWriter());
         checkOutput("Escaping is " + p_escaping,
                     escapedExpected(p_escaping));
     }
