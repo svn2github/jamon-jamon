@@ -28,10 +28,6 @@
 
   <property name="src.dir" value="src" />
 
-  <target name="init">
-    <mkdir dir="${build.src.dir}"/>
-  </target>
-
   <target name="check-parser">
     <uptodate property="parser.uptodate"
               targetfile="${build.src.dir}/org/jamon/node/Node.java">
@@ -40,11 +36,13 @@
   </target>
 
  <target name="parser"
-         depends="init,check-parser"
+         depends="check-parser"
          unless="parser.uptodate"
          description="Generates parsers from the grammar file">
     <taskdef name="sablecc" classname="org.sablecc.ant.taskdef.Sablecc"
              classpath="${java.lib.sablecctask}:${java.lib.sablecc}"/>
+    <delete dir="${build.src.dir}"/>
+    <mkdir dir="${build.src.dir}"/>
     <sablecc src="src" outputdirectory="${build.src.dir}">
         <include name="jamon.grammar"/>
     </sablecc>
@@ -120,7 +118,7 @@
   <property name="javadoc.zip.file" value="jamon-api.zip" />
   <property name="javadoc.zip" value="${javadoc.zip.file}" />
 
-  <target name="javadoc.check" depends="init">
+  <target name="javadoc.check">
     <uptodate property="javadoc.build.notrequired"
               targetfile="${javadoc.dir}/index.html" >
       <srcfiles dir="${src.dir}" includes="**/*.java" />
