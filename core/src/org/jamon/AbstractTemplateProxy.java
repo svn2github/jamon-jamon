@@ -32,7 +32,7 @@ public abstract class AbstractTemplateProxy
         void escapeWith(Escaping p_escaping);
     }
 
-    protected interface FragmentIntf
+    public interface FragmentIntf
     {
         void writeTo(Writer p_writer);
         void escapeWith(Escaping p_escaping);
