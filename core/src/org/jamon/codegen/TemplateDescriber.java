@@ -21,11 +21,8 @@
 package org.jamon.codegen;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
 import java.io.Reader;
@@ -49,6 +46,7 @@ public class TemplateDescriber
         m_classLoader = p_classLoader;
     }
 
+    private final Map m_descriptionCache = new HashMap();
     private final TemplateSource m_templateSource;
     private final ClassLoader m_classLoader;
 
@@ -63,6 +61,26 @@ public class TemplateDescriber
     }
 
     public TemplateDescription getTemplateDescription(
+        final String p_path,
+        final Token p_token,
+        final String p_templateIdentifier,
+        final Set p_children)
+         throws IOException
+    {
+        if (m_descriptionCache.containsKey(p_path))
+        {
+            return (TemplateDescription) m_descriptionCache.get(p_path);
+        }
+        else
+        {
+            TemplateDescription desc = computeTemplateDescription(
+                p_path, p_token, p_templateIdentifier, p_children);
+            m_descriptionCache.put(p_path, desc);
+            return desc;
+        }
+    }
+
+    private TemplateDescription computeTemplateDescription(
         final String p_path,
         final Token p_token,
         final String p_templateIdentifier,
