@@ -121,14 +121,14 @@
       <p>
 
       For example, suppose <code>/restaurant/Menu</code> contains:
-      <&| _template &><&| escape//Html &><%LITERAL>
+      <&| _template &><%LITERAL>
 <html>
  <body>
    <h1>Menu</h1>
    <& *CHILD &>
  </body>
 </html>
-</%LITERAL></&></&>
+</%LITERAL></&>
       and <code>/restaurant/Lunch</code> contains:
       <&| _template &><%LITERAL>
 <%extends /restaurant/Menu>
