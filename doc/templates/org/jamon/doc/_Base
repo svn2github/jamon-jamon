@@ -12,7 +12,10 @@
 
   <body>
     <h1 id="logo">Jamon</h1>
-    <h3 id="tagline">a powerful typed template engine for Java</h3>
+
+    <h3 id="tagline">a typed dynamic text generation template engine
+    for Java</h3>
+
     <div id="header"></div>
     <div id="nav">
       <ul id="navul">

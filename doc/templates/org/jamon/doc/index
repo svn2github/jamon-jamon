@@ -1,54 +1,75 @@
 <&| _Base; title => "Jamon"; section => "Home" &>
     <h2>What is Jamon?</h2>
 
-    <b>Jamon</b> is a template processor for <a
+    <b>Jamon</b> is a text template engine for <a
     href="http://java.sun.com">Java</a>, useful for generating dynamic
-    html, dynamic text, basically any dynamic text-based content. The
-    syntax of the templates is roughly based on <a
-    href="http://www.masonhq.com">Mason</a>, which is written in and
-    for <a href="http://www.perl.org">Perl</a>.
+    HTML, XML, or any text-based content. The syntax of the templates
+    is roughly based on <a href="http://www.masonhq.com">Mason</a>,
+    which is written in and for <a
+    href="http://www.perl.org">Perl</a>.
 
-    <h4>What is Jam&#243;n?</h4>
+    <p>
+      Some features of Jamon:
+    </p>
 
-    <emph>Jam&#243;n</emph> is a succulent spanish pork product, not to be
-    confused with <emph>ham</emph> (nor with <b>Jamon</b>).
+    <ul>
+
+      <li>
+        Jamon has a rich feature set to support encapsulation,
+        parameterization, and reuse of presentation logic. In
+        particular, Jamon templates can pass arbitrary dynamic content
+        (i.e. template fragments) as parameters to other templates.
+      </li>
+
+      <li>
+        You can pass arbitrary objects between templates (only <a
+        href="http://opensource.go.com/Tea/index.html">Tea</a> seems
+        to provide this capability).
+      </li>
+
+      <li>
+        Jamon is general-use; can produce arbitrary output format (for example,
+        <a href="http://xmlc.enhydra.org">Enhydra XMLC</a> and <a
+        href="http://www.zope.org">Zope</a> are tied to HTML or
+        XML). Consider generating text and / or multipart MIME email.
+      </li>
+
+      <li>
+        Templates are compiled into Java and then into bytecode for
+        type checking and performance. <b>BUT</b> changes to template
+        sources at runtime trigger dynamic retranslation and
+        recompilation of the templates. This dynamic recompilation can be
+        turned off for production deployment.
+      </li>
+
+      <li>
+        Jamon encourages the separation of presentation from controller logic.
+      </li>
+
+      <li>
+        Invocation of templates is compile-time type-checked like
+        any other method call. This is unique among Java template
+        processors. In fact, the templates themselves are translated
+        into Java classes (dynamically, for use e.g. during
+        development).
+      </li>
+
+    </ul>
 
     <h2>What isn't Jamon?</h2>
 
     Jamon does not provide the functionality of a <a
-    href="#FIXME">controller</a>, nor of a <a
-    href="#FIXME">servlet</a>. It is not a <a href="#FIXME">content
-    management system</a>. It does one thing, and does it well: it is
-    a powerful template processor for Java.
+    href="http://ootips.org/mvc-pattern.html">controller</a>, nor of a
+    <a
+    href="http://java.sun.com/products/servlet/">servlet</a>. Though
+    servlets and controllers often end up generating dynamic text
+    and/or html, those functions are better served by components in
+    the <emph>view</emph>, or the <emph>presentation</emph> layer.
 
     <h2>Why is Jamon?</h2>
 
-    Jamon provides the following advantages over <a
-    href="#FIXME">JSP</a> and other technologies:
+    The inspiration for Jamon was born over dissatisfaction with
+    current presentation layer technologies, including JSP and
+    Velocity, and a surprisingly pleasant experience with Mason.
 
-    <ul>
-      <li>
-        Separate presentation from controller logic (unlike JSP)
-      </li>
-      <li>
-        Rich feature set to support encapsulation, parameterization,
-        and reuse of presentation logic. In particular, Jamon
-        templates can pass arbitrary dynamic content (i.e. template
-        fragments) as parameters to other templates.
-      </li>
-      <li>
-        General-use; can produce arbitrary output format (for example,
-        <a href="http://xmlc.enhydra.org">Enhydra XMLC</a> and <a
-        href="http://www.zope.org">Zope</a> are tied to HTML or XML).
-      </li>
-      <li>
-        Pass arbitrary objects between templates (only <a
-        href="http://opensource.go.com/Tea/index.html">Tea</a> seems
-        to provide this capability).
-      </li>
-      <li>
-        Invocation of templates is typed like any other method
-        call. This is unique among Java template processors.
-      </li>
-    </ul>
 </&>
