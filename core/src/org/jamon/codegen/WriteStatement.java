@@ -31,17 +31,20 @@ public class WriteStatement
                    String p_templateIdentifier)
     {
         super(p_token, p_templateIdentifier);
-        m_expr = p_expr;
+        m_expr = p_expr.trim();
         m_escapingDirective = p_escapingDirective;
     }
 
     public void generateSource(CodeWriter p_writer,
                                TemplateDescriber p_describer)
     {
-        generateSourceLine(p_writer);
-        p_writer.println(m_escapingDirective.toJava() + ".write("
-                         + "this.valueOf(" + m_expr.trim() + ")"
-                         + ", " + ArgNames.WRITER + ");");
+        if (! "\"\"".equals(m_expr))
+        {
+            generateSourceLine(p_writer);
+            p_writer.println(m_escapingDirective.toJava() + ".write("
+                             + "this.valueOf(" + m_expr + ")"
+                             + ", " + ArgNames.WRITER + ");");
+        }
     }
 
     private final String m_expr;
