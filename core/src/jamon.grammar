@@ -15,7 +15,7 @@
  * created by Jay Sachs are Copyright (C) 2003 Jay Sachs.  All Rights
  * Reserved.
  *
- * Contributor(s):
+ * Contributor(s): Ian Robertson
  */
 
 Package
@@ -57,17 +57,21 @@ States
   body,
   def,
   imports,
+  extends,
+  extends_inner,
   emit,
   class,
   java,
   jline,
   call,
-  fargcall,
-  fargcallexp,
-  fargcallbody,
+  multifragmentcall,
+  multifragmentcallexp,
+  multifragmentcallbody,
   argexp,
   callexp,
   args,
+  parent_args,
+  parent_argexp,
   escape,
   literal,
   farginit;
@@ -76,19 +80,26 @@ Tokens
 
   {start -> farginit,body -> farginit} farg_start_begin = '<%frag';
   {farginit -> args} farg_start_done = '>';
+  {farginit -> body} farg_start_end = ws* '/>';
   {args -> body} args_end = '</%args>';
   {args -> body} farg_end = '</%frag>';
-  {start ->class,body -> class} class_start = '<%class>' ws*;
+  {start -> extends,body -> extends} extends_start = '<%extends' ws+;
+  {extends -> extends_inner} extends_start_done = ws* '>';
+  {extends_inner -> body} extends_end = ws* '</%extends>';
+  {extends_inner -> parent_args} use_start = '<%use>';
+  {parent_args -> extends_inner} use_end = '</%use>';
+  {start -> class,body -> class} class_start = '<%class>' ws*;
   {class -> body} class_end = ws* '</%class>';
   {start -> args, body -> args} args_start = '<%args>';
-  {start ->imports,body -> imports} import_start = '<%import>';
+  {start -> imports,body -> imports} import_start = '<%import>';
   {imports -> body} import_end = '</%import>';
   {start ->java,body -> java} java_start = '<%java>' ws*;
   {java -> body} java_end = ws* '</%java>';
   {args,imports} dot = period;
-  {args -> argexp} arrow = '=>' hs*;
-  {call,fargcall,fargcallbody,args,farginit,imports} white_space = ws*;
-  {call,fargcall,fargcallbody,args,farginit,imports,def} identifier = letter letter_or_digit*;
+  {args -> argexp, parent_args -> parent_argexp} arrow = '=>' hs*;
+  {call,multifragmentcall,multifragmentcallbody,args,farginit,imports, extends_inner, parent_args} white_space = ws*;
+  {call,multifragmentcall,multifragmentcallbody,args,parent_args,farginit,imports,def,extends} identifier = letter letter_or_digit*;
+  {call} child_call = '*CHILD';
 
   {start -> emit,body -> emit} emit_start = '<%' ws+;
   {emit -> body, escape -> body} emit_end = ws* '%>';
@@ -106,8 +117,9 @@ Tokens
   {jline -> start} outjava = hs* nl;
   {jline} expr = all_except_nl*;
    // fixme: line ending ...
-  {argexp} argexpr = ([all - [argsep+q]] | quoted | squoted)*;
-  {argexp -> args,args} donearg = hs* argsep ws*;
+  {argexp, parent_argexp} argexpr = ([all - [argsep+q]] | quoted | squoted)*;
+  {argexp -> args,parent_argexp -> parent_args, args, parent_args}
+      donearg = hs* argsep ws*;
 
   {java} java_stmts =
        ( [all - [q + lt]]
@@ -153,22 +165,22 @@ Tokens
   {literal -> body} litend = '</%LITERAL>';
 
   {args} brackets = '[' (hs)* ']';
-  {start -> body,body,fargcallbody -> body} fragment_call_end = '</&>';
-  {call -> callexp, fargcall -> fargcallexp} carrow = '=>' hs*;
+  {start -> body,body,multifragmentcallbody -> body} fragment_call_end = '</&>';
+  {call -> callexp, multifragmentcall -> multifragmentcallexp} carrow = '=>' hs*;
   {start -> call, body -> call} fragment_call_start = '<&|' ws*;
   {start -> call,body -> call} call_start = '<&' ws*;
-  {fargcall -> fargcallbody, call -> body} call_end = ws* '&>';
-  {callexp -> call, fargcallexp -> fargcall} param_expr =
+  {multifragmentcall -> multifragmentcallbody, call -> body} call_end = ws* '&>';
+  {callexp -> call, multifragmentcallexp -> multifragmentcall} param_expr =
        ([all - [argsep + [q + '&']]] | quoted | squoted | '&' [all - '>'])*;
-  {fargcall,call,imports} semi = ';';
-  {fargcall,call} pathsep = slash;
+  {multifragmentcall,call,imports} semi = ';';
+  {multifragmentcall,call,extends} pathsep = slash;
 
-  {start -> fargcall, body -> fargcall} farg_call_init = '<&||' ws*;
+  {start -> multifragmentcall, body -> multifragmentcall} multi_fragment_call_init = '<&||' ws*;
 
 
-  {fargcallbody} named_farg_init = '<|';
-  {fargcallbody -> body} named_farg_done = '>';
-  {body -> fargcallbody} named_farg_end = '</|>';
+  {multifragmentcallbody} named_farg_init = '<|';
+  {multifragmentcallbody -> body} named_farg_done = '>';
+  {body -> multifragmentcallbody} named_farg_end = '</|>';
 
   {start -> def,body -> def} def_start = '<%def' hs+;
   {body,start} def_end = '</%def>';
@@ -200,7 +212,7 @@ Productions
             | {emit} emit
             | {call} call
             | {fragment_call} fragment_call
-            | {farg_call} farg_call
+            | {multi_fragment_call} multi_fragment_call
             | {args} args
             | {farg} farg
             ;
@@ -209,15 +221,18 @@ Productions
             | {imports} imports
             | {def} def
             | {class} class_tag
+            | {extends} extends_start path extends_start_done use? extends_end
             ;
 
   def = def_start identifier gt base_component* def_end;
 
-  call = call_start path param* call_end;
+  call = call_start path param* call_end
+       | {child} call_start child_call call_end
+       ;
 
   fragment_call = fragment_call_start path param* call_end base_component* fragment_call_end;
 
-  farg_call = farg_call_init path param* call_end named_farg* fragment_call_end;
+  multi_fragment_call = multi_fragment_call_init path param* call_end named_farg* fragment_call_end;
   named_farg = named_farg_init identifier named_farg_done base_component* named_farg_end;
 
   imports = import_start import* import_end;
@@ -228,9 +243,12 @@ Productions
 
   class_tag = class_start class_content* class_end;
 
-  farg = farg_start arg* farg_end;
+  farg = farg_start arg* farg_end
+       | {argless} farg_tag;
 
   farg_start = farg_start_begin identifier farg_start_done;
+
+  farg_tag = farg_start_begin identifier farg_start_end;
 
   java = java_start java_stmts java_end;
 
@@ -246,6 +264,8 @@ Productions
 
   arg = type [name]: identifier default? donearg;
 
+  parent_arg = [name]: identifier default? donearg;
+
   param = semi identifier carrow param_expr;
 
   default = arrow argexpr;
@@ -254,3 +274,5 @@ Productions
        | {qualified} name dot identifier;
 
   type = name brackets*;
+
+  use = use_start parent_arg* use_end;

@@ -1,8 +1,8 @@
 <%def subX>\
-<%frag f> int num; </%frag>\
+<%frag f> int numByAnyOtherName; </%frag>\
 <%args> int[] nums; </%args>\
 % for (int i = 0; i < nums.length; i++) {
-<& f; num => nums[i] &>\
+<& f; numByAnyOtherName => nums[i] &>\
 % }
 </%def>\
 <%args> int[] nums; </%args>\

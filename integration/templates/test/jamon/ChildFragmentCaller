@@ -1,0 +1,1 @@
+<&| ChildFragment &><%args>int j;</%args><% j %></&>

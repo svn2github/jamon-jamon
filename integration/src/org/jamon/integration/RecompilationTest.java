@@ -28,16 +28,11 @@ import java.io.File;
 public class RecompilationTest
     extends TestBase
 {
-    protected boolean doDynamicRecompilation()
-    {
-        return true;
-    }
-
     public void testIt()
         throws Exception
     {
         Recompilation template =
-            new Recompilation(getTemplateManager())
+            new Recompilation(getRecompilingTemplateManager())
             .writeTo(getWriter());
         template.render();
         checkOutput("This is the template");

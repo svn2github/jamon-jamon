@@ -15,13 +15,11 @@
  * created by Jay Sachs are Copyright (C) 2003 Jay Sachs.  All Rights
  * Reserved.
  *
- * Contributor(s):
+ * Contributor(s): Ian Robertson
  */
 
 package org.jamon.codegen;
 
-import java.io.Writer;
-import java.io.PrintWriter;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
@@ -37,83 +35,23 @@ import org.jamon.JamonException;
 
 public class ImplAnalyzer extends BaseAnalyzer
 {
+    public ImplAnalyzer(String p_templatePath,
+                        TemplateDescriber p_describer)
+    {
+        super(p_templatePath, p_describer);
+    }
+
     private StringBuffer m_current = new StringBuffer();
-    private StringBuffer m_classContent = new StringBuffer();
-    private final Set m_calls = new HashSet();
 
-    private final String m_path;
-
-    public ImplAnalyzer(String p_templatePath, Start p_start)
+    protected void mainAnalyze(Start p_start)
         throws IOException
     {
-        m_path = p_templatePath;
-        try
-        {
-            p_start.apply(new Adapter());
-        }
-        catch (TunnelingException e)
-        {
-            throw new JamonException(e.getMessage());
-        }
+        p_start.apply(new Adapter());
     }
 
-    public String getClassContent()
+    private List getStatements()
     {
-        return m_classContent.toString();
-    }
-
-    public Collection getCalledTemplateNames()
-    {
-        Set calls = new HashSet();
-        calls.addAll(m_calls);
-        calls.removeAll(getDefNames());
-        List absCalls = new ArrayList(calls.size());
-        for (Iterator i = calls.iterator(); i.hasNext(); /* */)
-        {
-            absCalls.add(getAbsolutePath((String) i.next()));
-        }
-        return absCalls;
-    }
-
-    // FIXME: does this belong here?
-    private int m_lastVar = 0;
-    public String newVarName()
-    {
-        return "__jamon_var__" + (m_lastVar++);
-    }
-
-
-    public String getPath()
-    {
-        return m_path;
-    }
-
-
-    public String getAbsolutePath(String p_path)
-    {
-        // FIXME: should use properties ...
-        if (p_path.charAt(0) == '/')
-        {
-            return p_path;
-        }
-        else
-        {
-            int i = getPath().lastIndexOf('/');
-            if (i <= 0)
-            {
-                return "/" + p_path;
-            }
-            else
-            {
-                return getPath().substring(0,i) + "/" + p_path;
-            }
-        }
-
-    }
-
-    private List getStatements(String p_unitName)
-    {
-        return getAbstractUnitInfo(p_unitName).getStatements();
+        return getCurrentUnit().getStatements();
     }
 
     protected class Adapter extends BaseAnalyzer.Adapter
@@ -125,7 +63,8 @@ public class ImplAnalyzer extends BaseAnalyzer
                     .iterator();
                 i.hasNext();)
             {
-                m_classContent.append(((TClassContent)i.next()).getText());
+                getTemplateUnit().addClassContent
+                    (((TClassContent)i.next()).getText());
             }
         }
 
@@ -190,65 +129,26 @@ public class ImplAnalyzer extends BaseAnalyzer
                                             directive));
         }
 
-        private FargInfo maybeGetFargInfo(String p_path)
-        {
-            String unitName = getUnitName();
-            for (Iterator f = getUnitInfo(unitName).getFargNames();
-                 f.hasNext();
-                 /* */)
-            {
-                String name = (String) f.next();
-                if (p_path.equals(name))
-                {
-                    return getFargInfo(unitName,p_path);
-                }
-            }
-            if (unitName.startsWith("#fragment#"))
-            {
-                String name = popUnitName();
-                FargInfo val = maybeGetFargInfo(p_path);
-                pushUnitName(name);
-                return val;
-            }
-            else
-            {
-                return null;
-            }
-        }
-
-
         public void caseACallBaseComponent(ACallBaseComponent node)
         {
             handleBody();
-            ACall call = (ACall) node.getCall();
-            String path = asText(call.getPath());
-            FargInfo fargInfo = maybeGetFargInfo(path);
-            if (fargInfo != null)
-            {
-                addStatement(new FargCallStatement(path,
-                                                   makeParamMap(call.getParam()),
-                                                   fargInfo));
-            }
-            else
-            {
-                m_calls.add(path);
-                addStatement(new CallStatement(path,makeParamMap(call.getParam())));
-            }
+            node.getCall().apply(new PCallAdapter());
         }
 
-        public void caseAFargCallBaseComponent(AFargCallBaseComponent node)
+        public void caseAMultiFragmentCallBaseComponent(AMultiFragmentCallBaseComponent node)
         {
             handleBody();
-            AFargCall call = (AFargCall) node.getFargCall();
-            String path = asText(call.getPath());
-            CallStatement s =
-                new CallStatement(path,
-                                  makeParamMap(call.getParam()));
-            m_calls.add(path);
+            AMultiFragmentCall call =
+                (AMultiFragmentCall) node.getMultiFragmentCall();
+            String path = NodeUtils.asText(call.getPath());
+            CallStatement s = new CallStatement(path,
+                                                makeParamMap(call.getParam()),
+                                                getTemplateUnit());
+            getTemplateUnit().addCallPath(path);
             for (Iterator f = call.getNamedFarg().iterator(); f.hasNext(); /* */)
             {
                 ANamedFarg farg = (ANamedFarg) f.next();
-                pushUnit("#fragment#" + (fragments++));
+                pushFragmentUnitImpl(farg.getIdentifier().getText());
                 for (Iterator i = farg.getBaseComponent().iterator();
                      i.hasNext();
                      /* */)
@@ -256,9 +156,8 @@ public class ImplAnalyzer extends BaseAnalyzer
                     ((Node) i.next()).apply(this);
                 }
                 handleBody();
-                s.addFragmentArg(farg.getIdentifier().getText(),
-                                 getStatements(getUnitName()));
-                popUnitName();
+                s.addFragmentImpl((FragmentUnit) getCurrentUnit());
+                popUnit();
             }
             addStatement(s);
         }
@@ -267,20 +166,22 @@ public class ImplAnalyzer extends BaseAnalyzer
         {
             handleBody();
             AFragmentCall call = (AFragmentCall) node.getFragmentCall();
-            String path = asText(call.getPath());
-            CallStatement s =
-                new CallStatement(path,
-                                  makeParamMap(call.getParam()));
-            m_calls.add(path);
+            String path = NodeUtils.asText(call.getPath());
+            CallStatement s = new CallStatement(path,
+                                                makeParamMap(call.getParam()),
+                                                getTemplateUnit());
+            getTemplateUnit().addCallPath(path);
 
-            pushUnit("#fragment#" + (fragments++));
-            for (Iterator i = call.getBaseComponent().iterator(); i.hasNext(); /* */)
+            pushFragmentUnitImpl(null);
+            for (Iterator i = call.getBaseComponent().iterator();
+                 i.hasNext();
+                 /* */)
             {
                 ((Node) i.next()).apply(this);
             }
             handleBody();
-            s.addFragmentArg(null, getStatements(getUnitName()));
-            popUnitName();
+            s.addFragmentImpl((FragmentUnit) getCurrentUnit());
+            popUnit();
 
             addStatement(s);
         }
@@ -302,7 +203,47 @@ public class ImplAnalyzer extends BaseAnalyzer
 
     }
 
-    private int fragments = 0;
+    protected class PCallAdapter extends BaseAnalyzer.PCallAdapter
+    {
+        public void caseACall(ACall p_call)
+        {
+            String path = NodeUtils.asText(p_call.getPath());
+            FragmentUnit fragmentUnit = getCurrentUnit()
+                .getFragmentUnitIntf(path);
+            if (fragmentUnit != null)
+            {
+                addStatement(new FargCallStatement
+                    (path,
+                     makeParamMap(p_call.getParam()),
+                     fragmentUnit));
+            }
+            else
+            {
+                getTemplateUnit().addCallPath(path);
+                addStatement(new CallStatement(path,
+                                               makeParamMap(p_call.getParam()),
+                                               getTemplateUnit()));
+            }
+        }
+
+        public void caseAChildCall(AChildCall p_childCall)
+        {
+            super.caseAChildCall(p_childCall);
+            addStatement(new Statement() {
+                    public void generateSource(IndentingWriter p_writer,
+                                               TemplateResolver p_resolver,
+                                               TemplateDescriber p_describer)
+                    {
+                        p_writer.println(ImplGenerator.CHILD_FARG_NAME
+                                         + ".writeTo(this.getWriter());");
+                        p_writer.println(ImplGenerator.CHILD_FARG_NAME
+                                         + ".escaping(this.getEscaping());");
+                        p_writer.println(ImplGenerator.CHILD_FARG_NAME
+                                         + ".render();");
+                    }
+                });
+        }
+    }
 
     private void handleBody()
     {
@@ -326,32 +267,9 @@ public class ImplAnalyzer extends BaseAnalyzer
         return paramMap;
     }
 
-    private String asText(PPath node)
-    {
-        if (node instanceof ASimplePath)
-        {
-            ASimplePath path = (ASimplePath) node;
-            if (path.getPathsep() != null)
-            {
-                return "/" + path.getIdentifier().getText();
-            }
-            else
-            {
-                return path.getIdentifier().getText();
-            }
-        }
-        else
-        {
-            AQualifiedPath path = (AQualifiedPath) node;
-            return asText(path.getPath())
-                + "/"
-                + path.getIdentifier().getText();
-        }
-    }
-
     private void addStatement(Statement p_statement)
     {
-        getAbstractUnitInfo(getUnitName()).addStatement(p_statement);
+        getCurrentUnit().addStatement(p_statement);
     }
 
 }

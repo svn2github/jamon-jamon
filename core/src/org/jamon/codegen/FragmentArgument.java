@@ -11,28 +11,28 @@
  *
  * The Original Code is Jamon code, released February, 2003.
  *
- * The Initial Developer of the Original Code is Jay Sachs.  Portions
- * created by Jay Sachs are Copyright (C) 2003 Jay Sachs.  All Rights
+ * The Initial Developer of the Original Code is Ian Robertson.  Portions
+ * created by Ian Robertson are Copyright (C) 2003 Ian Robertson.  All Rights
  * Reserved.
  *
- * Contributor(s): Ian Robertson
+ * Contributor(s):
  */
 
 package org.jamon.codegen;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-public class FargInfo extends AbstractUnitInfo
+public class FragmentArgument extends RequiredArgument
 {
-    public FargInfo(String p_name)
+    public FragmentArgument(FragmentUnit p_fragmentUnit)
     {
-        super(p_name);
+        super(p_fragmentUnit.getName(),
+              p_fragmentUnit.getFragmentInterfaceName());
+        m_fragmentUnit = p_fragmentUnit;
     }
 
-    public String getFargInterfaceName()
+    public FragmentUnit getFragmentUnit()
     {
-        return "Fragment_" + getName();
+        return m_fragmentUnit;
     }
+
+    private final FragmentUnit m_fragmentUnit;
 }

@@ -32,8 +32,7 @@ public class RawStatement
 
     public void generateSource(IndentingWriter p_writer,
                                TemplateResolver p_resolver,
-                               TemplateDescriber p_describer,
-                               ImplAnalyzer p_analyzer)
+                               TemplateDescriber p_describer)
         throws IOException
     {
         p_writer.println(m_code);

@@ -21,10 +21,13 @@
 package org.jamon.codegen;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
+import java.util.Set;
 import java.io.Reader;
 import java.io.IOException;
 import java.io.PushbackReader;
@@ -48,107 +51,36 @@ public class TemplateDescriber
 
     private final TemplateSource m_templateSource;
 
-    public FargInfo getFargInfo(String p_path, String p_fargName)
-        throws IOException
+    public TemplateDescription getTemplateDescription(final String p_path)
+         throws IOException
     {
-        if (m_templateSource.available(p_path))
-        {
-            return new BaseAnalyzer(parseTemplate(p_path)).getFargInfo(p_fargName);
-        }
-        else
-        {
-            FargInfo fargInfo = new FargInfo(p_fargName);
-            try
-            {
-                 String[] argNames = (String[])
-                     Class.forName(StringUtils.templatePathToClassName(p_path))
-                     .getField("FARGINFO_" + p_fargName + "_ARG_NAMES")
-                     .get(null);
-                 String[] argTypes = (String[])
-                     Class.forName(StringUtils.templatePathToClassName(p_path))
-                     .getField("FARGINFO_" + p_fargName + "_ARG_TYPES")
-                     .get(null);
-                 for(int i = 0; i < argNames.length; i++)
-                 {
-                     fargInfo.addRequiredArg(argNames[i], argTypes[i]);
-                 }
-                 return fargInfo;
-            }
-            catch (RuntimeException e)
-            {
-                throw e;
-            }
-            catch (Exception e)
-            {
-                throw new JamonException(e);
-            }
-        }
+        return getTemplateDescription(p_path, new HashSet());
     }
 
-    public Iterator getFargNames(String p_path)
-        throws IOException
-    {
-        if (m_templateSource.available(p_path))
-        {
-            return new BaseAnalyzer(parseTemplate(p_path))
-                .getUnitInfo().getFargNames();
-        }
-        else
-        {
-            try
-            {
-                return Arrays.asList
-                    ( (String [])
-                      Class.forName(StringUtils.templatePathToClassName(p_path))
-                          .getField("FARGNAMES")
-                          .get(null) )
-                    .iterator();
-            }
-            catch (RuntimeException e)
-            {
-                throw e;
-            }
-            catch (Exception e)
-            {
-                throw new JamonException(e);
-            }
-        }
-    }
-
-    public List getRequiredArgNames(final String p_path)
-        throws IOException
-    {
-        if (m_templateSource.available(p_path))
-        {
-            LinkedList list = new LinkedList();
-            BaseAnalyzer g = new BaseAnalyzer(parseTemplate(p_path));
-            for (Iterator i = g.getUnitInfo().getRequiredArgs();
-                 i.hasNext();
-                 /* */)
-            {
-                list.add(((Argument)i.next()).getName());
-            }
-            return list;
-        }
-        else
-        {
-            try
-            {
-                return Arrays.asList
-                    ( (String [])
-                      Class.forName(StringUtils.templatePathToClassName(p_path))
-                          .getField("REQUIRED_ARGS")
-                          .get(null) );
-            }
-            catch (RuntimeException e)
-            {
-                throw e;
-            }
-            catch (Exception e)
-            {
-                throw new JamonException(e);
-            }
-        }
+    //FIXME - need a unit test for finding inheritance loops.
+    public TemplateDescription getTemplateDescription(final String p_path,
+                                                      final Set p_children)
+         throws IOException
+     {
+         if (m_templateSource.available(p_path))
+         {
+             return new TemplateDescription
+                 (new BaseAnalyzer(p_path, this, p_children).analyze());
+         }
+         else
+         {
+             try
+             {
+                 return new TemplateDescription(
+                     Class.forName(
+                         StringUtils.templatePathToClassName(p_path)));
+             }
+             catch(ClassNotFoundException e)
+             {
+                 throw new JamonException
+                     ("Unable to find template or class for " + p_path);
+             }
+         }
     }
 
     public Start parseTemplate(String p_path)

@@ -36,13 +36,11 @@ public interface Statement
      * @param p_writer where to emit the java source
      * @param p_resolver the <code>TemplateResolver</code> to use
      * @param p_describer the <code>TemplateDescriber</code> to use
-     * @param p_analyzer the <code>ImplAnalyzer</code> to use
      *
      * @exception IOException if something goes wrong
      */
     void generateSource(IndentingWriter p_writer,
                         TemplateResolver p_resolver,
-                        TemplateDescriber p_describer,
-                        ImplAnalyzer p_analyzer)
+                        TemplateDescriber p_describer)
         throws IOException;
 }

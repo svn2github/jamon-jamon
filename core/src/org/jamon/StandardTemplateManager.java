@@ -46,6 +46,7 @@ import org.jamon.codegen.BaseAnalyzer;
 import org.jamon.codegen.ImplGenerator;
 import org.jamon.codegen.IntfGenerator;
 import org.jamon.codegen.TemplateResolver;
+import org.jamon.codegen.TemplateUnit;
 
 /**
  * The standard implementation of the {@link TemplateManager}
@@ -597,9 +598,8 @@ public class StandardTemplateManager
             trace("generating impl for " + p_path);
         }
 
-        ImplAnalyzer ia =
-            new ImplAnalyzer(p_path,
-                             m_describer.parseTemplate(p_path));
+        TemplateUnit templateUnit =
+            new ImplAnalyzer(p_path,m_describer).analyze();
 
         File javaFile = getWriteableFile(javaImpl(p_path));
         FileWriter writer = new FileWriter(javaFile);
@@ -608,10 +608,10 @@ public class StandardTemplateManager
             new ImplGenerator(writer,
                               new TemplateResolver(),
                               m_describer,
-                              ia)
+                              templateUnit)
                 .generateSource();
             writer.close();
-            return ia.getCalledTemplateNames();
+            return templateUnit.getTemplateDependencies();
         }
         catch (IOException e)
         {
@@ -655,11 +655,11 @@ public class StandardTemplateManager
     private boolean generateIntfIfChanged(String p_path)
         throws IOException
     {
-        BaseAnalyzer bg =
-            new BaseAnalyzer(m_describer.parseTemplate(p_path));
+        TemplateUnit templateUnit = new BaseAnalyzer(p_path, m_describer)
+                .analyze();
 
         String oldsig = getIntfSignatureFromClass(p_path);
-        if (! bg.getUnitInfo().getSignature().equals(oldsig))
+        if (! templateUnit.getSignature().equals(oldsig))
         {
             if (TRACE)
             {
@@ -669,10 +669,10 @@ public class StandardTemplateManager
             FileWriter writer = new FileWriter(javaFile);
             try
             {
-                new IntfGenerator(new TemplateResolver(),
-                                  p_path,
-                                  bg,
-                                  writer)
+                new IntfGenerator(writer,
+                                  new TemplateResolver(),
+                                  m_describer,
+                                  templateUnit)
                     .generateClassSource();
                 writer.close();
             }
@@ -724,9 +724,9 @@ public class StandardTemplateManager
             trace("computing dependencies for " + p_path);
         }
 
-        return new ImplAnalyzer(p_path,
-                                m_describer.parseTemplate(p_path))
-            .getCalledTemplateNames();
+        return new ImplAnalyzer(p_path, m_describer)
+            .analyze()
+            .getTemplateDependencies();
     }
 
 

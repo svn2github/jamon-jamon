@@ -25,25 +25,16 @@ import java.io.Writer;
 import java.io.StringWriter;
 import java.io.IOException;
 
-import junit.framework.TestCase;
-
 import org.jamon.StandardTemplateManager;
 import org.jamon.TemplateManager;
 
 public abstract class TestBase
-    extends TestCase
+    extends AbstractTestBase
 {
     public void setUp()
-        throws Exception
     {
-        m_templateManager = new StandardTemplateManager
-            (new StandardTemplateManager.Data()
-                 .setDynamicRecompilation(doDynamicRecompilation())
-                 .setSourceDir(SOURCE_DIR)
-                 .setClasspath(System.getProperty
-                               ("org.jamon.integration.classpath"))
-                 .setCacheSize(cacheSize())
-                 .setWorkDir(WORK_DIR));
+        m_templateManager = null;
+        m_recompilingTemplateManager = null;
         resetWriter();
     }
 
@@ -52,7 +43,7 @@ public abstract class TestBase
         return 10;
     }
 
-    protected boolean doDynamicRecompilation()
+    protected final boolean doDynamicRecompilation()
     {
         return false;
     }
@@ -95,10 +86,37 @@ public abstract class TestBase
     }
 
     protected TemplateManager getTemplateManager()
+        throws IOException
     {
+        if(m_templateManager == null)
+        {
+            m_templateManager = constructTemplateManager(false);
+        }
         return m_templateManager;
     }
 
+    protected TemplateManager getRecompilingTemplateManager()
+        throws IOException
+    {
+        if(m_recompilingTemplateManager == null)
+        {
+            m_recompilingTemplateManager = constructTemplateManager(true);
+        }
+        return m_recompilingTemplateManager;
+    }
+
+    private TemplateManager constructTemplateManager(boolean p_recompiling)
+        throws IOException
+    {
+        return new StandardTemplateManager
+            (new StandardTemplateManager.Data()
+                 .setDynamicRecompilation(p_recompiling)
+                 .setSourceDir(SOURCE_DIR)
+                 .setClasspath(System.getProperty
+                               ("org.jamon.integration.classpath"))
+                 .setCacheSize(cacheSize())
+                 .setWorkDir(WORK_DIR));
+    }
 
     private String removeCrs(StringBuffer p_string)
     {
@@ -121,6 +139,7 @@ public abstract class TestBase
     }
 
     private TemplateManager m_templateManager;
+    private TemplateManager m_recompilingTemplateManager;
     private StringWriter m_writer;
 
 }

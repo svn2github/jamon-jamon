@@ -31,8 +31,7 @@ public class WriteStatement
 
     public void generateSource(IndentingWriter p_writer,
                                TemplateResolver p_resolver,
-                               TemplateDescriber p_describer,
-                               ImplAnalyzer p_analyzer)
+                               TemplateDescriber p_describer)
     {
         p_writer.print("this.writeEscaped(this.valueOf(");
         p_writer.print(m_expr);

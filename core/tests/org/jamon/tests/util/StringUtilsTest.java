@@ -21,6 +21,7 @@
 package org.jamon.tests.util;
 
 import java.io.File;
+import java.util.Arrays;
 import junit.framework.TestCase;
 import org.jamon.util.StringUtils;
 
@@ -85,6 +86,46 @@ public class StringUtilsTest
         assertEquals("0000", StringUtils.hexify4(0));
         assertEquals("ffff", StringUtils.hexify4(0xffff));
         assertEquals("03b8", StringUtils.hexify4(0x03b8));
+    }
+
+
+    public void testCommaJoin0()
+        throws Exception
+    {
+        StringBuffer buf = new StringBuffer("prefix ");
+        StringUtils.commaJoin(buf,
+                              (Arrays.asList(new String[] {}).iterator()));
+        assertEquals("prefix ", buf.toString());
+    }
+
+    public void testCommaJoin1()
+        throws Exception
+    {
+        StringBuffer buf = new StringBuffer("prefix ");
+        StringUtils.commaJoin(buf,
+                              (Arrays.asList(new String[] {"foo"})
+                               .iterator()));
+        assertEquals("prefix foo", buf.toString());
+    }
+
+    public void testCommaJoin2()
+        throws Exception
+    {
+        StringBuffer buf = new StringBuffer("prefix ");
+        StringUtils.commaJoin(buf,
+                              (Arrays.asList(new String[] {"foo", "bar"})
+                               .iterator()));
+        assertEquals("prefix foo, bar", buf.toString());
+    }
+
+    public void testCommaJoin3()
+        throws Exception
+    {
+        StringBuffer buf = new StringBuffer("prefix ");
+        StringUtils.commaJoin(buf,
+                              Arrays.asList(new String[] {"foo", "bar", "baz"})
+                              .iterator());
+        assertEquals("prefix foo, bar, baz", buf.toString());
     }
 
 }

@@ -15,7 +15,7 @@
  * created by Ian Robertson are Copyright (C) 2003 Ian Robertson.  All Rights
  * Reserved.
  *
- * Contributor(s): Ian Robertson
+ * Contributor(s):
  */
 
 package org.jamon.codegen;
@@ -33,4 +33,5 @@ public interface ClassNames
         org.jamon.TemplateManager.class.getName();
     public static final String BASE_TEMPLATE =
         org.jamon.AbstractTemplateImpl.class.getName();
+    public static final String CHILD_FARG = BASE_TEMPLATE + ".ChildFarg";
 }

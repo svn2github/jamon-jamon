@@ -8,6 +8,8 @@
   <property file="../build.properties"/>
   <property file="${user.home}/.ant.properties"/>
 
+  <property name="org.jamon.integration.verbose" value="false"/>
+
   <property name="build.dir" value="build"/>
   <property name="build.src.dir" value="${build.dir}/src"/>
   <property name="build.src2.dir" value="${build.dir}/src2"/>
@@ -16,25 +18,26 @@
 
   <property name="sample.template1" value="test/jamon/TestTemplate"/>
   <property name="sample.template2" value="test/jamon/Arguments"/>
-  <property name="java.lib.junit" value="/usr/local/share/java/junit.jar" />
+  <property name="java.lib.junit" value="/usr/local/share/java/junit.jar"/>
 
-  <property name="junit.timeout" value="15000" />
-  <property name="junit.printsummary" value="off" />
-  <property name="junit.formatter" value="org.apache.tools.ant.taskdefs.optional.junit.BriefJUnitResultFormatter" />
+  <property name="junit.timeout" value="15000"/>
+  <property name="junit.printsummary" value="off"/>
+  <property name="junit.formatter" value="org.apache.tools.ant.taskdefs.optional.junit.BriefJUnitResultFormatter"/>
 
+  <property name="tests" value="*Test"/>
 
   <target name="jamon-libs-use-jar" if="org.jamon.integration.usejar">
-    <dirname property="jamon.top.dir" file="." />
+    <dirname property="jamon.top.dir" file="."/>
     <property name="java.lib.jamon" value="${jamon.top.dir}/jamon.jar"/>
   </target>
 
   <target name="jamon-libs-use-work" unless="org.jamon.integration.usejar">
-    <dirname property="jamon.top.dir" file="." />
+    <dirname property="jamon.top.dir" file="."/>
     <property name="java.lib.jamon"
-              value="${jamon.top.dir}/core/build/classes:${jamon.top.dir}/stdlib/build/classes:${jamon.top.dir}/anttask/build/classes" />
+              value="${jamon.top.dir}/core/build/classes:${jamon.top.dir}/stdlib/build/classes:${jamon.top.dir}/anttask/build/classes"/>
   </target>
 
-  <target name="init" depends="jamon-libs-use-jar,jamon-libs-use-work" />
+  <target name="init" depends="jamon-libs-use-jar,jamon-libs-use-work"/>
 
   <target name="template-src" depends="init">
     <echo file="templates/test/jamon/Recompilation"
@@ -47,11 +50,13 @@
       <srcfileset dir="${jamon.top.dir}/core/build/classes"/>
       <targetfileset dir="${build.src.dir}"/>
     </dependset>
-    <mkdir dir="${build.src.dir}" />
+    <mkdir dir="${build.src.dir}"/>
     <taskdef name="jamon"
              classname="org.jamon.ant.JamonTask"
-             classpath="${java.lib.jamon}" />
-    <jamon destdir="${build.src.dir}" srcdir="templates"/>
+             classpath="${java.lib.jamon}"/>
+    <jamon destdir="${build.src.dir}" srcdir="templates">
+      <exclude name="test/jamon/broken/*"/>
+    </jamon>
   </target>
 
   <target name="commandlineTemplates"
@@ -79,6 +84,11 @@
   <target name="compile"
           depends="templates"
           description="Compiles Java">
+    <dependset>
+      <srcfileset dir="${src.dir}" includes="**/*.java"/>
+      <srcfileset dir="${build.src.dir}" includes="**/*.java"/>
+      <targetfileset dir="${classes.dir}" includes="**/*.class"/>
+    </dependset>
     <mkdir dir="${classes.dir}"/>
     <javac destdir="${classes.dir}"
            debug="true"
@@ -95,30 +105,33 @@
     <java fork="true"
           classpath="${classes.dir}:${java.lib.jamon}"
           classname="org.jamon.Invoker">
-      <arg value="test.jamon.TestTemplate" />
-      <arg value="amount=4.5" />
-      <arg value="y=17" />
+      <arg value="test.jamon.TestTemplate"/>
+      <arg value="amount=4.5"/>
+      <arg value="y=17"/>
     </java>
   </target>
 
   <target name="test"
           depends="compile"
           description="Run the unit tests">
-    <dirname property="template.src.dir" file="${ant.file}" />
-    <property name="build.sysclasspath" value="last" />
+    <delete dir="${build.dir}/work"/>
+    <dirname property="template.src.dir" file="${ant.file}"/>
+    <property name="build.sysclasspath" value="last"/>
     <path id="org.jamon.integration.classpath">
-      <pathelement path="${java.lib.jamon}" />
-      <pathelement location="${template.src.dir}/${classes.dir}" />
+      <pathelement path="${java.lib.jamon}"/>
+      <pathelement location="${template.src.dir}/${classes.dir}"/>
     </path>
     <property name="org.jamon.integration.classpath"
-              refid="org.jamon.integration.classpath" />
+              refid="org.jamon.integration.classpath"/>
     <junit printsummary="${junit.printsummary}"
            timeout="${junit.timeout}"
            failureproperty="org.jamon.junit.failuresOccured">
       <sysproperty key="org.jamon.integration.basedir"
-                   value="${template.src.dir}" />
+                   value="${template.src.dir}"/>
       <sysproperty key="org.jamon.integration.classpath"
-                   value="${org.jamon.integration.classpath}" />
+                   value="${org.jamon.integration.classpath}"/>
+      <sysproperty key="org.jamon.integration.verbose"
+                   value="${org.jamon.integration.verbose}"/>
       <formatter classname="${junit.formatter}" usefile="no"/>
       <classpath>
         <pathelement location="${classes.dir}"/>
@@ -127,12 +140,12 @@
       </classpath>
       <batchtest>
         <fileset dir="${src.dir}">
-          <include name="**/*Test.java" />
+          <include name="**/${tests}.java"/>
           <exclude name="**/Abstract*.java"/>
         </fileset>
       </batchtest>
     </junit>
-    <fail message="tests failed" if="org.jamon.junit.failuresOccured" />
+    <fail message="tests failed" if="org.jamon.junit.failuresOccured"/>
   </target>
 
   <target name="cvsignores">
@@ -145,7 +158,7 @@
   </target>
 
   <target name="spotless" depends="clean">
-    <delete file=".cvsignore" />
+    <delete file=".cvsignore"/>
   </target>
 
 </project>

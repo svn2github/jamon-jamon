@@ -15,7 +15,7 @@
  * created by Jay Sachs are Copyright (C) 2003 Jay Sachs.  All Rights
  * Reserved.
  *
- * Contributor(s): Luis O'Shea
+ * Contributor(s): Luis O'Shea, Ian Robertson
  */
 
 package org.jamon;
@@ -28,6 +28,17 @@ import org.jamon.escaping.Escaping;
 
 public abstract class AbstractTemplateImpl
 {
+    protected abstract class ChildFarg extends AbstractTemplateImpl
+    {
+        public ChildFarg(TemplateManager p_templateManager)
+        {
+            super(p_templateManager, null);
+        }
+
+        public abstract void render()
+            throws java.io.IOException;
+    }
+
     protected AbstractTemplateImpl(TemplateManager p_templateManager,
                                    String p_path)
     {

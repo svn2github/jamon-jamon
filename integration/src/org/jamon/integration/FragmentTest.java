@@ -21,6 +21,7 @@
 package org.jamon.integration;
 
 import test.jamon.Fragment;
+import test.jamon.RepeatedFragmentName;
 
 /**
  * Test Jamon's template fragments.  See "Jamon User's Guide", section 8.
@@ -37,6 +38,15 @@ public class FragmentTest
             .writeTo(getWriter())
             .render(1);
         checkOutput("1(2)1");
+    }
+
+    public void testRepeatedFragmentNameExercise()
+        throws Exception
+    {
+        new RepeatedFragmentName(getTemplateManager())
+            .writeTo(getWriter())
+            .render();
+        checkOutput("d1:d1,d2:d2,d3:d3 - 7");
     }
 
 }

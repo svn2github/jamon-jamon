@@ -11,20 +11,34 @@
  *
  * The Original Code is Jamon code, released February, 2003.
  *
- * The Initial Developer of the Original Code is Jay Sachs.  Portions
- * created by Jay Sachs are Copyright (C) 2003 Jay Sachs.  All Rights
+ * The Initial Developer of the Original Code is Ian Robertson.  Portions
+ * created by Ian Robertson are Copyright (C) 2003 Ian Robertson.  All Rights
  * Reserved.
  *
- * Contributor(s): Ian Robertson
+ * Contributor(s):
  */
 
 package org.jamon.codegen;
 
-public class OptionalArgument extends Argument
+import org.jamon.node.AArg;
+import org.jamon.node.ADefault;
+
+public class OptionalArgument extends AbstractArgument
 {
+    public OptionalArgument(AArg p_arg, ADefault p_default)
+    {
+        super(p_arg);
+        m_default = p_default.getArgexpr().toString().trim();
+    }
+
     public OptionalArgument(String p_name, String p_type, String p_default)
     {
         super(p_name, p_type);
+        m_default = p_default;
+    }
+
+    public void setDefault(String p_default)
+    {
         m_default = p_default;
     }
 
@@ -33,5 +47,5 @@ public class OptionalArgument extends Argument
         return m_default;
     }
 
-    private final String m_default;
+    private String m_default;
 }

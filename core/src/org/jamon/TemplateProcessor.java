@@ -29,9 +29,9 @@ import org.jamon.util.StringUtils;
 import org.jamon.codegen.TemplateDescriber;
 import org.jamon.codegen.TemplateResolver;
 import org.jamon.codegen.ImplAnalyzer;
-import org.jamon.codegen.BaseAnalyzer;
 import org.jamon.codegen.ImplGenerator;
 import org.jamon.codegen.IntfGenerator;
+import org.jamon.codegen.TemplateUnit;
 import org.jamon.lexer.Lexer;
 import org.jamon.lexer.LexerException;
 import org.jamon.node.Start;
@@ -80,18 +80,16 @@ public class TemplateProcessor
                                StringUtils.classNameToFilePath(pkg));
         File javaFile = new File(pkgDir, className + ".java");
 
-        ImplAnalyzer analyzer =
-            new ImplAnalyzer(StringUtils.filePathToTemplatePath(templateName),
-                             m_describer.parseTemplate(templateName));
+        TemplateUnit templateUnit = new ImplAnalyzer
+            ("/" + StringUtils.filePathToTemplatePath(templateName),
+             m_describer)
+            .analyze();
         pkgDir.mkdirs();
         FileWriter writer = new FileWriter(javaFile);
 
         try
         {
-            new IntfGenerator(m_resolver,
-                              StringUtils.filePathToTemplatePath("/" + templateName),
-                              analyzer,
-                              writer)
+            new IntfGenerator(writer, m_resolver, m_describer, templateUnit)
                 .generateClassSource();
         }
         catch (RuntimeException e)
@@ -127,7 +125,7 @@ public class TemplateProcessor
             new ImplGenerator(writer,
                               m_resolver,
                               m_describer,
-                              analyzer)
+                              templateUnit)
                 .generateSource();
         }
         catch (RuntimeException e)

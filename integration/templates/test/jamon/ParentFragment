@@ -1,0 +1,4 @@
+<%frag f>
+  int i;
+</%frag>\
+<& f; i => 0 &><& *CHILD &><& f; i => 2 &>

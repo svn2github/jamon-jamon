@@ -1,0 +1,6 @@
+<%def foo>
+  <%frag content1/>
+  <%frag content2/>
+</%def>
+<&| foo &>
+</&>

@@ -15,7 +15,7 @@
  * created by Jay Sachs are Copyright (C) 2003 Jay Sachs.  All Rights
  * Reserved.
  *
- * Contributor(s):
+ * Contributor(s): Ian Robertson
  */
 
 package org.jamon.codegen;
@@ -30,34 +30,30 @@ import org.jamon.JamonException;
 public class FargCallStatement
     implements Statement
 {
-    FargCallStatement(String p_path,Map p_params, FargInfo p_fargInfo)
+    FargCallStatement(String p_path, Map p_params, FragmentUnit p_fragmentUnit)
     {
         m_path = p_path;
         m_params = p_params;
-        m_fargInfo = p_fargInfo;
+        m_fragmentUnit = p_fragmentUnit;
     }
 
     private final String m_path;
     private final Map m_params;
-    private final FargInfo m_fargInfo;
+    private final FragmentUnit m_fragmentUnit;
 
     public void generateSource(IndentingWriter p_writer,
                                TemplateResolver p_resolver,
-                               TemplateDescriber p_describer,
-                               ImplAnalyzer p_analyzer)
+                               TemplateDescriber p_describer)
         throws IOException
     {
         // FIXME!
         String tn = getPath();
-        p_writer.print  (tn);
-        p_writer.println(".writeTo(this.getWriter());");
-        p_writer.print  (tn);
-        p_writer.println(".escaping(this.getEscaping());");
-        p_writer.print  (tn);
-        p_writer.print  (".render(");
-        for (Iterator r = m_fargInfo.getRequiredArgs(); r.hasNext(); /* */)
+        p_writer.println(tn + ".writeTo(this.getWriter());");
+        p_writer.println(tn + ".escaping(this.getEscaping());");
+        p_writer.print  (tn + ".render(");
+        for (Iterator r = m_fragmentUnit.getRequiredArgs(); r.hasNext(); /* */)
         {
-            Argument arg = (Argument) r.next();
+            RequiredArgument arg = (RequiredArgument) r.next();
             String name = arg.getName();
             String expr = (String) m_params.get(name);
             if (expr == null)

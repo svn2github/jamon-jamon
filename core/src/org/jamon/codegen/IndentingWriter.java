@@ -87,6 +87,15 @@ public class IndentingWriter
         }
     }
 
+    public void finish() throws IllegalStateException
+    {
+        if(m_indentation != 0)
+        {
+            throw new IllegalStateException("indentation is " + m_indentation
+                                            + " at end of file");
+        }
+    }
+
     private void maybeIndent()
     {
         if (beginingOfLine)

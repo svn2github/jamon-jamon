@@ -226,7 +226,7 @@ public class Invoker
         try
         {
             m_writeToMethod.invoke(m_template, new Object[] { p_writer } );
-            Field required = m_templateClass.getField("REQUIRED_ARGS");
+            Field required = m_templateClass.getField("REQUIRED_ARG_NAMES");
             String[] requiredArgNames = (String[]) required.get(null);
             Object[] actuals = new Object[requiredArgNames.length];
             Class[] paramTypes = m_renderMethod.getParameterTypes();

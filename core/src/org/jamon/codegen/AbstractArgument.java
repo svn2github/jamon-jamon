@@ -11,26 +11,40 @@
  *
  * The Original Code is Jamon code, released February, 2003.
  *
- * The Initial Developer of the Original Code is Jay Sachs.  Portions
- * created by Jay Sachs are Copyright (C) 2003 Jay Sachs.  All Rights
+ * The Initial Developer of the Original Code is Ian Robertson.  Portions
+ * created by Ian Robertson are Copyright (C) 2003 Ian Robertson.  All Rights
  * Reserved.
  *
- * Contributor(s): Ian Robertson
+ * Contributor(s):
  */
 
 package org.jamon.codegen;
 
-public class Argument
+import org.jamon.node.AArg;
+import org.jamon.node.AType;
+
+public abstract class AbstractArgument
 {
-    public Argument(String p_name, String p_type)
+    public AbstractArgument(String p_name, String p_type)
     {
         m_name = p_name;
         m_type = p_type;
     }
 
+    public AbstractArgument(AArg p_arg)
+    {
+        this(p_arg.getName().getText(),
+             NodeUtils.asText((AType) p_arg.getType()));
+    }
+
     public String getName()
     {
         return m_name;
+    }
+
+    public String getObfuscatedName()
+    {
+        return "p__jamon__" + getName();
     }
 
     public String getType()
@@ -40,4 +54,5 @@ public class Argument
 
     private final String m_name;
     private final String m_type;
+
 }

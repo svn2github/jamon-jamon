@@ -15,32 +15,51 @@
  * created by Jay Sachs are Copyright (C) 2003 Jay Sachs.  All Rights
  * Reserved.
  *
- * Contributor(s):
+ * Contributor(s): Ian Robertson
  */
 
 package org.jamon.codegen;
 
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.List;
 import java.util.LinkedList;
-import java.util.Map;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.security.NoSuchAlgorithmException;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 import org.jamon.JamonException;
 import org.jamon.node.*;
-import org.jamon.analysis.*;
+import org.jamon.analysis.AnalysisAdapter;
 
 public class BaseAnalyzer
 {
-    public BaseAnalyzer(Start p_start)
+    public BaseAnalyzer(String p_templatePath,
+                        TemplateDescriber p_describer,
+                        Set p_children)
+    {
+        m_templateUnit = new TemplateUnit(p_templatePath);
+        m_currentUnit = m_templateUnit;
+        m_describer = p_describer;
+        m_children = p_children;
+    }
+
+    public BaseAnalyzer(String p_templatePath, TemplateDescriber p_describer)
+    {
+        this(p_templatePath, p_describer, new HashSet());
+    }
+
+    public TemplateUnit analyze()
         throws IOException
     {
-        this();
+        Start start =
+            m_describer.parseTemplate(m_templateUnit.getName());
         try
         {
-            p_start.apply(new Adapter());
+            preAnalyze(start);
+            mainAnalyze(start);
+            return m_templateUnit;
         }
         catch (TunnelingException e)
         {
@@ -48,145 +67,97 @@ public class BaseAnalyzer
         }
     }
 
-    protected static class TunnelingException
-        extends RuntimeException
+    private void preAnalyze(Start p_start)
+        throws IOException
     {
-        TunnelingException(String p_message)
+        for (Iterator i = ((ATemplate) p_start.getPTemplate())
+                 .getComponent().iterator();
+             i.hasNext(); )
         {
-            super(p_message);
+            ((PComponent) i.next()).apply(new PreliminaryAdapter());
         }
+
     }
 
-    protected BaseAnalyzer() {}
-
-    public List getDefNames()
+    protected void mainAnalyze(Start p_start)
+        throws IOException
     {
-        return m_defNames;
-    }
-
-    public Iterator getImports()
-    {
-        return m_imports.iterator();
-    }
-
-    protected static final String MAIN_UNIT_NAME = "";
-
-    protected final void pushUnitName(String p_unitName)
-    {
-        m_unitNames.addLast(p_unitName);
-    }
-
-    protected final void pushUnit(String p_unitName)
-    {
-        pushUnitName(p_unitName);
-        m_unit.put(p_unitName,new UnitInfo(p_unitName));
+        p_start.apply(new Adapter());
     }
 
     private final void pushDefUnit(String p_defName)
     {
-        pushUnitName(p_defName);
-        m_unit.put(p_defName, new DefInfo(p_defName));
+        DefUnit defUnit = new DefUnit(p_defName, getCurrentUnit());
+        m_currentUnit = defUnit;
+        getTemplateUnit().addDefUnit(defUnit);
     }
 
-    private final void pushFargUnit(String p_fragName)
+    protected final void pushFragmentUnitImpl(String p_fragName)
     {
-        String unitName = "#PFRAG#" + p_fragName;
-        pushUnitName(unitName);
-        m_unit.put(unitName, new FargInfo(p_fragName));
+        m_currentUnit = new FragmentUnit(p_fragName, getCurrentUnit());
     }
 
-    protected final String popUnitName()
+    protected final void popUnit()
     {
-        return (String) m_unitNames.removeLast();
+        m_currentUnit = m_currentUnit.getParent();
     }
 
-    private boolean isFarg(String p_unitName)
+    private String fragmentIntfKey(String p_unitName, String p_fragmentName)
     {
-        return m_unit.get(p_unitName) instanceof FargInfo;
+        return p_unitName + "__jamon__" + p_fragmentName;
     }
 
-    protected String getUnitName()
+    protected TemplateUnit getTemplateUnit()
     {
-        return (String) m_unitNames.getLast();
+        return m_templateUnit;
     }
 
-    public DefInfo getDefInfo(String p_defName)
+    protected AbstractUnit getCurrentUnit()
     {
-        return (DefInfo) getAbstractUnitInfo(p_defName);
+        return m_currentUnit;
     }
 
-    public FargInfo getFargInfo(String p_fargName)
-    {
-        return getFargInfo(MAIN_UNIT_NAME, p_fargName);
-    }
+    private final TemplateUnit m_templateUnit;
+    private AbstractUnit m_currentUnit;
+    private final TemplateDescriber m_describer;
+    private final Set m_children;
 
-    protected FargInfo getFargInfo(String p_unitName, String p_fargName)
+    private class PreliminaryAdapter extends AnalysisAdapter
     {
-        //FIXME - use the unitName or get rid of it.
-        return (FargInfo) getAbstractUnitInfo("#PFRAG#" + p_fargName);
-    }
-
-    public UnitInfo getUnitInfo()
-    {
-        return (UnitInfo) getUnitInfo(MAIN_UNIT_NAME);
-    }
-
-    public AbstractStandardUnitInfo getUnitInfo(String p_unitName)
-    {
-        return (AbstractStandardUnitInfo) getAbstractUnitInfo(p_unitName);
-    }
-
-    public AbstractUnitInfo getAbstractUnitInfo(String p_unitName)
-    {
-        return (AbstractUnitInfo)m_unit.get(p_unitName);
-    }
-
-    private final List m_imports = new LinkedList();
-    private final Map m_unit = new HashMap();
-    private final List m_defNames = new LinkedList();
-    private final LinkedList m_unitNames = new LinkedList();
-
-    private String asText(PName name)
-    {
-        if (name instanceof ASimpleName)
+        public void caseAExtendsComponent(AExtendsComponent p_extends)
         {
-            return ((ASimpleName)name).getIdentifier().getText();
-
-        }
-        else if (name instanceof AQualifiedName)
-        {
-            AQualifiedName qname = (AQualifiedName) name;
-            return asText(qname.getName())
-                + '.'
-                + qname.getIdentifier().getText();
-        }
-        else
-        {
-            throw new RuntimeException("Unknown name type "
-                                       + name.getClass().getName());
+            getTemplateUnit().setParentPath
+                (NodeUtils.asText(p_extends.getPath()));
+            try
+            {
+                getTemplateUnit().processParent(m_describer, m_children);
+            }
+            catch(IOException e)
+            {
+                throw new TunnelingException(e);
+            }
+            AUse use = (AUse) p_extends.getUse();
+            if (use != null)
+            {
+                for (Iterator i = use.getParentArg().iterator();
+                     i.hasNext(); )
+                {
+                    AParentArg arg = (AParentArg) i.next();
+                    ADefault argDefault = (ADefault) arg.getDefault();
+                    getTemplateUnit().addParentArg
+                        (arg.getName().getText(),
+                         (argDefault != null
+                          ? argDefault.getArgexpr().toString().trim()
+                          : null));
+                }
+            }
         }
     }
-
-    private String asText(PType p_type)
-    {
-        StringBuffer str = new StringBuffer();
-        AType type = (AType) p_type;
-        str.append(asText(type.getName()));
-        for (Iterator i = type.getBrackets().iterator(); i.hasNext(); i.next())
-        {
-            str.append("[]");
-        }
-        return str.toString();
-    }
-
 
     protected class Adapter extends AnalysisAdapter
     {
-
         public void caseStart(Start start)
         {
-            m_unitNames.add(MAIN_UNIT_NAME);
-            m_unit.put(getUnitName(),new UnitInfo(getUnitName()));
             start.getPTemplate().apply(this);
             start.getEOF().apply(this);
         }
@@ -209,85 +180,119 @@ public class BaseAnalyzer
             }
         }
 
-        public void caseAArg(AArg arg)
-        {
-            ADefault argDefault = (ADefault) arg.getDefault();
-            String name = arg.getName().getText();
-            String type = asText(arg.getType());
-            if (argDefault == null)
-            {
-                getAbstractUnitInfo(getUnitName()).addRequiredArg(name, type);
-            }
-            else if (isFarg(getUnitName()))
-            {
-                throw new TunnelingException
-                    ("farg '"
-                     + getAbstractUnitInfo(getUnitName()).getName()
-                     + "' has optional argument(s)");
-            }
-            else
-            {
-                getUnitInfo(getUnitName())
-                    .addOptionalArg(name,
-                                    type,
-                                    argDefault.getArgexpr().toString().trim());
-            }
-        }
-
         public void caseAImportsComponent(AImportsComponent imports)
         {
             AImports imps = (AImports) imports.getImports();
-            for (Iterator i = imps.getImport().iterator(); i.hasNext(); /* */ )
+            for (Iterator i = imps.getImport().iterator(); i.hasNext(); )
             {
-                m_imports.add(asText(((AImport) i.next()).getName()));
+                getTemplateUnit().addImport
+                    (NodeUtils.asText(((AImport) i.next()).getName()));
             }
         }
 
-        public void caseAArgsBaseComponent(AArgsBaseComponent args)
+        public void caseAArgsBaseComponent(AArgsBaseComponent p_args)
         {
-            AArgs a = (AArgs) args.getArgs();
-            for (Iterator i = a.getArg().iterator(); i.hasNext(); /**/ )
-            {
-                ((Node)i.next()).apply(this);
-            }
+            handleArgs(((AArgs) p_args.getArgs()).getArg().iterator(),
+                       getCurrentUnit());
         }
 
         public void caseAFargBaseComponent(AFargBaseComponent farg)
         {
-            AFarg f = (AFarg) farg.getFarg();
-            AFargStart start = (AFargStart) f.getFargStart();
+            farg.getFarg().apply( new AnalysisAdapter()
+                {
+                    public void caseAFarg(AFarg p_farg)
+                    {
+                        String fragmentName =
+                            ((AFargStart) p_farg.getFargStart())
+                            .getIdentifier().getText();
 
-            String pfragName = start.getIdentifier().getText();
-            pushFargUnit(pfragName);
+                        FragmentUnit fragmentUnit =
+                            new FragmentUnit(fragmentName, getCurrentUnit());
+                        handleFragmentArgs(p_farg.getArg().iterator(),
+                                           fragmentUnit);
 
-            for (Iterator a = f.getArg().iterator(); a.hasNext(); /* */)
+                        // FIXME: this doesn't handle multiple occurrences of a
+                        // frag name (say, in different def components) AT ALL.
+
+                        getCurrentUnit().addFragmentArg(
+                            new FragmentArgument(fragmentUnit));
+                    }
+
+                    public void caseAArglessFarg(AArglessFarg p_farg)
+                    {
+                        String fragmentName =
+                            ((AFargTag) p_farg.getFargTag())
+                            .getIdentifier().getText();
+                        FragmentUnit fragmentUnit =
+                            new FragmentUnit(fragmentName, getCurrentUnit());
+                        getCurrentUnit().addFragmentArg(
+                            new FragmentArgument(fragmentUnit));
+                    }
+                });
+        }
+
+        private void handleFragmentArgs(Iterator p_iter,
+                                        FragmentUnit p_fragmentUnit)
+        {
+            while(p_iter.hasNext())
             {
-                ((Node)a.next()).apply(this);
+                AArg arg = (AArg) p_iter.next();
+                if((ADefault) arg.getDefault() == null)
+                {
+                    p_fragmentUnit.addRequiredArg(new RequiredArgument(arg));
+                }
+                else
+                {
+                    throw new TunnelingException
+                        ("farg '" + p_fragmentUnit.getName()
+                         + "' has optional argument(s)");
+                }
             }
+        }
 
-            popUnitName();
-
-            // FIXME: this doesn't handle multiple occurrences of a
-            // frag name (say, in different def components) AT ALL.
-
-            getUnitInfo(getUnitName())
-                .addFarg(pfragName, "Fragment_" + pfragName);
-
+        private void handleArgs(Iterator p_iter,
+                                AbstractUnit p_unit)
+        {
+            while(p_iter.hasNext())
+            {
+                AArg arg = (AArg) p_iter.next();
+                ADefault argDefault = (ADefault) arg.getDefault();
+                if(argDefault == null)
+                {
+                    p_unit.addRequiredArg(new RequiredArgument(arg));
+                }
+                else
+                {
+                    p_unit.addOptionalArg
+                        (new OptionalArgument(arg, argDefault));
+                }
+            }
         }
 
         public void caseADefComponent(ADefComponent node)
         {
             ADef def = (ADef) node.getDef();
             String unitName = def.getIdentifier().getText();
-            m_defNames.add(unitName);
             pushDefUnit(unitName);
-            def.getDefStart().apply(this);
-            for (Iterator i = def.getBaseComponent().iterator(); i.hasNext(); /* */ )
+            for (Iterator i = def.getBaseComponent().iterator(); i.hasNext(); )
             {
                 ((Node)i.next()).apply(this);
             }
             def.getDefEnd().apply(this);
-            popUnitName();
+            popUnit();
+        }
+
+        public void caseACallBaseComponent(ACallBaseComponent node)
+        {
+            node.getCall().apply(new PCallAdapter());
+        }
+    }
+
+    protected class PCallAdapter extends AnalysisAdapter
+    {
+        public void caseAChildCall(AChildCall p_childCall)
+        {
+            getTemplateUnit().setIsParent();
         }
     }
 }

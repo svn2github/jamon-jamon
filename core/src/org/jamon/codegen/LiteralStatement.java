@@ -32,8 +32,7 @@ public class LiteralStatement
 
     public void generateSource(IndentingWriter p_writer,
                                TemplateResolver p_resolver,
-                               TemplateDescriber p_describer,
-                               ImplAnalyzer p_analyzer)
+                               TemplateDescriber p_describer)
     {
         p_writer.print("this.write(\"");
         p_writer.print(m_text);

@@ -21,10 +21,13 @@
 package org.jamon.codegen;
 
 import java.io.IOException;
+import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Iterator;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.SortedMap;
+import java.util.HashMap;
 
 import org.jamon.JamonException;
 import org.jamon.util.StringUtils;
@@ -32,228 +35,212 @@ import org.jamon.util.StringUtils;
 public class CallStatement
     implements Statement
 {
-    CallStatement(String p_path,Map p_params)
+    CallStatement(String p_path, Map p_params, TemplateUnit p_templateUnit)
     {
         m_path = p_path;
         m_params = p_params;
-        m_fragParams = new HashMap();
+        m_templateUnit = p_templateUnit;
     }
 
-    public void addFragmentArg(String p_name, List p_statements)
+    public void addFragmentImpl(FragmentUnit p_unit)
     {
-        m_fragParams.put(p_name, p_statements);
+        m_fragParams.put(p_unit.getName(), p_unit);
     }
 
     private final String m_path;
-    private final Map m_fragParams;
     private final Map m_params;
+    private final TemplateUnit m_templateUnit;
+    private final Map m_fragParams = new HashMap();;
 
-    private boolean isDefCall(ImplAnalyzer p_analyzer)
+    private boolean isDefCall()
     {
-        return p_analyzer.getDefNames().contains(getPath());
+        return m_templateUnit.doesDefExist(getPath());
     }
 
-    private final static String IOEXCEPTION_CLASS =
-        IOException.class.getName();
-    private final static String RENDERER_CLASS =
-        org.jamon.Renderer.class.getName();
-    private final static String WRITER_CLASS =
-        java.io.Writer.class.getName();
-
-    private String getFargName(String p_fargName,
-                               ImplAnalyzer p_analyzer,
-                               TemplateDescriber p_describer)
+    private void handleFragmentParam(FragmentUnit p_fragmentUnitIntf,
+                                     IndentingWriter p_writer,
+                                     TemplateResolver p_resolver,
+                                     TemplateDescriber p_describer)
         throws IOException
     {
-        if (p_fargName != null)
+        final FragmentUnit fragmentUnitImpl =
+            (FragmentUnit) m_fragParams.remove(p_fragmentUnitIntf.getName());
+        if (fragmentUnitImpl == null)
         {
-            return p_fargName;
-        }
-        else if (isDefCall(p_analyzer))
-        {
-            return (String)
-                p_analyzer.getUnitInfo(getPath()).getFargNames().next();
-        }
-        else
-        {
-            return (String) p_describer
-                .getFargNames(p_analyzer.getAbsolutePath(getPath())).next();
-        }
-    }
-
-    private void handleFragParam(String p_fargName,
-                                 List p_statements,
-                                 IndentingWriter p_writer,
-                                 TemplateResolver p_resolver,
-                                 TemplateDescriber p_describer,
-                                 ImplAnalyzer p_analyzer)
-        throws IOException
-    {
-        String fragVar = p_analyzer.newVarName();
-
-        String fargName = (String) getFargName(p_fargName,
-                                               p_analyzer,
-                                               p_describer);
-        FargInfo fargInfo =
-            isDefCall(p_analyzer)
-            ? p_analyzer.getFargInfo(fargName)
-            : p_describer.getFargInfo(p_analyzer.getAbsolutePath(getPath()),fargName);
-
-        if (fargInfo == null)
-        {
-            throw new JamonException("Unknown fragment arg " + fargName);
+            throw new JamonException
+                ("Call to " + getPath()
+                 + " is missing fragment " + p_fragmentUnitIntf.getName());
         }
 
-        p_writer.print("final ");
-
-        String fargIntf = fargInfo.getFargInterfaceName();
-        if (! isDefCall(p_analyzer))
+        String fragmentIntf = p_fragmentUnitIntf.getFragmentInterfaceName();
+        if (! isDefCall())
         {
-            fargIntf =
+            fragmentIntf =
                 p_resolver.getFullyQualifiedIntfClassName
-                    (p_analyzer.getAbsolutePath(getPath()))
-                + "." + fargIntf;
+                    (m_templateUnit.getAbsolutePath(getPath()))
+                + "." + fragmentIntf;
         }
 
-        String className = fargInfo.getFargInterfaceName()
-            + p_analyzer.newVarName();
-        p_writer.println("class " + className);
-        p_writer.println("  extends org.jamon.AbstractTemplateImpl");
-        p_writer.println("  implements " + fargIntf);
+        p_writer.print("new " + fragmentIntf
+                       + "(this.getTemplateManager(), \"\") ");
         p_writer.openBlock();
-        p_writer.println(className + "(org.jamon.TemplateManager p_manager)");
-        p_writer.openBlock();
-        p_writer.println("super(p_manager,\"\");");
-        p_writer.closeBlock();
 
-
-        p_writer.print("public " + RENDERER_CLASS + " makeRenderer(");
-        fargInfo.printRequiredArgsDecl(p_writer);
+        p_writer.print("public " + ClassNames.RENDERER + " makeRenderer(");
+        p_fragmentUnitIntf.printRequiredArgsDecl(p_writer);
         p_writer.println(")");
         p_writer.openBlock();
-        p_writer.print(  "return new " + RENDERER_CLASS + "()");
+        p_writer.print(  "return new " + ClassNames.RENDERER + "()");
         p_writer.openBlock();
         p_writer.print(  "public void renderTo(");
-        p_writer.print(  WRITER_CLASS);
+        p_writer.print(  ClassNames.WRITER);
         p_writer.println(" p_writer)");
         p_writer.print(  "  throws ");
-        p_writer.println(IOEXCEPTION_CLASS);
+        p_writer.println(ClassNames.IOEXCEPTION);
         p_writer.openBlock();
         p_writer.println("writeTo(p_writer);");
         p_writer.print  ("render(");
-        fargInfo.printRequiredArgs(p_writer);
+        p_fragmentUnitIntf.printRequiredArgs(p_writer);
         p_writer.println(");");
         p_writer.closeBlock();
         p_writer.closeBlock(";");
         p_writer.closeBlock();
 
         p_writer.print("public void render(");
-        fargInfo.printRequiredArgsDecl(p_writer);
+        fragmentUnitImpl.printRequiredArgsDecl(p_writer);
         p_writer.print(") throws ");
-        p_writer.println(IOEXCEPTION_CLASS);
+        p_writer.println(ClassNames.IOEXCEPTION);
         p_writer.openBlock();
-        for (Iterator i = p_statements.iterator(); i.hasNext(); /* */)
+        fragmentUnitImpl.printArgDeobfuscations(p_writer);
+        for (Iterator i = fragmentUnitImpl.getStatements().iterator();
+             i.hasNext(); )
         {
             ((Statement)i.next()).generateSource(p_writer,
                                                  p_resolver,
-                                                 p_describer,
-                                                 p_analyzer);
+                                                 p_describer);
             p_writer.println();
         }
         p_writer.closeBlock();
-        p_writer.closeBlock();
 
-        p_writer.print(className);
-        p_writer.print(" ");
-        p_writer.print(fragVar);
-        p_writer.println(" =");
-        p_writer.print("  new ");
-        p_writer.print(className);
-        p_writer.println(" (this.getTemplateManager());");
-        p_writer.print(fragVar);
-        p_writer.println(".writeTo(this.getWriter());");
-        p_writer.print(fragVar);
-        p_writer.println(".escaping(this.getEscaping());");
-        m_params.put(fargName, fragVar);
+        p_writer.closeBlock();
+    }
+
+    private void handleFragmentParams(List p_fragmentInterfaces,
+                                      IndentingWriter p_writer,
+                                      TemplateResolver p_resolver,
+                                      TemplateDescriber p_describer,
+                                      boolean p_argsAlreadyPrinted)
+        throws IOException
+    {
+        if (m_fragParams.size() == 1
+            && m_fragParams.keySet().iterator().next() == null)
+        {
+            if(p_fragmentInterfaces.size() == 0)
+            {
+                throw new JamonException
+                    ("Call to " + getPath()
+                     + " provides a fragment, but none are expected");
+            }
+            else if (p_fragmentInterfaces.size() > 1)
+            {
+                throw new JamonException
+                    ("Call to " + getPath()
+                     + " must provide multiple fragments");
+            }
+            else
+            {
+                m_fragParams.put
+                    (((AbstractArgument) p_fragmentInterfaces.get(0))
+                     .getName(),
+                     m_fragParams.remove(null));
+            }
+        }
+        for (Iterator i = p_fragmentInterfaces.iterator(); i.hasNext(); )
+        {
+            if (p_argsAlreadyPrinted)
+            {
+                p_writer.println(", ");
+            }
+            p_argsAlreadyPrinted = true;
+            handleFragmentParam
+                (((FragmentArgument) i.next()).getFragmentUnit(),
+                 p_writer,
+                 p_resolver,
+                 p_describer);
+        }
     }
 
     public void generateSource(IndentingWriter p_writer,
                                TemplateResolver p_resolver,
-                               TemplateDescriber p_describer,
-                               ImplAnalyzer p_analyzer)
+                               TemplateDescriber p_describer)
         throws IOException
     {
-        if (! m_fragParams.isEmpty())
+        if (isDefCall())
         {
-            p_writer.openBlock();
-            for (Iterator f = m_fragParams.entrySet().iterator(); f.hasNext(); /* */)
-            {
-                Map.Entry entry = (Map.Entry) f.next();
-                handleFragParam((String) entry.getKey(),
-                                (List) entry.getValue(),
-                                p_writer,
-                                p_resolver,
-                                p_describer,
-                                p_analyzer);
-            }
-        }
-
-
-        if (isDefCall(p_analyzer))
-        {
-            generateAsDefCall(p_writer, p_analyzer);
+            generateAsDefCall(p_writer, p_resolver, p_describer);
         }
         else
         {
             generateAsComponentCall(p_writer,
                                     p_resolver,
                                     p_describer,
-                                    p_analyzer,
-                                    p_analyzer.getAbsolutePath(m_path));
+                                    m_templateUnit.getAbsolutePath(m_path));
         }
+        checkSuppliedParams("arguments", m_params);
+        checkSuppliedParams("fragments", m_fragParams);
+    }
 
-        if (! m_fragParams.isEmpty())
+    private void checkSuppliedParams(String p_paramType, Map p_params)
+        throws JamonException
+    {
+        if (! p_params.isEmpty())
         {
-            p_writer.closeBlock();
+            StringBuffer message = new StringBuffer("Call to ");
+            message.append(getPath());
+            message.append(" provides unused ");
+            message.append(p_paramType);
+            message.append(" ");
+            StringUtils.commaJoin(message, p_params.keySet().iterator());
+            throw new JamonException(message.toString());
         }
     }
 
     private void generateAsDefCall(IndentingWriter p_writer,
-                                   ImplAnalyzer p_analyzer)
+                                   TemplateResolver p_resolver,
+                                   TemplateDescriber p_describer)
         throws IOException
     {
-        p_writer.print("__jamon_def__");
-        p_writer.print(getPath());
-        p_writer.print("(");
-        AbstractStandardUnitInfo unitInfo = p_analyzer.getUnitInfo(getPath());
-        for (Iterator r = unitInfo.getRequiredArgs(); r.hasNext(); /* */)
+        p_writer.println("__jamon_def__" + getPath() + "(");
+        p_writer.indent(2);
+        DefUnit unit = m_templateUnit.getDefUnit(getPath());
+        boolean argsAlreadyPrinted = false;
+        for (Iterator r = unit.getRequiredArgs(); r.hasNext(); /* */)
         {
-            Argument arg = (Argument) r.next();
+            if (argsAlreadyPrinted)
+            {
+                p_writer.println(",");
+            }
+            argsAlreadyPrinted = true;
+            RequiredArgument arg = (RequiredArgument) r.next();
             String name = arg.getName();
-            String expr = (String) m_params.get(name);
+            String expr = (String) m_params.remove(name);
             if (expr == null)
             {
                 throw new JamonException
                     ("No value supplied for required argument " + name);
             }
-            p_writer.print("(");
-            p_writer.print(expr);
-            p_writer.print(")");
-            if (r.hasNext())
+            p_writer.print("(" + expr + ")");
+        }
+        for (Iterator o = unit.getOptionalArgs(); o.hasNext(); /* */ )
+        {
+            if (argsAlreadyPrinted)
             {
-                p_writer.print(",");
+                p_writer.println(",");
             }
-        }
-        if (unitInfo.hasRequiredArgs() && unitInfo.hasOptionalArgs())
-        {
-            p_writer.print(",");
-        }
-        for (Iterator o = unitInfo.getOptionalArgs(); o.hasNext(); /* */ )
-        {
+            argsAlreadyPrinted = true;
             OptionalArgument arg = (OptionalArgument) o.next();
             String name = arg.getName();
             p_writer.print("(");
-            String expr = (String) m_params.get(name);
+            String expr = (String) m_params.remove(name);
             if (expr == null)
             {
                 p_writer.print(arg.getDefault());
@@ -265,16 +252,21 @@ public class CallStatement
             p_writer.print(")");
             if (o.hasNext())
             {
-                p_writer.print(",");
+                p_writer.println(",");
             }
         }
+        handleFragmentParams(unit.getFragmentArgsList(),
+                             p_writer,
+                             p_resolver,
+                             p_describer,
+                             argsAlreadyPrinted);
+        p_writer.outdent(2);
         p_writer.println(");");
     }
 
     private void generateAsComponentCall(IndentingWriter p_writer,
                                          TemplateResolver p_resolver,
                                          TemplateDescriber p_describer,
-                                         ImplAnalyzer p_analyzer,
                                          String p_absPath)
         throws IOException
     {
@@ -286,38 +278,48 @@ public class CallStatement
         p_writer.println(".writeTo(this.getWriter())");
         p_writer.println(".escaping(this.getEscaping())");
 
-        List requiredArgs = p_describer.getRequiredArgNames(p_absPath);
+        TemplateDescription desc =
+            p_describer.getTemplateDescription(p_absPath);
 
-        for (Iterator i = m_params.keySet().iterator(); i.hasNext(); /* */ )
+        for (Iterator i = desc.getOptionalArgs().iterator(); i.hasNext(); )
         {
-            String name = (String) i.next();
-            if (! requiredArgs.contains(name) )
+            String name = ((OptionalArgument) i.next()).getName();
+            String value = (String) m_params.remove(name);
+            if (value != null)
             {
                 p_writer.print(".set");
                 p_writer.print(StringUtils.capitalize(name));
                 p_writer.print("(");
-                p_writer.print(m_params.get(name));
+                p_writer.print(value);
                 p_writer.println(")");
+                i.remove();
             }
         }
         p_writer.print(".render(");
-        for (Iterator i = requiredArgs.iterator(); i.hasNext(); /* */)
+        boolean argsAlreadyPrinted = false;
+        for (Iterator i = desc.getRequiredArgs().iterator(); i.hasNext(); )
         {
-            String name = (String) i.next();
-            String expr = (String) m_params.get(name);
+            if (argsAlreadyPrinted)
+            {
+                p_writer.println(", ");
+            }
+            String name = ((RequiredArgument) i.next()).getName();
+            String expr = (String) m_params.remove(name);
             if (expr == null)
             {
-                throw new JamonException("No parameter supplied for argument "
+                throw new JamonException("No value supplied for required argument "
                                          + name
                                          + " in call to "
                                          + getPath());
             }
             p_writer.print(expr);
-            if (i.hasNext())
-            {
-                p_writer.print(", ");
-            }
+            argsAlreadyPrinted = true;
         }
+        handleFragmentParams(desc.getFragmentInterfaces(),
+                             p_writer,
+                             p_resolver,
+                             p_describer,
+                             argsAlreadyPrinted);
         p_writer.println(");");
         p_writer.outdent(5);
     }

@@ -1,0 +1,6 @@
+<%extends /test/jamon/ParentFragment>
+  <%use>
+    f;
+  </%use>
+</%extends>\
+{<& f; i => 1 &>}

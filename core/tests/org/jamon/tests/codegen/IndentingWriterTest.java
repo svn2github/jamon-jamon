@@ -61,6 +61,23 @@ public class IndentingWriterTest
                     + "line9" + nl);
     }
 
+    public void testFinish()
+    {
+        m_indentingWriter.openBlock();
+        boolean exceptionThrown = false;
+        try
+        {
+            m_indentingWriter.finish();
+        }
+        catch(IllegalStateException e)
+        {
+            exceptionThrown = true;
+        }
+        assertTrue(exceptionThrown);
+        m_indentingWriter.closeBlock();
+        m_indentingWriter.finish();
+    }
+
     private void checkOutput(String p_expected)
     {
         assertEquals(p_expected, m_stringWriter.toString());

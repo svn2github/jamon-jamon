@@ -27,20 +27,15 @@ import java.util.LinkedList;
 import org.jamon.JamonException;
 import org.jamon.util.StringUtils;
 
-public class DefInfo extends AbstractStandardUnitInfo
+public class DefUnit extends AbstractInnerUnit
 {
-    public DefInfo(String p_name)
+    public DefUnit(String p_name, AbstractUnit p_parent)
     {
-        super(p_name);
+        super(p_name, p_parent);
     }
 
     public void printAllArgsDecl(IndentingWriter p_writer)
     {
-        printRequiredArgsDecl(p_writer);
-        if(hasRequiredArgs() && hasOptionalArgs())
-        {
-            p_writer.println(", ");
-        }
-        printArgsDecl(p_writer, getOptionalArgs());
+        printArgsDecl(p_writer, getAllArgs());
     }
 }

@@ -1,0 +1,5 @@
+<%extends /test/jamon/Parent>
+</%extends>
+<%args>
+  int opt1;
+</%args>
