@@ -75,7 +75,6 @@ the documentation thus taking care of issues such as escaping.
           todir="${work.dir}" />
     <invoker classpath="${java.lib.jamon}"
              workDir="${work.dir}"
-             cleanWorkDir="false"
              compiler="${org.jamon.invoker.compiler}"
              sourceDir="templates"
              output="${doc.dir}/QsTemp.jamon"
@@ -102,7 +101,6 @@ the documentation thus taking care of issues such as escaping.
     <delete file="${temp.file}" />
     <invoker classpath="${java.lib.jamon}"
              workDir="${work.dir}"
-             cleanWorkDir="false"
              compiler="${org.jamon.invoker.compiler}"
              sourceDir="templates"
              output="${doc.dir}/Overview.html"
@@ -194,7 +192,6 @@ the documentation thus taking care of issues such as escaping.
     <dirname property="this.dir" file="build.xml" />
     <invoker classpath="${java.lib.jamon}"
              workDir="${work.dir}"
-             cleanWorkDir="false"
              compiler="${org.jamon.invoker.compiler}"
              sourceDir="templates"
              output="${tutorial.dir}/${tutorial.page}.html"
@@ -214,7 +211,6 @@ the documentation thus taking care of issues such as escaping.
     <echo message="${tutorial.page}"/>
     <invoker classpath="${java.lib.jamon}"
              workDir="${work.dir}"
-             cleanWorkDir="false"
              compiler="${org.jamon.invoker.compiler}"
              sourceDir="templates"
              output="${tutorial.dir}/${tutorial.page}.html"
@@ -259,7 +255,6 @@ the documentation thus taking care of issues such as escaping.
     </antcall>
     <invoker classpath="${java.lib.jamon}"
              workDir="${work.dir}"
-             cleanWorkDir="false"
              compiler="${org.jamon.invoker.compiler}"
              sourceDir="templates"
              output="${doc.dir}/Download.html"
@@ -288,7 +283,6 @@ the documentation thus taking care of issues such as escaping.
     <!-- Generate the first template example -->
     <invoker classpath="${java.lib.jamon}:${java.lib.diff}"
              workDir="${work.dir}"
-             cleanWorkDir="false"
              compiler="${org.jamon.invoker.compiler}"
              sourceDir="templates"
              output="${www.dir}/templates/foo/bar/HelloTemplate.jamon"
@@ -297,7 +291,6 @@ the documentation thus taking care of issues such as escaping.
     <property name="servlet.src.dir" value="${www.dir}/src/foo/bar" />
     <invoker classpath="${java.lib.jamon}:${java.lib.diff}"
              workDir="${work.dir}"
-             cleanWorkDir="false"
              compiler="${org.jamon.invoker.compiler}"
              sourceDir="templates"
              output="${servlet.src.dir}/HelloServlet.java"
@@ -305,7 +298,6 @@ the documentation thus taking care of issues such as escaping.
     <!-- Generate the ant script -->
     <invoker classpath="${java.lib.jamon}:${java.lib.diff}"
              workDir="${work.dir}"
-             cleanWorkDir="false"
              compiler="${org.jamon.invoker.compiler}"
              sourceDir="templates"
              output="${www.dir}/build.xml"
@@ -314,7 +306,6 @@ the documentation thus taking care of issues such as escaping.
     <invoker classpath="${java.lib.jamon}:${java.lib.diff}"
              compiler="${org.jamon.invoker.compiler}"
              workDir="${work.dir}"
-             cleanWorkDir="false"
              sourceDir="templates"
              output="${www.dir}/web.xml"
              template="/org/jamon/doc/servlet/webxml" />
@@ -323,7 +314,6 @@ the documentation thus taking care of issues such as escaping.
     <property name="servlet.src2.dir" value="${www.dir}/example2/src/foo/bar" />
     <invoker classpath="${java.lib.jamon}:${java.lib.diff}"
              workDir="${work.dir}"
-             cleanWorkDir="false"
              compiler="${org.jamon.invoker.compiler}"
              sourceDir="templates"
              output="${servlet.src2.dir}/HelloServlet.java"
@@ -331,7 +321,6 @@ the documentation thus taking care of issues such as escaping.
     <!-- Generate the form fields class for the second example -->
     <invoker classpath="${java.lib.jamon}:${java.lib.diff}"
              workDir="${work.dir}"
-             cleanWorkDir="false"
              compiler="${org.jamon.invoker.compiler}"
              sourceDir="templates"
              output="${servlet.src2.dir}/HelloFormFields.java"
@@ -339,7 +328,6 @@ the documentation thus taking care of issues such as escaping.
     <!-- Generate the second template example -->
     <invoker classpath="${java.lib.jamon}:${java.lib.diff}"
              workDir="${work.dir}"
-             cleanWorkDir="false"
              compiler="${org.jamon.invoker.compiler}"
              sourceDir="templates"
              output="${www.dir}/example2/templates/foo/bar/HelloTemplate"
@@ -370,7 +358,6 @@ the documentation thus taking care of issues such as escaping.
     <echo>Generating ${doc.dir}/${template}.html</echo>
     <invoker classpath="${java.lib.jamon}:${java.lib.diff}"
              workDir="${work.dir}"
-             cleanWorkDir="false"
              compiler="${org.jamon.invoker.compiler}"
              sourceDir="templates"
              output="${doc.dir}/${template}.html"
