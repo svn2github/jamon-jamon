@@ -234,16 +234,31 @@ public class BaseAnalyzer
         {
             AFarg f = (AFarg) farg.getFarg();
             AFargStart start = (AFargStart) f.getFargStart();
+
+            String pfragName = start.getIdentifier().getText();
+            pushUnitName("#PFRAG#" + pfragName);
+            m_unit.put(getUnitName(),new UnitInfo(getUnitName()));
+
+            for (Iterator a = f.getArg().iterator(); a.hasNext(); /* */)
+            {
+                ((Node)a.next()).apply(this);
+            }
+
+            if (getRequiredArgNames(getUnitName()).hasNext())
+            {
+                throw new UnsupportedOperationException("PFrags cannot have optional arguments");
+            }
+
+            popUnitName();
+
             // FIXME: we want to ensure that this is the first argument
             // FIXME: this doesn't handle multiple occurrences AT ALL.
+
             getUnitInfo(getUnitName())
-                .addArg(start.getIdentifier().getText(),
+                .addArg(pfragName,
                         Fragment.class.getName(),
                         null);
-            if (! f.getArg().isEmpty())
-            {
-                throw new UnsupportedOperationException("Parameterized fragment parameters not implemented");
-            }
+
         }
 
         public void caseADefComponent(ADefComponent node)
