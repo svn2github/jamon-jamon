@@ -23,6 +23,12 @@
 ;; This file contains the definition of an MMM Mode submode class for
 ;; editing Jamon templates.
 
+;; To use this, put something like the following into your .emacs file:
+
+;; (require 'mmm-jamon)
+;; (add-to-list 'auto-mode-alist '("\\.jamon" . html-mode))
+;; (mmm-add-mode-ext-class 'html-mode "\\.jamon" 'jamon)
+
 ;;; Code:
 
 (require 'mmm-compat)
