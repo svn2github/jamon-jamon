@@ -22,9 +22,9 @@ package org.jamon;
 
 import java.io.PrintWriter;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Iterator;
+import java.util.HashMap;
 import java.util.Map;
 
 public class CallStatement
@@ -34,16 +34,16 @@ public class CallStatement
     {
         m_path = p_path;
         m_params = p_params;
-        m_fragParams = new ArrayList();
+        m_fragParams = new HashMap();
     }
 
     public void addFragmentArg(String p_name, List p_statements)
     {
-        m_fragParams.add(new FragmentCallInfo(p_name, p_statements));
+        m_fragParams.put(p_name, p_statements);
     }
 
     private final String m_path;
-    private final List m_fragParams;
+    private final Map m_fragParams;
     private final Map m_params;
 
     private boolean isDefCall(ImplAnalyzer p_analyzer)
@@ -75,7 +75,8 @@ public class CallStatement
         }
     }
 
-    private void handleFragParam(FragmentCallInfo p_fragCallInfo,
+    private void handleFragParam(String p_fargName,
+                                 List p_statements,
                                  PrintWriter p_writer,
                                  TemplateResolver p_resolver,
                                  TemplateDescriber p_describer,
@@ -84,7 +85,7 @@ public class CallStatement
     {
         String fragVar = p_analyzer.newVarName();
 
-        String fargName = (String) getFargName(p_fragCallInfo.getName(),
+        String fargName = (String) getFargName(p_fargName,
                                                p_analyzer,
                                                p_describer);
         FargInfo fargInfo =
@@ -131,7 +132,7 @@ public class CallStatement
         p_writer.print(") throws ");
         p_writer.print(IOEXCEPTION_CLASS);
         p_writer.println(" {");
-        for (Iterator i = p_fragCallInfo.getStatements(); i.hasNext(); /* */)
+        for (Iterator i = p_statements.iterator(); i.hasNext(); /* */)
         {
             ((Statement)i.next()).generateSource(p_writer,
                                                  p_resolver,
@@ -165,9 +166,11 @@ public class CallStatement
         if (! m_fragParams.isEmpty())
         {
             p_writer.println("{");
-            for (Iterator f = m_fragParams.iterator(); f.hasNext(); /* */)
+            for (Iterator f = m_fragParams.entrySet().iterator(); f.hasNext(); /* */)
             {
-                handleFragParam((FragmentCallInfo) f.next(),
+                Map.Entry entry = (Map.Entry) f.next();
+                handleFragParam((String) entry.getKey(),
+                                (List) entry.getValue(),
                                 p_writer,
                                 p_resolver,
                                 p_describer,
