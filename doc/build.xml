@@ -83,7 +83,18 @@ the documentation thus taking care of issues such as escaping.
     <antcall target="grind">
       <param name="template" value="index" />
     </antcall>
-    <!-- Generate the Servlets document -->
+    <antcall target="grind">
+      <param name="template" value="Documentation" />
+    </antcall>
+    <antcall target="grind">
+      <param name="template" value="Download" />
+    </antcall>
+    <antcall target="grind">
+      <param name="template" value="Contact" />
+    </antcall>
+    <antcall target="grind">
+      <param name="template" value="News" />
+    </antcall>
     <antcall target="grind">
       <param name="template" value="Servlets" />
     </antcall>

@@ -20,7 +20,7 @@
         <& _menuItem; section => "News"; href => "News"; current => section &>
         <& _menuItem; section => "Download"; href => "Download"; current => section &>
         <& _menuItem; section => "Documentation"; href => "Documentation"; current => section &>
-        <& _menuItem; section => "Get involved"; href => "GetInvolved"; current => section &>
+        <& _menuItem; section => "Contact"; href => "Contact"; current => section &>
       </ul>
     </div>
     <div id="main">
@@ -36,10 +36,10 @@
     String href;
   </%args>
 <li class="nav">
+  <a href="<% href #u %>.html" \
 % if (section.equals(current)) {
-  <span id="current"><% section %></span>
-% } else {
-  <a href="<% href #u %>.html"><% section %></a>
+  id="current"\
 % }
+><% section %></a>
 </li>
 </%def>

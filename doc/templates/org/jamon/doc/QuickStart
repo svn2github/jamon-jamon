@@ -1,6 +1,10 @@
 <%args>
   String output;
-</%args><&| _Base; title => "Jamon Quick Start Mini-Tutorial"; section => "Documentation" &>
+</%args>
+<&| _Base; title => "Jamon Quick Start Mini-Tutorial"; section => "Documentation" &>
+
+<h2>Quick Start Mini-Tutorial</h2>
+
 Create a java file <a class="file" href="JamonQs.java">JamonQs.java</a>:
 
 <pre class="java"><& JamonQsJava &></pre>

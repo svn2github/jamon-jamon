@@ -1,0 +1,17 @@
+<&| _Base; title => "Jamon Contact"; section => "Contact" &>
+
+    <h2>Mailing lists</h2>
+
+    <ul>
+      <li>
+        <a href="mailman/listinfo/jamon-announce">Jamon
+        announce</a>. Low-bandwidth, restricted, announcements-only
+        list.
+      </li>
+      <li>
+        <a href="mailman/listinfo/jamon-users">Jamon
+        users</a>. Questions, suggestions, problems.
+      </li>
+    </ul>
+
+</&>

@@ -15,13 +15,17 @@
 
     <h2>What isn't Jamon?</h2>
 
-    Jamon does not provide the functionality of a controller, nor of a
-    servlet. It is not a content management system. It does one thing,
-    and does it well: it is a powerful template processor for Java.
+    Jamon does not provide the functionality of a <a
+    href="#FIXME">controller</a>, nor of a <a
+    href="#FIXME">servlet</a>. It is not a <a href="#FIXME">content
+    management system</a>. It does one thing, and does it well: it is
+    a powerful template processor for Java.
 
     <h2>Why is Jamon?</h2>
 
-    Jamon provides the following advantages over JSP and other technologies:
+    Jamon provides the following advantages over <a
+    href="#FIXME">JSP</a> and other technologies:
+
     <ul>
       <li>
         Separate presentation from controller logic (unlike JSP)
@@ -47,39 +51,4 @@
         call. This is unique among Java template processors.
       </li>
     </ul>
-
-    <h2>How to use Jamon</h2>
-
-    <ul>
-      <li><a href="QuickStart.html">Quick start mini-tutorial</a>.</li>
-      <li><a href="UserGuide.html">User's Guide</a>.</li>
-      <li><a href="Reference.html">Template reference manual</a>.</li>
-      <li><a href="javadoc/index.html">Javadoc</a>.</li>
-    </ul>
-
-    <h2>Download</h2>
-
-    <ul>
-      <li><a href="jamon-src.tgz">Source</a></li>
-      <li><a href="jamon-bin.tgz">Binaries</a></li>
-    </ul>
-
-    <h2>Mailing lists</h2>
-
-    <ul>
-      <li>
-        <a href="mailman/listinfo/jamon-announce">Jamon
-        announce</a>. Low-bandwidth, restricted, announcements-only
-        list.
-      </li>
-      <li>
-        <a href="mailman/listinfo/jamon-users">Jamon
-        users</a>. Questions, suggestions, problems.
-      </li>
-    </ul>
-
-    <h2>CVS access</h2>
-
-    Anonymous CVS access is not yet available. The source is viewable
-    <a href="cvs">online</a>.
 </&>

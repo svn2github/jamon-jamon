@@ -1,0 +1,16 @@
+<&| _Base; title => "Getting Jamon"; section => "Download" &>
+  <h2>Where to get Jamon</h2>
+
+    <h3>Download</h3>
+
+    <ul>
+      <li><a href="jamon-src.tgz">Source</a></li>
+      <li><a href="jamon-bin.tgz">Binaries</a></li>
+    </ul>
+
+    <h3>CVS access</h3>
+
+    Anonymous CVS access is not yet available. The source is viewable
+    <a href="cvs">online</a>.
+
+</&>

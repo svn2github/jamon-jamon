@@ -1,5 +1,8 @@
 <&| _Base; title => "Jamon User's Guide"; section => "Documentation" &>
-    <h2>Invoking templates from Java</h2>
+
+<h2>User Guide</h2>
+
+    <h3>Invoking templates from Java</h3>
 
     <ol>
       <li>
