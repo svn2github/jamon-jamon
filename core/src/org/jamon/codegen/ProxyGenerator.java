@@ -78,14 +78,10 @@ public class ProxyGenerator
     private IndentingWriter m_writer;
     private final TemplateUnit m_templateUnit;
 
+
     private void generateImports()
     {
-        for (Iterator i = m_templateUnit.getImports();
-             i.hasNext(); )
-        {
-            m_writer.println("import " + i.next() + ";");
-        }
-        m_writer.println();
+        m_templateUnit.printImports(m_writer);
     }
 
     private String getClassName()

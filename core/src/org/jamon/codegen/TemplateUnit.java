@@ -243,7 +243,7 @@ public class TemplateUnit
         return m_abstractMethodNames;
     }
 
-    public Iterator getImports()
+    private Iterator getImports()
     {
         return m_imports.iterator();
     }
@@ -335,6 +335,15 @@ public class TemplateUnit
         return new SequentialIterator
             (m_parentDescription.getRequiredArgs().iterator(),
              m_parentDescription.getFragmentInterfaces().iterator());
+    }
+
+    public void printImports(IndentingWriter p_writer)
+    {
+        for (Iterator i = getImports(); i.hasNext(); )
+        {
+            p_writer.println("import " + i.next() + ";");
+        }
+        p_writer.println();
     }
 
     public void printParentRenderArgs(IndentingWriter p_writer)
