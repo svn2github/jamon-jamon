@@ -192,7 +192,7 @@
     </copy>
   </target>
 
-  <target name="push" depends="stage" if="push.dest" >
+  <target name="push" depends="stage">
     <exec dir="${stage.dir}" executable="rsync">
       <arg value="--rsh=ssh" />
       <arg value="--verbose" />
@@ -202,18 +202,8 @@
       <arg value="--delete" />
       <arg value="--compress" />
       <arg value="." />
-      <arg value="jamon@jamon.org:/home/jamon/www${push.dest}" />
+      <arg value="jamon@jamon.org:/home/jamon/www" />
     </exec>
-  </target>
-
-  <target name="pushstage">
-    <property name="push.dest" value="/stage" />
-    <ant target="push" />
-  </target>
-
-  <target name="pushlive">
-    <property name="push.dest" value="" />
-    <ant target="push" />
   </target>
 
 </project>
