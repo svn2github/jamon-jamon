@@ -1,9 +1,3 @@
-<%extends _escape>
+<%frag content />
 
-<%import>
-  org.jamon.escaping.Escaping;
-</%import>
-
-<%class>
-  protected Escaping _escaping() { return Escaping.STRICT_HTML; }
-</%class>
+<% content.makeRenderer().asString() #H %>

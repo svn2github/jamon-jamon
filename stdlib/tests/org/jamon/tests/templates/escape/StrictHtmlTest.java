@@ -5,6 +5,13 @@ import org.jamon.escape.StrictHtml;
 public class StrictHtmlTest
     extends TestBase
 {
+    private class Fragment
+        extends TestBase.Fragment
+        implements StrictHtml.Fragment_content
+    {
+        Fragment(String p_body) { super(p_body); }
+    }
+
     public void testEmpty()
         throws Exception
     {

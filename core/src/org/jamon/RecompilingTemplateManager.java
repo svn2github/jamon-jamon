@@ -36,7 +36,6 @@ import java.util.HashMap;
 import java.util.Set;
 import java.util.HashSet;
 
-import org.jamon.escaping.Escaping;
 import org.jamon.util.JavaCompiler;
 import org.jamon.util.ExternalJavaCompiler;
 import org.jamon.util.InternalJavaCompiler;
@@ -91,9 +90,6 @@ import org.jamon.codegen.TemplateUnit;
  *   <li><b>setClassLoader</b> - used to set the class loader
  *   explicitly. Default is use the class loader of the
  *   <code>RecompilingTemplateManager</code> instance.
-
- *   <li><b>setDefaultEscaping</b> - used to set the default escaping
- *   Default is {@link TemplateManager#DEFAULT_ESCAPING}.
 
  * </ul>
  */
@@ -151,13 +147,6 @@ public class RecompilingTemplateManager
             return this;
         }
         private ClassLoader classLoader = getClass().getClassLoader();
-
-        public Data setDefaultEscaping(Escaping p_escaping)
-        {
-            escaping = p_escaping;
-            return this;
-        }
-        private Escaping escaping = DEFAULT_ESCAPING;
     }
 
     public RecompilingTemplateManager()
@@ -222,7 +211,6 @@ public class RecompilingTemplateManager
 
     public RecompilingTemplateManager(Data p_data)
     {
-        m_escaping = p_data.escaping;
         m_classLoader = p_data.classLoader == null
             ? getClass().getClassLoader()
             : p_data.classLoader;
@@ -245,11 +233,6 @@ public class RecompilingTemplateManager
         }
 
         m_loader = new WorkDirClassLoader(m_classLoader, m_workDir);
-    }
-
-    public Escaping getDefaultEscaping()
-    {
-        return m_escaping;
     }
 
     public AbstractTemplateProxy.Intf constructImpl(
@@ -430,7 +413,6 @@ public class RecompilingTemplateManager
     }
 
     private final TemplateSource m_templateSource;
-    private final Escaping m_escaping;
     private final String m_workDir;
     private final ClassLoader m_classLoader;
     private final JavaCompiler m_javaCompiler;

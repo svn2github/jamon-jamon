@@ -5,6 +5,13 @@ import org.jamon.escape.Html;
 public class HtmlTest
     extends TestBase
 {
+    private class Fragment
+        extends TestBase.Fragment
+        implements Html.Fragment_content
+    {
+        Fragment(String p_body) { super(p_body); }
+    }
+
     public void testEmpty()
         throws Exception
     {

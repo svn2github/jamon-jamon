@@ -42,11 +42,8 @@ public class WriteStatement
         p_writer.print("this.writeEscaped(this.valueOf(");
         p_writer.print(m_expr.trim());
         p_writer.print(")");
-        if (!m_escapingDirective.isDefault())
-        {
-            p_writer.print(", ");
-            p_writer.print(m_escapingDirective.toJava());
-        }
+        p_writer.print(", ");
+        p_writer.print(m_escapingDirective.toJava());
         p_writer.println(");");
     }
 

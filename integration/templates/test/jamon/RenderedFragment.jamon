@@ -1,9 +1,8 @@
-<%import>org.jamon.escaping.Escaping;</%import>\
-<%def foo>\
-<%frag content/>\
-% escapeWith(Escaping.HTML);
-% String s = content.makeRenderer().asString();
-<% s #n %>\
-</%def>\
-% escapeWith(Escaping.NONE);
-<&| foo &><% "<" %></&>
+<%def foo>
+
+  <%frag content/>
+
+<% content.makeRenderer().asString() #n %>\
+</%def>
+
+<&| foo &><% "<" #n %></&>

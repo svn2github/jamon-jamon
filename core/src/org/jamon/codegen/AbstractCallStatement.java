@@ -110,10 +110,9 @@ public abstract class AbstractCallStatement
                          + getFragmentIntfName(p_fragmentUnitIntf));
         p_writer.openBlock();
         p_writer.println("public " + getFragmentImplName(p_fragmentUnitIntf)
-                         + "(" + ClassNames.TEMPLATE_MANAGER + " p_manager, "
-                         + ClassNames.ESCAPING + " p_escaping)");
+                         + "(" + ClassNames.TEMPLATE_MANAGER + " p_manager)");
         p_writer.openBlock();
-        p_writer.println("super(p_manager, p_escaping);");
+        p_writer.println("super(p_manager);");
         p_writer.closeBlock();
         p_writer.print("public " + ClassNames.RENDERER + " makeRenderer(");
         fragmentUnitImpl.printRenderArgsDecl(p_writer);
@@ -193,7 +192,7 @@ public abstract class AbstractCallStatement
                 + getFragmentImplName(
                     (((FragmentArgument) p_fragmentInterfaces.next())
                      .getFragmentUnit()))
-                + "(this.getTemplateManager(), this.getEscaping())");
+                + "(this.getTemplateManager())");
         }
     }
 

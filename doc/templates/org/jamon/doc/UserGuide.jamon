@@ -50,7 +50,7 @@
     This can be processed into a Java interface with the
     Jamon <code>TemplateProcessor</code> class, e.g.
   <pre class="tty">
-java org.jamon.TemplateProcessor --destDir=./gensrc \ 
+java org.jamon.TemplateProcessor --destDir=./gensrc \
   --srcDir=templates templates/org/foo/templates/Foo
 </pre>
 which will place the generated Java source file(s) into the
@@ -100,10 +100,11 @@ import org.jamon.TemplateManagerSource;
 
 <h3>Changing the default escaping mechanism</h3>
 
-Suppose the we wanted to include some text for inclusion in an
-email.  Since we are producing plain text (and not HTML) we want a
-different default escaping mechanism.  For example
-
+Suppose the we wanted to include some text for inclusion in an email.
+Since we are producing plain text (and not HTML) we want a different
+default escaping mechanism.  This can be specified in the template as
+follows:
+<%doc>FIXME: use <%escape #n></%doc>
     <pre class="template"><&| /org/jamon/escape/Html &><%LITERAL>
 <%args>
   int count;
@@ -113,23 +114,10 @@ different default escaping mechanism.  For example
     Many Greetings
     ==============
 %   for (int i = 1; i <= count; ++i) {
-    <% i %>. <% greeting %> <% name %>
+    <% i #n %>. <% greeting #n %> <% name #n %>
 %   }
 </%LITERAL></&></pre>
-Could be called from Java as follows
-        <pre class="code">
-import org.foo.templates.Foo;
-import org.jamon.TemplateManager;
-<b>import org.jamon.Escaping;</b>
-
-  ...
-       Writer writer = new OutputStreamWriter(System.out);
-       new Foo()
-         <b>.escapeWith(Escaping.NONE)</b>
-         .setName("Duke & Co.")
-         .render(writer, 3, "Hello");
-</pre>
-(Note how we set the escaping mechanism.)  It would emit
+It would emit
     <pre class="tty">
     Many Greetings
     ==============
@@ -138,6 +126,7 @@ import org.jamon.TemplateManager;
     3. Hello Duke &amp; Co.
 </pre>
 
+<%doc>FIXME - show template escapings via #</%doc>
 The available escaping mechanisms are:
 <code>Escaping.NONE</code>, <code>Escaping.HTML</code>,
 <code>Escaping.STRICT_HTML</code>, <code>Escaping.URL</code>

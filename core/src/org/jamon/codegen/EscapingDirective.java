@@ -44,7 +44,7 @@ public class EscapingDirective
         new EscapingDirective(PREFIX + "NONE");
 
     public static final EscapingDirective DEFAULT =
-        new EscapingDirective(null);
+        new EscapingDirective(PREFIX + "HTML");
 
     public static EscapingDirective get(String p_abbreviation)
     {

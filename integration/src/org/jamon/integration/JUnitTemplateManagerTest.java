@@ -53,8 +53,6 @@ public class JUnitTemplateManagerTest
                                      new Object[] { Boolean.TRUE, "hello" });
         m_template = new JUnitTemplate(m_manager);
         m_writer = new StringWriter();
-        m_template
-            .escapeWith(Escaping.NONE);
     }
 
     private void checkSuccess()

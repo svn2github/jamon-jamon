@@ -40,16 +40,9 @@ public abstract class AbstractTemplateImpl
             throws java.io.IOException;
     }
 
-    private AbstractTemplateImpl(TemplateManager p_templateManager)
+    protected AbstractTemplateImpl(TemplateManager p_templateManager)
     {
         m_templateManager = p_templateManager;
-    }
-
-    protected AbstractTemplateImpl(TemplateManager p_templateManager,
-                                   Escaping p_escaping)
-    {
-        this(p_templateManager);
-        escapeWith(p_escaping);
     }
 
     protected AbstractTemplateImpl(TemplateManager p_templateManager,
@@ -64,21 +57,10 @@ public abstract class AbstractTemplateImpl
         m_writer = p_writer;
     }
 
-    public void escapeWith(Escaping p_escaping)
-    {
-        m_escaping = p_escaping;
-    }
-
     protected void write(String p_string)
         throws IOException
     {
         m_writer.write(p_string);
-    }
-
-    protected void writeEscaped(String p_string)
-        throws IOException
-    {
-        writeEscaped(p_string, m_escaping);
     }
 
     protected void writeEscaped(String p_string, Escaping p_escaping)
@@ -95,11 +77,6 @@ public abstract class AbstractTemplateImpl
     protected Writer getWriter()
     {
         return m_writer;
-    }
-
-    protected Escaping getEscaping()
-    {
-        return m_escaping;
     }
 
     protected String valueOf(Object p_obj)
@@ -128,6 +105,5 @@ public abstract class AbstractTemplateImpl
     }
 
     private Writer m_writer;
-    private Escaping m_escaping;
     private final TemplateManager m_templateManager;
 }

@@ -61,10 +61,7 @@ public class ComponentCallStatement
         p_writer.println(getComponentProxyClassName() + " "
                          + instanceVar + " = "
                          + "new " + getComponentProxyClassName()
-                         +"(this.getTemplateManager())");
-        p_writer.indent(2);
-        p_writer.println(".escapeWith(this.getEscaping());");
-        p_writer.outdent(2);
+                         +"(this.getTemplateManager());");
 
         for (Iterator i = desc.getOptionalArgs().iterator(); i.hasNext(); )
         {

@@ -5,6 +5,13 @@ import org.jamon.escape.Url;
 public class UrlTest
     extends TestBase
 {
+    private class Fragment
+        extends TestBase.Fragment
+        implements Url.Fragment_content
+    {
+        Fragment(String p_body) { super(p_body); }
+    }
+
     public void testEmpty()
         throws Exception
     {

@@ -20,7 +20,6 @@
 
 package org.jamon;
 
-import org.jamon.escaping.Escaping;
 import org.jamon.util.StringUtils;
 
 import java.io.IOException;
@@ -114,11 +113,6 @@ public class JUnitTemplateManager
     }
 
 
-    public Escaping getDefaultEscaping()
-    {
-        return DEFAULT_ESCAPING;
-    }
-
     private final Map m_optionalArgs;
     private final Object[] m_requiredArgs;
     private final String m_path;
@@ -211,22 +205,15 @@ public class JUnitTemplateManager
         throws Throwable
     {
         // sanity:
-        Assert.assertTrue( m_impl == p_proxy );
+        Assert.assertTrue(m_impl == p_proxy);
 
         if (p_args == null)
         {
             p_args = new Object[0];
         }
 
-        // from AbstractTemplateProxy.Intf:
-        if ("escapeWith".equals(p_method.getName()))
-        {
-            checkArgsLength(p_method,p_args,1);
-            return null;
-        }
-
         // from the generated template Intf
-        else if ("render".equals(p_method.getName())
+        if ("render".equals(p_method.getName())
                  || "renderNoFlush".equals(p_method.getName()))
         {
             checkArgsLength(p_method, p_args, 0);

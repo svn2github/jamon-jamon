@@ -5,6 +5,13 @@ import org.jamon.escape.Xml;
 public class XmlTest
     extends TestBase
 {
+    private class Fragment
+        extends TestBase.Fragment
+        implements Xml.Fragment_content
+    {
+        Fragment(String p_body) { super(p_body); }
+    }
+
     public void testEmpty()
         throws Exception
     {

@@ -59,7 +59,6 @@ public class ProxyGenerator
             generateConstructImpl();
             generateMakeRenderer();
             generateRender();
-            generateEscaping(getClassName());
         }
         if (m_templateUnit.isParent())
         {
@@ -345,7 +344,6 @@ public class ProxyGenerator
             "Intf instance = (Intf) getTemplateManager().constructImpl(this);"
             );
 
-        m_writer.println("instance.escapeWith(getEscaping());");
         m_writer.println("instance.renderNoFlush();");
         m_writer.println("reset();");
         m_writer.closeBlock();
@@ -520,8 +518,6 @@ public class ProxyGenerator
             m_writer.println(");");
             m_writer.closeBlock();
 
-            generateEscaping("ParentRenderer");
-
             generateMakeRenderer();
         }
         else
@@ -577,17 +573,6 @@ public class ProxyGenerator
         }
         m_writer.closeBlock();
         m_writer.closeBlock(";");
-        m_writer.closeBlock();
-    }
-
-    private void generateEscaping(String p_returnClassName)
-    {
-        m_writer.println();
-        m_writer.println("public " + p_returnClassName + " escapeWith("
-                         + ClassNames.ESCAPING + " p_escaping)");
-        m_writer.openBlock();
-        m_writer.println("escape(p_escaping);");
-        m_writer.println("return this;");
         m_writer.closeBlock();
     }
 

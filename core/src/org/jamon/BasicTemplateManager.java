@@ -22,7 +22,6 @@ package org.jamon;
 
 import java.io.IOException;
 
-import org.jamon.escaping.Escaping;
 import org.jamon.util.StringUtils;
 
 /**
@@ -41,26 +40,11 @@ public class BasicTemplateManager
     implements TemplateManager
 {
     /**
-     * Creates a new <code>BasicTemplateManager</code> instance which
-     * uses {@link TemplateManager#DEFAULT_ESCAPING} as the
-     * default escaping mechanism, and automatically flushes the
-     * writer after rendering
+     * Creates a new <code>BasicTemplateManager</code> instance.
      **/
     public BasicTemplateManager()
     {
-        this(DEFAULT_ESCAPING);
-    }
-
-    /**
-     * Creates a new <code>BasicTemplateManager</code> which
-     * automatically flushes the writer after rendering.
-     *
-     * @param p_escaping which escaping mechanism to use for the
-     * default Escaping.
-     **/
-    public BasicTemplateManager(Escaping p_escaping)
-    {
-        this(p_escaping, null);
+        this(null);
     }
 
     /**
@@ -71,29 +55,9 @@ public class BasicTemplateManager
      **/
     public BasicTemplateManager(ClassLoader p_classLoader)
     {
-        this(DEFAULT_ESCAPING, p_classLoader);
-    }
-
-    /**
-     * Creates a new <code>BasicTemplateManager</code>.
-     *
-     * @param p_escaping which escaping mechanism to use for the
-     * default Escaping.
-     * @param p_classLoader the <code>ClassLoader</code> to use to
-     * load templates.
-     **/
-    public BasicTemplateManager(Escaping p_escaping,
-                                ClassLoader p_classLoader)
-    {
-        m_escaping = p_escaping;
         m_classLoader = p_classLoader == null
             ? getClass().getClassLoader()
             : p_classLoader;
-    }
-
-    public Escaping getDefaultEscaping()
-    {
-        return m_escaping;
     }
 
     public AbstractTemplateProxy.Intf constructImpl(
@@ -158,6 +122,5 @@ public class BasicTemplateManager
             (StringUtils.templatePathToClassName(p_path));
     }
 
-    private final Escaping m_escaping;
     private final ClassLoader m_classLoader;
 }

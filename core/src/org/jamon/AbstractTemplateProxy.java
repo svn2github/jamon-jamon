@@ -23,19 +23,15 @@ package org.jamon;
 import java.io.Writer;
 import java.io.IOException;
 
-import org.jamon.escaping.Escaping;
-
 public abstract class AbstractTemplateProxy
 {
     public interface Intf
     {
-        void escapeWith(Escaping p_escaping);
     }
 
     public interface FragmentIntf
     {
         void writeTo(Writer p_writer);
-        void escapeWith(Escaping p_escaping);
     }
 
     protected static class ImplData
@@ -56,7 +52,6 @@ public abstract class AbstractTemplateProxy
     protected AbstractTemplateProxy(TemplateManager p_templateManager)
     {
         m_templateManager = p_templateManager;
-        m_escaping = m_templateManager.getDefaultEscaping();
     }
 
     protected AbstractTemplateProxy(String p_path)
@@ -69,19 +64,8 @@ public abstract class AbstractTemplateProxy
         return m_templateManager;
     }
 
-    private Escaping m_escaping;
     private final TemplateManager m_templateManager;
     private ImplData m_implData = makeImplData();
-
-    protected final void escape(Escaping p_escaping)
-    {
-        m_escaping = p_escaping;
-    }
-
-    protected final Escaping getEscaping()
-    {
-        return m_escaping;
-    }
 
     protected abstract AbstractTemplateImpl constructImpl(
         Class p_class, TemplateManager p_manager)

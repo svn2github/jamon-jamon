@@ -25,19 +25,19 @@ import java.io.Writer;
 
 import org.jamon.Renderer;
 import org.jamon.AbstractTemplateImpl;
+import org.jamon.AbstractTemplateProxy;
 import org.jamon.escaping.Escaping;
-import org.jamon.escape._escape;
 
 public class TestBase
     extends org.jamon.tests.templates.TestBase
 {
     protected class Fragment
         extends AbstractTemplateImpl
-        implements _escape.Fragment_content
+        implements AbstractTemplateProxy.FragmentIntf
     {
         Fragment(String p_body)
         {
-            super(TestBase.this.getTemplateManager(), Escaping.NONE);
+            super(TestBase.this.getTemplateManager());
             m_body = p_body;
         }
         private final String m_body;

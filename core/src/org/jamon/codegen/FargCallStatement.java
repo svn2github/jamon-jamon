@@ -60,7 +60,6 @@ public class FargCallStatement
         generateSourceLine(p_writer);
         String tn = getPath();
         p_writer.println(tn + ".writeTo(this.getWriter());");
-        p_writer.println(tn + ".escapeWith(this.getEscaping());");
         p_writer.print  (tn + ".renderNoFlush");
         p_writer.openList();
         generateRequiredArgs(m_fragmentUnit.getRequiredArgs(), p_writer);
