@@ -106,4 +106,44 @@
     <cvs command="commit -m 'dev version of ${currentversion}' ${file}" />
   </target>
 
+  <target name="javadoc">
+    <ant dir="core" target="javadoc"/>
+  </target>
+
+  <property name="doc.zip" value="jamondoc.zip" />
+  <property name="tarfile.src" value="jamon-src.tar" />
+  <property name="tarball.src" value="jamon-src.tgz" />
+  <property name="tarfile.bin" value="jamon-bin.tar" />
+  <property name="tarball.bin" value="jamon-bin.tgz" />
+
+  <target name="doczip" depends="javadoc">
+    <zip zipfile="${doc.zip}">
+      <zipfileset dir="doc" prefix="doc" />
+      <zipfileset dir="core/build/javadoc" prefix="doc/javadoc" />
+    </zip>
+  </target>
+
+  <target name="bindist" depends="jar,doczip">
+    <tar tarfile="${tarfile.bin}"
+         baseDir="."
+         includes="${doc.zip},${jarfile}" />
+    <gzip src="${tarfile.bin}" zipfile="${tarball.bin}" />
+  </target>
+
+  <target name="srcdist">
+    <tar tarfile="${tarfile.src}">
+      <tarfileset dir=".">
+        <exclude name="${jarfile}" />
+        <exclude name="${tarball.bin}" />
+        <exclude name="${tarfile.bin}" />
+        <exclude name="${tarball.src}" />
+        <exclude name="${tarfile.src}" />
+        <exclude name="**/build.properties" />
+        <exclude name="**/build" />
+        <exclude name="**/build/**" />
+      </tarfileset>
+    </tar>
+    <gzip src="${tarfile.src}" zipfile="${tarball.src}" />
+  </target>
+
 </project>
