@@ -64,8 +64,6 @@ public class IntfGenerator
         TEMPLATE + ".Intf";
     private final static String TEMPLATE_MANAGER =
         TemplateManager.class.getName();
-    private final static String JAMON_EXCEPTION =
-        JamonException.class.getName();
     private final static String IOEXCEPTION_CLASS =
         IOException.class.getName();
     private final static String WRITER_CLASS =
@@ -348,7 +346,7 @@ public class IntfGenerator
             print(name);
             println(")");
             print  ("    throws ");
-            println(JAMON_EXCEPTION);
+            println(IOEXCEPTION_CLASS);
             println("  {");
             print  ("    getInstance().set");
             print(StringUtils.capitalize(name));
@@ -417,7 +415,7 @@ public class IntfGenerator
         println();
         println("  protected Intf getInstance()");
         print  ("    throws ");
-        println(JAMON_EXCEPTION);
+        println(IOEXCEPTION_CLASS);
         println("  {");
         print  ("    return (Intf) getInstance(\"");
         print  (getPath());
@@ -433,7 +431,7 @@ public class IntfGenerator
         print  (getClassName());
         println(" writeTo(java.io.Writer p_writer)");
         print  ("    throws ");
-        println(JAMON_EXCEPTION);
+        println(IOEXCEPTION_CLASS);
         println("  {");
         println("    getInstance().writeTo(p_writer);");
         println("    return this;");
@@ -448,7 +446,7 @@ public class IntfGenerator
         print  (getClassName());
         println(" escaping(org.jamon.Escaping p_escaping)");
         print  ("    throws ");
-        println(JAMON_EXCEPTION);
+        println(IOEXCEPTION_CLASS);
         println("  {");
         println("    getInstance().escaping(p_escaping);");
         println("    return this;");

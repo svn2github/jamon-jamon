@@ -95,27 +95,20 @@ public class StandardTemplateManager
     implements TemplateManager
 {
     public AbstractTemplateImpl getInstance(String p_path)
-        throws JamonException
+        throws IOException
     {
         return getInstance(p_path, this);
     }
 
     public void releaseInstance(AbstractTemplateImpl p_impl)
-        throws JamonException
+        throws IOException
     {
         if (m_autoFlush)
         {
-            try
+            Writer writer = p_impl.getWriter();
+            if (writer != null)
             {
-                Writer writer = p_impl.getWriter();
-                if (writer != null)
-                {
-                    writer.flush();
-                }
-            }
-            catch (IOException e)
-            {
-                throw new JamonException(e);
+                writer.flush();
             }
             m_cache.put(p_impl.getPath(), p_impl);
         }
@@ -132,11 +125,11 @@ public class StandardTemplateManager
      *
      * @return a <code>Template</code> instance
      *
-     * @exception JamonException if something goes wrong
+     * @exception IOException if something goes wrong
      */
     public AbstractTemplateImpl getInstance(String p_path,
                                             TemplateManager p_manager)
-        throws JamonException
+        throws IOException
     {
         try
         {
@@ -156,6 +149,10 @@ public class StandardTemplateManager
             }
             impl.escaping(m_escaping);
             return impl;
+        }
+        catch (IOException e)
+        {
+            throw e;
         }
         catch (RuntimeException e)
         {

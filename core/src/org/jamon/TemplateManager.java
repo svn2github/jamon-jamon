@@ -21,6 +21,7 @@
 package org.jamon;
 
 import java.io.Writer;
+import java.io.IOException;
 
 /**
  * A <code>TemplateManager</code> is the entry point to obtaining
@@ -36,10 +37,10 @@ public interface TemplateManager
      *
      * @return a <code>Template</code> instance
      *
-     * @exception JamonException if something goes wrong
+     * @exception IOException if something goes wrong
      */
     public AbstractTemplateImpl getInstance(String p_path)
-        throws JamonException;
+        throws IOException;
 
 
     /**
@@ -47,9 +48,9 @@ public interface TemplateManager
      *
      * @param p_impl the template implementation instance
      *
-     * @exception JamonException if something goes wrong
+     * @exception IOException if something goes wrong
      */
     public void releaseInstance(AbstractTemplateImpl p_impl)
-        throws JamonException;
+        throws IOException;
 
 }

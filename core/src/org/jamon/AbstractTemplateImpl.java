@@ -49,7 +49,7 @@ public abstract class AbstractTemplateImpl
     }
 
     public final void initialize()
-        throws JamonException
+        throws IOException
     {
         try
         {
@@ -59,7 +59,7 @@ public abstract class AbstractTemplateImpl
         {
             throw e;
         }
-        catch (JamonException e)
+        catch (IOException e)
         {
             throw e;
         }

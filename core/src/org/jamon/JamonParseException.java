@@ -28,7 +28,7 @@ import org.jamon.lexer.LexerException;
 import org.jamon.node.Token;
 
 public class JamonParseException
-    extends IOException
+    extends JamonException
 {
     public JamonParseException(File p_file, LexerException p_exception)
     {

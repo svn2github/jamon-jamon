@@ -21,6 +21,7 @@
 package org.jamon;
 
 import java.io.Writer;
+import java.io.IOException;
 
 public abstract class AbstractTemplateProxy
 {
@@ -44,7 +45,7 @@ public abstract class AbstractTemplateProxy
     private final ThreadLocal m_instance = new ThreadLocal();
 
     protected final Intf getInstance(String p_path)
-        throws JamonException
+        throws IOException
     {
         Intf instance = (Intf) m_instance.get();
         if (instance == null)
@@ -57,7 +58,7 @@ public abstract class AbstractTemplateProxy
     }
 
     protected final void releaseInstance()
-        throws JamonException
+        throws IOException
     {
         AbstractTemplateImpl instance =
             (AbstractTemplateImpl) m_instance.get();
