@@ -18,9 +18,9 @@ template that defined the subtemplate.
 Subtemplates defined with the
 <code>&lt;%method subTempName></code> ... <code>&lt;/%method></code>
 tag, however, are <em>protected</em> and can be accessed by templates
-that inherit from the template with this subtemplate definition.
-To invoke a protected subtemplate defined in a parent, simply invoke it
-like any other subtemplate
+that inherit from the template with the subtemplate definition.
+To invoke a protected subtemplate defined in a parent, a child template
+simply invokes it like any other subtemplate
 <pre class="template"><%LITERAL><& subTempName &></%LITERAL></pre>
 Usually, however, it is the parent template that invokes the subtemplate,
 and the parent makes the template protected so that the child can
@@ -49,7 +49,7 @@ subtemplate by using the <code>&lt;%override title></code> ... <code>&lt;/%overr
 
 Overridden methods take the same arguments as the method they
 override, although, as with template inheritance, only those
-args declared in an <code>&lt;%xargs&gt;</code>
+arguments declared in an <code>&lt;%xargs&gt;</code>
 ... <code>&lt;/%xargs&gt;</code> block will be visible within
 the body of the override. Also, as with template inheritance,
 only the names of the arguments are listed within the
@@ -58,20 +58,26 @@ because the types of the arguments are declared in the parent template's
 definition.
 <p>
 The template <a href="InheritanceChildProtected.jamon" class="file">
-InheritanceChildProtected</a> extends
+InheritanceChildProtected</a>, below, extends
 <a href="InheritanceParentProtected.jamon" class="file">
 InheritanceParentProtected</a> and overrides the subtemplate
-<code>title</code>. By overriding <code>title</code>
+<code>title</code>. By overriding the <code>title</code> method
 <code>InheritanceChildProtected</code> replaces the title that the
 parent template generates.
 
 <& _TutorialTemplateInclude; fileName => "InheritanceChildProtected" &>
 
-<p>
-To invoke this template, the class <a href="User2.java" class="file">
-User2.java</a> calls <code>makeParentRenderer()</code> on
-the template and then passes the object returned to a controller,
-which invokes <code>render()</code> on the returned object.
+<p>The class <a href="User2.java" class="file">
+User2.java</a> takes advantage of the fact that the
+<code>InheritanceParentProtected</code> supports inheritance by
+delegating the choice of which derived template to invoke to a
+separate method and then simply calling the <code>render()</code>
+method on the object returned. The top level controller simply has
+to provide the output <code>Writer</code> and the
+arguments required by the parent template,
+<code>InheritanceParentProtected</code>, while the delegated method
+selects the actual template instance and provides the arguments
+required by that instance.
 
 <& _TutorialJavaFileInclude; fileName => "User2" &>
 

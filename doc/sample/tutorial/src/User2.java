@@ -39,6 +39,12 @@ public class User2
     }
   }
 
+  /** Chooses the correct derived template to invoke and calls
+   *  <code>makeParentRenderer()</code> on that instance.
+   *
+   *  @param templateName the key name of the template to create
+   *  @return the <code>ParentRenderer</code> of the derived template
+   */
   private static InheritanceParentProtected.ParentRenderer
         processUser(String templateName)
   {
