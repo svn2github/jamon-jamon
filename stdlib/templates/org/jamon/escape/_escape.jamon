@@ -1,16 +1,17 @@
-<%frag content></%frag>\
-<%args>
-  Escaping escaping;
-  boolean compose;
-</%args>\
 <%import>
-  java.io.Writer;
-  java.io.StringWriter;
   org.jamon.escaping.Escaping;
 </%import>\
+<%frag content></%frag>\
+<%args>
+  boolean compose => false;
+</%args>\
+<%class>
+  protected abstract Escaping _escaping();
+</%class>\
 <%java>
-  content.escapeWith(compose ? escaping : getEscaping());
+  content.escapeWith(compose ? _escaping() : getEscaping());
   String text = content.makeRenderer().asString();
-  escapeWith(escaping);
+  escapeWith(_escaping());
 </%java>\
+<& *CHILD &>\
 <% text %>
