@@ -54,8 +54,6 @@ import org.jamon.util.StringUtils;
 public class TemplateBuilder extends IncrementalProjectBuilder {
 
 	private TemplateDependencies m_dependencies = null;
-	private final Set m_changed = new HashSet();
-	
 	private void logInfo(String p_message) {
 		JamonProjectPlugin.getDefault().logInfo(p_message);
 	}
@@ -104,7 +102,6 @@ public class TemplateBuilder extends IncrementalProjectBuilder {
 		if (m_dependencies == null) {
 			loadDependencies();
 		}
-		m_changed.clear();
 		if (kind == IncrementalProjectBuilder.FULL_BUILD || m_dependencies == null) {
 			fullBuild(monitor);
 		} else {
@@ -129,7 +126,7 @@ public class TemplateBuilder extends IncrementalProjectBuilder {
 		}
      }
 
-	private void fullBuild(IProgressMonitor monitor) throws CoreException {
+	private synchronized void fullBuild(IProgressMonitor monitor) throws CoreException {
 		m_dependencies = new TemplateDependencies();
 		getProject().accept(new BuildVisitor());
 	}
@@ -138,12 +135,13 @@ public class TemplateBuilder extends IncrementalProjectBuilder {
 		return (JamonNature) getProject().getNature(JamonNature.natureId());
 	}
 
-	private void incrementalBuild(IResourceDelta delta, IProgressMonitor monitor) throws CoreException {
+	private synchronized void incrementalBuild(IResourceDelta delta, IProgressMonitor monitor) throws CoreException {
 		BuildVisitor visitor = new BuildVisitor();
 		delta.accept(visitor);
-		logInfo("Changed templates are " + m_changed);
+		Set changed = visitor.getChanged();
+		logInfo("Changed templates are " + changed);
 		IFolder templateDir = getNature().getTemplateSourceFolder();
-		for (Iterator i = m_changed.iterator(); i.hasNext(); ) {
+		for (Iterator i = changed.iterator(); i.hasNext(); ) {
 			IPath s = (IPath) i.next();
 			Collection c = m_dependencies.getDependenciesOf(s.toString());
 			for (Iterator j = c.iterator(); j.hasNext(); ) {
@@ -162,6 +160,11 @@ public class TemplateBuilder extends IncrementalProjectBuilder {
 			m_source = new ResourceTemplateSource(m_templateDir);
 			m_describer = new TemplateDescriber(m_source, classLoader());
 			m_outFolder = getNature().getTemplateOutputFolder();
+			m_changed = new HashSet();
+		}
+		
+		Set getChanged() {
+			return m_changed;
 		}
 		
 		private List classpathUrlsForProject(IJavaProject p_project) throws CoreException {
@@ -201,6 +204,7 @@ public class TemplateBuilder extends IncrementalProjectBuilder {
 		private final TemplateDescriber m_describer;
 		private final IFolder m_templateDir;
 		private final IFolder m_outFolder;
+		private final Set m_changed;
 		
 		private void createParents(IContainer p_container) throws CoreException {
 			if (! p_container.exists()) {
