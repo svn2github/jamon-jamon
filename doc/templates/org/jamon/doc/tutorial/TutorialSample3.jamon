@@ -15,7 +15,7 @@ information comes from the model and is passed to the templates to
 <p>
 
 Arguments to a Jamon template are declared between
-<code>&lt;%args></code> ... <code>&lt;%/args></code> tags:
+<nobr><code>&lt;%args></code> ... <code>&lt;%/args></code></nobr> tags:
 
       <&| ../_Template &>
 <%LITERAL>
@@ -40,7 +40,7 @@ optional arguments.  The required arguemnts are:
 Any Java class that invokes this template <strong>must</strong> provide
 these three arguments, and they must be provided to the <code>render</code>
 method in the order specified in the
-<code>&lt;%args></code> ... <code>&lt;%/args></code> tag.
+<nobr><code>&lt;%args></code> ... <code>&lt;%/args></code></nobr> tag.
 
 <p>
   In addition, there are two optional arguments.  Any java class that

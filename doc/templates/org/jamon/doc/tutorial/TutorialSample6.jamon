@@ -7,9 +7,14 @@
 
 <h2>Jamon Tutorial - Calling Another Template From a Template</h2>
 
-Jamon templates can call other templates. The semantics are exactly the same as a method call in Java. The only difference is the syntax.
-<p>
-In Jamon, a template calls another template with the <code>&lt;& templateName ; arguments &></code> tag. (Notice that the tag delimeters are <code>&lt;&</code> and <code>&></code> -- <em>not</em> <code>&lt;%</code> and <code>%></code>.) Some examples of calling templates from a template are shown below.
+Jamon templates can call other templates. The semantics are exactly
+the same as a method call in Java. The only difference is the syntax.
+<p> In Jamon, a template calls another template with the
+<nobr><code>&lt;& templateName ; arguments &></code></nobr>
+tag. (Notice that the tag delimeters are <nobr><code>&lt;&</code> and
+<code>&></code></nobr> -- <em>not</em> <nobr><code>&lt;%</code></nobr> and
+<code>%></code>.) Some examples of calling templates from a template
+are shown below.
 
       <&| ../_Template &>
 <%LITERAL>
@@ -30,10 +35,13 @@ package (directory) as this template. It also calls the
 <code>com.tripleclick.ads</code> package. The call to the
 <code>ForecastTemplate</code> provides arguments to the call. These
 arguments may be required or they may be optional; there is no
-distinction between the two types of arguments except that required
-arguments must be provided.  <p> Arguments to template calls are
+difference in how required and optional argument values are provided
+by the caller in Jamon.
+
+<p> Arguments to template calls are
 assigned by name. The name of the argument is the name specified in
-the <code>&lt;%args></code> ... <code>&lt;/%args></code> tag. The name
+the <nobr><code>&lt;%args></code> ... <code>&lt;/%args></code></nobr>
+tag. The name
 should be followed by <code>=></code> and then the value of the
 argument. The value is evaluated as Java code, so it may be a Java
 variable, a call to a Java method, or any Java expression.
@@ -48,7 +56,8 @@ variable, a call to a Java method, or any Java expression.
     It calls the template <a href="StdPhoneNumberFormat.jamon" class="file">
      <code>StdPhoneNumberFormat</code></a> (below) to format the telephone
     number into a specified format.
-    The argument to the <code>StdPhoneNumberFormat</code> is
+    The <code>separator</code>argument to the
+    <code>StdPhoneNumberFormat</code> template is
     optional, so the <code>JamonCallerTemplate</code> only has to provide
     a value to override the default.
 
@@ -57,8 +66,8 @@ variable, a call to a Java method, or any Java expression.
 <div class="note">Notice that the <code>StdPhoneNumberFormat</code> template
 adds backslashes, '\', at the end of each line that outputs text (the non-java code lines). The backslash at the end of the line escapes the new-line on
 that line. Jamon outputs text exactly as it appears in the template,
-including new-lines. To prevent new-lines from being output, the author
-must end the line with a backslash.
+including new-lines. To prevent new-lines from being output, each Jamon line
+must end with a backslash.
 </div>
 
     The top level template, <code>JamonCallerTemplate</code> is called
