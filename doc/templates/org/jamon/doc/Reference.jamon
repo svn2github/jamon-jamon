@@ -24,24 +24,20 @@
     Other ignored white space includes whitespace immediately after
     the following tags:
     <ul>
-      <li><&| escape//Html &><%LITERAL></%args></%LITERAL></&></li>
-      <li><&| escape//Html &><%LITERAL></%doc></%LITERAL></&></li>
-      <li><&| escape//Html &><%LITERAL></%frag></%LITERAL></&></li>
-      <li><&| escape//Html &><%LITERAL></%xargs></%LITERAL></&></li>
-      <li><&| escape//Html &><%LITERAL><%abstract></%LITERAL></&></li>
-      <li><&| escape//Html &><%LITERAL></%class></%LITERAL></&></li>
-      <li><&| escape//Html &><%LITERAL></%import></%LITERAL></&></li>
-      <li><&| escape//Html &><%LITERAL></%implements></%LITERAL></&></li>
-      <li><&| escape//Html &><%LITERAL></%java></%LITERAL></&></li>
-      <li><&| escape//Html &>
-            <%LITERAL><%def ...> and </%def></%LITERAL>
-          </&></li>
-      <li><&| escape//Html &><%LITERAL></%absmeth></%LITERAL></&></li>
-      <li><&| escape//Html &>
-            <%LITERAL><%method ...> and </%method></%LITERAL></&></li>
-      <li><&| escape//Html &>
-            <%LITERAL><%override ...> and </%override></%LITERAL></&></li>
-      <li><&| escape//Html &><%LITERAL></%alias></%LITERAL></&></li>
+      <li><% "</%args>" %></li>
+      <li><% "</%doc>" %></li>
+      <li><% "</%frag>" %></li>
+      <li><% "</%xargs>" %></li>
+      <li><% "<%abstract>" %></li>
+      <li><% "</%class>" %></li>
+      <li><% "</%import>" %></li>
+      <li><% "</%implements>" %></li>
+      <li><% "</%java>" %></li>
+      <li><% "<%def ...>" %> and <% "</%def>" %></li>
+      <li><% "</%absmeth>" %></li>
+      <li><% "<%method ...>" %> and <% "</%method>" %></li>
+      <li><% "<%override ...>" %> and <% "</%override>" %></li>
+      <li><% "</%alias>" %></li>
     </ul>
 
     If you would like to force whitespace to appear after one of the
