@@ -86,7 +86,7 @@ public abstract class TestBase
     {
         if(m_templateManager == null)
         {
-            m_templateManager = constructTemplateManager(false);
+            m_templateManager = new StaticTemplateManager();
         }
         return m_templateManager;
     }
@@ -96,29 +96,23 @@ public abstract class TestBase
     {
         if(m_recompilingTemplateManager == null)
         {
-            m_recompilingTemplateManager = constructTemplateManager(true);
+            m_recompilingTemplateManager =
+                constructRecompilingTemplateManager();
         }
         return m_recompilingTemplateManager;
     }
 
-    private TemplateManager constructTemplateManager(boolean p_recompiling)
+    private TemplateManager constructRecompilingTemplateManager()
         throws IOException
     {
-        if (p_recompiling)
-        {
-            return new RecompilingTemplateManager(
-                new RecompilingTemplateManager.Data()
+        return new RecompilingTemplateManager(
+            new RecompilingTemplateManager.Data()
                 .setSourceDir(SOURCE_DIR)
                 .setJavaCompiler(System.getProperty
                                  ("org.jamon.integration.compiler"))
                 .setClasspath(System.getProperty
                               ("org.jamon.integration.classpath"))
                 .setWorkDir(WORK_DIR));
-        }
-        else
-        {
-            return new StaticTemplateManager();
-        }
     }
 
     private String removeCrs(StringBuffer p_string)
