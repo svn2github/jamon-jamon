@@ -1,0 +1,10 @@
+<%abstract>
+<%extends ../_DocumentationBase>
+<& *CHILD &>
+
+<%override docRootUrl>\
+<%xargs>
+   href;
+ </%xargs>\
+<% href.startsWith("/") ? href : ("../" + href) %>\
+</%override>

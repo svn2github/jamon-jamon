@@ -1,4 +1,4 @@
-<%extends ../_DocumentationBase>
+<%extends _TutorialBase>
 <%args>
   String output;
 </%args>
