@@ -169,7 +169,6 @@ public class StandardTemplateManager
     private Class loadAndResolveClass(String p_path)
         throws ClassNotFoundException
     {
-        // FIXME: need to check that it still implements the interface
         return getLoader().loadClass(getClassName(p_path));
     }
 
@@ -364,7 +363,6 @@ public class StandardTemplateManager
                ParserException,
                LexerException
     {
-        // FIXME
         System.err.println("generating intf for " + p_path);
 
         String packageName, className;
@@ -461,7 +459,8 @@ public class StandardTemplateManager
             className = p_path;
         }
 
-        ImplGenerator g2 = new ImplGenerator(null,
+        // FIXME: shouldn't have to pass a writer at ALL.
+        ImplGenerator g2 = new ImplGenerator(new FileWriter("/dev/null"),
                                              m_packagePrefix,
                                              packageName,
                                              className);
