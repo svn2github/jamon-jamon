@@ -205,15 +205,14 @@ public class Analyzer
             {
                 m_path.append(m_templateDir);
             }
-            int lastSlash = m_path.toString()
-                .lastIndexOf("/", m_path.toString().length() - 2 );
+            int lastSlash = m_path.lastIndexOf("/", m_path.length() - 2 );
             if (lastSlash == 0)
             {
                 throw new TunnelingException
                     ("Cannot reference templates above the root",
                      p_updir.getUpdir());
             }
-            m_path.delete(lastSlash+1, m_path.length());
+            m_path.delete(lastSlash + 1, m_path.length());
         }
 
         public void inARelativePath(ARelativePath p_relativePath)
