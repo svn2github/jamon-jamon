@@ -28,7 +28,7 @@ Arguments to a Jamon template are declared between
 </&>
 
 The above Jamon code declares a template with three required and two
-optional arguments.  The required arguemnts are:
+optional arguments.  The required arguments are:
 <ol>
   <li><code>java.util.Date effectiveDate</code></li>
   <li><code>String userName</code></li>
@@ -58,7 +58,7 @@ shown above could be invoked with the following code:
     sampleTemplate
         .setTitle("Most Recent Account Balance");
         .render(new OutputStreamWriter(System.out),
-                new Date(), "John Public", new BigDecimal(9.99));
+                new Date(), "John Public", new BigDecimal("9.99"));
 </pre>
 
 In the above example, the calling code sets the optional argument
