@@ -14,9 +14,7 @@
   <property name="core.classes.dir" value="core/build/classes" />
   <property name="stage.dir" value="site" />
   <property name="doc.zip" value="jamondoc.zip" />
-  <property name="tarfile.src" value="jamon-src.tar" />
   <property name="tarball.src" value="jamon-src.tgz" />
-  <property name="tarfile.bin" value="jamon-bin.tar" />
   <property name="tarball.bin" value="jamon-bin.tgz" />
 
   <target name="test"
@@ -68,9 +66,7 @@
 
   <target name="localclean">
     <delete file="${doc.zip}" />
-    <delete file="${tarfile.src}" />
     <delete file="${tarball.src}" />
-    <delete file="${tarfile.bin}" />
     <delete file="${tarball.bin}" />
     <delete dir="${stage.dir}" />
   </target>
@@ -127,6 +123,10 @@
     <ant dir="core" target="javadoc"/>
   </target>
 
+  <target name="doc" depends="jar">
+    <ant dir="doc" target="build" />
+  </target>
+
   <target name="doczip" depends="javadoc">
     <zip zipfile="${doc.zip}">
       <zipfileset dir="doc" prefix="doc" />
@@ -135,35 +135,32 @@
   </target>
 
   <target name="bindist" depends="jar,doczip">
-    <tar tarfile="${tarfile.bin}"
+    <tar tarfile="${tarball.bin}"
          baseDir="."
+         compression="gzip"
          includes="${doc.zip},${jarfile}" />
-    <gzip src="${tarfile.bin}" zipfile="${tarball.bin}" />
   </target>
 
   <target name="srcdist">
-    <tar tarfile="${tarfile.src}">
-      <tarfileset dir=".">
+    <tar tarfile="${tarball.src}" compression="gzip" >
+      <tarfileset dir="." prefix="jamon-alpha" >
         <exclude name="${jarfile}" />
         <exclude name="${stage.dir}" />
         <exclude name="${stage.dir}/**" />
         <exclude name="${tarball.bin}" />
-        <exclude name="${tarfile.bin}" />
         <exclude name="${tarball.src}" />
-        <exclude name="${tarfile.src}" />
         <exclude name="**/build.properties" />
         <exclude name="**/build" />
         <exclude name="**/build/**" />
       </tarfileset>
     </tar>
-    <gzip src="${tarfile.src}" zipfile="${tarball.src}" />
   </target>
 
 
-  <target name="stage" depends="srcdist, bindist" >
+  <target name="stage" depends="srcdist, bindist, doc" >
     <mkdir dir="${stage.dir}" />
     <copy todir="${stage.dir}" >
-      <fileset dir="doc" />
+      <fileset dir="doc/build/www" />
       <fileset dir="." includes="${tarball.bin}" />
       <fileset dir="." includes="${tarball.src}" />
       <fileset dir="core/build" includes="javadoc/**" />
