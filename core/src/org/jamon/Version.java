@@ -190,6 +190,6 @@ public class Version
 
     public String asCvsTag()
     {
-        return makeString("_") + (m_beta ? "-BETA" : "-RELEASE");
+        return "JAMON-" + makeString("_") + (m_beta ? "-BETA" : "-RELEASE");
     }
 }
