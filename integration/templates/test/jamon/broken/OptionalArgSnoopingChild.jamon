@@ -1,2 +1,2 @@
-<%inherits /test/jamon/Parent>
+<%extends /test/jamon/Parent>
 <% opt1 %>

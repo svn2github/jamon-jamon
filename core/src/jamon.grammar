@@ -59,7 +59,7 @@ States
   method,
   override,
   imports,
-  inherits,
+  extends,
   emit,
   class,
   java,
@@ -86,7 +86,7 @@ Tokens
   {args -> body} args_end = '</%args>';
   {args -> body} farg_end = '</%frag>';
 
-  {start -> inherits,body -> inherits} inherits_start = '<%inherits' ws+;
+  {start -> extends,body -> extends} extends_start = '<%extends' ws+;
 
   {start -> parent_args, body -> parent_args}
          inherited_args_start = '<%xargs>';
@@ -103,8 +103,8 @@ Tokens
   {java -> body} java_end = ws* '</%java>';
   {args,imports} dot = period;
   {args -> argexp, parent_args -> parent_argexp,alias} arrow = '=>' hs*;
-  {call,multifragmentcall,multifragmentcallbody,args,farginit,imports,parent_args,inherits,alias} white_space = ws*;
-  {call,multifragmentcall,multifragmentcallbody,args,parent_args,farginit,imports,def,inherits,method,override,alias} identifier = letter letter_or_digit*;
+  {call,multifragmentcall,multifragmentcallbody,args,farginit,imports,parent_args,extends,alias} white_space = ws*;
+  {call,multifragmentcall,multifragmentcallbody,args,parent_args,farginit,imports,def,extends,method,override,alias} identifier = letter letter_or_digit*;
   {call} child_call = '*CHILD';
 
   {start -> emit,body -> emit} emit_start = '<%' ws+;
@@ -180,8 +180,8 @@ Tokens
   {callexp -> call, multifragmentcallexp -> multifragmentcall} param_expr =
        ([all - [argsep + [q + '&']]] | quoted | squoted | '&' [all - '>'])*;
   {multifragmentcall,call,imports,alias} semi = ';';
-  {multifragmentcall,call,inherits,alias} pathsep = slash;
-  {multifragmentcall,call,inherits,alias} updir = period period slash;
+  {multifragmentcall,call,extends,alias} pathsep = slash;
+  {multifragmentcall,call,extends,alias} updir = period period slash;
 
   {start -> multifragmentcall, body -> multifragmentcall} multi_fragment_call_init = '<&||' ws*;
 
@@ -192,7 +192,7 @@ Tokens
 
   {start -> def,body -> def} def_start = '<%def' hs+;
   {body,start} def_end = '</%def>';
-  {def -> body, method -> body, override -> body, inherits -> body} gt = hs* gt;
+  {def -> body, method -> body, override -> body, extends -> body} gt = hs* gt;
 
   {start -> method,body -> method} method_start = '<%method' hs+;
   {body,start} method_end = '</%method>';
@@ -240,7 +240,7 @@ Productions
             | {implements} implements
             | {def} def
             | {class} class_tag
-            | {inherits} inherits_start path gt
+            | {extends} extends_start path gt
             | {method} method
             | {override} override
             | {inherited_use} inherited_use

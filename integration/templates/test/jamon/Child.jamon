@@ -1,4 +1,4 @@
-<%inherits /test/jamon/Parent>\
+<%extends /test/jamon/Parent>\
 <%xargs>
   opt1 => "o1c";
   opt5; i;

@@ -264,10 +264,10 @@ public class Analyzer
 
     private class PreliminaryAdapter extends AnalysisAdapter
     {
-        public void caseAInheritsComponent(AInheritsComponent p_inherits)
+        public void caseAExtendsComponent(AExtendsComponent p_extends)
         {
             getTemplateUnit().setParentPath
-                (getAbsolutePath(computePath(p_inherits.getPath())));
+                (getAbsolutePath(computePath(p_extends.getPath())));
             try
             {
                 getTemplateUnit().processParent(m_describer, m_children);

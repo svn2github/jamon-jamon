@@ -1,1 +1,1 @@
-<%inherits ParentLoop1>
+<%extends ParentLoop1>

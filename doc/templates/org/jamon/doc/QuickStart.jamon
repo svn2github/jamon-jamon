@@ -1,4 +1,4 @@
-<%inherits _Base>
+<%extends _Base>
 <%args>
   String output;
 </%args>

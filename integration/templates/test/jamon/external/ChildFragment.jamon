@@ -1,2 +1,2 @@
-<%inherits /test/jamon/LibParentFragment><%xargs>f;</%xargs>\
+<%extends /test/jamon/LibParentFragment><%xargs>f;</%xargs>\
 {<& f; i => 1 &>}

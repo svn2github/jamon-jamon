@@ -1,4 +1,4 @@
-<%inherits MethodParent>\
+<%extends MethodParent>\
 <%override foo><%xargs>req1; opt1 => "co3";</%xargs>\
 fooOverride: <% req1 %>, <% opt1 %></%override>\
 <%override bar><%xargs>content;</%xargs>\

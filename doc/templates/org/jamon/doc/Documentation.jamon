@@ -1,4 +1,4 @@
-<%inherits _Base>
+<%extends _Base>
 <%override title>Jamon Documentation</%override>
 <%class>
   protected Section currentSection() { return Section.DOCUMENTATION; }

@@ -1,4 +1,4 @@
-<%inherits /test/jamon/Parent>
+<%extends /test/jamon/Parent>
 <%xargs>
   nosucharg;
 </%xargs>

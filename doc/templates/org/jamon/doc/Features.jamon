@@ -1,4 +1,4 @@
-<%inherits _Base>
+<%extends _Base>
 <%override title>Jamon</%override>
 
 <%class>

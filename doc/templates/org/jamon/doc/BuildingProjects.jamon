@@ -1,4 +1,4 @@
-<%inherits _Base>
+<%extends _Base>
 <%override title>Integrating Jamon into projects</%override>
 <%class>
   protected Section currentSection() { return Section.DOCUMENTATION; }

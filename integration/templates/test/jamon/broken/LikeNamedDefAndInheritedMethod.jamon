@@ -1,2 +1,2 @@
-<%inherits /test/jamon/MethodParent>
+<%extends /test/jamon/MethodParent>
 <%def foo></%def>

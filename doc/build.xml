@@ -69,8 +69,10 @@ the documentation thus taking care of issues such as escaping.
     <copy file="${doc.dir}/QsTemp.jamon" todir="${work.dir}" />
     <java classname="org.jamon.TemplateProcessor"
           failonerror="true"
+          fork="yes"
+          dir="${work.dir}"
           classpath="${java.lib.jamon}">
-      <arg line="--srcDir=${work.dir} --destDir=. QsTemp" />
+      <arg line="--destDir=. QsTemp" />
     </java>
     <javac destdir="${work.dir}"
            srcdir="${work.dir}"
