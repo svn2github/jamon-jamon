@@ -36,7 +36,7 @@ public class UrlEscaping
     public void write(String p_string, Writer p_writer)
         throws IOException
     {
-        p_writer.write(URLEncoder.encode(p_string));
+        p_writer.write(URLEncoder.encode(p_string, "UTF-8"));
     }
 
 }
