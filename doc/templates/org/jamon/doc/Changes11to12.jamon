@@ -12,31 +12,31 @@
     and subtemplates.
   </li>
 
-  <li class="incompatible">
+  <li><& _incompat &>
     The writer is publicly accessible as <code>jamonWriter</code>
     variable, and is no longer an instance on the template.
   </li>
 
-  <li class="incompatible">
+  <li><& _incompat &>
     Fixed and refactored reflective template invocation, adding
     facilities to introspect on template arguments and types.
     <code>Invoker</code> becomes <code>TemplateInspector</code>.
   </li>
 
-  <li class="incompatible">
+  <li><& _incompat &>
     <code>Renderer</code> becomes an
     interface, <code>AbstractRenderer</code> replaces it as the
     abstract superclass.
   </li>
 
-  <li class="incompatible">
+  <li><& _incompat &>
     Default escaping is no longer set at runtime
     via <code>escapeWith</code>, but statically declared
     via <code>&lt;%escaping ...&gt;</code> directive.
   </li>
 
-  <li class="incompatible">
-    Flushing the writer after rendering no done via
+  <li><& _incompat &>
+    Flushing the writer after rendering is now done via
     <code>autoFlush()</code> method, but done by default unless call
     <code>renderNoFlush()</code>.
   </li>
@@ -48,8 +48,9 @@
 
   <li>
     Changes to the <code>&lt;%import&gt;</code> sections are no longer
-    included in determining if a template needs recompilation. The
-    (degenerate) use case that will break involves changing
+    included in determining if a template (proxy) needs
+    regeneration. The (degenerate) use case that will break involves
+    changing
 
 <pre class="jamon"><&| /org/jamon/escape/Html &><%LITERAL>
   <%import> java.util.Date; </%import>
@@ -65,3 +66,7 @@
     Fixed JDK 1.3 compatibility issues
   </li>
 </ul>
+
+<%def _incompat>
+<span class="incompatible">[INCOMPATIBLE]</span>
+</%def>
