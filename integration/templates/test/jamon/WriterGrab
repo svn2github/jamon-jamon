@@ -3,12 +3,12 @@
   java.io.Writer;
 </%import>\
 % StringWriter nw = new StringWriter();
-<&| stringify; sink => nw &>secret message</&>\
+% Writer old = getWriter();
+% writeTo(nw);
+<&| stringify &>secret message</&>\
 % String me = nw.toString();
+% writeTo(old);
 <% me.toUpperCase() %>
-<%def stringify><%farg content></%farg><%args>
-    StringWriter sink;
-  </%args>\
-% content.writeTo(sink);
+<%def stringify><%farg content></%farg>\
 <& content &>\
 </%def>
