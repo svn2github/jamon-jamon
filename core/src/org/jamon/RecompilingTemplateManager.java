@@ -95,7 +95,7 @@ import org.jamon.codegen.TemplateUnit;
  *   <code>RecompilingTemplateManager</code> instance.
 
  *   <li><b>setDefaultEscaping</b> - used to set the default escaping
- *   Default is null.
+ *   Default is {@link TemplateManager#DEFAULT_ESCAPING}.
 
  * </ul>
  */
@@ -166,7 +166,7 @@ public class RecompilingTemplateManager
             escaping = p_escaping;
             return this;
         }
-        private Escaping escaping = Escaping.DEFAULT;
+        private Escaping escaping = DEFAULT_ESCAPING;
     }
 
     public RecompilingTemplateManager()
@@ -232,9 +232,7 @@ public class RecompilingTemplateManager
     public RecompilingTemplateManager(Data p_data)
     {
         m_autoFlush = p_data.autoFlush;
-        m_escaping = p_data.escaping == null
-            ? Escaping.DEFAULT
-            : p_data.escaping;
+        m_escaping = p_data.escaping;
         m_classLoader = p_data.classLoader == null
             ? getClass().getClassLoader()
             : p_data.classLoader;
@@ -257,6 +255,11 @@ public class RecompilingTemplateManager
         }
 
         m_loader = new WorkDirClassLoader(m_classLoader, m_workDir);
+    }
+
+    public Escaping getDefaultEscaping()
+    {
+        return m_escaping;
     }
 
     public AbstractTemplateProxy.Intf constructImpl(

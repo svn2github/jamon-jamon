@@ -20,6 +20,7 @@
 
 package org.jamon;
 
+import org.jamon.escaping.Escaping;
 import org.jamon.util.StringUtils;
 
 import java.io.IOException;
@@ -52,6 +53,11 @@ public class JUnitTemplateManager
         this(StringUtils.classToTemplatePath(p_class),
              p_optionalArgs,
              p_requiredArgs);
+    }
+
+    public Escaping getDefaultEscaping()
+    {
+        return DEFAULT_ESCAPING;
     }
 
     private final Map m_optionalArgs;

@@ -67,6 +67,7 @@ public abstract class AbstractTemplateProxy
     protected AbstractTemplateProxy(TemplateManager p_templateManager)
     {
         m_templateManager = p_templateManager;
+        m_escaping = m_templateManager.getDefaultEscaping();
     }
 
     protected AbstractTemplateProxy(String p_path)
@@ -79,7 +80,7 @@ public abstract class AbstractTemplateProxy
         return m_templateManager;
     }
 
-    private Escaping m_escaping = Escaping.DEFAULT;
+    private Escaping m_escaping;
     private final TemplateManager m_templateManager;
     private ImplData m_implData = makeImplData();
 

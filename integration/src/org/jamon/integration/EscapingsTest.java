@@ -15,7 +15,7 @@
  * created by Luis O'Shea are Copyright (C) 2003 Luis O'Shea.  All Rights
  * Reserved.
  *
- * Contributor(s):
+ * Contributor(s): Ian Robertson
  */
 
 package org.jamon.integration;
@@ -35,12 +35,6 @@ import test.jamon.Escapings;
 public class EscapingsTest
     extends TestBase
 {
-    public void testDefault()
-        throws Exception
-    {
-        checkEscaping(null);
-    }
-
     public void testNone()
         throws IOException
     {
@@ -74,17 +68,11 @@ public class EscapingsTest
     private void checkEscaping(Escaping p_escaping)
         throws IOException
     {
-        Escapings escapings = new Escapings(getTemplateManager());
-        if (p_escaping != null)
-        {
-            escapings.escapeWith(p_escaping);
-        }
-
-        escapings.render(getWriter());
+        new Escapings(getTemplateManager())
+            .escapeWith(p_escaping)
+            .render(getWriter());
         checkOutput("Escaping is " + p_escaping,
-                    escapedExpected(p_escaping == null
-                                    ? Escaping.DEFAULT
-                                    : p_escaping));
+                    escapedExpected(p_escaping));
     }
 
     private String escapedExpected(Escaping p_escaping)

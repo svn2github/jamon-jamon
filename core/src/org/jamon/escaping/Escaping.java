@@ -48,6 +48,4 @@ public interface Escaping
     public static final Escaping NONE = new NoneEscaping();
     public static final Escaping URL = new UrlEscaping();
     public static final Escaping XML = new XmlEscaping();
-    public static final Escaping DEFAULT = HTML;
-
 }

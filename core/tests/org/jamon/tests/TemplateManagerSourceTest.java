@@ -24,6 +24,7 @@ import junit.framework.TestCase;
 import org.jamon.TemplateManagerSource;
 import org.jamon.TemplateManager;
 import org.jamon.AbstractTemplateProxy;
+import org.jamon.escaping.Escaping;
 
 public class TemplateManagerSourceTest
     extends TestCase
@@ -53,6 +54,11 @@ public class TemplateManagerSourceTest
     private static class TestTemplateManager
         implements TemplateManager
     {
+        public Escaping getDefaultEscaping()
+        {
+            return DEFAULT_ESCAPING;
+        }
+
         public AbstractTemplateProxy.Intf constructImpl
             (AbstractTemplateProxy p_proxy)
         {

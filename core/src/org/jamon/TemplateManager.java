@@ -23,6 +23,8 @@ package org.jamon;
 import java.io.Writer;
 import java.io.IOException;
 
+import org.jamon.escaping.Escaping;
+
 /**
  * A <code>TemplateManager</code> is the entry point to obtaining
  * instances of template objects.
@@ -55,4 +57,20 @@ public interface TemplateManager
      */
     AbstractTemplateProxy constructProxy(String p_path)
         throws IOException;
+
+    /**
+     * Return the default escaping for Proxy classes use upon
+     * construction.
+     *
+     * @param p_escaping an <code>Escaping</code> value
+     * @return an <code>Escaping</code> value
+     **/
+
+    Escaping getDefaultEscaping();
+
+    /**
+     * The standard value for {@link #getDefaultEscaping()} to return.
+     **/
+
+    public static Escaping DEFAULT_ESCAPING = Escaping.HTML;
 }
