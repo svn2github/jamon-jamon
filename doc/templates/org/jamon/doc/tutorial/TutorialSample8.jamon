@@ -15,8 +15,8 @@
 <li> <span class="concept"> Passing fragment arguments</span>
 
 In addition to template arguments, Jamon allows passing a block, or
-"fragment," of Jamon text to a template. When passing template
-fragments, the invocation syntax must look like <nobr><code>&lt;&amp;|
+"fragment," of Jamon text to a template. When passing a template
+fragment, the invocation syntax must look like <nobr><code>&lt;&amp;|
 target; arg1 => ... &amp;> [fragment of Jamon text] &lt;/&amp;></code></nobr>,
 and any template content after the start tag, <nobr><code>&lt;&amp;| target;
 arg1 => ... &amp;></code></nobr>, up to the closing tag,
