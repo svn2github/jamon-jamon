@@ -373,7 +373,11 @@ public class StandardTemplateManager
                      "jamon"
                      + (new java.util.Random().nextInt(100000000))
                      + ".tmp");
-        workDir.mkdirs();
+        if (! workDir.mkdirs())
+        {
+            throw new JamonException("Unable to create default work directory "
+                                     + workDir);
+        }
         workDir.deleteOnExit();
         return workDir.getCanonicalPath();
     }
