@@ -1,6 +1,3 @@
-<%args>
-  boolean showChanged => false;
-</%args>\
 <<% "%" %>args>
   int num => 0;
   boolean error => false;
@@ -16,11 +13,9 @@
 <% "%" %> }
     <hr>
     <form method="GET" action="hello">
-<% showChanged ? "<span class=\"changed\">" : "" #n %>\
 <% "%" %> if (error) {
       <b>The data you entered was invalid</b><br>
 <% "%" %> }
-<% showChanged ? "</span>" : "" #n %>\
       How many times would you like to be greeted? <input type="text" name="num" />
       <br>
       <input type="submit" value="Greet Me"/>

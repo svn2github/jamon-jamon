@@ -1,0 +1,32 @@
+<%farg content></%farg>\
+<%args>
+  String separator;
+  String beginInsert => "<b>";
+  String endInsert => "</b>";
+</%args>\
+<%import>
+  java.io.Writer;
+  java.io.StringWriter;
+  org.jamon.doc.diff.DiffRenderer;
+  org.jamon.doc.diff.BracketingPrinter;
+  org.jamon.doc.diff.DiscardingPrinter;
+  org.jamon.doc.diff.TokenUtils;
+</%import>\
+<%java>
+  Writer oldWriter = getWriter();
+  StringWriter buffer = new StringWriter();
+  writeTo(buffer);
+</%java>\
+<& content &>\
+<%java>
+  writeTo(oldWriter);
+  String text = buffer.toString();
+  int ix = text.indexOf(separator);
+  String first = text.substring(0, ix);
+  String second = text.substring(ix + separator.length());
+  DiffRenderer renderer = new DiffRenderer(TokenUtils.coarseTokenize(first), 
+                                           TokenUtils.coarseTokenize(second));
+</%java>\
+<% renderer.render(new BracketingPrinter(),
+                   new BracketingPrinter(beginInsert, endInsert),
+                   new DiscardingPrinter()) %>

@@ -13,7 +13,9 @@ the documentation thus taking care of issues such as escaping.
   <property name="build.dir" value="build"/>
   <property name="build.src.dir" value="${build.dir}/src"/>
   <property name="classes.dir" value="${build.dir}/classes"/>
+  <property name="html.dir" value="${build.dir}/html"/>
   <property name="java.lib.jamon" value="../jamon.jar"/>
+  <property name="java.lib.diff" value="/usr/local/share/java/diff.jar"/>
 
   <target name="templates">
     <mkdir dir="${build.src.dir}" />
@@ -30,7 +32,7 @@ the documentation thus taking care of issues such as escaping.
     <mkdir dir="${classes.dir}"/>
     <javac destdir="${classes.dir}"
            debug="true"
-           classpath="${java.lib.jamon}"
+           classpath="${java.lib.jamon}:${java.lib.diff}"
            deprecation="true">
       <src path="src"/>
       <src path="${build.src.dir}"/>
@@ -40,20 +42,22 @@ the documentation thus taking care of issues such as escaping.
   <target name="build"
           depends="compile"
           description="Generates all the documentation">
+    <mkdir dir="${html.dir}"/>
+    <copy file="base.css" todir="${html.dir}" />
     <java classname="org.jamon.doc.RenderingTool"
-          classpath="${java.lib.jamon}:${classes.dir}" 
+          classpath="${java.lib.jamon}:${java.lib.diff}:${classes.dir}" 
           fork="yes">
       <sysproperty key="org.jamon.integration.templatedir"
                    file="templates" />
       <sysproperty key="org.jamon.integration.workdir"
                    file="build/work" />
       <sysproperty key="org.jamon.integration.out"
-                   file="rainbow.html" />
+                   file="${html.dir}/rainbow.html" />
     </java>
   </target>
 
   <target name="cvsignores">
-    <echo file=".cvsignore">.cvsignore ${build.dir} build.properties rainbow.html
+    <echo file=".cvsignore">.cvsignore ${build.dir} build.properties
 </echo>
   </target>
 

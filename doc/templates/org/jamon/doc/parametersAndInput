@@ -6,11 +6,20 @@ template.
 Suppose we want a servlet that will print out the above message an arbitrary number
 of times.  We can do this with the following template.
 
-<pre class="template"><&| /org/jamon/escape/Html &><& hello2 &></&></pre>
+<pre class="template"><&| /org/jamon/doc/util/HighlightChanges; 
+                            separator => "---";
+                            beginInsert => "<span class='changed'>";
+                            endInsert => "</span>" &>\
+<&| /org/jamon/escape/Html &><& hello &>---<& hello2 &></&></&></pre>
 
+(New or changed lines look like <span class="changed">this</span>).  
 The above template can be invoked with code like:
 
-<pre class="code"><& servletSnippet &></pre>
+<pre class="code"><&| /org/jamon/doc/util/HighlightChanges; 
+                            separator => "---";
+                            beginInsert => "<span class='changed'>";
+                            endInsert => "</span>" &>\
+<& HelloServletTemplate &>---<& servletSnippet &></&></pre>
 
 (note that Java code identical to the previous example has been omitted.)  The above 
 code will result in "Hello World!" being printed out ten times.
@@ -20,12 +29,22 @@ displayed.  We can achieve that with a template such as:
 
 <pre class="template"><&| /org/jamon/escape/Html &><& hello3 &></&></pre>
 
+<pre class="template"><&| /org/jamon/doc/util/HighlightChanges; 
+                            separator => "---";
+                            beginInsert => "<span class='changed'>";
+                            endInsert => "</span>" &>\
+<&| /org/jamon/escape/Html &><& hello2 &>---<& hello3 &></&></&></pre>
+
 The corresponding servlet would look like:
 
-<pre class="code"><& servletSnippet2; showChanged => true &></pre>
+<pre class="code"><&| /org/jamon/doc/util/HighlightChanges; 
+                            separator => "---";
+                            beginInsert => "<span class='changed'>";
+                            endInsert => "</span>" &>\
+<& servletSnippet &>---<& servletSnippet2 &></&></pre>
 
-(new or changed lines look like <span class="changed">this</span>).  However, there is something
-unsatisfactory about this:
+However, there is something unsatisfactory about this:
+
 <div class="smell">
   <dl>
     <dt>Smell #1</dt>
@@ -35,11 +54,19 @@ unsatisfactory about this:
 Since the object responsible for parsing the parameter seems like the natural owner of the 
 name of the parameter, for the moment we reduce the smell by doing this:
 
-<pre class="template"><&| /org/jamon/escape/Html &><& hello4; showChanged => true &></&></pre>
+<pre class="template"><&| /org/jamon/doc/util/HighlightChanges; 
+                            separator => "---";
+                            beginInsert => "<span class='changed'>";
+                            endInsert => "</span>" &>\
+<&| /org/jamon/escape/Html &><& hello3 &>---<& hello4 &></&></&></pre>
 
 and
 
-<pre class="code"><& servletSnippet3; showChanged => true &></pre>
+<pre class="code"><&| /org/jamon/doc/util/HighlightChanges; 
+                            separator => "---";
+                            beginInsert => "<span class='changed'>";
+                            endInsert => "</span>" &>\
+<& servletSnippet2 &>---<& servletSnippet3 &></&></pre>
 
 The next problem to address is the fact that no validation is performed on the
 data coming from the web.  For example a user may enter "a" as the number of times
@@ -47,11 +74,19 @@ they want to be greeted which would cause the <span class="code">doGet</span> me
 to throw a <span class="code">NumberFormatException</span>.  Thus we need to catch 
 this as follows (unchanged code is omitted).  In the servlet we need:
 
-<pre class="code"><& servletSnippet4; showChanged => true &></pre>
+<pre class="code"><&| /org/jamon/doc/util/HighlightChanges; 
+                            separator => "---";
+                            beginInsert => "<span class='changed'>";
+                            endInsert => "</span>" &>\
+<& servletSnippet3 &>---<& servletSnippet4 &></&></pre>
 
 and the template needs an additional error parameter:
 
-<pre class="template"><&| /org/jamon/escape/Html &><& hello5; showChanged => true &></&></pre>
+<pre class="template"><&| /org/jamon/doc/util/HighlightChanges; 
+                            separator => "---";
+                            beginInsert => "<span class='changed'>";
+                            endInsert => "</span>" &>\
+<&| /org/jamon/escape/Html &><& hello4 &>---<& hello5 &></&></&></pre>
 
 However, in spite of all this the servlet leaves a great deal to be desired.  For example
 invalid input should be returned to the user for editing.

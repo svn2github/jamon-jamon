@@ -1,17 +1,10 @@
-<%args>
-  boolean showChanged => false;
-</%args>\
     public void doGet(HttpServletRequest request,
                       HttpServletResponse response)
 	throws IOException
     {
         response.setContentType("text/html");
         helloTemplate.writeTo(response.getWriter());
-        String numString = request.getParameter(\
-<% showChanged ? "<span class=\"changed\">" : "" %>\
-NUM_KEY\
-<% showChanged ? "</span>" : "" %>\
-);
+        String numString = request.getParameter(NUM_KEY);
         if (numString != null)
         {
             helloTemplate.setNum(Integer.parseInt(numString));
@@ -19,6 +12,4 @@ NUM_KEY\
         helloTemplate.render();
     }
 
-    <% showChanged ? "<span class=\"changed\">" : "" %>\
-public static final String NUM_KEY = "num";\
-<% showChanged ? "</span>" : "" %>
+    public static final String NUM_KEY = "num";

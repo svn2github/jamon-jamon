@@ -1,6 +1,3 @@
-<%args>
-  boolean showChanged => false;
-</%args>\
 <<% "%" %>args>
   int num => 0;
 </<% "%" %>args>
@@ -16,7 +13,7 @@
     <hr>
     <form method="GET" action="hello">
       How many times would you like to be greeted? \
-<input type="text" name="<% showChanged ? "<span class=\"changed\">" : "" #n %><<% "%" %> HelloServlet.NUM_KEY %><% showChanged ? "</span>" : "" #n %>" />
+<input type="text" name="<<% "%" %> HelloServlet.NUM_KEY %>" />
       <br>
       <input type="submit" value="Greet Me"/>
     </form>
