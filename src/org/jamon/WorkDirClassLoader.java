@@ -14,16 +14,14 @@ public class WorkDirClassLoader
         throws IOException
     {
         super(p_parent);
-        m_workDir = p_workDir;
-        m_workUrl = new URL("file:" + m_workDir + "/");
+        m_workUrl = new URL("file:" + p_workDir + "/");
     }
 
-    private final String m_workDir;
     private final URL m_workUrl;
 
     private String getFileNameForClass(String p_name)
     {
-        return m_workDir
+        return m_workUrl.getPath()
             + StringUtils.classNameToPath(p_name.replace('.','/'))
             + ".class";
     }
