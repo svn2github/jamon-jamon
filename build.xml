@@ -125,6 +125,7 @@
              token="release=false"
              value="release=true" />
     <cvs command="commit -m 'version bump to ${jamon.version.next}' ${file}" />
+    <ant dir="core" target="compile" />
     <exec executable="java"
           outputproperty="jamon.version.cvs">
       <arg value="-cp" />
