@@ -24,7 +24,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-class FargInfo extends AbstractUnitInfo
+public class FargInfo extends AbstractUnitInfo
 {
     public FargInfo(String p_name)
     {
