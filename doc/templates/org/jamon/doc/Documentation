@@ -1,5 +1,5 @@
 <&| _Base; title => "Jamon Documentation"; section => "Documentation" &>
-  <h2>How to use Jamon</h2>
+  <h2>Documentation</h2>
   <ul>
     <li><a href="Overview.html">Overview</a></li>
     <li><a href="QuickStart.html">Quick start mini-tutorial</a></li>
