@@ -28,8 +28,6 @@ package org.jamon;
 
 public class TemplateResolver
 {
-    private static final String FS = System.getProperty("file.separator");
-
     /**
      * Construct a <code>TemplateResolver</code>.
      **/
@@ -48,7 +46,7 @@ public class TemplateResolver
 
     public String getIntfClassName(final String p_path)
     {
-        int i = p_path.lastIndexOf(FS);
+        int i = p_path.lastIndexOf('/');
         return i < 0 ? p_path : p_path.substring(i+1);
     }
 
@@ -78,10 +76,11 @@ public class TemplateResolver
 
     public String getIntfPackageName(final String p_path)
     {
-        int i = p_path.lastIndexOf(FS);
+        int i = p_path.lastIndexOf('/');
         if (i > 0)
         {
-            return StringUtils.pathToClassName(p_path.substring(0,i));
+            return StringUtils.templatePathToClassName
+                (p_path.substring(0,i));
         }
         else
         {

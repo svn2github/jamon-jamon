@@ -64,12 +64,14 @@ public class TemplateProcessor
         }
         else if (fsPos > 0)
         {
-            pkg = StringUtils.pathToClassName(p_filename.substring(0,fsPos));
+            pkg = StringUtils.templatePathToClassName
+                (p_filename.substring(0,fsPos));
             templateName =
                 templateName.substring(fsPos+File.separator.length());
         }
 
-        File pkgDir = new File(m_destDir, StringUtils.classNameToPath(pkg));
+        File pkgDir = new File(m_destDir,
+                               StringUtils.classNameToFilePath(pkg));
         File javaFile = new File(pkgDir, templateName + ".java");
 
         BaseAnalyzer analyzer =

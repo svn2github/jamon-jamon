@@ -26,7 +26,6 @@ import java.util.List;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.HashMap;
-import java.lang.reflect.Field;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -59,9 +58,10 @@ public class TemplateDescriber
         {
             try
             {
-                Class c = Class.forName(StringUtils.pathToClassName(p_path));
-                Field f = c.getField("FARGINFO_"+p_fargName);
-                Map args = (Map) f.get(null);
+                Map args = (Map)
+                    Class.forName(StringUtils.templatePathToClassName(p_path))
+                    .getField("FARGINFO_"+p_fargName)
+                    .get(null);
                 return new FargInfo(p_fargName,
                                     args.keySet().iterator(),
                                     args);
@@ -88,9 +88,12 @@ public class TemplateDescriber
         {
             try
             {
-                Class c = Class.forName(StringUtils.pathToClassName(p_path));
-                Field f = c.getField("FARGNAMES");
-                return Arrays.asList( (String []) f.get(null) ).iterator();
+                return Arrays.asList
+                    ( (String [])
+                      Class.forName(StringUtils.templatePathToClassName(p_path))
+                          .getField("FARGNAMES")
+                          .get(null) )
+                    .iterator();
             }
             catch (RuntimeException e)
             {
@@ -130,9 +133,11 @@ public class TemplateDescriber
         {
             try
             {
-                Class c = Class.forName(StringUtils.pathToClassName(p_path));
-                Field f = c.getField("REQUIRED_ARGS");
-                return Arrays.asList( (String []) f.get(null) );
+                return Arrays.asList
+                    ( (String [])
+                      Class.forName(StringUtils.templatePathToClassName(p_path))
+                          .getField("REQUIRED_ARGS")
+                          .get(null) );
             }
             catch (RuntimeException e)
             {

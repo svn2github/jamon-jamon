@@ -26,7 +26,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PushbackReader;
 import java.io.Writer;
-import java.lang.reflect.Field;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Collection;
@@ -346,7 +345,7 @@ public class StandardTemplateManager
 
     private String getClassName(String p_path)
     {
-        return StringUtils.pathToClassName(p_path) + "Impl";
+        return StringUtils.templatePathToClassName(p_path) + "Impl";
     }
 
     private Class loadAndResolveClass(String p_path)
@@ -611,13 +610,14 @@ public class StandardTemplateManager
         if (TRACE)
         {
             trace("Looking for signature of "
-                    + StringUtils.pathToClassName(p_path));
+                    + StringUtils.templatePathToClassName(p_path));
         }
         try
         {
-            Class c = Class.forName(StringUtils.pathToClassName(p_path));
-            Field f = c.getField("SIGNATURE");
-            return (String) f.get(null);
+            return (String)
+                Class.forName(StringUtils.templatePathToClassName(p_path))
+                    .getField("SIGNATURE")
+                    .get(null);
         }
         catch (ClassNotFoundException e)
         {

@@ -20,8 +20,8 @@
 
 package org.jamon.tests;
 
+import java.io.File;
 import junit.framework.TestCase;
-
 import org.jamon.StringUtils;
 
 public class StringUtilsTest
@@ -30,21 +30,34 @@ public class StringUtilsTest
     public void testPathToClassName()
         throws Exception
     {
-        assertEquals("a.b.c", StringUtils.pathToClassName("/a/b/c"));
-        assertEquals("a.b.c", StringUtils.pathToClassName("a/b/c"));
-        assertEquals("a", StringUtils.pathToClassName("a"));
-        assertEquals("a", StringUtils.pathToClassName("/a"));
+        assertEquals("a.b.c", StringUtils.templatePathToClassName("/a/b/c"));
+        assertEquals("a.b.c", StringUtils.templatePathToClassName("a/b/c"));
+        assertEquals("a", StringUtils.templatePathToClassName("a"));
+        assertEquals("a", StringUtils.templatePathToClassName("/a"));
         assertEquals("axy.bxy.cxyasd",
-                     StringUtils.pathToClassName("/axy/bxy/cxyasd"));
+                     StringUtils.templatePathToClassName("/axy/bxy/cxyasd"));
     }
 
     public void testClassNameToPath()
         throws Exception
     {
-        assertEquals("/a/b/c", StringUtils.classNameToPath("a.b.c"));
-        assertEquals("/a", StringUtils.classNameToPath("a"));
-        assertEquals("/axy/bxy/cxyasd",
-                     StringUtils.classNameToPath("axy.bxy.cxyasd"));
+
+        assertEquals(File.separator
+                     + "a"
+                     + File.separator
+                     + "b"
+                     + File.separator
+                     + "c",
+                     StringUtils.classNameToFilePath("a.b.c"));
+        assertEquals(File.separator + "a",
+                     StringUtils.classNameToFilePath("a"));
+        assertEquals(File.separator
+                     + "axy"
+                     + File.separator
+                     + "bxy"
+                     + File.separator
+                     + "cxyasd",
+                     StringUtils.classNameToFilePath("axy.bxy.cxyasd"));
     }
 
     public void testCapitalize()

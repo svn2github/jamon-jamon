@@ -38,12 +38,11 @@ public class WorkDirClassLoader
 
     private final String m_workDir;
 
-    private String getFileNameForClass(String p_name)
+    private File getFileForClass(String p_name)
     {
-        return m_workDir
-            + '/'
-            + StringUtils.classNameToPath(p_name.replace('.','/'))
-            + ".class";
+        return new File(m_workDir,
+                        StringUtils.classNameToFilePath(p_name)
+                        + ".class");
     }
 
     public synchronized void invalidate()
@@ -63,7 +62,7 @@ public class WorkDirClassLoader
             throws IOException
         {
             FileInputStream s =
-                new FileInputStream(getFileNameForClass(p_name));
+                new FileInputStream(getFileForClass(p_name));
             final byte [] buf = new byte[1024];
             byte [] bytes = new byte[0];
             while (true)
@@ -84,7 +83,7 @@ public class WorkDirClassLoader
         protected Class loadClass(String p_name, boolean p_resolve)
             throws ClassNotFoundException
         {
-            if (! new File(getFileNameForClass(p_name)).exists())
+            if (! getFileForClass(p_name).exists())
             {
                 return super.loadClass(p_name, p_resolve);
             }
@@ -107,7 +106,7 @@ public class WorkDirClassLoader
     protected Class loadClass(String p_name, boolean p_resolve)
         throws ClassNotFoundException
     {
-        if (! new File(getFileNameForClass(p_name)).exists())
+        if (! getFileForClass(p_name).exists())
         {
             return super.loadClass(p_name, p_resolve);
         }

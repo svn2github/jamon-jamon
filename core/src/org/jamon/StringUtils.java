@@ -20,25 +20,26 @@
 
 package org.jamon;
 
+import java.io.File;
+
 public class StringUtils
 {
     private StringUtils() { }
 
-    private static final String PS = System.getProperty("path.separator");
-    private static final String FS = System.getProperty("file.separator");
+    private static final String TFS = "/";
 
-    public static String pathToClassName(String p_path)
+    public static String templatePathToClassName(String p_path)
     {
         StringBuffer sb = new StringBuffer(p_path);
-        final int len = FS.length();
-        while (sb.length() > 0 && FS.equals(sb.substring(0,len)))
+        final int len = TFS.length();
+        while (sb.length() > 0 && TFS.equals(sb.substring(0,len)))
         {
             sb.delete(0,len);
         }
         int j = len;
         for (int i = 0; i < sb.length() - len; ++i)
         {
-            if (sb.substring(i,j).equals(FS))
+            if (sb.substring(i,j).equals(TFS))
             {
                 sb.replace(i,j,".");
             }
@@ -47,15 +48,15 @@ public class StringUtils
         return sb.toString();
     }
 
-    public static String classNameToPath(String p_className)
+    public static String classNameToFilePath(String p_className)
     {
-        StringBuffer sb = new StringBuffer(FS);
+        StringBuffer sb = new StringBuffer(File.separator);
         sb.append(p_className);
-        for (int i = FS.length(); i < sb.length(); ++i)
+        for (int i = File.separator.length(); i < sb.length(); ++i)
         {
             if (sb.charAt(i) == '.')
             {
-                sb.replace(i,i+1,FS);
+                sb.replace(i,i+1,File.separator);
             }
         }
         return sb.toString();
