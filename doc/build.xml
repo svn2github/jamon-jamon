@@ -41,7 +41,11 @@ the documentation thus taking care of issues such as escaping.
   <target name="init">
     <dirname property="this.dir" file="build.xml" />
     <mkdir dir="${doc.dir}"/>
-    <mkdir dir="${build.dir}"/>
+    <mkdir dir="${www.dir}"/>
+    <dependset>
+      <srcfileset file="${java.lib.jamon}"/>
+      <targetfileset refid="build-files"/>
+    </dependset>
     <copy file="base.css" todir="${doc.dir}" />
     <copy file="earthaddress.gif" todir="${doc.dir}" />
     <copy file="favicon.ico" todir="${doc.dir}" />
@@ -92,10 +96,6 @@ the documentation thus taking care of issues such as escaping.
     <taskdef name="jamon"
              classname="org.jamon.ant.JamonTask"
              classpath="${java.lib.jamon}" />
-    <dependset>
-      <srcfileset file="${java.lib.jamon}"/>
-      <targetfileset refid="build-files"/>
-    </dependset>
     <jamon destdir="${work.dir}" srcdir="${overview.samples.dir}/templates">
       <include name="QsTemp.jamon"/>
     </jamon>
