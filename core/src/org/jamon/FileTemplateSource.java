@@ -26,24 +26,52 @@ import java.io.FileReader;
 import java.io.File;
 import java.util.StringTokenizer;
 
-/*
-this takes the place of some of TemplateDescriber.
-
-*/
+/**
+ * The standard implementation of {@link TemplateSource} which
+ * retrieves templates from the filesystem location under a specified
+ * root directory. By default, templates are expected to have extens
+ * ".jamon"; this can be overridden.
+ */
 public class FileTemplateSource
     implements TemplateSource
 {
+    /**
+     * Construct a FileTemplateSource
+     *
+     * @param p_templateSourceDir the source directory
+     */
     public FileTemplateSource(String p_templateSourceDir)
     {
         this(new File(p_templateSourceDir));
     }
 
+    /**
+     * Construct a FileTemplateSource, using the default extension
+     * ".jamon".
+     *
+     * @param p_templateSourceDir the source directory
+     */
     public FileTemplateSource(File p_templateSourceDir)
     {
-        m_templateSourceDir = p_templateSourceDir;
+        this(p_templateSourceDir, "jamon");
     }
 
-    private final File m_templateSourceDir;
+    /**
+     * Construct a FileTemplateSource, specifying a filename extension
+     * for templates. If the supplied extension is null or empty, no
+     * extension is expected, otherwise the extension should
+     * <emph>NOT</emph> include a leading ".".
+     *
+     * @param p_templateSourceDir the source directory
+     * @param p_extension the filename extension for templates
+     */
+    public FileTemplateSource(File p_templateSourceDir, String p_extension)
+    {
+        m_templateSourceDir = p_templateSourceDir;
+        m_extension = p_extension == null || p_extension.length() == 0
+            ? ""
+            : "." + p_extension;
+    }
 
     public long lastModified(String p_templatePath)
         throws IOException
@@ -70,18 +98,8 @@ public class FileTemplateSource
 
     private File getTemplateFile(String p_templatePath)
     {
-        String filePath = templatePathToFilePath(p_templatePath);
-        File file = new File(m_templateSourceDir,
-                             filePath + ".jamon");
-        if (! file.exists())
-        {
-            file = new File(m_templateSourceDir,filePath + ".jam");
-        }
-        if (! file.exists())
-        {
-            file = new File(m_templateSourceDir,filePath);
-        }
-        return file;
+        return new File(m_templateSourceDir,
+                        templatePathToFilePath(p_templatePath) + m_extension);
     }
 
     private String templatePathToFilePath(String p_path)
@@ -98,4 +116,7 @@ public class FileTemplateSource
         }
         return path.toString();
     }
+
+    private final File m_templateSourceDir;
+    private final String m_extension;
 }
