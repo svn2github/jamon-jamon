@@ -2,7 +2,7 @@
   org.jamon.html.TextInput input;
   String type => "text";
   int size => 0;
-</%args>
+</%args>\
 <input type='<% type %>'
        name='<% input.getName() %>'
        value='<% input.getValue() %>'

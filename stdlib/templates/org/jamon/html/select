@@ -1,10 +1,10 @@
 <%farg renderOption>
   Object renderable;
-</%farg>
+</%farg>\
 <%args>
   org.jamon.html.Select input;
   boolean multiple => false;
-</%args>
+</%args>\
 <select name="<% input.getName() %>" \
 % if (multiple) {
   multiple \
@@ -16,6 +16,6 @@
 % if (input.isSelected(value)) {
   selected \
 % }
-  ><& renderOption; renderable => input.getRenderable(value) &>
+  ><& renderOption; renderable => input.getRenderable(value) &>\
 % }
 </select>

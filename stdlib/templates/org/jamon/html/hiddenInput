@@ -1,6 +1,6 @@
 <%args>
   org.jamon.html.Input input;
-</%args>
+</%args>\
 <input type='hidden'
        name='<% input.getName() %>'
        value='<% input.getValue() %>' />
