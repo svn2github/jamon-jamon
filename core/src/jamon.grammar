@@ -46,7 +46,7 @@ Tokens
   {call,args,inherit,imports} white_space = ws*;
   {call,args,imports,inherit,def} identifier = letter letter_or_digit*;
 
-  {start -> emit,body -> emit} emit_start = '<%' ws*;
+  {start -> emit,body -> emit} emit_start = '<%' ws+;
   {emit -> body} emit_end = ws* '%>';
   {emit} escape = ws* '|' ('h' | 'u' | 'x' | 'n');
 
@@ -75,7 +75,14 @@ Tokens
   {start -> inherit, body -> inherit} inherit_start = ws* '<%inherit';
   {inherit -> body} inherit_end = '%>';
 
-  {start,body} doc = '<%doc>' all* '</%doc>';
+  {start -> body,body} doc =
+       '<%doc>' ([all - '<']
+              | '<' [all-'/']
+              | '</' [all-'%']
+              | '</%' [all-'d']
+              | '</%d' [all-'o']
+              | '</%do' [all-'c']
+              | '</%doc' [all-'>'])* '</%doc>';
 
 Ignored Tokens
 
