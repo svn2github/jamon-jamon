@@ -12,10 +12,10 @@
   <property file="${user.home}/.ant.properties"/>
   <property name="jarfile" value="jamon.jar" />
 
-  <target name="test1"
-          depends="compile"
+  <target name="test"
+          depends="jar"
           description="Run the demo">
-    <ant dir="integration" target="test1">
+    <ant dir="integration" target="test">
       <property name="java.lib.jamon" value="${basedir}/core/build/classes"/>
     </ant>
   </target>
@@ -25,8 +25,8 @@
   </target>
 
   <target name="compile" description="Build every project">
-    <ant dir="core" target="build"/>
-    <ant dir="anttask" target="build"/>
+    <ant dir="core" target="compile"/>
+    <ant dir="anttask" target="compile"/>
     <ant dir="stdlib" target="compile"/>
   </target>
 

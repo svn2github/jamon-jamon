@@ -13,7 +13,7 @@
   <property name="src.dir" value="src"/>
   <property name="test.pkg" value="test/jamon"/>
 
-  <property name="java.lib.jamon" value="../core/jamon-core.jar"/>
+  <property name="java.lib.jamon" value="../jamon.jar"/>
   <property name="java.lib.junit" value="/usr/local/share/java/junit.jar" />
   <property name="java.lib.gnuregexp" value="/usr/local/share/java/gnu-regexp-1.1.4.jar" />
 
@@ -22,26 +22,16 @@
   <property name="junit.printsummary" value="off" />
   <property name="junit.formatter" value="brief" />
 
-  <target name="templates"
-          depends=""
-          description="Compiles the Jamon templates into Java">
-    <mkdir dir="${build.src.dir}"/>
-    <java fork="true"
-          dir="templates"
-          failonerror="true"
-          classpath="${java.lib.jamon}:${java.lib.gnuregexp}"
-          classname="org.jamon.TemplateGenerator">
-      <arg value="../${build.src.dir}" />
-      <arg value="${test.pkg}/TestTemplate" />
-      <arg value="${test.pkg}/SubTemplate" />
-      <arg value="${test.pkg}/Sub2" />
-      <arg value="${test.pkg}/JavaEscape" />
-      <arg value="${test.pkg}/Arguments" />
-      <arg value="${test.pkg}/OptionalArguments" />
-      <arg value="${test.pkg}/PrivateMethods" />
-      <arg value="${test.pkg}/Fragment" />
-      <arg value="${test.pkg}/ParametrizedFragment" />
-    </java>
+  <taskdef name="jamon"
+           classname="org.jamon.ant.JamonTask"
+           classpath="${java.lib.jamon}" />
+
+
+  <target name="templates">
+    <mkdir dir="${build.src.dir}" />
+    <jamon destdir="${build.src.dir}" generateImpls="true">
+      <src path="templates"/>
+    </jamon>
   </target>
 
   <target name="compile"

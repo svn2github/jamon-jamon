@@ -12,7 +12,7 @@ import org.apache.tools.ant.util.SourceFileScanner;
 
 import org.apache.tools.ant.taskdefs.MatchingTask;
 
-import org.jamon.TemplateGenerator;
+import org.jamon.TemplateProcessor;
 import org.jamon.StringUtils;
 import org.jamon.parser.ParserException;
 
@@ -122,13 +122,13 @@ public class JamonTask
         {
             if (m_generateImpls)
             {
-                TemplateGenerator.generateImplAndInterfaces(m_destDir,
+                TemplateProcessor.generateImplAndInterfaces(m_destDir,
                                                             m_src.toString(),
                                                             relativeFilenames);
             }
             else
             {
-                TemplateGenerator.generateInterfaces(m_destDir,
+                TemplateProcessor.generateInterfaces(m_destDir,
                                                      m_src.toString(),
                                                      relativeFilenames);
             }

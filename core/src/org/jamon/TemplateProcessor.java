@@ -12,7 +12,7 @@ import org.jamon.node.Start;
 import org.jamon.parser.Parser;
 import org.jamon.parser.ParserException;
 
-public class TemplateGenerator
+public class TemplateProcessor
 {
     private static final String FILESEP =
         System.getProperty("file.separator");

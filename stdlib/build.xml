@@ -14,8 +14,8 @@
 
   <property name="jarfile" value="jamon-stdlib.jar" />
 
-  <property name="java.lib.jamon" value="../core/jamon-core.jar"/>
-  <property name="java.lib.jamon-anttask" value="../anttask/jamon-anttask.jar"/>
+  <property name="java.lib.jamon" value="../core/build/classes"/>
+  <property name="java.lib.jamon-anttask" value="../anttask/build/classes"/>
   <property name="java.lib.junit" value="/usr/local/share/java/junit.jar" />
 
   <taskdef name="jamon"
