@@ -30,10 +30,6 @@ public abstract class AbstractTemplateImpl
         {
             initializeDefaultArguments();
         }
-        catch (Error e)
-        {
-            throw e;
-        }
         catch (RuntimeException e)
         {
             throw e;
