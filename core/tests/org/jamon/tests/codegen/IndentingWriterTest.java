@@ -53,7 +53,12 @@ public class IndentingWriterTest
         m_indentingWriter.closeBlock();
         m_indentingWriter.closeBlock("suffix");
         m_indentingWriter.println("line9");
-        checkOutput("line1\n{\n  line3\n  {\n    line5\n       line6\n  }\n}suffix\nline9\n");
+        String nl = System.getProperty("line.separator");
+        checkOutput("line1" + nl
+                    + "{" + nl + "  line3" + nl + "  {" + nl
+                    + "    line5" + nl + "       line6" + nl + "  }" + nl
+                    + "}suffix" + nl
+                    + "line9" + nl);
     }
 
     private void checkOutput(String p_expected)
