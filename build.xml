@@ -97,7 +97,7 @@
     <replace file="${file}"
              token="release=false"
              value="release=true" />
-    <cvs command="commit -m 'minor version bump to ${currentversion}' ${file}" />
+    <cvs command="commit -m 'minor version bump to ${nextversion}' ${file}" />
     <cvs command="tag RELEASE-${majorversion}_${nextversion}" />
     <cvs command="edit ${file}"/>
     <replace file="${file}"
