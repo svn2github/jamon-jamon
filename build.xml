@@ -201,13 +201,13 @@
         <exclude name="${jarfile}" />
         <exclude name="${stage.dir}" />
         <exclude name="${stage.dir}/**" />
-        <exclude name="${tarball.bin}" />
-        <exclude name="${tarball.src}" />
-        <exclude name="${zip.bin}" />
-        <exclude name="${zip.src}" />
+        <exclude name="*.tgz" />
+        <exclude name="*.jar" />
+        <exclude name="*.zip" />
         <exclude name="**/build.properties" />
         <exclude name="**/build" />
         <exclude name="**/build/**" />
+        <exclude name="**/work/**" />
       </tarfileset>
     </tar>
     <zip destfile="${zip.src}" >
@@ -215,13 +215,13 @@
         <exclude name="${jarfile}" />
         <exclude name="${stage.dir}" />
         <exclude name="${stage.dir}/**" />
-        <exclude name="${zip.bin}" />
-        <exclude name="${zip.src}" />
-        <exclude name="${tarball.bin}" />
-        <exclude name="${tarball.src}" />
+        <exclude name="*.tgz" />
+        <exclude name="*.jar" />
+        <exclude name="*.zip" />
         <exclude name="**/build.properties" />
         <exclude name="**/build" />
         <exclude name="**/build/**" />
+        <exclude name="**/work/**" />
       </zipfileset>
     </zip>
   </target>
