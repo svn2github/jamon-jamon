@@ -24,7 +24,7 @@ Package
 Helpers
   lower = ['a'..'z'];
   upper = ['A'..'Z'];
-  letter = lower | upper | '_';
+  letter = [[lower + upper] + '_'];
   digit = ['0'..'9'];
   letter_or_digit = letter | digit;
   period = '.';
@@ -89,7 +89,7 @@ Tokens
       ( [all - [[q + pct] + pipe]]
       | quoted
       | pct [all - gt]
-      | pipe [all - [[lower + upper] + '_']]
+      | pipe [all - letter]
       | pipe letter ws* [all - [pct + ws]]
       | pipe letter ws* pct [all - [gt + ws]] )*;
 
