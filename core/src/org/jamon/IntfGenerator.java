@@ -5,9 +5,9 @@ import java.io.PrintWriter;
 import java.io.IOException;
 import java.util.Iterator;
 
-public class InterfaceGenerator
+public class IntfGenerator
 {
-    public InterfaceGenerator(TemplateResolver p_resolver,
+    public IntfGenerator(TemplateResolver p_resolver,
                               String p_templatePath,
                               BaseAnalyzer p_analyzer,
                               Writer p_writer)

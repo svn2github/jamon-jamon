@@ -423,10 +423,10 @@ public class StandardTemplateManager
 
         try
         {
-            new InterfaceGenerator(new TemplateResolver(m_packagePrefix),
-                                   p_path,
-                                   bg,
-                                   writer)
+            new IntfGenerator(new TemplateResolver(m_packagePrefix),
+                              p_path,
+                              bg,
+                              writer)
                 .generateClassSource();
             writer.close();
         }

@@ -63,10 +63,10 @@ public class TemplateGenerator
 
         try
         {
-            new InterfaceGenerator(p_resolver,
-                                   "/" + p_filename,
-                                   bg,
-                                   writer)
+            new IntfGenerator(p_resolver,
+                              "/" + p_filename,
+                              bg,
+                              writer)
                 .generateClassSource();
         }
         catch (IOException e)
