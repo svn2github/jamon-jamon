@@ -125,23 +125,19 @@ public class StandardTemplateManager
         protected Class loadClass(String p_name, boolean p_resolve)
             throws ClassNotFoundException
         {
-            System.err.println("load class " + p_name);
             File cf = new File(getFileNameForClass(p_name));
             if (!cf.exists())
             {
-                System.err.println("to super " + p_name);
                 return super.loadClass(p_name, p_resolve);
             }
 
             Long last = (Long) m_timestampMap.get(p_name);
             if (last != null && last.longValue() >= cf.lastModified())
             {
-                System.err.println("up to date in cache " + p_name);
                 return (Class) m_classMap.get(p_name);
             }
             if (last != null || m_loader == null)
             {
-                System.err.println("creating new class loader " + p_name);
                 try
                 {
                     m_loader = new URLClassLoader
@@ -153,7 +149,6 @@ public class StandardTemplateManager
                     throw new JttClassNotFoundException(e);
                 }
             }
-            System.err.println("inner load " + p_name);
             Class c = m_loader.loadClass(p_name);
             if (p_resolve)
             {
