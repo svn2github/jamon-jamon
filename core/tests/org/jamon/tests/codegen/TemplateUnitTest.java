@@ -148,28 +148,14 @@ public class TemplateUnitTest
         checkSigIsUnique(unit, sigs);
     }
 
-    public void testAbsolutePath()
-        throws Exception
-    {
-        assertEquals("/bar", new TemplateUnit("foo").getAbsolutePath("bar"));
-        assertEquals("/bar",
-                     new TemplateUnit("/foo/bar").getAbsolutePath("/bar"));
-        assertEquals("/foo/bar",
-                     new TemplateUnit("/foo/bar").getAbsolutePath("bar"));
-        assertEquals("/foo/bar/boz",
-                     new TemplateUnit("/foo/bar/baz").getAbsolutePath("boz"));
-        assertEquals("/foo/bar/boz/bez",
-                     new TemplateUnit("/foo/bar/baz")
-                         .getAbsolutePath("boz/bez"));
-    }
 
     public void testDependencies()
         throws Exception
     {
         TemplateUnit unit = new TemplateUnit("/foo/bar");
         unit.addCallPath("/baz");
-        unit.addCallPath("wazza");
-        unit.setParentPath("balla");
+        unit.addCallPath("/foo/wazza");
+        unit.setParentPath("/foo/balla");
         Collection dependencies = unit.getTemplateDependencies();
         assertEquals(3, dependencies.size());
         assertTrue(dependencies.contains("/baz"));

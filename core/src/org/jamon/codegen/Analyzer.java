@@ -41,6 +41,8 @@ public class Analyzer
                     Set p_children)
     {
         m_templateUnit = new TemplateUnit(p_templatePath);
+        m_templateDir =
+            p_templatePath.substring(0,1 + p_templatePath.lastIndexOf('/'));
         m_currentUnit = m_templateUnit;
         m_describer = p_describer;
         m_children = p_children;
@@ -165,6 +167,14 @@ public class Analyzer
     private final Set m_defNames = new HashSet();
     private final LinkedList m_callStatements = new LinkedList();
     private final Map m_aliases = new HashMap();
+    private final String m_templateDir;
+
+    private String getAbsolutePath(String p_path)
+    {
+        return p_path.charAt(0) == '/'
+            ? p_path
+            : m_templateDir + p_path;
+    }
 
     private String computePath(PPath p_node)
     {
@@ -186,12 +196,6 @@ public class Analyzer
         {
             m_path.append(p_relativePath.getIdentifier().getText());
         }
-
-        // FIXME: can we pull in the de-relativizing code from TemplateUnit?
-//         public void inARelPath(ARelPath p_relPath)
-//         {
-//             m_path.append( the current template path );
-//         }
 
         public void inAAbsolutePath(AAbsolutePath p_absPath)
         {
@@ -236,9 +240,8 @@ public class Analyzer
                  a.hasNext(); )
             {
                 AAlias alias = (AAlias) a.next();
-                addAlias
-                    (alias.getAliasName().toString().trim(),
-                     computePath(alias.getPath()));
+                addAlias(alias.getAliasName().toString().trim(),
+                         computePath(alias.getPath()));
             }
         }
     }
@@ -247,7 +250,8 @@ public class Analyzer
     {
         public void caseAExtendsComponent(AExtendsComponent p_extends)
         {
-            getTemplateUnit().setParentPath(computePath(p_extends.getPath()));
+            getTemplateUnit().setParentPath
+                (getAbsolutePath(computePath(p_extends.getPath())));
             try
             {
                 getTemplateUnit().processParent(m_describer, m_children);
@@ -534,10 +538,9 @@ public class Analyzer
                 return new MethodCallStatement
                     (p_path, makeParamMap(p_calls), methodUnit);
             }
-            getTemplateUnit().addCallPath(p_path);
-            return new ComponentCallStatement
-                (getTemplateUnit().getAbsolutePath(p_path),
-                 makeParamMap(p_calls));
+            getTemplateUnit().addCallPath(getAbsolutePath(p_path));
+            return new ComponentCallStatement(getAbsolutePath(p_path),
+                                              makeParamMap(p_calls));
         }
     }
 

@@ -44,26 +44,6 @@ public class TemplateUnit
         super(p_path, null);
     }
 
-    public String getAbsolutePath(String p_path)
-    {
-        if (p_path.charAt(0) == '/')
-        {
-            return p_path;
-        }
-        else
-        {
-            int i = getName().lastIndexOf('/');
-            if (i <= 0)
-            {
-                return "/" + p_path;
-            }
-            else
-            {
-                return getName().substring(0,i) + "/" + p_path;
-            }
-        }
-    }
-
     public void processParent(TemplateDescriber p_describer,
                                       Set p_children)
         throws IOException
@@ -305,7 +285,7 @@ public class TemplateUnit
             throw new TunnelingException
                 ("a template cannot extend multiple templates");
         }
-        m_parentPath = getAbsolutePath(p_parentPath);
+        m_parentPath = p_parentPath;
         m_dependencies.add(m_parentPath);
     }
 
@@ -341,7 +321,7 @@ public class TemplateUnit
 
     public void addCallPath(String p_callPath)
     {
-        m_dependencies.add(getAbsolutePath(p_callPath));
+        m_dependencies.add(p_callPath);
     }
 
     private InheritedArgs m_inheritedArgs;
