@@ -426,11 +426,6 @@ public class TemplateUnit
         }
     }
 
-    protected void printArgDeobfuscations(IndentingWriter p_writer)
-    {
-        // nope
-    }
-
     public String getSignature()
         throws JamonException
     {

@@ -46,11 +46,6 @@ public abstract class AbstractArgument
         return m_name;
     }
 
-    public String getObfuscatedName()
-    {
-        return "p__jamon__" + getName();
-    }
-
     public String getType()
     {
         return m_type;

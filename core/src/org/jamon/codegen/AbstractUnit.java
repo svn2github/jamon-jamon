@@ -80,20 +80,9 @@ public abstract class AbstractUnit
         throws IOException
     {
         p_writer.openBlock();
-        printArgDeobfuscations(p_writer);
         printStatements(p_writer, p_resolver, p_describer);
         printRenderBodyEnd(p_writer);
         p_writer.closeBlock();
-    }
-
-    protected void printArgDeobfuscations(IndentingWriter p_writer)
-    {
-        for (Iterator i = getVisibleArgs(); i.hasNext(); )
-        {
-            AbstractArgument arg = (AbstractArgument) i.next();
-            p_writer.println("final " + arg.getType() + " " + arg.getName()
-                             + " = " + arg.getObfuscatedName() + ";");
-        }
     }
 
     private void printStatements(IndentingWriter p_writer,
@@ -155,8 +144,7 @@ public abstract class AbstractUnit
         while(i.hasNext())
         {
             AbstractArgument arg = (AbstractArgument) i.next();
-            p_writer.print("final " + arg.getType() + " "
-                           + arg.getObfuscatedName());
+            p_writer.print("final " + arg.getType() + " " + arg.getName());
             if (i.hasNext())
             {
                 p_writer.print(", ");
@@ -169,8 +157,7 @@ public abstract class AbstractUnit
     {
         while (p_args.hasNext())
         {
-            p_writer.print(((AbstractArgument) p_args.next())
-                           .getObfuscatedName());
+            p_writer.print(((AbstractArgument) p_args.next()).getName());
             if(p_args.hasNext())
             {
                 p_writer.print(", ");

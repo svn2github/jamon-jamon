@@ -76,7 +76,18 @@ public class OverriddenMethodUnit
 
     public void printAllArgsDecl(IndentingWriter p_writer)
     {
-        m_declaredMethodUnit.printAllArgsDecl(p_writer);
+        for (Iterator i = m_declaredMethodUnit.getAllArgs(); i.hasNext(); )
+        {
+            AbstractArgument arg = (AbstractArgument) i.next();
+            p_writer.print("final " + arg.getType() + " "
+                           + (m_inheritedArgs.isArgVisible(arg)
+                              ? "" : "p__jamon__" )
+                           + arg.getName());
+            if (i.hasNext())
+            {
+                p_writer.print(", ");
+            }
+        }
     }
 
     public void addFragmentArg(org.jamon.codegen.FragmentArgument p_arg)

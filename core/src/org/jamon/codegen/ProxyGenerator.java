@@ -335,7 +335,7 @@ public class ProxyGenerator
         {
             AbstractArgument arg = (AbstractArgument) i.next();
             m_writer.println("implData." + arg.getSetterName()
-                             + "(" + arg.getObfuscatedName() + ");");
+                             + "(" + arg.getName() + ");");
         }
 
         m_writer.println(

@@ -52,6 +52,11 @@ public class InheritedArgs
         return m_visibleArgs.iterator();
     }
 
+    public boolean isArgVisible(AbstractArgument p_arg)
+    {
+        return m_visibleArgs.contains(p_arg);
+    }
+
     public void addParentArg(String p_name, String p_default)
     {
         for (Iterator i = m_requiredArgs.iterator(); i.hasNext(); )
