@@ -16,13 +16,14 @@ href="http://ootips.org/mvc-pattern.html">Model-View-Controller
 architecture</a>, Jamon clearly is aimed at the View (or presentation)
 layer.
 
-<p>
-  Because it is compiled to non-reflective Java code, and statically
-  type-checked, Jamon is <b>ideally suited to supporting <a
+<p> Because it is compiled to non-reflective Java code, and statically
+  type-checked, Jamon is <b>ideally suited to support <a
   href="http://www.refactoring.com">refactoring</a></b> of
-  template-based UI applications. See the <a href="Features.html">list
-  of features</a> for more detail.
-</p>
+  template-based UI applications. Using <a
+  href="http://www.mockobjects.com">mock objects</a> -like
+  functionality, Jamon also facilitates unit testing of the controller
+  and view. See the <a href="Features.html">list of features</a> for
+  more detail.  </p>
 
 <p>
 The motivations for Jamon came from dissatisfaction with current
