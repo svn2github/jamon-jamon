@@ -29,9 +29,9 @@
 
 <h3>Building with Ant</h3>
 
-  First, ensure you have the Jamon task properly defined, which
-  could be accomplished by including the following in the
-  <code>build.xml</code> file:
+  First, ensure you have the <a href="JamonTask.html">Jamon task</a>
+  properly defined, which could be accomplished by including the
+  following in the <code>build.xml</code> file:
 
 <pre class="webxml"><&| /org/jamon/escape/Html &>
   <property name="java.lib.jamon" value="/path/to/jamon.jar" />
