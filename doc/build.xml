@@ -66,8 +66,6 @@ the documentation thus taking care of issues such as escaping.
 
     <copy file="sample/servlet/templates/HelloTemplate.jamon"
           todir="${www.dir}/templates/foo/bar/"/>
-    <copy file="sample/servlet/templates/HelloTemplate2.jamon"
-          todir="${www.dir}/example2/templates/foo/bar/"/>
     <copy file="sample/servlet/src/HelloServlet.java"
           todir="${www.dir}/src/foo/bar"/>
 
@@ -76,6 +74,8 @@ the documentation thus taking care of issues such as escaping.
         <include name="*.java"/>
       </fileset>
     </copy>
+    <copy file="sample/standardLibrary/templates/HelloTemplate.jamon"
+          todir="${www.dir}/example2/templates/foo/bar/"/>
 
     <taskdef name="invoker"
              classname="org.jamon.ant.InvokerTask"
@@ -271,8 +271,7 @@ the documentation thus taking care of issues such as escaping.
              template="/org/jamon/doc/${template}" />
   </target>
 
-  <target name="war"
-          depends="doc">
+  <target name="war" depends="doc">
     <ant dir="${www.dir}" />
     <ant dir="${www.dir}/example2" />
   </target>

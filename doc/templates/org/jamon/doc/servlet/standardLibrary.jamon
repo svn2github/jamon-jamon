@@ -42,7 +42,8 @@ Here is a servlet that will use the above class:
 
 and the corresponding template should look like:
 
-  <& ../_TemplateInclude; fileName => "servlet/templates/Hello2Template" &>
+  <& ../_TemplateInclude;
+     fileName => "standardLibrary/templates/HelloTemplate" &>
 
 There are a few things to note about the above example.
 <ul>
