@@ -141,18 +141,16 @@
   </target>
 
   <target name="bindist" depends="jar,doczip">
-    <tar tarfile="${tarball.bin}"
-         baseDir="."
-         prefix="jamon-${org.jamon.version.major}.${org.jamon.version.minor}"
-         compression="gzip"
-         includes="${doc.zip},${jarfile}" />
+    <tar tarfile="${tarball.bin}" compression="gzip" >
+      <tarfileset dir="."
+                  prefix="${tarfilebase}"
+                  includes="${doc.zip},${jarfile}" />
+    </tar>
   </target>
 
   <target name="srcdist">
-    <tar tarfile="${tarball.src}"
-         compression="gzip"
-         prefix="jamon-${org.jamon.version.major}.${org.jamon.version.minor}" >
-      <tarfileset dir="." prefix="jamon-alpha" >
+    <tar tarfile="${tarball.src}" compression="gzip" >
+      <tarfileset dir="." prefix="${tarfilebase}" >
         <exclude name="${jarfile}" />
         <exclude name="${stage.dir}" />
         <exclude name="${stage.dir}/**" />
