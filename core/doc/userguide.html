@@ -65,7 +65,7 @@
       The kinds of Java code that can appear in an escape is fairly
       unrestricted. Be warned, however, that code is emitted inside a
       method body. Thus, for example, package declarations and import
-      statements are invalid.
+      statements would trigger a compilation error.
 
     <li><span class="concept">Comments</span>
 
@@ -76,7 +76,7 @@
     <li><span class="concept">Imports</span>
 
       Java classes or packages to be imported and used in a template
-      should be placed inside an <code>&lt;import&gt;</code>
+      should be placed inside an <code>&lt;%import&gt;</code>
       block. Each package or class should appear on a new line,
       optionally separated by a semicolon ('<code>;</code>').
       <p>
@@ -236,6 +236,57 @@ Your nicknames are
 </pre>
 
     <li><span class="concept">Fragment arguments</span>
+
+        It is possible to pass a "fragment" of a template as an
+        argument to another template (or a <code>def</code>).  When
+        passing template fragments, the invocation syntax must look
+        like <code>&lt;|&amp; <i>target</i>; arg1 =&gt;
+        ... &amp;&gt;</code>, and any template content up until a
+        closing <code>&lt;/&amp;&gt;</code> is considered the fragment
+        argument.
+        <p>
+          In order to pass a fragment argument, the target template or
+          def must declare that it expects a fragment argument. This
+          is done using the <code>&lt;%farg
+          <i>name</i>&gt;&lt;/%farg&gt;</code> declaration, which
+          declares that the template (or def) expects a fragment
+          argument.
+        <p>
+          The fragment can be invoked in the target template or def
+          like any other template or def invocation, simply specifying
+          the name of the fragment argument as the target
+        <p>
+          Putting this all together, the template
+        <pre class="template">
+&lt;%def _lilink&gt;
+  &lt;%farg content&gt;
+  &lt;/%farg&gt;
+  &lt;%args&gt;
+    String href;
+  &lt;/%args&gt;
+  &lt;li&gt;&lt;a href="&lt;% href %&gt;"&gt;&lt;&amp; content &amp;&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;/%def&gt;
+
+&lt;%def _big&gt;
+  &lt;%farg stuff&gt;
+  &lt;/%farg&gt;
+&lt;font size="+4"&gt;&lt;&amp; stuff &amp;&gt;&lt;/font&gt;
+&lt;/%def&gt;
+
+&lt;ul&gt;
+  &lt;|&amp; _lilink, href =&gt; "index.html" &amp;&gt;Home&lt;/&amp;&gt;
+  &lt;|&amp; _lilink, href =&gt; "faq.html" &amp;&gt;&lt;bFAQ&lt;/b&gt;&lt;/&amp;&gt;
+  &lt;|&amp; _lilink, href =&gt; "toc.html" &amp;&gt;&lt;&amp; _big &amp;&gt;Table of contents&lt;/&amp;&gt;
+&lt;/ul&gt;
+</pre>
+        produces
+        <pre class="tty">
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href="index.html"&gt;Home&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href="faq.html"&gt;&lt;b&gt;FAQ&lt;/b&gt;&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href="toc.html"&gt;&lt;font size="+5"&gt;Table of contents&lt;/font&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</pre>
 
   </ol>
 
