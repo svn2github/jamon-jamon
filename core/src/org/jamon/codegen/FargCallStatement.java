@@ -29,8 +29,7 @@ import org.jamon.util.StringUtils;
 import org.jamon.node.Token;
 
 public class FargCallStatement
-    extends AbstractStatement
-    implements CallStatement
+    extends AbstractCallStatement
 {
     FargCallStatement(String p_path,
                       Map p_params,
@@ -38,17 +37,18 @@ public class FargCallStatement
                       Token p_token,
                       String p_templateIdentifier)
     {
-        super(p_token, p_templateIdentifier);
-        m_path = p_path;
-        m_params = p_params;
+        super(p_path, p_params, p_token, p_templateIdentifier);
         m_fragmentUnit = p_fragmentUnit;
     }
 
-    private final String m_path;
-    private final Map m_params;
     private final FragmentUnit m_fragmentUnit;
 
     public void addFragmentImpl(FragmentUnit p_unit)
+    {
+        throw new UnsupportedOperationException();
+    }
+
+    protected String getFragmentIntfName(FragmentUnit p_fragmentUnitIntf)
     {
         throw new UnsupportedOperationException();
     }
@@ -65,34 +65,19 @@ public class FargCallStatement
         p_writer.openList();
         for (Iterator r = m_fragmentUnit.getRequiredArgs(); r.hasNext(); /* */)
         {
-            RequiredArgument arg = (RequiredArgument) r.next();
-            String name = arg.getName();
-            String expr = (String) m_params.remove(name);
+            String name = ((RequiredArgument) r.next()).getName();
+            String expr = (String) getParams().remove(name);
             if (expr == null)
             {
-                throw new AnalysisException
-                    ("No value supplied for required argument " + name,
-                     getTemplateIdentifier(),
-                     getToken());
+                throw new AnalysisException(
+                    "No value supplied for required argument " + name,
+                    getTemplateIdentifier(),
+                    getToken());
             }
             p_writer.printArg("(" + expr + ")");
         }
         p_writer.closeList();
         p_writer.println(";");
-        if (! m_params.isEmpty())
-        {
-            StringBuffer message = new StringBuffer("fragment ");
-            message.append(getPath());
-            message.append(" doesn't expect args ");
-            StringUtils.commaJoin(message, m_params.keySet().iterator());
-            throw new AnalysisException(message.toString(),
-                                        getTemplateIdentifier(),
-                                        getToken());
-        }
-    }
-
-    private String getPath()
-    {
-        return m_path;
+        checkSuppliedParams();
     }
 }

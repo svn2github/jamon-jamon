@@ -45,7 +45,7 @@ public class DisallowedFragmentArgsTest
         throws Exception
     {
         expectTemplateException("UnusedArgumentToFragment",
-                                "fragment f doesn't expect args i",
+                                "Call provides unused arguments i",
                                 2, 1);
     }
 }
