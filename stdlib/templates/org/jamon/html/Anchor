@@ -35,6 +35,6 @@
 %   {
 &\
 %   }
-<% inputs[i].getName() |u %>=<% inputs[i].getValue() |u %>\
+<% inputs[i].getName() #u %>=<% inputs[i].getValue() #u %>\
 % }
 '><& content &></a>

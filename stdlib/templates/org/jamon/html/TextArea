@@ -24,7 +24,7 @@
   int cols => 0;
   int rows => 0;
 </%args>
-<textarea name="<% input.getName() |H %>"
+<textarea name="<% input.getName() #H %>"
 % if (cols > 0) {
        cols="<% cols %>"
 % }

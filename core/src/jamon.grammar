@@ -47,6 +47,7 @@ Helpers
   lt = '<';
   pct = '%';
   slash = '/';
+  hash = '#';
 
 States
   start,
@@ -61,6 +62,7 @@ States
   argexp,
   callexp,
   args,
+  escape,
   farginit;
 
 Tokens
@@ -82,16 +84,15 @@ Tokens
   {call,args,farginit,imports,def} identifier = letter letter_or_digit*;
 
   {start -> emit,body -> emit} emit_start = '<%' ws+;
-  {emit -> body} emit_end = ws* '%>';
-  {emit} escape = pipe letter;
+  {emit -> body, escape -> body} emit_end = ws* '%>';
+  {emit -> escape} escape_delimiter = hash;
+  {escape} escape_code = letter;
 
   {emit} emit_expr =
-      ( [all - [[q + pct] + pipe]]
+      ( [all - [[[q + pct] + pipe] + hash]]
       | quoted
       | pct [all - gt]
-      | pipe [all - letter]
-      | pipe letter ws* [all - [pct + ws]]
-      | pipe letter ws* pct [all - [gt + ws]] )*;
+      )*;
 
   {start -> jline} injava = pct hs*;
   {jline -> start} outjava = hs* nl;
@@ -201,6 +202,8 @@ Productions
   partial_jline = injava expr;
 
   emit = emit_start emit_expr escape? emit_end;
+
+  escape = escape_delimiter escape_code;
 
   path = {simple} pathsep? identifier | {qualified} path pathsep identifier;
 

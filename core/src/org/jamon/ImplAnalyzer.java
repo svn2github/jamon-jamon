@@ -169,7 +169,7 @@ public class ImplAnalyzer extends BaseAnalyzer
         {
             handleBody();
             AEmit emit = (AEmit) node.getEmit();
-            TEscape escape = emit.getEscape();
+            AEscape escape = (AEscape) emit.getEscape();
             EscapingDirective directive;
             if (escape == null)
             {
@@ -177,9 +177,7 @@ public class ImplAnalyzer extends BaseAnalyzer
             }
             else
             {
-                // Remove the first character from the name of escaping directive since
-                // we know it is a '|' and hence really belongs to the grammar.
-                directive = EscapingDirective.get(escape.getText().trim().substring(1));
+                directive = EscapingDirective.get(escape.getEscapeCode().getText());
             }
             addStatement(new WriteStatement(emit.getEmitExpr().getText(),
                                             directive));

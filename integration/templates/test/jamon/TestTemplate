@@ -27,17 +27,17 @@ i is <% i %>.
 
 Some funky emits:
 <% "\"quoted string\"" %>
-<% "<% this is an \"emit\" %>" |n %>
+<% "<% this is an \"emit\" %>" #n %>
 
 Some escaping stuff:
 
 HTML Escaped: <% "&" %> <% ">" %> <% "<" %> <% "'" %> <% "\"" %>
 
-XML escaped: <% "&"   |x  %> <% ">" |x%> <% "<"   |x %> <% "'" |x%> <% "\"" |x %>
+XML escaped: <% "&"   #x  %> <% ">" #x%> <% "<"   #x %> <% "'" #x%> <% "\"" #x %>
 
-URL escaped: <% "&"   |u  %> <% ">" |u%> <% "<"   |u %> <% "'" |u%> <% "\"" |u %>
+URL escaped: <% "&"   #u  %> <% ">" #u%> <% "<"   #u %> <% "'" #u%> <% "\"" #u %>
 
-Not escaped: <% "&"   |n  %> <% ">" |n%> <% "<"   |n %> <% "'" |n%> <% "\"" |n %>
+Not escaped: <% "&"   #n  %> <% ">" #n%> <% "<"   #n %> <% "'" #n%> <% "\"" #n %>
 
 This \
 Should \

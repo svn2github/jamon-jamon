@@ -22,9 +22,9 @@
   String type => "text";
   int size => 0;
 </%args>\
-<input type='<% type |H %>'
-       name='<% input.getName() |H %>'
-       value='<% input.getValue() |H %>'
+<input type='<% type #H %>'
+       name='<% input.getName() #H %>'
+       value='<% input.getValue() #H %>'
 % int max = input.getMaxLength();
 % if (size <= 0 && max > 0) { size = max; }
 % if (size > 0) {

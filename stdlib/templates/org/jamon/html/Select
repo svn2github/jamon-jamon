@@ -24,14 +24,14 @@
   org.jamon.render.html.Select input;
   boolean multiple => false;
 </%args>\
-<select name="<% input.getName() |H %>" \
+<select name="<% input.getName() #H %>" \
 % if (multiple) {
     multiple \
 % }
 >
 % org.jamon.render.html.Select.Item[] items = input.getItems();
 % for (int i = 0; i < items.length; ++i ) {
-    <option value="<% items[i].getValue() |H %>" \
+    <option value="<% items[i].getValue() #H %>" \
 % if (items[i].isSelected()) {
     selected \
 % }

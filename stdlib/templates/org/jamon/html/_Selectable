@@ -25,19 +25,19 @@
   Boolean selected => null;
   String onClick => null;
 </%args>\
-<input type='<% type |H %>'
-       name='<% input.getName() |H %>'
-       value='<% input.getValue() |H %>'
+<input type='<% type #H %>'
+       name='<% input.getName() #H %>'
+       value='<% input.getValue() #H %>'
 % if (cssClass != null) {
-       class='<% cssClass |H %>'
+       class='<% cssClass #H %>'
 % }
 % if (style != null) {
-       style='<% style |H %>'
+       style='<% style #H %>'
 % }
 % if (selected == null ? input.isSelected() : selected.booleanValue()) {
       checked \
 % }
 % if (onClick != null) {
-      onClick='<% onClick |H %>'
+      onClick='<% onClick #H %>'
 % }
 />
