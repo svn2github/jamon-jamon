@@ -1,24 +1,29 @@
 package org.modusponens.jtt;
 
-import java.util.*;
+import java.io.Writer;
+import java.io.IOException;
+import java.util.Iterator;
 import org.modusponens.jtt.node.*;
 import org.modusponens.jtt.analysis.*;
 
 public class Phase1Generator extends BaseGenerator
 {
     private final static String TEMPLATE =
-        "org.modusponens.jtt.Template";
+        Template.class.getName();
     private final static String BASE_FACTORY =
-        "org.modusponens.jtt.AbstractTemplateFactory";
+        AbstractTemplateFactory.class.getName();
     private final static String TEMPLATE_MANAGER =
-        "org.modusponens.jtt.TemplateManager";
+        TemplateManager.class.getName();
 
-    public Phase1Generator(String p_packageName,String p_className)
+    public Phase1Generator(Writer p_writer,
+                           String p_packageName,
+                           String p_className)
     {
-        super(p_packageName,p_className);
+        super(p_writer,p_packageName,p_className);
     }
 
     public void generateClassSource()
+        throws IOException
     {
         generatePrologue();
         generateImports();
@@ -30,6 +35,7 @@ public class Phase1Generator extends BaseGenerator
     }
 
     private void generateFactoryClass()
+        throws IOException
     {
         println("  public static class Factory");
         print  ("    extends ");
@@ -58,6 +64,7 @@ public class Phase1Generator extends BaseGenerator
     }
 
     private void generateDeclaration()
+        throws IOException
     {
         print("public interface ");
         println(getClassName());
@@ -66,6 +73,7 @@ public class Phase1Generator extends BaseGenerator
         println("{");
     }
     private void generateRender()
+        throws IOException
     {
         print("  public void render(");
         for (Iterator i = getRequiredArgs(); i.hasNext(); /* */)
@@ -85,6 +93,7 @@ public class Phase1Generator extends BaseGenerator
     }
 
     private void generateOptionalArgs()
+        throws IOException
     {
         for (Iterator i = getOptionalArgs(); i.hasNext(); /* */)
         {
@@ -101,6 +110,7 @@ public class Phase1Generator extends BaseGenerator
     }
 
     private void generateEpilogue()
+        throws IOException
     {
         println();
         println("}");

@@ -1,6 +1,10 @@
 package org.modusponens.jtt;
 
-import java.util.*;
+import java.io.Writer;
+import java.io.IOException;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ArrayList;
 import org.modusponens.jtt.node.*;
 import org.modusponens.jtt.analysis.*;
 
@@ -9,12 +13,15 @@ public class Phase2Generator extends BaseGenerator
     private List m_body = new ArrayList();
     private StringBuffer m_current = new StringBuffer();
 
-    public Phase2Generator(String p_packageName,String p_className)
+    public Phase2Generator(Writer p_writer,
+                           String p_packageName,
+                           String p_className)
     {
-        super(p_packageName,p_className);
+        super(p_writer,p_packageName,p_className);
     }
 
     public void generateClassSource()
+        throws IOException
     {
         generatePrologue();
         generateImports();
@@ -99,6 +106,7 @@ public class Phase2Generator extends BaseGenerator
     }
 
     private void generateDeclaration()
+        throws IOException
     {
         print("public class ");
         print(getClassName());
@@ -111,6 +119,7 @@ public class Phase2Generator extends BaseGenerator
     }
 
     private void generateConstructor()
+        throws IOException
     {
         print("  public ");
         print(getClassName());
@@ -127,6 +136,7 @@ public class Phase2Generator extends BaseGenerator
         "org.modusponens.jtt.AbstractTemplate";
 
     private void generateRender()
+        throws IOException
     {
         print("  public void render(");
         for (Iterator i = getRequiredArgs(); i.hasNext(); /* */)
@@ -152,6 +162,7 @@ public class Phase2Generator extends BaseGenerator
     }
 
     private void generateOptionalArgs()
+        throws IOException
     {
         for (Iterator i = getOptionalArgs(); i.hasNext(); /* */)
         {
@@ -184,6 +195,7 @@ public class Phase2Generator extends BaseGenerator
     }
 
     private void generateEpilogue()
+        throws IOException
     {
         println();
         println("}");

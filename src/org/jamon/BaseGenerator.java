@@ -1,24 +1,34 @@
 package org.modusponens.jtt;
 
-import java.util.*;
+import java.io.IOException;
+import java.io.Writer;
+import java.io.PrintWriter;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.Iterator;
 import org.modusponens.jtt.node.*;
 import org.modusponens.jtt.analysis.*;
 
 public class BaseGenerator extends AnalysisAdapter
 {
     protected void print(Object p_obj)
+        throws IOException
     {
-        System.out.print(p_obj);
+        m_writer.print(p_obj);
     }
 
     protected void println()
+        throws IOException
     {
-        System.out.println();
+        m_writer.println();
     }
 
     protected void println(Object p_obj)
+        throws IOException
     {
-        System.out.println(p_obj);
+        m_writer.println(p_obj);
     }
 
     private List m_imports = new ArrayList();
@@ -28,10 +38,13 @@ public class BaseGenerator extends AnalysisAdapter
     private List m_optionalArgs = new ArrayList();
     private final String m_className;
     private final String m_packageName;
+    private final PrintWriter m_writer;
 
-
-    protected BaseGenerator(String p_packageName,String p_className)
+    protected BaseGenerator(Writer p_writer,
+                            String p_packageName,
+                            String p_className)
     {
+        m_writer = new PrintWriter(p_writer);
         m_packageName = p_packageName;
         m_className = p_className;
     }
@@ -173,6 +186,7 @@ public class BaseGenerator extends AnalysisAdapter
 
 
     protected void generatePrologue()
+        throws IOException
     {
         print("package ");
         print(getPackageName());
@@ -181,6 +195,7 @@ public class BaseGenerator extends AnalysisAdapter
     }
 
     protected void generateImports()
+        throws IOException
     {
         for (Iterator i = getImports(); i.hasNext(); /* */ )
         {
