@@ -61,6 +61,8 @@ public class EscapingDirective
 
     static
     {
+        s_standardDirectives.put("|H",
+                                 new EscapingDirective(PREFIX + "STRICT_HTML"));
         s_standardDirectives.put("|h",
                                  new EscapingDirective(PREFIX + "HTML"));
         s_standardDirectives.put("|n",

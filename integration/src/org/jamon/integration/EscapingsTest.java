@@ -53,6 +53,12 @@ public class EscapingsTest
         checkEscaping(Escaping.HTML);
     }
 
+    public void testStrictHtml()
+        throws IOException
+    {
+        checkEscaping(Escaping.STRICT_HTML);
+    }
+
     public void testUrl()
         throws IOException
     {
