@@ -106,8 +106,8 @@
     <li><span class="concept">Inheritance</span>
 
       Templates can inherit from other templates.  A template is an
-      "abstract" template if it contains a <code>&lt;&amp; *CHILD
-      &amp;&gt;</code> tag.  A template extends another template by
+      "abstract" template if it contains a <code>&lt;%abstract&gt;</code>
+      tag.  A template extends another template by
       means of an <code>&lt;%extends <i>pathToParent</i>&gt;</code>
       tag.  There can be multiple levels of inheritance:
       <code>/grandchild</code> can extend <code>/child</code>, which
@@ -119,6 +119,7 @@
 
       For example, suppose <code>/restaurant/Menu</code> contains:
       <&| _template &><%LITERAL>
+<%abstract>
 <html>
  <body>
    <h1>Menu</h1>
@@ -254,6 +255,7 @@ Your nicknames are
       values redefined by the child.  For example, if
       <code>/parent</code> contains:
       <&| _template &><%LITERAL>
+<%abstract>
 <%args>
   String name;
   String favoriteColor => "red";
@@ -384,6 +386,7 @@ a good sign for you, <% name %>.
 
       For example, suppose <code>/weatherReport</code> contains:
       <&| _template &><%LITERAL>
+<%abstract>
 <%method title>
   <%args>
     String city;

@@ -278,6 +278,11 @@ public class Analyzer
             }
         }
 
+        public void caseAAbstractComponent(AAbstractComponent p_abstract)
+        {
+            getTemplateUnit().setIsParent();
+        }
+
         public void caseADefComponent(ADefComponent p_def)
         {
             getTemplateUnit().
@@ -398,7 +403,12 @@ public class Analyzer
         public void caseAChildCall(AChildCall p_childCall)
         {
             TemplateUnit unit = getTemplateUnit();
-            unit.setIsParent();
+            if (! unit.isParent())
+            {
+                throw new TunnelingException(
+                    unit.getName()
+                    + " is not a parent, and so cannot call <& *CHILD &>");
+            }
             addStatement(new ChildCallStatement(unit.getInheritanceDepth()+1));
         }
 

@@ -25,6 +25,7 @@ import java.io.Writer;
 import java.io.StringWriter;
 import java.io.IOException;
 
+import org.jamon.JamonException;
 import org.jamon.StandardTemplateManager;
 import org.jamon.TemplateManager;
 import org.jamon.TemplateProcessor;
@@ -163,6 +164,20 @@ public abstract class TestBase
         return Boolean.valueOf
             (System.getProperty
              ("org.jamon.integration.verbose","false")).booleanValue();
+    }
+
+    protected void checkForFailure(String p_template, String p_message)
+        throws Exception
+    {
+        try
+        {
+            generateSource("test/jamon/broken/" + p_template);
+            fail("No exception thrown");
+        }
+        catch(JamonException e)
+        {
+            assertEquals(p_message, e.getMessage());
+        }
     }
 
     private TemplateManager m_templateManager;

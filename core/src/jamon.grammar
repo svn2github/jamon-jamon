@@ -59,6 +59,7 @@ States
   method,
   override,
   imports,
+  abstract,
   extends,
   emit,
   class,
@@ -87,6 +88,10 @@ Tokens
   {args -> body} farg_end = '</%frag>';
 
   {start -> extends,body -> extends} extends_start = '<%extends' ws+;
+
+  {start -> abstract,body -> abstract} abstract_start = '<%abstract';
+  {abstract} fixed = ws+ 'fixed';
+  {abstract -> body} abstract_end = '>';
 
   {start -> parent_args, body -> parent_args}
          inherited_args_start = '<%xargs>';
@@ -241,6 +246,7 @@ Productions
             | {def} def
             | {class} class_tag
             | {extends} extends_start path gt
+            | {abstract} abstract_start fixed? abstract_end
             | {method} method
             | {override} override
             | {inherited_use} inherited_use

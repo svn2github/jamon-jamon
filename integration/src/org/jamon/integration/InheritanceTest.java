@@ -208,6 +208,13 @@ public class InheritanceTest
             ("/test/jamon/external/ChildFragment");
     }
 
+    public void testNonParentChildCall()
+        throws Exception
+    {
+        checkForFailure("NonParentChildCall",
+                        "/test/jamon/broken/NonParentChildCall is not a parent, and so cannot call <& *CHILD &>");
+    }
+
     private void checkCompilationFailure(String p_path)
         throws IOException
     {

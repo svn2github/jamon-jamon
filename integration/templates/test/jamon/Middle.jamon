@@ -1,3 +1,4 @@
+<%abstract>\
 <%extends /test/jamon/Parent>\
 <%xargs>
     i;

@@ -20,8 +20,6 @@
 
 package org.jamon.integration;
 
-import org.jamon.JamonException;
-
 public class ParametersTest
     extends TestBase
 {
@@ -133,21 +131,5 @@ public class ParametersTest
     {
         checkForFailure("XargsWithoutExtends",
                         "/test/jamon/broken/XargsWithoutExtends has xargs but does not extend anything");
-    }
-
-
-
-    private void checkForFailure(String p_template, String p_message)
-        throws Exception
-    {
-        try
-        {
-            generateSource("test/jamon/broken/" + p_template);
-            fail("No exception thrown");
-        }
-        catch(JamonException e)
-        {
-            assertEquals(p_message, e.getMessage());
-        }
     }
 }

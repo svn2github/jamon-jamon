@@ -1,3 +1,4 @@
+<%abstract>\
 <%frag f>
   int i;
 </%frag>\

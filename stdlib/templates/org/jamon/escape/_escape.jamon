@@ -1,3 +1,4 @@
+<%abstract>\
 <%import>
   org.jamon.escaping.Escaping;
 </%import>\
@@ -13,5 +14,4 @@
   String text = content.makeRenderer().asString();
   escapeWith(_escaping());
 </%java>\
-<& *CHILD &>\
 <% text %>
