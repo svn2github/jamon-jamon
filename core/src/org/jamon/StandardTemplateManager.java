@@ -278,12 +278,9 @@ public class StandardTemplateManager
             }
 
             m_loader = new WorkDirClassLoader(m_classLoader, m_workDir);
-            m_describer = new TemplateDescriber(m_templateSource,
-                                                m_loader);
         }
         else
         {
-            m_describer = null;
             m_templateSource = null;
             m_javaCompiler = null;
             m_workDir = null;
@@ -467,7 +464,9 @@ public class StandardTemplateManager
         {
             if (m_dynamicRecompilation)
             {
-                ensureUpToDate(p_path);
+                ensureUpToDate(p_path,
+                               new TemplateDescriber(m_templateSource,
+                                                     m_loader));
                 return m_loader.loadClass(p_className);
             }
             else
@@ -483,7 +482,6 @@ public class StandardTemplateManager
 
     private final TemplateSource m_templateSource;
     private final boolean m_dynamicRecompilation;
-    private final TemplateDescriber m_describer;
     private final Escaping m_escaping;
     private final String m_workDir;
     private final ClassLoader m_classLoader;
@@ -516,7 +514,8 @@ public class StandardTemplateManager
         return prefix() + p_path + ".class";
     }
 
-    private synchronized void ensureUpToDate(String p_path)
+    private synchronized void ensureUpToDate(String p_path,
+                                             TemplateDescriber p_describer)
         throws IOException
     {
         Collection seen = new HashSet();
@@ -548,7 +547,7 @@ public class StandardTemplateManager
             long modTime = m_templateSource.lastModified(path);
             if (jm.lastModified() < modTime)
             {
-                intfGenerated = generateIntfIfChanged(path);
+                intfGenerated = generateIntfIfChanged(path, p_describer);
                 if (intfGenerated)
                 {
                     outOfDateJavaFiles.add(javaIntf(path));
@@ -561,7 +560,8 @@ public class StandardTemplateManager
                     new File(javaIntf(path)).delete();
                 }
                 m_dependencyCache.put
-                    (path, new DependencyEntry(generateImpl(path)));
+                    (path,
+                     new DependencyEntry(generateImpl(path,p_describer)));
                 ts = System.currentTimeMillis();
             }
             if (new File(classImpl(path)).lastModified() < ts
@@ -574,7 +574,7 @@ public class StandardTemplateManager
             DependencyEntry d = (DependencyEntry) m_dependencyCache.get(path);
             if (d == null || d.lastUpdated() < modTime)
             {
-                d = new DependencyEntry(computeDependencies(path));
+                d = new DependencyEntry(computeDependencies(path,p_describer));
                 m_dependencyCache.put(path, d);
             }
             for (Iterator y = d.getDependencies(); y.hasNext(); /* */)
@@ -609,7 +609,8 @@ public class StandardTemplateManager
     /**
      * @return dependencies
      */
-    private Collection generateImpl(String p_path)
+    private Collection generateImpl(String p_path,
+                                    TemplateDescriber p_describer)
         throws IOException
     {
         if (TRACE)
@@ -617,13 +618,13 @@ public class StandardTemplateManager
             trace("generating impl for " + p_path);
         }
 
-        TemplateUnit templateUnit = new Analyzer(p_path,m_describer).analyze();
+        TemplateUnit templateUnit = new Analyzer(p_path,p_describer).analyze();
 
         File javaFile = getWriteableFile(javaImpl(p_path));
         FileWriter writer = new FileWriter(javaFile);
         try
         {
-            new ImplGenerator(writer, m_describer, templateUnit) 
+            new ImplGenerator(writer, p_describer, templateUnit)
                 .generateSource();
             writer.close();
             return templateUnit.getTemplateDependencies();
@@ -667,10 +668,11 @@ public class StandardTemplateManager
         }
     }
 
-    private boolean generateIntfIfChanged(String p_path)
+    private boolean generateIntfIfChanged(String p_path,
+                                          TemplateDescriber p_describer)
         throws IOException
     {
-        TemplateUnit templateUnit = new Analyzer(p_path, m_describer)
+        TemplateUnit templateUnit = new Analyzer(p_path, p_describer)
             .analyze();
 
         String oldsig = getIntfSignatureFromClass(p_path);
@@ -684,7 +686,7 @@ public class StandardTemplateManager
             FileWriter writer = new FileWriter(javaFile);
             try
             {
-                new ProxyGenerator(writer, m_describer, templateUnit)
+                new ProxyGenerator(writer, p_describer, templateUnit)
                     .generateClassSource();
                 writer.close();
             }
@@ -728,7 +730,8 @@ public class StandardTemplateManager
             .compile((String []) p_sourceFiles.toArray(new String [0]));
     }
 
-    private Collection computeDependencies(String p_path)
+    private Collection computeDependencies(String p_path,
+                                           TemplateDescriber p_describer)
         throws IOException
     {
         if (TRACE)
@@ -736,7 +739,7 @@ public class StandardTemplateManager
             trace("computing dependencies for " + p_path);
         }
 
-        return new Analyzer(p_path, m_describer)
+        return new Analyzer(p_path, p_describer)
             .analyze()
             .getTemplateDependencies();
     }
