@@ -1,0 +1,28 @@
+<span class="concept">Hello World</span>
+Create a file called <span class="file">HelloTemplate</span> in a directory 
+<span class="file">foo/bar</span>.
+
+<pre class="template"><&| /org/jamon/escape/Html &><& hello &></&></pre>
+
+Inside your code tree, in directory <span class="file">foo/bar</span> create
+a file <span class="file">HelloServlet</span> containing:
+
+<pre class="code"><& HelloServletTemplate &></pre>
+
+Create the following deployment descriptor by placing the following in a file
+called <span class="file">web.xml</span>:
+
+<pre class="webxml"><&| /org/jamon/escape/Html &><& webxml &></&></pre>
+
+The following Ant script will compile the Java and Jamon sources:
+
+<pre class="ant"><&| /org/jamon/escape/Html &><& buildxml &></&></pre>
+
+Finally you can compile the sources
+
+<pre class="tty">% ant build</pre>
+
+and start the servlet container.  Assuming you deployed the above servlet into
+a context called "foobar" and that the container listens for HTTP requests on port 8080,
+you should receive a worldly greeting by pointing a browser to 
+<a href="http://localhost:8080/foobar/hello">http://localhost:8080/foobar/hello</a>.

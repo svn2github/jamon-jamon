@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+
+<project name="FooBar" default="build">
+
+  <target name="templates"
+          description="Compiles Jamon templates into Java">
+    <mkdir dir="${build.src.dir}" />
+    <taskdef name="jamon" 
+             classname="org.jamon.ant.JamonTask"
+             classpath="${java.lib.dir}/jamon.jar"/>
+    <jamon destdir="${build.src.dir}" generateImpls="true">
+      <src path="templates"/>
+    </jamon>
+  </target>
+
+  <target name="build"
+          depends="init,templates,prepare-tomcat,semperj"
+          description="Compiles all the Java files">
+    <property name="classes.dir" value="${tomcat.home.dir}/webapps/${context.name}/WEB-INF/classes"/>
+    <mkdir dir="${classes.dir}"/>
+    <javac destdir="${classes.dir}"
+	   debug="true"
+	   deprecation="true">
+        <src path="src/java"/>
+        <src path="tests/src/java"/>
+        <src path="${build.src.dir}"/>
+        <classpath refid="class.path"/>
+    </javac>
+  </target>
+
+</project>

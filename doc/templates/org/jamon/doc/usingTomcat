@@ -1,0 +1,38 @@
+<span class="concept">Using Tomcat as your Servlet Container</span>
+The reference implementation of Sun's servlet specification is 
+<a href="http://jakarta.apache.org/tomcat/">Tomcat</a>.
+You can use the following two targets from an Ant build script to start and stop your
+container:
+<pre class="ant">\
+<&| /org/jamon/escape/Html &>\
+  <target name="start-tomcat"
+          depends="init-tomcat,prepare-tomcat"
+          description="Starts the tomcat servlet container">
+    <java classname="${tomcat.main.class}" fork="yes">
+      <classpath>
+         <pathelement location="${java.lib.tomcat}"/>
+      </classpath>
+      <sysproperty key="java.endorsed.dirs" value=""/>
+      <sysproperty key="catalina.base" value="${tomcat.home.dir}"/>
+      <sysproperty key="catalina.home" value="${tomcat.install.dir}"/>
+      <sysproperty key="java.io.tmpdir" value="${tmp.dir}"/>
+      <arg value="start"/>
+    </java>
+  </target>
+
+  <target name="stop-tomcat"
+          depends="init-tomcat,prepare-tomcat"
+          description="Stops the tomcat servlet container">
+    <java classname="${tomcat.main.class}"
+          classpath="${java.lib.tomcat}"
+          fork="yes">
+      <sysproperty key="java.endorsed.dirs" value=""/>
+      <sysproperty key="catalina.base" value="${tomcat.home.dir}"/>
+      <sysproperty key="catalina.home" value="${tomcat.install.dir}"/>
+      <sysproperty key="java.io.tmpdir" value="${tmp.dir}"/>
+      <arg value="stop"/>
+    </java>
+  </target>
+</&>\
+</pre>
+This will allow you to start and stop the container as an unprivileged user.

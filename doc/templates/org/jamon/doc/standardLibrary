@@ -1,0 +1,8 @@
+<span class="concept">Using the Standard Library</span>
+Jamon comes with a library of classes and templates to aid in the systematic 
+development of web applications.  The library consists of "input" objects
+and corresponding templates to render them.  The idea behind these input
+objects is that they encapsulate the name of a CGI paramater and its value.
+For example the <code>org.jamon.render.html.TextInput</code> object consists
+(more or less) of a name (a string), a value (a string) and its maxlength (an int).
+There is a corre

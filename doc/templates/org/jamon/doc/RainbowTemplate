@@ -1,0 +1,32 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+    <title>Servlets with Jamon</title>
+    <link rel="StyleSheet" href="base.css" type="text/css" media="screen" />
+  </head>
+
+  <body>
+    <h1>Servlets with Jamon</h1>
+    The goal of this document is to guide the reader through the process of developing and
+    deploying servlets that use Jamon to generate the HTML (i.e., for their <em>view</em>,
+    in MVC parlance).  Thus the servlets will be kept simple but nevertheless representative
+    of a typical development environment.
+    <p>
+    <ol>
+
+      <li><& prerequisites &></li>
+
+      <li><& helloWorld &></li>
+
+      <li><& parametersAndInput &></li>
+
+      <li><& standardLibrary &></li>
+
+      <h2>Appendix</h2>
+
+      <li value="1" type="A"><& usingTomcat &></li>
+
+    </ol>
+  </body>
+
+</html>

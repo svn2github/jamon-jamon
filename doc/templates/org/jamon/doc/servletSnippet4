@@ -1,0 +1,19 @@
+<%args>
+  boolean showChanged => false;
+</%args>\
+        if (numString != null)
+        {
+<% showChanged ? "<span class=\"changed\">" : "" %>\
+            try
+            {
+<% showChanged ? "</span>" : "" %>\
+                helloTemplate.setNum(Integer.parseInt(numString));
+<% showChanged ? "<span class=\"changed\">" : "" %>\
+            }
+            catch (NumberFormatException e)
+            {
+                helloTemplate.setError(true);
+            }
+<% showChanged ? "</span>" : "" %>\
+        }
+        helloTemplate.render();

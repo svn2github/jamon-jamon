@@ -1,0 +1,7 @@
+    public void doGet(HttpServletRequest request,
+                      HttpServletResponse response)
+	throws IOException
+    {
+        response.setContentType("text/html");
+        helloTemplate.writeTo(response.getWriter()).render(10);
+    }

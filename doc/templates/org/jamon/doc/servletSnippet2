@@ -1,0 +1,22 @@
+<%args>
+  boolean showChanged => false;
+</%args>\
+    public void doGet(HttpServletRequest request,
+                      HttpServletResponse response)
+	throws IOException
+    {
+        response.setContentType("text/html");
+% if (showChanged) {
+<span class="changed">\
+% }
+        helloTemplate.writeTo(response.getWriter());
+        String numString = request.getParameter("num");
+        if (numString != null)
+        {
+            helloTemplate.setNum(Integer.parseInt());
+        }
+        helloTemplate.render();
+% if (showChanged) {
+</span>\
+% }
+    }

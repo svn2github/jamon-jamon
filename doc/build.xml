@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+
+<project name="Jamon dcumentation" default="build">
+
+  <description>-------------------------------------------------------------------
+Documentation for the Jamon project.  Jamon itself is used to build
+the documentation thus taking care of issues such as escaping.
+-------------------------------------------------------------------</description>
+
+  <property file="build.properties"/>
+  <property file="${user.home}/.ant.properties"/>
+
+  <property name="build.dir" value="build"/>
+  <property name="build.src.dir" value="${build.dir}/src"/>
+  <property name="classes.dir" value="${build.dir}/classes"/>
+  <property name="java.lib.jamon" value="../jamon.jar"/>
+
+  <target name="templates">
+    <mkdir dir="${build.src.dir}" />
+    <taskdef name="jamon"
+             classname="org.jamon.ant.JamonTask"
+             classpath="${java.lib.jamon}" />
+    <jamon destdir="${build.src.dir}" generateImpls="true">
+      <src path="templates"/>
+    </jamon>
+  </target>
+
+  <target name="compile"
+          depends="templates">
+    <mkdir dir="${classes.dir}"/>
+    <javac destdir="${classes.dir}"
+           debug="true"
+           classpath="${java.lib.jamon}"
+           deprecation="true">
+      <src path="src"/>
+      <src path="${build.src.dir}"/>
+    </javac>
+  </target>
+
+  <target name="build"
+          depends="compile"
+          description="Generates all the documentation">
+    <java classname="org.jamon.doc.RenderingTool"
+          classpath="${java.lib.jamon}:${classes.dir}" 
+          fork="yes">
+      <sysproperty key="org.jamon.integration.templatedir"
+                   file="templates" />
+      <sysproperty key="org.jamon.integration.workdir"
+                   file="build/work" />
+      <sysproperty key="org.jamon.integration.out"
+                   file="rainbow.html" />
+    </java>
+  </target>
+
+  <target name="cvsignores">
+    <echo file=".cvsignore">.cvsignore ${build.dir} build.properties rainbow.html
+</echo>
+  </target>
+
+  <target name="clean">
+    <delete dir="${build.dir}"/>
+  </target>
+
+</project>
