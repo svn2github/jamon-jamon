@@ -19,6 +19,7 @@ public class Phase2Generator extends BaseGenerator
         generatePrologue();
         generateImports();
         generateDeclaration();
+        generateConstructor();
         generateRender();
         generateOptionalArgs();
         generateEpilogue();
@@ -99,12 +100,27 @@ public class Phase2Generator extends BaseGenerator
 
     private void generateDeclaration()
     {
-        print("class ");
+        print("public class ");
         print(getClassName());
         println("Impl");
         print("  extends ");
         println(BASE_TEMPLATE);
+        print("  implements ");
+        println(getClassName());
         println("{");
+    }
+
+    private void generateConstructor()
+    {
+        print("  public ");
+        print(getClassName());
+        println("Impl(java.io.Writer p_writer,");
+        println("        org.modusponens.jtt.TemplateManager p_templateManager)");
+        println("  {");
+        println("    super(p_writer, p_templateManager);");
+        println("  }");
+        println();
+
     }
 
     private static final String BASE_TEMPLATE =
@@ -126,7 +142,7 @@ public class Phase2Generator extends BaseGenerator
         }
         println(")");
 
-        println("    throws IOException");
+        println("    throws java.io.IOException");
         println("  {");
         for (Iterator i = m_body.iterator(); i.hasNext(); /* */)
         {
