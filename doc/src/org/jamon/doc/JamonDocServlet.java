@@ -42,6 +42,7 @@ public class JamonDocServlet
         m_parameters.put("binTarball", "jamon.tgz");
         m_parameters.put("binZip", "jamon.zip");
         m_parameters.put("version", "3.14");
+        m_parameters.put("output", "whatever");
 
         try
         {
