@@ -8,6 +8,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PushbackReader;
 import java.io.Writer;
+import java.net.URLClassLoader;
+import java.net.URL;
 import org.modusponens.jtt.parser.Parser;
 import org.modusponens.jtt.parser.ParserException;
 import org.modusponens.jtt.lexer.Lexer;
@@ -19,58 +21,10 @@ public class StandardTemplateManager
     public StandardTemplateManager(ClassLoader p_parentLoader)
         throws IOException
     {
-        m_loader = new WorkDirLoader(p_parentLoader);
+        m_parentLoader = p_parentLoader;
     }
 
-    private class WorkDirLoader
-        extends ClassLoader
-    {
-        WorkDirLoader(ClassLoader p_parent)
-        {
-            super(p_parent);
-        }
-
-        private byte [] readBytesForClass(String p_name)
-            throws IOException
-        {
-            FileInputStream s =
-                new FileInputStream(getFileNameForClass(p_name));
-            ByteArrayOutputStream b = new ByteArrayOutputStream(1024);
-            final byte [] buf = new byte[1024];
-            while (true)
-            {
-                int read = s.read(buf);
-                if (read <= 0)
-                {
-                    break;
-                }
-                b.write(buf,0,read);
-            }
-            return b.toByteArray();
-        }
-
-        private String getFileNameForClass(String p_name)
-        {
-            return m_workDir
-                + PathUtils.classNameToPath(p_name.replace('.','/'))
-                + ".class";
-        }
-
-        protected Class findClass(String p_name)
-            throws ClassNotFoundException
-        {
-            try
-            {
-                byte [] bytecode = readBytesForClass(p_name);
-                return defineClass(p_name,bytecode,0,bytecode.length);
-            }
-            catch (IOException e)
-            {
-                throw new JttClassNotFoundException(e);
-            }
-        }
-    }
-
+    private final ClassLoader m_parentLoader;
 
     public StandardTemplateManager()
         throws IOException
@@ -103,6 +57,7 @@ public class StandardTemplateManager
     {
         m_workDir = p_workDir;
         m_javaCompiler = null;
+        m_loader = null;
     }
 
     public void setTemplateSourceDir(String p_dir)
@@ -154,11 +109,24 @@ public class StandardTemplateManager
         return PathUtils.pathToClassName(p_path) + "Impl";
     }
 
+    private ClassLoader getLoader()
+        throws IOException
+    {
+        if (m_loader == null)
+        {
+            m_loader = new URLClassLoader
+                (new URL [] { new URL("file:" + m_workDir + "/") },
+                 m_parentLoader);
+        }
+        return m_loader;
+    }
+
     private Class loadAndResolveClass(String p_path)
-        throws ClassNotFoundException
+        throws ClassNotFoundException,
+               IOException
     {
         // FIXME: need to check that it still implements the interface
-        return m_loader.loadClass(getClassName(p_path));
+        return getLoader().loadClass(getClassName(p_path));
     }
 
     private String getClassPath()
@@ -296,5 +264,5 @@ public class StandardTemplateManager
     private ClassLoader m_classLoader = ClassLoader.getSystemClassLoader();
     private String m_packagePrefix = "";
     private JavaCompiler m_javaCompiler;
-    private final ClassLoader m_loader;
+    private ClassLoader m_loader;
 }
