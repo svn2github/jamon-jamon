@@ -1,7 +1,7 @@
 <%args>
   String userName;
 </%args>
-<%doc>Output list of links<%doc>
+<%doc>Output list of links</%doc>
 Site map:<br>
 <ul>
 <&| liRef; href => "/about.html" &>About this company </&>
