@@ -36,7 +36,6 @@ public abstract class AbstractInnerUnit extends AbstractUnit
 
     public void addOptionalArg(OptionalArgument p_arg)
     {
-        checkArgName(p_arg);
         m_optionalArgs.add(p_arg);
     }
 
@@ -52,7 +51,6 @@ public abstract class AbstractInnerUnit extends AbstractUnit
 
     public void addRequiredArg(RequiredArgument p_arg)
     {
-        checkArgName(p_arg);
         m_requiredArgs.add(p_arg);
     }
 
@@ -81,9 +79,8 @@ public abstract class AbstractInnerUnit extends AbstractUnit
         return ! getRequiredArgsList().isEmpty();
     }
 
-    public void addFragmentArg(FragmentArgument p_arg)
+    protected void addFragmentArg(FragmentArgument p_arg)
     {
-        checkArgName(p_arg);
         m_fragmentArgs.add(p_arg);
     }
 

@@ -88,7 +88,7 @@ public class TemplateDescription
             String[] methodNames = getStringArray(p_intf, "METHOD_NAMES");
             for (int i = 0; i < methodNames.length; i++)
             {
-                MethodUnit method =
+                DeclaredMethodUnit method =
                     new DeclaredMethodUnit(methodNames[i], null);
                 String prefix = "METHOD_" + methodNames[i] + "_";
                 for (Iterator j = getRequiredArgs(p_intf, prefix).iterator();

@@ -26,10 +26,11 @@ import org.jamon.util.StringUtils;
 
 public class OptionalArgument extends AbstractArgument
 {
-    public OptionalArgument(AArg p_arg, ADefault p_default)
+    public OptionalArgument(AArg p_arg)
     {
         super(p_arg);
-        m_default = p_default.getArgexpr().toString().trim();
+        m_default = ((ADefault) p_arg.getDefault())
+            .getArgexpr().getText().trim();
     }
 
     public OptionalArgument(String p_name, String p_type, String p_default)

@@ -138,15 +138,19 @@ public class ParametersTest
     public void testDuplicateArgument()
         throws Exception
     {
-        checkForFailure("DuplicateArgument",
-                        "/test/jamon/broken/DuplicateArgument has multiple arguments named opt1");
+        expectTemplateException("test/jamon/broken/DuplicateArgument",
+                                "multiple arguments named opt1",
+                                3,
+                                7);
     }
 
     public void testDuplicateFragmentArgument()
         throws Exception
     {
-        checkForFailure("DuplicateFragmentArgument",
-                        "/test/jamon/broken/DuplicateFragmentArgument has multiple arguments named f");
+        expectTemplateException("test/jamon/broken/DuplicateFragmentArgument",
+                                "multiple arguments named f",
+                                3,
+                                7);
     }
 
     public void testXargsWithoutExtends()

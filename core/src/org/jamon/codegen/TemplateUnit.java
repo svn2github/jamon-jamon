@@ -91,7 +91,7 @@ public class TemplateUnit
                 p_parent.getFragmentInterfaces().iterator());
              i.hasNext(); )
         {
-            checkArgName(((AbstractArgument) i.next()));
+            addArgName(((AbstractArgument) i.next()));
         }
 
         m_callNames.addAll(p_parent.getMethodUnits().keySet());
@@ -114,7 +114,6 @@ public class TemplateUnit
 
     public void addFragmentArg(FragmentArgument p_arg)
     {
-        checkArgName(p_arg);
         m_fragmentArgs.add(p_arg);
         m_declaredFragmentArgs.add(p_arg);
     }
@@ -126,13 +125,11 @@ public class TemplateUnit
 
     public void addRequiredArg(RequiredArgument p_arg)
     {
-        checkArgName(p_arg);
         m_declaredRequiredArgs.add(p_arg);
     }
 
     public void addOptionalArg(OptionalArgument p_arg)
     {
-        checkArgName(p_arg);
         m_declaredOptionalArgs.add(p_arg);
     }
 

@@ -24,6 +24,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.jamon.node.TIdentifier;
+import org.jamon.node.AArg;
+import org.jamon.node.ADefault;
+
 public class FragmentUnit extends AbstractInnerUnit
 {
     public FragmentUnit(String p_name, Unit p_parent)
@@ -44,16 +48,35 @@ public class FragmentUnit extends AbstractInnerUnit
         }
     }
 
-    public void addFragmentArg(FragmentArgument p_arg)
+    public FragmentUnit addFragment(TIdentifier p_fragName)
     {
-        throw new TunnelingException
-            ("fragment '" + getName() + "' has fragment argument(s)");
+        throw new TunnelingException(
+            "Fragments cannot have fragment arguments",
+            p_fragName);
+    }
+
+    public void addNonFragmentArg(AArg p_arg)
+    {
+        if (p_arg.getDefault() != null)
+        {
+            throw new TunnelingException(
+                "Fragments cannot have optional arguments",
+                ((ADefault) p_arg.getDefault()).getArrow());
+        }
+        else
+        {
+            super.addNonFragmentArg(p_arg);
+        }
     }
 
     public void addOptionalArg(OptionalArgument p_arg)
     {
-        throw new TunnelingException
-            ("fragment '" + getName() + "' has optional argument(s)");
+        throw new UnsupportedOperationException();
+    }
+
+    protected void addFragmentArg(FragmentArgument p_arg)
+    {
+        throw new UnsupportedOperationException();
     }
 
     public FragmentUnit getFragmentUnitIntf(String p_path)

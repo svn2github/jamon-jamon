@@ -28,31 +28,19 @@ public class DisallowedFragmentArgsTest
     public void testFragmentInFragment()
         throws Exception
     {
-        try
-        {
-            generateSource("test/jamon/broken/FragmentInFragment");
-            fail("No exception thrown");
-        }
-        catch(JamonException e)
-        {
-            assertEquals("fragment 'null' has fragment argument(s)",
-                         e.getMessage());
-        }
+        expectTemplateException("test/jamon/broken/FragmentInFragment",
+                                "Fragments cannot have fragment arguments",
+                                5,
+                                10);
     }
 
     public void testOptionalArgInFragment()
         throws Exception
     {
-        try
-        {
-            generateSource("test/jamon/broken/OptionalArgInFragment");
-            fail("No exception thrown");
-        }
-        catch(JamonException e)
-        {
-            assertEquals("fragment 'null' has optional argument(s)",
-                         e.getMessage());
-        }
+        expectTemplateException("test/jamon/broken/OptionalArgInFragment",
+                                "Fragments cannot have optional arguments",
+                                5,
+                                16);
     }
 
     public void testUnusedArgumentToFragment()

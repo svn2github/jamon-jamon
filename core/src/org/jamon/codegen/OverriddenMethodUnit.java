@@ -23,6 +23,7 @@ package org.jamon.codegen;
 import java.util.Iterator;
 import java.util.List;
 
+import org.jamon.node.AArg;
 import org.jamon.node.AParentArg;
 
 public class OverriddenMethodUnit

@@ -132,11 +132,9 @@ public class Analyzer
         return (FragmentUnit) m_currentUnit;
     }
 
-    private void pushFragmentArg(String p_fragName)
+    private void pushFragmentArg(FragmentUnit p_frag)
     {
-        FragmentUnit frag = new FragmentUnit(p_fragName, getCurrentUnit());
-        m_currentUnit.addFragmentArg(new FragmentArgument(frag));
-        m_currentUnit = frag;
+        m_currentUnit = p_frag;
     }
 
     private void popUnit()
@@ -365,7 +363,8 @@ public class Analyzer
 
         public void caseAFargStart(AFargStart p_fargStart)
         {
-            pushFragmentArg(p_fargStart.getIdentifier().getText());
+            pushFragmentArg(
+                getCurrentUnit().addFragment(p_fargStart.getIdentifier()));
         }
 
         public void outAFarg(AFarg node)
@@ -375,26 +374,13 @@ public class Analyzer
 
         public void caseAArglessFarg(AArglessFarg p_farg)
         {
-            String fragmentName = ((AFargTag) p_farg.getFargTag())
-                .getIdentifier().getText();
-            FragmentUnit fragmentUnit =
-                new FragmentUnit(fragmentName, getCurrentUnit());
-            getCurrentUnit().addFragmentArg(
-                new FragmentArgument(fragmentUnit));
+            getCurrentUnit().addFragment(
+                ((AFargTag) p_farg.getFargTag()).getIdentifier());
         }
 
         public void caseAArg(AArg p_arg)
         {
-            ADefault argDefault = (ADefault) p_arg.getDefault();
-            if(argDefault == null)
-            {
-                getCurrentUnit().addRequiredArg(new RequiredArgument(p_arg));
-            }
-            else
-            {
-                getCurrentUnit().addOptionalArg(
-                    new OptionalArgument(p_arg, argDefault));
-            }
+            getCurrentUnit().addNonFragmentArg(p_arg);
         }
 
         public void inADef(ADef p_def)

@@ -24,6 +24,8 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 
+import org.jamon.node.TIdentifier;
+import org.jamon.node.AArg;
 
 public interface Unit
 {
@@ -37,9 +39,8 @@ public interface Unit
 
     void addStatement(Statement p_statement);
 
-    void addFragmentArg(FragmentArgument p_arg);
-    void addRequiredArg(RequiredArgument p_arg);
-    void addOptionalArg(OptionalArgument p_arg);
+    FragmentUnit addFragment(TIdentifier p_fragName);
+    void addNonFragmentArg(AArg p_arg);
 
     void printRenderArgsDecl(IndentingWriter p_writer);
     void generateRenderBody(IndentingWriter p_writer,

@@ -28,6 +28,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeMap;
 
+import org.jamon.node.TIdentifier;
+import org.jamon.node.AArg;
+
 public abstract class AbstractUnit
     implements Unit
 {
@@ -47,7 +50,7 @@ public abstract class AbstractUnit
         return m_parent;
     }
 
-    public abstract void addFragmentArg(FragmentArgument p_arg);
+    protected abstract void addFragmentArg(FragmentArgument p_arg);
     public abstract Iterator getFragmentArgs();
     public abstract List getFragmentArgsList();
 
@@ -109,13 +112,39 @@ public abstract class AbstractUnit
     private final List m_statements = new LinkedList();
     private final Set m_argNames = new HashSet();
 
-    protected void checkArgName(AbstractArgument p_arg)
+    public FragmentUnit addFragment(TIdentifier p_fragName)
     {
-        if (! m_argNames.add(p_arg.getName()))
+        checkArgName(p_fragName);
+        FragmentUnit frag = new FragmentUnit(p_fragName.getText(), this);
+        addFragmentArg(new FragmentArgument(frag));
+        return frag;
+    }
+
+    public void addNonFragmentArg(AArg p_arg)
+    {
+        checkArgName(p_arg.getName());
+        if (p_arg.getDefault() == null)
+        {
+            addRequiredArg(new RequiredArgument(p_arg));
+        }
+        else
+        {
+            addOptionalArg(new OptionalArgument(p_arg));
+        }
+    }
+
+    protected void addArgName(AbstractArgument p_arg)
+    {
+        m_argNames.add(p_arg.getName());
+    }
+
+    private void checkArgName(TIdentifier p_name)
+    {
+        if (! m_argNames.add(p_name.getText()))
         {
             throw new TunnelingException
-                (getName() + " has multiple arguments named "
-                 + p_arg.getName());
+                ("multiple arguments named " + p_name.getText(),
+                 p_name);
         }
     }
 
@@ -138,7 +167,7 @@ public abstract class AbstractUnit
     protected static void printArgsDecl(IndentingWriter p_writer,
                                         Iterator i)
     {
-        while(i.hasNext())
+        while (i.hasNext())
         {
             AbstractArgument arg = (AbstractArgument) i.next();
             p_writer.print("final " + arg.getType() + " " + arg.getName());
@@ -155,7 +184,7 @@ public abstract class AbstractUnit
         while (p_args.hasNext())
         {
             p_writer.print(((AbstractArgument) p_args.next()).getName());
-            if(p_args.hasNext())
+            if (p_args.hasNext())
             {
                 p_writer.print(", ");
             }
