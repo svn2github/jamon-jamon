@@ -1,7 +1,7 @@
 <%args>
   String[] names;
-  String  externalLink;
-  String  cgiParamName => null;
+  String externalLink;
+  String cgiParamName => null;
 </%args>
 
 <table>
@@ -11,12 +11,12 @@
   </tr>
 % for (int i=0; i<names.length; i++) {
     <%doc>Call a subtemplate to build each row of the table.</%doc>
-    <& _row; name => names[i]; link => externalLink;
+    <& row; name => names[i]; link => externalLink;
         cgiParam => cgiParamName &>
 % }
 
 <%doc>A sub-template to construct each row of the table.</%doc>
-<%def _row>
+<%def row>
   <%args>
     String name;
     String link;
@@ -24,13 +24,13 @@
   </%args>
   <tr>
     <td align="left"> <% name %> </td>
-    <td> <& _generateLink; link => link; name => cgiParam;
+    <td> <& generateLink; link => link; name => cgiParam;
             value => name &> </td>
   </tr>
 </%def>
 
 <%doc>This sub-template builds a URL.</%doc>
-<%def _generateLink>
+<%def generateLink>
 <%args>
     String link;
     String name => null;

@@ -7,29 +7,30 @@
 
 <h2>Jamon Tutorial - Subtemplates: Functional Decomposition of Templates</h2>
 
-Jamon templates can define <em>subtemplates</em>. These are exactly
-analogous to methods of a class, except that they are written in Jamon
-and are called from the main template or other subtemplates of the
-main template. Calling a subtemplate will cause it to print its output
-to the same output stream as the main template.
+<p> Jamon templates can define <em>subtemplates</em>. These are
+exactly analogous to methods of a class, except that they are written
+in Jamon and are called from the main template or other subtemplates
+of the main template. Calling a subtemplate will cause it to print its
+output to the same output stream as the main template.
 
-<blockquote>
-There are actually two types of subtemplates: private and protected. Private subtemplates are described in this document. Private subtemplates are accessible <em>only</em> from the template in which they are defined. Protected subtemplates, which are described in the tutorial section on inheritance, can also be called from templates that inherit from the main template.
-</blockquote>
-<p>
 
-Subtemplates are declared in a template file with the
-<nobr><code>&lt;%def subtemplate-name></code>
-... <code>&lt;/%def></code></nobr>
- tag. Inside this tag, the subtemplate can declare arguments just as
-a top level template can by using the
-<nobr><code>&lt;%args></code> ... <code>&lt;/%args></code></nobr> tag.
-These arguments may have default
-values just as arguments to top level templates can.
+<p> There are actually two types of subtemplates: private and
+protected. Private subtemplates are described in this
+document. Private subtemplates are accessible <em>only</em> from the
+template in which they are defined. Protected subtemplates, which are
+described in the tutorial section on inheritance, can also be called
+from templates that inherit from the main template.
+
+<p>Private subtemplates are declared in a template file with the
+<nobr><code>&lt;%def <em>subtemplate-name</em>></code>
+... <code>&lt;/%def></code></nobr> tag. Inside this tag, the
+subtemplate can declare required and/or optional arguments just as a
+top level template can by using the <nobr><code>&lt;%args></code>
+... <code>&lt;/%args></code></nobr> tag.
 
 <p> Subtemplates are called just like any other template, however
-subtemplates defined with the <nobr><code>&lt%;def
-subtemplate-name></code> ... <code>&lt;/%def></code></nobr> tag are
+subtemplates defined with the <nobr><code>&lt;%def
+<em>subtemplate-name</em>></code> ... <code>&lt;/%def></code></nobr> tag are
 only visible <em>within</em> the template that defined them.
 Subtemplates can call themselves as well as other subtemplates in the
 same file or other top level templates.
@@ -42,9 +43,9 @@ same file or other top level templates.
     subtemplates to help format a table of user account information.
     The top level template builds a table with a row for each entry
     in an array of names provided as an argument to the top level
-    template. It calls the subtemplate <code>_row</code> to generate
-    each row of table data. The subtemplate <code>_row</code>
-    calls the subtemplate <code>_generateLink</code> to compose a
+    template. It calls the subtemplate <code>row</code> to generate
+    each row of table data. The subtemplate <code>row</code>
+    calls the subtemplate <code>generateLink</code> to compose a
     URL for each user account.
 
     <& _TutorialTemplateInclude; fileName => "SubtemplateTemplate" &>
@@ -52,7 +53,7 @@ same file or other top level templates.
   <li>
     This template is called from the Java class
      <a class="file" href="SubtemplateTut7.java">SubtemplateTut7.java</a>:
-     <& _TutorialJavaFileInclude; fileName => "SubtemplateTut7" &>.
+     <& _TutorialJavaFileInclude; fileName => "SubtemplateTut7" &>
 
   <li>
     Process the template and Java class with the following commands.
