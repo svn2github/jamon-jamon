@@ -8,13 +8,14 @@ a page generated using Jamon.  To this end we will present
   <li>an Ant script to build the project.</li>
 </ul>
 
-In addition the exact directory layout will be specified.  Evidently, in your
-own projects you are free to use your own layout.  Note that
+In addition the exact directory layout will be specified, but of
+course in your own projects you are free to use your own layout.  Note
+that
 
 <ul>
 <%def root>/home/alice/tutorial</%def>
-  <li>All paths are relative to some directory of your choice where you choose
-    to try out this tutorial.  For example if that path is
+  <li>All paths are relative to a base directory for the tutorial.
+  For example, if you choose the base directory to be
     <code><& root &></code>, then a reference to a directory
     <code>templates/foo/bar</code> means
     <code><& root &>/templates/foo/bar</code>.  A reference to
