@@ -33,32 +33,24 @@ public abstract class AbstractTemplateImpl
     {
         public ChildFarg(TemplateManager p_templateManager)
         {
-            super(p_templateManager, null);
+            super(p_templateManager);
         }
 
         public abstract void render()
             throws java.io.IOException;
     }
 
-    protected AbstractTemplateImpl(TemplateManager p_templateManager,
-                                   String p_path)
+    protected AbstractTemplateImpl(TemplateManager p_templateManager)
     {
         m_templateManager = p_templateManager;
-        m_path = p_path;
     }
 
     protected AbstractTemplateImpl(TemplateManager p_templateManager,
-                                   String p_path,
                                    AbstractTemplateProxy.ImplData p_implData)
     {
-        this(p_templateManager, p_path);
+        this(p_templateManager);
         writeTo(p_implData.getWriter());
         autoFlush(p_implData.getAutoFlush());
-    }
-
-    public final String getPath()
-    {
-        return m_path;
     }
 
     public final void writeTo(Writer p_writer)
@@ -142,6 +134,5 @@ public abstract class AbstractTemplateImpl
     private Writer m_writer;
     private Escaping m_escaping;
     private final TemplateManager m_templateManager;
-    private final String m_path;
     private boolean m_autoFlush = true;
 }

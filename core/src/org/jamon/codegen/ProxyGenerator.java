@@ -174,10 +174,9 @@ public class ProxyGenerator
     private void generateTemplateImplConstructor(String p_className)
     {
         m_writer.println("protected " + p_className
-                         + "(" + ClassNames.TEMPLATE_MANAGER + " p_manager"
-                         + ", String p_path)");
+                         + "(" + ClassNames.TEMPLATE_MANAGER + " p_manager)");
         m_writer.openBlock();
-        m_writer.println("super(p_manager, p_path);");
+        m_writer.println("super(p_manager);");
         m_writer.closeBlock();
     }
 
@@ -302,9 +301,9 @@ public class ProxyGenerator
         m_writer.indent(2);
         m_writer.println(".getConstructor(new Class [] { "
                          + ClassNames.TEMPLATE_MANAGER + ".class"
-                         + ", String.class, ImplData.class })");
+                         + ", ImplData.class })");
         m_writer.println(".newInstance(new Object [] "
-                         + "{ p_manager, getPath(), getImplData() });");
+                         + "{ p_manager, getImplData() });");
         m_writer.outdent(2);
         m_writer.closeBlock();
         m_writer.println("catch (RuntimeException e)");
@@ -326,7 +325,7 @@ public class ProxyGenerator
         m_writer.println(
             "return new "
             + m_resolver.getImplClassName(m_templateUnit.getName())
-            + "(p_manager, getPath(), (ImplData) getImplData());");
+            + "(p_manager, (ImplData) getImplData());");
         m_writer.closeBlock();
     }
 

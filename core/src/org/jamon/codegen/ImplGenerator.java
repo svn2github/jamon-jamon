@@ -126,11 +126,11 @@ public class ImplGenerator
     {
         m_writer.println("public " +  getClassName()
                          + "(" + ClassNames.TEMPLATE_MANAGER
-                         + " p_templateManager, String p_path, "
+                         + " p_templateManager, "
                          + getImplDataClassName() + " p_implData)");
         m_writer.openBlock();
         m_writer.println(
-            "super(p_templateManager, p_path, " + SET_OPTS + "(p_implData));");
+            "super(p_templateManager, " + SET_OPTS + "(p_implData));");
         for (Iterator i = m_templateUnit.getVisibleArgs(); i.hasNext(); )
         {
             AbstractArgument arg = (AbstractArgument) i.next();
@@ -157,10 +157,9 @@ public class ImplGenerator
     private void generateTemplateImplConstructor(String p_className)
     {
         m_writer.println("protected " + p_className
-                         + "(" + ClassNames.TEMPLATE_MANAGER + " p_manager"
-                         + ", String p_path)");
+                         + "(" + ClassNames.TEMPLATE_MANAGER + " p_manager)");
         m_writer.openBlock();
-        m_writer.println("super(p_manager, p_path);");
+        m_writer.println("super(p_manager);");
         m_writer.closeBlock();
     }
 

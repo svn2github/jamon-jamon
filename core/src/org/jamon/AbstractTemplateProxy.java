@@ -30,7 +30,6 @@ public abstract class AbstractTemplateProxy
     public interface Intf
     {
         void escapeWith(Escaping p_escaping);
-        String getPath();
     }
 
     protected static class ImplData

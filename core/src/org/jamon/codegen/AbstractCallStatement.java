@@ -67,7 +67,7 @@ public abstract class AbstractCallStatement
 
         p_writer.print("new "
                        + getFragmentIntfName(p_fragmentUnitIntf, p_resolver)
-                       + "(this.getTemplateManager(), \"\") ");
+                       + "(this.getTemplateManager()) ");
         p_writer.openBlock();
 
         p_writer.print("public " + ClassNames.RENDERER + " makeRenderer(");
