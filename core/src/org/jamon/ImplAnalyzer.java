@@ -129,6 +129,11 @@ public class ImplAnalyzer extends BaseAnalyzer
             }
         }
 
+        public void caseALiteralBaseComponent(ALiteralBaseComponent node)
+        {
+            m_current.append(node.getLiteralText().getText());
+        }
+
         public void caseABodyBaseComponent(ABodyBaseComponent node)
         {
             m_current.append(node.getText().getText());

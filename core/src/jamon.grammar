@@ -63,6 +63,7 @@ States
   callexp,
   args,
   escape,
+  literal,
   farginit;
 
 Tokens
@@ -127,6 +128,21 @@ Tokens
   {body,start -> body} text = all_except_nl;
   {start,body -> start} newline = nl;
 
+  {body -> literal, start -> literal} litstart = '<%LITERAL>';
+  {literal} literal_text =
+       (    [all - '<']
+       | '<' [all - '/']
+       | '</' [all - '%']
+       | '</%' [all - 'L']
+       | '</%L' [all - 'I']
+       | '</%LI' [all - 'T']
+       | '</%LIT' [all - 'E']
+       | '</%LITE' [all - 'R']
+       | '</%LITER' [all - 'A']
+       | '</%LITERA' [all - 'L']
+       | '</%LITERAL' [all - '>'] )*;
+  {literal -> body} litend = '</%LITERAL>';
+
   {args} brackets = '[' (hs)* ']';
   {start -> body,body} fragment_call_end = '</&>';
   {call -> callexp} carrow = '=>' hs*;
@@ -162,6 +178,7 @@ Productions
   base_component =
               {body} text
             | {newline} newline
+            | {literal} litstart literal_text litend
             | {java} java
             | {jline} jline
             | {emit} emit
