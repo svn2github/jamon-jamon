@@ -26,20 +26,29 @@ public class StringUtils
 {
     private StringUtils() { }
 
-    private static final String TFS = "/";
+    public static String filePathToClassName(String p_path)
+    {
+        return pathToClassName(p_path, File.separator);
+    }
 
     public static String templatePathToClassName(String p_path)
     {
+        return pathToClassName(p_path, "/");
+    }
+
+    private static String pathToClassName(String p_path,
+                                          String p_fromSep)
+    {
         StringBuffer sb = new StringBuffer(p_path);
-        final int len = TFS.length();
-        while (sb.length() > 0 && TFS.equals(sb.substring(0,len)))
+        final int len = p_fromSep.length();
+        while (sb.length() > 0 && p_fromSep.equals(sb.substring(0,len)))
         {
             sb.delete(0,len);
         }
         int j = len;
         for (int i = 0; i < sb.length() - len; ++i)
         {
-            if (sb.substring(i,j).equals(TFS))
+            if (sb.substring(i,j).equals(p_fromSep))
             {
                 sb.replace(i,j,".");
             }
@@ -58,26 +67,6 @@ public class StringUtils
             if (sb.substring(i,j).equals(File.separator))
             {
                 sb.replace(i,j,"/");
-            }
-            j++;
-        }
-        return sb.toString();
-    }
-
-    public static String filePathToClassName(String p_path)
-    {
-        StringBuffer sb = new StringBuffer(p_path);
-        final int len = File.separator.length();
-        while (sb.length() > 0 && File.separator.equals(sb.substring(0,len)))
-        {
-            sb.delete(0,len);
-        }
-        int j = len;
-        for (int i = 0; i < sb.length() - len; ++i)
-        {
-            if (sb.substring(i,j).equals(File.separator))
-            {
-                sb.replace(i,j,".");
             }
             j++;
         }
