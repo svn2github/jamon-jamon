@@ -6,30 +6,33 @@
 
 <h2>Generated Template Classes</h2>
 
-Generated classes are the output of the processor, and have the
-following relationships to the template sources:
+Jamon templates are translated into Java classes, either by using the
+<a href="JamonTask.html">Jamon ant task</a>, or by executing the
+<a href="javadoc/org/jamon/TemplateProcessor.html">TemplateProcessor</a>
+class. These generated classes have the following relationships to the
+template sources:
 <ul>
   <li>
-    The class name is the same as the name of the template
-    source file excluding any filename extension (i.e. a suffix
-    starting with '.')
+    The class name is the same as the name of the template source file
+    excluding any filename extension (i.e. a suffix starting with
+    '.').
   </li>
   <li>
-    The package of the class maps directly to the directory path
-    from the template source directory to the template.
+    The package of the class maps directly to the directory path from
+    the template source directory to the template.
   </li>
   <li>
     The generated class has a <code>render</code> method whose
-    arguments are the required arguments declared in the
-    template. The order of declaration in the template
-    determines the order in the <code>render</code> method.
+    arguments are the required arguments declared in the template. The
+    order of declaration in the <code>render</code> method is the same
+    as the order of declaration in the template.
   </li>
   <li>
-    A <code>makeRenderer</code> method taking the same parameters as <code>render</code>
-  <!-- make mention of makeRenderable -->
+    The generated class has a <code>makeRenderer</code> method taking
+    the same parameters as <code>render</code>
   <li>
     Optional arguments in the template
-    generate <code>setXXX<code> methods in the class.
+    generate <code>setXXX</code> methods in the class.
   </li>
 </ul>
 
@@ -110,7 +113,7 @@ If one template inherits from another, then:
       </li>
 
       <li>
-        <code>setXXX<code> methods for each of the parent templates
+        <code>setXXX</code> methods for each of the parent templates
         optional argument (including any optional arguments for the
         parent template's ancestors, if any).
       </li>
@@ -129,7 +132,7 @@ If one template inherits from another, then:
 
   <li>
     If the child template is a final template (i.e. does not contain a
-    <code>&lt;&amp; *CHILD &amp;&gt;</code> call), then it's generated
+    <code>&lt;&amp; *CHILD &amp;&gt;</code> call), then its generated
     class will contain a <code>makeParentRenderer</code> method which
     takes as arguments the required arguments declared by the child
     template, and returns an object whose type is the inner
