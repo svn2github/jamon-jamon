@@ -306,21 +306,12 @@ public class CallStatement
                                          String p_absPath)
         throws IOException
     {
-        String tVar = p_analyzer.newVarName();
         String intfName = p_resolver.getFullyQualifiedIntfClassName(p_absPath);
-        p_writer.println("{");
-        p_writer.print("  final ");
+        p_writer.print("new ");
         p_writer.print(intfName);
-        p_writer.print(" ");
-        p_writer.print(tVar);
-        p_writer.print(" = new ");
-        p_writer.print(intfName);
-        p_writer.println("(this.getTemplateManager());");
-        p_writer.print("  ");
-        p_writer.print(tVar);
-        p_writer.println(".writeTo(this.getWriter());");
-        p_writer.print(tVar);
-        p_writer.println(".escaping(this.getEscaping());");
+        p_writer.println("(this.getTemplateManager())");
+        p_writer.println("      .writeTo(this.getWriter())");
+        p_writer.println("      .escaping(this.getEscaping())");
 
         List requiredArgs = p_describer.getRequiredArgNames(p_absPath);
 
@@ -329,18 +320,14 @@ public class CallStatement
             String name = (String) i.next();
             if (! requiredArgs.contains(name) )
             {
-                p_writer.print("      ");
-                p_writer.print(tVar);
-                p_writer.print(".set");
+                p_writer.print("      .set");
                 p_writer.print(StringUtils.capitalize(name));
                 p_writer.print("(");
                 p_writer.print(m_params.get(name));
-                p_writer.println(");");
+                p_writer.println(")");
             }
         }
-        p_writer.print("      ");
-        p_writer.print(tVar);
-        p_writer.print(".render(");
+        p_writer.print("      .render(");
         for (Iterator i = requiredArgs.iterator(); i.hasNext(); /* */)
         {
             String name = (String) i.next();
@@ -359,7 +346,6 @@ public class CallStatement
             }
         }
         p_writer.println(");");
-        p_writer.print("    }");
     }
 
     private final String getPath()
