@@ -7,10 +7,7 @@
 <%import>
   java.io.Writer;
   java.io.StringWriter;
-  java.io.StringReader;
-  java.io.BufferedReader;
-  java.io.IOException;
-  java.util.LinkedList;
+  java.util.StringTokenizer;
   bmsi.util.Diff;
 </%import>\
 <%java>
@@ -21,25 +18,22 @@
 <& content &>\
 <%class>
   private Object[] getLinesFor(String p_text)
-    throws IOException
   {
-    BufferedReader reader = new BufferedReader(new StringReader(p_text));
-    LinkedList tokenList = new LinkedList();
-    String line;
-    while ((line = reader.readLine()) != null)
+    StringTokenizer tokenizer = new StringTokenizer(p_text,"\n");
+    String[] tokens = new String[tokenizer.countTokens()];
+    for (int i = 0; i < tokens.length; ++i)
     {
-      tokenList.add(line + '\n');
+      tokens[i] = tokenizer.nextToken() + '\n';
     }
-    return tokenList.toArray();
+    return tokens;
   }
 </%class>\
 <%java>
   writeTo(oldWriter);
   String text = buffer.toString();
   int ix = text.indexOf(separator);
-  Object[] first = getLinesFor(text.substring(0, ix));
   Object[] second = getLinesFor(text.substring(ix + separator.length()));
-  Diff diff = new Diff(first,second);
+  Diff diff = new Diff(getLinesFor(text.substring(0, ix)),second);
   diff.no_discards = true;
   Diff.change change = diff.diff_2(false);
   int last = 0;
