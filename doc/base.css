@@ -16,7 +16,7 @@ body
 {
   width: 100%;
   border-bottom: solid;
-  clear: both;
+  height: 0;
   padding: 0 0 0 0;
   margin: 0 0 0 0;
 }
@@ -29,19 +29,16 @@ body
 
 #header2
 {
-  height: 0em;
   border-bottom-color: #2f4f9f;
 }
 
 #header3
 {
-  height: 0em;
   border-bottom-color: #1f3f8f;
 }
 
 #header4
 {
-  height: 0em;
   border-bottom-color: #0f2f7f;
 }
 
