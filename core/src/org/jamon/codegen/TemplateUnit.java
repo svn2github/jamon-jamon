@@ -238,7 +238,6 @@ public class TemplateUnit extends AbstractUnit
     {
         Set calls = new HashSet();
         calls.addAll(m_callPaths);
-        calls.removeAll(getDefNames());
         List absCalls = new ArrayList(calls.size());
         for (Iterator i = calls.iterator(); i.hasNext(); /* */)
         {

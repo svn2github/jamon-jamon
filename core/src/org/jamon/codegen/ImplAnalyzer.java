@@ -141,17 +141,18 @@ public class ImplAnalyzer extends BaseAnalyzer
             AMultiFragmentCall call =
                 (AMultiFragmentCall) node.getMultiFragmentCall();
             String path = NodeUtils.asText(call.getPath());
-            CallStatement s = new CallStatement(path,
-                                                makeParamMap(call.getParam()),
-                                                getTemplateUnit());
+            AbstractCallStatement s = hasDef(path)
+                ? (AbstractCallStatement) new DefCallStatement
+                    (path, makeParamMap(call.getParam()), getTemplateUnit())
+                : (AbstractCallStatement) new ComponentCallStatement
+                    (path, makeParamMap(call.getParam()), getTemplateUnit());
             getTemplateUnit().addCallPath(path);
-            for (Iterator f = call.getNamedFarg().iterator(); f.hasNext(); /* */)
+            for (Iterator f = call.getNamedFarg().iterator(); f.hasNext(); )
             {
                 ANamedFarg farg = (ANamedFarg) f.next();
                 pushFragmentUnitImpl(farg.getIdentifier().getText());
                 for (Iterator i = farg.getBaseComponent().iterator();
-                     i.hasNext();
-                     /* */)
+                     i.hasNext(); )
                 {
                     ((Node) i.next()).apply(this);
                 }
@@ -167,15 +168,16 @@ public class ImplAnalyzer extends BaseAnalyzer
             handleBody();
             AFragmentCall call = (AFragmentCall) node.getFragmentCall();
             String path = NodeUtils.asText(call.getPath());
-            CallStatement s = new CallStatement(path,
-                                                makeParamMap(call.getParam()),
-                                                getTemplateUnit());
+            AbstractCallStatement s = hasDef(path)
+                ? (AbstractCallStatement) new DefCallStatement
+                    (path, makeParamMap(call.getParam()), getTemplateUnit())
+                : (AbstractCallStatement) new ComponentCallStatement
+                    (path, makeParamMap(call.getParam()), getTemplateUnit());
             getTemplateUnit().addCallPath(path);
 
             pushFragmentUnitImpl(null);
             for (Iterator i = call.getBaseComponent().iterator();
-                 i.hasNext();
-                 /* */)
+                 i.hasNext(); )
             {
                 ((Node) i.next()).apply(this);
             }
@@ -219,10 +221,21 @@ public class ImplAnalyzer extends BaseAnalyzer
             }
             else
             {
-                getTemplateUnit().addCallPath(path);
-                addStatement(new CallStatement(path,
-                                               makeParamMap(p_call.getParam()),
-                                               getTemplateUnit()));
+                if (hasDef(path))
+                {
+                    addStatement(new DefCallStatement
+                        (path,
+                         makeParamMap(p_call.getParam()),
+                         getTemplateUnit()));
+                }
+                else
+                {
+                    getTemplateUnit().addCallPath(path);
+                    addStatement(new ComponentCallStatement
+                        (path,
+                         makeParamMap(p_call.getParam()),
+                         getTemplateUnit()));
+                }
             }
         }
 

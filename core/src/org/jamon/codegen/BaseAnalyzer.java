@@ -117,10 +117,17 @@ public class BaseAnalyzer
         return m_currentUnit;
     }
 
+    //FIXME - don't use this once the template is prepopulated with stub defs.
+    protected boolean hasDef(String p_defName)
+    {
+        return m_defNames.contains(p_defName);
+    }
+
     private final TemplateUnit m_templateUnit;
     private AbstractUnit m_currentUnit;
     private final TemplateDescriber m_describer;
     private final Set m_children;
+    private final Set m_defNames = new HashSet();
 
     private class PreliminaryAdapter extends AnalysisAdapter
     {
@@ -151,6 +158,11 @@ public class BaseAnalyzer
                           : null));
                 }
             }
+        }
+
+        public void caseADefComponent(ADefComponent p_def)
+        {
+            m_defNames.add(((ADef) p_def.getDef()).getIdentifier().getText());
         }
     }
 

@@ -21,21 +21,20 @@
 package org.jamon.codegen;
 
 import java.io.IOException;
-import java.util.Collection;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.SortedMap;
 import java.util.HashMap;
 
 import org.jamon.JamonException;
 import org.jamon.util.StringUtils;
 
-public class CallStatement
+public abstract class AbstractCallStatement
     implements Statement
 {
-    CallStatement(String p_path, Map p_params, TemplateUnit p_templateUnit)
+    AbstractCallStatement(String p_path,
+                          Map p_params,
+                          TemplateUnit p_templateUnit)
     {
         m_path = p_path;
         m_params = p_params;
@@ -50,12 +49,10 @@ public class CallStatement
     private final String m_path;
     private final Map m_params;
     private final TemplateUnit m_templateUnit;
-    private final Map m_fragParams = new HashMap();;
+    private final Map m_fragParams = new HashMap();
 
-    private boolean isDefCall()
-    {
-        return m_templateUnit.doesDefExist(getPath());
-    }
+    protected abstract String getFragmentIntfName(
+        FragmentUnit p_fragmentUnitIntf, TemplateResolver p_resolver);
 
     private void handleFragmentParam(FragmentUnit p_fragmentUnitIntf,
                                      IndentingWriter p_writer,
@@ -72,16 +69,8 @@ public class CallStatement
                  + " is missing fragment " + p_fragmentUnitIntf.getName());
         }
 
-        String fragmentIntf = p_fragmentUnitIntf.getFragmentInterfaceName();
-        if (! isDefCall())
-        {
-            fragmentIntf =
-                p_resolver.getFullyQualifiedIntfClassName
-                    (m_templateUnit.getAbsolutePath(getPath()))
-                + "." + fragmentIntf;
-        }
-
-        p_writer.print("new " + fragmentIntf
+        p_writer.print("new "
+                       + getFragmentIntfName(p_fragmentUnitIntf, p_resolver)
                        + "(this.getTemplateManager(), \"\") ");
         p_writer.openBlock();
 
@@ -124,7 +113,7 @@ public class CallStatement
         p_writer.closeBlock();
     }
 
-    private void handleFragmentParams(List p_fragmentInterfaces,
+    protected void handleFragmentParams(List p_fragmentInterfaces,
                                       IndentingWriter p_writer,
                                       TemplateResolver p_resolver,
                                       TemplateDescriber p_describer,
@@ -169,22 +158,9 @@ public class CallStatement
         }
     }
 
-    public void generateSource(IndentingWriter p_writer,
-                               TemplateResolver p_resolver,
-                               TemplateDescriber p_describer)
-        throws IOException
+    protected void checkSuppliedParams()
+        throws JamonException
     {
-        if (isDefCall())
-        {
-            generateAsDefCall(p_writer, p_resolver, p_describer);
-        }
-        else
-        {
-            generateAsComponentCall(p_writer,
-                                    p_resolver,
-                                    p_describer,
-                                    m_templateUnit.getAbsolutePath(m_path));
-        }
         checkSuppliedParams("arguments", m_params);
         checkSuppliedParams("fragments", m_fragParams);
     }
@@ -204,128 +180,18 @@ public class CallStatement
         }
     }
 
-    private void generateAsDefCall(IndentingWriter p_writer,
-                                   TemplateResolver p_resolver,
-                                   TemplateDescriber p_describer)
-        throws IOException
-    {
-        p_writer.println("__jamon_def__" + getPath() + "(");
-        p_writer.indent(2);
-        DefUnit unit = m_templateUnit.getDefUnit(getPath());
-        boolean argsAlreadyPrinted = false;
-        for (Iterator r = unit.getRequiredArgs(); r.hasNext(); /* */)
-        {
-            if (argsAlreadyPrinted)
-            {
-                p_writer.println(",");
-            }
-            argsAlreadyPrinted = true;
-            RequiredArgument arg = (RequiredArgument) r.next();
-            String name = arg.getName();
-            String expr = (String) m_params.remove(name);
-            if (expr == null)
-            {
-                throw new JamonException
-                    ("No value supplied for required argument " + name);
-            }
-            p_writer.print("(" + expr + ")");
-        }
-        for (Iterator o = unit.getOptionalArgs(); o.hasNext(); /* */ )
-        {
-            if (argsAlreadyPrinted)
-            {
-                p_writer.println(",");
-            }
-            argsAlreadyPrinted = true;
-            OptionalArgument arg = (OptionalArgument) o.next();
-            String name = arg.getName();
-            p_writer.print("(");
-            String expr = (String) m_params.remove(name);
-            if (expr == null)
-            {
-                p_writer.print(arg.getDefault());
-            }
-            else
-            {
-                p_writer.print(expr);
-            }
-            p_writer.print(")");
-            if (o.hasNext())
-            {
-                p_writer.println(",");
-            }
-        }
-        handleFragmentParams(unit.getFragmentArgsList(),
-                             p_writer,
-                             p_resolver,
-                             p_describer,
-                             argsAlreadyPrinted);
-        p_writer.outdent(2);
-        p_writer.println(");");
-    }
-
-    private void generateAsComponentCall(IndentingWriter p_writer,
-                                         TemplateResolver p_resolver,
-                                         TemplateDescriber p_describer,
-                                         String p_absPath)
-        throws IOException
-    {
-        String intfName = p_resolver.getFullyQualifiedIntfClassName(p_absPath);
-        p_writer.print("new ");
-        p_writer.print(intfName);
-        p_writer.println("(this.getTemplateManager())");
-        p_writer.indent(5);
-        p_writer.println(".writeTo(this.getWriter())");
-        p_writer.println(".escaping(this.getEscaping())");
-
-        TemplateDescription desc =
-            p_describer.getTemplateDescription(p_absPath);
-
-        for (Iterator i = desc.getOptionalArgs().iterator(); i.hasNext(); )
-        {
-            String name = ((OptionalArgument) i.next()).getName();
-            String value = (String) m_params.remove(name);
-            if (value != null)
-            {
-                p_writer.print(".set");
-                p_writer.print(StringUtils.capitalize(name));
-                p_writer.print("(");
-                p_writer.print(value);
-                p_writer.println(")");
-                i.remove();
-            }
-        }
-        p_writer.print(".render(");
-        boolean argsAlreadyPrinted = false;
-        for (Iterator i = desc.getRequiredArgs().iterator(); i.hasNext(); )
-        {
-            if (argsAlreadyPrinted)
-            {
-                p_writer.println(", ");
-            }
-            String name = ((RequiredArgument) i.next()).getName();
-            String expr = (String) m_params.remove(name);
-            if (expr == null)
-            {
-                throw new JamonException("No value supplied for required argument "
-                                         + name
-                                         + " in call to "
-                                         + getPath());
-            }
-            p_writer.print(expr);
-            argsAlreadyPrinted = true;
-        }
-        handleFragmentParams(desc.getFragmentInterfaces(),
-                             p_writer,
-                             p_resolver,
-                             p_describer,
-                             argsAlreadyPrinted);
-        p_writer.println(");");
-        p_writer.outdent(5);
-    }
-
-    private final String getPath()
+    protected final String getPath()
     {
         return m_path;
+    }
+
+    protected final TemplateUnit getTemplateUnit()
+    {
+        return m_templateUnit;
+    }
+
+    protected final Map getParams()
+    {
+        return m_params;
     }
 }
