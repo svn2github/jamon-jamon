@@ -230,7 +230,7 @@ public class Analyzer
             {
                 m_path.append(m_templateDir);
             }
-            int lastSlash = m_path.lastIndexOf("/", m_path.length() - 2 );
+            int lastSlash = m_path.toString().lastIndexOf("/", m_path.length() - 2 );
             if (lastSlash == 0)
             {
                 throw new TunnelingException
