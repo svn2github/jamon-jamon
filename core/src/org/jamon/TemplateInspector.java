@@ -33,9 +33,8 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 
-
 /**
- * An <code>Invoker</code> manages the reflective rendering of a
+ * An <code>TemplateInspector</code> manages the reflective rendering of a
  * template, given a template path and a <code>Map</code> of argument
  * values as Strings.
  *
@@ -43,18 +42,8 @@ import java.lang.reflect.InvocationTargetException;
  * public contract ought to allow reuse for multiple templates.
  */
 
-public class Invoker
+public class TemplateInspector
 {
-    /**
-     * An <code>ObjectParser</code> describes how to convert string
-     * values to objects.
-     */
-    public static interface ObjectParser
-    {
-        Object parseObject(Class p_type, String p_value)
-            throws TemplateArgumentException;
-    }
-
     public static class InvalidTemplateException
         extends JamonException
     {
@@ -71,148 +60,31 @@ public class Invoker
         }
     }
 
-    public static class TemplateArgumentException
-        extends JamonException
-    {
-        public TemplateArgumentException(Throwable t)
-        {
-            super(t);
-        }
-
-        public TemplateArgumentException(String p_msg)
-        {
-            super(p_msg);
-        }
-    }
-
-    public static class DefaultObjectParser
-        implements ObjectParser
-    {
-        public Object parseObject(Class p_type, String p_string)
-            throws TemplateArgumentException
-        {
-            try
-            {
-                if (p_string == null)
-                {
-                    if (p_type.isPrimitive())
-                    {
-                        throw new TemplateArgumentException
-                            ("primitive types cannot be null");
-                    }
-                    else
-                    {
-                        return null;
-                    }
-                }
-                else if (p_type == String.class)
-                {
-                    return p_string;
-                }
-                else if (p_type == Boolean.class || p_type == Boolean.TYPE )
-                {
-                    return Boolean.valueOf(p_string);
-                }
-                else if (p_type == Integer.class || p_type == Integer.TYPE)
-                {
-                    return Integer.valueOf(p_string);
-                }
-                else if (p_type == Float.class || p_type == Float.TYPE)
-                {
-                    return Float.valueOf(p_string);
-                }
-                else if (p_type == Double.class || p_type == Double.TYPE)
-                {
-                    return Double.valueOf(p_string);
-                }
-                else if (p_type == Short.class || p_type == Short.TYPE)
-                {
-                    return Short.valueOf(p_string);
-                }
-                else if (p_type == Byte.class || p_type == Byte.TYPE)
-                {
-                    return Byte.valueOf(p_string);
-                }
-                else
-                {
-                    return p_type
-                        .getConstructor(new Class[] { String.class })
-                        .newInstance(new Object[] { p_string });
-                }
-            }
-            catch (RuntimeException e)
-            {
-                throw e;
-            }
-            catch (Exception e)
-            {
-                throw new TemplateArgumentException(e);
-            }
-        }
-    }
-
     /**
-     * Construct an <code>Invoker</code> with a template manager and
-     * template path, using a {@link DefaultObjectParser}.
-     *
-     * @param p_manager the <code>TemplateManager</code> to use
-     * @param p_templateName the path of the template to be rendered
-     */
-    public Invoker(TemplateManager p_manager,
-                   String p_templateName)
-        throws IOException
-    {
-        this(p_manager, p_templateName, new DefaultObjectParser());
-    }
-
-    /**
-     * Construct an <code>Invoker</code> for a template path, using a
-     * {@link DefaultObjectParser} and the default {@link
-     * TemplateManager} as determined via the {@link
-     * TemplateManagerSource}.
+     * Construct an <code>TemplateInspector</code> for a template path
+     * using the default {@link TemplateManager} as determined via the
+     * {@link TemplateManagerSource}.
      *
      * @param p_templateName the path of the template to be rendered
      */
-    public Invoker(String p_templateName)
-        throws IOException
-    {
-        this(p_templateName,
-             new DefaultObjectParser());
-    }
-
-    /**
-     * Construct an <code>Invoker</code> for a template path using the
-     * specified {@ObjectParser}, and the default {@link
-     * TemplateManager} as determined via the {@link
-     * TemplateManagerSource}.
-     *
-     * @param p_templateName the path of the template to be rendered
-     * @param p_objectParser the object with which to translate
-     */
-    public Invoker(String p_templateName, ObjectParser p_objectParser)
+    public TemplateInspector(String p_templateName)
         throws IOException
     {
         this(TemplateManagerSource.getTemplateManagerFor(p_templateName),
-             p_templateName,
-             p_objectParser);
+             p_templateName);
     }
 
 
     /**
-     * Construct an <code>Invoker</code> with a template manager,
-     * template path and a specific <code>ObjectParser</code>.
+     * Construct an <code>TemplateInspector</code> with a template
+     * manager, template path.
      *
      * @param p_manager the <code>TemplateManager</code> to use
      * @param p_templateName the path of the template to be rendered
-     * @param p_objectParser the object with which to translate
-     * strings to values.
      */
-    public Invoker(TemplateManager p_manager,
-                   String p_templateName,
-                   ObjectParser p_objectParser)
+    public TemplateInspector(TemplateManager p_manager, String p_templateName)
         throws IOException
     {
-        m_objectParser = p_objectParser;
         m_template = p_manager.constructProxy(p_templateName);
         m_templateClass = m_template.getClass();
         try
@@ -347,31 +219,26 @@ public class Invoker
     }
 
     private Object[] computeRenderArguments(Map p_argMap, Writer p_writer)
-        throws TemplateArgumentException
     {
         Object[] actuals = new Object[1 + m_requiredArgNames.size()];
         actuals[0] = p_writer;
 
-        Class[] paramTypes = m_renderMethod.getParameterTypes();
-
         for (int i = 0; i < m_requiredArgNames.size(); ++i)
         {
-            actuals[i + 1] =
-                parse(paramTypes[i + 1],
-                      (String) p_argMap.get(m_requiredArgNames.get(i)));
+            actuals[i + 1] = p_argMap.get(m_requiredArgNames.get(i));
         }
         return actuals;
     }
 
     private void invokeOptionalArguments(Map p_argMap)
-        throws TemplateArgumentException
+        throws InvalidTemplateException
     {
         for (int i = 0; i < m_optionalArgNames.size(); ++i)
         {
             String name = (String) m_optionalArgNames.get(i);
             if (p_argMap.containsKey(name))
             {
-                invokeSet(name, (String) p_argMap.get(name));
+                invokeSet(name, p_argMap.get(name));
             }
         }
     }
@@ -399,12 +266,6 @@ public class Invoker
         }
     }
 
-    private Object parse(Class p_type, String p_value)
-        throws TemplateArgumentException
-    {
-        return m_objectParser.parseObject(p_type, p_value);
-    }
-
     private Method findSetMethod(String p_name)
     {
         Method[] methods = m_templateClass.getMethods();
@@ -425,25 +286,23 @@ public class Invoker
         return null;
     }
 
-    private void invokeSet(String p_name, String p_value)
-        throws TemplateArgumentException
+    private void invokeSet(String p_name, Object p_value)
+        throws InvalidTemplateException
     {
         Method setMethod = findSetMethod(p_name);
         if (setMethod == null)
         {
-            throw new TemplateArgumentException("No set method for " + p_name);
+            throw new InvalidTemplateException(m_templateClass.getName() +
+                                               " has no set method for "
+                                               + p_name);
         }
         try
         {
-            setMethod.invoke(m_template,
-                             new Object[] {
-                                 parse(setMethod.getParameterTypes()[0],
-                                       p_value)
-                             });
+            setMethod.invoke(m_template, new Object[] { p_value });
         }
         catch (IllegalAccessException e)
         {
-            throw new TemplateArgumentException(e);
+            throw new InvalidTemplateException(m_templateClass.getName(), e);
         }
         catch (InvocationTargetException e)
         {
@@ -458,7 +317,8 @@ public class Invoker
             }
             else
             {
-                throw new TemplateArgumentException(t);
+                throw new InvalidTemplateException(m_templateClass.getName(),
+                                                   t);
             }
         }
     }
@@ -467,7 +327,6 @@ public class Invoker
     private final Class m_templateClass;
     private final AbstractTemplateProxy m_template;
     private final Method m_renderMethod;
-    private final ObjectParser m_objectParser;
     private final List m_requiredArgNames;
     private final List m_optionalArgNames;
 }

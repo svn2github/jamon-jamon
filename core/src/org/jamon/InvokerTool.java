@@ -29,6 +29,97 @@ import java.util.HashMap;
 
 public class InvokerTool
 {
+
+    /**
+     * An <code>ObjectParser</code> describes how to convert string
+     * values to objects.
+     */
+    public static interface ObjectParser
+    {
+        Object parseObject(Class p_type, String p_value)
+            throws TemplateArgumentException;
+    }
+
+    public static class DefaultObjectParser
+        implements ObjectParser
+    {
+        public Object parseObject(Class p_type, String p_string)
+            throws TemplateArgumentException
+        {
+            try
+            {
+                if (p_string == null)
+                {
+                    if (p_type.isPrimitive())
+                    {
+                        throw new TemplateArgumentException
+                            ("primitive types cannot be null");
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                }
+                else if (p_type == String.class)
+                {
+                    return p_string;
+                }
+                else if (p_type == Boolean.class || p_type == Boolean.TYPE )
+                {
+                    return Boolean.valueOf(p_string);
+                }
+                else if (p_type == Integer.class || p_type == Integer.TYPE)
+                {
+                    return Integer.valueOf(p_string);
+                }
+                else if (p_type == Float.class || p_type == Float.TYPE)
+                {
+                    return Float.valueOf(p_string);
+                }
+                else if (p_type == Double.class || p_type == Double.TYPE)
+                {
+                    return Double.valueOf(p_string);
+                }
+                else if (p_type == Short.class || p_type == Short.TYPE)
+                {
+                    return Short.valueOf(p_string);
+                }
+                else if (p_type == Byte.class || p_type == Byte.TYPE)
+                {
+                    return Byte.valueOf(p_string);
+                }
+                else
+                {
+                    return p_type
+                        .getConstructor(new Class[] { String.class })
+                        .newInstance(new Object[] { p_string });
+                }
+            }
+            catch (RuntimeException e)
+            {
+                throw e;
+            }
+            catch (Exception e)
+            {
+                throw new TemplateArgumentException(e);
+            }
+        }
+    }
+
+    public static class TemplateArgumentException
+        extends JamonException
+    {
+        public TemplateArgumentException(Throwable t)
+        {
+            super(t);
+        }
+
+        public TemplateArgumentException(String p_msg)
+        {
+            super(p_msg);
+        }
+    }
+
     public class UsageException
         extends Exception
     {
@@ -43,19 +134,36 @@ public class InvokerTool
         }
     }
 
-    private void parseArgString(Map p_argMap, String p_arg)
-        throws UsageException
+    public InvokerTool(ObjectParser p_objectParser)
+    {
+        m_objectParser = p_objectParser;
+    }
+
+    private final ObjectParser m_objectParser;
+
+    public InvokerTool()
+    {
+        this(new DefaultObjectParser());
+    }
+
+    private void parseArgString(TemplateInspector p_inspector,
+                                Map p_argMap,
+                                String p_arg)
+        throws UsageException, TemplateArgumentException
     {
         int i = p_arg.indexOf("=");
         if (i <= 0)
         {
             throw new UsageException();
         }
-        p_argMap.put(p_arg.substring(0,i),p_arg.substring(i+1));
+        String name = p_arg.substring(0,i);
+        p_argMap.put(name,
+                     m_objectParser.parseObject
+                     (p_inspector.getArgumentType(name),
+                      p_arg.substring(i+1)));
     }
 
-    protected void invoke(String[] args,
-                          Invoker.ObjectParser p_objectParser)
+    protected void invoke(String[] args)
         throws UsageException, IOException
     {
         int a = 0;
@@ -125,20 +233,21 @@ public class InvokerTool
 
         String templateName = args[a++];
 
+        TemplateInspector inspector =
+            new TemplateInspector(new RecompilingTemplateManager(data),
+                                  templateName);
+
         HashMap argMap = new HashMap();
         while (a < args.length)
         {
-            parseArgString(argMap, args[a++]);
+            parseArgString(inspector, argMap, args[a++]);
         }
 
         Writer writer = outFile == null
             ? new OutputStreamWriter(System.out)
             : new FileWriter(outFile);
 
-        new Invoker(new RecompilingTemplateManager(data),
-                    templateName,
-                    p_objectParser)
-            .render(writer, argMap);
+        inspector.render(writer, argMap);
     }
 
     public static void main(String[] args)
@@ -146,7 +255,7 @@ public class InvokerTool
     {
         try
         {
-            new InvokerTool().invoke(args, new Invoker.DefaultObjectParser());
+            new InvokerTool().invoke(args);
         }
         catch (UsageException e)
         {

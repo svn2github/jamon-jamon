@@ -20,37 +20,38 @@
 
 package org.jamon.integration;
 
-import org.jamon.Invoker;
+import org.jamon.TemplateInspector;
 import java.util.List;
 import java.util.Iterator;
 
-public class InvokerTest
+public class TemplateInspectorTest
     extends TestBase
 {
     public void testArgumentReflection()
         throws Exception
     {
-        Invoker invoker = new Invoker("/test/jamon/Grandchild");
-        List args = invoker.getRequiredArgumentNames();
+        TemplateInspector inspector =
+            new TemplateInspector("/test/jamon/Grandchild");
+        List args = inspector.getRequiredArgumentNames();
         assertEquals(5, args.size());
         assertEquals("i", args.get(0));
         assertEquals("j", args.get(1));
         assertEquals("a", args.get(2));
         assertEquals("b", args.get(3));
         assertEquals("x", args.get(4));
-        assertEquals(Integer.TYPE, invoker.getArgumentType("i"));
-        assertEquals(Integer.class, invoker.getArgumentType("j"));
-        assertEquals(String.class, invoker.getArgumentType("a"));
-        assertEquals(Boolean.TYPE, invoker.getArgumentType("b"));
-        assertEquals(Boolean.class, invoker.getArgumentType("x"));
+        assertEquals(Integer.TYPE, inspector.getArgumentType("i"));
+        assertEquals(Integer.class, inspector.getArgumentType("j"));
+        assertEquals(String.class, inspector.getArgumentType("a"));
+        assertEquals(Boolean.TYPE, inspector.getArgumentType("b"));
+        assertEquals(Boolean.class, inspector.getArgumentType("x"));
 
-        args = invoker.getOptionalArgumentNames();
+        args = inspector.getOptionalArgumentNames();
         assertEquals(10, args.size());
         for (int i = 1; i <= 10; ++i)
         {
             String name = "opt" + i;
             assertTrue(args.contains(name));
-            assertEquals(String.class, invoker.getArgumentType(name));
+            assertEquals(String.class, inspector.getArgumentType(name));
         }
     }
 }
