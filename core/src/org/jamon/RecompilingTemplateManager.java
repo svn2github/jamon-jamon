@@ -503,28 +503,27 @@ public class RecompilingTemplateManager
             boolean intfGenerated = false;
             long modTime = m_templateSource.lastModified(path);
 
-            File ji = new File(javaIntf(path));
-            if (ji.lastModified() < modTime)
+            String intfFileName = javaIntf(path);
+            File intfFile = new File(intfFileName);
+            if (intfFile.lastModified() < modTime)
             {
-                intfGenerated = generateIntfIfChanged(path, p_describer);
-                if (intfGenerated)
+                TemplateUnit templateUnit =
+                    new Analyzer(path, p_describer).analyze();
+                String signature = templateUnit.getSignature();
+                if (isIntfChanged(path, signature, m_classLoader))
                 {
-                    outOfDateJavaFiles.add(javaIntf(path));
+                    if (isIntfChanged(path, signature, m_loader))
+                    {
+                        generateIntf(path, p_describer, templateUnit);
+                        outOfDateJavaFiles.add(intfFileName);
+                    }
                 }
                 else
                 {
-                    try
-                    {
-                        m_classLoader.loadClass
-                            (StringUtils.templatePathToClassName(path));
-                        ji.delete();
-                        deleteClassFilesFor(path);
-                    }
-                    catch (ClassNotFoundException e)
-                    {
-                        // it's ok, just don't delete anything
-                    }
+                    intfFile.delete();
+                    deleteClassFilesFor(path);
                 }
+
             }
 
             File jm = new File(javaImpl(path));
@@ -572,12 +571,16 @@ public class RecompilingTemplateManager
         File dir = new File(new File(m_workDir),
                             StringUtils.templatePathToFileDir(p_path));
         String[] files = dir.list();
-        for (int j = 0; j < files.length; ++j)
+        if (files != null)
         {
-            if (StringUtils.isGeneratedClassFilename(templateName, files[j]))
+            for (int j = 0; j < files.length; ++j)
             {
-                new File(dir, files[j]).delete();
-                // FIXME: error checking?
+                if (StringUtils.isGeneratedClassFilename(templateName,
+                                                         files[j]))
+                {
+                    new File(dir, files[j]).delete();
+                    // FIXME: error checking?
+                }
             }
         }
     }
@@ -625,7 +628,8 @@ public class RecompilingTemplateManager
         }
     }
 
-    private String getIntfSignatureFromClass(String p_path)
+    private String getIntfSignatureFromClass(String p_path,
+                                             ClassLoader p_loader)
         throws IOException
     {
         if (TRACE)
@@ -636,7 +640,7 @@ public class RecompilingTemplateManager
         try
         {
             return (String)
-                m_loader.loadClass(StringUtils.templatePathToClassName(p_path))
+                p_loader.loadClass(StringUtils.templatePathToClassName(p_path))
                 .getField("SIGNATURE")
                 .get(null);
         }
@@ -656,44 +660,37 @@ public class RecompilingTemplateManager
         }
     }
 
-    private boolean generateIntfIfChanged(String p_path,
-                                          TemplateDescriber p_describer)
+    private boolean isIntfChanged(String p_path,
+                                  String p_signature,
+                                  ClassLoader p_loader)
         throws IOException
     {
-        TemplateUnit templateUnit = new Analyzer(p_path, p_describer)
-            .analyze();
+        return ! p_signature.equals(getIntfSignatureFromClass(p_path,
+                                                              p_loader));
+    }
 
-        String oldsig = getIntfSignatureFromClass(p_path);
+    private void generateIntf(String p_path,
+                                 TemplateDescriber p_describer,
+                                 TemplateUnit p_templateUnit)
+        throws IOException
+    {
         if (TRACE)
         {
-            trace("old sig is " + oldsig
-                  + " and new sig is " + templateUnit.getSignature());
+            trace("generating intf for " + p_path);
         }
-        if (! templateUnit.getSignature().equals(oldsig))
+        File javaFile = getWriteableFile(javaIntf(p_path));
+        FileWriter writer = new FileWriter(javaFile);
+        try
         {
-            if (TRACE)
-            {
-                trace("generating intf for " + p_path);
-            }
-            File javaFile = getWriteableFile(javaIntf(p_path));
-            FileWriter writer = new FileWriter(javaFile);
-            try
-            {
-                new ProxyGenerator(writer, p_describer, templateUnit)
-                    .generateClassSource();
-                writer.close();
-            }
-            catch (IOException e)
-            {
-                writer.close();
-                javaFile.delete();
-                throw e;
-            }
-            return true;
+            new ProxyGenerator(writer, p_describer, p_templateUnit)
+                .generateClassSource();
+            writer.close();
         }
-        else
+        catch (IOException e)
         {
-            return false;
+            writer.close();
+            javaFile.delete();
+            throw e;
         }
     }
 
