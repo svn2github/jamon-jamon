@@ -72,7 +72,7 @@ public class ImplAnalyzer extends BaseAnalyzer
     private int m_lastVar = 0;
     public String newVarName()
     {
-        return "j$" + (m_lastVar++);
+        return "__jamon_var__" + (m_lastVar++);
     }
 
 

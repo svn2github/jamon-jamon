@@ -195,7 +195,7 @@ public class ImplGenerator
                 generateDefFargInterface(m_analyzer.getFargInfo((String)f.next()));
             }
 
-            print("  private void $def$");
+            print("  private void __jamon_def__");
             print(name);
             print("(");
             int argNum = 0;

@@ -67,7 +67,7 @@ public class CallStatement
                                    ImplAnalyzer p_analyzer)
         throws IOException
     {
-        p_writer.print("$def$");
+        p_writer.print("__jamon_def__");
         p_writer.print(getPath());
         p_writer.print("(");
         int argNum = 0;
