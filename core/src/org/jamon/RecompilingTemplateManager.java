@@ -243,28 +243,10 @@ public class RecompilingTemplateManager
         m_loader = new WorkDirClassLoader(m_classLoader, m_workDir);
     }
 
-    public AbstractTemplateProxy.Intf constructImpl(
-        AbstractTemplateProxy p_proxy)
+    public AbstractTemplateProxy.Intf constructImpl
+        (AbstractTemplateProxy p_proxy)
     {
-        return constructImpl(p_proxy, this);
-    }
-
-    /**
-     * Provided for subclasses and composing classes. Given a template
-     * proxy path, return an instance of the executable code for that
-     * proxy's template.
-     *
-     * @param p_proxy a proxy for the template
-     * @param p_manager the {@link TemplateManager} to supply to the
-     * template
-     *
-     * @return a <code>Template</code> instance
-     **/
-    public AbstractTemplateProxy.Intf constructImpl(
-        AbstractTemplateProxy p_proxy, TemplateManager p_manager)
-    {
-        return p_proxy.constructImpl(getImplClass(p_proxy.getClass()),
-                                     p_manager);
+        return p_proxy.constructImpl(getImplClass(p_proxy.getClass()));
     }
 
     /**
