@@ -8,7 +8,7 @@
 
     <servlet>
       <servlet-name>Hello</servlet-name>
-      <servlet-class>com.earthaddress.ui.web.HelloServlet</servlet-class>
+      <servlet-class>foo.bar.HelloServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>

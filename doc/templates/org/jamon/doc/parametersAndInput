@@ -15,8 +15,8 @@ template.
   <|newContent><& hello2 &></|>
 </&></pre>
 
-(New or changed lines look like <span class="changed">this</span>).  
-The above template can be invoked with code like:
+(You should be able to distinguish lines that are <span class="changed">new or 
+changed</span><span class="deleted"> or deleted</span>).
 
 <pre class="code"><&|| _showDiff &>
   <|oldContent><& HelloServletTemplate &></|>

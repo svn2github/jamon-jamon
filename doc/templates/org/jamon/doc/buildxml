@@ -1,32 +1,39 @@
 <?xml version="1.0"?>
 
-<project name="FooBar" default="build">
+<project name="FooBar" default="war">
 
-  <target name="templates"
-          description="Compiles Jamon templates into Java">
+  <property name="build.dir" value="build"/>
+  <property name="build.src.dir" value="${build.dir}/src"/>
+  <property name="classes.dir" value="${build.dir}/classes"/>
+
+  <property name="java.lib.jamon" value="jamon.jar" />
+  <property name="java.lib.servlet" value="/usr/share/java/servlet.jar" />
+
+  <target name="templates">
     <mkdir dir="${build.src.dir}" />
+    <echo>java.lib.jamon=${java.lib.jamon}</echo>
     <taskdef name="jamon" 
              classname="org.jamon.ant.JamonTask"
-             classpath="${java.lib.dir}/jamon.jar"/>
+             classpath="${java.lib.jamon}" />
     <jamon destdir="${build.src.dir}" generateImpls="true">
-      <src path="templates"/>
+      <src path="templates" />
     </jamon>
   </target>
 
-  <target name="build"
-          depends="init,templates,prepare-tomcat,semperj"
-          description="Compiles all the Java files">
-    <property name="classes.dir"
-              value="${tomcat.dir}/webapps/${context}/WEB-INF/classes"/>
-    <mkdir dir="${classes.dir}"/>
+  <target name="compile" depends="templates">
+    <mkdir dir="${classes.dir}" />
     <javac destdir="${classes.dir}"
-	   debug="true"
-	   deprecation="true">
-        <src path="src/java"/>
-        <src path="tests/src/java"/>
-        <src path="${build.src.dir}"/>
-        <classpath refid="class.path"/>
+           classpath="${java.lib.jamon}:${java.lib.servlet}">
+        <src path="src" />
+        <src path="${build.src.dir}" />
     </javac>
+  </target>
+
+  <target name="war" depends="compile">
+    <war destfile="foobar.war" 
+         webxml="web.xml">
+      <classes dir="${classes.dir}"/>
+    </war>
   </target>
 
 </project>

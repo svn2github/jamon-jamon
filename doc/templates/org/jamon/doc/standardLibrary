@@ -1,14 +1,26 @@
 <span class="concept">Using the Standard Library</span>
+
 Jamon comes with a library of classes and templates to aid in the systematic 
 development of web applications.  The library consists of "input" objects
 and corresponding templates to render them.  The idea behind these input
 objects is that they encapsulate the name of a CGI paramater and its value.
 For example the <code>org.jamon.render.html.TextInput</code> input object consists
-(more or less) of a name (a string), a value (a string) and its maxlength (an int).
-There is a corresponding template, <code>org.jamon.html.TextInput</code>, which
-takes as parameters 
+(more or less) of a name (a string), a value (a string) and its maxlength (an 
+integer).  There is a corresponding template, <code>org.jamon.html.TextInput</code>, 
+which takes as parameters 
 <ul>
   <li>an object of the above input type</li>
   <li>the size of the input element (an integer)</li>
   <li>the type of the input element, for example "text" or "password" (a string)</li>
 </ul>
+Since it is the controller that will be receiving and parsing the data from
+the form it is natural that it decide what the name of each CGI parameter
+should be as well as the default value the input element should display.  Hence
+it is natural to pass input objects like the one above into the template that
+renders the view.  Furthermore since parsing the data that comes back also
+needs access to the names of the parameters it natural to place all this in
+one class.  This is a <code>FormFields</code> class.
+<p>
+For example
+<pre class="code">
+</pre>

@@ -11,14 +11,17 @@ the documentation thus taking care of issues such as escaping.
   <property file="${user.home}/.ant.properties"/>
 
   <property name="build.dir" value="build"/>
-  <property name="html.dir" value="${build.dir}/html"/>
-  <property name="java.lib.jamon" value="../jamon.jar"/>
+  <property name="www.dir" value="${build.dir}/www"/>
+  <property name="classes.dir" value="${www.dir}/classes"/>
+  <property name="java.lib.jamon" location="../jamon.jar"/>
+  <property name="java.lib.servlet" value="/usr/share/java/servlet.jar"/>
   <property name="java.lib.diff" value="/usr/local/share/java/diff.jar"/>
 
-  <target name="build"
+  <target name="doc"
           description="Generates all the documentation">
-    <mkdir dir="${html.dir}"/>
-    <copy file="base.css" todir="${html.dir}" />
+    <mkdir dir="${www.dir}"/>
+    <copy file="base.css" todir="${www.dir}" />
+    <!-- Generate the big Rainbow document -->
     <java classname="org.jamon.Invoker"
           classpath="${java.lib.jamon}:${java.lib.diff}" 
           fork="yes">
@@ -27,10 +30,77 @@ the documentation thus taking care of issues such as escaping.
       <arg value="-w" />
       <arg value="build/work" />
       <arg value="-o" />
-      <arg value="${html.dir}/rainbow.html" />
+      <arg value="${www.dir}/rainbow.html" />
       <arg value="/org/jamon/doc/RainbowTemplate" />
     </java>
+    <!-- Generate the first template example -->
+    <mkdir dir="${www.dir}/templates/foo/bar"/>
+    <java classname="org.jamon.Invoker"
+          classpath="${java.lib.jamon}:${java.lib.diff}" 
+          fork="yes">
+      <arg value="-s" />
+      <arg value="templates" />
+      <arg value="-w" />
+      <arg value="build/work" />
+      <arg value="-o" />
+      <arg value="${www.dir}/templates/foo/bar/HelloTemplate" />
+      <arg value="/org/jamon/doc/hello" />
+    </java>
+    <!-- Generate the first servlet example -->
+    <property name="servlet.src.dir" value="${www.dir}/src/foo/bar" />
+    <mkdir dir="${servlet.src.dir}" />
+    <java classname="org.jamon.Invoker"
+          classpath="${java.lib.jamon}:${java.lib.diff}" 
+          fork="yes">
+      <arg value="-s" />
+      <arg value="templates" />
+      <arg value="-w" />
+      <arg value="build/work" />
+      <arg value="-o" />
+      <arg value="${servlet.src.dir}/HelloServlet.java" />
+      <arg value="/org/jamon/doc/HelloServletTemplate" />
+    </java>
+    <!-- Generate the ant script -->
+    <java classname="org.jamon.Invoker"
+          classpath="${java.lib.jamon}:${java.lib.diff}" 
+          fork="yes">
+      <arg value="-s" />
+      <arg value="templates" />
+      <arg value="-w" />
+      <arg value="build/work" />
+      <arg value="-o" />
+      <arg value="${www.dir}/build.xml" />
+      <arg value="/org/jamon/doc/buildxml" />
+    </java>
+    <!-- Generate the deployment descriptor -->
+    <java classname="org.jamon.Invoker"
+          classpath="${java.lib.jamon}:${java.lib.diff}" 
+          fork="yes">
+      <arg value="-s" />
+      <arg value="templates" />
+      <arg value="-w" />
+      <arg value="build/work" />
+      <arg value="-o" />
+      <arg value="${www.dir}/web.xml" />
+      <arg value="/org/jamon/doc/webxml" />
+    </java>
   </target>
+
+  <target name="war"
+          depends="doc">
+    <ant dir="${www.dir}" />
+  </target>
+
+  <target name="zip"
+          depends="doc">
+    <zip destfile="${www.dir}/foobar.zip"
+         basedir="${www.dir}"
+         includes="src/**,templates/**,web.xml,build.xml">
+    </zip>
+  </target>
+
+  <target name="build"
+          depends="war,zip" />
 
   <target name="cvsignores">
     <echo file=".cvsignore">.cvsignore ${build.dir} build.properties
@@ -39,6 +109,10 @@ the documentation thus taking care of issues such as escaping.
 
   <target name="clean">
     <delete dir="${build.dir}"/>
+  </target>
+
+  <target name="spotless" depends="clean">
+    <delete file=".cvsignore"/>
   </target>
 
 </project>
