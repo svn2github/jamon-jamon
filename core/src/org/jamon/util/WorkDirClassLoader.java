@@ -30,7 +30,6 @@ public class WorkDirClassLoader
     extends ClassLoader
 {
     public WorkDirClassLoader(ClassLoader p_parent, String p_workDir)
-        throws IOException
     {
         super(p_parent);
         m_workDir = p_workDir;
