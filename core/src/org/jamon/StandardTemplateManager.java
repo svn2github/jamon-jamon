@@ -150,7 +150,7 @@ public class StandardTemplateManager
         m_dynamicRecompilation = p_dynamicRecompilation;
     }
 
-    private void logInfo(String p_message)
+    private void trace(String p_message)
     {
         System.err.println(p_message);
     }
@@ -160,7 +160,10 @@ public class StandardTemplateManager
     {
         if (! m_initialized)
         {
-            logInfo("initializing std template mgr");
+            if (TRACE)
+            {
+                trace("initializing std template mgr");
+            }
             if (m_workDir == null)
             {
                 m_workDir = System.getProperty("java.io.tmpdir")
@@ -224,7 +227,10 @@ public class StandardTemplateManager
             cp.append(getRtJarPath());
         }
 
-        logInfo("Jamon compilation CLASSPATH is " + cp);
+        if (TRACE)
+        {
+            trace("Jamon compilation CLASSPATH is " + cp);
+        }
 
         return cp.toString();
     }
@@ -318,13 +324,19 @@ public class StandardTemplateManager
         while (!workQueue.isEmpty())
         {
             String path = (String) workQueue.remove(0);
-            logInfo("processing " + path);
+            if (TRACE)
+            {
+                trace("processing " + path);
+            }
             seen.add(path);
 
             File tf = m_describer.getTemplateFile(path);
             if (!tf.exists())
             {
-                logInfo(path + " source not found; assume class exists");
+                if (TRACE)
+                {
+                    trace(path + " source not found; assume class exists");
+                }
                 continue;
             }
 
@@ -404,7 +416,10 @@ public class StandardTemplateManager
     private Collection generateImpl(String p_path)
         throws IOException
     {
-        logInfo("generating impl for " + p_path);
+        if (TRACE)
+        {
+            trace("generating impl for " + p_path);
+        }
 
         ImplAnalyzer ia =
             new ImplAnalyzer(p_path,
@@ -433,8 +448,11 @@ public class StandardTemplateManager
     private String getIntfSignatureFromClass(String p_path)
         throws IOException
     {
-        logInfo("Looking for signature of "
-                + StringUtils.pathToClassName(p_path));
+        if (TRACE)
+        {
+            trace("Looking for signature of "
+                    + StringUtils.pathToClassName(p_path));
+        }
         try
         {
             Class c = Class.forName(StringUtils.pathToClassName(p_path));
@@ -466,7 +484,10 @@ public class StandardTemplateManager
         String oldsig = getIntfSignatureFromClass(p_path);
         if (! bg.getSignature().equals(oldsig))
         {
-            logInfo("generating intf for " + p_path);
+            if (TRACE)
+            {
+                trace("generating intf for " + p_path);
+            }
             File javaFile = getWriteableFile(javaIntf(p_path));
             FileWriter writer = new FileWriter(javaFile);
             try
@@ -510,7 +531,10 @@ public class StandardTemplateManager
                 buf.append(", ");
             }
         }
-        logInfo(buf.toString());
+        if (TRACE)
+        {
+            trace(buf.toString());
+        }
         getJavaCompiler()
             .compile((String []) p_sourceFiles.toArray(new String [0]));
     }
@@ -518,7 +542,10 @@ public class StandardTemplateManager
     private Collection computeDependencies(String p_path)
         throws IOException
     {
-        logInfo("computing dependencies for " + p_path);
+        if (TRACE)
+        {
+            trace("computing dependencies for " + p_path);
+        }
 
         return new ImplAnalyzer(p_path,
                                 m_describer.parseTemplate(p_path))
@@ -549,5 +576,11 @@ public class StandardTemplateManager
             return m_lastUpdated;
         }
     }
+
+
+    private static final boolean TRACE =
+        Boolean.valueOf(System.getProperty
+                        (StandardTemplateManager.class.getName()
+                         + ".trace" )).booleanValue();
 
 }
