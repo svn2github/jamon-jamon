@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServlet;
 import org.jamon.Invoker;
 import org.jamon.StandardTemplateManager;
 import org.jamon.TemplateManager;
+import org.jamon.JamonTemplateException;
 
 public class JamonDocServlet
     extends HttpServlet
@@ -29,8 +30,20 @@ public class JamonDocServlet
         p_response.setContentType("text/html");
         String templatePath = p_request.getServletPath();
         templatePath = templatePath.substring(0,templatePath.length()-5);
-        new Invoker(m_manager, "/org/jamon/doc" + templatePath)
-            .render(writer, m_parameters, true);
+        try
+        {
+            new Invoker(m_manager, "/org/jamon/doc" + templatePath)
+                .render(writer, m_parameters, true);
+        }
+        catch (JamonTemplateException e)
+        {
+            writer.write("In " + e.getFileName()
+                                + ", line " + e.getLine()
+                                + ", column " + e.getColumn()
+                                + "\n<pre>\n");
+            e.printStackTrace(new PrintWriter(writer));
+            writer.write("</pre>");
+        }
         writer.close();
     }
 
