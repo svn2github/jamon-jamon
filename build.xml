@@ -78,40 +78,39 @@
     <ant dir="anttask" target="clean"/>
   </target>
 
+  <target name="release" depends="base">
+    <antcall target="_release">
+      <param name="jamon.version.action" value="release"/>
+    </antcall>
+  </target>
+
   <target name="major-release" depends="base">
-    <exec executable="java"
-          outputproperty="jamon.version.next">
-      <arg value="-cp" />
-      <arg value="${core.classes.dir}" />
-      <arg value="org.jamon.Version" />
-      <arg value="nextmajor" />
-    </exec>
-    <antcall target="release" />
+    <antcall target="_release">
+      <param name="jamon.version.action" value="nextmajor"/>
+    </antcall>
   </target>
 
   <target name="minor-release" depends="base">
-    <exec executable="java"
-          outputproperty="jamon.version.next">
-      <arg value="-cp" />
-      <arg value="${core.classes.dir}" />
-      <arg value="org.jamon.Version" />
-      <arg value="nextminor" />
-    </exec>
-    <antcall target="release" />
+    <antcall target="_release">
+      <param name="jamon.version.action" value="nextminor"/>
+    </antcall>
   </target>
 
   <target name="bugfix-release" depends="base">
+    <antcall target="_release">
+      <param name="jamon.version.action" value="nextsub"/>
+    </antcall>
+  </target>
+
+  <target name="_release">
     <exec executable="java"
+          failonerror="true"
           outputproperty="jamon.version.next">
       <arg value="-cp" />
       <arg value="${core.classes.dir}" />
       <arg value="org.jamon.Version" />
-      <arg value="nextsub" />
+      <arg value="${jamon.version.action}"/>
     </exec>
-    <antcall target="release" />
-  </target>
-
-  <target name="release" if="jamon.version.next" >
     <property name="file" value="core/src/org/jamon/Resources.properties" />
     <property file="${file}"/>
     <echo message="Current version: ${org.jamon.version}" />
@@ -125,7 +124,6 @@
              token="release=false"
              value="release=true" />
     <cvs command="commit -m 'version bump to ${jamon.version.next}' ${file}" />
-    <antcall target="jar" />
     <exec executable="java"
           outputproperty="jamon.version.cvs">
       <arg value="-cp" />
