@@ -28,6 +28,11 @@ import java.io.File;
 public class RecompilationTest
     extends TestBase
 {
+    protected boolean doDynamicRecompilation()
+    {
+        return true;
+    }
+
     public void testIt()
         throws Exception
     {

@@ -39,9 +39,15 @@ public class TestBase
     {
         m_templateManager = new StandardTemplateManager
             (new StandardTemplateManager.Data()
+                 .setDynamicRecompilation(doDynamicRecompilation())
                  .setSourceDir(SOURCE_DIR)
                  .setWorkDir(WORK_DIR));
         resetWriter();
+    }
+
+    protected boolean doDynamicRecompilation()
+    {
+        return false;
     }
 
 
