@@ -65,10 +65,12 @@
   </target>
 
   <target name="clean">
-    <delete dir="${build.dir}"/>
+    <delete dir="${classes.dir}"/>
   </target>
 
-  <target name="spotless" depends="clean" />
+  <target name="spotless" depends="clean">
+    <delete dir="${build.dir}"/>
+  </target>
 
   <target name="cvsignores">
     <echo file=".cvsignore">.cvsignore build build.properties</echo>
