@@ -6,7 +6,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
-import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -19,18 +18,6 @@ import org.eclipse.ui.dialogs.PropertyPage;
 
 public class JamonProjectPropertyPage extends PropertyPage {
 
-	private static final String PATH_TITLE = "Path:";
-	private static final String OWNER_TITLE = "&Owner:";
-	private static final String OWNER_PROPERTY = "OWNER";
-	private static final String DEFAULT_OWNER = "John Doe";
-
-	private static final int TEXT_FIELD_WIDTH = 50;
-
-	private Text ownerText;
-
-	/**
-	 * Constructor for SamplePropertyPage.
-	 */
 	public JamonProjectPropertyPage() {
 		super();
 	}
@@ -66,34 +53,35 @@ public class JamonProjectPropertyPage extends PropertyPage {
 		gridData.grabExcessHorizontalSpace = true;
 		separator.setLayoutData(gridData);
 	}
+	
+	private Text templateSourceText;
+	private static final String DEFAULT_TEMPLATE_SOURCE = "templates";
+	private static final String TEMPLATE_SOURCE_PROPERTY = "TEMPLATE_SOURCE_FOLDER";
 
 	private void addSecondSection(Composite parent) {
 		Composite composite = createDefaultComposite(parent);
 
 		// Label for owner field
-		Label ownerLabel = new Label(composite, SWT.NONE);
-		ownerLabel.setText(OWNER_TITLE);
-
+		Label templateSourceLabel = new Label(composite, SWT.NONE);
+		templateSourceLabel.setText("Template source folder:");
 		// Owner text field
-		ownerText = new Text(composite, SWT.SINGLE | SWT.BORDER);
+		templateSourceText = new Text(composite, SWT.SINGLE | SWT.BORDER);
 		GridData gd = new GridData();
-		gd.widthHint = convertWidthInCharsToPixels(TEXT_FIELD_WIDTH);
-		ownerText.setLayoutData(gd);
+		gd.widthHint = convertWidthInCharsToPixels(50);
+		templateSourceText.setLayoutData(gd);
 
+		
 		// Populate owner text field
 		try {
-			String owner =
+			String templateSourceFolder =
 				((IResource) getElement()).getPersistentProperty(
-					new QualifiedName("", OWNER_PROPERTY));
-			ownerText.setText((owner != null) ? owner : DEFAULT_OWNER);
+					new QualifiedName("", TEMPLATE_SOURCE_PROPERTY));
+			templateSourceText.setText((templateSourceFolder != null) ? templateSourceFolder : DEFAULT_TEMPLATE_SOURCE);
 		} catch (CoreException e) {
-			ownerText.setText(DEFAULT_OWNER);
+			templateSourceText.setText(DEFAULT_TEMPLATE_SOURCE);
 		}
 	}
 
-	/**
-	 * @see PreferencePage#createContents(Composite)
-	 */
 	protected Control createContents(Composite parent) {
 		Composite composite = new Composite(parent, SWT.NONE);
 		GridLayout layout = new GridLayout();
@@ -126,7 +114,6 @@ public class JamonProjectPropertyPage extends PropertyPage {
 	}
 	
 	public boolean performOk() {
-		// store the value in the owner text field
 		try {
 			if (isJamonProjectCheckbox.getSelection()) {
 				JamonNature.addToProject(getJavaProject().getProject());
