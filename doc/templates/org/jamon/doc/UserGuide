@@ -1,14 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<!--    $Id$ -->
-<html>
-  <head>
-    <title>Jamon User's Guide</title>
-    <link rel="StyleSheet" href="base.css" type="text/css" media="screen" />
-  </head>
-
-  <body>
-    <h1>Jamon User's Guide</h1>
-
+<&| _Base; title => "Jamon User's Guide" &>
     <h2>Invoking templates from Java</h2>
 
     <ol>
@@ -35,20 +25,19 @@
     Suppose the template in
     <code>templates/org/modusponens/templates/Foo</code> contains
 
-    <pre class="template">
-&lt;%args&gt;
+    <pre class="template"><&| /org/jamon/escape/Html &><%LITERAL>
+<%args>
   int count;
   String name => "Somebody";
   String greeting;
-&lt;/%args&gt;
-&lt;html&gt;
-  &lt;body&gt;
-%   for (int i = 1; i &lt;= count; ++i) {
-    &lt;% i %&gt;. &lt;% greeting %&gt; &lt;% name %&gt; &lt;br /&gt;
+</%args>
+<html>
+  <body>
+%   for (int i = 1; i <= count; ++i) {
+    <% i %>. <% greeting %> <% name %> <br />
 %   }
-  &lt;/body&gt;
-&lt;/html&gt;
-</pre>
+  </body>
+</html></%LITERAL></&></pre>
     This can be processed into a Java interface with the
     Jamon <code>TemplateProcessor</code> class, e.g.
   <pre class="tty">
@@ -83,32 +72,33 @@ import org.jamon.TemplateManager;
       in the <code>gensrc</code> directory in the compilation command.
     <p>
       Execution of the above code snippet produces the output
-    <pre class="tty">
-&lt;html&gt;
-  &lt;body&gt;
-    1. Hello Duke &amp;amp; Co.&lt;br /&gt;
-    2. Hello Duke &amp;amp; Co.&lt;br /&gt;
-    3. Hello Duke &amp;amp; Co.&lt;br /&gt;
-  &lt;/body&gt;
-&lt;/html&gt;
-</pre>
+    <pre class="tty"><&| /org/jamon/escape/Html &>
+<html>
+  <body>
+    1. Hello Duke &amp; Co.<br />
+    2. Hello Duke &amp; Co.<br />
+    3. Hello Duke &amp; Co.<br />
+  </body>
+</html></&></pre>
 
 <h3>Changing the default escaping mechanism</h3>
-Suppose the we wanted to include some text for inclusion in an email.  Since we are 
-producing plain text (and not HTML) we want a different default escaping mechanism.
-For example
-    <pre class="template">
-&lt;%args&gt;
+
+Suppose the we wanted to include some text for inclusion in an
+email.  Since we are producing plain text (and not HTML) we want a
+different default escaping mechanism.  For example
+
+    <pre class="template"><&| /org/jamon/escape/Html &><%LITERAL>
+<%args>
   int count;
   String name => "Somebody";
   String greeting;
-&lt;/%args&gt;
+</%args>
     Many Greetings
     ==============
-%   for (int i = 1; i &lt;= count; ++i) {
-    &lt;% i %&gt;. &lt;% greeting %&gt; &lt;% name %&gt;
+%   for (int i = 1; i <= count; ++i) {
+    <% i %>. <% greeting %> <% name %>
 %   }
- </pre>
+</%LITERAL></&></pre>
 Could be called from Java as follows
         <pre class="code">
 import org.modusponens.templates.Foo;
@@ -137,8 +127,13 @@ import org.jamon.TemplateManager;
     2. Hello Duke &amp; Co.
     3. Hello Duke &amp; Co.
 </pre>
-The available escaping mechanisms are: <code>Escaping.NONE</code>, <code>Escaping.HTML</code>, 
-<code>Escaping.STRICT_HTML</code>, <code>Escaping.URL</code> and <code>Escaping.XML</code>.
-See the <a href="reference.html">template reference manual</a> for further details.
-  </body>
-</html>
+
+The available escaping mechanisms are:
+<code>Escaping.NONE</code>, <code>Escaping.HTML</code>,
+<code>Escaping.STRICT_HTML</code>, <code>Escaping.URL</code>
+and <code>Escaping.XML</code>.
+
+See the <a href="Reference.html">template reference manual</a> for
+further details.
+
+</&>

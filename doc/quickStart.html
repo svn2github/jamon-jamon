@@ -45,23 +45,35 @@ The arguments are:
 </pre>
 
 Set your classpath:
-<pre class="tty">
+<table width="100%">
+  <tr>
+    <td>Unix</td>
+    <td><pre class="tty">
 % export CLASSPATH=.:/path/to/jamon.jar
-</pre>
+</pre></td></tr>
+<tr><td>Windows</td><td><pre class="tty">
+C:\JAMONTMP>SET CLASSPATH=.;\path\to\jamon.jar
+</pre></td></tr></table>
 
-Process the template
+Process the template:
 <pre class="tty">
 % java org.jamon.TemplateProcessor --destDir=. --all QsTemp
+</pre><pre class="tty">
+C:\JAMONTMP>java org.jamon.TemplateProcessor --destDir=. --all QsTemp
 </pre>
 
 Compile everything:
 <pre class="tty">
 % javac JamonQs.java QsTemp*.java
+</pre><pre class="tty">
+C:\JAMONTMP>javac JamonQs.java QsTemp*.java
 </pre>
 
 Run it:
 <pre class="tty">
 % java JamonQs one two three
+</pre><pre class="tty">
+C:\JAMONTMP>java JamonQs one two three
 </pre>
 
 You should see:

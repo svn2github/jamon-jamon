@@ -1,14 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<!--    $Id$ -->
-<html>
-  <head>
-    <title>Jamon Template Reference Manual</title>
-    <link rel="StyleSheet" href="base.css" type="text/css" media="screen" />
-  </head>
-
-  <body>
-    <h1>Jamon Template Reference Manual</h1>
-
+<&| _Base; title => "Jamon Template Reference Manual" &>
     <ol>
 
       <li><span class="concept">Static content</span>
@@ -20,36 +10,35 @@
 
         The value of a java expression can be emitted by enclosing the
         expression in <code>&lt;%...%&gt;</code> pairs, e.g.
-        <pre class="template">
-&lt;% person.getFirstName().substring(0,10) %&gt;
-</pre>
+        <&| _template &><%LITERAL>
+<% person.getFirstName().substring(0,10) %>
+</%LITERAL></&>
 
         <p>
           Arbitrary Java code can be inserted into the template using
           <code>&lt;%java&gt;...&lt;/%java&gt;</code>, e.g.
-        <pre class="template">
-&lt;%java&gt;
+        <&| _template &><%LITERAL>
+<%java>
   while (iter.hasNext()) {
     Person p = (Person) iter.next();
     if (p.getLastName().startsWith("S")) {
-&lt;/%java&gt;
-      &lt;% p.getLastName() %&gt;'s last name doesn't start with 'X'.
-&lt;%java&gt;
+</%java>
+      <% p.getLastName() %>'s last name doesn't start with 'X'.
+<%java>
     }
   }
-&lt;/%java&gt;
-</pre>
+</%java></%LITERAL></&>
         Alternatively, any line beginning with '<code>%</code>' also is
         assumed to contain valid Java code. The previous example could
         be equivalently (and perhaps more clearly) written as
-        <pre class="template">
+        <&| _template &><%LITERAL>
 %  while (iter.hasNext()) {
 %    Person p = (Person) iter.next();
 %    if (p.getLastName().startsWith("S")) {
-      &lt;% p.getLastName() %&gt;'s last name doesn't start with 'X'.
+      <% p.getLastName() %>'s last name doesn't start with 'X'.
 %    }
 %  }
-</pre>
+</%LITERAL></&>
     <p>
 
       The kinds of Java code that can appear in an escape is fairly
@@ -61,29 +50,31 @@
       Before a Java expression is emitted, the string that represents it
       is <em>escaped</em>.  The default escaping mechanism is HTML, so for
       example the following template
-<pre class="template">
-this &lt;% "&" %&gt; that
-</pre>
+<&| _template &><%LITERAL>this <% "&" %> that</%LITERAL></&>
       produces
 <pre class="tty">
 this &amp;amp; that
 </pre>
-      However different escaping mechanisms can be specified in the template itself.
-      A string can be emitted with no escaping as follows:
-<pre class="template">
-this &lt;% "&" #n %&gt; that
-</pre>
+      However different escaping mechanisms can be specified in the
+      template itself.  A string can be emitted with no escaping as
+      follows:
+<&| _template &><%LITERAL>this <% "&" #n %> that</%LITERAL></&>
       producing
 <pre class="tty">
 this &amp; that
 </pre>
      The available escaping mechanism are
      <ul>
-       <li>HTML (use <code>#h</code> in the emit block) -- produces output suitable for 
-         inclusion in the body of HTML elements</li>
-       <li>Strict HTML (use <code>#H</code> in the emit block) -- produces output suitable
-         for use as an HTML attribute value (it is similar to HTML escaping but also escapes
-         quotes and apostrophes)</li>
+       <li>
+         HTML (use <code>#h</code> in the emit block) -- produces
+         output suitable for inclusion in the body of HTML elements
+       </li>
+       <li>
+         Strict HTML (use <code>#H</code> in the emit block) --
+         produces output suitable for use as an HTML attribute value
+         (it is similar to HTML escaping but also escapes quotes and
+         apostrophes)
+       </li>
        <li>XML (use <code>#x</code> in the emit block)</li>
        <li>URL (use <code>#u</code> in the emit block)</li>
        <li>None (use <code>#n</code> in the emit block)</li>
@@ -91,10 +82,10 @@ this &amp; that
 
    <p>
 
-     In addition the <em>default</em> escaping mechanism can also be changed, however this is 
-     done from outside the template, see the Jamon <a href="userguide.html">user's guide</a>
-     for further details.
-      
+     In addition the <em>default</em> escaping mechanism can also be
+     changed, however this is done from outside the template, see the
+     Jamon <a href="UserGuide.html">user's guide</a> for further
+     details.
 
     <li><span class="concept">Comments</span>
 
@@ -110,24 +101,23 @@ this &amp; that
       ('<code>;</code>').
       <p>
       For example:
-      <pre class="template">
-&lt;%import&gt;
+      <&| _template &><%LITERAL>
+<%import>
   java.util.Iterator;
   org.modusponens.myapp.data.*;
-&lt;/%import&gt;
-</pre>
+</%import></%LITERAL></&>
 
     <li><span class="concept">Class code</span> Any code to be
       included in the generated class should be placed inside a
       <code>&lt;%class&gt;</code> block.
       <p>
       For example:
-      <pre class="template">
-&lt;%class&gt;
+      <&| _template &><%LITERAL>
+<%class>
   static int pageViews = 1;
-&lt;/%class&gt;
-This component has been accessed &lt;% pageViews++ %&gt; times.
-</pre>
+</%class>
+This component has been accessed <% pageViews++ %> times.
+</%LITERAL></&>
 
     <li><span class="concept">Arguments</span>
 
@@ -146,25 +136,25 @@ This component has been accessed &lt;% pageViews++ %&gt; times.
 
     <p>
       For example:
-      <pre class="template">
-&lt;%args&gt;
+      <&| _template &><%LITERAL>
+<%args>
   String[] nicknames => new String[0];
   Address address;
   java.util.Iterator friends;
-&lt;/%args&gt;
+</%args>
 Your nicknames are
-&lt;ul&gt;
-% for (int i = 0; i &lt; nicknames.length; ++i) {
-    &lt;li&gt; &lt;% nicknames[i] %&gt;
+<ul>
+% for (int i = 0; i < nicknames.length; ++i) {
+    <li> <% nicknames[i] %>
 % }
-&lt;/ul&gt;
+</ul>
 % while (friends.hasNext()) {
 %   Person p = (Person) friends.next();
 %   if (p.getAddress().getPostalCode().equals(address.getPostalCode())) {
-      Hey, guess what? &lt;% p.getName() %&gt; lives close by!
+      Hey, guess what? <% p.getName() %> lives close by!
 %   }
 % }
-</pre>
+</%LITERAL></&>
     Note that for this template to compile, the <code>Address</code>
     class would need to appear in an <code>&lt;%import&gt;</code>
     block.
@@ -188,61 +178,61 @@ Your nicknames are
           construct.
         <p>
           For example:
-        <pre class="template">
-&lt;%def _row&gt;
-  &lt;%args&gt;
+        <&| _template &><%LITERAL>
+<%def _row>
+  <%args>
     String name;
     int age;
-  &lt;/%args&gt;
-  &lt;tr&gt;
-    &lt;td align="left"&gt;&lt;% name %&gt;&lt;/td&gt;
-    &lt;td&gt;&nbsp;&lt;/td&gt;
-    &lt;td align="center"
-%     if (age &lt; 18) {
+  </%args>
+  <tr>
+    <td align="left"><% name %></td>
+    <td>&nbsp;</td>
+    <td align="center"
+%     if (age < 18) {
         bgcolor="red"
 %     }
-    &gt;
-      &lt;% age %&gt;
-    &lt;/td&gt;
-  &lt;/tr&gt;
-&lt;/%def&gt;
+    >
+      <% age %>
+    </td>
+  </tr>
+</%def>
 
-&lt;table&gt;
-  &lt;&amp; _row; name =&gt; "Mickey"; age =&gt; 46 &amp;&gt;
-  &lt;&amp; _row; name =&gt; "Junior"; age =&gt; 8 &amp;&gt;
-  &lt;&amp; _row; name =&gt; "Minnie"; age =&gt; 25 &amp;&gt;
-&lt;/table&gt;
-</pre>
+<table>
+  <& _row; name => "Mickey"; age => 46 &>
+  <& _row; name => "Junior"; age => 8 &>
+  <& _row; name => "Minnie"; age => 25 &>
+</table>
+</%LITERAL></&>
         produces
-        <pre class="tty">
-&lt;table&gt;
-  &lt;tr&gt;
-    &lt;td align="left"&gt;Mickey&lt;/td&gt;
-    &lt;td&gt;&amp;nbsp;&lt;/td&gt;
-    &lt;td align="center"
-    &gt;
+        <pre class="tty"><&| /org/jamon/escape/Html &><%LITERAL>
+<table>
+  <tr>
+    <td align="left">Mickey</td>
+    <td>&nbsp;</td>
+    <td align="center"
+    >
       46
-    &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-    &lt;td align="left"&gt;Junior&lt;/td&gt;
-    &lt;td&gt;&amp;nbsp;&lt;/td&gt;
-    &lt;td align="center"
+    </td>
+  </tr>
+  <tr>
+    <td align="left">Junior</td>
+    <td>&nbsp;</td>
+    <td align="center"
         bgcolor="red"
-    &gt;
+    >
       8
-    &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-    &lt;td align="left"&gt;Minnie&lt;/td&gt;
-    &lt;td&gt;&amp;nbsp;&lt;/td&gt;
-    &lt;td align="center"
-    &gt;
+    </td>
+  </tr>
+  <tr>
+    <td align="left">Minnie</td>
+    <td>&nbsp;</td>
+    <td align="center"
+    >
       25
-    &lt;/td&gt;
-  &lt;/tr&gt;
-&lt;/table&gt;
-</pre>
+    </td>
+  </tr>
+</table>
+</%LITERAL></&></pre>
         <p>
           Defs can invoke other defs in the same template, and can be
           directly or indirectly recursive. Arguments to defs can be
@@ -254,27 +244,27 @@ Your nicknames are
         It is also possible to invoke other templates from within a
         template. Instead of supplying the def name, simply supply the
         path to the template, e.g. in <code>/img/spacer</code>:
-        <pre class="template">
-&lt;%args&gt;
-  int width =&gt; 1;
-  int height =&gt; 1;
-&lt;/%args&gt;
-&lt;img src="transparentpixel.gif"
-     width="&lt;% width %&gt;"
-     height="&lt;% height %&gt;"
-     border="0"&gt;
-</pre>
+        <&| _template &><%LITERAL>
+<%args>
+  int width => 1;
+  int height => 1;
+</%args>
+<img src="transparentpixel.gif"
+     width="<% width %>"
+     height="<% height %>"
+     border="0">
+</%LITERAL></&>
         This can be invoked from other templates like
-        <pre class="template">
-&lt;table&gt;
-  &lt;tr&gt;
-    &lt;td align="left"&gt;Name&lt;/td&gt;
-    &lt;td&gt;&lt;& /img/spacer; width =&gt; 12 &&gt;&lt;/td&gt;
-    &lt;td&gt;Age&lt;/td&gt;
-  &lt;/tr&gt;
+        <&| _template &><%LITERAL>
+<table>
+  <tr>
+    <td align="left">Name</td>
+    <td><& /img/spacer; width => 12 &></td>
+    <td>Age</td>
+  </tr>
   ...
-&lt;/table&gt;
-</pre>
+</table>
+</%LITERAL></&>
 
     <li><span class="concept">Fragment arguments</span>
 
@@ -298,86 +288,97 @@ Your nicknames are
           the name of the fragment argument as the target
         <p>
           Putting this all together, the template
-        <pre class="template">
-&lt;%def _lilink&gt;
-  &lt;%farg content&gt;
-  &lt;/%farg&gt;
-  &lt;%args&gt;
+        <&| _template &><%LITERAL>
+<%def _lilink>
+  <%farg content>
+  </%farg>
+  <%args>
     String href;
-  &lt;/%args&gt;
-  &lt;li&gt;&lt;a href="&lt;% href %&gt;"&gt;&lt;&amp; content &amp;&gt;&lt;/a&gt;&lt;/li&gt;
-&lt;/%def&gt;
+  </%args>
+  <li><a href="<% href %>"><& content &></a></li>
+</%def>
 
-&lt;%def _big&gt;
-  &lt;%farg stuff&gt;
-  &lt;/%farg&gt;
-&lt;font size="+4"&gt;&lt;&amp; stuff &amp;&gt;&lt;/font&gt;
-&lt;/%def&gt;
+<%def _big>
+  <%farg stuff>
+  </%farg>
+<font size="+4"><& stuff &></font>
+</%def>
 
-&lt;ul&gt;
-  &lt;&amp;| _lilink; href =&gt; "index.html" &amp;&gt;Home&lt;/&amp;&gt;
-  &lt;&amp;| _lilink; href =&gt; "faq.html" &amp;&gt;&lt;b&gt;FAQ&lt;/b&gt;&lt;/&amp;&gt;
-  &lt;&amp;| _lilink; href =&gt; "toc.html" &amp;&gt;&lt;&amp; _big &amp;&gt;Table of contents&lt;/&amp;&gt;
-&lt;/ul&gt;
-</pre>
+<ul>
+  <&| _lilink; href => "index.html" &>Home</&>
+  <&| _lilink; href => "faq.html" &><b>FAQ</b></&>
+  <&| _lilink; href => "toc.html" &><& _big &>Table of contents</&>
+</ul>
+</%LITERAL></&>
         produces
-        <pre class="tty">
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href="index.html"&gt;Home&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href="faq.html"&gt;&lt;b&gt;FAQ&lt;/b&gt;&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href="toc.html"&gt;&lt;font size="+5"&gt;Table of contents&lt;/font&gt;&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</pre>
+        <pre class="tty"><&| /org/jamon/escape/Html &>
+<ul>
+  <li><a href="index.html">Home</a></li>
+  <li><a href="faq.html"><b>FAQ</b></a></li>
+  <li><a href="toc.html"><font size="+5">Table of contents</font></a></li>
+</ul>
+</&></pre>
 
     <li><span class="concept">Parametrized fragment arguments</span>
-      Template fragments can themselves take arguments.  The invocation syntax is similar
-      to a regular template fragment with the addition of an
-      <code>&lt;%args&gt;</code>...<code>&lt;/%args&gt;</code> inside the fragment.
-      <p>
-      To pass a parameterized template fragment to a <code>def</code> (or another template)
-      the fragment and its parameters must be declared via a <code>&lt;%farg
-      <i>name</i>&gt;</code> <i>parameters</i> <code>&lt;/%farg&gt;</code>, where
-      each parameter is a type followed by an identifier. Thus a <code>&lt;%farg
-      <i>name</i>&gt;</code>...<code>&lt;/%farg&gt;</code> is similar to a
-      <code>&lt;%args&gt;</code>...<code>&lt;/%args&gt;</code> except it has a name
-      and its parameters cannot have default values.  Inside the <code>def</code>
-      (or template) the parameterized fragment is invoked exactly like a call
-      to a <code>def</code> whose name is the name of the fragment.
-      <p>
-      For example <pre class="template">
-&lt;%def _list&gt;
-  &lt;%farg display&gt;
-    float temperature;
-  &lt;/%farg&gt;
-  &lt;%args&gt;
-    float[] temps;
-  &lt;/%args&gt;
-&lt;ul&gt;
-% for (int i = 0; i < temps.length; i++) {
-  &lt;li&gt;&lt;&amp; display; temperature =&gt; temps[i] &amp;&gt;
-% }
-&lt;/ul&gt;
-&lt;/%def&gt;
 
-&lt;&amp;| _list; temps =&gt; new float[] { -13.0, 34.0 }  &amp;&gt;
-  &lt;%args&gt;
+      Template fragments can themselves take arguments.  The
+      invocation syntax is similar to a regular template fragment with
+      the addition of an
+      <code>&lt;%args&gt;</code>...<code>&lt;/%args&gt;</code> inside
+      the fragment.
+      <p>
+      To pass a parameterized template fragment to a <code>def</code>
+      (or another template) the fragment and its parameters must be
+      declared via a <code>&lt;%farg
+      <i>name</i>&gt;</code> <i>parameters</i> <code>&lt;/%farg&gt;</code>,
+      where each parameter is a type followed by an identifier. Thus
+      a <code>&lt;%farg
+      <i>name</i>&gt;</code>...<code>&lt;/%farg&gt;</code> is similar
+      to a
+      <code>&lt;%args&gt;</code>...<code>&lt;/%args&gt;</code> except
+      it has a name and its parameters cannot have default values.
+      Inside the <code>def</code> (or template) the parameterized
+      fragment is invoked exactly like a call to a <code>def</code>
+      whose name is the name of the fragment.
+
+      <p>
+      For example <&| _template &><%LITERAL>
+<%def _list>
+  <%farg display>
     float temperature;
-  &lt;/%args&gt;
+  </%farg>
+  <%args>
+    float[] temps;
+  </%args>
+<ul>
+% for (int i = 0; i < temps.length; i++) {
+  <li><& display; temperature => temps[i] &>
+% }
+</ul>
+</%def>
+
+<&| _list; temps => new float[] { -13.0, 34.0 }  &>
+  <%args>
+    float temperature;
+  </%args>
 % if (temperature > 0.0) {
   water at <% temperature %> degrees
 % } else {
-  &lt;b&gt;ice&lt;/b&gt;
+  <b>ice</b>
 % }
-&lt;/&amp;&gt;
-</pre>
-produces <pre class="tty">
-&lt;ul&gt;
-  &lt;li&gt;&lt;b&gt;ice&lt;/b&gt;
-  &lt;li&gt;water at 34.0 degrees
-&lt;/ul&gt;
-</pre>
+</&>
+</%LITERAL></&>
+produces <pre class="tty"><&| /org/jamon/escape/Html &>
+<ul>
+  <li><b>ice</b>
+  <li>water at 34.0 degrees
+</ul>
+</&></pre>
 (in fact it produces the above with some extra whitsepace).
 
   </ol>
-  </body>
-</html>
+</&>
+
+<%def _template><%farg content></%farg>
+<pre class="template"><&| /org/jamon/escape/Html &><& content &></&></pre>
+</%def>

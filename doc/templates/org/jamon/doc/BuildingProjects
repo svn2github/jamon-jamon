@@ -1,0 +1,63 @@
+<&| _Base; title => "Integrating Jamon into projects" &>
+    <h3>Overview</h3>
+
+    <p>
+      Within a Java program, each Jamon template is represented as an
+      instance of a class specific to that template. In order for your
+      program to compile, Jamon templates need to be translated into
+      Java source classes, and those generated Java sources need to be
+      included in the build of your project.
+    </p>
+
+    <h4>Assumptions</h4>
+    <ul>
+      <li>Java source files are located in the directory '<code>src</code>'
+      under your main project directory
+      <li>Jamon templates are located in the directory
+      tree named '<code>templates</code>'
+      <li>generated classes are generated into
+      '<code>classes</code>'
+      <li>Java source files corresponding to Jamon
+      templates will be generated into the directory
+      '<code>tempsrc</code>'.
+    </ul>
+
+    <h3>Building with Ant</h3>
+
+      First, ensure you have the Jamon task properly defined, which
+      could be accomplished by including the following in the
+      <code>build.xml</code> file:
+
+<pre class="webxml"><&| /org/jamon/escape/Html &>
+  <property name="java.lib.jamon" value="/path/to/jamon.jar" />
+  <taskdef name="jamon"
+           classname="org.jamon.ant.JamonTask"
+           classpath="${java.lib.jamon}" />
+</&></pre>
+
+To generate the Java sources, include the following target:
+
+<pre class="webxml"><&| /org/jamon/escape/Html &>
+  <target name="templates">
+    <mkdir dir="tempsrc" />
+    <jamon destdir="tempsrc" generateImpls="true">
+      <src path="templates"/>
+    </jamon>
+  </target></&></pre>
+
+To compile the project:
+
+<pre class="webxml"><&| /org/jamon/escape/Html &>
+  <target name="compile"  depends="templates">
+    <javac destdir="classes" classpath="${java.lib.jamon}" >
+      <src path="src"/>
+      <src path="tempsrc"/>
+    </javac>
+  </target>
+</&></pre>
+
+    <h3>Building with Make</h3>
+
+    TBD
+
+</&>
