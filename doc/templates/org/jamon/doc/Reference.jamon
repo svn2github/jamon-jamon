@@ -38,6 +38,7 @@
       <li><% "<%method ...>" %> and <% "</%method>" %></li>
       <li><% "<%override ...>" %> and <% "</%override>" %></li>
       <li><% "</%alias>" %></li>
+      <li><% "<%encoding ...>" %></li>
     </ul>
 
     If you would like to force whitespace to appear after one of the
