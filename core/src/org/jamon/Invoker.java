@@ -20,7 +20,6 @@
 
 package org.jamon;
 
-import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.Iterator;
@@ -29,6 +28,7 @@ import java.util.HashMap;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 
 public class Invoker
 {
@@ -77,21 +77,24 @@ public class Invoker
                  new Object[] { new OutputStreamWriter(System.out) });
 
         }
-        catch (Error e)
+        catch (ClassNotFoundException e)
         {
-            throw e;
+            throw new InvalidTemplateException(args[0]);
         }
-        catch (RuntimeException e)
+        catch (IllegalAccessException e)
         {
-            throw e;
+            throw new InvalidTemplateException(args[0]);
         }
-        catch (UsageException e)
+        catch (InvocationTargetException e)
         {
-            throw e;
+            throw new InvalidTemplateException(args[0]);
         }
-        catch (Exception e)
+        catch (NoSuchMethodException e)
         {
-            e.printStackTrace();
+            throw new InvalidTemplateException(args[0]);
+        }
+        catch (InstantiationException e)
+        {
             throw new InvalidTemplateException(args[0]);
         }
     }
@@ -154,19 +157,23 @@ public class Invoker
                     .newInstance(new Object[] { p_string });
             }
         }
-        catch (Error e)
-        {
-            throw e;
-        }
         catch (NumberFormatException e)
         {
             throw new TemplateArgumentException();
         }
-        catch (RuntimeException e)
+        catch (NoSuchMethodException e)
         {
-            throw e;
+            throw new TemplateArgumentException();
         }
-        catch (Exception e)
+        catch (InvocationTargetException e)
+        {
+            throw new TemplateArgumentException();
+        }
+        catch (InstantiationException e)
+        {
+            throw new TemplateArgumentException();
+        }
+        catch (IllegalAccessException e)
         {
             throw new TemplateArgumentException();
         }
@@ -207,23 +214,18 @@ public class Invoker
             setMethod.invoke(m_template,
                              new Object[] { parse(paramTypes[0], p_value) });
         }
-        catch (Error e)
+        catch (IllegalAccessException e)
         {
-            throw e;
+            throw new TemplateArgumentException();
         }
-        catch (RuntimeException e)
+        catch (InvocationTargetException e)
         {
-            throw e;
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
             throw new TemplateArgumentException();
         }
     }
 
     void renderTemplate()
-        throws IOException, ClassNotFoundException
+        throws InvalidTemplateException
     {
         try
         {
@@ -234,8 +236,9 @@ public class Invoker
 
             for (int i = 0; i < requiredArgNames.length; ++i)
             {
-                actuals[i] = parse(paramTypes[i],
-                                   (String) m_argMap.remove(requiredArgNames[i]));
+                actuals[i] =
+                    parse(paramTypes[i],
+                          (String) m_argMap.remove(requiredArgNames[i]));
             }
             for (Iterator i = m_argMap.keySet().iterator(); i.hasNext(); /* */)
             {
@@ -244,19 +247,19 @@ public class Invoker
             }
             m_renderMethod.invoke(m_template, actuals);
         }
-        catch (Error e)
-        {
-            throw e;
-        }
-        catch (RuntimeException e)
-        {
-            throw e;
-        }
         catch (TemplateArgumentException e)
         {
             displayError("supplied arguments are not valid");
         }
-        catch (Exception e)
+        catch (NoSuchFieldException e)
+        {
+            throw new InvalidTemplateException(m_templateClass.getName());
+        }
+        catch (IllegalAccessException e)
+        {
+            displayError("Unable to render template");
+        }
+        catch (InvocationTargetException e)
         {
             displayError("Unable to render template");
         }
