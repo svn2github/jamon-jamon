@@ -116,7 +116,7 @@ the documentation thus taking care of issues such as escaping.
     </invoker>
   </target>
 
-  <target name="tutorial" depends="init" >
+  <target name="tutorial" depends="init" description="Tutorial docs">
     <property name="build.sysclasspath" value="last" />
     <property name="tutorial.src" value="sample/tutorial/src" />
     <property name="tutorial.jamon" value="sample/tutorial/templates" />
