@@ -130,7 +130,11 @@ public class InterfaceGenerator extends BaseGenerator
         {
             println();
             String name = (String) i.next();
-            print("  public void set");
+            print("  public ");
+            print(getPackageName());
+            print(".");
+            print(getClassName());
+            print(" set");
             print(capitalize(name));
             print("(");
             print(getArgType(MAIN_UNIT_NAME,name));

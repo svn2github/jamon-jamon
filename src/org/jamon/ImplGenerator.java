@@ -346,7 +346,9 @@ public class ImplGenerator extends BaseGenerator
         {
             println();
             String name = (String) i.next();
-            print("  public void set");
+            print("  public ");
+            print(getInterfaceClassName());
+            print(" set");
             print(capitalize(name));
             print("(");
             String type = getArgType(MAIN_UNIT_NAME,name);
@@ -360,6 +362,7 @@ public class ImplGenerator extends BaseGenerator
             print(" = p_");
             print(name);
             println(";");
+            println("    return this;");
             println("  }");
             println();
             print("  private ");
