@@ -24,6 +24,7 @@ import java.io.File;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
+import org.apache.tools.ant.Location;
 
 import org.apache.tools.ant.types.Path;
 
@@ -150,8 +151,10 @@ public class JamonTask
         }
         catch (JamonParseException e)
         {
-            System.err.println(e.getStandardMessage());
-            throw new BuildException(e);
+            throw new BuildException(e.getDescription(),
+                                     new Location(e.getFileName(),
+                                                  e.getLine(),
+                                                  e.getColumn()));
         }
         catch (Exception e)
         {
