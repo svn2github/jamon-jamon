@@ -50,7 +50,7 @@ public class BracketingPrinter
             result.append(m_start);
             for (Iterator i = p_list.iterator(); i.hasNext(); )
             {
-                result.append(((Token)i.next()).getValue());
+                result.append(((LineToken)i.next()).getValue());
             }
             result.append(m_end);
             return result.toString();

@@ -21,7 +21,6 @@
 package org.jamon.doc.diff;
 
 public class LineToken
-    implements Token
 {
 
     public LineToken(String p_line)

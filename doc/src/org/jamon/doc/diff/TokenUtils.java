@@ -30,44 +30,7 @@ import java.io.IOException;
 public class TokenUtils
 {
 
-    public static Token[] fineTokenize(String p_text)
-    {
-        char[] chars = p_text.toCharArray();
-        StringBuffer whitespace = new StringBuffer();
-        boolean haveNewline = true; // so we classify initial whitespace as a StringToken
-        List tokenList = new LinkedList();
-        for (int i = 0; i < chars.length; i++)
-        {
-            char c = chars[i];
-            if (Character.isWhitespace(c))
-            {
-                whitespace.append(c);
-                haveNewline |= (c == '\n');
-            }
-            else
-            {
-                if (haveNewline)
-                {
-                    tokenList.add(new StringToken(whitespace.toString()));
-                    haveNewline = false;
-                }
-                else
-                {
-                    for (int j = 0; j < whitespace.length(); j++)
-                    {
-                        tokenList.add(new CharacterToken(whitespace.charAt(j)));
-                    }
-                }
-                whitespace = new StringBuffer();
-                tokenList.add(new CharacterToken(c));
-            }
-        }
-        tokenList.add(new StringToken(whitespace.toString()));
-        return (Token[]) tokenList.toArray(new Token[0]);
-    }
-
-
-    public static Token[] coarseTokenize(String p_text)
+    public static LineToken[] coarseTokenize(String p_text)
     {
         BufferedReader reader = new BufferedReader(new StringReader(p_text));
         List tokenList = new LinkedList();
@@ -84,7 +47,7 @@ public class TokenUtils
             // This can't actually happen
             throw new RuntimeException("readLine threw an exception on a buffered StringReader");
         }
-        return (Token[]) tokenList.toArray(new Token[0]);
+        return (LineToken[]) tokenList.toArray(new LineToken[0]);
     }
 
 }
