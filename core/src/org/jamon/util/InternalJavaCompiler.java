@@ -81,14 +81,20 @@ public class InternalJavaCompiler
         }
         catch (IllegalAccessException e)
         {
+            // this should never happen, since we checked for this
+            //   in the constructor
             throw new JamonRuntimeException(e);
         }
         catch (InstantiationException e)
         {
+            // this should never happen, since we checked for this
+            //   in the constructor
             throw new JamonRuntimeException(e);
         }
         catch (InvocationTargetException e)
         {
+            // internal compiler error, so the compiler object
+            //   is not usable
             m_compiler = null;
             throw new JamonException(e.getTargetException());
         }
