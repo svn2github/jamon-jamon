@@ -125,7 +125,7 @@ import org.jamon.TemplateManager;
          new StandardTemplateManager(...);
        Writer writer = new OutputStreamWriter(System.out);
        new Foo(templateManager)
-         <b>.escaping(Escaping.NONE)</b>
+         <b>.escapeWith(Escaping.NONE)</b>
          .setName("Duke & Co.")
          .render(writer, 3, "Hello");
 </pre>
