@@ -395,7 +395,10 @@ produces <pre class="tty">
     This can be processed into a Java interface with the
     Jamon <code>TemplateProcessor</code> class, e.g.
   <pre class="tty">
-java org.jamon.TemplateProcessor --destDir=./gensrc --sourceDir=templates templates/org/modusponens/templates/Foo
+java org.jamon.TemplateProcessor \
+     --destDir=./gensrc \
+     --sourceDir=templates \
+     templates/org/modusponens/templates/Foo
 </pre>
 which will place the generated Java source file(s) into the
 <code>gensrc</code> directory.
