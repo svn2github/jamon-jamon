@@ -162,17 +162,10 @@ public class TemplateUnit
     {
         return m_inheritedArgs == null
             ? new SequentialIterator(getDeclaredRequiredArgs(),
-                                     getDeclaredOptionalArgs(),
-                                     getDeclaredFragmentArgs())
+                                     getDeclaredOptionalArgs())
             : new SequentialIterator(m_inheritedArgs.getVisibleArgs(),
                                      getDeclaredRequiredArgs(),
-                                     getDeclaredOptionalArgs(),
-                                     getDeclaredFragmentArgs());
-    }
-
-    public Iterator getDeclaredRequiredArgs()
-    {
-        return m_declaredRequiredArgs.iterator();
+                                     getDeclaredOptionalArgs());
     }
 
     public Iterator getDeclaredOptionalArgs()
@@ -359,13 +352,37 @@ public class TemplateUnit
                   && m_parentDescription.getFragmentInterfaces().isEmpty());
     }
 
+    private Iterator getParentRequiredArgs()
+    {
+        return new SequentialIterator
+            (m_parentDescription.getRequiredArgs().iterator(),
+             m_parentDescription.getFragmentInterfaces().iterator());
+    }
+
     public void printParentRequiredArgs(IndentingWriter p_writer)
     {
-        printArgs(p_writer,
-                  new SequentialIterator
-                      (m_parentDescription.getRequiredArgs().iterator(),
-                       m_parentDescription.getFragmentInterfaces().iterator())
-                      );
+        printArgs(p_writer, getParentRequiredArgs());
+    }
+
+    public void printParentRequiredArgsDecl(IndentingWriter p_writer)
+    {
+        printArgsDecl(p_writer, getParentRequiredArgs());
+    }
+
+    public Iterator getDeclaredRequiredArgs()
+    {
+        return new SequentialIterator(m_declaredRequiredArgs.iterator(),
+                                      m_declaredFragmentArgs.iterator());
+    }
+
+    public void printDeclaredRequiredArgs(IndentingWriter p_writer)
+    {
+        printArgs(p_writer, getDeclaredRequiredArgs());
+    }
+
+    public void printDeclaredRequiredArgsDecl(IndentingWriter p_writer)
+    {
+        printArgsDecl(p_writer, getDeclaredRequiredArgs());
     }
 
     protected void generateInterfaceSummary(StringBuffer p_buf)
