@@ -25,32 +25,26 @@
   <target name="test"
           depends="jar"
           description="Run tests">
-    <ant dir="core" target="test"/>
     <ant dir="integration" target="test">
       <property name="org.jamon.integration.usejar" value="true" />
     </ant>
-    <ant dir="stdlib" target="test"/>
-  </target>
-
-  <target name="core" description="Build the core template engine">
-    <ant dir="core" target="compile"/>
-  </target>
-
-  <target name="compile" description="Build every project">
-    <ant dir="core" target="compile"/>
-    <ant dir="anttask" target="compile"/>
-    <ant dir="stdlib" target="compile"/>
   </target>
 
   <target name="jar"
           description="Creates a uber JAR"
-          depends="compile">
+          depends="base">
     <jar jarfile="${jarfile}"
          manifest="manifest" >
       <fileset dir="core/build/classes" />
       <fileset dir="stdlib/build/classes" />
       <fileset dir="anttask/build/classes" />
     </jar>
+  </target>
+
+  <target name="base" description="Build and test subprojects">
+    <ant dir="core" target="test"/>
+    <ant dir="anttask" target="test"/>
+    <ant dir="stdlib" target="test"/>
   </target>
 
   <target name="cvsignores" description="Generates cvsignore files">
@@ -88,7 +82,7 @@
     <ant dir="anttask" target="clean"/>
   </target>
 
-  <target name="major-release" depends="core">
+  <target name="major-release" depends="base">
     <exec executable="java"
           outputproperty="jamon.version.next">
       <arg value="-cp" />
@@ -99,7 +93,7 @@
     <antcall target="release" />
   </target>
 
-  <target name="minor-release" depends="core">
+  <target name="minor-release" depends="base">
     <exec executable="java"
           outputproperty="jamon.version.next">
       <arg value="-cp" />
@@ -110,7 +104,7 @@
     <antcall target="release" />
   </target>
 
-  <target name="bugfix-release" depends="core">
+  <target name="bugfix-release" depends="base">
     <exec executable="java"
           outputproperty="jamon.version.next">
       <arg value="-cp" />
