@@ -158,6 +158,7 @@ public class JUnitTemplateManager
             {
                 checkArgument(p_method, i, m_requiredArgs[i], p_args[i]);
             }
+            m_rendered = true;
             return null;
         }
         else if (p_method.getName().startsWith("set"))
@@ -169,7 +170,6 @@ public class JUnitTemplateManager
             Assert.assertTrue("unexpected optional argument " + argname,
                               m_optionalArgs.containsKey(argname));
             checkArgument(p_method, 0, m_optionalArgs.remove(argname), p_args[0]);
-            m_rendered = true;
             return null;
         }
         else
