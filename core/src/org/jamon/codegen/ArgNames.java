@@ -22,7 +22,7 @@ package org.jamon.codegen;
 
 public interface ArgNames
 {
-    public final static String WRITER = "p__jamon_writer";
+    public final static String WRITER = "jamonWriter";
     public final static String WRITER_DECL =
         "final " + ClassNames.WRITER + " " + WRITER;
 }
