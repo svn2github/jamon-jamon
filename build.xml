@@ -57,6 +57,7 @@
     <ant dir="integration" target="cvsignores"/>
     <ant dir="anttask" target="cvsignores"/>
     <ant dir="stdlib" target="cvsignores"/>
+    <ant dir="doc" target="cvsignores"/>
     <echo file=".cvsignore">.cvsignore ${jarfile}
 </echo>
   </target>
