@@ -12,9 +12,10 @@ that need to be described.
 
 <ol>
 <li>
-The most important constraint is that a template instance cannot have the
-<code>render()</code> method called twice. Instead, the user must create
-a new template instance each time the template is to be displayed.
+An important constraint is that a template instance cannot have the
+<code>render()</code> method called twice. Instead, the user must
+create a new template instance (a cheap operation) each time the
+template is to be displayed.
 <pre class="java">
       StandardTemplateManager mgr = new StandardTemplateManager();
       Writer outputWriter = new OutputStreamWriter(System.out);
@@ -43,10 +44,24 @@ The following code will <em>not</em> work.
 <p>
 
 <li>
-The examples so far have created the template instances by providing a <code>StandardTemplateManager</code> instance as an argument to the template's constructor. It is also possible to set globally a single template manager instance that will be used to construct <em>all</em> Jamon template instances that are created with the no-argument (default) constructor. The global template manager is set by creating an instance and passing it to the static <code>TemplateManagerSource.setTemplateManager()</code> method, as shown below.
+
+The examples so far have created the template instances by providing a
+<code>TemplateManager</code> instance as an argument to the template's
+constructor. It is also possible to set globally a single
+<code>TemplateManager</code> instance that will be used to construct
+<em>all</em> Jamon template instances that are created with the
+no-argument (default) constructor. The global template manager is set
+by creating an instance and passing it to the static
+<code>TemplateManagerSource.setTemplateManager()</code> method, as
+shown below.
+
 <& _TutorialJavaFileInclude; fileName => "HelloTut1Alternate" &>
-This style of creating templates is much clearer in a program that uses more than a few templates.
+This style of creating templates is much clearer in a program that
+uses more than a few templates.
 <p>
-If the program needs to create a template with a template manager <em>other</em> than the default template manager, then it can still provide the correct template manager to the one-argument constructor for a template.
+If the program needs to create a template with a template manager
+<em>other</em> than the default template manager, then it can still
+provide the correct template manager to the one-argument constructor
+for a template.
 </ol>
 <p>
