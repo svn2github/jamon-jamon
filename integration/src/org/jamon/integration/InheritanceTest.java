@@ -104,7 +104,7 @@ public class InheritanceTest
             .render(0, new Integer(1));
         String childString = "{s 0 true o1c o5p o7c}";
         checkOutput("0 1 " + childString + " "
-                    + childString + " o1cc o2j o3p o4p o5p o6p");
+                    + childString + " o1c o2j o3p o4p o5p o6p");
     }
 
     public void testGrandchildWithDefaultsViaParentRenderer()
