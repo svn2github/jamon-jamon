@@ -336,7 +336,7 @@ Productions
 
   java = java_start java_stmts java_end;
 
-  jline = expr outjava;
+  jline = expr outjava | {empty} outjava;
 
   partial_jline = expr;
 
