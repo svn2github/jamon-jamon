@@ -1,12 +1,10 @@
-    public void doGet(HttpServletRequest request,
-                      HttpServletResponse response)
+    public void doGet(HttpServletRequest request, HttpServletResponse response)
 	throws IOException
     {
         response.setContentType("text/html");
         helloTemplate.writeTo(response.getWriter());
         String numString = request.getParameter(NUM_KEY);
-        if (numString != null)
-        {
+        if (numString != null) {
             helloTemplate.setNum(Integer.parseInt(numString));
         }
         helloTemplate.render();

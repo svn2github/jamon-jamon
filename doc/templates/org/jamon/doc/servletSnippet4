@@ -1,11 +1,8 @@
-        if (numString != null)
-        {
-            try
-            {
+        if (numString != null) {
+            try {
                 helloTemplate.setNum(Integer.parseInt(numString));
             }
-            catch (NumberFormatException e)
-            {
+            catch (NumberFormatException e) {
                 helloTemplate.setError(true);
             }
         }
