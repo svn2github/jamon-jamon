@@ -12,6 +12,8 @@
   <property name="build.dir" value="build"/>
   <property name="build.src.dir" value="${build.dir}/src"/>
   <property name="classes.dir" value="${build.dir}/classes"/>
+  <property name="test.classes.dir" value="${build.dir}/testclasses"/>
+  <property name="tests.src.dir" value="tests"/>
   <property name="test.dir" value="test" />
   <property name="work.dir" value="work" />
   <property name="test.src.dir" value="${test.dir}/src" />
@@ -20,6 +22,12 @@
   <property name="test.classes.dir" value="${test.dir}/classes" />
   <property name="testdata.dir" value="testdata/${test.pkg}" />
   <property name="jarfile" value="jtt.jar" />
+  <property name="java.lib.junit" value="junit.jar" />
+
+  <property name="junit.fork" value="no" />
+  <property name="junit.timeout" value="1000" />
+  <property name="junit.printsummary" value="off" />
+  <property name="junit.formatter" value="brief" />
 
   <property name="java.lib.sablecc"
             value="/usr/local/share/java/sablecc.jar" />
@@ -119,6 +127,43 @@
 
   <target name="jar" depends="build">
     <jar basedir="${classes.dir}" jarfile="${jarfile}" />
+  </target>
+
+
+
+  <target name="testclasses" depends="build">
+    <mkdir dir="${test.classes.dir}" />
+    <javac srcdir="${tests.src.dir}"
+           destdir="${test.classes.dir}"
+           debug="on"
+           deprecation="on"
+           optimize="on" >
+      <include name="**/*.java"/>
+      <classpath>
+        <pathelement location="${classes.dir}"/>
+        <pathelement location="${java.lib.junit}"/>
+      </classpath>
+    </javac>
+  </target>
+
+  <target name="test"
+          depends="testclasses"
+          description="Run the unit tests">
+    <junit printsummary="${junit.printsummary}"
+           fork="${junit.fork}" timeout="${junit.timeout}">
+      <formatter type="${junit.formatter}" usefile="no"/>
+      <classpath>
+        <pathelement location="${test.classes.dir}"/>
+        <pathelement location="${classes.dir}"/>
+        <pathelement location="${java.lib.junit}"/>
+      </classpath>
+      <batchtest>
+        <fileset dir="${tests.src.dir}">
+          <include name="**/*Test.java" />
+          <exclude name="**/Abstract*.java"/>
+        </fileset>
+      </batchtest>
+    </junit>
   </target>
 
 </project>
