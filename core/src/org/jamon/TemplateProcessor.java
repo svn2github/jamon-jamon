@@ -126,7 +126,6 @@ public class TemplateProcessor
             }
             finally
             {
-                e.printStackTrace();
                 throw e;
             }
         }
