@@ -68,4 +68,8 @@ public class JamonPlugin extends AbstractUIPlugin {
 	public ResourceBundle getResourceBundle() {
 		return resourceBundle;
 	}
+	
+	public String pluginId() {
+		return getBundle().getSymbolicName();
+	}
 }
