@@ -25,6 +25,7 @@ import java.io.Writer;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.lang.reflect.Constructor;
@@ -200,10 +201,24 @@ public class Invoker
                 throw new InvalidTemplateException(p_templateName);
             }
             m_renderMethod = renderMethod;
+            m_requiredArgNames = Arrays.asList
+                ((String[])
+                 m_templateClass.getField("REQUIRED_ARG_NAMES").get(null));
+            m_optionalArgNames = Arrays.asList
+                ((String[])
+                 m_templateClass.getField("OPTIONAL_ARG_NAMES").get(null));
         }
         catch (NoSuchMethodException e)
         {
-            throw new InvalidTemplateException(p_templateName,e);
+            throw new InvalidTemplateException(p_templateName, e);
+        }
+        catch (NoSuchFieldException e)
+        {
+            throw new InvalidTemplateException(p_templateName, e);
+        }
+        catch (IllegalAccessException e)
+        {
+            throw new InvalidTemplateException(p_templateName, e);
         }
     }
 
@@ -236,57 +251,14 @@ public class Invoker
     {
         try
         {
-            Field required = m_templateClass.getField("REQUIRED_ARG_NAMES");
-            Field optional = m_templateClass.getField("OPTIONAL_ARG_NAMES");
-            String[] requiredArgNames = (String[]) required.get(null);
-            String[] optionalArgNames = (String[]) optional.get(null);
-
             if (! p_ignoreUnusedParams)
             {
-                Set argNames = new HashSet();
-                argNames.addAll(p_argMap.keySet());
-                argNames.removeAll(Arrays.asList(requiredArgNames));
-                argNames.removeAll(Arrays.asList(optionalArgNames));
-                if (! argNames.isEmpty())
-                {
-                    StringBuffer msg =
-                        new StringBuffer("Unknown arguments supplied: ");
-                    for (Iterator i = argNames.iterator(); i.hasNext(); )
-                    {
-                        msg.append(i.next());
-                        if (i.hasNext())
-                        {
-                            msg.append(",");
-                        }
-                    }
-                    throw new JamonException(msg.toString());
-                }
+                validateArguments(p_argMap);
             }
 
-            Object[] actuals = new Object[1 + requiredArgNames.length];
-            actuals[0] = p_writer;
-
-            Class[] paramTypes = m_renderMethod.getParameterTypes();
-
-            for (int i = 0; i < requiredArgNames.length; ++i)
-            {
-                actuals[i + 1] =
-                    parse(paramTypes[i + 1],
-                          (String) p_argMap.get(requiredArgNames[i]));
-            }
-            for (int i = 0; i < optionalArgNames.length; ++i)
-            {
-                if (p_argMap.containsKey(optionalArgNames[i]))
-                {
-                    invokeSet(optionalArgNames[i],
-                              (String) p_argMap.get(optionalArgNames[i]));
-                }
-            }
-            m_renderMethod.invoke(m_template, actuals);
-        }
-        catch (NoSuchFieldException e)
-        {
-            throw new InvalidTemplateException(m_templateClass.getName(),e);
+            invokeOptionalArguments(p_argMap);
+            m_renderMethod.invoke(m_template,
+                                  computeRenderArguments(p_argMap, p_writer));
         }
         catch (IllegalAccessException e)
         {
@@ -311,11 +283,88 @@ public class Invoker
         }
     }
 
+    public List getRequiredArgumentNames()
+    {
+        return m_requiredArgNames;
+    }
 
-    private final Class m_templateClass;
-    private final AbstractTemplateProxy m_template;
-    private final Method m_renderMethod;
-    private final ObjectParser m_objectParser;
+    public List getOptionalArgumentNames()
+    {
+        return m_optionalArgNames;
+    }
+
+    public Class getArgumentType(String p_argName)
+    {
+        if (m_optionalArgNames.contains(p_argName))
+        {
+            return findSetMethod(p_argName).getParameterTypes()[0];
+        }
+        else
+        {
+            int i = m_requiredArgNames.indexOf(p_argName);
+            if (i < 0)
+            {
+                return null;
+            }
+            else
+            {
+                return m_renderMethod.getParameterTypes()[i];
+            }
+        }
+    }
+
+    private Object[] computeRenderArguments(Map p_argMap, Writer p_writer)
+        throws TemplateArgumentException
+    {
+        Object[] actuals = new Object[1 + m_requiredArgNames.size()];
+        actuals[0] = p_writer;
+
+        Class[] paramTypes = m_renderMethod.getParameterTypes();
+
+        for (int i = 0; i < m_requiredArgNames.size(); ++i)
+        {
+            actuals[i + 1] =
+                parse(paramTypes[i + 1],
+                      (String) p_argMap.get(m_requiredArgNames.get(i)));
+        }
+        return actuals;
+    }
+
+    private void invokeOptionalArguments(Map p_argMap)
+        throws TemplateArgumentException
+    {
+        for (int i = 0; i < m_optionalArgNames.size(); ++i)
+        {
+            String name = (String) m_optionalArgNames.get(i);
+            if (p_argMap.containsKey(name))
+            {
+                invokeSet(name, (String) p_argMap.get(name));
+            }
+        }
+    }
+
+    private void validateArguments(Map p_argMap)
+        throws JamonException
+    {
+        Set argNames = new HashSet();
+        argNames.addAll(p_argMap.keySet());
+        argNames.removeAll(m_requiredArgNames);
+        argNames.removeAll(m_optionalArgNames);
+        if (! argNames.isEmpty())
+        {
+            StringBuffer msg =
+                new StringBuffer("Unknown arguments supplied: ");
+            for (Iterator i = argNames.iterator(); i.hasNext(); )
+            {
+                msg.append(i.next());
+                if (i.hasNext())
+                {
+                    msg.append(",");
+                }
+            }
+            throw new JamonException(msg.toString());
+        }
+    }
 
     private Object parse(Class p_type, String p_value)
         throws TemplateArgumentException
@@ -323,36 +372,41 @@ public class Invoker
         return m_objectParser.parseObject(p_type, p_value);
     }
 
-    private void invokeSet(String p_name, String p_value)
-        throws TemplateArgumentException
+    private Method findSetMethod(String p_name)
     {
         Method[] methods = m_templateClass.getMethods();
         String name = "set"
             + Character.toUpperCase(p_name.charAt(0))
             + p_name.substring(1);
-        Method setMethod = null;
         for (int i = 0; i < methods.length; ++i)
         {
             if (methods[i].getName().equals(name))
             {
-                setMethod = methods[i];
+                Class[] paramTypes = methods[i].getParameterTypes();
+                if (paramTypes.length == 1)
+                {
+                    return methods[i];
+                }
             }
         }
+        return null;
+    }
+
+    private void invokeSet(String p_name, String p_value)
+        throws TemplateArgumentException
+    {
+        Method setMethod = findSetMethod(p_name);
         if (setMethod == null)
         {
             throw new TemplateArgumentException("No set method for " + p_name);
         }
-        Class[] paramTypes = setMethod.getParameterTypes();
-        if (paramTypes.length != 1)
-        {
-            throw new TemplateArgumentException("Set method "
-                                                + p_name
-                                                + "does not take 1 arg");
-        }
         try
         {
             setMethod.invoke(m_template,
-                             new Object[] { parse(paramTypes[0], p_value) });
+                             new Object[] {
+                                 parse(setMethod.getParameterTypes()[0],
+                                       p_value)
+                             });
         }
         catch (IllegalAccessException e)
         {
@@ -376,4 +430,11 @@ public class Invoker
         }
     }
 
+
+    private final Class m_templateClass;
+    private final AbstractTemplateProxy m_template;
+    private final Method m_renderMethod;
+    private final ObjectParser m_objectParser;
+    private final List m_requiredArgNames;
+    private final List m_optionalArgNames;
 }
