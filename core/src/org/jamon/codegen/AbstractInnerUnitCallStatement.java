@@ -64,8 +64,7 @@ public abstract class AbstractInnerUnitCallStatement
         //FIXME - do we need to surround args with parens?
         for (Iterator r = m_unit.getSignatureRequiredArgs(); r.hasNext(); )
         {
-            RequiredArgument arg = (RequiredArgument) r.next();
-            String name = arg.getName();
+            String name = ((RequiredArgument) r.next()).getName();
             String expr = (String) getParams().remove(name);
             if (expr == null)
             {
