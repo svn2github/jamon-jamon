@@ -30,6 +30,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.jamon.JamonException;
+import org.jamon.JamonTemplateException;
 import org.jamon.node.*;
 import org.jamon.analysis.AnalysisAdapter;
 import org.jamon.analysis.DepthFirstAdapter;
@@ -66,7 +67,11 @@ public class Analyzer
         }
         catch (TunnelingException e)
         {
-            if(e.getToken() != null)
+            if(e.getRootCause() instanceOf JamonTemplateException)
+            {
+                throw e.getRootCause();
+            }
+            else if(e.getToken() != null)
             {
                 throw new AnalysisException(e.getMessage(),
                                             m_describer.getExternalIdentifier(
