@@ -52,4 +52,13 @@
           classname="${test.pkg}.Test1" />
   </target>
 
+  <target name="cvsignores">
+    <echo file=".cvsignore">.cvsignore ${build.dir} build.properties
+</echo>
+  </target>
+
+  <target name="spotless">
+    <delete dir="${build.dir}"/>
+  </target>
+
 </project>
