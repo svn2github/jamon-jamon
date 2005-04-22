@@ -37,6 +37,8 @@ import test.jamon.Child;
 import test.jamon.Middle;
 import test.jamon.Grandchild;
 import test.jamon.ChildFragmentCaller;
+import test.jamon.Child1;
+import test.jamon.Child2;
 
 /**
  * Test Jamon's template inheritance
@@ -174,6 +176,15 @@ public class InheritanceTest
                                              "opt9", "opt10"},
                                Grandchild.OPTIONAL_ARG_NAMES);
         assertEquals(new String[] {}, Grandchild.FRAGMENT_ARG_NAMES);
+    }
+
+    public void testTemplateCaching() throws Exception
+    {
+        new Child1().render(getWriter());
+        checkOutput("10");
+        resetWriter();
+        new Child2().render(getWriter());
+        checkOutput("01");
     }
 
     public void testRecompilation()

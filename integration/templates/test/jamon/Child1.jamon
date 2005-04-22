@@ -1,0 +1,4 @@
+<%extends ParentWithTwoChildren>
+<%xargs>
+  i1 => 1;
+</%xargs>
