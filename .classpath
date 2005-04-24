@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry output="anttask/build/classes" kind="src" path="anttask/src"/>
+	<classpathentry output="stdlib/build/testclasses" kind="src" path="stdlib/tests"/>
+	<classpathentry output="core/build/classes" kind="src" path="core/build/src"/>
+	<classpathentry output="core/nodegen/build" kind="src" path="core/nodegen/src"/>
+	<classpathentry output="core/build/classes" kind="src" path="core/src"/>
+	<classpathentry output="core/build/testclasses" kind="src" path="core/tests"/>
+	<classpathentry output="stdlib/build/classes" kind="src" path="stdlib/build/src"/>
+	<classpathentry output="stdlib/build/classes" kind="src" path="stdlib/src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="var" path="ANT_JAR"/>
+	<classpathentry kind="var" path="JUNIT_JAR"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
