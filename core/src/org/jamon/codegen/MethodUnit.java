@@ -20,8 +20,12 @@
 
 package org.jamon.codegen;
 
+import java.util.Iterator;
+
 public interface MethodUnit extends Unit
 {
     String getOptionalArgDefaultMethod(OptionalArgument p_arg);
+    Iterator getOptionalArgsWithDefaults();
+    String getDefaultForArg(OptionalArgument p_arg);
     boolean isAbstract();
 }

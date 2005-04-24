@@ -24,14 +24,16 @@ import java.io.File;
 import java.io.Writer;
 import java.io.StringWriter;
 import java.io.IOException;
+import java.util.Iterator;
 
-import org.jamon.JamonException;
-import org.jamon.JamonTemplateException;
-import org.jamon.BasicTemplateManager;
+import org.jamon.ParserError;
+import org.jamon.ParserErrors;
 import org.jamon.RecompilingTemplateManager;
+import org.jamon.TemplateFileLocation;
 import org.jamon.TemplateManager;
 import org.jamon.TemplateProcessor;
 import org.jamon.emit.EmitMode;
+import org.jamon.node.Location;
 
 import junit.framework.TestCase;
 
@@ -151,10 +153,8 @@ public abstract class TestBase
         generateSource(p_path, EmitMode.STANDARD);
     }
 
-    protected void expectTemplateException(String p_path,
-                                           String p_message,
-                                           int p_line,
-                                           int p_column)
+    protected void expectParserError(
+        String p_path, String p_message, int p_line, int p_column)
         throws Exception
     {
         String path = "test/jamon/broken/" + p_path;
@@ -163,18 +163,21 @@ public abstract class TestBase
             generateSource(path);
             fail();
         }
-        catch(JamonTemplateException e)
+        catch(ParserErrors e)
         {
-            assertEquals("Exception message mismatch", p_message, e.getMessage());
-            assertEquals("Exception line number mismatch",
-                         p_line,
-                         e.getLine());
-            assertEquals("Exception column number mismatch",
-                         p_column,
-                         e.getColumn());
-            assertEquals("Exception filename mismatch",
-                         getTemplateFilePath(path),
-                         e.getFileName());
+            Iterator errors = e.getErrors();
+            assertTrue(errors.hasNext());
+            assertEquals(
+                new ParserError(
+                    new Location(
+                        new TemplateFileLocation(getTemplateFilePath(path)), 
+                        p_line, p_column), 
+                    p_message),
+                errors.next());
+            if (errors.hasNext())
+            {
+                fail("Extra errors: " + errors.next());
+            }
         }
     }
 

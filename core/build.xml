@@ -21,10 +21,12 @@
   <property name="junit.printsummary" value="off" />
   <property name="junit.formatter" value="org.apache.tools.ant.taskdefs.optional.junit.BriefJUnitResultFormatter" />
 
-  <property name="java.lib.sablecc"
-            value="/usr/local/share/java/sablecc.jar" />
-  <property name="java.lib.sablecctask"
-            value="/usr/local/share/java/sablecc/anttask.jar"/>
+  <property name="nodeGen.dir" value="nodegen"/>
+  <property name="nodeGen.src.dir" value="${nodeGen.dir}/src"/>
+  <property name="nodeGen.build.dir" value="${nodeGen.dir}/build"/>
+  <property name="nodeGen.classes.dir" location="${nodeGen.build.dir}/classes"/>
+
+  <property name="nodes.file" value="${nodeGen.dir}/nodes"/>
 
   <property name="src.dir" value="src" />
 
@@ -35,21 +37,36 @@
     </uptodate>
   </target>
 
- <target name="parser"
-         depends="check-parser"
-         unless="parser.uptodate"
-         description="Generates parsers from the grammar file">
-    <taskdef name="sablecc" classname="org.sablecc.ant.taskdef.Sablecc"
-             classpath="${java.lib.sablecc}:${java.lib.sablecctask}"/>
-    <delete dir="${build.src.dir}"/>
-    <mkdir dir="${build.src.dir}"/>
-    <sablecc src="src" outputdirectory="${build.src.dir}">
-      <include name="jamon.grammar"/>
-    </sablecc>
- </target>
+  <target name="buildNodeGenerator" description="Build the node generator">
+	<dependset>
+	  <srcfileset dir="${nodeGen.src.dir}" includes="**/*.java"/>
+	  <targetfileset dir="${nodeGen.build.dir}"/>
+	</dependset>
+	<mkdir dir="${nodeGen.build.dir}"/>
+	<javac srcdir = "${nodeGen.src.dir}" destdir="${nodeGen.build.dir}"/>
+  </target>
+
+  <target name="check-nodes">
+    <uptodate property="nodes.uptodate"
+              srcfile="${nodes.file}"
+              targetfile="${nodes.src.dir}/org/jamon/node/JavaNode.java"/>
+  </target>
+
+  <target name="generateNodes"
+          description="Generate parser node source files"
+          depends="buildNodeGenerator,check-nodes"
+          unless="nodes.uptodate">
+    <echo message="rebuilding node source files"/>
+    <java classname="org.jamon.nodegen.NodesGenerator"
+          classpath="${nodeGen.build.dir}"
+          fork="true">
+      <arg value="${nodes.file}"/>
+      <arg value="${build.src.dir}"/>
+    </java>
+  </target>
 
   <target name="compile"
-          depends="parser"
+          depends="generateNodes"
           description="Compiles all the Java files">
       <mkdir dir="${classes.dir}"/>
       <dependset>
@@ -68,19 +85,12 @@
         </classpath>
         <compilerarg line="${org.jamon.jike.options}" compiler="jikes"/>
       </javac>
-      <copy todir="${classes.dir}" >
-        <fileset dir="${src.dir}" includes="**/*.properties" />
-        <fileset dir="${build.src.dir}" includes="**/*.dat" />
-      </copy>
   </target>
 
   <target name="clean">
     <delete dir="${classes.dir}"/>
     <delete dir="${tests.classes.dir}"/>
-  </target>
-
-  <target name="spotless" depends="clean">
-    <delete dir="${build.dir}"/>
+    <delete dir="${nodes.src.dir}"/>
   </target>
 
   <target name="cvsignores">

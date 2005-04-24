@@ -66,7 +66,7 @@ public class UrlEscaping
                 }
                 else
                 {
-                    percentEscape(p_writer, (char) c);
+                    percentEscape(p_writer, c);
                 }
             }
             else if (c < 0xD800 || c >= 0xE000)

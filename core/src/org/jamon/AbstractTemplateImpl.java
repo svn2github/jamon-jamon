@@ -20,8 +20,6 @@
 
 package org.jamon;
 
-import org.jamon.emit.StandardEmitter;
-
 public abstract class AbstractTemplateImpl
     implements AbstractTemplateProxy.Intf
 {

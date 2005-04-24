@@ -26,11 +26,15 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import org.jamon.ParserErrors;
+import org.jamon.node.Location;
+
 public abstract class AbstractInnerUnit extends AbstractUnit
 {
-    public AbstractInnerUnit(String p_name, Unit p_parent)
+    public AbstractInnerUnit(
+        String p_name, Unit p_parent, ParserErrors p_errors)
     {
-        super(p_name, p_parent);
+        super(p_name, p_parent, p_errors);
     }
 
     public void addOptionalArg(OptionalArgument p_arg)
@@ -78,7 +82,7 @@ public abstract class AbstractInnerUnit extends AbstractUnit
         return ! getRequiredArgsList().isEmpty();
     }
 
-    protected void addFragmentArg(FragmentArgument p_arg)
+    protected void addFragmentArg(FragmentArgument p_arg, Location p_location)
     {
         m_fragmentArgs.add(p_arg);
     }

@@ -7,6 +7,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
+import org.jamon.TemplateLocation;
 import org.jamon.TemplateSource;
 
 public class ResourceTemplateSource implements TemplateSource {
@@ -18,7 +19,8 @@ public class ResourceTemplateSource implements TemplateSource {
 	private final IFolder m_templateFolder;
 	
 	private IFile resourceFor(String p_templatePath) {
-		return (IFile) m_templateFolder.findMember(new Path(p_templatePath).addFileExtension("jamon"));
+		return (IFile) m_templateFolder.findMember(new Path(p_templatePath)
+            .addFileExtension("jamon"));
 	}
 	
 	public long lastModified(String p_templatePath) {
@@ -41,5 +43,9 @@ public class ResourceTemplateSource implements TemplateSource {
 	public String getExternalIdentifier(String p_templatePath) {
 		return p_templatePath;
 	}
+
+    public TemplateLocation getTemplateLocation(String p_templatePath) {
+        return new ResourceTemplateLocation(resourceFor(p_templatePath));
+    }
 
 }

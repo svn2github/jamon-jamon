@@ -20,22 +20,21 @@
 
 package org.jamon.codegen;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import junit.framework.TestCase;
+import org.jamon.TemplateFileLocation;
+import org.jamon.node.ArgNameNode;
+import org.jamon.node.ArgValueNode;
+import org.jamon.node.Location;
+import org.jamon.node.ParentArgNode;
+import org.jamon.node.ParentArgWithDefaultNode;
 
-import org.jamon.node.ADefault;
-import org.jamon.node.AParentArg;
-import org.jamon.node.TArgexpr;
-import org.jamon.node.TIdentifier;
+import junit.framework.TestCase;
 
 public class TemplateUnitTest
     extends TestCase
@@ -43,9 +42,9 @@ public class TemplateUnitTest
 
     public void testInheritanceDepth() throws Exception
     {
-        TemplateUnit parent = new TemplateUnit("/parent");
-        TemplateUnit child = new TemplateUnit("/child");
-        TemplateUnit grandchild = new TemplateUnit("/grandchild");
+        TemplateUnit parent = new TemplateUnit("/parent", null);
+        TemplateUnit child = new TemplateUnit("/child", null);
+        TemplateUnit grandchild = new TemplateUnit("/grandchild", null);
         child.setParentDescription(new TemplateDescription(parent));
         grandchild.setParentDescription(new TemplateDescription(child));
 
@@ -56,9 +55,9 @@ public class TemplateUnitTest
 
     public void testParentArgs() throws Exception
     {
-        TemplateUnit parent = new TemplateUnit("/parent");
-        TemplateUnit child = new TemplateUnit("/child");
-        TemplateUnit grandchild = new TemplateUnit("/grandchild");
+        TemplateUnit parent = new TemplateUnit("/parent", null);
+        TemplateUnit child = new TemplateUnit("/child", null);
+        TemplateUnit grandchild = new TemplateUnit("/grandchild", null);
 
         RequiredArgument pr1 = new RequiredArgument("pr1", "int");
         RequiredArgument pr2 = new RequiredArgument("pr2", "int");
@@ -74,11 +73,10 @@ public class TemplateUnitTest
         child.setParentPath(parent.getName());
         child.setParentDescription(new TemplateDescription(parent));
 
-        child.addParentArg(new AParentArg(new TIdentifier("pr2"), null, null));
-        child.addParentArg(new AParentArg(new TIdentifier("po2"),
-                                          new ADefault(null,
-                                                       new TArgexpr("oc2")),
-                                          null));
+        Location loc = new Location(new TemplateFileLocation("x"), 1,1);
+        child.addParentArg(new ParentArgNode(loc, new ArgNameNode(loc, "pr2")));
+        child.addParentArg(new ParentArgWithDefaultNode(
+            loc, new ArgNameNode(loc, "po2"), new ArgValueNode(loc, "oc2")));
         child.addRequiredArg(cr3);
         child.addOptionalArg(co3);
 
@@ -94,8 +92,8 @@ public class TemplateUnitTest
                      child.getDeclaredOptionalArgs());
 
         FragmentArgument f =
-            new FragmentArgument( new FragmentUnit("f", child));
-        child.addFragmentArg(f);
+            new FragmentArgument( new FragmentUnit("f", child, null));
+        child.addFragmentArg(f, null);
         checkArgSet(new AbstractArgument[] {pr2, cr3, po2, co3, f},
                     child.getVisibleArgs());
 
@@ -114,8 +112,8 @@ public class TemplateUnitTest
     public void testSignature()
         throws Exception
     {
-        TemplateUnit unit = new TemplateUnit("/foo");
-        TemplateUnit parent = new TemplateUnit("/bar");
+        TemplateUnit unit = new TemplateUnit("/foo", null);
+        TemplateUnit parent = new TemplateUnit("/bar", null);
 
         Set sigs = new HashSet();
         checkSigIsUnique(unit, sigs);
@@ -124,8 +122,8 @@ public class TemplateUnitTest
         RequiredArgument j = new RequiredArgument("j", "Integer");
         OptionalArgument a = new OptionalArgument("a", "boolean", "true");
         OptionalArgument b = new OptionalArgument("b", "Boolean", "null");
-        FragmentUnit f = new FragmentUnit("f", null);
-        FragmentUnit g = new FragmentUnit("g", null);
+        FragmentUnit f = new FragmentUnit("f", null, null);
+        FragmentUnit g = new FragmentUnit("g", null, null);
 
         unit.addRequiredArg(i);
         checkSigIsUnique(unit, sigs);
@@ -139,21 +137,21 @@ public class TemplateUnitTest
         unit.addOptionalArg(b);
         checkSigIsUnique(unit, sigs);
 
-        unit = new TemplateUnit("/foo");
+        unit = new TemplateUnit("/foo", null);
         unit.setParentDescription(new TemplateDescription(parent));
         checkSigIsUnique(unit, sigs);
 
-        unit = new TemplateUnit("/foo");
+        unit = new TemplateUnit("/foo", null);
         parent.addRequiredArg(i);
         unit.setParentDescription(new TemplateDescription(parent));
         // suboptimal - if the parent's sig changes, so does the child's
         checkSigIsUnique(unit, sigs);
 
-        unit.addFragmentArg(new FragmentArgument(f));
+        unit.addFragmentArg(new FragmentArgument(f), null);
         checkSigIsUnique(unit, sigs);
         f.addRequiredArg(new RequiredArgument("x", "float"));
         checkSigIsUnique(unit, sigs);
-        unit.addFragmentArg(new FragmentArgument(g));
+        unit.addFragmentArg(new FragmentArgument(g), null);
         checkSigIsUnique(unit, sigs);
     }
 
@@ -161,7 +159,7 @@ public class TemplateUnitTest
     public void testDependencies()
         throws Exception
     {
-        TemplateUnit unit = new TemplateUnit("/foo/bar");
+        TemplateUnit unit = new TemplateUnit("/foo/bar", null);
         unit.addCallPath("/baz");
         unit.addCallPath("/foo/wazza");
         unit.setParentPath("/foo/balla");

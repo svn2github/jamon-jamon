@@ -20,7 +20,6 @@
 
 package org.jamon.util;
 
-import org.jamon.JamonException;
 import org.jamon.JamonRuntimeException;
 
 import java.io.ByteArrayOutputStream;

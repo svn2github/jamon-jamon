@@ -20,10 +20,12 @@
 
 package org.jamon.codegen;
 
+import org.jamon.ParserErrors;
+
 public class DefUnit extends AbstractInnerUnit
 {
-    public DefUnit(String p_name, Unit p_parent)
+    public DefUnit(String p_name, Unit p_parent, ParserErrors p_errors)
     {
-        super(p_name, p_parent);
+        super(p_name, p_parent, p_errors);
     }
 }

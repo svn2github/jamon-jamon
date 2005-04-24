@@ -44,19 +44,17 @@ public class EncodingsTest
     public void testMalformedEncoding1()
         throws Exception
     {
-        expectTemplateException("BadEncoding",
-                                "Malformed encoding tag; expected '>'",
-                                1,
-                                16);
+        expectParserError("BadEncoding",
+                          "Malformed encoding tag; expected '>'",
+                          1, 16);
     }
 
     public void testMalformedEncoding2()
         throws Exception
     {
-        expectTemplateException("BadEncoding2",
-                                "EOF before encoding tag finished",
-                                1,
-                                12);
+        expectParserError("BadEncoding2",
+                          "EOF before encoding tag finished",
+                          1, 12);
     }
 
     public void testMalformedEncoding3()

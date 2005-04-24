@@ -280,47 +280,4 @@ public class JUnitTemplateManager
                        new Class[0])
             .invoke(m_implData, new Object[0]);
     }
-
-    private boolean equals(Object p_obj1, Object p_obj2)
-    {
-        if (p_obj1 == null)
-        {
-            return p_obj2 == null;
-        }
-        else if (p_obj2 == null)
-        {
-            return false;
-        }
-        else if (p_obj1 instanceof Object[])
-        {
-            if (p_obj2 instanceof Object[])
-            {
-                Object[] a1 = (Object[]) p_obj1;
-                Object[] a2 = (Object[]) p_obj2;
-                if (a1.length == a2.length)
-                {
-                    for (int i = 0; i < a1.length; ++i)
-                    {
-                        if (!equals(a1[i],a2[i]))
-                        {
-                            return false;
-                        }
-                    }
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-            else
-            {
-                return false;
-            }
-        }
-        else
-        {
-            return p_obj1.equals(p_obj2);
-        }
-    }
 }

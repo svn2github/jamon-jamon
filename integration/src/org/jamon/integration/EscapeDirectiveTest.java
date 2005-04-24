@@ -37,19 +37,19 @@ public class EscapeDirectiveTest
     public void testBadDirective()
         throws Exception
     {
-        expectTemplateException(
+        expectParserError(
             "BadEscaping",
             "Unknown escaping directive 'Q'",
-            1, 7);
+            1, 6);
     }
 
     public void testBadDefault()
         throws Exception
     {
-        expectTemplateException(
+        expectParserError(
             "BadDefaultEscaping",
             "Unknown escaping directive 'Z'",
-            1, 11);
+            1, 1);
     }
 
 }

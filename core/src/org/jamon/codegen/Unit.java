@@ -23,9 +23,11 @@ package org.jamon.codegen;
 import java.util.Iterator;
 import java.util.List;
 
+import org.jamon.ParserError;
 import org.jamon.emit.EmitMode;
-import org.jamon.node.TIdentifier;
-import org.jamon.node.AArg;
+import org.jamon.node.ArgNode;
+import org.jamon.node.FragmentArgsNode;
+import org.jamon.node.OptionalArgNode;
 
 public interface Unit
 {
@@ -39,11 +41,12 @@ public interface Unit
 
     void addStatement(Statement p_statement);
 
-    FragmentUnit addFragment(TIdentifier p_fragName);
-    void addNonFragmentArg(AArg p_arg);
+    FragmentUnit addFragment(FragmentArgsNode p_node);
+    void addRequiredArg(ArgNode p_node);
+    void addOptionalArg(OptionalArgNode p_node);
 
     void printRenderArgsDecl(CodeWriter p_writer);
     void generateRenderBody(CodeWriter p_writer,
                             TemplateDescriber p_describer,
-                            EmitMode p_emitMode);
+                            EmitMode p_emitMode) throws ParserError;
 }

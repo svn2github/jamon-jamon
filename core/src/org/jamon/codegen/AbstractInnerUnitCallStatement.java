@@ -22,8 +22,9 @@ package org.jamon.codegen;
 
 import java.util.Iterator;
 
+import org.jamon.ParserError;
 import org.jamon.emit.EmitMode;
-import org.jamon.node.Token;
+import org.jamon.node.Location;
 
 public abstract class AbstractInnerUnitCallStatement
     extends AbstractCallStatement
@@ -31,10 +32,10 @@ public abstract class AbstractInnerUnitCallStatement
     AbstractInnerUnitCallStatement(String p_path,
                                    ParamValues p_params,
                                    Unit p_unit,
-                                   Token p_token,
+                                   Location p_location,
                                    String p_templateIdentifier)
     {
-        super(p_path, p_params, p_token, p_templateIdentifier);
+        super(p_path, p_params, p_location, p_templateIdentifier);
         m_unit = p_unit;
     }
 
@@ -52,7 +53,7 @@ public abstract class AbstractInnerUnitCallStatement
 
     public void generateSource(CodeWriter p_writer,
                                TemplateDescriber p_describer,
-                               EmitMode p_emitMode)
+                               EmitMode p_emitMode) throws ParserError
     {
         generateSourceLine(p_writer);
         p_writer.openBlock();

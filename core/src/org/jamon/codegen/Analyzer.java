@@ -21,6 +21,7 @@
 package org.jamon.codegen;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -29,10 +30,11 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.jamon.JamonTemplateException;
+import org.jamon.ParserError;
+import org.jamon.ParserErrors;
 import org.jamon.node.*;
-import org.jamon.analysis.AnalysisAdapter;
-import org.jamon.analysis.DepthFirstAdapter;
+import org.jamon.node.AnalysisAdapter;
+import org.jamon.node.DepthFirstAnalysisAdapter;
 import org.jamon.util.StringUtils;
 
 public class Analyzer
@@ -41,7 +43,7 @@ public class Analyzer
                     TemplateDescriber p_describer,
                     Set p_children)
     {
-        m_templateUnit = new TemplateUnit(p_templatePath);
+        m_templateUnit = new TemplateUnit(p_templatePath, m_errors);
         m_templateDir =
             p_templatePath.substring(0,1 + p_templatePath.lastIndexOf('/'));
         m_currentUnit = m_templateUnit;
@@ -59,64 +61,54 @@ public class Analyzer
     public TemplateUnit analyze()
         throws IOException
     {
-        Start start = m_describer.parseTemplate(m_templateUnit.getName());
-        try
+        TopNode top = m_describer.parseTemplate(m_templateUnit.getName());
+        preAnalyze(top);
+        mainAnalyze(top);
+        checkForConcreteness(top);
+        if (m_errors.hasErrors())
         {
-            preAnalyze(start);
-            mainAnalyze(start);
-            checkForConcreteness(start);
-            return m_templateUnit;
+            throw m_errors;
         }
-        catch (TunnelingException e)
-        {
-            if(e.getRootCause() != null)
-            {
-                throw e.getRootCause();
-            }
-            else
-            {
-                throw new AnalysisException(e.getMessage(),
-                                            m_templateIdentifier,
-                                            e.getToken());
-            }
-        }
+        return m_templateUnit;
     }
 
-    private void preAnalyze(Start p_start)
+    private void addError(String p_message, Location p_location)
     {
-        topLevelAnalyze(p_start, new AliasAdapter());
-        topLevelAnalyze(p_start, new PreliminaryAdapter());
+        m_errors.addError(new ParserError(p_location, p_message));
+    }
+
+    private void preAnalyze(TopNode p_top)
+    {
+        topLevelAnalyze(p_top, new AliasAdapter());
+        topLevelAnalyze(p_top, new PreliminaryAdapter());
         if (m_defaultEscaping == null)
         {
             m_defaultEscaping = EscapingDirective.DEFAULT_ESCAPE_CODE;
         }
     }
 
-    private void topLevelAnalyze(Start p_start, AnalysisAdapter p_adapter)
+    private void topLevelAnalyze(TopNode p_top, AnalysisAdapter p_adapter)
     {
-        for (Iterator i = ((ATemplate) p_start.getPTemplate())
-                 .getComponent().iterator();
-             i.hasNext(); )
+        for (Iterator i = p_top.getSubNodes(); i.hasNext(); )
         {
-            ((PComponent) i.next()).apply(p_adapter);
+            ((AbstractNode) i.next()).apply(p_adapter);
         }
 
     }
 
-    private void mainAnalyze(Start p_start)
+    private void mainAnalyze(TopNode p_top)
     {
-        p_start.apply(new Adapter());
+        p_top.apply(new Adapter());
     }
 
-    public void checkForConcreteness(Start p_start)
+    public void checkForConcreteness(TopNode p_top)
     {
         if (! getTemplateUnit().isParent()
             && ! getTemplateUnit().getAbstractMethodNames().isEmpty())
         {
-            topLevelAnalyze(p_start, new AnalysisAdapter()
+            topLevelAnalyze(p_top, new AnalysisAdapter()
                 {
-                    public void caseAExtendsComponent(
-                        AExtendsComponent p_extends)
+                    public void caseExtendsNode(ExtendsNode p_extends)
                     {
                         StringBuffer message =
                             new StringBuffer("The abstract method(s) ");
@@ -124,8 +116,7 @@ public class Analyzer
                                   getTemplateUnit().getAbstractMethodNames()
                                   .iterator());
                         message.append(" have no concrete implementation");
-                        throw new TunnelingException(
-                            message.toString(), p_extends.getExtendsStart());
+                        addError(message.toString(), p_extends.getLocation());
                     }
                 });
         }
@@ -141,15 +132,16 @@ public class Analyzer
         m_currentUnit = getTemplateUnit().getMethodUnit(p_methodName);
     }
 
-    private void pushOverriddenMethodUnit(AOverride p_override)
+    private void pushOverriddenMethodUnit(OverrideNode p_node)
     {
         m_currentUnit = getTemplateUnit()
-            .makeOverridenMethodUnit(p_override);
+            .makeOverridenMethodUnit(p_node.getName(), p_node.getLocation());
     }
 
     private FragmentUnit pushFragmentUnitImpl(String p_fragName)
     {
-        m_currentUnit = new FragmentUnit(p_fragName, getCurrentUnit());
+        m_currentUnit = 
+            new FragmentUnit(p_fragName, getCurrentUnit(), m_errors);
         return (FragmentUnit) m_currentUnit;
     }
 
@@ -178,11 +170,6 @@ public class Analyzer
         return (CallStatement) m_callStatements.getLast();
     }
 
-    private String fragmentIntfKey(String p_unitName, String p_fragmentName)
-    {
-        return p_unitName + "__jamon__" + p_fragmentName;
-    }
-
     private TemplateUnit getTemplateUnit()
     {
         return m_templateUnit;
@@ -194,16 +181,16 @@ public class Analyzer
     }
 
     private StringBuffer m_current = new StringBuffer();
-    private Token m_currentToken = null;
     private final TemplateUnit m_templateUnit;
     private Unit m_currentUnit;
     private final TemplateDescriber m_describer;
     private final Set m_children;
-    private final Set m_defNames = new HashSet();
     private final LinkedList m_callStatements = new LinkedList();
     private final Map m_aliases = new HashMap();
     private final String m_templateDir;
     private final String m_templateIdentifier;
+    private Location m_currentTextLocation;
+    private ParserErrors m_errors = new ParserErrors();
 
     private String getAbsolutePath(String p_path)
     {
@@ -212,144 +199,72 @@ public class Analyzer
             : m_templateDir + p_path;
     }
 
-    private String computePath(PPath p_path)
+    private String computePath(AbstractPathNode p_path)
     {
-        PathAdapter adapter = new PathAdapter();
+        PathAdapter adapter = 
+            new PathAdapter(m_templateDir, m_aliases, m_errors);
         p_path.apply(adapter);
         return adapter.getPath();
     }
 
-    private class PathAdapter extends DepthFirstAdapter
-    {
-        private final StringBuffer m_path = new StringBuffer();
-
-        public String getPath()
-        {
-            return m_path.toString();
-        }
-
-        public void inAUpdirPath(AUpdirPath p_updir)
-        {
-            if (! m_path.toString().startsWith("/"))
-            {
-                m_path.append(m_templateDir);
-            }
-            int lastSlash = m_path.toString().lastIndexOf("/", m_path.length() - 2 );
-            if (lastSlash == 0)
-            {
-                throw new TunnelingException
-                    ("Cannot reference templates above the root",
-                     p_updir.getUpdir());
-            }
-            m_path.delete(lastSlash + 1, m_path.length());
-        }
-
-        public void inARelativePath(ARelativePath p_relativePath)
-        {
-            m_path.append(p_relativePath.getIdentifier().getText());
-        }
-
-        public void inAAbsolutePath(AAbsolutePath p_absPath)
-        {
-            m_path.append("/");
-        }
-
-        public void inAAliasedPath(AAliasedPath p_aliasedPath)
-        {
-            String alias = p_aliasedPath.getIdentifier() == null
-                ? "/"
-                : p_aliasedPath.getIdentifier().getText().trim();
-            String prefix = (String) m_aliases.get(alias);
-            if (prefix == null)
-            {
-                throw new TunnelingException("Unknown alias " + alias,
-                                             p_aliasedPath.getIdentifier());
-            }
-            else
-            {
-                m_path.append(prefix);
-            }
-        }
-    }
-
     private class AliasAdapter extends AnalysisAdapter
     {
-        private void addAlias(AAlias p_alias)
+        public void caseAliasesNode(AliasesNode p_node)
         {
-            String name = p_alias.getAliasName().toString().trim();
-            if (m_aliases.containsKey(name))
+            for (Iterator i = p_node.getAliass(); i.hasNext(); )
             {
-                Token token = null;
-                if (p_alias.getAliasName() instanceof ARootAliasName)
-                {
-                    token = ((ARootAliasName) p_alias.getAliasName())
-                        .getPathsep();
-                }
-                else if (p_alias.getAliasName() instanceof AIdAliasName)
-                {
-                    token = ((AIdAliasName) p_alias.getAliasName())
-                        .getIdentifier();
-                }
-                else // in case we forget to handle new types
-                {
-                    token = p_alias.getArrow();
-                }
-                throw new TunnelingException("Duplicate alias " + name, token);
-            }
-            else
-            {
-                m_aliases.put(name, computePath(p_alias.getPath()));
+                handleAlias((AliasDefNode) i.next());
             }
         }
 
-        public void caseAAliasComponent(AAliasComponent p_alias)
+        private void handleAlias(AliasDefNode p_node)
         {
-            for (Iterator a = ((AAliases)p_alias.getAliases())
-                     .getAlias().iterator();
-                 a.hasNext(); )
+            if (m_aliases.containsKey(p_node.getName()))
             {
-                addAlias((AAlias) a.next());
+                addError("Duplicate alias for " + p_node.getName(),
+                         p_node.getLocation());
+            }
+            else
+            {
+                m_aliases.put(p_node.getName(), computePath(p_node.getPath()));
             }
         }
     }
 
     private class PreliminaryAdapter extends AnalysisAdapter
     {
-        public void caseAEscapeComponent(AEscapeComponent p_escape)
+        public void caseEscapeDirectiveNode(EscapeDirectiveNode p_escape)
         {
             if (m_defaultEscaping != null)
             {
-                throw new TunnelingException
+                addError
                     ("a template cannot specify multiple default escapings",
-                     p_escape.getEscapeDirectiveStart());
+                     p_escape.getLocation());
             }
-            TEscaping token = p_escape.getEscaping();
-            m_defaultEscaping = token.getText();
+            m_defaultEscaping = p_escape.getEscapeCode();
             if (EscapingDirective.get(m_defaultEscaping) == null)
             {
-                throw new AnalysisException
-                    ("Unknown escaping directive '" + m_defaultEscaping + "'",
-                     m_describer.getExternalIdentifier(getTemplateUnit().getName()),
-                     token);
+                addError("Unknown escaping directive '" + m_defaultEscaping + "'",
+                         p_escape.getLocation());
             }
         }
 
-        public void caseAExtendsComponent(AExtendsComponent p_extends)
+        public void caseExtendsNode(ExtendsNode p_extends)
         {
             if(getTemplateUnit().hasParentPath())
             {
-                throw new TunnelingException
+                addError
                     ("a template cannot extend multiple templates",
-                     p_extends.getExtendsStart());
+                     p_extends.getLocation());
             }
             String parentPath =
                 getAbsolutePath(computePath(p_extends.getPath()));
             getTemplateUnit().setParentPath(parentPath);
             if (m_children.contains(parentPath))
             {
-                throw new TunnelingException(
+                addError(
                     "cyclic inheritance involving " + parentPath,
-                    p_extends.getExtendsStart());
+                    p_extends.getLocation());
             }
             else
             {
@@ -359,344 +274,288 @@ public class Analyzer
                     getTemplateUnit().setParentDescription(
                         m_describer.getTemplateDescription(
                             parentPath,
-                            p_extends.getExtendsStart(),
+                            p_extends.getLocation(),
                             m_templateIdentifier,
                             m_children));
                 }
-                catch (JamonTemplateException e)
+                catch (ParserError e)
                 {
-                    throw new TunnelingException(e);
+                    m_errors.addError(e);
+                }
+                catch (ParserErrors e)
+                {
+                    m_errors.addErrors(e);
                 }
                 catch (IOException e)
                 {
-                    throw new TunnelingException(e.getMessage(),
-                                                 p_extends.getExtendsStart());
+                    addError(e.getMessage(), p_extends.getLocation());
                 }
             }
         }
 
-        public void caseAAbstractComponent(AAbstractComponent p_abstract)
+        public void caseParentMarkerNode(ParentMarkerNode p_node)
         {
             getTemplateUnit().setIsParent();
         }
 
-        public void caseADefComponent(ADefComponent p_def)
+        public void caseDefNode(DefNode p_node)
         {
-            getTemplateUnit().
-                makeDefUnit(((ADef) p_def.getDef()).getIdentifier());
+            getTemplateUnit()
+                .makeDefUnit(p_node.getName(), p_node.getLocation());
         }
 
-        public void caseAMethodComponent(AMethodComponent p_method)
+        public void caseMethodNode(MethodNode p_node)
         {
-            getTemplateUnit().makeMethodUnit(
-                ((AMethod) p_method.getMethod()).getIdentifier(),
-                false);
+            getTemplateUnit()
+                .makeMethodUnit(p_node.getName(), p_node.getLocation(), false);
         }
 
-        public void caseAAbstractMethodComponent(
-            AAbstractMethodComponent p_method)
+        public void caseAbsMethodNode(AbsMethodNode p_node)
         {
             getTemplateUnit().makeMethodUnit(
-                ((AAbstractMethod) p_method.getAbstractMethod())
-                .getIdentifier(),
-                true);
+                p_node.getName(), p_node.getLocation(), true);
         }
     }
 
-    private class Adapter extends DepthFirstAdapter
+    private class Adapter extends DepthFirstAnalysisAdapter
     {
-        public void caseAImport(AImport p_import)
+        public void caseImportNode(ImportNode p_import)
         {
             getTemplateUnit().addImport(p_import);
         }
 
-        public void caseAImplement(AImplement p_implement)
+        public void caseImplementNode(ImplementNode p_node)
         {
-            getTemplateUnit().addInterface(
-                NodeUtils.asString(p_implement.getName()));
+            getTemplateUnit().addInterface(p_node.getName());
         }
 
-        public void inAInheritedUse(AInheritedUse p_inheritedUse)
+        public void caseParentArgsNode(ParentArgsNode p_node)
         {
             if (getCurrentUnit() instanceof TemplateUnit
                 && ! ((TemplateUnit) getCurrentUnit()).hasParentPath())
             {
-                throw new TunnelingException
-                    ("xargs may not be declared without extending another template",
-                     p_inheritedUse.getInheritedArgsStart());
+                addError(
+                    "xargs may not be declared without extending another template",
+                    p_node.getLocation());
+            }
+            else
+            {
+                super.caseParentArgsNode(p_node);
             }
         }
 
-        public void caseAParentArg(AParentArg p_arg)
+        public void caseParentArgNode(ParentArgNode p_node)
         {
-            ADefault argDefault = (ADefault) p_arg.getDefault();
-            ((InheritedUnit) getCurrentUnit()).addParentArg(p_arg);
+            ((InheritedUnit) getCurrentUnit()).addParentArg(p_node);
         }
 
-        public void caseAFargStart(AFargStart p_fargStart)
+        public void caseParentArgWithDefaultNode(
+            ParentArgWithDefaultNode p_node)
         {
-            pushFragmentArg(
-                getCurrentUnit().addFragment(p_fargStart.getIdentifier()));
+            ((InheritedUnit) getCurrentUnit()).addParentArg(p_node);
         }
 
-        public void outAFarg(AFarg node)
+        public void inFragmentArgsNode(FragmentArgsNode p_node)
+        {
+            pushFragmentArg(getCurrentUnit().addFragment(p_node));
+        }
+
+        public void outFragmentArgsNode(FragmentArgsNode p_node)
         {
             popUnit();
         }
 
-        public void caseAArglessFarg(AArglessFarg p_farg)
+        public void caseArgNode(ArgNode p_node)
         {
-            getCurrentUnit().addFragment(
-                ((AFargTag) p_farg.getFargTag()).getIdentifier());
+            getCurrentUnit().addRequiredArg(p_node);
         }
 
-        public void caseAArg(AArg p_arg)
+        public void caseOptionalArgNode(OptionalArgNode p_node)
         {
-            getCurrentUnit().addNonFragmentArg(p_arg);
+            getCurrentUnit().addOptionalArg(p_node);
         }
-
-        public void inADef(ADef p_def)
-        {
-            handleBody();
-            pushDefUnit(p_def.getIdentifier().getText());
-        }
-
-        public void outADef(ADef p_def)
+        
+        public void inDefNode(DefNode p_node)
         {
             handleBody();
-            popUnit();
+            pushDefUnit(p_node.getName());
         }
 
-        public void inAMethod(AMethod p_method)
-        {
-            handleBody();
-            pushMethodUnit(p_method.getIdentifier().getText());
-        }
-
-        public void outAMethod(AMethod p_method)
+        public void outDefNode(DefNode p_def)
         {
             handleBody();
             popUnit();
         }
 
-        public void inAAbstractMethod(AAbstractMethod p_abstractMethod)
+        public void inMethodNode(MethodNode p_node)
+        {
+            handleBody();
+            pushMethodUnit(p_node.getName());
+        }
+
+        public void outMethodNode(MethodNode p_node)
+        {
+            handleBody();
+            popUnit();
+        }
+
+        public void inAbsMethodNode(AbsMethodNode p_node)
         {
             handleBody();
             if (! getTemplateUnit().isParent())
             {
-                throw new TunnelingException(
+                addError(
                     "Non-abstract templates cannot have abstract methods",
-                    p_abstractMethod.getAbstractMethodStart());
+                    p_node.getLocation());
             }
-            pushMethodUnit(p_abstractMethod.getIdentifier().getText());
+            pushMethodUnit(p_node.getName());
         }
 
-        public void outAAbstractMethod(AAbstractMethod p_abstractMethod)
+        public void outAbsMethodNode(AbsMethodNode p_node)
         {
             popUnit();
         }
 
-        public void inAOverride(AOverride p_override)
+        public void inOverrideNode(OverrideNode p_node)
         {
             handleBody();
-            pushOverriddenMethodUnit(p_override);
+            pushOverriddenMethodUnit(p_node);
         }
 
-        public void outAOverride(AOverride p_override)
+        public void outOverrideNode(OverrideNode p_node)
         {
             handleBody();
             popUnit();
         }
 
-        public void caseABadBaseComponent(ABadBaseComponent node)
-        {
-            throw new TunnelingException
-                ("Unknown directive \""
-                 + node.getBadToken().getText()
-                 + node.getRestOfToken().getText()
-                 + "\"",
-                 node.getBadToken());
-        }
-
-        public void inACallBaseComponent(ACallBaseComponent node)
+        public void caseSimpleCallNode(SimpleCallNode p_node)
         {
             handleBody();
+            addStatement(makeCallStatement(p_node.getCallPath(),
+                                           p_node.getParams(),
+                                           p_node.getLocation()));
         }
 
-        public void caseACall(ACall p_call)
+        public void caseChildCallNode(ChildCallNode p_node)
         {
-            addStatement(makeCallStatement(p_call.getPath(),
-                                           p_call.getParams(),
-                                           p_call.getCallStart()));
-        }
-
-        public void caseAChildCall(AChildCall p_childCall)
-        {
+            handleBody();
             TemplateUnit unit = getTemplateUnit();
             if (! unit.isParent())
             {
-                throw new TunnelingException(
+                addError(
                     "<& *CHILD &> cannot be called from a template without an <%abstract> tag",
-                    p_childCall.getCallStart());
+                    p_node.getLocation());
             }
             addStatement(new ChildCallStatement(unit.getInheritanceDepth()+1));
         }
 
-        public void inAClassComponent(AClassComponent node)
+        public void caseClassNode(ClassNode p_node)
         {
             handleBody();
+            getTemplateUnit().addClassContent(p_node);
         }
 
-        public void caseTClassContent(TClassContent p_content)
+        public void caseTextNode(TextNode p_node)
         {
-            handleBody();
-            getTemplateUnit().addClassContent(p_content);
-        }
-
-        public void caseALiteralBaseComponent(ALiteralBaseComponent node)
-        {
-            handleBody();
-            addStatement
-                (new LiteralStatement(node.getLiteralText().getText(),
-                                      node.getLitstart(),
-                                      m_templateIdentifier));
-        }
-
-        public void caseABodyBaseComponent(ABodyBaseComponent node)
-        {
-            if (m_currentToken == null)
+            if (m_currentTextLocation == null)
             {
-                m_currentToken = node.getText();
+                m_currentTextLocation = p_node.getLocation();
             }
-            m_current.append(node.getText().getText());
+            m_current.append(p_node.getText());
         }
 
-        public void caseANewlineBaseComponent(ANewlineBaseComponent node)
-        {
-            if (m_currentToken == null)
-            {
-                m_currentToken = node.getNewline();
-            }
-            m_current.append(node.getNewline().getText());
-        }
-
-        public void caseAPercentBaseComponent(APercentBaseComponent node)
-        {
-            if (m_currentToken == null)
-            {
-                m_currentToken = node.getPercent();
-            }
-            m_current.append(node.getPercent().getText());
-        }
-
-        public void inAMultiFragmentCall(AMultiFragmentCall p_call)
+        public void inMultiFragmentCallNode(MultiFragmentCallNode p_node)
         {
             handleBody();
             CallStatement s = makeCallStatementWithFragments(
-                p_call.getPath(),
-                p_call.getParams(),
-                p_call.getMultiFragmentCallInit());
+                p_node.getLocation(),
+                p_node.getCallPath(),
+                p_node.getParams());
             addStatement(s);
             pushCallStatement(s);
         }
 
-        public void outAMultiFragmentCall(AMultiFragmentCall p_call)
+        public void outMultiFragmentCallNode(MultiFragmentCallNode p_call)
         {
             popCallStatement();
         }
 
-        public void inANamedFarg(ANamedFarg p_farg)
+        public void inNamedFragmentNode(NamedFragmentNode p_node)
         {
             getCurrentCallStatement().addFragmentImpl(
-                pushFragmentUnitImpl(p_farg.getIdentifier().getText()));
+                pushFragmentUnitImpl(p_node.getName()), m_errors);
         }
 
-        public void outANamedFarg(ANamedFarg p_farg)
+        public void outNamedFragmentNode(NamedFragmentNode p_node)
         {
             handleBody();
             popUnit();
         }
 
-        public void inAFragmentCall(AFragmentCall p_call)
+        public void inFragmentCallNode(FragmentCallNode p_node)
         {
             handleBody();
             CallStatement s =
-                makeCallStatementWithFragments(p_call.getPath(),
-                                               p_call.getParams(),
-                                               p_call.getFragmentCallStart());
+                makeCallStatementWithFragments(p_node.getLocation(),
+                                               p_node.getCallPath(),
+                                               p_node.getParams());
             addStatement(s);
-            s.addFragmentImpl(pushFragmentUnitImpl(null));
+            s.addFragmentImpl(pushFragmentUnitImpl(null), m_errors);
         }
 
-        public void outAFragmentCall(AFragmentCall p_call)
+        public void outFragmentCallNode(FragmentCallNode p_node)
         {
             handleBody();
             popUnit();
         }
 
-        public void caseEOF(EOF node)
+        public void outTopNode(TopNode p_node)
         {
             handleBody();
         }
 
-        public void caseAJava(AJava p_java)
+        public void caseJavaNode(JavaNode p_node)
         {
             handleBody();
-            addStatement(new RawStatement(p_java.getJavaStmts().getText(),
-                                          p_java.getJavaStart(),
+            addStatement(new RawStatement(p_node.getJava(),
+                                          p_node.getLocation(),
                                           m_templateIdentifier));
         }
 
-        public void caseAPartialJline(APartialJline node)
+        private class EmitAdapter extends AnalysisAdapter
         {
-            handleBody();
-            addStatement(new RawStatement(node.getExpr().getText(),
-                                          node.getExpr(),
-                                          m_templateIdentifier));
+            EscapingDirective m_escapeCode = null;
+            public void caseEscapeNode(EscapeNode p_node)
+            {
+                m_escapeCode = EscapingDirective.get(p_node.getEscapeCode());
+                if (m_escapeCode == null)
+                {
+                    addError("Unknown escaping directive '" 
+                             + p_node.getEscapeCode()+ "'",
+                             p_node.getLocation());
+                }
+            }
+            
+            public void caseDefaultEscapeNode(DefaultEscapeNode p_node)
+            {
+                m_escapeCode = getDefaultEscaping(); 
+            }
+            
+            public EscapingDirective getEscape(AbstractEscapeNode p_node)
+            {
+                p_node.apply(this);
+                return m_escapeCode;
+            }
         }
-
-        public void caseAJline(AJline p_jline)
+        
+        public void caseEmitNode(EmitNode p_node)
         {
             handleBody();
-            addStatement(new RawStatement(p_jline.getExpr().getText(),
-                                          p_jline.getExpr(),
-                                          m_templateIdentifier));
-        }
-
-        public void caseAEmit(AEmit p_emit)
-        {
-            handleBody();
-            AEscape escape = (AEscape) p_emit.getEscape();
             addStatement(new WriteStatement
-                         (p_emit.getEmitExpr().getText(),
-                          extractEscaping(escape),
-                          p_emit.getEmitStart(),
+                         (p_node.getEmitExpression(),
+                          new EmitAdapter().getEscape(p_node.getEscaping()),
+                          p_node.getLocation(),
                           m_templateIdentifier));
-        }
-
-        private EscapingDirective extractEscaping(AEscape p_escape)
-        {
-            if (p_escape == null)
-            {
-                return getDefaultEscaping();
-            }
-            else
-            {
-                String directive = p_escape.getEscapeCode().getText();
-                EscapingDirective escaping =
-                    EscapingDirective.get(directive);
-                if (escaping == null)
-                {
-                    throw new AnalysisException
-                        ("Unknown escaping directive '" + directive + "'",
-                         m_describer.getExternalIdentifier(getTemplateUnit().getName()),
-                         p_escape.getEscapeCode());
-                }
-                else
-                {
-                    return escaping;
-                }
-            }
         }
     }
 
@@ -712,39 +571,34 @@ public class Analyzer
         if (m_current.length() > 0)
         {
             addStatement(new LiteralStatement(m_current.toString(),
-                                              m_currentToken,
+                                              m_currentTextLocation,
                                               m_templateIdentifier));
             m_current = new StringBuffer();
-            m_currentToken = null;
+            m_currentTextLocation = null;
         }
     }
 
-    private CallStatement makeCallStatementWithFragments(PPath p_path,
-                                                         PParams p_params,
-                                                         Token p_token)
+    private CallStatement makeCallStatementWithFragments(
+        Location p_location,
+        AbstractPathNode p_callPath, 
+        AbstractParamsNode p_params)
     {
-        CallStatement s = makeCallStatement(p_path, p_params, p_token);
-        if (s instanceof FargCallStatement)
-        {
-            throw new TunnelingException
-                ("Fragment args for fragments not implemented", p_token);
-        }
-        return s;
+        return makeCallStatement(p_callPath, p_params, p_location);
     }
 
-    private CallStatement makeCallStatement(PPath p_path,
-                                            PParams p_params,
-                                            Token p_token)
+    private CallStatement makeCallStatement(AbstractPathNode p_path,
+                                            AbstractParamsNode p_params,
+                                            Location p_location)
     {
         String path = computePath(p_path);
         FragmentUnit fragmentUnit = getCurrentUnit().getFragmentUnitIntf(path);
-        ParamValues paramValues = makeParamValues(p_params, p_token);
+        ParamValues paramValues = makeParamValues(p_params);
         if (fragmentUnit != null)
         {
             return new FargCallStatement(path,
                                          paramValues,
                                          fragmentUnit,
-                                         p_token,
+                                         p_location,
                                          m_templateIdentifier);
         }
         else
@@ -755,7 +609,7 @@ public class Analyzer
                 return new DefCallStatement(path,
                                             paramValues,
                                             defUnit,
-                                            p_token,
+                                            p_location,
                                             m_templateIdentifier);
             }
             else
@@ -767,7 +621,7 @@ public class Analyzer
                     return new MethodCallStatement(path,
                                                    paramValues,
                                                    methodUnit,
-                                                   p_token,
+                                                   p_location,
                                                    m_templateIdentifier);
                 }
                 else
@@ -775,48 +629,61 @@ public class Analyzer
                     getTemplateUnit().addCallPath(getAbsolutePath(path));
                     return new ComponentCallStatement(getAbsolutePath(path),
                                                       paramValues,
-                                                      p_token,
+                                                      p_location,
                                                       m_templateIdentifier);
                 }
             }
         }
     }
 
-    private ParamValues makeParamValues(PParams p_params, Token p_token)
+    private class ParamsAdapter extends DepthFirstAnalysisAdapter
     {
-        if (p_params instanceof ANamedParams)
+        public ParamValues getParamValues(AbstractParamsNode p_node)
         {
-            final Map paramMap = new HashMap();
-            p_params.apply(new DepthFirstAdapter()
-                {
-                    public void caseANamedParam(ANamedParam p_param)
-                    {
-                        paramMap.put(p_param.getIdentifier().getText(),
-                                     p_param.getParamExpr().getText().trim());
-                    }
-                });
-            return
-                new NamedParamValues(paramMap, p_token, m_templateIdentifier);
+            p_node.apply(this);
+            if (m_paramsList != null)
+            {
+                return new UnnamedParamValues(
+                    m_paramsList, p_node.getLocation());
+            }
+            else
+            {
+                return new NamedParamValues(
+                    m_paramsMap == null
+                    ? Collections.EMPTY_MAP
+                    : m_paramsMap,
+                    p_node.getLocation());
+            }
         }
-        else if (p_params instanceof AUnnamedParams)
+
+        public void inNamedParamsNode(NamedParamsNode p_node)
         {
-            final List params = new LinkedList();
-            p_params.apply(new DepthFirstAdapter()
-                {
-                    public void caseAUnnamedParam(AUnnamedParam p_param)
-                    {
-                        params.add(p_param.getParamExpr().getText().trim());
-                    }
-                });
-            return new UnnamedParamValues(params,
-                                          p_token,
-                                          m_templateIdentifier);
+            m_paramsMap = new HashMap();
         }
-        else
+        
+        public void inUnnamedParamsNode(UnnamedParamsNode p_node)
         {
-            throw new IllegalStateException(
-                "Unexpected subtype " + p_params.getClass() + " of PParams");
+            m_paramsList = new LinkedList();
         }
+        
+        public void caseNamedParamNode(NamedParamNode p_node)
+        {
+            m_paramsMap.put(p_node.getName().getName(), 
+                            p_node.getValue().getValue());
+        }
+        
+        public void caseParamValueNode(ParamValueNode p_node)
+        {
+            m_paramsList.add(p_node.getValue());
+        }
+        
+        private Map m_paramsMap = null;
+        private List m_paramsList = null;
+    }
+    
+    private ParamValues makeParamValues(AbstractParamsNode p_params)
+    {
+        return new ParamsAdapter().getParamValues(p_params);
     }
 
     private void addStatement(Statement p_statement)

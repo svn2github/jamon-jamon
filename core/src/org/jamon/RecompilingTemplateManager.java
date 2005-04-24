@@ -23,7 +23,6 @@ package org.jamon;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.Writer;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Collection;
@@ -32,7 +31,6 @@ import java.util.List;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.HashMap;
-import java.util.Set;
 import java.util.HashSet;
 
 import org.jamon.util.JavaCompiler;
@@ -426,11 +424,6 @@ public class RecompilingTemplateManager
     private String javaIntf(String p_path)
     {
         return prefix() + p_path + ".java";
-    }
-
-    private String classIntf(String p_path)
-    {
-        return prefix() + p_path + ".class";
     }
 
     private synchronized void ensureUpToDate(String p_path,

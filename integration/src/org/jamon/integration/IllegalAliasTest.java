@@ -28,18 +28,18 @@ public class IllegalAliasTest
     public void testCircularAlias()
         throws Exception
     {
-        expectTemplateException("CircularAlias", "Unknown alias bar", 2, 10);
+        expectParserError("CircularAlias", "Unknown alias bar", 2, 10);
     }
 
     public void testUnknownAlias()
         throws Exception
     {
-        expectTemplateException("UnknownAlias", "Unknown alias foo", 4, 4);
+        expectParserError("UnknownAlias", "Unknown alias foo", 4, 4);
     }
 
     public void testDuplicateAlias()
         throws Exception
     {
-        expectTemplateException("DuplicateAlias", "Duplicate alias foo", 3, 3);
+        expectParserError("DuplicateAlias", "Duplicate alias for foo", 3, 3);
     }
 }

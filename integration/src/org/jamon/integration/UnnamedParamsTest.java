@@ -39,9 +39,9 @@ public class UnnamedParamsTest
     public void testIncorrectNumberOfParams()
         throws Exception
     {
-        expectTemplateException(
+        expectParserError(
             "BadUnnamedParamCount",
             "Call provides 1 arguments when 2 are expected",
-            8, 1);
+            8, 5);
     }
 }

@@ -109,11 +109,10 @@ public class EncodingReader
                                    boolean p_twoBytes)
         throws IOException
     {
-        final int SPACE = (int) ' ';
-        final int TAB = (int) '\t';
-        final int CLOSE = (int) '>';
+        final int SPACE = ' ';
+        final int TAB = '\t';
+        final int CLOSE = '>';
 
-        final int START = 0;
         final int INNAME = 1;
         final int WAITFORCLOSE = 2;
         final int CLOSED = 3;

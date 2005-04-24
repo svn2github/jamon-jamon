@@ -22,7 +22,6 @@ package org.jamon;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.File;
 import java.net.URL;
 import java.net.URLConnection;
 
@@ -101,4 +100,9 @@ public class ResourceTemplateSource
     private final ClassLoader m_classLoader;
     private final String m_templateSourceDir;
     private final String m_extension;
+    
+    public TemplateLocation getTemplateLocation(String p_templatePath)
+    {
+        return new TemplateResourceLocation(resourceName(p_templatePath));
+    }
 }

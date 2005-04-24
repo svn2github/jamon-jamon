@@ -23,34 +23,47 @@ package org.jamon.codegen;
 import java.util.Map;
 import java.util.Iterator;
 
-import org.jamon.node.Token;
+import org.jamon.ParserError;
+import org.jamon.node.Location;
 
 public class NamedParamValues implements ParamValues
 {
-    public NamedParamValues(Map p_params,
-                            Token p_token,
-                            String p_templateIdentifier)
+    public NamedParamValues(Map p_params, Location p_location)
     {
         m_params = p_params;
-        m_token = p_token;
-        m_templateIdentifier = p_templateIdentifier;
+        m_location = p_location;
     }
 
     public void generateRequiredArgs(Iterator p_args, CodeWriter p_writer)
-        throws AnalysisException
+        throws ParserError
     {
+        boolean multipleArgsAreMissing= false;
+        StringBuffer missingArgs = null;
         while (p_args.hasNext())
         {
             String name = ((RequiredArgument) p_args.next()).getName();
             String expr = (String) m_params.remove(name);
             if (expr == null)
             {
-                throw new AnalysisException(
-                    "No value supplied for required argument " + name,
-                    m_templateIdentifier,
-                    m_token);
+                if (missingArgs == null)
+                {
+                    missingArgs = new StringBuffer(name);
+                }
+                else
+                {
+                    multipleArgsAreMissing = true;
+                    missingArgs.append(", " + name);
+                }
             }
             p_writer.printArg(expr);
+        }
+        if (missingArgs != null)
+        {
+            String plural = multipleArgsAreMissing ? "s" : "";
+            throw new ParserError(
+                m_location,
+                "No value" + plural + " supplied for required argument" + plural
+                + " " + missingArgs.toString());
         }
     }
 
@@ -72,6 +85,5 @@ public class NamedParamValues implements ParamValues
 
 
     private final Map m_params;
-    private final Token m_token;
-    private final String m_templateIdentifier;
+    private final Location m_location;
 }

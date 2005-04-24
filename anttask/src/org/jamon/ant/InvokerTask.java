@@ -36,16 +36,18 @@ import java.util.Map;
 import java.util.Properties;
 
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Location;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Environment;
 
+import org.jamon.ParserError;
+import org.jamon.ParserErrors;
 import org.jamon.TemplateInspector;
 import org.jamon.InvokerTool;
 import org.jamon.TemplateManager;
 import org.jamon.BasicTemplateManager;
 import org.jamon.RecompilingTemplateManager;
-import org.jamon.JamonTemplateException;
 
 /**
  * Ant task to reflectively invoke templates.
@@ -124,12 +126,20 @@ public class InvokerTask
         {
             throw new BuildException(e);
         }
-        catch (JamonTemplateException e)
+        catch (ParserErrors e)
         {
-            throw new BuildException(e.getMessage(),
-                                     new JamonLocation(e.getFileName(),
-                                                       e.getLine(),
-                                                       e.getColumn()));
+            e.printErrors(System.err); //FIXME - is this the right thing to do?
+            Iterator i = e.getErrors();
+            if (i.hasNext())
+            {
+                ParserError error = (ParserError) i.next();
+                throw new BuildException(
+                    error.getMessage(), new JamonLocation(error.getLocation()));
+            }
+            else
+            {
+                throw new BuildException("Jamon translation failed");
+            }
         }
         catch (IOException e)
         {

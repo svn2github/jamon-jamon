@@ -24,9 +24,9 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.Iterator;
 
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Location;
 
 import org.apache.tools.ant.types.Path;
@@ -36,8 +36,9 @@ import org.apache.tools.ant.util.SourceFileScanner;
 
 import org.apache.tools.ant.taskdefs.MatchingTask;
 
+import org.jamon.ParserError;
+import org.jamon.ParserErrors;
 import org.jamon.TemplateProcessor;
-import org.jamon.JamonTemplateException;
 import org.jamon.emit.EmitMode;
 
 /**
@@ -95,12 +96,12 @@ public class JamonTask
         if (m_srcDir == null)
         {
             throw new BuildException("srcdir attribute must be set!",
-                                     location);
+                                     getLocation());
         }
         if (m_destDir == null)
         {
             throw new BuildException("destdir attribute must be set!",
-                                     location);
+                                     getLocation());
         }
 
         if (! m_srcDir.exists() && ! m_srcDir.isDirectory())
@@ -108,7 +109,7 @@ public class JamonTask
             throw new BuildException("source directory \"" +
                                      m_srcDir +
                                      "\" does not exist or is not a directory",
-                                     location);
+                                     getLocation());
         }
 
         m_destDir.mkdirs();
@@ -117,14 +118,14 @@ public class JamonTask
             throw new BuildException("destination directory \"" +
                                      m_destDir +
                                      "\" does not exist or is not a directory",
-                                     location);
+                                     getLocation());
         }
 
         if (!m_srcDir.exists())
         {
             throw new BuildException("srcdir \""
                                      + m_srcDir
-                                     + "\" does not exist!", location);
+                                     + "\" does not exist!", getLocation());
         }
 
         FileNameMapper m = new FileNameMapper()
@@ -172,12 +173,20 @@ public class JamonTask
                 {
                     processor.generateSource(relativize(files[i]));
                 }
-                catch (JamonTemplateException e)
+                catch (ParserErrors e)
                 {
-                    throw new BuildException(e.getMessage(),
-                                             new JamonLocation(e.getFileName(),
-                                                               e.getLine(),
-                                                               e.getColumn()));
+                    e.printErrors(System.err); //FIXME - is this the right thing to do?
+                    Iterator errors = e.getErrors();
+                    if (errors.hasNext())
+                    {
+                        ParserError error = (ParserError) errors.next();
+                        throw new BuildException(
+                            error.getMessage(), new JamonLocation(error.getLocation()));
+                    }
+                    else
+                    {
+                        throw new BuildException("Jamon translation failed");
+                    }
                 }
                 catch (Exception e)
                 {

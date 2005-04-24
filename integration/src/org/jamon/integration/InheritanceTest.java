@@ -222,17 +222,17 @@ public class InheritanceTest
     public void testNonParentChildCall()
         throws Exception
     {
-        expectTemplateException("NonParentChildCall",
-                                "<& *CHILD &> cannot be called from a template without an <%abstract> tag",
-                                1, 1);
+        expectParserError("NonParentChildCall",
+                          "<& *CHILD &> cannot be called from a template without an <%abstract> tag",
+                          1, 1);
     }
 
     public void testMultipleParents()
         throws Exception
     {
-        expectTemplateException("MultipleParents",
-                                "a template cannot extend multiple templates",
-                                2, 1);
+        expectParserError("MultipleParents",
+                          "a template cannot extend multiple templates",
+                          2, 1);
     }
 
     private void checkCompilationFailure(String p_path)

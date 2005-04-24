@@ -20,14 +20,14 @@
 
 package org.jamon.codegen;
 
-import org.jamon.node.Token;
+import org.jamon.node.Location;
 import org.jamon.emit.EmitMode;
 
 public class RawStatement
     extends AbstractStatement
 {
     RawStatement(String p_code,
-                 Token p_token,
+                 Location p_token,
                  String p_templateIdentifier)
     {
         super(p_token, p_templateIdentifier);

@@ -26,7 +26,7 @@ public class ComponentCallTest
     public void testCallToNonexistantTemplate()
         throws Exception
     {
-        expectTemplateException(
+        expectParserError(
             "CallToNonexistantTemplate",
             "Unable to find template or class for /foo/bar",
             1, 1);

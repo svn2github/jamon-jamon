@@ -27,17 +27,22 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeMap;
 
-import org.jamon.node.TIdentifier;
-import org.jamon.node.AArg;
+import org.jamon.ParserError;
+import org.jamon.ParserErrors;
 import org.jamon.emit.EmitMode;
+import org.jamon.node.ArgNode;
+import org.jamon.node.FragmentArgsNode;
+import org.jamon.node.Location;
+import org.jamon.node.OptionalArgNode;
 
 public abstract class AbstractUnit
     implements Unit
 {
-    public AbstractUnit(String p_name, Unit p_parent)
+    public AbstractUnit(String p_name, Unit p_parent, ParserErrors p_errors)
     {
         m_name = p_name;
         m_parent = p_parent;
+        m_errors = p_errors;
     }
 
     public final String getName()
@@ -49,8 +54,13 @@ public abstract class AbstractUnit
     {
         return m_parent;
     }
+    
+    protected final ParserErrors getErrors()
+    {
+        return m_errors;
+    }
 
-    protected abstract void addFragmentArg(FragmentArgument p_arg);
+    protected abstract void addFragmentArg(FragmentArgument p_arg, Location p_location);
     public abstract Iterator getFragmentArgs();
     public abstract List getFragmentArgsList();
 
@@ -79,7 +89,7 @@ public abstract class AbstractUnit
 
     public void generateRenderBody(CodeWriter p_writer,
                                    TemplateDescriber p_describer,
-                                   EmitMode p_emitMode)
+                                   EmitMode p_emitMode) throws ParserError
     {
         p_writer.openBlock();
         printStatements(p_writer, p_describer, p_emitMode);
@@ -89,7 +99,7 @@ public abstract class AbstractUnit
 
     private void printStatements(CodeWriter p_writer,
                                  TemplateDescriber p_describer,
-                                 EmitMode p_emitMode)
+                                 EmitMode p_emitMode) throws ParserError
     {
         for (Iterator i = getStatements().iterator(); i.hasNext(); )
         {
@@ -111,28 +121,31 @@ public abstract class AbstractUnit
 
     private final String m_name;
     private final Unit m_parent;
+    private final ParserErrors m_errors;
     private final List m_statements = new LinkedList();
     private final Set m_argNames = new HashSet();
 
-    public FragmentUnit addFragment(TIdentifier p_fragName)
+    public FragmentUnit addFragment(FragmentArgsNode p_node)
     {
-        checkArgName(p_fragName);
-        FragmentUnit frag = new FragmentUnit(p_fragName.getText(), this);
-        addFragmentArg(new FragmentArgument(frag));
+        checkArgName(p_node.getFragmentName(), p_node.getLocation());
+        FragmentUnit frag = 
+            new FragmentUnit(p_node.getFragmentName(), this, m_errors);
+        addFragmentArg(new FragmentArgument(frag), p_node.getLocation());
         return frag;
     }
 
-    public void addNonFragmentArg(AArg p_arg)
+    public void addRequiredArg(ArgNode p_node)
     {
-        checkArgName(p_arg.getName());
-        if (p_arg.getDefault() == null)
-        {
-            addRequiredArg(new RequiredArgument(p_arg));
-        }
-        else
-        {
-            addOptionalArg(new OptionalArgument(p_arg));
-        }
+        checkArgName(p_node.getName().getName(), 
+                     p_node.getName().getLocation());
+        addRequiredArg(new RequiredArgument(p_node));
+    }
+
+    public void addOptionalArg(OptionalArgNode p_node)
+    {
+        checkArgName(p_node.getName().getName(), 
+            p_node.getName().getLocation());
+        addOptionalArg(new OptionalArgument(p_node));
     }
 
     protected void addArgName(AbstractArgument p_arg)
@@ -140,13 +153,13 @@ public abstract class AbstractUnit
         m_argNames.add(p_arg.getName());
     }
 
-    private void checkArgName(TIdentifier p_name)
+    private void checkArgName(String p_name, Location p_location)
     {
-        if (! m_argNames.add(p_name.getText()))
+        if (! m_argNames.add(p_name))
         {
-            throw new TunnelingException
-                ("multiple arguments named " + p_name.getText(),
-                 p_name);
+            getErrors().addError(
+                "multiple arguments named " + p_name,
+                p_location);
         }
     }
 

@@ -20,21 +20,27 @@
 
 package org.jamon.codegen;
 
+import java.util.Iterator;
+
+import org.jamon.ParserErrors;
+
 public class DeclaredMethodUnit
     extends AbstractInnerUnit
     implements MethodUnit
 {
     public DeclaredMethodUnit(String p_name,
                               Unit p_parent,
+                              ParserErrors p_errors,
                               boolean p_isAbstract)
     {
-        super(p_name, p_parent);
+        super(p_name, p_parent, p_errors);
         m_isAbstract = p_isAbstract;
     }
 
-    public DeclaredMethodUnit(String p_name, Unit p_parent)
+    public DeclaredMethodUnit(
+        String p_name, Unit p_parent, ParserErrors p_errors)
     {
-        this(p_name, p_parent, false);
+        this(p_name, p_parent, p_errors, false);
     }
 
     public String getOptionalArgDefaultMethod(OptionalArgument p_arg)
@@ -48,4 +54,19 @@ public class DeclaredMethodUnit
     }
 
     private final boolean m_isAbstract;
+
+    public Iterator getOptionalArgsWithDefaults()
+    {
+        return getSignatureOptionalArgs();
+    }
+
+    public String getDefaultForArg(OptionalArgument p_arg)
+    {
+        return p_arg.getDefault();
+    }
+
+    public void addFragmentArg(FragmentArgument p_argument)
+    {
+        super.addFragmentArg(p_argument, null);
+    }
 }

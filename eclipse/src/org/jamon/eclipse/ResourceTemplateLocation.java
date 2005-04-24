@@ -11,34 +11,33 @@
  *
  * The Original Code is Jamon code, released February, 2003.
  *
- * The Initial Developer of the Original Code is Jay Sachs.  Portions
- * created by Jay Sachs are Copyright (C) 2003 Jay Sachs.  All Rights
+ * The Initial Developer of the Original Code is Ian Robertson.  Portions
+ * created by Ian Robertson are Copyright (C) 2005 Ian Robertson.  All Rights
  * Reserved.
  *
  * Contributor(s):
  */
+package org.jamon.eclipse;
 
-package org.jamon.codegen;
+import org.eclipse.core.resources.IFile;
+import org.jamon.TemplateLocation;
 
-import org.jamon.lexer.LexerException;
-import org.jamon.node.TPercent;
-
-public class Lexer
-    extends org.jamon.lexer.Lexer
+public class ResourceTemplateLocation implements TemplateLocation
 {
-    public Lexer(java.io.PushbackReader p_reader)
+    public ResourceTemplateLocation(IFile p_file)
     {
-        super(p_reader);
+        m_file = p_file;
+    }
+    
+    public String toString()
+    {
+        return m_file.getFullPath().toString();
+    }
+    
+    public IFile getFile()
+    {
+        return m_file;
     }
 
-    protected void filter()
-    {
-        if (state == State.BODY
-            && token instanceof TPercent
-            && token.getPos() == 1)
-        {
-            state = State.JLINE;
-            token = null;
-        }
-    }
+    private final IFile m_file;
 }

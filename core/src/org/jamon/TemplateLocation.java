@@ -12,23 +12,17 @@
  * The Original Code is Jamon code, released February, 2003.
  *
  * The Initial Developer of the Original Code is Ian Robertson.  Portions
- * created by Ian Robertson are Copyright (C) 2003 Jay Sachs.  All Rights
+ * created by Ian Robertson are Copyright (C) 2005 Ian Robertson.  All Rights
  * Reserved.
  *
  * Contributor(s):
  */
+package org.jamon;
 
-package org.jamon.codegen;
-
-import org.jamon.JamonTemplateException;
-import org.jamon.node.Token;
-
-public class AnalysisException
-    extends JamonTemplateException
+/**
+ * Interface for classes whose instances hold the location of a template.
+ */
+public interface TemplateLocation
 {
-    public AnalysisException(
-        String p_message, String p_fileName, Token p_token)
-    {
-        super(p_message, p_fileName, p_token.getLine(), p_token.getPos());
-    }
+    String toString();
 }

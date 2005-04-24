@@ -58,9 +58,9 @@ public class MethodTest
     public void testOverrideNonexistentMethod()
         throws Exception
     {
-        expectTemplateException(
+        expectParserError(
             "OverrideNonexistentMethod",
             "There is no such method noSuchMethod to override",
-            2, 12);
+            2, 1);
     }
 }

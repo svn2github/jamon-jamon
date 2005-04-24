@@ -23,7 +23,8 @@ package org.jamon.codegen;
 import java.util.Iterator;
 
 import org.jamon.JamonRuntimeException;
-import org.jamon.node.Token;
+import org.jamon.ParserError;
+import org.jamon.node.Location;
 import org.jamon.emit.EmitMode;
 
 public class ComponentCallStatement
@@ -31,10 +32,10 @@ public class ComponentCallStatement
 {
     ComponentCallStatement(String p_path,
                            ParamValues p_params,
-                           Token p_token,
+                           Location p_location,
                            String p_templateIdentifier)
     {
-        super(p_path, p_params, p_token, p_templateIdentifier);
+        super(p_path, p_params, p_location, p_templateIdentifier);
     }
 
     protected String getFragmentIntfName(FragmentUnit p_fragmentUnitIntf)
@@ -45,7 +46,7 @@ public class ComponentCallStatement
 
     public void generateSource(CodeWriter p_writer,
                                TemplateDescriber p_describer,
-                               EmitMode p_emitMode)
+                               EmitMode p_emitMode) throws ParserError
     {
         generateSourceLine(p_writer);
         p_writer.openBlock();
@@ -53,7 +54,7 @@ public class ComponentCallStatement
         try
         {
             desc = p_describer.getTemplateDescription(getPath(),
-                                                      getToken(),
+                                                      getLocation(),
                                                       getTemplateIdentifier());
         }
         catch (java.io.IOException e)

@@ -20,7 +20,7 @@
 
 package org.jamon.codegen;
 
-import org.jamon.node.Token;
+import org.jamon.node.Location;
 import org.jamon.util.StringUtils;
 import org.jamon.emit.EmitMode;
 
@@ -28,7 +28,7 @@ public class LiteralStatement
     extends AbstractStatement
     implements Statement
 {
-    LiteralStatement(String p_text, Token p_token, String p_templateIdentifier)
+    LiteralStatement(String p_text, Location p_token, String p_templateIdentifier)
     {
         super(p_token, p_templateIdentifier);
         m_text = javaEscape(p_text);
@@ -63,7 +63,7 @@ public class LiteralStatement
               case '\"': s.append("\\\""); break;
               default:
                   {
-                      int ci = (int) c;
+                      int ci = c;
                       if (ci < 32 || ci > 127)
                       {
                           s.append("\\u");

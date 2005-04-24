@@ -20,7 +20,6 @@
 
 package org.jamon.codegen;
 
-import java.io.Writer;
 import java.io.StringWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -78,7 +77,6 @@ public class CodeWriterTest
         throws IOException
     {
         m_codeWriter.openList();
-        boolean exceptionThrown = false;
         try
         {
             m_codeWriter.finish();

@@ -71,4 +71,6 @@ public interface TemplateSource
      * @return an identifying string
      */
     String getExternalIdentifier(String p_templatePath);
+    
+    TemplateLocation getTemplateLocation(String p_templatePath);
 }

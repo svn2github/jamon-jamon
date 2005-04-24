@@ -21,6 +21,7 @@
 package org.jamon;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
@@ -152,9 +153,13 @@ public class TemplateProcessor
         System.out.println("Usage: java org.jamon.TemplateProcessor <args> templatePath*");
         System.out.println("  Arguments:");
         System.out.println("  -h|--help         - print this help");
-        System.out.println("  "
-                           + DESTDIR
-                           + "<path>  - path to where compiled .java files go (required)");
+        System.out.println(
+            "  -d|--directories  - treat paths as directories, " +
+            "                      and parse all .jamon files therein"); 
+        System.out.println(
+            "  "
+            + DESTDIR
+            + "<path>  - path to where compiled .java files go (required)");
         System.out.println("  "
                            + SRCDIR
                            + "<path>   - path to template directory");
@@ -169,6 +174,7 @@ public class TemplateProcessor
         try
         {
             int arg = 0;
+            boolean processDirectories = false;
             File sourceDir = new File(".");
             File destDir = null;
             EmitMode emitMode = EmitMode.STANDARD;
@@ -178,6 +184,11 @@ public class TemplateProcessor
                 {
                     showHelp();
                     System.exit(0);
+                }
+                else if ("-d".equals(args[arg]) 
+                         || "--directories".equals(args[arg]))
+                {
+                    processDirectories = true;
                 }
                 else if (args[arg].startsWith(DESTDIR))
                 {
@@ -228,13 +239,36 @@ public class TemplateProcessor
 
             while (arg < args.length)
             {
-                processor.generateSource(args[arg++]);
+                if (processDirectories)
+                {
+                    String directoryName = args[arg++];
+                    String fullPath = sourceDir + directoryName;
+                    File directory = new File(fullPath);
+                    if (!directory.isDirectory())
+                    {
+                        System.err.println(fullPath + " is not a directory");
+                    }
+                    File[] files = directory.listFiles(new FilenameFilter() {
+                        public boolean accept(File p_dir, String p_name)
+                        {
+                            return p_name.endsWith(".jamon");
+                        }
+                    });
+                    for (int i = 0; i < files.length; i++)
+                    {
+                        processor.generateSource(
+                            directoryName + "/" + files[i].getName());
+                    }
+                }
+                else
+                {
+                    processor.generateSource(args[arg++]);
+                }
             }
         }
-        catch (JamonTemplateException e)
+        catch (ParserErrors e)
         {
-            System.err.println(e.getFileName() + ":" + e.getLine() + ":"
-                               + e.getColumn() + ":" + e.getMessage());
+            e.printErrors(System.err);
             System.exit(2);
         }
         catch (Throwable t)

@@ -115,6 +115,11 @@ public class FileTemplateSource
         return path.toString();
     }
 
+    public TemplateLocation getTemplateLocation(String p_templatePath)
+    {
+        return new TemplateFileLocation(getExternalIdentifier(p_templatePath));
+    }
+
     private final File m_templateSourceDir;
     private final String m_extension;
 }

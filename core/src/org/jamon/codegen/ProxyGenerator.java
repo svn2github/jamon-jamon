@@ -21,10 +21,7 @@
 package org.jamon.codegen;
 
 import java.io.OutputStream;
-import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
-import java.util.LinkedList;
 
 public class ProxyGenerator
 {
@@ -174,7 +171,6 @@ public class ProxyGenerator
 
     private void generateArgArrays(Unit p_unit, String p_prefix)
     {
-        List parentRequiredArgs = new LinkedList();
         printArgNames(p_prefix + "REQUIRED",
                       p_unit.getSignatureRequiredArgs());
         printArgTypes(p_prefix + "REQUIRED",

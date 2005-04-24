@@ -22,6 +22,9 @@ package org.jamon.codegen;
 
 import java.io.OutputStream;
 import java.util.Iterator;
+
+import org.jamon.ParserError;
+import org.jamon.ParserErrors;
 import org.jamon.emit.EmitMode;
 
 public class ImplGenerator
@@ -40,17 +43,24 @@ public class ImplGenerator
     public void generateSource()
         throws java.io.IOException
     {
-        generateHeader();
-        generatePrologue();
-        generateImports();
-        generateDeclaration();
-        generateSetOptionalArguments();
-        generateConstructor();
-        generateRender();
-        generateDefs();
-        generateMethods();
-        generateEpilogue();
-        m_writer.finish();
+        try
+        {
+            generateHeader();
+            generatePrologue();
+            generateImports();
+            generateDeclaration();
+            generateSetOptionalArguments();
+            generateConstructor();
+            generateRender();
+            generateDefs();
+            generateMethods();
+            generateEpilogue();
+            m_writer.finish();
+        }
+        catch (ParserError e)
+        {
+            throw new ParserErrors(e);
+        }
     }
 
     private final CodeWriter m_writer;
@@ -111,13 +121,14 @@ public class ImplGenerator
              i.hasNext(); )
         {
             OptionalArgument arg = (OptionalArgument) i.next();
-            if(arg.getDefault() != null)
+            String value = m_templateUnit.getOptionalArgDefault(arg);
+            if (value != null)
             {
                 m_writer.println(
                     "if(! p_implData." + arg.getIsNotDefaultName() + "())");
                 m_writer.openBlock();
                 m_writer.println("p_implData." + arg.getSetterName() + "("
-                                 + arg.getDefault() + ");");
+                                 + value + ");");
                 m_writer.closeBlock();
             }
         }
@@ -168,7 +179,7 @@ public class ImplGenerator
     }
 
 
-    private void generateDefs()
+    private void generateDefs() throws ParserError
     {
         for (Iterator i = m_templateUnit.getDefUnits(); i.hasNext(); )
         {
@@ -194,7 +205,7 @@ public class ImplGenerator
         }
     }
 
-    private void generateMethods()
+    private void generateMethods() throws ParserError
     {
         for (Iterator i = m_templateUnit.getDeclaredMethodUnits();
              i.hasNext(); )
@@ -221,7 +232,7 @@ public class ImplGenerator
     }
 
 
-    private void generateMethodImpl(MethodUnit p_methodUnit)
+    private void generateMethodImpl(MethodUnit p_methodUnit) throws ParserError
     {
         //FIXME - cut'n'pasted from generateDefs
         m_writer.println();
@@ -245,9 +256,7 @@ public class ImplGenerator
         }
         m_writer.println();
 
-        //FIXME - only generate these for optional args we provide new
-        //defaults for.
-        for (Iterator i = p_methodUnit.getSignatureOptionalArgs();
+        for (Iterator i = p_methodUnit.getOptionalArgsWithDefaults();
              i.hasNext(); )
         {
             OptionalArgument arg = (OptionalArgument) i.next();
@@ -255,12 +264,13 @@ public class ImplGenerator
                              + p_methodUnit.getOptionalArgDefaultMethod(arg)
                              + "()");
             m_writer.openBlock();
-            m_writer.println("return " + arg.getDefault() + ";");
+            m_writer.println(
+                "return " + p_methodUnit.getDefaultForArg(arg) + ";");
             m_writer.closeBlock();
         }
     }
 
-    private void generateRender()
+    private void generateRender() throws ParserError
     {
         if (m_templateUnit.hasParentPath())
         {

@@ -20,11 +20,11 @@
 
 package org.jamon.codegen;
 
-import org.jamon.node.AArg;
+import org.jamon.node.ArgNode;
 
 public class RequiredArgument extends AbstractArgument
 {
-    public RequiredArgument(AArg p_arg)
+    public RequiredArgument(ArgNode p_arg)
     {
         super(p_arg);
     }

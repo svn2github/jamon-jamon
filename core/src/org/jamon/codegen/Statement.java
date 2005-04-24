@@ -20,6 +20,7 @@
 
 package org.jamon.codegen;
 
+import org.jamon.ParserError;
 import org.jamon.emit.EmitMode;
 
 /**
@@ -35,8 +36,12 @@ public interface Statement
      * @param p_writer where to emit the java source
      * @param p_describer the <code>TemplateDescriber</code> to use
      * @param p_emitMode the <code>EmitMode</code> to use
+     * 
+     * @throws ParserError
      */
     void generateSource(CodeWriter p_writer,
                         TemplateDescriber p_describer,
-                        EmitMode p_emitMode);
+                        EmitMode p_emitMode)
+        throws ParserError;
+    //FIXME - determine parser errors before trying to generate source.
 }

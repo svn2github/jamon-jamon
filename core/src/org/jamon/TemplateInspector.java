@@ -28,9 +28,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 
 /**
@@ -89,8 +87,6 @@ public class TemplateInspector
         m_templateClass = m_template.getClass();
         try
         {
-            Constructor con = m_templateClass
-                .getConstructor(new Class[] { TemplateManager.class });
             Method[] methods = m_templateClass.getMethods();
             Method renderMethod = null;
             for (int i = 0; i < methods.length; ++i)
@@ -112,10 +108,6 @@ public class TemplateInspector
             m_optionalArgNames = Arrays.asList
                 ((String[])
                  m_templateClass.getField("OPTIONAL_ARG_NAMES").get(null));
-        }
-        catch (NoSuchMethodException e)
-        {
-            throw new InvalidTemplateException(p_templateName, e);
         }
         catch (NoSuchFieldException e)
         {

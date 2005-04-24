@@ -42,7 +42,7 @@ public class AbstractMethodTest
     public void testNoOverride()
         throws Exception
     {
-        expectTemplateException(
+        expectParserError(
             "MissingOverride",
             "The abstract method(s) foo have no concrete implementation",
             1, 1);
@@ -51,7 +51,7 @@ public class AbstractMethodTest
     public void testAbstractMethodInConcreteTemplate()
         throws Exception
     {
-        expectTemplateException(
+        expectParserError(
             "AbstractMethodInConcrete",
             "Non-abstract templates cannot have abstract methods",
             1, 1);

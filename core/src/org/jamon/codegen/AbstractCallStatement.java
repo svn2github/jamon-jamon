@@ -25,9 +25,12 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.HashMap;
 
-import org.jamon.node.Token;
+import org.jamon.ParserError;
+import org.jamon.ParserErrors;
 import org.jamon.util.StringUtils;
 import org.jamon.emit.EmitMode;
+
+import org.jamon.node.Location;
 
 public abstract class AbstractCallStatement
     extends AbstractStatement
@@ -35,15 +38,15 @@ public abstract class AbstractCallStatement
 {
     AbstractCallStatement(String p_path,
                           ParamValues p_params,
-                          Token p_token,
+                          Location p_location,
                           String p_templateIdentifier)
     {
-        super(p_token, p_templateIdentifier);
+        super(p_location, p_templateIdentifier);
         m_path = p_path;
         m_params = p_params;
     }
 
-    public void addFragmentImpl(FragmentUnit p_unit)
+    public void addFragmentImpl(FragmentUnit p_unit, ParserErrors p_errors)
     {
         m_fragParams.put(p_unit.getName(), p_unit);
     }
@@ -73,16 +76,15 @@ public abstract class AbstractCallStatement
     private void makeFragmentImplClass(FragmentUnit p_fragmentUnitIntf,
                                        CodeWriter p_writer,
                                        TemplateDescriber p_describer,
-                                       EmitMode p_emitMode)
+                                       EmitMode p_emitMode) throws ParserError
     {
         final FragmentUnit fragmentUnitImpl =
             (FragmentUnit) m_fragParams.remove(p_fragmentUnitIntf.getName());
         if (fragmentUnitImpl == null)
         {
-            throw new AnalysisException
-                ("Call is missing fragment " + p_fragmentUnitIntf.getName(),
-                 getTemplateIdentifier(),
-                 getToken());
+            throw new ParserError(
+                getLocation(),
+                "Call is missing fragment " + p_fragmentUnitIntf.getName());
         }
 
         p_writer.println("class " + getFragmentImplName(p_fragmentUnitIntf));
@@ -131,23 +133,21 @@ public abstract class AbstractCallStatement
                                            CodeWriter p_writer,
                                            TemplateDescriber p_describer,
                                            EmitMode p_emitMode)
+        throws ParserError
     {
         if (m_fragParams.size() == 1
             && m_fragParams.keySet().iterator().next() == null)
         {
             if(p_fragmentInterfaces.size() == 0)
             {
-                throw new AnalysisException
-                    ("Call provides a fragment, but none are expected",
-                     getTemplateIdentifier(),
-                     getToken());
+                throw new ParserError(
+                    getLocation(),
+                    "Call provides a fragment, but none are expected");
             }
             else if (p_fragmentInterfaces.size() > 1)
             {
-                throw new AnalysisException
-                    ("Call must provide multiple fragments",
-                     getTemplateIdentifier(),
-                     getToken());
+                throw new ParserError(getLocation(),
+                                      "Call must provide multiple fragments");
             }
             else
             {
@@ -182,7 +182,7 @@ public abstract class AbstractCallStatement
     }
 
     protected void checkSuppliedParams()
-        throws AnalysisException
+        throws ParserError
     {
         if (getParams().hasUnusedParams())
         {
@@ -196,16 +196,14 @@ public abstract class AbstractCallStatement
         }
     }
 
-    AnalysisException constructExtraParamsException(String p_paramType,
+    ParserError constructExtraParamsException(String p_paramType,
                                                  Iterator p_extraParams)
     {
         StringBuffer message = new StringBuffer("Call provides unused ");
         message.append(p_paramType);
         message.append(" ");
         StringUtils.commaJoin(message, p_extraParams);
-        return new AnalysisException(message.toString(),
-                                     getTemplateIdentifier(),
-                                     getToken());
+        return new ParserError(getLocation(), message.toString());
     }
 
     protected final String getPath()

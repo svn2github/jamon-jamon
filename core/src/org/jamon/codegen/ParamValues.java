@@ -22,14 +22,16 @@ package org.jamon.codegen;
 
 import java.util.Iterator;
 
+import org.jamon.ParserError;
+
 public interface ParamValues
 {
     void generateRequiredArgs(Iterator p_args, CodeWriter p_writer)
-        throws AnalysisException;
+        throws ParserError;
 
     String getOptionalArgValue(String p_argName);
 
-    boolean hasUnusedParams() throws AnalysisException;
+    boolean hasUnusedParams();
 
-    Iterator getUnusedParams() throws AnalysisException;
+    Iterator getUnusedParams();
 }

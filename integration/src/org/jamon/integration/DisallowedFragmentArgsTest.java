@@ -20,32 +20,30 @@
 
 package org.jamon.integration;
 
-import org.jamon.JamonException;
-
 public class DisallowedFragmentArgsTest
     extends TestBase
 {
     public void testFragmentInFragment()
         throws Exception
     {
-        expectTemplateException("FragmentInFragment",
-                                "Fragments cannot have fragment arguments",
-                                5, 10);
+        expectParserError("FragmentInFragment",
+                          "Fragments cannot have fragment arguments",
+                          5, 3);
     }
 
     public void testOptionalArgInFragment()
         throws Exception
     {
-        expectTemplateException("OptionalArgInFragment",
-                                "Fragments cannot have optional arguments",
-                                5, 16);
+        expectParserError("OptionalArgInFragment",
+                          "Fragments cannot have optional arguments",
+                          5, 19);
     }
 
     public void testUnusedArgumentToFragment()
         throws Exception
     {
-        expectTemplateException("UnusedArgumentToFragment",
-                                "Call provides unused arguments i",
-                                2, 1);
+        expectParserError("UnusedArgumentToFragment",
+                          "Call provides unused arguments i",
+                          2, 1);
     }
 }

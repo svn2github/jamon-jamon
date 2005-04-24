@@ -20,11 +20,7 @@
 
 package org.jamon.integration;
 
-import java.io.File;
-
 import test.jamon.subdir.RelativePath;
-import org.jamon.TemplateProcessor;
-import org.jamon.JamonTemplateException;
 
 public class RelativePathTest
     extends TestBase
@@ -39,8 +35,8 @@ public class RelativePathTest
     public void testToManyDotDots()
         throws Exception
     {
-        expectTemplateException("TooManyDotDots",
-                                "Cannot reference templates above the root",
-                                1, 10);
+        expectParserError("TooManyDotDots",
+                          "Cannot reference templates above the root",
+                          1, 13);
     }
 }

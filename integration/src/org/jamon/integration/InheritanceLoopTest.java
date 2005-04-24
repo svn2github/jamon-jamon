@@ -20,15 +20,13 @@
 
 package org.jamon.integration;
 
-import org.jamon.JamonException;
-
 public class InheritanceLoopTest
     extends TestBase
 {
     public void testInheritanceLoop()
         throws Exception
     {
-        expectTemplateException(
+        expectParserError(
             "ParentLoop2",
             "cyclic inheritance involving /test/jamon/broken/ParentLoop1",
             1, 1);

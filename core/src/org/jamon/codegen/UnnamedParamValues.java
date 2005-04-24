@@ -23,21 +23,19 @@ package org.jamon.codegen;
 import java.util.List;
 import java.util.Iterator;
 
-import org.jamon.node.Token;
+import org.jamon.ParserError;
+import org.jamon.node.Location;
 
 public class UnnamedParamValues implements ParamValues
 {
-    public UnnamedParamValues(List p_params,
-                              Token p_token,
-                              String p_templateIdentifier)
+    public UnnamedParamValues(List p_params, Location p_location)
     {
         m_params = p_params;
-        m_token = p_token;
-        m_templateIdentifier = p_templateIdentifier;
+        m_location = p_location;
     }
 
     public void generateRequiredArgs(Iterator p_args, CodeWriter p_writer)
-        throws AnalysisException
+        throws ParserError
     {
         int numberOfRequiredArgs = 0;
         while(p_args.hasNext())
@@ -48,11 +46,10 @@ public class UnnamedParamValues implements ParamValues
 
         if (numberOfRequiredArgs != m_params.size())
         {
-            throw new AnalysisException(
+            throw new ParserError(
+                m_location,
                 "Call provides " + m_params.size() + " arguments when "
-                + numberOfRequiredArgs + " are expected",
-                m_templateIdentifier,
-                m_token);
+                + numberOfRequiredArgs + " are expected");
         }
         for (Iterator i = m_params.iterator(); i.hasNext(); )
         {
@@ -77,6 +74,5 @@ public class UnnamedParamValues implements ParamValues
 
 
     private final List m_params;
-    private final Token m_token;
-    private final String m_templateIdentifier;
+    private final Location m_location;
 }

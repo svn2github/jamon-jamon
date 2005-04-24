@@ -26,7 +26,7 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
-import org.jamon.node.Token;
+import org.jamon.node.Location;;
 
 public class CodeWriter
 {
@@ -63,9 +63,9 @@ public class CodeWriter
         "                                        "; // 40 spaces
 
 
-    public void printLocation(Token p_token)
+    public void printLocation(Location p_location)
     {
-        println("// " + p_token.getLine() + ", " + p_token.getPos());
+        println("// " + p_location.getLine() + ", " + p_location.getColumn());
     }
 
     public void println()

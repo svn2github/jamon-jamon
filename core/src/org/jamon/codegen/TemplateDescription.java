@@ -83,13 +83,13 @@ public class TemplateDescription
         m_requiredArgs = getRequiredArgs(p_intf, "");
         m_optionalArgs = getOptionalArgs(p_intf, "");
         m_fragmentInterfaces =
-            getFragmentArgs(p_intf, "", new TemplateUnit(null));
+            getFragmentArgs(p_intf, "", new TemplateUnit(null, null));
         m_methodUnits = new HashMap();
         String[] methodNames = getStringArray(p_intf, "METHOD_NAMES");
         for (int i = 0; i < methodNames.length; i++)
         {
             DeclaredMethodUnit method =
-                new DeclaredMethodUnit(methodNames[i], null);
+                new DeclaredMethodUnit(methodNames[i], null, null);
             String prefix = "METHOD_" + methodNames[i] + "_";
             for (Iterator j = getRequiredArgs(p_intf, prefix).iterator();
                  j.hasNext(); )
@@ -157,7 +157,7 @@ public class TemplateDescription
         for (int i = 0; i < fragmentArgNames.length; i++)
         {
             FragmentUnit frag =
-                new FragmentUnit(fragmentArgNames[i], p_parentUnit);
+                new FragmentUnit(fragmentArgNames[i], p_parentUnit, null);
             String[] fragmentArgArgNames = getStringArray
                 (p_class,
                  p_prefix + "FRAGMENT_ARG_"

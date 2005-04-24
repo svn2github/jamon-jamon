@@ -64,17 +64,17 @@ public class FragmentTest
     public void testFragmentArgInNamedFragmentImpl()
         throws Exception
     {
-        expectTemplateException("FragmentArgInNamedFragmentImpl",
-                                "Fragment args for fragments not implemented",
-                                3, 3);
+        expectParserError("FragmentArgInNamedFragmentImpl",
+                          "Fragment args for fragments not implemented",
+                          3, 3);
     }
 
     public void testFragmentArgInAnonFragmentImpl()
         throws Exception
     {
-        expectTemplateException("FragmentArgInAnonFragmentImpl",
-                                "Fragment args for fragments not implemented",
-                                3, 3);
+        expectParserError("FragmentArgInAnonFragmentImpl",
+                          "Fragment args for fragments not implemented",
+                          3, 3);
     }
 
 

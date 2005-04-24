@@ -26,7 +26,7 @@ public class ParametersTest
     public void testUnusedAnonDefFragment()
         throws Exception
     {
-        expectTemplateException(
+        expectParserError(
             "UnusedAnonDefFragment",
             "Call provides a fragment, but none are expected",
             2, 1);
@@ -35,7 +35,7 @@ public class ParametersTest
     public void testUnusedAnonTemplateFragment()
         throws Exception
     {
-        expectTemplateException(
+        expectParserError(
             "UnusedAnonTemplateFragment",
             "Call provides a fragment, but none are expected",
             1, 1);
@@ -44,85 +44,85 @@ public class ParametersTest
     public void testUnusedNamedTemplateFragment()
         throws Exception
     {
-        expectTemplateException("UnusedNamedTemplateFragment",
-                                "Call provides unused fragments content",
-                                1, 1);
+        expectParserError("UnusedNamedTemplateFragment",
+                          "Call provides unused fragments content",
+                          1, 1);
     }
 
     public void testUnusedNamedDefFragment()
         throws Exception
     {
-        expectTemplateException("UnusedNamedDefFragment",
-                                "Call provides unused fragments content",
-                                2, 1);
+        expectParserError("UnusedNamedDefFragment",
+                          "Call provides unused fragments content",
+                          2, 1);
     }
 
     public void testSingleFragmentCallToMultiFragmentUnit()
         throws Exception
     {
-        expectTemplateException("MultiFarg",
-                                "Call must provide multiple fragments",
-                                5, 1);
+        expectParserError("MultiFarg",
+                          "Call must provide multiple fragments",
+                          5, 1);
     }
 
     public void testUnusedDefArgument()
         throws Exception
     {
-        expectTemplateException("UnusedDefArgument",
-                                "Call provides unused arguments x",
-                                2, 1);
+        expectParserError("UnusedDefArgument",
+                          "Call provides unused arguments x",
+                          2, 1);
     }
 
     public void testUnusedTemplateArgument()
         throws Exception
     {
-        expectTemplateException("UnusedTemplateArgument",
-                                "Call provides unused arguments x",
-                                1, 1);
+        expectParserError("UnusedTemplateArgument",
+                          "Call provides unused arguments x",
+                          1, 1);
     }
 
     public void testMissingDefFragment()
         throws Exception
     {
-        expectTemplateException(
+        expectParserError(
             "MissingDefFragment", "Call is missing fragment content", 4, 1);
     }
 
     public void testMissingTemplateFragment()
         throws Exception
     {
-        expectTemplateException(
+        expectParserError(
             "MissingTemplateFragment", "Call is missing fragment f", 1, 1);
     }
 
     public void testMissingRequiredArgumentForDef()
         throws Exception
     {
-        expectTemplateException("MissingRequiredArgument",
-                                "No value supplied for required argument x",
-                                6, 1);
+        expectParserError("MissingRequiredArgument",
+                          "No value supplied for required argument x",
+                          6, 8);
     }
 
     public void testMissingRequiredArgumentForTemplate()
         throws Exception
     {
-        expectTemplateException("MissingTemplateRequiredArgument",
-                                "No value supplied for required argument i",
-                                1, 1);
+        expectParserError("MissingTemplateRequiredArgument",
+                          "No value supplied for required argument i",
+                          1, 25);
     }
 
     public void testMissingRequiredArgumentForFragment()
         throws Exception
     {
-        expectTemplateException("MissingFragmentRequiredArgument",
-                                "No value supplied for required argument x",
-                                5, 1);
+        expectParserError("MissingFragmentRequiredArgument",
+                          "No value supplied for required argument x",
+                          5, 6);
     }
 
     public void testFictionalParentArgument()
         throws Exception
     {
-        expectTemplateException(
+        expectParserError(
             "FictionalParentArgument",
             "/test/jamon/Parent does not have an arg named nosucharg",
             3, 3);
@@ -131,39 +131,39 @@ public class ParametersTest
     public void testSettingDefaultForInheritedRequiredArg()
         throws Exception
     {
-        expectTemplateException("DefaultForInheritedRequiredArg",
-                                "i is an inherited required argument, and may not be given a default value",
-                                3, 5);
+        expectParserError("DefaultForInheritedRequiredArg",
+                          "i is an inherited required argument, and may not be given a default value",
+                          3, 8);
     }
 
     public void testSettingDefaultForInheritedFragmentArg()
         throws Exception
     {
-        expectTemplateException("DefaultForInheritedFragmentArg",
-                                "f is an inherited fragment argument, and may not be given a default value",
-                                3, 5);
+        expectParserError("DefaultForInheritedFragmentArg",
+                          "f is an inherited fragment argument, and may not be given a default value",
+                          3, 8);
     }
 
     public void testDuplicateArgument()
         throws Exception
     {
-        expectTemplateException("DuplicateArgument",
-                                "multiple arguments named opt1",
-                                3, 7);
+        expectParserError("DuplicateArgument",
+                          "multiple arguments named opt1",
+                          3, 7);
     }
 
     public void testDuplicateFragmentArgument()
         throws Exception
     {
-        expectTemplateException("DuplicateFragmentArgument",
-                                "multiple arguments named f",
-                                3, 7);
+        expectParserError("DuplicateFragmentArgument",
+                          "multiple arguments named f",
+                          3, 7);
     }
 
     public void testXargsWithoutExtends()
         throws Exception
     {
-        expectTemplateException(
+        expectParserError(
             "XargsWithoutExtends",
             "xargs may not be declared without extending another template",
             1, 1);

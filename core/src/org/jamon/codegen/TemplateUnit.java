@@ -23,30 +23,28 @@ package org.jamon.codegen;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.jamon.node.ASimpleName;
-import org.jamon.node.AQualifiedName;
-import org.jamon.node.AImport;
-import org.jamon.node.AOverride;
-import org.jamon.node.AParentArg;
-import org.jamon.node.TClassContent;
-import org.jamon.node.TIdentifier;
+import org.jamon.ParserErrors;
+import org.jamon.node.ClassNode;
+import org.jamon.node.ImportNode;
+import org.jamon.node.Location;
+import org.jamon.node.ParentArgNode;
 import org.jamon.util.StringUtils;
 
 public class TemplateUnit
     extends AbstractUnit
     implements InheritedUnit
 {
-    public TemplateUnit(String p_path)
+    public TemplateUnit(String p_path, ParserErrors p_errors)
     {
-        super(p_path, null);
+        super(p_path, null, p_errors);
     }
 
     public int getInheritanceDepth()
@@ -71,7 +69,8 @@ public class TemplateUnit
                                             getParentPath(),
                                             p_parent.getRequiredArgs(),
                                             p_parent.getOptionalArgs(),
-                                            p_parent.getFragmentInterfaces());
+                                            p_parent.getFragmentInterfaces(),
+                                            getErrors());
 
         for (Iterator i = new SequentialIterator(
                 p_parent.getRequiredArgs().iterator(),
@@ -86,7 +85,7 @@ public class TemplateUnit
         m_abstractMethodNames.addAll(p_parent.getAbstractMethodNames());
     }
 
-    public void addParentArg(AParentArg p_arg)
+    public void addParentArg(ParentArgNode p_arg)
     {
         m_inheritedArgs.addParentArg(p_arg);
     }
@@ -101,7 +100,7 @@ public class TemplateUnit
         return m_fragmentArgs;
     }
 
-    public void addFragmentArg(FragmentArgument p_arg)
+    public void addFragmentArg(FragmentArgument p_arg, Location p_location)
     {
         m_fragmentArgs.add(p_arg);
         m_declaredFragmentArgs.add(p_arg);
@@ -136,6 +135,13 @@ public class TemplateUnit
              m_declaredOptionalArgs.iterator());
     }
 
+    public String getOptionalArgDefault(OptionalArgument p_arg)
+    {
+        return m_declaredOptionalArgs.contains(p_arg)
+            ? p_arg.getDefault()
+            : m_inheritedArgs.getDefaultValue(p_arg);
+    }
+    
     public Iterator getVisibleArgs()
     {
         return m_inheritedArgs == null
@@ -156,21 +162,19 @@ public class TemplateUnit
         return m_dependencies;
     }
 
-    private void checkCallName(TIdentifier p_name)
+    private void checkCallName(String p_name, Location p_location)
     {
-        if (! m_callNames.add(p_name.getText()))
+        if (! m_callNames.add(p_name))
         {
-            throw new TunnelingException
-                ("multiple defs and/or methods named " + p_name.getText(),
-                 p_name);
+            getErrors().addError(
+                "multiple defs and/or methods named " + p_name, p_location);
         }
     }
 
-    public void makeDefUnit(TIdentifier p_defName)
+    public void makeDefUnit(String p_defName, Location p_location)
     {
-        checkCallName(p_defName);
-        m_defs.put(p_defName.getText(),
-                   new DefUnit(p_defName.getText(), this));
+        checkCallName(p_defName, p_location);
+        m_defs.put(p_defName, new DefUnit(p_defName, this, getErrors()));
     }
 
     public Iterator getDefUnits()
@@ -183,34 +187,37 @@ public class TemplateUnit
         return (DefUnit) m_defs.get(p_name);
     }
 
-    public void makeMethodUnit(TIdentifier p_methodName, boolean p_isAbstract)
+    public void makeMethodUnit(
+            String p_methodName, Location p_location, boolean p_isAbstract)
     {
-        checkCallName(p_methodName);
-        m_methods.put(p_methodName.getText(),
-                      new DeclaredMethodUnit(p_methodName.getText(),
-                                             this,
-                                             p_isAbstract));
+        checkCallName(p_methodName, p_location);
+        m_methods.put(p_methodName,
+                      new DeclaredMethodUnit(
+                          p_methodName, this, getErrors(), p_isAbstract));
         if(p_isAbstract)
         {
-            m_abstractMethodNames.add(p_methodName.getText());
+            m_abstractMethodNames.add(p_methodName);
         }
     }
 
-    public OverriddenMethodUnit makeOverridenMethodUnit(AOverride p_override)
+    public OverriddenMethodUnit makeOverridenMethodUnit(
+            String p_name, Location p_location)
     {
-        String methodName = p_override.getIdentifier().getText();
         DeclaredMethodUnit methodUnit = (DeclaredMethodUnit)
-            m_parentDescription.getMethodUnits().get(methodName);
+            m_parentDescription.getMethodUnits().get(p_name);
         if(methodUnit == null)
         {
-            throw new TunnelingException
-                ("There is no such method " + methodName + " to override",
-                 p_override.getIdentifier());
+            getErrors().addError(
+                "There is no such method " + p_name + " to override",
+                p_location);
+            // Provide a dummy parent, to allow us to catch errors inside the
+            // override
+            methodUnit = new DeclaredMethodUnit(p_name, this, getErrors());
         }
 
-        m_abstractMethodNames.remove(methodName);
+        m_abstractMethodNames.remove(p_name);
         OverriddenMethodUnit override =
-            new OverriddenMethodUnit(methodUnit, this);
+            new OverriddenMethodUnit(methodUnit, this, getErrors());
         m_overrides.add(override);
         return override;
     }
@@ -251,9 +258,9 @@ public class TemplateUnit
         return m_imports.iterator();
     }
 
-    public void addImport(AImport p_import)
+    public void addImport(ImportNode p_node)
     {
-        m_imports.add(p_import);
+        m_imports.add(p_node);
     }
 
     public void addInterface(String p_interface)
@@ -291,15 +298,15 @@ public class TemplateUnit
     {
         for (Iterator i = m_classContent.iterator(); i.hasNext(); )
         {
-            TClassContent content = (TClassContent) i.next();
-            p_writer.printLocation(content);
-            p_writer.println(content.getText());
+            ClassNode node = (ClassNode) i.next();
+            p_writer.printLocation(node.getLocation());
+            p_writer.println(node.getContent());
         }
     }
 
-    public void addClassContent(TClassContent p_content)
+    public void addClassContent(ClassNode p_node)
     {
-        m_classContent.add(p_content);
+        m_classContent.add(p_node);
     }
 
     public void addCallPath(String p_callPath)
@@ -338,10 +345,9 @@ public class TemplateUnit
     {
         for (Iterator i = getImports(); i.hasNext(); )
         {
-            AImport imp = (AImport) i.next();
-            p_writer.println("import "
-                             + NodeUtils.asString(imp.getName())
-                             + ";");
+            ImportNode node = (ImportNode) i.next();
+            p_writer.printLocation(node.getLocation());
+            p_writer.println("import " + node.getName() + ";");
         }
         p_writer.println();
     }

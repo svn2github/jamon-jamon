@@ -19,18 +19,15 @@
  */
 
 package org.jamon.codegen;
-
-import org.jamon.node.AArg;
-import org.jamon.node.ADefault;
+import org.jamon.node.OptionalArgNode;
 import org.jamon.util.StringUtils;
 
 public class OptionalArgument extends AbstractArgument
 {
-    public OptionalArgument(AArg p_arg)
+    public OptionalArgument(OptionalArgNode p_arg)
     {
         super(p_arg);
-        m_default = ((ADefault) p_arg.getDefault())
-            .getArgexpr().getText().trim();
+        m_default = p_arg.getValue().getValue();
     }
 
     public OptionalArgument(String p_name, String p_type, String p_default)

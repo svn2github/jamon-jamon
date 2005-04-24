@@ -20,12 +20,8 @@
 
 package org.jamon.codegen;
 
-import java.util.Iterator;
-
-import org.jamon.node.AArg;
-import org.jamon.node.AType;
-import org.jamon.node.PName;
 import org.jamon.util.StringUtils;
+import org.jamon.node.ArgNode;
 
 public abstract class AbstractArgument
 {
@@ -35,10 +31,9 @@ public abstract class AbstractArgument
         m_type = p_type;
     }
 
-    public AbstractArgument(AArg p_arg)
+    public AbstractArgument(ArgNode p_arg)
     {
-        this(p_arg.getName().getText(),
-             NodeUtils.asString((AType) p_arg.getType()));
+        this(p_arg.getName().getName(), p_arg.getType().getType());
     }
 
     public String getName()
@@ -83,5 +78,4 @@ public abstract class AbstractArgument
 
     private final String m_name;
     private final String m_type;
-
 }

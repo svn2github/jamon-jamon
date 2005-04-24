@@ -20,7 +20,7 @@
 
 package org.jamon.codegen;
 
-import org.jamon.node.Token;
+import org.jamon.node.Location;
 
 public class MethodCallStatement
     extends AbstractInnerUnitCallStatement
@@ -28,10 +28,10 @@ public class MethodCallStatement
     MethodCallStatement(String p_path,
                         ParamValues p_params,
                         MethodUnit p_methodUnit,
-                        Token p_token,
+                        Location p_location,
                         String p_templateIdentifier)
     {
-        super(p_path, p_params, p_methodUnit, p_token, p_templateIdentifier);
+        super(p_path, p_params, p_methodUnit, p_location, p_templateIdentifier);
     }
 
     protected String getDefault(OptionalArgument p_arg)

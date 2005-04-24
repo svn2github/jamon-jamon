@@ -20,22 +20,20 @@
 
 package org.jamon.codegen;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.io.InputStream;
 import java.io.IOException;
-import java.io.PushbackReader;
 
+import org.jamon.ParserError;
+import org.jamon.ParserErrors;
 import org.jamon.TemplateSource;
+import org.jamon.node.Location;
+import org.jamon.node.TopNode;
+import org.jamon.parser.TopLevelParser;
 import org.jamon.util.StringUtils;
-import org.jamon.node.Start;
-import org.jamon.node.Token;
-import org.jamon.parser.Parser;
-import org.jamon.parser.ParserException;
-import org.jamon.lexer.LexerException;
 
 public class TemplateDescriber
 {
@@ -51,21 +49,21 @@ public class TemplateDescriber
     private final ClassLoader m_classLoader;
 
     public TemplateDescription getTemplateDescription(
-        String p_path, Token p_token, String p_templateIdentifier)
-        throws IOException
+        String p_path, Location p_location, String p_templateIdentifier)
+        throws IOException, ParserError
     {
         return getTemplateDescription(p_path,
-                                      p_token,
+                                      p_location,
                                       p_templateIdentifier,
                                       new HashSet());
     }
 
     public TemplateDescription getTemplateDescription(
         final String p_path,
-        final Token p_token,
+        final Location p_location,
         final String p_templateIdentifier,
         final Set p_children)
-         throws IOException
+         throws IOException, ParserError
     {
         if (m_descriptionCache.containsKey(p_path))
         {
@@ -74,7 +72,7 @@ public class TemplateDescriber
         else
         {
             TemplateDescription desc = computeTemplateDescription(
-                p_path, p_token, p_templateIdentifier, p_children);
+                p_path, p_location, p_templateIdentifier, p_children);
             m_descriptionCache.put(p_path, desc);
             return desc;
         }
@@ -82,10 +80,10 @@ public class TemplateDescriber
 
     private TemplateDescription computeTemplateDescription(
         final String p_path,
-        final Token p_token,
+        final Location p_location,
         final String p_templateIdentifier,
         final Set p_children)
-         throws IOException
+        throws IOException, ParserError
      {
          if (m_templateSource.available(p_path))
          {
@@ -102,48 +100,47 @@ public class TemplateDescriber
              }
              catch(ClassNotFoundException e)
              {
-                 throw new AnalysisException
-                     ("Unable to find template or class for " + p_path,
-                      p_templateIdentifier,
-                      p_token);
+                 throw new ParserError(
+                     p_location,
+                     "Unable to find template or class for " + p_path);
              }
              catch (NoSuchFieldException e)
              {
-                 throw new AnalysisException("Malformed class for " + p_path,
-                                             p_templateIdentifier,
-                                             p_token);
+                 throw new ParserError(p_location, 
+                                       "Malformed class for " + p_path);
              }
              catch (IllegalAccessException e)
              {
-                 throw new AnalysisException("Malformed class for " + p_path,
-                                             p_templateIdentifier,
-                                             p_token);
+                 throw new ParserError(p_location, 
+                                       "Malformed class for " + p_path);
              }
          }
      }
 
-    public Start parseTemplate(String p_path)
+    public TopNode parseTemplate(String p_path)
         throws IOException
     {
         InputStream stream = m_templateSource.getStreamFor(p_path);
         try
         {
-            return new Parser(new Lexer
-                              (new PushbackReader(new EncodingReader(stream),
-                                                  1024)))
-                .parse();
+            return 
+                new TopLevelParser(
+                    m_templateSource.getTemplateLocation(p_path), 
+                    new EncodingReader(stream)).getRootNode();
         }
         catch (EncodingReader.Exception e)
         {
-            throw new JamonParseException(getExternalIdentifier(p_path),e);
+            throw new ParserErrors(
+                new ParserError(
+                    new Location(
+                        m_templateSource.getTemplateLocation(p_path),
+                        1,
+                        e.getPos()),
+                    e.getMessage())); 
         }
-        catch (ParserException e)
+        catch (ParserErrors e)
         {
-            throw new JamonParseException(getExternalIdentifier(p_path),e);
-        }
-        catch (LexerException e)
-        {
-            throw new JamonParseException(getExternalIdentifier(p_path),e);
+            throw e;
         }
         finally
         {

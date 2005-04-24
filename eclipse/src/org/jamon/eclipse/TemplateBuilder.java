@@ -41,13 +41,14 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.launching.JavaRuntime;
 import org.jamon.JamonRuntimeException;
-import org.jamon.JamonTemplateException;
 import org.jamon.codegen.Analyzer;
 import org.jamon.codegen.ImplGenerator;
 import org.jamon.codegen.ProxyGenerator;
 import org.jamon.codegen.TemplateDescriber;
 import org.jamon.codegen.TemplateUnit;
 import org.jamon.emit.EmitMode;
+import org.jamon.ParserError;
+import org.jamon.ParserErrors;
 import org.jamon.util.StringUtils;
 
 
@@ -224,24 +225,37 @@ public class TemplateBuilder extends IncrementalProjectBuilder {
 			return new CoreException(new Status(IStatus.ERROR,JamonProjectPlugin.getDefault().getBundle().getSymbolicName(), 0, e.getMessage(), e));
 		}
 		
-		private void markFile(IFile file, JamonTemplateException e) throws CoreException {
-			IMarker marker = file.createMarker(IMarker.PROBLEM);
-			marker.setAttribute(IMarker.LINE_NUMBER, e.getLine());
+		private void markFile(ParserError e) throws CoreException {
+            IMarker marker = 
+                ((ResourceTemplateLocation) e.getLocation().getTemplateLocation())
+                    .getFile().createMarker(IMarker.PROBLEM);
+			marker.setAttribute(IMarker.LINE_NUMBER, e.getLocation().getLine());
 			marker.setAttribute(IMarker.MESSAGE, e.getMessage());
 			marker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_ERROR);
 		}
+        
+        private void addMarkers(ParserErrors p_errors) throws CoreException
+        {
+            for (Iterator i = p_errors.getErrors(); i.hasNext(); )
+            {
+                markFile((ParserError) i.next());
+            }
+        }
 		
 		private TemplateUnit analyze(IPath path, IFile file) throws CoreException {
 			file.deleteMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE);
 			try {
-				return new Analyzer("/" + StringUtils.filePathToTemplatePath(path.toString()), m_describer).analyze();
+				return new Analyzer(
+                    "/" + StringUtils.filePathToTemplatePath(path.toString()), 
+                    m_describer)
+                    .analyze();
 			}
+            catch (ParserErrors e) {
+                addMarkers(e);
+                return null;
+            }
 			catch (IOException e) {
 				throw createCoreException(e);
-			}
-			catch (JamonTemplateException e) {
-				markFile(file, e);
-				return null;
 			}
 			catch (JamonRuntimeException e) {
 				throw createCoreException(e);
@@ -253,11 +267,12 @@ public class TemplateBuilder extends IncrementalProjectBuilder {
 			try {
 				new ProxyGenerator(baos, m_describer, templateUnit).generateClassSource();
 			}
-			catch (IOException e) {
+			catch (ParserErrors e)
+            {
+			    addMarkers(e);
+            }
+            catch (IOException e) {
 				throw createCoreException(e);
-			}
-			catch (JamonTemplateException e) {
-				markFile(file, e);
 			}
 			catch (JamonRuntimeException e) {
 				throw createCoreException(e);
@@ -270,11 +285,11 @@ public class TemplateBuilder extends IncrementalProjectBuilder {
 			try {
 				new ImplGenerator(baos, m_describer, templateUnit, EmitMode.STANDARD).generateSource();			
 			}
-			catch (IOException e) {
+            catch (ParserErrors e) {
+                addMarkers(e);
+            }
+            catch (IOException e) {
 				throw createCoreException(e);
-			}
-			catch (JamonTemplateException e) {
-				markFile(file, e);
 			}
 			catch (JamonRuntimeException e) {
 				throw createCoreException(e);

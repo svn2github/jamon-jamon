@@ -20,19 +20,15 @@
 
 package org.jamon.codegen;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import org.jamon.node.TIdentifier;
-import org.jamon.node.AArg;
-import org.jamon.node.ADefault;
+import org.jamon.ParserErrors;
+import org.jamon.node.Location;
+import org.jamon.node.OptionalArgNode;
 
 public class FragmentUnit extends AbstractInnerUnit
 {
-    public FragmentUnit(String p_name, Unit p_parent)
+    public FragmentUnit(String p_name, Unit p_parent, ParserErrors p_errors)
     {
-        super(p_name, p_parent);
+        super(p_name, p_parent, p_errors);
     }
 
     public String getFragmentInterfaceName()
@@ -48,25 +44,11 @@ public class FragmentUnit extends AbstractInnerUnit
         }
     }
 
-    public FragmentUnit addFragment(TIdentifier p_fragName)
+    public void addOptionalArg(OptionalArgNode p_node)
     {
-        throw new TunnelingException(
-            "Fragments cannot have fragment arguments",
-            p_fragName);
-    }
-
-    public void addNonFragmentArg(AArg p_arg)
-    {
-        if (p_arg.getDefault() != null)
-        {
-            throw new TunnelingException(
-                "Fragments cannot have optional arguments",
-                ((ADefault) p_arg.getDefault()).getArrow());
-        }
-        else
-        {
-            super.addNonFragmentArg(p_arg);
-        }
+        getErrors().addError(
+            "Fragments cannot have optional arguments",
+            p_node.getValue().getLocation());
     }
 
     public void addOptionalArg(OptionalArgument p_arg)
@@ -74,9 +56,10 @@ public class FragmentUnit extends AbstractInnerUnit
         throw new UnsupportedOperationException();
     }
 
-    protected void addFragmentArg(FragmentArgument p_arg)
+    protected void addFragmentArg(FragmentArgument p_arg, Location p_location)
     {
-        throw new UnsupportedOperationException();
+        getErrors().addError("Fragments cannot have fragment arguments", 
+                             p_location);
     }
 
     public FragmentUnit getFragmentUnitIntf(String p_path)

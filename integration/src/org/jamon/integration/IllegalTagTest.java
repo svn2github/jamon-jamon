@@ -28,9 +28,6 @@ public class IllegalTagTest
     public void testBadTag()
         throws Exception
     {
-        expectTemplateException("BadTag",
-                                "Unknown directive \"<%bad>\"",
-                                5,
-                                7);
+        expectParserError("BadTag", "Unknown tag <%bad>", 5, 7);
     }
 }

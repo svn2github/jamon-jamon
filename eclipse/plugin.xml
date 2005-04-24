@@ -1,48 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?eclipse version="3.0"?><plugin>
-                            <extension
-                                  id="jamonnature"
-                                  name="Jamon Project Nature"
-                                  point="org.eclipse.core.resources.natures">
-                               <requires-nature id="org.eclipse.jdt.core.javanature"/>
-                               <builder id="org.jamon.project.templateBuilder"/>
-                               <builder id="org.jamon.project.markerUpdater"/>
-                               <runtime>
-                                  <run class="org.jamon.eclipse.JamonNature"/>
-                               </runtime>
-                            </extension>
-                            <extension
-                                  point="org.eclipse.ui.propertyPages">
-                               <page
-                                     objectClass="org.eclipse.core.resources.IProject"
-                                     adaptable="true"
-                                     class="org.jamon.eclipse.JamonProjectPropertyPage"
-                                     name="Jamon"
-                                     id="org.jamon.project.JamonProjectPropertyPage"/>
-                            </extension>
-                            <extension
-                                  id="templateBuilder"
-                                  name="Jamon Template Builder"
-                                  point="org.eclipse.core.resources.builders">
-                               <builder hasNature="true">
-                                  <run class="org.jamon.eclipse.TemplateBuilder"/>
-                               </builder>
-                            </extension>
-                            <extension
-                                  id="markerUpdater"
-                                  name="Jamon Marker Updater"
-                                  point="org.eclipse.core.resources.builders">
-                               <builder hasNature="true">
-                                  <run class="org.jamon.eclipse.MarkerUpdaterBuilder"/>
-                               </builder>
-                            </extension>
-                            <extension
-                                  id="preferences"
-                                  name="preferences"
-                                  point="org.eclipse.core.runtime.preferences">
-                               <scope
-                                     class="org.eclipse.core.internal.resources.ProjectPreferences"
-                                     name="project"/>
-                            </extension>
-
+<?eclipse version="3.0"?>
+  <plugin>
+    <extension
+          id="jamonnature"
+          name="Jamon Project Nature"
+          point="org.eclipse.core.resources.natures">
+       <requires-nature id="org.eclipse.jdt.core.javanature"/>
+       <builder id="org.jamon.project.templateBuilder"/>
+       <builder id="org.jamon.project.markerUpdater"/>
+       <runtime>
+          <run class="org.jamon.eclipse.JamonNature"/>
+       </runtime>
+    </extension>
+    <extension
+          point="org.eclipse.ui.propertyPages">
+       <page
+             objectClass="org.eclipse.core.resources.IProject"
+             adaptable="true"
+             class="org.jamon.eclipse.JamonProjectPropertyPage"
+             name="Jamon"
+             id="org.jamon.project.JamonProjectPropertyPage"/>
+    </extension>
+    <extension
+          id="templateBuilder"
+          name="Jamon Template Builder"
+          point="org.eclipse.core.resources.builders">
+       <builder hasNature="true">
+          <run class="org.jamon.eclipse.TemplateBuilder"/>
+       </builder>
+    </extension>
+    <extension
+          id="markerUpdater"
+          name="Jamon Marker Updater"
+          point="org.eclipse.core.resources.builders">
+       <builder hasNature="true">
+          <run class="org.jamon.eclipse.MarkerUpdaterBuilder"/>
+       </builder>
+    </extension>
+    <extension
+          id="preferences"
+          name="preferences"
+          point="org.eclipse.core.runtime.preferences">
+       <scope
+             class="org.eclipse.core.internal.resources.ProjectPreferences"
+             name="project"/>
+    </extension>
 </plugin>

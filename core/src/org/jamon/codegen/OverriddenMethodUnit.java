@@ -23,30 +23,33 @@ package org.jamon.codegen;
 import java.util.Iterator;
 import java.util.List;
 
-import org.jamon.node.AArg;
-import org.jamon.node.AParentArg;
+import org.jamon.ParserErrors;
+import org.jamon.node.Location;
+import org.jamon.node.ParentArgNode;
 
 public class OverriddenMethodUnit
     extends AbstractUnit
     implements MethodUnit, InheritedUnit
 {
     public OverriddenMethodUnit(DeclaredMethodUnit p_declaredMethodUnit,
-                                Unit p_parent)
+                                Unit p_parent,
+                                ParserErrors p_errors)
     {
-        super(p_declaredMethodUnit.getName(), p_parent);
+        super(p_declaredMethodUnit.getName(), p_parent, p_errors);
         m_declaredMethodUnit = p_declaredMethodUnit;
         m_inheritedArgs =
             new InheritedArgs(getName(),
                               getName(),
                               p_declaredMethodUnit.getRequiredArgsList(),
                               p_declaredMethodUnit.getOptionalArgsSet(),
-                              p_declaredMethodUnit.getFragmentArgsList());
+                              p_declaredMethodUnit.getFragmentArgsList(),
+                              p_errors);
 
     }
 
-    public void addParentArg(AParentArg p_arg)
+    public void addParentArg(ParentArgNode p_node)
     {
-        m_inheritedArgs.addParentArg(p_arg);
+        m_inheritedArgs.addParentArg(p_node);
     }
 
     public Iterator getVisibleArgs()
@@ -95,7 +98,7 @@ public class OverriddenMethodUnit
     }
 
 
-    public void addFragmentArg(org.jamon.codegen.FragmentArgument p_arg)
+    public void addFragmentArg(org.jamon.codegen.FragmentArgument p_arg, Location p_location)
     {
         throw new UnsupportedOperationException();
     }
@@ -113,5 +116,15 @@ public class OverriddenMethodUnit
     public void addOptionalArg(org.jamon.codegen.OptionalArgument p_arg)
     {
         throw new UnsupportedOperationException();
+    }
+
+    public Iterator getOptionalArgsWithDefaults()
+    {
+        return m_inheritedArgs.getOptionalArgsWithNewDefaultValues();
+    }
+
+    public String getDefaultForArg(OptionalArgument p_arg)
+    {
+        return m_inheritedArgs.getDefaultValue(p_arg);
     }
 }

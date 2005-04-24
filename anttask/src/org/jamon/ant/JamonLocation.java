@@ -24,12 +24,12 @@ import org.apache.tools.ant.Location;
 
 public class JamonLocation extends Location
 {
-    public JamonLocation(String p_fileName,
-                         int p_lineNumber,
-                         int p_columnNumber)
+    public JamonLocation(org.jamon.node.Location p_location)
     {
-        super(p_fileName, p_lineNumber, p_columnNumber);
-        m_columnNumber = p_columnNumber;
+        super(p_location.getTemplateLocation().toString(),
+              p_location.getLine(),
+              p_location.getColumn());
+        m_columnNumber = p_location.getColumn();
     }
 
     public String toString()
