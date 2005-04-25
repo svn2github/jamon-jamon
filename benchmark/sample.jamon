@@ -1,0 +1,586 @@
+<%extends _Base>
+
+<%class>
+  protected Section currentSection() { return Section.DOC_REFERENCE; }
+</%class>
+
+<%override title>Jamon Template Reference Manual</%override>
+
+<%alias>
+  escape => /org/jamon/escape;
+</%alias>
+
+<h2>Template Reference Manual</h2>
+<ol>
+  <li><span class="concept">Static content</span>
+
+    In general, any characters appearing in a template are output
+    literally, whitespace included.
+
+    <%def code><%args>String code;</%args><code><% code %></code></%def>
+
+    This excludes whitespace inside <& code: "<%args>" &>,
+    <& code: "<%xargs>" &>, <& code: "<%import>" &>, <& code: "<%alias>" &>,
+     <& code: "<%absmeth>" &>, and <& code: "<%frag>" &> declarations.
+
+    Other ignored white space includes whitespace immediately after
+    the following tags:
+    <ul class="referenceTagList">
+      <li><& code: "</%args>" &></li>
+      <li><& code: "</%doc>" &></li>
+      <li><& code: "</%frag>" &></li>
+      <li><& code: "</%xargs>" &></li>
+      <li><& code: "<%abstract>" &></li>
+      <li><& code: "</%class>" &></li>
+      <li><& code: "</%import>" &></li>
+      <li><& code: "</%implements>" &></li>
+      <li><& code: "</%java>" &></li>
+      <li><& code: "<%def ...>" &> and <& code: "</%def>" &></li>
+      <li><& code: "</%absmeth>" &></li>
+      <li><& code: "<%method ...>" &> and <& code: "</%method>" &></li>
+      <li><& code: "<%override ...>" &> and <& code: "</%override>" &></li>
+      <li><& code: "</%alias>" &></li>
+      <li><& code: "<%encoding ...>" &></li>
+    </ul>
+
+    If you would like to force whitespace to appear after one of the
+    above tags, you can follow the tag with a backslash and a
+    newline; whitespace after that will be emitted.
+
+    <br />
+    <b>Newline escape</b><br />
+
+    One other notable exception is that if a newline is preceded by
+    a backslash, then neither the newline nor the backslash are
+    output.
+
+  <li><span class="concept">Emit statements</span>
+
+    The value of a java expression can be emitted by enclosing the
+    expression in <code><% "<% ...%>" %></code> pairs, e.g.
+    <&| _Template &><%LITERAL>
+<% person.getFirstName().substring(0,10) %>
+</%LITERAL></&>
+    Note that there must be at least one whitespace character
+    following the <code><% "<%" %></code>.
+
+    <p>
+
+    Before a Java expression is emitted, the string that represents it
+    is <em>escaped</em>.  The default escaping mechanism is HTML, so for
+    example the following template
+
+    <& _TemplateInclude: "/templates/org/jamon/doc/reference/escapedEmit" &>
+    produces
+
+    <pre class="tty"><&| escape//Html &><& reference/escapedEmit &></&></pre>
+
+    However different escaping mechanisms can be specified in the
+    template itself.  A string can be emitted with no escaping as
+    follows:
+
+    <& _TemplateInclude: "/templates/org/jamon/doc/reference/unescapedEmit" &>
+    producing
+
+    <pre class="tty"><&| escape//Html &><& reference/unescapedEmit &></&></pre>
+
+    JavaScript escaping is also available
+
+    <& _TemplateInclude: "/templates/org/jamon/doc/reference/javascriptEscapedEmit" &>
+    producing <& reference/javascriptEscapedEmit &>
+
+    <pre class="tty"><&| escape//Html &><& reference/javascriptEscapedEmit &></&></pre>
+
+    The available escaping mechanism are
+    <ul>
+      <li>
+        HTML (use <code>#h</code> in the emit block) -- produces
+        output suitable for inclusion in the body of HTML elements
+      </li>
+      <li>
+        Strict HTML (use <code>#H</code> in the emit block) --
+        produces output suitable for use as an HTML attribute value
+        (it is similar to HTML escaping but also escapes quotes and
+        apostrophes)
+      </li>
+      <li>
+        JavaScript (use <code>#j</code> in the emit block) --
+        produces output suitable for use in a JavaScript string literal
+      </li>
+      <li>XML (use <code>#x</code> in the emit block)</li>
+      <li>URL (use <code>#u</code> in the emit block)</li>
+      <li>None (use <code>#n</code> in the emit block)</li>
+    </ul>
+
+    <p>
+
+    In addition the <em>default</em> escaping mechanism can also be
+    changed, however this is done from outside the template, see the
+    Jamon <a href="UserGuide.html">user's guide</a> for further
+    details.
+
+    <h4><a name="emitMode">Mode</a></h4>
+
+    It is possible to restrict the allowable types that can appear in
+    emit directives by supplying the appropriate attribute in the <a
+    href="JamonTask.html">JamonTask</a> definition, and also in the
+    corresponding attribute in the <a
+    href="javadoc/org/jamon/RecompilingTemplateManager.html"
+    >RecompilingTemplateManager</a>. The following levels are available:
+
+    <ul>
+      <li><b>Standard</b> - all types allowed
+      <li><b>Limited</b> - Strings, primitives, and boxed primitives
+      <li><b>Strict</b> - Strings only
+    </ul>
+
+    An attempt to emit a disallowed type will result in a Java
+    compilation error when the template is compiled.
+
+  <li><span class="concept">Arbitrary Java code</span>
+
+    <p>
+      Arbitrary Java code can be inserted into the template using
+      <code><% "<%java>...</%java>" %></code>, e.g.
+    <&| _Template &><%LITERAL>
+<%java>
+  while (iter.hasNext()) {
+    Person p = (Person) iter.next();
+    if (p.getLastName().startsWith("S")) {
+</%java>
+      <% p.getLastName() %>'s last name doesn't start with 'X'.
+<%java>
+    }
+  }
+</%java></%LITERAL></&>
+    Alternatively, any line beginning with '<code>%</code>' also is
+    assumed to contain valid Java code. The previous example could
+    be equivalently (and perhaps more clearly) written as
+    <&| _Template &><%LITERAL>
+%  while (iter.hasNext()) {
+%    Person p = (Person) iter.next();
+%    if (p.getLastName().startsWith("S")) {
+      <% p.getLastName() %>'s last name doesn't start with 'X'.
+%    }
+%  }
+</%LITERAL></&>
+    <p>
+
+    The kinds of Java code that can appear is fairly
+    unrestricted. Be warned, however, that code will appear inside a
+    method body. Thus, for example, package declarations and import
+    statements would trigger a compilation error.
+
+  <li><span class="concept">Inheritance</span>
+
+    Templates can inherit from other templates.  A template is an
+    "abstract" template if it contains a <code><% "<%abstract>" %></code>
+    tag.  A template extends another template by
+    means of an <code><% "<%extends " %><var>pathToParent</var><% ">" %></code>
+    tag.  There can be multiple levels of inheritance:
+    <code>/grandchild</code> can extend <code>/child</code>, which
+    in turn can extend <code>/parent</code>.  When Jamon encounters
+    a <code><% "<& *CHILD &>" %></code> tag, it inserts the
+    results of rendering the child template.
+
+    <p>
+
+    For example, suppose <code>/restaurant/Menu</code> contains:
+    <& _TemplateInclude: "/templates/restaurant/Menu" &>
+     and <code>/restaurant/Lunch</code> contains:
+    <& _TemplateInclude: "/templates/restaurant/Lunch" &>
+
+    Then rendering <code>/restaurant/Lunch</code> produces
+    <pre class="tty"><&| escape//Html &><& /restaurant/Lunch &></&></pre>
+
+  <li><span class="concept">Class code</span>
+
+    Any code to be included in the generated class should be placed
+    inside a <code><% "<%class>...</%class>" %></code> block.  If one
+    template inherits from another, there is corresponding inheritance
+    of java classes.  As a result, protected members declared in a
+    parent template's <code><% "<%class>...</%class>" %></code> block
+    will be visible to the child.
+
+    <p>
+    For example:
+    <&| _Template &><%LITERAL>
+<%class>
+  static int pageViews = 1;
+</%class>
+This component has been accessed <% pageViews++ %> times.
+</%LITERAL></&>
+
+  <li><span class="concept">Comments</span>
+
+    Any template content between <code><% "<%doc>" %></code> and
+    <code><% "</%doc>" %></code> is considered "documentation", and
+    ignored by the template processor
+
+  <li><span class="concept">Imports</span>
+
+    Java classes or packages to be imported and used in a template
+    should be placed inside an <code><% "<%import>...</%import>" %></code>
+    block. Each package or class should be separated by a semicolon
+    ('<code>;</code>').  Note that imports are not inherited, so if you
+    use an import to aid in the declaration of an argument type in a
+    parent template, you must use the same import in all descendants
+    of that template.
+    <p>
+    For example:
+    <&| _Template &><%LITERAL>
+<%import>
+  java.util.Iterator;
+  org.modusponens.myapp.data.*;
+</%import></%LITERAL></&>
+
+  <li><span class="concept">Arguments</span>
+
+    Arguments to a template are specified in
+    <code><% "<%args>...</%args>" %></code>
+    blocks. Each argument consists of a type followed by the
+    argument name, optionally followed by <code><% "=>" %></code> and a
+    default value. Each argument must appear on a separate line, and
+    each argument declaration must be terminated by a semicolon.
+
+    <p>
+
+    Arguments are usable inside any java escape or java expression
+    in the template, including those in subtemplates. Top-level
+    visible arguments are also usable inside
+    <code><% "<%class>...<%/class>" %></code>
+    blocks.  Technically, arguments are declared
+    "<code>final</code>", so it is not possible to (re)assign a
+    value to an argument.
+
+    <p>
+
+    For example:
+    <&| _Template &><%LITERAL>
+<%args>
+  String[] nicknames => new String[0];
+  Address address;
+  java.util.Iterator friends;
+</%args>
+Your nicknames are
+<ul>
+% for (int i = 0; i < nicknames.length; ++i) {
+    <li> <% nicknames[i] %>
+% }
+</ul>
+% while (friends.hasNext()) {
+%   Person p = (Person) friends.next();
+%   if (p.getAddress().getPostalCode().equals(address.getPostalCode())) {
+      Hey, guess what? <% p.getName() %> lives close by!
+%   }
+% }
+</%LITERAL></&>
+    Note that for this template to compile, the <code>Address</code>
+    class would need to appear in an
+    <code><% "<%import>...</%import>" %></code> block.
+
+    <p>
+
+    Arguments with default values are optional, and need not be
+    specified when invoking a template. At the top-level
+    (i.e. the interface to "standard" java code), optional
+    arguments are implemented as "setters" on the template
+    object rather than as arguments to the <code>render</code>
+    method.
+
+    <p>
+
+    If a template inherits from another template, the arguments to
+    the template's ancestors are not automatically visible to the
+    child template.  They can be made visible to code in the child
+    template by declaring them in <code><% "<%xargs>...</%xargs>" %></code>
+    blocks.  Unlike
+    <code><% "<%args>...</%args>" %></code> blocks,
+    <code><% "<%xargs>...</%xargs>" %></code> blocks do not specify argument
+    types, since those have already been specified by a parent
+    template.  Optional arguments, however, may have their default
+    values redefined by the child.  For example, if
+    <code>/parent</code> contains:
+    <&| _Template &><%LITERAL>
+<%abstract>
+<%args>
+  String name;
+  String favoriteColor => "red";
+  String favoriteFood => "Jamon";
+  int luckyNumber => 7;
+</%args>
+<font color="<% favoriteColor %>">Hello <% name %></font>.
+Would you like some <% favoriteFood %>?
+<& *CHILD &>
+Remember, today's lucky number is <% luckyNumber %>.
+</%LITERAL></&>
+
+  then <code>/child</code> might contain:
+  <&| _Template &><%LITERAL>
+<%extends /parent>
+<%args>
+  int temperature;
+</%args>
+<%xargs>
+  name;
+  favoriteColor => "green"
+  luckyNumber;
+</%xargs>
+Today's temperature is
+<font color="<% favoriteColor %>"><% temperature %></font>, which is
+% if(temperature != luckyNumber) {
+  not
+%}
+a good sign for you, <% name %>.
+</%LITERAL></&>
+
+    Note that it would be an error if <code>/child</code> tried
+    referring to <code>favoriteFood</code>'s argument to
+    <code>/parent</code> without referencing it in an
+    <code><% "<%xargs>...<%/xargs>" %></code> block.
+
+  <li><span class="concept">Invoking other templates</span>
+
+    It is possible to invoke other templates from within a template.
+    To invoke a template which takes no argument, simply write
+    <code><% "<& " %><var>template-name</var><% " &>" %></code>.
+    <p>
+
+    There are two ways to pass arguments to templates: named
+    parameters, and positional parameters. Templates can be invoked
+    with named parameters via the
+    <code>
+      <% "<& " %><var>template-name</var>;
+                 <var>argument1</var> <% "=>" %> <var>value1</var>; ...
+      <% " &>" %>
+    </code>
+    construct.  All arguments without default values
+    (i.e. <em>required</em> arguments) must be specified, but
+    arguments given default values are optional.  If values are only
+    being passed for required arguments, positional parameter syntax
+    may be used instead.  The syntax for positional parameters is
+    simply
+    <code>
+      <% "<& " %><var>template-name</var>: <var>value1</var>; ...<% " &>" %>
+    </code>
+    With positional parameter syntax, arguments are passed in the
+    order that they are declared in the
+    <code><% "<%args>" %></code> section of the
+    template.  Note that while with named parameter syntax, the
+    template name is followed by a semicolon, positional parameter
+    syntax follows the template name with a colon.  In each case,
+    semicolons are used to separate parameters.
+
+  <p>
+
+    For example, suppose <code>/accounting/bill</code> contains
+    <& _TemplateInclude: "/templates/accounting/bill" &>
+
+    This tempate can be called in the following ways:
+    <& _TemplateInclude: "/templates/accounting/summary" &>
+
+    resulting in something like
+    <pre class="tty"><& /accounting/summary &></pre>
+
+    When using positional parameter syntax to invoke templates which
+    extend abstract templates, first pass the required arguments of the
+    parent, and then those of the child.
+
+  <li><span class="concept">Subtemplates</span>
+
+    In addition to calling other templates, a template can call
+    "subtemplates" defined within a template.  Subtemplates come in
+    two forms, "private" and "protected".  Subtemplates may be
+    declared to accept arguments similar to templates by using
+    <code>%args</code>.  Subtemplates can invoke other subtemplates in
+    the same template, and can be directly or indirectly
+    recursive. Arguments to subtemplates can be given default values.
+
+    <p>
+
+
+    Private subtemplates ("<def>defs</def>") can be declared via the
+    <code><% "<%def " %><var>def-name</var><% ">" %></code>
+    instruction, and are only visible within the template in which
+    they are declared.
+
+    <p>
+
+    For example:
+    <& _TemplateInclude: "/templates/org/jamon/doc/reference/defExample" &>
+    produces
+    <pre class="tty"><&| escape//Html &><& reference/defExample &></&></pre>
+    <p>
+
+    Protected templates ("<def>methods</def>") can be declared via
+    the <code><% "<%method "%><var>method-name</var><% ">" %></code>
+    instruction.  A method is similar to a <def>def</def>, but is
+    visible to all descendants of the declaring template.  Moreover,
+    a method declared in an ancestor template can be overriddden via
+    the <code><% "<%override " %><var>method-name</var><% ">" %></code>
+    instruction.  Overridden methods take the same arguments as the
+    method they override, although, as with template inheritance,
+    only those args declared in an <code><% "<%xargs>....</%xargs>" %></code>
+    block will be visible within
+    the body of the override.  Finally, an ancestor template may
+    declare an "abstract" protected subtemplate by using
+    <code><% "<%absmeth " %><var>method-name</var><% ">...</%absmeth>" %>
+    </code>.  The only things allowed inside an
+    <code><% "<%absmeth ...>...<%/absmeth>" %></code> block are
+    <code><% "<%args>...</%args>" %></code> blocks and
+    <code><% "<%frag ...>...</%frag>" %></code> blocks.  It is an error
+    for a non-abstract template to extend
+    (directly or indirectly) a template with an abstract method, and
+    not have that method overridden by the non-abstract template, or
+    one of it's intermediate ancestors.
+
+    For example, suppose <code>/weather/Report</code> contains:
+    <& _TemplateInclude: "/templates/weather/Report" &>
+
+    Then <code>/weather/Sunny</code> might contain:
+    <& _TemplateInclude: "/templates/weather/Sunny" &>
+
+    resulting in something like
+    <pre class="tty"><&| escape//Html &>
+<& /weather/Sunny: new weather.WeatherReport("Monday", "Miami") &></&></pre>
+
+    However, <code>/weather/StormWarning</code> could contain:
+    <& _TemplateInclude: "/templates/weather/StormWarning" &>
+    resulting in something like
+    <pre class="tty"><&| escape//Html &>
+<& /weather/Sunny: new weather.WeatherReport("Friday", "Boston") &></&></pre>
+
+  <li><span class="concept">Fragment arguments</span>
+
+    It is possible to pass a "fragment" of a template as an argument
+    to a template or subtemplate.  When passing template fragments,
+    the invocation syntax must look like
+    <code><% "<&| " %><var>target</var> ... <% " &>" %></code>,
+    and any template content up until a closing
+    <code><% "</&>" %></code> is considered the fragment argument.
+
+    <p>
+
+    In order to pass a fragment argument, the target template or
+    subtemplate must declare that it expects a fragment
+    argument. This is done using the
+    <code><% "<%frag " %><var>name</var>< %"/>" %></code>
+    declaration, which declares that the template or subtemplate
+    expects a fragment argument.
+
+    <p>
+
+    The fragment can be invoked in the target template or
+    subtemplate like any other template or subtemplate invocation,
+    simply specifying the name of the fragment argument as the
+    target
+
+    <p>
+
+    Putting this all together, the template
+    <& _TemplateInclude:
+           "/templates/org/jamon/doc/reference/fragExample" &>
+    produces
+    <pre class="tty"><&| escape//Html &><& reference/fragExample &></&></pre>
+
+  <li><span class="concept">Parametrized fragment arguments</span>
+
+    Template fragments can themselves take arguments.  The
+    invocation syntax is similar to a regular template fragment with
+    the addition of an
+    <code><% "<%args>...</%args>" %></code> inside the fragment.
+
+    <p>
+
+    To pass a parameterized template fragment to a template or
+    subtemplate, the fragment and its parameters must be
+    declared via a <code><% "<%frag " %><var>name</var><% "%>" %><var>parameters</var><% "</%frag>" %></code>,
+    where each parameter is a type followed by an identifier. Thus
+    a <code><% "<%frag " %><var>name</var><% ">...</%frag>" %></code> block
+    is similar to a
+    <code><% "<%args>...</%args>" %></code> block, except that
+    it has a name and its parameters cannot have default values.
+    Inside the template or subtemplate, the parameterized
+    fragment is invoked exactly like a call to a subtemplate
+    whose name is the name of the fragment.
+
+    <p>
+
+    For example <& _TemplateInclude:
+      "/templates/org/jamon/doc/reference/paramFragExample" &>
+    produces
+    <pre class="tty"><&| escape//Html &><& reference/paramFragExample &>\
+    </&></pre>
+
+  <li><span class="concept">Path aliases</span>
+
+    It is possible to create aliases for path-names.  The basic syntax is:
+    <code>
+      <% "<%alias>" %>
+        <var>shortcut</var> <% "=>" %> <var>/full/path</var>;
+        ...
+      <% "</%alias>" %>
+    </code>
+
+    To use an alias, replace <var>/full/path//</var> with
+    <var>shortcut//</var> when refering to other templates (note the
+    double-slash after <var>shortcut</var>.  Aliases may only be used
+    for the leading part of a path.  Aliases can be used to declare
+    the full path for other aliases.  Shortcut must be a single word,
+    without slashes; the only exception to this is that "/" may be
+    made an alias, refering to the "empty" shortcut.
+
+    <%doc>
+      FIXME - we should define what legal jamon identifiers are,
+      i.e. [a-zA-Z_][a-zA-Z_0-9]*
+    </%doc>
+
+    <p>
+
+    For example:
+    <&| _Template &><%LITERAL>
+<%alias>
+  / => /com/foo/bar;
+  nav => //navigation;
+  legal => /attorneys/documents;
+</%alias>
+
+<& //Home &>  -- calls /com/foo/bar/Home
+<& nav//Left &> -- calls /com/foo/bar/navigation/Left
+<& legal/Disclaimer &> -- calls /attorneys/documents/Disclaimer
+</%LITERAL></&>
+
+  <li><span class="concept">Character encoding</span>
+
+    By default, Jamon template source files are read using the default
+    encoding of the running Java platform. The specific character
+    encoding can be specified in the template by including an
+    <code><% "<%encoding ...>" %></code> declaration at the very beginning
+    of the template. For example, the following declaration indicates that
+    the source of the template should be parsed in UTF-8:
+
+    <&| _Template &><%LITERAL><%encoding UTF-8></%LITERAL></&>
+
+    The available encodings are exactly those supported by the JRE in
+    use.
+
+  </li>
+
+</ol>
+<%method foo>
+  <li><span class="concept">Character encoding</span>
+
+    By default, Jamon template source files are read using the default
+    encoding of the running Java platform. The specific character
+    encoding can be specified in the template by including an
+    <code><% "<%encoding ...>" %></code> declaration at the very beginning
+    of the template. For example, the following declaration indicates that
+    the source of the template should be parsed in UTF-8:
+
+    <&| _Template &><%LITERAL><%encoding UTF-8></%LITERAL></&>
+
+    The available encodings are exactly those supported by the JRE in
+    use.
+
+  </li>
+</%method>

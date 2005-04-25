@@ -60,16 +60,18 @@
           classname="org.jamon.benchmark.Benchmark" />
   </target>
 
-  <target name="run-sablecc"
+  <target name="run-parser"
           depends="compile"
-          description="Run the sablecc benchmarks">
+          description="Run the parser benchmarks">
     <property name="template.dir" value = "../doc/templates"/>
     <property name="template.file" value = "org/jamon/doc/Reference"/>
+    <property name="template.sample" location = "sample.jamon"/>
     <java fork="true"
           classpath="${classes.dir}:${java.lib.jamon}:${java.lib.jamon.stdlib}"
-          classname="org.jamon.benchmark.SableCcBenchmarks">
+          classname="org.jamon.benchmark.ParserBenchmarks">
       <arg value="${template.dir}"/>
       <arg value="${template.file}"/>
+      <arg value="${template.sample}"/>
     </java>
   </target>
 
