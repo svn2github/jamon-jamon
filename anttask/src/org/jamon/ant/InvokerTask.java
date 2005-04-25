@@ -36,7 +36,6 @@ import java.util.Map;
 import java.util.Properties;
 
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.Location;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Environment;
