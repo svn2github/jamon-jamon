@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry output="anttask/build/classes" kind="src" path="anttask/src"/>
+	<classpathentry output="benchmark/build/classes" kind="src" path="benchmark/build/src"/>
+	<classpathentry output="benchmark/build/classes" kind="src" path="benchmark/src"/>
 	<classpathentry output="stdlib/build/testclasses" kind="src" path="stdlib/tests"/>
 	<classpathentry output="core/build/classes" kind="src" path="core/build/src"/>
 	<classpathentry output="core/nodegen/build" kind="src" path="core/nodegen/src"/>
