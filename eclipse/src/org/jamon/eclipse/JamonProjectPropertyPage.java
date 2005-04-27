@@ -57,8 +57,7 @@ public class JamonProjectPropertyPage extends PropertyPage {
 	}
 	
 	private Text templateSourceText;
-	private static final String TEMPLATE_SOURCE_PROPERTY = "TEMPLATE_SOURCE_FOLDER";
-
+    
 	private void addSecondSection(Composite parent) {
 		Composite composite = createDefaultComposite(parent);
 
