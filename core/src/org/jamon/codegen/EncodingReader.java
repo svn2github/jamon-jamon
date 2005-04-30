@@ -75,6 +75,10 @@ public class EncodingReader
     {
         byte[] data = new byte[match.length];
         int len = p_stream.read(data);
+        if (len == -1)
+        {
+            return false;
+        }
         if (len == match.length)
         {
             for (int i = 0; i < len; ++i)

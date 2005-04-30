@@ -31,6 +31,31 @@ import junit.framework.TestCase;
 public class EncodingReaderTest
     extends TestCase
 {
+    public void testEmptyStream() throws Exception
+    {
+        assertEquals(
+            "", 
+            readAll(new EncodingReader(new ByteArrayInputStream(new byte[0]))));
+    }
+    
+    public void testOneCharStream() throws Exception
+    {
+        assertEquals(
+            "x", 
+            readAll(new EncodingReader(
+                new ByteArrayInputStream(new byte[] {'x'}))));
+    }
+    
+    
+    public void testNoEncodingTag() throws Exception
+    {
+        String stuff = "abcdefg12345!@#$%^~";
+        assertEquals(
+            stuff,
+            readAll(new EncodingReader(
+                new ByteArrayInputStream(stuff.getBytes("latin1")))));
+    }
+    
     public void testLatin1()
         throws Exception
     {
