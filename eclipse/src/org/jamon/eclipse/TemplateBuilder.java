@@ -214,13 +214,6 @@ public class TemplateBuilder extends IncrementalProjectBuilder {
 			}
 		}
 		
-		private void delete(IFile p_file) throws CoreException {
-			if (p_file.exists()) {
-				p_file.setReadOnly(false);
-				p_file.delete(true, null);
-			}
-		}
-		
 		private CoreException createCoreException(Exception e) {
 			return new CoreException(new Status(IStatus.ERROR,JamonProjectPlugin.getDefault().getBundle().getSymbolicName(), 0, e.getMessage(), e));
 		}
@@ -303,35 +296,103 @@ public class TemplateBuilder extends IncrementalProjectBuilder {
 			// p_file.setReadOnly(true);
 		}
 		
-		public boolean visit(IResource resource) throws CoreException {
-			if (resource.getType() == IResource.FILE) {
-				IFile file = (IFile) resource;
-				if (JamonNature.JAMON_EXTENSION.equals(file.getFileExtension())) {
-					if (m_templateDir.getFullPath().isPrefixOf(file.getFullPath())) {
-						IPath path = file.getFullPath().removeFirstSegments(m_templateDir.getFullPath().segmentCount()).removeFileExtension();
-						logInfo("translating Jamon template /" + path);
-						IFile pFile = m_outFolder.getFile(path.addFileExtension("java"));
-						delete(pFile);
-						IFile iFile = m_outFolder.getFile(path.removeLastSegments(1).append(path.lastSegment() + "Impl").addFileExtension("java"));
-						delete(iFile);
-						TemplateUnit templateUnit = analyze(path, file);
-						if (templateUnit != null) {
-							path = path.makeAbsolute();
-							m_dependencies.setCalledBy(path.toString(), templateUnit.getTemplateDependencies());
-							m_changed.add(path);
-							createSourceFile(generateProxy(templateUnit, file), pFile);
-							createSourceFile(generateImpl(templateUnit, file), iFile);
-						}
-					}
-				}
-			}
-			return true;
+        private class TemplateResources
+        {
+            public TemplateResources(IFile p_templateFile)
+            {
+                m_template = p_templateFile;
+                m_path = m_template
+                .getFullPath()
+                .removeFirstSegments(
+                    m_templateDir.getFullPath().segmentCount())
+                .removeFileExtension();
+            logInfo("translating Jamon template /" + m_path);
+            m_proxy = m_outFolder.getFile(m_path.addFileExtension("java"));
+            m_impl = m_outFolder.getFile(
+                m_path.removeLastSegments(1)
+                    .append(m_path.lastSegment() + "Impl")
+                    .addFileExtension("java"));
+            }
+            
+            public void clearGeneratedResources() throws CoreException
+            {
+                delete(m_impl);
+                delete(m_proxy);
+            }
+            
+            public void generateResources() throws CoreException
+            {
+                delete(m_impl);
+                delete(m_proxy);
+                TemplateUnit templateUnit = analyze(m_path, m_template);
+                if (templateUnit != null)
+                {
+                    IPath path = m_path.makeAbsolute();
+                    m_dependencies.setCalledBy(
+                        path.toString(), templateUnit.getTemplateDependencies());
+                    m_changed.add(path);
+                    createSourceFile(
+                        generateProxy(templateUnit, m_template), m_proxy);
+                    createSourceFile(
+                        generateImpl(templateUnit, m_template), m_impl);
+                }
+            }
+            
+            private void delete(IFile p_file) throws CoreException
+            {
+                if (p_file.exists()) 
+                {
+                    p_file.setReadOnly(false);
+                    p_file.delete(true, null);
+                }
+            }
+
+            private final IPath m_path;
+            private final IFile m_template, m_proxy, m_impl;
+        }
+        
+        private TemplateResources makeResources(IResource p_resource)
+        {
+            if (p_resource.getType() == IResource.FILE) 
+            {
+                IFile file = (IFile) p_resource;
+                if (JamonNature.JAMON_EXTENSION.equals(file.getFileExtension())
+                    && m_templateDir.getFullPath().isPrefixOf(file.getFullPath()))
+                {
+                    return new TemplateResources(file);
+                }
+            }
+            return null;
+        }
+        
+		public boolean visit(IResource p_resource) throws CoreException 
+        {
+            TemplateResources resources = makeResources(p_resource);
+            if (resources != null)
+            {
+                resources.generateResources();
+            }
+            return true;
 		}
 
-		public boolean visit(IResourceDelta delta) throws CoreException {
-			return visit(delta.getResource());
-		}
-		
+		public boolean visit(IResourceDelta p_delta) throws CoreException 
+        {
+            switch(p_delta.getKind())
+            {
+                case IResourceDelta.ADDED :
+                case IResourceDelta.CHANGED :
+                    visit(p_delta.getResource());
+                break;
+                case IResourceDelta.REMOVED:
+                    TemplateResources resources = 
+                        makeResources(p_delta.getResource());
+                    if (resources != null)
+                    {
+                        resources.clearGeneratedResources();
+                    }
+            }
+            return true;
+        }
 	}
 
 	private static String builderId() {
