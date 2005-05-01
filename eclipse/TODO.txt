@@ -16,3 +16,9 @@ New Jamon project wizard
 
 Add interfaces so that can have Eclipse use Jamon generation classes
 from a project (so can develop Jamon in Eclipse)
+
+Provide a view similar to the Package Explorer for templates, geared towards
+hiding empty parent packages as the PE does.  Ideally, we could extended the 
+PE itself, but there appear to be no extension points available.  Perhaps we 
+could trick it by claiming that the template directory was a source directory, 
+but this probably would have some unintended consequences.
