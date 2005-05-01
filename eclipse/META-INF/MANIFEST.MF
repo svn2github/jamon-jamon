@@ -11,7 +11,10 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.ide,
  org.eclipse.jdt.core,
  org.eclipse.jdt.launching,
- org.jamon
+ org.jamon,
+ org.eclipse.jface.text,
+ org.eclipse.ui.workbench.texteditor,
+ org.eclipse.ui.editors
 Eclipse-AutoStart: true
 Bundle-Vendor: Jay Sachs
 Plugin-Class: org.jamon.eclipse.JamonProjectPlugin

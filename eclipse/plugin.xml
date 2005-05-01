@@ -45,4 +45,16 @@
              class="org.eclipse.core.internal.resources.ProjectPreferences"
              name="project"/>
     </extension>
+       <extension
+         id="org.jamon.eclipse.editor"
+         name="Jamon Template Editor"
+         point="org.eclipse.ui.editors">
+	      <editor
+            name="Jamon Template Editor"
+    		icon="icons/jamon.gif"        
+            extensions="jamon"
+            class="org.jamon.eclipse.JamonEditor"
+            id="org.jamon.eclipse.editor">
+      </editor>
+   </extension>
 </plugin>
