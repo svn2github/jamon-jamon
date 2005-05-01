@@ -52,8 +52,13 @@
     <ant dir="anttask" target="cvsignores"/>
     <ant dir="stdlib" target="cvsignores"/>
     <ant dir="doc" target="cvsignores"/>
-    <echo file=".cvsignore">.cvsignore ${jarfile.core} ${jarfile.anttask} ${jarfile.stdlib} build.properties
-</echo>
+    <echo file=".cvsignore">
+      .cvsignore
+      ${jarfile.core}
+      ${jarfile.anttask}
+      ${jarfile.stdlib}
+      build.properties
+    </echo>
   </target>
 
   <target name="spotless"

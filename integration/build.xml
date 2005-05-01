@@ -161,8 +161,11 @@
   </target>
 
   <target name="cvsignores">
-    <echo file=".cvsignore">.cvsignore ${build.dir} build.properties
-</echo>
+    <echo file=".cvsignore">
+      .cvsignore
+      ${build.dir}
+      build.properties
+    </echo>
   </target>
 
   <target name="clean">

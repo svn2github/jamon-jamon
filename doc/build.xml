@@ -272,8 +272,11 @@ the documentation thus taking care of issues such as escaping.
   </target>
 
   <target name="cvsignores">
-    <echo file=".cvsignore">.cvsignore ${build.dir} build.properties
-</echo>
+    <echo file=".cvsignore">
+      .cvsignore
+      ${build.dir}
+      build.properties
+    </echo>
   </target>
 
   <target name="clean">

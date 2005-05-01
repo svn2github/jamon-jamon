@@ -38,8 +38,11 @@
   </target>
 
   <target name="cvsignores">
-    <echo file=".cvsignore">.cvsignore ${build.dir} build.properties
-</echo>
+    <echo file=".cvsignore">
+      .cvsignore 
+      ${build.dir}
+      build.properties
+    </echo>
     <ant dir="test" target="cvsignores"/>
   </target>
 
