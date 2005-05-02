@@ -46,7 +46,7 @@
              name="project"/>
     </extension>
        <extension
-         id="org.jamon.eclipse.editor"
+         id="jamonEditor"
          name="Jamon Template Editor"
          point="org.eclipse.ui.editors">
 	      <editor
@@ -57,4 +57,11 @@
             id="org.jamon.eclipse.editor">
       </editor>
    </extension>
+       <extension
+             id="javaMarker"
+             name="Java marker"
+             point="org.eclipse.core.resources.markers">
+          <super type="org.eclipse.core.resources.problemmarker"/>
+          <persistent value="true"/>
+       </extension>
 </plugin>

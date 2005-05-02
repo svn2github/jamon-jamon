@@ -68,7 +68,7 @@ public class JamonProjectPropertyPage extends PropertyPage {
 		gd.widthHint = convertWidthInCharsToPixels(50);
 		templateSourceText.setLayoutData(gd);
 
-		String templateSourceFolder = JamonNature.templateSourceFolder(getProject());
+		String templateSourceFolder = JamonNature.templateSourceFolderName(getProject());
 		templateSourceText.setText((templateSourceFolder != null) ? templateSourceFolder : JamonNature.DEFAULT_TEMPLATE_SOURCE);
 	}
 

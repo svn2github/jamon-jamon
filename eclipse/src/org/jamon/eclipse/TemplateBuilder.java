@@ -218,13 +218,13 @@ public class TemplateBuilder extends IncrementalProjectBuilder {
 			return new CoreException(new Status(IStatus.ERROR,JamonProjectPlugin.getDefault().getBundle().getSymbolicName(), 0, e.getMessage(), e));
 		}
 		
-		private void markFile(ParserError e) throws CoreException {
-            IMarker marker = 
+		private void markFile(ParserError e) throws CoreException
+        {
+            EclipseUtils.populateProblemMarker(
                 ((ResourceTemplateLocation) e.getLocation().getTemplateLocation())
-                    .getFile().createMarker(IMarker.PROBLEM);
-			marker.setAttribute(IMarker.LINE_NUMBER, e.getLocation().getLine());
-			marker.setAttribute(IMarker.MESSAGE, e.getMessage());
-			marker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_ERROR);
+                    .getFile().createMarker(IMarker.PROBLEM), 
+                e.getLocation().getLine(),
+                e.getMessage());
 		}
         
         private void addMarkers(ParserErrors p_errors) throws CoreException
@@ -290,28 +290,22 @@ public class TemplateBuilder extends IncrementalProjectBuilder {
 			return baos.toByteArray();
 		}
 		
-		private void createSourceFile(byte[] contents, IFile p_file) throws CoreException {
-			createParents(p_file.getParent());
-			p_file.create(new ByteArrayInputStream(contents), true, null);
-			// p_file.setReadOnly(true);
-		}
-		
         private class TemplateResources
         {
             public TemplateResources(IFile p_templateFile)
             {
                 m_template = p_templateFile;
                 m_path = m_template
-                .getFullPath()
-                .removeFirstSegments(
-                    m_templateDir.getFullPath().segmentCount())
-                .removeFileExtension();
-            logInfo("translating Jamon template /" + m_path);
-            m_proxy = m_outFolder.getFile(m_path.addFileExtension("java"));
-            m_impl = m_outFolder.getFile(
-                m_path.removeLastSegments(1)
-                    .append(m_path.lastSegment() + "Impl")
-                    .addFileExtension("java"));
+                    .getFullPath()
+                    .removeFirstSegments(
+                        m_templateDir.getFullPath().segmentCount())
+                    .removeFileExtension();
+                logInfo("translating Jamon template /" + m_path);
+                m_proxy = m_outFolder.getFile(m_path.addFileExtension("java"));
+                m_impl = m_outFolder.getFile(
+                    m_path.removeLastSegments(1)
+                        .append(m_path.lastSegment() + "Impl")
+                        .addFileExtension("java"));
             }
             
             public void clearGeneratedResources() throws CoreException
@@ -336,6 +330,12 @@ public class TemplateBuilder extends IncrementalProjectBuilder {
                     createSourceFile(
                         generateImpl(templateUnit, m_template), m_impl);
                 }
+            }
+            
+            private void createSourceFile(byte[] contents, IFile p_file) throws CoreException {
+                createParents(p_file.getParent());
+                p_file.create(new ByteArrayInputStream(contents), true, null);
+                // p_file.setReadOnly(true);
             }
             
             private void delete(IFile p_file) throws CoreException
@@ -414,7 +414,6 @@ public class TemplateBuilder extends IncrementalProjectBuilder {
 		description.setBuildSpec((ICommand[]) cmds.toArray(new ICommand[cmds
 				.size()]));
 		p_project.setDescription(description, null);
-
 	}
 
 }

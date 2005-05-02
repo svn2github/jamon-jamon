@@ -1,16 +1,25 @@
 package org.jamon.eclipse;
 
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.LineNumberReader;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IProjectNature;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IResourceChangeEvent;
+import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.IScopeContext;
@@ -78,19 +87,30 @@ public class JamonNature implements IProjectNature {
 		}
 	}
 
+	static IFolder templateOutputFolder(IProject p_project)
+    {
+        // TODO: don't hardcode the generated template directory
+        return p_project.getFolder(new Path("tsrc"));
+    }
 
-	public IFolder getTemplateOutputFolder() {
-		// TODO: don't hardcode the generated template directory
-		return getProject().getFolder(new Path("tsrc"));
+    public IFolder getTemplateOutputFolder() {
+        return templateOutputFolder(getProject());
+    }
+    
+    static String templateSourceFolderName(IProject p_project) {
+		return preferences(p_project)
+            .get(TEMPLATE_SOURCE_DIR_PROPERTY, DEFAULT_TEMPLATE_SOURCE);
 	}
-	
-	static String templateSourceFolder(IProject p_project) {
-		return preferences(p_project).get(TEMPLATE_SOURCE_DIR_PROPERTY, DEFAULT_TEMPLATE_SOURCE);
-	}
+    
+    static IFolder templateSourceFolder(IProject p_project)
+    {
+        return p_project.getFolder(
+            new Path(templateSourceFolderName(p_project)));
+    }
 	
 	public IFolder getTemplateSourceFolder() {
 		IProject project = getProject();
-		return project.getFolder(new Path(templateSourceFolder(project)));
+		return project.getFolder(new Path(templateSourceFolderName(project)));
 	}
 
 	private void unsetReadOnly(IContainer p_container) throws CoreException {
@@ -115,10 +135,10 @@ public class JamonNature implements IProjectNature {
 		}
 	}
 	
-	public void configure() throws CoreException {
-
+	public void configure() throws CoreException 
+    {
 		TemplateBuilder.addToProject(getProject());
-		MarkerUpdaterBuilder.addToProject(getProject());
+        MarkerUpdaterBuilder.addToProject(getProject());
 		removeTsrc();
 		IFolder tsrc = getTemplateOutputFolder();
 		tsrc.create(true, true, null);
@@ -127,8 +147,9 @@ public class JamonNature implements IProjectNature {
 		IJavaProject jp = getJavaProject();
 		ArrayList e = new ArrayList(Arrays.asList(jp.getRawClasspath()));
 		e.add(JavaCore.newSourceEntry(tsrc.getFullPath()));
-		jp.setRawClasspath((IClasspathEntry[]) e.toArray(new IClasspathEntry[e.size()]), null);
-	}
+		jp.setRawClasspath(
+            (IClasspathEntry[]) e.toArray(new IClasspathEntry[e.size()]), null);
+    }
 	
 	private IJavaProject getJavaProject() throws CoreException {
 		return (IJavaProject) (getProject().getNature(JavaCore.NATURE_ID));
@@ -147,6 +168,7 @@ public class JamonNature implements IProjectNature {
 	}
 	
 	private IProject m_project;
+    private IResourceChangeListener m_javaMarkerListener;
 	static final String JAMON_EXTENSION = "jamon";
 	static final String DEFAULT_TEMPLATE_SOURCE = "templates";
 
