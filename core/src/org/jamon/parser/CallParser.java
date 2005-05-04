@@ -224,25 +224,24 @@ public class CallParser extends AbstractParser
 
         public int checkEnd(final char p_char)
         {
-            switch (p_char)
+            if (p_char == '&')
             {
-                case '>' :
-                    if (m_seenAmpersand)
-                    {
-                        m_noMoreParams = true;
-                        return 2;
-                    }
-                    else
-                    {
-                        m_seenAmpersand = false;
-                        return 0;
-                    }
-                case ';' :
-                    return 1;
-                case '&' :
-                    m_seenAmpersand = true;
-                default :
-                    return 0;
+                m_seenAmpersand = true;
+                return 0;
+            }
+            else if (p_char == '>' && m_seenAmpersand) 
+            {
+                m_noMoreParams = true;
+                return 2;
+            }
+            else if (p_char == ';')
+            {
+                return 1;
+            }
+            else
+            {
+                m_seenAmpersand = false;
+                return 0;
             }
         }
 

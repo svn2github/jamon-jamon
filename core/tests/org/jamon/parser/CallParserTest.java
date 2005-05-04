@@ -145,6 +145,15 @@ public class CallParserTest extends AbstractParserTest
                     .addValue(new ParamValueNode(location(1, 10), "\"a;\""))
                     .addValue(new ParamValueNode(location(1, 16), "'&' "))),
             parse("<& /foo: \"a;\"; '&' &>"));
+        assertEquals(
+            new SimpleCallNode(
+                START_LOC,
+                new AbsolutePathNode(location(1, 4)).addPathElement(
+                    new PathElementNode(location(1, 5), "foo")),
+                new UnnamedParamsNode(location(1, 8))
+                    .addValue(
+                        new ParamValueNode(location(1, 10), "x && a > b "))),
+            parse("<& /foo: x && a > b &>"));
     }
     
     public void testChildCall() throws IOException
