@@ -224,7 +224,7 @@ public class TemplateBuilder extends IncrementalProjectBuilder {
                 ((ResourceTemplateLocation) e.getLocation().getTemplateLocation())
                     .getFile().createMarker(IMarker.PROBLEM), 
                 e.getLocation().getLine(),
-                e.getMessage());
+                e.getMessage(), IMarker.SEVERITY_ERROR);
 		}
         
         private void addMarkers(ParserErrors p_errors) throws CoreException

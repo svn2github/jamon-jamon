@@ -30,13 +30,13 @@ public class EclipseUtils
     private EclipseUtils() {}
     
     public static void populateProblemMarker(
-        IMarker p_marker, int p_lineNumber, String p_message)
+        IMarker p_marker, int p_lineNumber, String p_message, int p_severity)
         throws CoreException
     {
         Map attributes = new HashMap();
         attributes.put(IMarker.LINE_NUMBER, new Integer(p_lineNumber));
         attributes.put(IMarker.MESSAGE, p_message);
-        attributes.put(IMarker.SEVERITY, new Integer(IMarker.SEVERITY_ERROR));
+        attributes.put(IMarker.SEVERITY, new Integer(p_severity));
         p_marker.setAttributes(attributes);
     }
 }

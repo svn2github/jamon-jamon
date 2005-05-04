@@ -101,7 +101,10 @@ public class JavaMarkerListener implements IResourceChangeListener
                             .createMarker(javaMarkerId), 
                         p_generatedResource.getTemplateLineNumber(
                             p_marker.getAttribute(IMarker.LINE_NUMBER, 1)),
-                        message);
+                        (p_generatedResource.isImpl() ? "Impl: " : "Proxy: ")
+                        + message, 
+                        p_marker.getAttribute(
+                            IMarker.SEVERITY, IMarker.SEVERITY_ERROR));
                 }
             }
         }
