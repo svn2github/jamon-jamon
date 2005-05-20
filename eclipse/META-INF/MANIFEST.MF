@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-Name: Jamon Project Plug-in
 Bundle-SymbolicName: org.jamon.project; singleton=true
-Bundle-Version: 0.1.1
+Bundle-Version: 0.1.2
 Bundle-ClassPath: jamonProjectPlugin.jar
 Bundle-Activator: org.jamon.eclipse.JamonProjectPlugin
 Bundle-Localization: plugin
