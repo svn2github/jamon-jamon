@@ -19,7 +19,6 @@
  */
 package org.jamon.eclipse;
 
-import java.util.Vector;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
