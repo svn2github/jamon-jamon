@@ -22,7 +22,6 @@ package org.jamon;
 
 import junit.framework.TestCase;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.net.URLClassLoader;

@@ -20,8 +20,6 @@
 
 package org.jamon.render.html;
 
-import java.util.HashMap;
-
 import junit.framework.TestCase;
 
 public class CgiParametersTest

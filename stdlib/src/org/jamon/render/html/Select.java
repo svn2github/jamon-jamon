@@ -20,8 +20,6 @@
 
 package org.jamon.render.html;
 
-import java.util.Iterator;
-
 public interface Select
 {
     interface Item

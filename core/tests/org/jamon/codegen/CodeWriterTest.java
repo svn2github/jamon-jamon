@@ -20,7 +20,6 @@
 
 package org.jamon.codegen;
 
-import java.io.StringWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 

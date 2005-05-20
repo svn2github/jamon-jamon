@@ -27,7 +27,6 @@ import java.io.IOException;
 import junit.framework.TestCase;
 
 import org.jamon.BasicTemplateManager;
-import org.jamon.RecompilingTemplateManager;
 import org.jamon.TemplateManager;
 
 public class TestBase
