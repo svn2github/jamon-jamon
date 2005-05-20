@@ -19,6 +19,7 @@
  */
 package org.jamon.eclipse;
 
+import java.util.Vector;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
@@ -105,6 +106,12 @@ public class JavaMarkerListener implements IResourceChangeListener
                         + message, 
                         p_marker.getAttribute(
                             IMarker.SEVERITY, IMarker.SEVERITY_ERROR));
+                    if (!p_generatedResource.isImpl()
+                        && message.startsWith("The import ") 
+                        && message.endsWith(" is never used"))
+                    {
+                        p_marker.delete();
+                    }
                 }
             }
         }
