@@ -1,16 +1,14 @@
 Manifest-Version: 1.0
 Bundle-Name: JamonPlugin Plug-in
 Bundle-SymbolicName: org.jamon
-Bundle-Version: 1.0.0
+Bundle-Version: 1.0.1
 Bundle-Localization: plugin
 Eclipse-AutoStart: true
 Bundle-ClassPath: jamon.jar
-Provide-Package: 
-  org.jamon,
-  org.jamon.codegen,
-  org.jamon.emit,
-  org.jamon.escaping,
-  org.jamon.node,
-  org.jamon.parser,
-  org.jamon.util
-  
+Export-Package: org.jamon,
+ org.jamon.codegen,
+ org.jamon.emit,
+ org.jamon.escaping,
+ org.jamon.node,
+ org.jamon.parser,
+ org.jamon.util
