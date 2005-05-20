@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-Name: Jamon Project Plug-in
-Bundle-SymbolicName: org.jamon.project
+Bundle-SymbolicName: org.jamon.project; singleton=true
 Bundle-Version: 0.1.1
 Bundle-ClassPath: jamonProjectPlugin.jar
 Bundle-Activator: org.jamon.eclipse.JamonProjectPlugin
@@ -11,10 +11,9 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.ide,
  org.eclipse.jdt.core,
  org.eclipse.jdt.launching,
- org.jamon,
  org.eclipse.jface.text,
  org.eclipse.ui.workbench.texteditor,
- org.eclipse.ui.editors
+ org.eclipse.ui.editors,
+ org.jamon
 Eclipse-AutoStart: true
-Bundle-Vendor: Jay Sachs
-Plugin-Class: org.jamon.eclipse.JamonProjectPlugin
+Bundle-Vendor: jamon.org
