@@ -12,3 +12,11 @@ Export-Package: org.jamon,
  org.jamon.node,
  org.jamon.parser,
  org.jamon.util
+Bundle-Vendor: jamon.org
+Provide-Package: org.jamon,
+ org.jamon.codegen,
+ org.jamon.emit,
+ org.jamon.escaping,
+ org.jamon.node,
+ org.jamon.parser,
+ org.jamon.util
