@@ -5,13 +5,6 @@ Bundle-Version: 1.0.1
 Bundle-Localization: plugin
 Eclipse-AutoStart: true
 Bundle-ClassPath: jamon.jar
-Export-Package: org.jamon,
- org.jamon.codegen,
- org.jamon.emit,
- org.jamon.escaping,
- org.jamon.node,
- org.jamon.parser,
- org.jamon.util
 Bundle-Vendor: jamon.org
 Provide-Package: org.jamon,
  org.jamon.codegen,
