@@ -28,6 +28,8 @@ public abstract class AbstractParserTest extends TestCase
     protected final static Location START_LOC = 
         new Location(TEMPLATE_LOC, 1, 1);
 
+    public AbstractParserTest() {}
+    
     public AbstractParserTest(String p_name)
     {
         super(p_name);
