@@ -21,6 +21,7 @@ package org.jamon.parser;
 
 import java.io.IOException;
 
+import org.jamon.ParserError;
 import org.jamon.ParserErrors;
 import org.jamon.node.Location;
 
@@ -29,7 +30,7 @@ public class ImportParser extends AbstractTypeParser
 
     public ImportParser(Location p_location, 
                         PositionalPushbackReader p_reader, 
-                        ParserErrors p_errors) throws IOException
+                        ParserErrors p_errors) throws IOException, ParserError
     {
         super(p_location, p_reader, p_errors);
     }
@@ -37,9 +38,8 @@ public class ImportParser extends AbstractTypeParser
     @Override
     protected boolean checkForImportWildcards() throws IOException
     {
-        if (readChar('*'))
+        if (readAndAppendChar('*'))
         {
-            m_type.append('*');
             return true;
         }
         else

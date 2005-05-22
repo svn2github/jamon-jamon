@@ -19,7 +19,6 @@
  */
 package org.jamon.parser;
 
-import java.io.IOException;
 import org.jamon.ParserErrors;
 
 public class ImportParserTest extends AbstractParserTest
@@ -39,7 +38,7 @@ public class ImportParserTest extends AbstractParserTest
         assertEquals("foo.bar.*", parseImport("foo.bar . *"));
     }
     
-    private String parseImport(String p_content) throws IOException
+    private String parseImport(String p_content) throws Exception
     {
         ParserErrors errors = new ParserErrors();
         String result = 

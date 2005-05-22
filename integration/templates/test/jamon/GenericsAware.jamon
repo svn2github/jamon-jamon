@@ -1,0 +1,16 @@
+<%import>
+  java.util.*;
+</%import>
+
+<%def handleMap>
+  <%args>
+    Map<? extends Number, String> map;
+  </%args>
+<% map.get(1).substring(1) %>\
+</%def>
+
+<%java>
+  Map<Integer, String> m = new HashMap();
+  m.put(1,"abc");
+</%java>\
+<& handleMap: m &>

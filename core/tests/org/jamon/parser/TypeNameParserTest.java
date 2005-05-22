@@ -17,22 +17,17 @@
  *
  * Contributor(s):
  */
+
 package org.jamon.parser;
 
 import java.io.IOException;
-import org.jamon.ParserErrors;
 
-public class TypeNameParserTest extends AbstractParserTest
+import org.jamon.ParserError;
+import org.jamon.ParserErrors;
+import org.jamon.node.Location;
+
+public class TypeNameParserTest extends AbstractClassNameParserTest
 {
-    public void testParseSimple() throws Exception
-    {
-        assertEquals("foo", parseTypeName("foo "));
-    }
-    
-    public void testParseCompound() throws Exception
-    {
-        assertEquals("foo.bar", parseTypeName("foo. bar"));
-    }
     
     public void testParseArray() throws Exception
     {
@@ -44,17 +39,12 @@ public class TypeNameParserTest extends AbstractParserTest
         assertEquals("foo.bar[][]", parseTypeName("foo . bar [ ] [ ]"));
     }
     
-    private String parseTypeName(String p_content) throws IOException
+    @Override
+    protected ClassNameParser makeParser(Location p_location,
+        PositionalPushbackReader p_reader,
+        ParserErrors p_errors) throws IOException, ParserError
     {
-        ParserErrors errors = new ParserErrors();
-        String result = 
-            new TypeNameParser(START_LOC, makeReader(p_content), errors)
-            .getType();
-        if (errors.hasErrors())
-        {
-            throw errors;
-        }
-        return result;
+        return new TypeNameParser(p_location, p_reader, p_errors);
     }
 
 }

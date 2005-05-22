@@ -21,21 +21,21 @@ package org.jamon.parser;
 
 import java.io.IOException;
 
+import org.jamon.ParserError;
 import org.jamon.ParserErrors;
 import org.jamon.node.Location;
 
 public class TypeNameParser extends ClassNameParser
 {
-
     public TypeNameParser(Location p_location,
-                      PositionalPushbackReader p_reader,
-                      ParserErrors p_errors) throws IOException
+                          PositionalPushbackReader p_reader,
+                          ParserErrors p_errors) throws IOException, ParserError
     {
         super(p_location, p_reader, p_errors);
     }
 
     @Override
-    protected void checkForArrayBrackets() throws IOException
+    protected void checkForArrayBrackets() throws IOException, ParserError
     {
         while (readChar('['))
         {

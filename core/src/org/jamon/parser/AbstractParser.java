@@ -69,7 +69,7 @@ public class AbstractParser
         throws IOException, NotAnIdentifierException
     {
         int c;
-        StringBuffer buffer = new StringBuffer();
+        StringBuilder builder = new StringBuilder();
         if ((c = m_reader.read()) <= 0
             || !Character.isJavaIdentifierStart((char) c))
         {
@@ -78,16 +78,16 @@ public class AbstractParser
         }
         else
         {
-            buffer.append((char) c);
+            builder.append((char) c);
         }
 
         while ((c = m_reader.read()) >= 0
             && Character.isJavaIdentifierPart((char) c))
         {
-            buffer.append((char) c);
+            builder.append((char) c);
         }
         m_reader.unread(c);
-        return buffer.toString();
+        return builder.toString();
     }
     
     protected String readIdentifier() throws IOException
@@ -267,17 +267,41 @@ public class AbstractParser
 
     protected String readType(final Location p_location) throws IOException
     {
-        return new TypeNameParser(p_location, m_reader, m_errors).getType();
+        try
+        {
+            return new TypeNameParser(p_location, m_reader, m_errors).getType();
+        }
+        catch (ParserError e)
+        {
+            addError(e);
+            return "";
+        }
     }
     
     protected String readClassName(final Location p_location) throws IOException
     {
-        return new ClassNameParser(p_location, m_reader, m_errors).getType();
+        try
+        {
+            return new ClassNameParser(p_location, m_reader, m_errors).getType();
+        }
+        catch (ParserError e)
+        {
+            addError(e);
+            return "";
+        }
     }
     
     protected String readImport(final Location p_location) throws IOException
     {
-        return new ImportParser(p_location, m_reader, m_errors).getType();
+        try
+        {
+            return new ImportParser(p_location, m_reader, m_errors).getType();
+        }
+        catch (ParserError e)
+        {
+            addError(e);
+            return "";
+        }
     }
 
     protected AbstractPathNode parsePath() throws IOException

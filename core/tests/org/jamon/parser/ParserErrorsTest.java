@@ -219,9 +219,12 @@ public class ParserErrorsTest extends AbstractParserTest
     
     public void testImplementMissingSemi() throws Exception
     {
-        assertError(
+        // FIXME - not the most intuitive error - the parser is treating the
+        // close tag as part of a generic specification.
+        assertErrorPair(
             "<%implements>\nfoo.bar\n</%implements>",
-            3, 1, TopLevelParser.EXPECTING_SEMI);
+            3, 1, AbstractParser.BAD_JAVA_TYPE_SPECIFIER,
+            2, 1, TopLevelParser.EXPECTING_IMPLEMENTS_CLOSE);
     }
     
     public void testMalformedImplementsOpen() throws Exception

@@ -21,21 +21,96 @@ package org.jamon.parser;
 
 import java.io.IOException;
 
+import org.jamon.ParserError;
 import org.jamon.ParserErrors;
 import org.jamon.node.Location;
 
 public class ClassNameParser extends AbstractTypeParser
 {
-
-    public ClassNameParser(Location p_location,
-                           PositionalPushbackReader p_reader,
-                           ParserErrors p_errors) throws IOException
+    public ClassNameParser(
+        Location p_location,
+        PositionalPushbackReader p_reader,
+        ParserErrors p_errors) throws IOException, ParserError
     {
         super(p_location, p_reader, p_errors);
     }
 
+    private void readGenericsParameter() 
+        throws IOException, NotAnIdentifierException, ParserError
+    {
+        boolean boundsAllowed;
+        if (readAndAppendChar('?'))
+        {
+            boundsAllowed = true;
+        }
+        else
+        {
+            //FIXME - check for errors
+            String type = new TypeNameParser(
+                m_reader.getLocation(), m_reader, m_errors).getType();
+            m_type.append(type);
+            boundsAllowed = (type.indexOf('.') < 0);
+        }
+        if (boundsAllowed && soakWhitespace())
+        {
+            readBoundingType();
+        }
+    }
+    
     @Override
     protected void parseTypeElaborations()
+        throws IOException, NotAnIdentifierException, ParserError
     {
+        if (readAndAppendChar('<'))
+        {
+            soakWhitespace();
+            readGenericsParameter();
+            soakWhitespace();
+            while(readAndAppendChar(','))
+            {
+                soakWhitespace();
+                readGenericsParameter();
+                soakWhitespace();
+            }
+            if (!readAndAppendChar('>'))
+            {
+                throw new NotAnIdentifierException();
+            }
+        }
+    }
+
+    protected void readBoundingType()
+        throws IOException, NotAnIdentifierException, ParserError
+    {
+        boolean needBoundingType = false;
+        if (readChar('e'))
+        {
+            if (checkToken("xtends") && soakWhitespace())
+            {
+                m_type.append(" extends ");
+                needBoundingType = true;
+            }
+            else
+            {
+                throw new NotAnIdentifierException();
+            }
+        }
+        else if (readChar('s'))
+        {
+            if (checkToken("uper") && soakWhitespace())
+            {
+                m_type.append(" super ");
+                needBoundingType = true;
+            }
+            else
+            {
+                throw new NotAnIdentifierException();
+            }
+        }
+        if (needBoundingType)
+        {
+            m_type.append(new TypeNameParser(
+                m_reader.getLocation(), m_reader, m_errors).getType());
+        }
     }
 }

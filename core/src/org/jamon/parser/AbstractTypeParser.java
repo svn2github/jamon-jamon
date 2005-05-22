@@ -21,22 +21,26 @@ package org.jamon.parser;
 
 import java.io.IOException;
 
+import org.jamon.ParserError;
 import org.jamon.ParserErrors;
 import org.jamon.node.Location;
 
 public class AbstractTypeParser extends AbstractParser
 {
-    public AbstractTypeParser(Location p_location,
-                              PositionalPushbackReader p_reader,
-                              ParserErrors p_errors) throws IOException
+    public static final String UNEXPECTED_ARRAY_ERROR =
+        "Arrays not allowed in this context";
+
+    public AbstractTypeParser(
+        Location p_location,
+        PositionalPushbackReader p_reader,
+        ParserErrors p_errors) throws IOException, ParserError
     {
         super(p_reader, p_errors);
         try
         {
             parseComponent();
-            while (readChar('.'))
+            while (readAndAppendChar('.'))
             {
-                m_type.append('.');
                 soakWhitespace();
                 if (checkForImportWildcards())
                 {
@@ -47,20 +51,21 @@ public class AbstractTypeParser extends AbstractParser
         }
         catch (NotAnIdentifierException e)
         {
-            m_type.setLength(0);
-            addError(p_location, BAD_JAVA_TYPE_SPECIFIER);
+            throw new ParserError(p_location, BAD_JAVA_TYPE_SPECIFIER);
         }
         checkForArrayBrackets();
     }
 
-    private void parseComponent() throws IOException, NotAnIdentifierException
+    private void parseComponent() 
+        throws IOException, NotAnIdentifierException, ParserError
     {
         m_type.append(readIdentifierOrThrow());
         soakWhitespace();
         parseTypeElaborations();
     }
 
-    protected void parseTypeElaborations()
+    protected void parseTypeElaborations() 
+        throws IOException, NotAnIdentifierException, ParserError
     {
     }
 
@@ -69,8 +74,12 @@ public class AbstractTypeParser extends AbstractParser
         return false;
     }
     
-    protected void checkForArrayBrackets() throws IOException
+    protected void checkForArrayBrackets() throws IOException, ParserError
     {
+        if (readChar('['))
+        {
+            throw new ParserError(m_reader.getLocation(), UNEXPECTED_ARRAY_ERROR);
+        }
     }
 
     public String getType()
@@ -78,5 +87,18 @@ public class AbstractTypeParser extends AbstractParser
         return m_type.toString();
     }
 
+    protected boolean readAndAppendChar(char p_char) throws IOException
+    {
+        if (readChar(p_char))
+        {
+            m_type.append(p_char);
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    
     protected final StringBuilder m_type = new StringBuilder();
 }

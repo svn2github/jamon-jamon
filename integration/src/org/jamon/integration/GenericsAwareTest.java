@@ -17,27 +17,16 @@
  *
  * Contributor(s):
  */
+package org.jamon.integration;
 
-package org.jamon.parser;
+import test.jamon.GenericsAware;
 
-import java.io.IOException;
-
-import org.jamon.ParserError;
-import org.jamon.ParserErrors;
-import org.jamon.node.Location;
-
-public class ClassNameParserTest extends AbstractClassNameParserTest
+public class GenericsAwareTest extends TestBase
 {
-    public void testUnexpectedArray() throws Exception
+    public void testExercise()
+        throws Exception
     {
-        assertError("foo[]", 1, 4, AbstractTypeParser.UNEXPECTED_ARRAY_ERROR);
-    }
-    
-    @Override
-    protected ClassNameParser makeParser(Location p_location,
-        PositionalPushbackReader p_reader,
-        ParserErrors p_errors) throws IOException, ParserError
-    {
-        return new ClassNameParser(p_location, p_reader, p_errors);
+        new GenericsAware().render(getWriter());
+        checkOutput("bc");
     }
 }
