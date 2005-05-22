@@ -108,6 +108,7 @@ public class Analyzer
         {
             topLevelAnalyze(p_top, new AnalysisAdapter()
                 {
+                    @Override
                     public void caseExtendsNode(ExtendsNode p_extends)
                     {
                         StringBuffer message =
@@ -209,6 +210,7 @@ public class Analyzer
 
     private class AliasAdapter extends AnalysisAdapter
     {
+        @Override
         public void caseAliasesNode(AliasesNode p_node)
         {
             for (Iterator i = p_node.getAliass(); i.hasNext(); )
@@ -233,6 +235,7 @@ public class Analyzer
 
     private class PreliminaryAdapter extends AnalysisAdapter
     {
+        @Override
         public void caseEscapeDirectiveNode(EscapeDirectiveNode p_escape)
         {
             if (m_defaultEscaping != null)
@@ -249,6 +252,7 @@ public class Analyzer
             }
         }
 
+        @Override
         public void caseExtendsNode(ExtendsNode p_extends)
         {
             if(getTemplateUnit().hasParentPath())
@@ -293,23 +297,27 @@ public class Analyzer
             }
         }
 
+        @Override
         public void caseParentMarkerNode(ParentMarkerNode p_node)
         {
             getTemplateUnit().setIsParent();
         }
 
+        @Override
         public void caseDefNode(DefNode p_node)
         {
             getTemplateUnit()
                 .makeDefUnit(p_node.getName(), p_node.getLocation());
         }
 
+        @Override
         public void caseMethodNode(MethodNode p_node)
         {
             getTemplateUnit()
                 .makeMethodUnit(p_node.getName(), p_node.getLocation(), false);
         }
 
+        @Override
         public void caseAbsMethodNode(AbsMethodNode p_node)
         {
             getTemplateUnit().makeMethodUnit(
@@ -319,16 +327,19 @@ public class Analyzer
 
     private class Adapter extends DepthFirstAnalysisAdapter
     {
+        @Override
         public void caseImportNode(ImportNode p_import)
         {
             getTemplateUnit().addImport(p_import);
         }
 
+        @Override
         public void caseImplementNode(ImplementNode p_node)
         {
             getTemplateUnit().addInterface(p_node.getName());
         }
 
+        @Override
         public void caseParentArgsNode(ParentArgsNode p_node)
         {
             if (getCurrentUnit() instanceof TemplateUnit
@@ -344,61 +355,72 @@ public class Analyzer
             }
         }
 
+        @Override
         public void caseParentArgNode(ParentArgNode p_node)
         {
             ((InheritedUnit) getCurrentUnit()).addParentArg(p_node);
         }
 
+        @Override
         public void caseParentArgWithDefaultNode(
             ParentArgWithDefaultNode p_node)
         {
             ((InheritedUnit) getCurrentUnit()).addParentArg(p_node);
         }
 
+        @Override
         public void inFragmentArgsNode(FragmentArgsNode p_node)
         {
             pushFragmentArg(getCurrentUnit().addFragment(p_node));
         }
 
+        @Override
         public void outFragmentArgsNode(FragmentArgsNode p_node)
         {
             popUnit();
         }
 
+        @Override
         public void caseArgNode(ArgNode p_node)
         {
             getCurrentUnit().addRequiredArg(p_node);
         }
 
+        @Override
         public void caseOptionalArgNode(OptionalArgNode p_node)
         {
             getCurrentUnit().addOptionalArg(p_node);
         }
         
+        @Override
         public void inDefNode(DefNode p_node)
         {
             handleBody();
             pushDefUnit(p_node.getName());
         }
 
+        @Override
         public void outDefNode(DefNode p_def)
         {
             handleBody();
             popUnit();
         }
 
+        @Override
         public void inMethodNode(MethodNode p_node)
         {
             handleBody();
             pushMethodUnit(p_node.getName());
         }
 
+        @Override
         public void outMethodNode(MethodNode p_node)
         {
             handleBody();
             popUnit();
         }
 
+        @Override
         public void inAbsMethodNode(AbsMethodNode p_node)
         {
             handleBody();
@@ -411,23 +433,27 @@ public class Analyzer
             pushMethodUnit(p_node.getName());
         }
 
+        @Override
         public void outAbsMethodNode(AbsMethodNode p_node)
         {
             popUnit();
         }
 
+        @Override
         public void inOverrideNode(OverrideNode p_node)
         {
             handleBody();
             pushOverriddenMethodUnit(p_node);
         }
 
+        @Override
         public void outOverrideNode(OverrideNode p_node)
         {
             handleBody();
             popUnit();
         }
 
+        @Override
         public void caseSimpleCallNode(SimpleCallNode p_node)
         {
             handleBody();
@@ -436,6 +462,7 @@ public class Analyzer
                                            p_node.getLocation()));
         }
 
+        @Override
         public void caseChildCallNode(ChildCallNode p_node)
         {
             handleBody();
@@ -449,12 +476,14 @@ public class Analyzer
             addStatement(new ChildCallStatement(unit.getInheritanceDepth()+1));
         }
 
+        @Override
         public void caseClassNode(ClassNode p_node)
         {
             handleBody();
             getTemplateUnit().addClassContent(p_node);
         }
 
+        @Override
         public void caseTextNode(TextNode p_node)
         {
             if (m_currentTextLocation == null)
@@ -464,6 +493,7 @@ public class Analyzer
             m_current.append(p_node.getText());
         }
 
+        @Override
         public void inMultiFragmentCallNode(MultiFragmentCallNode p_node)
         {
             handleBody();
@@ -475,23 +505,27 @@ public class Analyzer
             pushCallStatement(s);
         }
 
+        @Override
         public void outMultiFragmentCallNode(MultiFragmentCallNode p_call)
         {
             popCallStatement();
         }
 
+        @Override
         public void inNamedFragmentNode(NamedFragmentNode p_node)
         {
             getCurrentCallStatement().addFragmentImpl(
                 pushFragmentUnitImpl(p_node.getName()), m_errors);
         }
 
+        @Override
         public void outNamedFragmentNode(NamedFragmentNode p_node)
         {
             handleBody();
             popUnit();
         }
 
+        @Override
         public void inFragmentCallNode(FragmentCallNode p_node)
         {
             handleBody();
@@ -503,17 +537,20 @@ public class Analyzer
             s.addFragmentImpl(pushFragmentUnitImpl(null), m_errors);
         }
 
+        @Override
         public void outFragmentCallNode(FragmentCallNode p_node)
         {
             handleBody();
             popUnit();
         }
 
+        @Override
         public void outTopNode(TopNode p_node)
         {
             handleBody();
         }
 
+        @Override
         public void caseJavaNode(JavaNode p_node)
         {
             handleBody();
@@ -525,6 +562,7 @@ public class Analyzer
         private class EmitAdapter extends AnalysisAdapter
         {
             EscapingDirective m_escapeCode = null;
+            @Override
             public void caseEscapeNode(EscapeNode p_node)
             {
                 m_escapeCode = EscapingDirective.get(p_node.getEscapeCode());
@@ -536,6 +574,7 @@ public class Analyzer
                 }
             }
             
+            @Override
             public void caseDefaultEscapeNode(DefaultEscapeNode p_node)
             {
                 m_escapeCode = getDefaultEscaping(); 
@@ -548,6 +587,7 @@ public class Analyzer
             }
         }
         
+        @Override
         public void caseEmitNode(EmitNode p_node)
         {
             handleBody();
@@ -656,22 +696,26 @@ public class Analyzer
             }
         }
 
+        @Override
         public void inNamedParamsNode(NamedParamsNode p_node)
         {
             m_paramsMap = new HashMap();
         }
         
+        @Override
         public void inUnnamedParamsNode(UnnamedParamsNode p_node)
         {
             m_paramsList = new LinkedList();
         }
         
+        @Override
         public void caseNamedParamNode(NamedParamNode p_node)
         {
             m_paramsMap.put(p_node.getName().getName(), 
                             p_node.getValue().getValue());
         }
         
+        @Override
         public void caseParamValueNode(ParamValueNode p_node)
         {
             m_paramsList.add(p_node.getValue());
