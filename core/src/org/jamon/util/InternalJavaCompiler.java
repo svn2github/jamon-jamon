@@ -42,10 +42,10 @@ public class InternalJavaCompiler
 
         m_compilerClass = Class.forName("com.sun.tools.javac.Main");
         m_compiler = m_compilerClass.newInstance();
-        m_compile = m_compilerClass.getMethod
-            ("compile", new Class [] {(new String [0]).getClass()});
+        m_compile = m_compilerClass.getMethod("compile", 
+                                              (new String [0]).getClass());
         // check if we can invoke the compile method
-        m_compile.invoke(m_compiler, new String[0]);
+        m_compile.invoke(m_compiler);
     }
 
     public String compile(String [] p_javaFiles)
