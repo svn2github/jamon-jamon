@@ -25,7 +25,7 @@ public final class ParserErrors extends IOException
         return ! m_errors.isEmpty();
     }
     
-    public Iterator getErrors()
+    public Iterator<ParserError> getErrors()
     {
         return m_errors.iterator();
     }
@@ -45,14 +45,14 @@ public final class ParserErrors extends IOException
         m_errors.addAll(p_errors.m_errors);
     }
     
-    private final List m_errors = new ArrayList();
+    private final List<ParserError> m_errors = new ArrayList<ParserError>();
 
 
     public String getMessage()
     {
         StringBuffer buffer = 
             new StringBuffer("Errors occured during parsing:");
-        for (Iterator i = getErrors(); i.hasNext(); )
+        for (Iterator<ParserError> i = getErrors(); i.hasNext(); )
         {
             buffer.append("\n   ");
             buffer.append(i.next().toString());
@@ -62,9 +62,9 @@ public final class ParserErrors extends IOException
 
     public void printErrors(PrintStream p_stream)
     {
-        for (Iterator i = getErrors(); i.hasNext(); )
+        for (Iterator<ParserError> i = getErrors(); i.hasNext(); )
         {
-            ParserError error = (ParserError) i.next();
+            ParserError error = i.next();
             System.err.println(error);
                         
         }
