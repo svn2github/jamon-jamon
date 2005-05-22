@@ -267,73 +267,17 @@ public class AbstractParser
 
     protected String readType(final Location p_location) throws IOException
     {
-        return readClassSpecifier(p_location, false, true);
+        return new TypeNameParser(p_location, m_reader, m_errors).getType();
     }
     
     protected String readClassName(final Location p_location) throws IOException
     {
-        return readClassSpecifier(p_location, false, false);
+        return new ClassNameParser(p_location, m_reader, m_errors).getType();
     }
     
     protected String readImport(final Location p_location) throws IOException
     {
-        return readClassSpecifier(p_location, true, false);
-    }
-    
-    private String readClassSpecifier(final Location p_location, 
-                                      final boolean p_allowStar,
-                                      final boolean p_allowArrays)
-        throws IOException
-    {
-        String component;
-        try
-        {
-            component = readIdentifierOrThrow();
-        }
-        catch (NotAnIdentifierException e)
-        {
-            addError(p_location, BAD_JAVA_TYPE_SPECIFIER);
-            return "";
-        }
-        StringBuffer type = new StringBuffer(component);
-        soakWhitespace();
-        while (readChar('.'))
-        {
-            type.append('.');
-            soakWhitespace();
-            if (p_allowStar && readChar('*'))
-            {
-                type.append('*');
-                return type.toString();
-            }
-            try
-            {
-                component = readIdentifierOrThrow();
-            }
-            catch (NotAnIdentifierException e)
-            {
-                addError(p_location, BAD_JAVA_TYPE_SPECIFIER);
-                return "";
-            }
-            type.append(component);
-            soakWhitespace();
-        }
-        if (p_allowArrays)
-        {
-            while (readChar('['))
-            {
-                soakWhitespace();
-                if (!readChar(']'))
-                {
-                    addError(m_reader.getNextLocation(), 
-                             INCOMPLETE_ARRAY_SPECIFIER_ERROR);
-                    return type.toString();
-                }
-                type.append("[]");
-                soakWhitespace();
-            }
-        }
-        return type.toString();
+        return new ImportParser(p_location, m_reader, m_errors).getType();
     }
 
     protected AbstractPathNode parsePath() throws IOException
