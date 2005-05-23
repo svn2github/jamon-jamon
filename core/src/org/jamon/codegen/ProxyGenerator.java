@@ -258,6 +258,7 @@ public class ProxyGenerator
     private void generateConstructImpl()
     {
         m_writer.println();
+        m_writer.println("@Override");
         m_writer.print(
             "protected " + ClassNames.BASE_TEMPLATE + " constructImpl"
             + "(Class p_class)");
@@ -286,6 +287,7 @@ public class ProxyGenerator
         m_writer.closeBlock();
 
         m_writer.println();
+        m_writer.println("@Override");
         m_writer.print("protected " + ClassNames.BASE_TEMPLATE
                        + " constructImpl()");
         m_writer.openBlock();
@@ -356,6 +358,7 @@ public class ProxyGenerator
         m_writer.openBlock();
         m_writer.print(  "return new " + ClassNames.ABSTRACT_RENDERER + "() ");
         m_writer.openBlock();
+        m_writer.println("@Override");
         m_writer.println("public void renderTo(" + ArgNames.WRITER_DECL + ")");
         m_writer.println(  "  throws " + ClassNames.IOEXCEPTION);
         m_writer.openBlock();
@@ -396,6 +399,7 @@ public class ProxyGenerator
 
         if (! m_templateUnit.isParent())
         {
+            m_writer.println("@Override");
             m_writer.println("protected " + ClassNames.IMPL_DATA
                              + " makeImplData()");
             m_writer.openBlock();
