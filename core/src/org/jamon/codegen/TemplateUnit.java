@@ -90,16 +90,19 @@ public class TemplateUnit
         m_inheritedArgs.addParentArg(p_arg);
     }
 
+    @Override
     public Iterator getFragmentArgs()
     {
         return m_fragmentArgs.iterator();
     }
 
+    @Override
     public List getFragmentArgsList()
     {
         return m_fragmentArgs;
     }
 
+    @Override
     public void addFragmentArg(FragmentArgument p_arg, Location p_location)
     {
         m_fragmentArgs.add(p_arg);
@@ -111,16 +114,19 @@ public class TemplateUnit
         return m_declaredFragmentArgs.iterator();
     }
 
+    @Override
     public void addRequiredArg(RequiredArgument p_arg)
     {
         m_declaredRequiredArgs.add(p_arg);
     }
 
+    @Override
     public void addOptionalArg(OptionalArgument p_arg)
     {
         m_declaredOptionalArgs.add(p_arg);
     }
 
+    @Override
     public Iterator getSignatureRequiredArgs()
     {
         return new SequentialIterator
@@ -128,6 +134,7 @@ public class TemplateUnit
              m_declaredRequiredArgs.iterator());
     }
 
+    @Override
     public Iterator getSignatureOptionalArgs()
     {
         return new SequentialIterator
@@ -142,6 +149,7 @@ public class TemplateUnit
             : m_inheritedArgs.getDefaultValue(p_arg);
     }
     
+    @Override
     public Iterator getVisibleArgs()
     {
         return m_inheritedArgs == null
@@ -400,6 +408,7 @@ public class TemplateUnit
         }
     }
 
+    @Override
     protected void generateInterfaceSummary(StringBuffer p_buf)
     {
         super.generateInterfaceSummary(p_buf);
