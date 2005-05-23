@@ -44,6 +44,7 @@ public class FragmentUnit extends AbstractInnerUnit
         }
     }
 
+    @Override
     public void addOptionalArg(OptionalArgNode p_node)
     {
         getErrors().addError(
@@ -51,17 +52,20 @@ public class FragmentUnit extends AbstractInnerUnit
             p_node.getValue().getLocation());
     }
 
+    @Override
     public void addOptionalArg(OptionalArgument p_arg)
     {
         throw new UnsupportedOperationException();
     }
 
+    @Override
     protected void addFragmentArg(FragmentArgument p_arg, Location p_location)
     {
         getErrors().addError("Fragments cannot have fragment arguments", 
                              p_location);
     }
 
+    @Override
     public FragmentUnit getFragmentUnitIntf(String p_path)
     {
         return getParent().getFragmentUnitIntf(p_path);
