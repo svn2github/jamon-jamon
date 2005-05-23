@@ -32,6 +32,7 @@ public class JamonLocation extends Location
         m_columnNumber = p_location.getColumn();
     }
 
+    @Override
     public String toString()
     {
         StringBuffer buf = new StringBuffer(super.toString());
