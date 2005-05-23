@@ -40,7 +40,7 @@ public class NodeGenerator
 
     private static void writeApply(PrintWriter p_writer, NodeDescriptor p_node)
     {
-        p_writer.println("  public void apply(Analysis p_analysis)");
+        p_writer.println("  @Override public void apply(Analysis p_analysis)");
         p_writer.println("  {");
         p_writer.println("    p_analysis.case" + p_node.getName() + "(this);");
         p_writer.println("  }");
@@ -192,7 +192,7 @@ public class NodeGenerator
         String p_nodeName,
         List p_members)
     {
-        p_writer.println("  public boolean equals(Object p_obj)");
+        p_writer.println("  @Override public boolean equals(Object p_obj)");
         p_writer.println("  {");
         p_writer.println("    return super.equals(p_obj)");
         for (Iterator i = p_members.iterator(); i.hasNext();)
@@ -224,7 +224,7 @@ public class NodeGenerator
 
     private static void writeHashCode(PrintWriter p_writer, List p_members)
     {
-        p_writer.println("  public int hashCode()");
+        p_writer.println("  @Override public int hashCode()");
         p_writer.println("  {");
         p_writer.println("    return super.hashCode()");
         for (Iterator i = p_members.iterator(); i.hasNext();)
@@ -240,7 +240,7 @@ public class NodeGenerator
     private static void writeToString(PrintWriter p_writer, List p_members)
     {
         p_writer.println(
-            "  protected void propertiesToString(StringBuffer p_buffer)");
+            "  @Override protected void propertiesToString(StringBuffer p_buffer)");
         p_writer.println("  {");
         p_writer.println("    super.propertiesToString(p_buffer);");
         for (Iterator i = p_members.iterator(); i.hasNext();)
