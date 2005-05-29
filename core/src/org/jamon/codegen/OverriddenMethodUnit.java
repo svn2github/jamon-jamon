@@ -52,7 +52,7 @@ public class OverriddenMethodUnit
         m_inheritedArgs.addParentArg(p_node);
     }
 
-    public Iterator getVisibleArgs()
+    @Override public Iterator getVisibleArgs()
     {
         return m_inheritedArgs.getVisibleArgs();
     }
@@ -60,17 +60,17 @@ public class OverriddenMethodUnit
     private final DeclaredMethodUnit m_declaredMethodUnit;
     private final InheritedArgs m_inheritedArgs;
 
-    public Iterator getFragmentArgs()
+    @Override public Iterator getFragmentArgs()
     {
         return m_declaredMethodUnit.getFragmentArgs();
     }
 
-    public Iterator getSignatureRequiredArgs()
+    @Override public Iterator getSignatureRequiredArgs()
     {
         return m_declaredMethodUnit.getSignatureRequiredArgs();
     }
 
-    public Iterator getSignatureOptionalArgs()
+    @Override public Iterator getSignatureOptionalArgs()
     {
         return m_declaredMethodUnit.getSignatureOptionalArgs();
     }
@@ -80,7 +80,7 @@ public class OverriddenMethodUnit
         return m_declaredMethodUnit.getOptionalArgDefaultMethod(p_arg);
     }
 
-    public void printRenderArgsDecl(CodeWriter p_writer)
+    @Override public void printRenderArgsDecl(CodeWriter p_writer)
     {
         for (Iterator i = m_declaredMethodUnit.getRenderArgs(); i.hasNext(); )
         {
@@ -98,22 +98,22 @@ public class OverriddenMethodUnit
     }
 
 
-    public void addFragmentArg(org.jamon.codegen.FragmentArgument p_arg, Location p_location)
+    @Override public void addFragmentArg(org.jamon.codegen.FragmentArgument p_arg, Location p_location)
     {
         throw new UnsupportedOperationException();
     }
 
-    public List getFragmentArgsList()
+    @Override public List getFragmentArgsList()
     {
         throw new UnsupportedOperationException();
     }
 
-    public void addRequiredArg(org.jamon.codegen.RequiredArgument p_arg)
+    @Override public void addRequiredArg(org.jamon.codegen.RequiredArgument p_arg)
     {
         throw new UnsupportedOperationException();
     }
 
-    public void addOptionalArg(org.jamon.codegen.OptionalArgument p_arg)
+    @Override public void addOptionalArg(org.jamon.codegen.OptionalArgument p_arg)
     {
         throw new UnsupportedOperationException();
     }

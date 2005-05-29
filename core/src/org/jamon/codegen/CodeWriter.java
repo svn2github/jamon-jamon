@@ -48,6 +48,7 @@ public class CodeWriter
     /**
      * @deprecated only use the Stream constructor
      */
+    @Deprecated
     public CodeWriter(Writer p_writer)
     {
         m_writer = new PrintWriter(p_writer);

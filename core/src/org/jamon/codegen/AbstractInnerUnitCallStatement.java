@@ -46,6 +46,7 @@ public abstract class AbstractInnerUnitCallStatement
         return m_unit;
     }
 
+    @Override
     protected String getFragmentIntfName(FragmentUnit p_fragmentUnitIntf)
     {
         return p_fragmentUnitIntf.getFragmentInterfaceName();

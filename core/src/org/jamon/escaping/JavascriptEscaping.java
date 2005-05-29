@@ -32,7 +32,7 @@ public class JavascriptEscaping
         // package scope constructor
     }
 
-    protected void write(char p_char, Writer p_writer)
+    @Override protected void write(char p_char, Writer p_writer)
         throws IOException
     {
         switch (p_char)

@@ -38,6 +38,7 @@ public class ComponentCallStatement
         super(p_path, p_params, p_location, p_templateIdentifier);
     }
 
+    @Override
     protected String getFragmentIntfName(FragmentUnit p_fragmentUnitIntf)
     {
         return getComponentProxyClassName()

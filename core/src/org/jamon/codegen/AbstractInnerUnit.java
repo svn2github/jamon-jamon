@@ -37,7 +37,7 @@ public abstract class AbstractInnerUnit extends AbstractUnit
         super(p_name, p_parent, p_errors);
     }
 
-    public void addOptionalArg(OptionalArgument p_arg)
+    @Override public void addOptionalArg(OptionalArgument p_arg)
     {
         m_optionalArgs.add(p_arg);
     }
@@ -52,7 +52,7 @@ public abstract class AbstractInnerUnit extends AbstractUnit
         return !m_optionalArgs.isEmpty();
     }
 
-    public void addRequiredArg(RequiredArgument p_arg)
+    @Override public void addRequiredArg(RequiredArgument p_arg)
     {
         m_requiredArgs.add(p_arg);
     }
@@ -82,39 +82,39 @@ public abstract class AbstractInnerUnit extends AbstractUnit
         return ! getRequiredArgsList().isEmpty();
     }
 
-    protected void addFragmentArg(FragmentArgument p_arg, Location p_location)
+    @Override protected void addFragmentArg(FragmentArgument p_arg, Location p_location)
     {
         m_fragmentArgs.add(p_arg);
     }
 
-    public Iterator getFragmentArgs()
+    @Override public Iterator getFragmentArgs()
     {
         return m_fragmentArgs.iterator();
     }
 
-    public List getFragmentArgsList()
+    @Override public List getFragmentArgsList()
     {
         return m_fragmentArgs;
     }
 
-    public Iterator getRenderArgs()
+    @Override public Iterator getRenderArgs()
     {
         return new SequentialIterator(getDeclaredRequiredArgs(),
                                       getOptionalArgs(),
                                       getFragmentArgs());
     }
 
-    public Iterator getVisibleArgs()
+    @Override public Iterator getVisibleArgs()
     {
         return getRenderArgs();
     }
 
-    public Iterator getSignatureRequiredArgs()
+    @Override public Iterator getSignatureRequiredArgs()
     {
         return getRequiredArgs();
     }
 
-    public Iterator getSignatureOptionalArgs()
+    @Override public Iterator getSignatureOptionalArgs()
     {
         return getOptionalArgs();
     }

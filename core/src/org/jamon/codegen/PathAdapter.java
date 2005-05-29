@@ -52,13 +52,13 @@ class PathAdapter extends DepthFirstAnalysisAdapter
     }
 
 
-    public void inAbsolutePathNode(AbsolutePathNode p_node)
+    @Override public void inAbsolutePathNode(AbsolutePathNode p_node)
     {
         m_absolutePath = true;
         m_path.append('/');
     }
     
-    public void inUpdirNode(UpdirNode p_updir)
+    @Override public void inUpdirNode(UpdirNode p_updir)
     {
         if (! m_absolutePath)
         {
@@ -76,13 +76,13 @@ class PathAdapter extends DepthFirstAnalysisAdapter
     }
 
     
-    public void inPathElementNode(PathElementNode p_relativePath)
+    @Override public void inPathElementNode(PathElementNode p_relativePath)
     {
         m_path.append(p_relativePath.getName());
         m_path.append('/');
     }
 
-    public void inNamedAliasPathNode(NamedAliasPathNode p_node)
+    @Override public void inNamedAliasPathNode(NamedAliasPathNode p_node)
     {
         String alias = (String) m_aliases.get(p_node.getAlias());
         if (alias == null)
@@ -97,7 +97,7 @@ class PathAdapter extends DepthFirstAnalysisAdapter
         }
     }
     
-    public void inRootAliasPathNode(RootAliasPathNode p_node)
+    @Override public void inRootAliasPathNode(RootAliasPathNode p_node)
     {
         String alias = (String) m_aliases.get("/");
         if (alias == null)

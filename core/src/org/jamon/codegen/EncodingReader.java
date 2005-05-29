@@ -188,13 +188,13 @@ public class EncodingReader
         return encoding.toString();
     }
 
-    public void close()
+    @Override public void close()
         throws IOException
     {
         m_reader.close();
     }
 
-    public int read(char[] p_buf, int p_offset, int p_len)
+    @Override public int read(char[] p_buf, int p_offset, int p_len)
         throws IOException
     {
         return m_reader.read(p_buf, p_offset, p_len);

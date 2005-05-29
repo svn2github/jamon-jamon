@@ -51,7 +51,7 @@ public class OptionalArgument extends AbstractArgument
         return "get" + StringUtils.capitalize(getName()) + "__IsNotDefault";
     }
 
-    public void generateImplDataCode(CodeWriter p_writer)
+    @Override public void generateImplDataCode(CodeWriter p_writer)
     {
         super.generateImplDataCode(p_writer);
 
@@ -63,7 +63,7 @@ public class OptionalArgument extends AbstractArgument
         p_writer.println("private boolean m_" + getName() + "__IsNotDefault;");
     }
 
-    protected void generateImplDataSetterCode(CodeWriter p_writer)
+    @Override protected void generateImplDataSetterCode(CodeWriter p_writer)
     {
         super.generateImplDataSetterCode(p_writer);
         p_writer.println("m_" + getName() + "__IsNotDefault = true;");

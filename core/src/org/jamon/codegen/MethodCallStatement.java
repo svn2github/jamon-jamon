@@ -34,7 +34,7 @@ public class MethodCallStatement
         super(p_path, p_params, p_methodUnit, p_location, p_templateIdentifier);
     }
 
-    protected String getDefault(OptionalArgument p_arg)
+    @Override protected String getDefault(OptionalArgument p_arg)
     {
         return ((MethodUnit) getUnit())
             .getOptionalArgDefaultMethod(p_arg)

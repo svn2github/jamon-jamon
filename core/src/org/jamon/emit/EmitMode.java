@@ -39,13 +39,13 @@ public class EmitMode
         return (EmitMode) s_modes.get(p_string.toUpperCase());
     }
 
-    public boolean equals(Object p_obj)
+    @Override public boolean equals(Object p_obj)
     {
         return (p_obj instanceof EmitMode)
             && ((EmitMode)p_obj).m_class.equals(m_class);
     }
 
-    public int hashCode()
+    @Override public int hashCode()
     {
         return m_class.hashCode();
     }
@@ -55,7 +55,7 @@ public class EmitMode
         return m_class.getName();
     }
 
-    public String toString()
+    @Override public String toString()
     {
         return "EmitMode{" + m_class.getName() + "}";
     }

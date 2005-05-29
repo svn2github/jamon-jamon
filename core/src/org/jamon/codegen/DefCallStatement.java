@@ -34,7 +34,7 @@ public class DefCallStatement
         super(p_path, p_params, p_defUnit, p_location, p_templateIdentifier);
     }
 
-    protected String getDefault(OptionalArgument p_arg)
+    @Override protected String getDefault(OptionalArgument p_arg)
     {
         return p_arg.getDefault();
     }
