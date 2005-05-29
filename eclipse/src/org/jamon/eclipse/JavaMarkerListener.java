@@ -37,12 +37,6 @@ import org.eclipse.core.resources.IResourceDeltaVisitor;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 
-/**
- * @author ian
- *
- * TODO To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Style - Code Templates
- */
 public class JavaMarkerListener implements IResourceChangeListener
 {
     public JavaMarkerListener(final IFolder p_templateFolder,
@@ -72,14 +66,14 @@ public class JavaMarkerListener implements IResourceChangeListener
                     javaMarkerId, true, IResource.DEPTH_ZERO);
                 
                 IMarkerDelta[] markerDeltas = p_delta.getMarkerDeltas();
-                for (int i = 0; i < markerDeltas.length; i++)
+                for (IMarkerDelta markerDelta : markerDeltas)
                 {
-                    switch(markerDeltas[i].getKind())
+                    switch(markerDelta.getKind())
                     {
                     case IResourceDelta.ADDED:
                     case IResourceDelta.CHANGED:
                         copyMarker(generatedResource, 
-                                   markerDeltas[i].getMarker());
+                                   markerDelta.getMarker());
                     break;
                     }
                 }
@@ -145,17 +139,18 @@ public class JavaMarkerListener implements IResourceChangeListener
                 }
                 catch (IOException e)
                 {
-                    m_locations = Collections.EMPTY_LIST;
+                    m_locations = Collections.emptyList();
                     JamonProjectPlugin.getDefault().logError(e);
                 }
             }
             
-            private List readLineNumberMappings(IFile p_generatedJavaFile)
+            private List<Integer> readLineNumberMappings(
+                IFile p_generatedJavaFile)
                 throws CoreException, IOException
             {
-                List lineNumbers = new ArrayList();
+                List<Integer> lineNumbers = new ArrayList<Integer>();
                 
-                Integer currentTemplateLineNumber = new Integer(1);
+                int currentTemplateLineNumber = 1;
                 LineNumberReader reader = null;
                 try
                 {
@@ -172,7 +167,7 @@ public class JavaMarkerListener implements IResourceChangeListener
                             {
                                 try
                                 {
-                                    currentTemplateLineNumber = new Integer(
+                                    currentTemplateLineNumber = Integer.parseInt(
                                        trimmedLine.substring(3, commaPosition));
                                 }
                                 catch (NumberFormatException e)
@@ -200,9 +195,8 @@ public class JavaMarkerListener implements IResourceChangeListener
                 }
                 else
                 {
-                    return ((Integer) m_locations.get(
-                        Math.min(p_javaLineNumber, m_locations.size() - 1)))
-                        .intValue();
+                    return m_locations.get(
+                        Math.min(p_javaLineNumber, m_locations.size() - 1));
                 }
             }
             
@@ -218,7 +212,7 @@ public class JavaMarkerListener implements IResourceChangeListener
             
             private final IFile m_templateFile;
             private final boolean m_isImpl;
-            private List m_locations;
+            private List<Integer> m_locations;
         }
     }
     
