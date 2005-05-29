@@ -122,10 +122,10 @@ public class TemplateBuilder extends IncrementalProjectBuilder {
 	@Override
     protected void clean(IProgressMonitor monitor) throws CoreException {
 		IFolder tsrc = getNature().getTemplateOutputFolder();
-		IResource[] things = tsrc.members();
-		for (int i = 0; i < things.length; ++i) {
-			things[i].setReadOnly(false);
-			things[i].delete(true, monitor);
+		for (IResource thing : tsrc.members())
+        {
+            EclipseUtils.unsetReadOnly(thing);
+			thing.delete(true, monitor);
 		}
      }
 
@@ -344,7 +344,7 @@ public class TemplateBuilder extends IncrementalProjectBuilder {
             {
                 if (p_file.exists()) 
                 {
-                    p_file.setReadOnly(false);
+                    EclipseUtils.unsetReadOnly(p_file);
                     p_file.delete(true, null);
                 }
             }
