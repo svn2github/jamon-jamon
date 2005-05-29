@@ -63,7 +63,7 @@ public class AnalysisGenerator
                     if (member.isList())
                     {
                         p_writer.println(
-                            "    for (Iterator i = p_node." 
+                            "    for (Iterator<? extends AbstractNode> i = p_node." 
                             + member.getGetter() + "; i.hasNext(); )");
                         p_writer.println("    {");
                         p_writer.println(

@@ -134,9 +134,9 @@ public class NodeGenerator
             if (member.isList())
             {
                 p_writer.println(
-                    "  private final List "
+                    "  private final List<" + member.getType() + "> "
                         + member.instanceName()
-                        + " = new ArrayList();");
+                        + " = new ArrayList<" + member.getType() + ">();");
                 p_writer.println(
                     "  public "
                         + p_nodeName
@@ -161,7 +161,8 @@ public class NodeGenerator
                 p_writer.println("    return this;");
                 p_writer.println("  }");
                 p_writer.println(
-                    "  public Iterator " + member.getGetter()
+                    "  public Iterator<" + member.getType() + "> "
+                    + member.getGetter()
                     + " { return " + member.instanceName() + ".iterator(); }");
             }
             else
