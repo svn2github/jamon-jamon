@@ -14,7 +14,7 @@ public class FragmentArgsParserTest extends AbstractParserTest
 {
     private static String FRAG_END = "</%frag>";
 
-    protected AbstractNode parse(String p_text) throws IOException
+    @Override protected AbstractNode parse(String p_text) throws IOException
     {
         final PositionalPushbackReader reader = makeReader(p_text);
         ParserErrors errors = new ParserErrors();

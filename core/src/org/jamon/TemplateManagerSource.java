@@ -78,6 +78,7 @@ public abstract class TemplateManagerSource
     {
         setTemplateManagerSource(new TemplateManagerSource()
             {
+                @Override
                 public TemplateManager getTemplateManagerForPath(String p_path)
                 {
                     return p_manager;

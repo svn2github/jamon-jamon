@@ -40,9 +40,9 @@ public class MapSelect
                   {
                       return new SingleSelect.Item()
                           {
-                              public Object getRenderable()
+                              @Override public Object getRenderable()
                                   { return p_options.get(p_data); }
-                              public String getValue()
+                              @Override public String getValue()
                                   { return p_data.toString(); }
                           };
                   }

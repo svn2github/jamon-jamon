@@ -17,7 +17,7 @@ public class ArgsParserTest extends AbstractParserTest
     private static String ARGS_START = ">";
     private static String ARGS_END = "</%args>";
 
-    protected AbstractNode parse(String p_text) throws IOException
+    @Override protected AbstractNode parse(String p_text) throws IOException
     {
         final PositionalPushbackReader reader = makeReader(p_text);
         ParserErrors errors = new ParserErrors();

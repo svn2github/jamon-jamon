@@ -24,14 +24,14 @@ public abstract class AbstractNode
 
     private final Location m_location;
 
-    public boolean equals(Object p_obj)
+    @Override public boolean equals(Object p_obj)
     {
         return p_obj != null
             && getClass().isInstance(p_obj)
             && m_location.equals(((AbstractNode) p_obj).m_location);
     }
 
-    public int hashCode()
+    @Override public int hashCode()
     {
         return m_location.hashCode();
     }
@@ -43,7 +43,7 @@ public abstract class AbstractNode
         p_buffer.append(m_location.toString());
     }
 
-    final public String toString()
+    @Override final public String toString()
     {
         StringBuffer buffer = new StringBuffer(getClass().getName());
         buffer.append("{");

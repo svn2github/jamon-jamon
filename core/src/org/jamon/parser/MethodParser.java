@@ -43,7 +43,7 @@ public class MethodParser extends SubcomponentParser
         super(new MethodNode(p_tagLocation, p_name), p_reader, p_errors);
     }
 
-    protected String tagName()
+    @Override protected String tagName()
     {
         return "method";
     }

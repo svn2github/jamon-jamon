@@ -11,28 +11,28 @@ public class DepthFirstAnalysisAdapterTest extends TestCase
  
     class TestAnalyzer extends DepthFirstAnalysisAdapter
     {
-        public void inTopNode(TopNode p_node)
+        @Override public void inTopNode(TopNode p_node)
         {
             assertFalse(inTopNodeCalled);
             assertFalse(outTopNodeCalled);
             inTopNodeCalled = true;
         }
         
-        public void outTopNode(TopNode p_node)
+        @Override public void outTopNode(TopNode p_node)
         {
             assertTrue(inTopNodeCalled);
             assertFalse(outTopNodeCalled);
             outTopNodeCalled = true;
         }
         
-        public void casePathElementNode(PathElementNode p_node)
+        @Override public void casePathElementNode(PathElementNode p_node)
         {
             assertFalse(casePathElementCalled);
             casePathElementCalled = true;
             assertEquals(s_path, p_node.getName());
         }
         
-        public void caseParamValueNode(ParamValueNode p_node)
+        @Override public void caseParamValueNode(ParamValueNode p_node)
         {
             assertTrue(paramsSeen < 2);
             assertEquals(s_values[paramsSeen], p_node.getValue());

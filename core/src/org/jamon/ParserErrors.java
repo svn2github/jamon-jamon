@@ -48,7 +48,7 @@ public final class ParserErrors extends IOException
     private final List<ParserError> m_errors = new ArrayList<ParserError>();
 
 
-    public String getMessage()
+    @Override public String getMessage()
     {
         StringBuffer buffer = 
             new StringBuffer("Errors occured during parsing:");

@@ -1,3 +1,23 @@
+/*
+ * The contents of this file are subject to the Mozilla Public
+ * License Version 1.1 (the "License"); you may not use this file
+ * except in compliance with the License. You may obtain a copy of
+ * the License at http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS
+ * IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
+ * implied. See the License for the specific language governing
+ * rights and limitations under the License.
+ *
+ * The Original Code is Jamon code, released February, 2003.
+ *
+ * The Initial Developer of the Original Code is Ian Robertson.  Portions
+ * created by Ian Robertson are Copyright (C) 2005 Ian Robertson.  All Rights
+ * Reserved.
+ *
+ * Contributor(s):
+ */
+
 package org.jamon.parser;
 
 import java.io.IOException;
@@ -20,9 +40,6 @@ import org.jamon.node.Location;
 import org.jamon.node.ParentMarkerNode;
 import org.jamon.node.TopNode;
 
-/**
- * @author ian
- **/
 public class TopLevelParser extends AbstractBodyParser
 {
     public static final String BAD_ABSMETH_CONTENT = 
@@ -53,6 +70,7 @@ public class TopLevelParser extends AbstractBodyParser
         }
     }
 
+    @Override
     protected void handleMethodTag(Location p_tagLocation) throws IOException
     {
         if (soakWhitespace())
@@ -71,6 +89,7 @@ public class TopLevelParser extends AbstractBodyParser
         }
     }
     
+    @Override
     protected void handleOverrideTag(Location p_tagLocation) throws IOException
     {
         if (soakWhitespace())
@@ -89,6 +108,7 @@ public class TopLevelParser extends AbstractBodyParser
         }
     }
     
+    @Override
     protected void handleDefTag(Location p_tagLocation) throws IOException
     {
         if (soakWhitespace())
@@ -107,7 +127,7 @@ public class TopLevelParser extends AbstractBodyParser
         }
     }
 
-    protected void handleClassTag(Location p_tagLocation)
+    @Override protected void handleClassTag(Location p_tagLocation)
         throws IOException
     {
         if (checkForTagClosure(p_tagLocation))
@@ -120,7 +140,7 @@ public class TopLevelParser extends AbstractBodyParser
         }
     }
     
-    protected void handleExtendsTag(Location p_tagLocation)
+    @Override protected void handleExtendsTag(Location p_tagLocation)
         throws IOException
     {
         if(soakWhitespace())
@@ -137,7 +157,7 @@ public class TopLevelParser extends AbstractBodyParser
         }
     }
 
-    protected void handleImplementsTag(Location p_tagLocation)
+    @Override protected void handleImplementsTag(Location p_tagLocation)
         throws IOException
     {
         if (checkForTagClosure(p_tagLocation))
@@ -174,7 +194,8 @@ public class TopLevelParser extends AbstractBodyParser
         }
     }   
 
-    protected void handleImportTag(Location p_tagLocation) throws IOException
+    @Override protected void handleImportTag(Location p_tagLocation) 
+        throws IOException
     {
         if (checkForTagClosure(p_tagLocation))
         {
@@ -211,7 +232,8 @@ public class TopLevelParser extends AbstractBodyParser
     }   
 
     
-    protected void handleAliasesTag(Location p_tagLocation) throws IOException
+    @Override protected void handleAliasesTag(Location p_tagLocation)
+        throws IOException
     {
         checkForTagClosure(p_tagLocation);
         AliasesNode aliases = new AliasesNode(p_tagLocation);
@@ -256,7 +278,7 @@ public class TopLevelParser extends AbstractBodyParser
     }
 
     
-    protected void handleAbsMethodTag(Location p_tagLocation)
+    @Override protected void handleAbsMethodTag(Location p_tagLocation)
         throws IOException
     {
         if (soakWhitespace())
@@ -339,7 +361,7 @@ public class TopLevelParser extends AbstractBodyParser
     
     
     
-    protected void handleParentArgsNode(Location p_tagLocation)
+    @Override protected void handleParentArgsNode(Location p_tagLocation)
             throws IOException
     {
         m_root.addSubNode(
@@ -349,7 +371,7 @@ public class TopLevelParser extends AbstractBodyParser
     
     
 
-    protected void handleParentMarkerTag(Location p_tagLocation)
+    @Override protected void handleParentMarkerTag(Location p_tagLocation)
         throws IOException
     {
         if (checkForTagClosure(p_tagLocation))
@@ -359,12 +381,13 @@ public class TopLevelParser extends AbstractBodyParser
         }
     }
 
-    protected void handleEof()
+    @Override protected void handleEof()
     {
         // end of file is a fine thing at the top level
     }
 
-    protected void handleEscapeTag(Location p_tagLocation) throws IOException
+    @Override protected void handleEscapeTag(Location p_tagLocation) 
+        throws IOException
     {
         soakWhitespace();
         if (!readChar('#'))
@@ -391,7 +414,7 @@ public class TopLevelParser extends AbstractBodyParser
         soakWhitespace();
     }
     
-    protected boolean isTopLevel()
+    @Override protected boolean isTopLevel()
     {
         return true;
     }

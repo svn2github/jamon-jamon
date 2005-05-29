@@ -37,7 +37,7 @@ public class FragmentArgsParser extends AbstractArgsParser
         return m_fragmentArgsNode;
     }
     
-    protected boolean handleDefaultValue(
+    @Override protected boolean handleDefaultValue(
         AbstractArgsNode argsNode, ArgTypeNode argType, ArgNameNode argName)
         throws IOException, ParserError
     {
@@ -45,10 +45,7 @@ public class FragmentArgsParser extends AbstractArgsParser
         return false;
     }
 
-    /* (non-Javadoc)
-     * @see org.jamon.parser.AbstractArgsParser#checkArgsTagEnd()
-     */
-    protected void checkArgsTagEnd() throws IOException
+    @Override protected void checkArgsTagEnd() throws IOException
     {
         if (!checkToken("/%frag>"))
         {
@@ -56,24 +53,19 @@ public class FragmentArgsParser extends AbstractArgsParser
         }
     }
 
-    /* (non-Javadoc)
-     * @see org.jamon.parser.AbstractArgsParser#postArgNameTokenError()
-     */
-    protected String postArgNameTokenError()
+    @Override protected String postArgNameTokenError()
     {
         return NEED_SEMI;
     }
 
-    /* (non-Javadoc)
-     * @see org.jamon.parser.AbstractArgsParser#makeArgsNode(org.jamon.node.Location)
-     */
-    protected AbstractArgsNode makeArgsNode(Location p_tagLocation)
+    @Override protected AbstractArgsNode makeArgsNode(Location p_tagLocation)
     {
         return m_fragmentArgsNode = 
             new FragmentArgsNode(p_tagLocation, m_fragmentName);
     }
 
-    protected boolean finishOpenTag(Location p_tagLocation) throws IOException
+    @Override protected boolean finishOpenTag(Location p_tagLocation) 
+        throws IOException
     {
         if(!soakWhitespace())
         {

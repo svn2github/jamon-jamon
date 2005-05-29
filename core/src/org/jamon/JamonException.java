@@ -41,12 +41,12 @@ public abstract class JamonException
 
     private final Throwable m_rootCause;
 
-    public Throwable getCause()
+    @Override public Throwable getCause()
     {
         return m_rootCause;
     }
 
-    public void printStackTrace(java.io.PrintWriter p_writer)
+    @Override public void printStackTrace(java.io.PrintWriter p_writer)
     {
         if (getCause() != null)
         {
@@ -57,12 +57,12 @@ public abstract class JamonException
         p_writer.flush();
     }
 
-    public void printStackTrace(java.io.PrintStream p_stream)
+    @Override public void printStackTrace(java.io.PrintStream p_stream)
     {
         printStackTrace(new java.io.PrintWriter(p_stream));
     }
 
-    public void printStackTrace()
+    @Override public void printStackTrace()
     {
         printStackTrace(System.err);
     }

@@ -43,12 +43,12 @@ public class OverrideParser extends SubcomponentParser
         super(new OverrideNode(p_tagLocation, p_name), p_reader, p_errors);
     }
 
-    protected String tagName()
+    @Override protected String tagName()
     {
         return "override";
     }
 
-    protected void handleParentArgsNode(Location p_tagLocation)
+    @Override protected void handleParentArgsNode(Location p_tagLocation)
         throws IOException
     {
         m_root.addSubNode(

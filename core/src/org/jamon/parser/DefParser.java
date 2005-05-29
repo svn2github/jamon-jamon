@@ -43,7 +43,7 @@ public class DefParser extends SubcomponentParser
         super(new DefNode(p_tagLocation, p_name), p_reader, p_errors);
     }
 
-    protected String tagName()
+    @Override protected String tagName()
     {
         return "def";
     }

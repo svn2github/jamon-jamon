@@ -28,7 +28,7 @@ public class SingleSelect
     public static abstract class Item
         extends AbstractSelect.Item
     {
-        public final boolean isSelected()
+        @Override public final boolean isSelected()
         {
             return getValue().equals(((SingleSelect) getSelect()).m_selectedValue);
         }

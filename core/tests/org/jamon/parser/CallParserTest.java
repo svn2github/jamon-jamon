@@ -32,7 +32,7 @@ public class CallParserTest extends AbstractParserTest
         super(p_name);
     }
 
-    protected AbstractNode parse(String p_text) throws IOException
+    @Override protected AbstractNode parse(String p_text) throws IOException
     {
         final PositionalPushbackReader reader = makeReader(p_text);
         assertEquals('<', reader.read());

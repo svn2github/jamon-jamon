@@ -25,12 +25,6 @@ import org.jamon.ParserErrors;
 import org.jamon.node.Location;
 import org.jamon.node.SubcomponentNode;
 
-/**
- * @author ian
- *
- * TODO To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Style - Code Templates
- */
 public abstract class SubcomponentParser extends AbstractBodyParser
 {
     protected SubcomponentParser(SubcomponentNode p_node, 
@@ -42,7 +36,7 @@ public abstract class SubcomponentParser extends AbstractBodyParser
     }
 
     
-    protected void parse() throws IOException
+    @Override protected void parse() throws IOException
     {
         soakWhitespace();
         super.parse();
@@ -51,8 +45,9 @@ public abstract class SubcomponentParser extends AbstractBodyParser
     
     protected abstract String tagName();
 
+    @Override
     protected void handleTagClose(String p_tagName, Location p_tagLocation)
-    throws IOException
+        throws IOException
     {
         if (!p_tagName.equals(tagName()))    
         {   
@@ -64,7 +59,7 @@ public abstract class SubcomponentParser extends AbstractBodyParser
         }
     }
 
-    protected void handleEof()
+    @Override protected void handleEof()
     {   
         addError(m_bodyStart, makeError(tagName()));
     }   

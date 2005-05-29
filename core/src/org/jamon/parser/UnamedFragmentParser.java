@@ -20,13 +20,13 @@ public class UnamedFragmentParser extends AbstractBodyParser
         super(p_rootNode, p_reader, p_errors);
     }
 
-    protected boolean handleFragmentsClose(Location p_tagLocation)
+    @Override protected boolean handleFragmentsClose(Location p_tagLocation)
         throws IOException
     {
         return true;
     }
 
-    protected void handleEof()
+    @Override protected void handleEof()
     {
         addError(m_bodyStart, FRAGMENT_CLOSE_EXPECTED);
     }

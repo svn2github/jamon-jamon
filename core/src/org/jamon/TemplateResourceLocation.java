@@ -26,18 +26,18 @@ public class TemplateResourceLocation implements TemplateLocation
         m_location = p_location;
     }
     
-    public String toString() 
+    @Override public String toString() 
     { 
         return m_location; 
     }
     
-    public boolean equals(Object p_obj)
+    @Override public boolean equals(Object p_obj)
     {
         return p_obj instanceof TemplateResourceLocation
             && m_location.equals(((TemplateResourceLocation) p_obj).m_location);
     }
     
-    public int hashCode()
+    @Override public int hashCode()
     {
         return m_location.hashCode();
     }

@@ -27,7 +27,7 @@ public class ParserError extends Exception
     /**
      * @return The error message
      */
-    public String getMessage()
+    @Override public String getMessage()
     {
         return m_message;
     }
@@ -35,7 +35,7 @@ public class ParserError extends Exception
     private final Location m_location;
     private final String m_message;
 
-    public boolean equals(Object p_obj)
+    @Override public boolean equals(Object p_obj)
     {
         return p_obj != null
             && p_obj instanceof ParserError
@@ -43,12 +43,12 @@ public class ParserError extends Exception
             && m_message.equals(((ParserError) p_obj).m_message);
     }
 
-    public int hashCode()
+    @Override public int hashCode()
     {
         return m_location.hashCode() ^ m_message.hashCode();
     }
 
-    public String toString()
+    @Override public String toString()
     {
         return getLocation().getTemplateLocation() + ":"
                + getLocation().getLine() + ":"

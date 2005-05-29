@@ -47,7 +47,7 @@ public class PathAdapterTest extends TestCase
     private PathAdapter m_adapter;
     private ParserErrors m_errors;
     
-    protected void setUp() throws Exception
+    @Override protected void setUp() throws Exception
     {
         Map aliases = new HashMap();
         aliases.put("/", "/root/dir");

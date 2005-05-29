@@ -31,7 +31,7 @@ public class TemplateManagerSourceTest
         TemplateManagerSource.setTemplateManagerSource
             (new TemplateManagerSource()
                 {
-                    public TemplateManager getTemplateManagerForPath
+                @Override public TemplateManager getTemplateManagerForPath
                         (String p_path)
                     {
                         return tm;

@@ -35,7 +35,7 @@ public class WhitespaceSoakingTest extends AbstractParserTest
     {
         private static final Pattern whitespace = Pattern.compile(".*\\s.*");
         
-        public void caseTextNode(TextNode p_node)
+        @Override public void caseTextNode(TextNode p_node)
         {
             if (whitespace.matcher(p_node.getText()).matches())
             {

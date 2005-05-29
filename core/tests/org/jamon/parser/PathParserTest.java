@@ -21,7 +21,7 @@ public class PathParserTest extends AbstractParserTest
         super(p_name);
     }
 
-    protected AbstractNode parse(String p_text)
+    @Override protected AbstractNode parse(String p_text)
         throws IOException, ParserErrors
     {
         m_reader = makeReader(p_text);

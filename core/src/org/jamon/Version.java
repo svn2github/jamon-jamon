@@ -175,7 +175,7 @@ public class Version
         return new Version(m_major, m_minor, m_sub, false);
     }
 
-    public String toString()
+    @Override public String toString()
     {
         return makeString(".") + (m_beta ? "b" : "");
     }

@@ -33,7 +33,7 @@ public class TestBase
     extends TestCase
 {
 
-    public void setUp()
+    @Override public void setUp()
         throws Exception
     {
         m_templateManager = new BasicTemplateManager();

@@ -46,7 +46,7 @@ public class JamonRuntimeException
         return m_rootCause;
     }
 
-    public void printStackTrace(java.io.PrintWriter p_writer)
+    @Override public void printStackTrace(java.io.PrintWriter p_writer)
     {
         if (getRootCause() != null)
         {
@@ -57,12 +57,12 @@ public class JamonRuntimeException
         p_writer.flush();
     }
 
-    public void printStackTrace(java.io.PrintStream p_stream)
+    @Override public void printStackTrace(java.io.PrintStream p_stream)
     {
         printStackTrace(new java.io.PrintWriter(p_stream));
     }
 
-    public void printStackTrace()
+    @Override public void printStackTrace()
     {
         printStackTrace(System.err);
     }

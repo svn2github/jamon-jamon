@@ -20,12 +20,12 @@ public class NamedFragmentParser extends AbstractBodyParser
         super(p_rootNode, p_reader, p_errors);
     }
 
-    protected void handleEof()
+    @Override protected void handleEof()
     {
         addError(m_bodyStart, NAMED_FRAGMENT_CLOSE_EXPECTED);
     }
 
-    protected boolean handleNamedFragmentClose(Location p_tagLocation)
+    @Override protected boolean handleNamedFragmentClose(Location p_tagLocation)
         throws IOException
     {
         return true;

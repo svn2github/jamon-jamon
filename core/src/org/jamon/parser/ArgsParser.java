@@ -23,17 +23,17 @@ public class ArgsParser extends AbstractArgsParser
 
     public ArgsNode getArgsNode() { return m_argsNode; }
 
-    protected AbstractArgsNode makeArgsNode(Location p_tagLocation)
+    @Override protected AbstractArgsNode makeArgsNode(Location p_tagLocation)
     {
         return m_argsNode = new ArgsNode(p_tagLocation);
     }
     
-    protected String postArgNameTokenError()
+    @Override protected String postArgNameTokenError()
     {
         return OptionalValueTagEndDetector.NEED_SEMI_OR_ARROW;
     }
 
-    protected void checkArgsTagEnd() throws IOException
+    @Override protected void checkArgsTagEnd() throws IOException
     {
         if (!checkToken("/%args>"))
         {
@@ -41,7 +41,10 @@ public class ArgsParser extends AbstractArgsParser
         }
     }
 
-    protected boolean handleDefaultValue(AbstractArgsNode argsNode, ArgTypeNode argType, ArgNameNode argName) throws IOException, ParserError
+    @Override
+    protected boolean handleDefaultValue(
+        AbstractArgsNode argsNode, ArgTypeNode argType, ArgNameNode argName) 
+        throws IOException, ParserError
     {
         if (readChar('='))
         {
@@ -68,6 +71,7 @@ public class ArgsParser extends AbstractArgsParser
         else return false;
     }
 
+    @Override
     protected boolean finishOpenTag(Location p_tagLocation) throws IOException
     {
         return checkForTagClosure(p_tagLocation);

@@ -31,7 +31,7 @@ public class CodeWriterTest
     private ByteArrayOutputStream m_bytes;
     private CodeWriter m_codeWriter;
 
-    public void setUp() throws Exception
+    @Override public void setUp() throws Exception
     {
         m_bytes = new ByteArrayOutputStream();
         m_codeWriter = new CodeWriter(m_bytes);

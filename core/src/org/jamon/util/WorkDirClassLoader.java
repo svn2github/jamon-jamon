@@ -57,7 +57,7 @@ public class WorkDirClassLoader
             super(WorkDirClassLoader.this);
         }
 
-        public String toString()
+        @Override public String toString()
         {
             return super.toString() + " { " + " parent: " + getParent() + " }";
         }
@@ -93,7 +93,7 @@ public class WorkDirClassLoader
             }
         }
 
-        protected Class loadClass(String p_name, boolean p_resolve)
+        @Override protected Class loadClass(String p_name, boolean p_resolve)
             throws ClassNotFoundException
         {
             if (! getFileForClass(p_name).exists())
@@ -126,6 +126,7 @@ public class WorkDirClassLoader
 
     }
 
+    @Override
     protected synchronized Class loadClass(String p_name, boolean p_resolve)
         throws ClassNotFoundException
     {
@@ -143,7 +144,7 @@ public class WorkDirClassLoader
         }
     }
 
-    public String toString()
+    @Override public String toString()
     {
         return super.toString() + " { workDir: " + m_workDir
             + "; parent: " + getParent() + " }";

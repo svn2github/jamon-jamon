@@ -34,7 +34,7 @@ public final class Location
     private final int m_line;
     private final int m_column;
 
-    public boolean equals(Object p_obj)
+    @Override public boolean equals(Object p_obj)
     {
         if (p_obj instanceof Location)
         {
@@ -49,12 +49,12 @@ public final class Location
         }
     }
 
-    public int hashCode()
+    @Override public int hashCode()
     {
         return (m_line * 160 + m_column) ^ m_templateLocation.hashCode();
     }
 
-    public String toString()
+    @Override public String toString()
     {
         return "Location{" + m_templateLocation + ": ("+ m_line + ":" + m_column + ")}";
     }

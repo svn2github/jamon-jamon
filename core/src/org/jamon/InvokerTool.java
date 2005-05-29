@@ -123,7 +123,7 @@ public class InvokerTool
     public class UsageException
         extends Exception
     {
-        public String toString()
+        @Override public String toString()
         {
             return "java "
                 + InvokerTool.this.getClass().getName()

@@ -34,7 +34,7 @@ public class ResourceTemplateSourceTest
     private File m_tmpDir;
     private File m_subDir;
 
-    protected void setUp()
+    @Override protected void setUp()
         throws Exception
     {
         m_tmpDir = File.createTempFile("jrt","");
@@ -44,7 +44,7 @@ public class ResourceTemplateSourceTest
         m_subDir.mkdirs();
     }
 
-    protected void tearDown()
+    @Override protected void tearDown()
         throws Exception
     {
         fullDelete(m_tmpDir);
