@@ -29,7 +29,7 @@ public class ResourceTemplateLocation implements TemplateLocation
         m_file = p_file;
     }
     
-    public String toString()
+    @Override public String toString()
     {
         return m_file.getFullPath().toString();
     }

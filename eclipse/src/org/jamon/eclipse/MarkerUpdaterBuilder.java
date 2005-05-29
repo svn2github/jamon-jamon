@@ -16,7 +16,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 
 public class MarkerUpdaterBuilder extends IncrementalProjectBuilder {
 
-	protected IProject[] build(int kind, Map args, IProgressMonitor monitor)
+	@Override
+    protected IProject[] build(int kind, Map args, IProgressMonitor monitor)
         throws CoreException 
     {
         //FIXME - there has to be a better way.  We don't want really want a 

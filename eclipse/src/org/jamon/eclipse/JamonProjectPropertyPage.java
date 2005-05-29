@@ -72,7 +72,7 @@ public class JamonProjectPropertyPage extends PropertyPage {
 		templateSourceText.setText((templateSourceFolder != null) ? templateSourceFolder : JamonNature.DEFAULT_TEMPLATE_SOURCE);
 	}
 
-	protected Control createContents(Composite parent) {
+    @Override protected Control createContents(Composite parent) {
 		Composite composite = new Composite(parent, SWT.NONE);
 		GridLayout layout = new GridLayout();
 		composite.setLayout(layout);
@@ -100,10 +100,10 @@ public class JamonProjectPropertyPage extends PropertyPage {
 		return composite;
 	}
 
-	protected void performDefaults() {
+    @Override protected void performDefaults() {
 	}
 	
-	public boolean performOk() {
+    @Override public boolean performOk() {
 		try {
 			if (isJamonProjectCheckbox.getSelection()) {
 				JamonNature.addToProject(getJavaProject().getProject(), templateSourceText.getText());

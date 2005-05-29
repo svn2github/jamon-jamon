@@ -98,7 +98,8 @@ public class TemplateBuilder extends IncrementalProjectBuilder {
 		}
 	}
 	
-	protected IProject[] build(int kind, Map args, IProgressMonitor monitor)
+	@Override
+    protected IProject[] build(int kind, Map args, IProgressMonitor monitor)
 			throws CoreException {
 		if (m_dependencies == null) {
 			loadDependencies();
@@ -118,7 +119,8 @@ public class TemplateBuilder extends IncrementalProjectBuilder {
 		return null;
 	}
 	
-	protected void clean(IProgressMonitor monitor) throws CoreException {
+	@Override
+    protected void clean(IProgressMonitor monitor) throws CoreException {
 		IFolder tsrc = getNature().getTemplateOutputFolder();
 		IResource[] things = tsrc.members();
 		for (int i = 0; i < things.length; ++i) {

@@ -28,11 +28,13 @@ public class JamonEditorSourceViewerConfiguration extends
 {
     private static IAnnotationHover s_annotationHover = 
         new JamonAnnotationHover(); 
+    @Override
     public IAnnotationHover getAnnotationHover(ISourceViewer sourceViewer) 
     {
         return s_annotationHover;
     }
 
+    @Override
     public IAnnotationHover getOverviewRulerAnnotationHover(
         ISourceViewer sourceViewer)
     {
