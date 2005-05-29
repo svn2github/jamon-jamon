@@ -4,18 +4,17 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Iterator;
 import java.util.List;
 
 public class NodeGenerator
 {
     private NodeGenerator()
     {}
-    private static boolean containsLists(List p_members)
+    private static boolean containsLists(List<NodeMember> p_members)
     {
-        for (Iterator i = p_members.iterator(); i.hasNext();)
+        for (NodeMember member : p_members)
         {
-            if (((NodeMember) i.next()).isList())
+            if (member.isList())
             {
                 return true;
             }
@@ -47,7 +46,8 @@ public class NodeGenerator
         p_writer.println();
     }
     
-    private static void writeHeader(PrintWriter p_writer, List p_members)
+    private static void writeHeader(
+        PrintWriter p_writer, List<NodeMember> p_members)
     {
         p_writer.println("package org.jamon.node;");
         p_writer.println();
@@ -68,18 +68,16 @@ public class NodeGenerator
            + " extends " + p_node.getParent());
         p_writer.println("{");
         p_writer.print("  public " + p_node.getName() + "(Location p_location");
-        for (Iterator i = p_node.getParentMembers().iterator(); i.hasNext();)
+        for (NodeMember member : p_node.getParentMembers())
         {
-            NodeMember member = (NodeMember) i.next();
             if (!member.isList())
             {
                 p_writer.print(", " + member.getType() 
                                + " p_" + member.getName());
             }
         }
-        for (Iterator i = p_node.getMembers().iterator(); i.hasNext();)
+        for (NodeMember member : p_node.getMembers())
         {
-            NodeMember member = (NodeMember) i.next();
             if (!member.isList())
             {
                 p_writer.print(", " + member.getType() + " p_" + member.getName());
@@ -88,18 +86,16 @@ public class NodeGenerator
         p_writer.println(")");
         p_writer.println("  {");
         p_writer.print("    super(p_location");
-        for (Iterator i = p_node.getParentMembers().iterator(); i.hasNext();)
+        for (NodeMember member : p_node.getParentMembers())
         {
-            NodeMember member = (NodeMember) i.next();
             if (!member.isList())
             {
                 p_writer.print(", p_" + member.getName());
             }
         }
         p_writer.println(");");
-        for (Iterator i = p_node.getMembers().iterator(); i.hasNext();)
+        for (NodeMember member : p_node.getMembers())
         {
-            NodeMember member = (NodeMember) i.next();
             if (!member.isList())
             {
                 if (!member.isPrimative())
@@ -131,11 +127,10 @@ public class NodeGenerator
     private static void writeMembers(
         PrintWriter p_writer,
         String p_nodeName,
-        List p_members)
+        List<NodeMember> p_members)
     {
-        for (Iterator i = p_members.iterator(); i.hasNext();)
+        for (NodeMember member : p_members)
         {
-            NodeMember member = (NodeMember) i.next();
             if (member.isList())
             {
                 p_writer.println(
@@ -190,14 +185,13 @@ public class NodeGenerator
     private static void writeEquals(
         PrintWriter p_writer,
         String p_nodeName,
-        List p_members)
+        List<NodeMember> p_members)
     {
         p_writer.println("  @Override public boolean equals(Object p_obj)");
         p_writer.println("  {");
         p_writer.println("    return super.equals(p_obj)");
-        for (Iterator i = p_members.iterator(); i.hasNext();)
+        for (NodeMember member : p_members)
         {
-            NodeMember member = (NodeMember) i.next();
             p_writer.print("      && " + member.instanceName());
             if (member.isPrimative())
             {
@@ -222,14 +216,14 @@ public class NodeGenerator
         p_writer.println();
     }
 
-    private static void writeHashCode(PrintWriter p_writer, List p_members)
+    private static void writeHashCode(
+        PrintWriter p_writer, List<NodeMember> p_members)
     {
         p_writer.println("  @Override public int hashCode()");
         p_writer.println("  {");
         p_writer.println("    return super.hashCode()");
-        for (Iterator i = p_members.iterator(); i.hasNext();)
+        for (NodeMember member : p_members)
         {
-            NodeMember member = (NodeMember) i.next();
             p_writer.println("      ^ " + member.hashCodeExpr());
         }
         p_writer.println("    ;");
@@ -237,15 +231,15 @@ public class NodeGenerator
         p_writer.println();
     }
 
-    private static void writeToString(PrintWriter p_writer, List p_members)
+    private static void writeToString(
+        PrintWriter p_writer, List<NodeMember> p_members)
     {
         p_writer.println(
             "  @Override protected void propertiesToString(StringBuffer p_buffer)");
         p_writer.println("  {");
         p_writer.println("    super.propertiesToString(p_buffer);");
-        for (Iterator i = p_members.iterator(); i.hasNext();)
+        for (NodeMember member : p_members)
         {
-            NodeMember member = (NodeMember) i.next();
             p_writer.print("    addProperty");
             if (member.isList())
             {
@@ -271,12 +265,12 @@ public class NodeGenerator
      * @param p_sourceDir The directory to place generated files in.
      * @throws IOException
      **/
-    public static void generateSources(Iterator p_nodes, File p_sourceDir)
+    public static void generateSources(
+        Iterable<NodeDescriptor> p_nodes, File p_sourceDir)
         throws IOException
     {
-        while (p_nodes.hasNext())
+        for (NodeDescriptor node : p_nodes)
         {
-            NodeDescriptor node = (NodeDescriptor) p_nodes.next();
             writeSource(new File(p_sourceDir, node.getName() + ".java"), node);
         }
     }

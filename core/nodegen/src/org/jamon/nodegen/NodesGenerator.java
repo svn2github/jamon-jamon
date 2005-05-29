@@ -14,11 +14,13 @@ public class NodesGenerator
 {
     private NodesGenerator() {}
 
-    private static Map parseNodes(Reader p_nodesDescriptor) throws IOException
+    private static Iterable<NodeDescriptor> parseNodes(
+        Reader p_nodesDescriptor) throws IOException
     {
         LineNumberReader reader = new LineNumberReader(p_nodesDescriptor);
         String line;
-        Map nodes = new HashMap();
+        Map<String, NodeDescriptor> nodes = 
+            new HashMap<String, NodeDescriptor>();
 
         while ((line = reader.readLine()) != null)
         {
@@ -29,7 +31,7 @@ public class NodesGenerator
                 nodes.put(node.getName(), node);
             }
         }
-        return nodes;
+        return nodes.values();
     }
     
     private static void initializeDir(File p_srcDir)
@@ -50,25 +52,26 @@ public class NodesGenerator
      **/
     public static void main(String[] args) throws IOException
     {
-        Map nodes = parseNodes(new FileReader(new File(args[0])));
+        Iterable<NodeDescriptor> nodes =
+            parseNodes(new FileReader(new File(args[0])));
         File srcDir =
             new File(
                 new File(new File(new File(args[1]), "org"), "jamon"),
                 "node");
         initializeDir(srcDir);
-        NodeGenerator.generateSources(nodes.values().iterator(), srcDir);
+        NodeGenerator.generateSources(nodes, srcDir);
         AnalysisGenerator.generateAnalysisInterface(
             new PrintWriter(new FileWriter(new File(srcDir, "Analysis.java"))),
-            nodes.values().iterator());
+            nodes);
         AnalysisGenerator.generateAnalysisAdapterClass(
             new PrintWriter(new FileWriter(
                 new File(srcDir, "AnalysisAdapter.java"))),
-            nodes.values().iterator());
+            nodes);
         AnalysisGenerator.generateDepthFirstAdapterClass(
             new PrintWriter(
                 new FileWriter(new File(srcDir, 
                                         "DepthFirstAnalysisAdapter.java"))),
-                nodes.values().iterator());
+                nodes);
     }
 
 }
