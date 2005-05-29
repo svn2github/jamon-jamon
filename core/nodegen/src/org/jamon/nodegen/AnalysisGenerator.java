@@ -41,7 +41,6 @@ public class AnalysisGenerator
         PrintWriter p_writer, Iterable<NodeDescriptor> p_nodes)
     {
         p_writer.println("package org.jamon.node;");
-        p_writer.println("import java.util.Iterator;");
         p_writer.println(
             "public class DepthFirstAnalysisAdapter implements Analysis");
         p_writer.println("{");
@@ -63,11 +62,10 @@ public class AnalysisGenerator
                     if (member.isList())
                     {
                         p_writer.println(
-                            "    for (Iterator<? extends AbstractNode> i = p_node." 
-                            + member.getGetter() + "; i.hasNext(); )");
+                            "    for (AbstractNode node : p_node." 
+                            + member.getGetter() + ")");
                         p_writer.println("    {");
-                        p_writer.println(
-                            "      ((AbstractNode) i.next()).apply(this);");
+                        p_writer.println("      node.apply(this);");
                         p_writer.println("    }");
                     }
                     else

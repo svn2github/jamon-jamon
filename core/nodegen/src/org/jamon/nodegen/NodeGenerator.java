@@ -54,7 +54,6 @@ public class NodeGenerator
         if (containsLists(p_members))
         {
             p_writer.println("import java.util.ArrayList;");
-            p_writer.println("import java.util.Iterator;");
             p_writer.println("import java.util.List;");
             p_writer.println();
         }
@@ -161,9 +160,9 @@ public class NodeGenerator
                 p_writer.println("    return this;");
                 p_writer.println("  }");
                 p_writer.println(
-                    "  public Iterator<" + member.getType() + "> "
+                    "  public Iterable<" + member.getType() + "> "
                     + member.getGetter()
-                    + " { return " + member.instanceName() + ".iterator(); }");
+                    + " { return " + member.instanceName() + "; }");
             }
             else
             {

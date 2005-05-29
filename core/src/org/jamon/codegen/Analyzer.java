@@ -89,9 +89,9 @@ public class Analyzer
 
     private void topLevelAnalyze(TopNode p_top, AnalysisAdapter p_adapter)
     {
-        for (Iterator i = p_top.getSubNodes(); i.hasNext(); )
+        for (AbstractNode node : p_top.getSubNodes())
         {
-            ((AbstractNode) i.next()).apply(p_adapter);
+            node.apply(p_adapter);
         }
 
     }
@@ -213,9 +213,9 @@ public class Analyzer
         @Override
         public void caseAliasesNode(AliasesNode p_node)
         {
-            for (Iterator i = p_node.getAliass(); i.hasNext(); )
+            for (AliasDefNode defNode : p_node.getAliass())
             {
-                handleAlias((AliasDefNode) i.next());
+                handleAlias(defNode);
             }
         }
 
