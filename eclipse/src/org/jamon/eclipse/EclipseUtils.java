@@ -23,6 +23,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.core.resources.IMarker;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourceAttributes;
 import org.eclipse.core.runtime.CoreException;
 
 public class EclipseUtils
@@ -33,10 +35,21 @@ public class EclipseUtils
         IMarker p_marker, int p_lineNumber, String p_message, int p_severity)
         throws CoreException
     {
-        Map attributes = new HashMap();
+        Map<String, Object> attributes = new HashMap<String, Object>();
         attributes.put(IMarker.LINE_NUMBER, new Integer(p_lineNumber));
         attributes.put(IMarker.MESSAGE, p_message);
         attributes.put(IMarker.SEVERITY, new Integer(p_severity));
         p_marker.setAttributes(attributes);
+    }
+
+    public static void unsetReadOnly(IResource p_resource) throws CoreException
+    {
+        ResourceAttributes resourceAttributes = 
+            p_resource.getResourceAttributes();
+        if (resourceAttributes != null && resourceAttributes.isReadOnly())
+        {
+            resourceAttributes.setReadOnly(false);
+            p_resource.setResourceAttributes(resourceAttributes);
+        }
     }
 }

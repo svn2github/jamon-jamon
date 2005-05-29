@@ -2,6 +2,7 @@ package org.jamon.eclipse;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFolder;
@@ -9,7 +10,6 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IProjectNature;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
@@ -30,17 +30,19 @@ public class JamonNature implements IProjectNature {
 		return p_project.getProject().hasNature(natureId());
 	}
 	
-	private static ArrayList naturesList(IProjectDescription p_desc) {
-		return new ArrayList(Arrays.asList(p_desc.getNatureIds()));
+	private static List<String> naturesList(IProjectDescription p_desc) {
+		return new ArrayList<String>(Arrays.asList(p_desc.getNatureIds()));
 	}
 	
-	private static void setNatures(IProjectDescription p_description, ArrayList p_natures) {
-		p_description.setNatureIds((String[]) p_natures.toArray(new String[p_natures.size()]));
+	private static void setNatures(
+        IProjectDescription p_description, List<String> p_natures)
+    {
+		p_description.setNatureIds(p_natures.toArray(new String[p_natures.size()]));
 	}
 	
 	public static void addToProject(IProject p_project, String p_templateSourceDir) throws CoreException {
 		IProjectDescription description = p_project.getDescription();
-		ArrayList natures = naturesList(description);
+		List<String> natures = naturesList(description);
 		if (! natures.contains(natureId())) {
 			natures.add(natureId());
 			setNatures(description, natures);
@@ -69,9 +71,10 @@ public class JamonNature implements IProjectNature {
 	private static final String TEMPLATE_SOURCE_DIR_PROPERTY = "templateSourceDir";
 	private static final String JAMON_PREFERENCES_NODE = "org.jamon";
 	
-	public static void removeFromProject(IProject p_project) throws CoreException {
+	public static void removeFromProject(IProject p_project) throws CoreException 
+    {
 		IProjectDescription description = p_project.getDescription();
-		ArrayList natures = naturesList(description);
+		List<String> natures = naturesList(description);
 		if (natures.contains(natureId())) {
 			natures.remove(natureId());
 			setNatures(description, natures);
@@ -107,20 +110,22 @@ public class JamonNature implements IProjectNature {
 
 	private void unsetReadOnly(IContainer p_container) throws CoreException {
 		IResource[] members = p_container.members();
-		for (int i = 0; i < members.length; ++i) {
-			members[i].setReadOnly(false);
-			if (members[i] instanceof IContainer) {
-				unsetReadOnly((IContainer) members[i]);
+		for (IResource resource : members)
+        {
+            EclipseUtils.unsetReadOnly(resource);
+			if (resource instanceof IContainer) {
+				unsetReadOnly((IContainer) resource);
 			}
 		}
 	}
-	
-	private void removeTsrc() throws CoreException {
+
+    private void removeTsrc() throws CoreException {
 		IFolder tsrc = getTemplateOutputFolder();
 		IJavaProject jp = getJavaProject();
-		ArrayList e = new ArrayList(Arrays.asList(jp.getRawClasspath()));
+		List<IClasspathEntry> e = 
+            new ArrayList<IClasspathEntry>(Arrays.asList(jp.getRawClasspath()));
 		e.remove(JavaCore.newSourceEntry(tsrc.getFullPath()));
-		jp.setRawClasspath((IClasspathEntry[]) e.toArray(new IClasspathEntry[e.size()]), null);
+		jp.setRawClasspath(e.toArray(new IClasspathEntry[e.size()]), null);
 		if (tsrc.exists()) {
 			unsetReadOnly(tsrc);
 			tsrc.delete(IResource.DEPTH_INFINITE, null);
@@ -137,10 +142,10 @@ public class JamonNature implements IProjectNature {
 		tsrc.setDerived(true);
 			
 		IJavaProject jp = getJavaProject();
-		ArrayList e = new ArrayList(Arrays.asList(jp.getRawClasspath()));
+		List<IClasspathEntry> e = 
+            new ArrayList<IClasspathEntry>(Arrays.asList(jp.getRawClasspath()));
 		e.add(JavaCore.newSourceEntry(tsrc.getFullPath()));
-		jp.setRawClasspath(
-            (IClasspathEntry[]) e.toArray(new IClasspathEntry[e.size()]), null);
+		jp.setRawClasspath(e.toArray(new IClasspathEntry[e.size()]), null);
     }
 	
 	private IJavaProject getJavaProject() throws CoreException {
@@ -160,8 +165,7 @@ public class JamonNature implements IProjectNature {
 	}
 	
 	private IProject m_project;
-    private IResourceChangeListener m_javaMarkerListener;
-	static final String JAMON_EXTENSION = "jamon";
+    static final String JAMON_EXTENSION = "jamon";
 	static final String DEFAULT_TEMPLATE_SOURCE = "templates";
 
 }
