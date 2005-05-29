@@ -329,14 +329,16 @@ public class ProxyGenerator
 
         m_writer.println("  throws " + ClassNames.IOEXCEPTION);
         m_writer.openBlock();
-        m_writer.println("ImplData implData = (ImplData) getImplData();");
-        for (Iterator i = m_templateUnit.getRenderArgs(); i.hasNext(); )
+        if (m_templateUnit.getRenderArgs().hasNext())
         {
-            AbstractArgument arg = (AbstractArgument) i.next();
-            m_writer.println("implData." + arg.getSetterName()
-                             + "(" + arg.getName() + ");");
+            m_writer.println("ImplData implData = (ImplData) getImplData();");
+            for (Iterator i = m_templateUnit.getRenderArgs(); i.hasNext(); )
+            {
+                AbstractArgument arg = (AbstractArgument) i.next();
+                m_writer.println("implData." + arg.getSetterName()
+                                 + "(" + arg.getName() + ");");
+            }
         }
-
         m_writer.println(
             "Intf instance = (Intf) getTemplateManager().constructImpl(this);"
             );
@@ -560,7 +562,7 @@ public class ProxyGenerator
         m_writer.openBlock();
         m_writer.print("return new " + parentRendererClass + "() ");
         m_writer.openBlock();
-        m_writer.print("protected void renderChild");
+        m_writer.print("@Override protected void renderChild");
         m_writer.openList();
         m_writer.printArg(ArgNames.WRITER_DECL);
         m_templateUnit.printParentRenderArgsDecl(m_writer);

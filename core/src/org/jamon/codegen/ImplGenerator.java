@@ -236,6 +236,10 @@ public class ImplGenerator
     {
         //FIXME - cut'n'pasted from generateDefs
         m_writer.println();
+        if (p_methodUnit.isOverride())
+        {
+           m_writer.print("@Override ");
+        }
         m_writer.print("protected "
                        + (p_methodUnit.isAbstract() ? "abstract " : "")
                        + "void __jamon_innerUnit__");
@@ -274,7 +278,7 @@ public class ImplGenerator
     {
         if (m_templateUnit.hasParentPath())
         {
-            m_writer.println("protected void child_render_"
+            m_writer.println("@Override protected void child_render_"
                              + m_templateUnit.getInheritanceDepth()
                              + "("  + ArgNames.WRITER_DECL + ") throws "
                              + ClassNames.IOEXCEPTION);

@@ -127,4 +127,9 @@ public class OverriddenMethodUnit
     {
         return m_inheritedArgs.getDefaultValue(p_arg);
     }
+    
+    public boolean isOverride()
+    {
+        return true;
+    }
 }

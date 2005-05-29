@@ -28,4 +28,5 @@ public interface MethodUnit extends Unit
     Iterator getOptionalArgsWithDefaults();
     String getDefaultForArg(OptionalArgument p_arg);
     boolean isAbstract();
+    boolean isOverride();
 }

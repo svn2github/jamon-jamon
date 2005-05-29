@@ -69,4 +69,10 @@ public class DeclaredMethodUnit
     {
         super.addFragmentArg(p_argument, null);
     }
+
+
+    public boolean isOverride()
+    {
+        return false;
+    }
 }
