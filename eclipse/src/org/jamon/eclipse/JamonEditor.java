@@ -23,6 +23,7 @@ import org.eclipse.ui.texteditor.AbstractDecoratedTextEditor;
 
 public class JamonEditor extends AbstractDecoratedTextEditor
 {
+    @Override
     protected void initializeEditor()
     {
         super.initializeEditor();
