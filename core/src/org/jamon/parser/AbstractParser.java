@@ -181,7 +181,8 @@ public class AbstractParser
             switch (c)
             {
                 case '"' :
-                    if (inString = !inChar && !inString)
+                    inString = !inChar && !inString;
+                    if (inString)
                     {
                         quoteStart = m_reader.getLocation();
                         p_tagEndDetector.resetEndMatch();
@@ -192,7 +193,8 @@ public class AbstractParser
                     }
                     break;
                 case '\'' :
-                    if (inChar = !inString && !inChar)
+                    inChar = !inString && !inChar;
+                    if (inChar)
                     {
                         quoteStart = m_reader.getLocation();
                         p_tagEndDetector.resetEndMatch();
