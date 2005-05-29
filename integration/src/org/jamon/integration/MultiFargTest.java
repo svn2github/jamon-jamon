@@ -20,13 +20,8 @@
 
 package org.jamon.integration;
 
-import java.io.File;
-
 import test.jamon.MultiFarg;
 import test.jamon.MultiFarg2;
-
-import org.jamon.TemplateProcessor;
-import org.jamon.JamonException;
 
 public class MultiFargTest
     extends TestBase

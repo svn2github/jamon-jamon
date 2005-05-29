@@ -28,8 +28,6 @@ import junit.framework.TestCase;
 import junit.framework.AssertionFailedError;
 
 import org.jamon.JUnitTemplateManager;
-import org.jamon.escaping.Escaping;
-
 import test.jamon.JUnitTemplate;
 
 public class JUnitTemplateManagerTest

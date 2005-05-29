@@ -22,7 +22,6 @@ package org.jamon.integration;
 
 import org.jamon.TemplateInspector;
 import java.util.List;
-import java.util.Iterator;
 
 public class TemplateInspectorTest
     extends TestBase

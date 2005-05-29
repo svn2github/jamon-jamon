@@ -40,7 +40,7 @@ import junit.framework.TestCase;
 public abstract class TestBase
     extends TestCase
 {
-    public void setUp()
+    @Override public void setUp()
     {
         m_recompilingTemplateManager = null;
         resetWriter();

@@ -20,8 +20,6 @@
 
 package org.jamon.integration;
 
-import org.jamon.JamonException;
-
 public class IllegalTagTest
     extends TestBase
 {

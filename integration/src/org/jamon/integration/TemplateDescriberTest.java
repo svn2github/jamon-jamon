@@ -22,7 +22,6 @@ package org.jamon.integration;
 
 import java.io.File;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -31,7 +30,6 @@ import junit.framework.TestCase;
 import org.jamon.FileTemplateSource;
 
 import org.jamon.codegen.FragmentArgument;
-import org.jamon.codegen.FragmentUnit;
 import org.jamon.codegen.MethodUnit;
 import org.jamon.codegen.AbstractArgument;
 import org.jamon.codegen.RequiredArgument;
@@ -43,7 +41,7 @@ public class TemplateDescriberTest
 {
     private TemplateDescriber m_describer;
 
-    public void setUp()
+    @Override public void setUp()
         throws Exception
     {
         File nonexistent = File.createTempFile("jamontest",null);

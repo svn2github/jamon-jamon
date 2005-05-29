@@ -20,25 +20,21 @@
 
 package org.jamon.integration;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Modifier;
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.jamon.util.StringUtils;
 import org.jamon.TemplateCompilationException;
 
-import test.jamon.Parent;
 import test.jamon.Child;
-import test.jamon.Middle;
-import test.jamon.Grandchild;
-import test.jamon.ChildFragmentCaller;
 import test.jamon.Child1;
 import test.jamon.Child2;
+import test.jamon.ChildFragmentCaller;
+import test.jamon.Grandchild;
+import test.jamon.Middle;
+import test.jamon.Parent;
 
 /**
  * Test Jamon's template inheritance
