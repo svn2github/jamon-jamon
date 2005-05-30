@@ -23,6 +23,7 @@ package org.jamon.render.html;
 import java.util.Iterator;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public abstract class AbstractSelect
     extends AbstractInput
@@ -84,14 +85,14 @@ public abstract class AbstractSelect
         }
     }
 
-    private static Item[] create( Iterator p_data, ItemMaker p_maker)
+    private static Item[] create(Iterator<?> p_data, ItemMaker p_maker)
     {
-        ArrayList items = new ArrayList();
+        List<Select.Item> items = new ArrayList<Select.Item>();
         while( p_data.hasNext() )
         {
             items.add( p_maker.makeItem( p_data.next() ) );
         }
-        return (Item[]) items.toArray(new Item[0]);
+        return items.toArray(new Item[0]);
     }
 
     private final Item[] m_items;

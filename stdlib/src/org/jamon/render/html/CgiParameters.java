@@ -21,6 +21,7 @@
 package org.jamon.render.html;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class CgiParameters
 {
@@ -32,8 +33,8 @@ public class CgiParameters
 
     public Input[] getInputs()
     {
-        return (Input[]) m_inputs.toArray( new Input[0] );
+        return m_inputs.toArray( new Input[0] );
     }
 
-    private final ArrayList m_inputs = new ArrayList();
+    private final List<Input> m_inputs = new ArrayList<Input>();
 }

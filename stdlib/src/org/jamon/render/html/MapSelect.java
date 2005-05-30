@@ -30,7 +30,7 @@ public class MapSelect
         this(p_name, p_options,null);
     }
 
-    public MapSelect(String p_name, final Map p_options, Object p_default)
+    public MapSelect(String p_name, final Map<?,?> p_options, Object p_default)
     {
         super(p_name,
               p_default == null ? null : p_default.toString(),
