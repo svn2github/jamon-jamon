@@ -102,9 +102,10 @@ public class ImplGenerator
                             : ClassNames.BASE_TEMPLATE));
         m_writer.println("  implements " + getProxyClassName() + ".Intf");
         m_writer.openBlock();
-        for (Iterator i = m_templateUnit.getVisibleArgs(); i.hasNext(); )
+        for (Iterator<AbstractArgument> i = m_templateUnit.getVisibleArgs(); 
+             i.hasNext(); )
         {
-            AbstractArgument arg = (AbstractArgument) i.next();
+            AbstractArgument arg = i.next();
             m_writer.println(
                 "private final " + arg.getType() + " " + arg.getName() + ";");
         }
@@ -117,10 +118,11 @@ public class ImplGenerator
                          + " " + SET_OPTS + "("
                          + getImplDataClassName() + " p_implData)");
         m_writer.openBlock();
-        for (Iterator i = m_templateUnit.getSignatureOptionalArgs();
+        for (Iterator<OptionalArgument> i = 
+                m_templateUnit.getSignatureOptionalArgs();
              i.hasNext(); )
         {
-            OptionalArgument arg = (OptionalArgument) i.next();
+            OptionalArgument arg = i.next();
             String value = m_templateUnit.getOptionalArgDefault(arg);
             if (value != null)
             {
@@ -150,9 +152,10 @@ public class ImplGenerator
         m_writer.openBlock();
         m_writer.println(
             "super(p_templateManager, " + SET_OPTS + "(p_implData));");
-        for (Iterator i = m_templateUnit.getVisibleArgs(); i.hasNext(); )
+        for (Iterator<AbstractArgument> i = m_templateUnit.getVisibleArgs(); 
+             i.hasNext(); )
         {
-            AbstractArgument arg = (AbstractArgument) i.next();
+            AbstractArgument arg = i.next();
             m_writer.println(arg.getName()
                              + " = p_implData." + arg.getGetterName() + "();");
         }
@@ -181,14 +184,14 @@ public class ImplGenerator
 
     private void generateDefs() throws ParserError
     {
-        for (Iterator i = m_templateUnit.getDefUnits(); i.hasNext(); )
+        for (Iterator<DefUnit> i = m_templateUnit.getDefUnits(); i.hasNext(); )
         {
-            DefUnit defUnit = (DefUnit) i.next();
+            DefUnit defUnit = i.next();
             m_writer.println();
-            for (Iterator f = defUnit.getFragmentArgs(); f.hasNext(); )
+            for (Iterator<FragmentArgument> f = defUnit.getFragmentArgs(); 
+                 f.hasNext(); )
             {
-                generateInnerUnitFargInterface(((FragmentArgument) f.next())
-                                               .getFragmentUnit(),
+                generateInnerUnitFargInterface(f.next().getFragmentUnit(),
                                                true);
             }
 
@@ -207,26 +210,25 @@ public class ImplGenerator
 
     private void generateMethods() throws ParserError
     {
-        for (Iterator i = m_templateUnit.getDeclaredMethodUnits();
+        for (Iterator<MethodUnit> i = m_templateUnit.getDeclaredMethodUnits();
              i.hasNext(); )
         {
-            generateMethodIntf((MethodUnit) i.next());
+            generateMethodIntf(i.next());
         }
-        for (Iterator i = m_templateUnit.getImplementedMethodUnits();
+        for (Iterator<MethodUnit> i = m_templateUnit.getImplementedMethodUnits();
              i.hasNext(); )
         {
-            generateMethodImpl((MethodUnit) i.next());
+            generateMethodImpl(i.next());
         }
     }
 
     private void generateMethodIntf(MethodUnit p_methodUnit)
     {
         m_writer.println();
-        for (Iterator f = p_methodUnit.getFragmentArgs(); f.hasNext(); )
+        for (Iterator<FragmentArgument> f = p_methodUnit.getFragmentArgs(); 
+             f.hasNext(); )
         {
-            generateInnerUnitFargInterface(((FragmentArgument) f.next())
-                                           .getFragmentUnit(),
-                                           false);
+            generateInnerUnitFargInterface(f.next().getFragmentUnit(), false);
         }
 
     }
@@ -260,10 +262,11 @@ public class ImplGenerator
         }
         m_writer.println();
 
-        for (Iterator i = p_methodUnit.getOptionalArgsWithDefaults();
+        for (Iterator<OptionalArgument> i =
+                p_methodUnit.getOptionalArgsWithDefaults();
              i.hasNext(); )
         {
-            OptionalArgument arg = (OptionalArgument) i.next();
+            OptionalArgument arg = i.next();
             m_writer.println("protected " + arg.getType() + " "
                              + p_methodUnit.getOptionalArgDefaultMethod(arg)
                              + "()");

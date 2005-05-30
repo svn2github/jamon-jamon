@@ -55,7 +55,7 @@ public class DeclaredMethodUnit
 
     private final boolean m_isAbstract;
 
-    public Iterator getOptionalArgsWithDefaults()
+    public Iterator<OptionalArgument> getOptionalArgsWithDefaults()
     {
         return getSignatureOptionalArgs();
     }

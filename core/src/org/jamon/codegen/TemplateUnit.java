@@ -72,13 +72,14 @@ public class TemplateUnit
                                             p_parent.getFragmentInterfaces(),
                                             getErrors());
 
-        for (Iterator i = new SequentialIterator(
-                p_parent.getRequiredArgs().iterator(),
-                p_parent.getOptionalArgs().iterator(),
-                p_parent.getFragmentInterfaces().iterator());
+        for (Iterator<AbstractArgument> i = 
+                new SequentialIterator<AbstractArgument>(
+                        p_parent.getRequiredArgs().iterator(),
+                        p_parent.getOptionalArgs().iterator(),
+                        p_parent.getFragmentInterfaces().iterator());
              i.hasNext(); )
         {
-            addArgName(((AbstractArgument) i.next()));
+            addArgName(i.next());
         }
 
         m_callNames.addAll(p_parent.getMethodUnits().keySet());
@@ -91,13 +92,13 @@ public class TemplateUnit
     }
 
     @Override
-    public Iterator getFragmentArgs()
+    public Iterator<FragmentArgument> getFragmentArgs()
     {
         return m_fragmentArgs.iterator();
     }
 
     @Override
-    public List getFragmentArgsList()
+    public List<FragmentArgument> getFragmentArgsList()
     {
         return m_fragmentArgs;
     }
@@ -109,7 +110,7 @@ public class TemplateUnit
         m_declaredFragmentArgs.add(p_arg);
     }
 
-    public Iterator getDeclaredFragmentArgs()
+    public Iterator<FragmentArgument> getDeclaredFragmentArgs()
     {
         return m_declaredFragmentArgs.iterator();
     }
@@ -127,17 +128,17 @@ public class TemplateUnit
     }
 
     @Override
-    public Iterator getSignatureRequiredArgs()
+    public Iterator<RequiredArgument> getSignatureRequiredArgs()
     {
-        return new SequentialIterator
+        return new SequentialIterator<RequiredArgument>
             (m_parentDescription.getRequiredArgs().iterator(),
              m_declaredRequiredArgs.iterator());
     }
 
     @Override
-    public Iterator getSignatureOptionalArgs()
+    public Iterator<OptionalArgument> getSignatureOptionalArgs()
     {
-        return new SequentialIterator
+        return new SequentialIterator<OptionalArgument>
             (m_parentDescription.getOptionalArgs().iterator(),
              m_declaredOptionalArgs.iterator());
     }
@@ -150,17 +151,19 @@ public class TemplateUnit
     }
     
     @Override
-    public Iterator getVisibleArgs()
+    public Iterator<AbstractArgument> getVisibleArgs()
     {
         return m_inheritedArgs == null
-            ? new SequentialIterator(getDeclaredRenderArgs(),
-                                     getDeclaredOptionalArgs())
-            : new SequentialIterator(m_inheritedArgs.getVisibleArgs(),
-                                     getDeclaredRenderArgs(),
-                                     getDeclaredOptionalArgs());
+            ? new SequentialIterator<AbstractArgument>(
+                    getDeclaredRenderArgs(),
+                    getDeclaredOptionalArgs())
+            : new SequentialIterator<AbstractArgument>(
+                    m_inheritedArgs.getVisibleArgs(),
+                    getDeclaredRenderArgs(),
+                    getDeclaredOptionalArgs());
     }
 
-    public Iterator getDeclaredOptionalArgs()
+    public Iterator<OptionalArgument> getDeclaredOptionalArgs()
     {
         return m_declaredOptionalArgs.iterator();
     }
@@ -185,14 +188,14 @@ public class TemplateUnit
         m_defs.put(p_defName, new DefUnit(p_defName, this, getErrors()));
     }
 
-    public Iterator getDefUnits()
+    public Iterator<DefUnit> getDefUnits()
     {
         return m_defs.values().iterator();
     }
 
     public DefUnit getDefUnit(String p_name)
     {
-        return (DefUnit) m_defs.get(p_name);
+        return m_defs.get(p_name);
     }
 
     public void makeMethodUnit(
@@ -232,36 +235,35 @@ public class TemplateUnit
 
     public MethodUnit getMethodUnit(String p_name)
     {
-        return
-            (MethodUnit) (m_methods.containsKey(p_name)
-                          ? m_methods.get(p_name)
-                          : m_parentDescription.getMethodUnits().get(p_name));
+        return (m_methods.containsKey(p_name)
+               ? m_methods.get(p_name)
+               : m_parentDescription.getMethodUnits().get(p_name));
     }
 
-    public Iterator getSignatureMethodUnits()
+    public Iterator<MethodUnit> getSignatureMethodUnits()
     {
-        return new SequentialIterator
+        return new SequentialIterator<MethodUnit>
             (getDeclaredMethodUnits(),
              m_parentDescription.getMethodUnits().values().iterator());
     }
 
-    public Iterator getDeclaredMethodUnits()
+    public Iterator<MethodUnit> getDeclaredMethodUnits()
     {
         return m_methods.values().iterator();
     }
 
-    public Iterator getImplementedMethodUnits()
+    public Iterator<MethodUnit> getImplementedMethodUnits()
     {
-        return new SequentialIterator(getDeclaredMethodUnits(),
-                                      m_overrides.iterator());
+        return new SequentialIterator<MethodUnit>(getDeclaredMethodUnits(),
+                                                  m_overrides.iterator());
     }
 
-    public Collection getAbstractMethodNames()
+    public Collection<String> getAbstractMethodNames()
     {
         return m_abstractMethodNames;
     }
 
-    private Iterator getImports()
+    private Iterator<ImportNode> getImports()
     {
         return m_imports.iterator();
     }
@@ -304,9 +306,8 @@ public class TemplateUnit
 
     public void printClassContent(CodeWriter p_writer)
     {
-        for (Iterator i = m_classContent.iterator(); i.hasNext(); )
+        for (ClassNode node : m_classContent)
         {
-            ClassNode node = (ClassNode) i.next();
             p_writer.printLocation(node.getLocation());
             p_writer.println(node.getContent());
         }
@@ -325,35 +326,42 @@ public class TemplateUnit
     private InheritedArgs m_inheritedArgs;
     private TemplateDescription m_parentDescription =
         TemplateDescription.EMPTY;
-    private final List m_declaredRequiredArgs = new LinkedList();
-    private final List m_fragmentArgs = new LinkedList();
-    private final Set m_declaredOptionalArgs = new HashSet();
-    private final Set m_declaredFragmentArgs = new HashSet();
+    private final List<RequiredArgument> m_declaredRequiredArgs = 
+        new LinkedList<RequiredArgument>();
+    private final List<FragmentArgument> m_fragmentArgs = 
+        new LinkedList<FragmentArgument>();
+    private final Set<OptionalArgument> m_declaredOptionalArgs =
+        new HashSet<OptionalArgument>();
+    private final Set<FragmentArgument> m_declaredFragmentArgs = 
+        new HashSet<FragmentArgument>();
 
-    private final Map m_defs = new HashMap();
-    private final Map m_methods = new HashMap();
-    private final List m_overrides = new LinkedList();
-    private final List m_imports = new LinkedList();
-    private final List m_interfaces = new LinkedList();
+    private final Map<String, DefUnit> m_defs = new HashMap<String, DefUnit>();
+    private final Map<String, MethodUnit> m_methods = 
+        new HashMap<String, MethodUnit>();
+    private final List<OverriddenMethodUnit> m_overrides = 
+        new LinkedList<OverriddenMethodUnit>();
+    private final List<ImportNode> m_imports = new LinkedList<ImportNode>();
+    private final List<String> m_interfaces = new LinkedList<String>();
     private String m_parentPath;
     private boolean m_isParent = false;
-    private final List m_classContent = new LinkedList();
+    private final List<ClassNode> m_classContent = new LinkedList<ClassNode>();
     private final Set<String> m_dependencies = new HashSet<String>();
-    private final Set m_callNames = new HashSet();
-    private final Collection m_abstractMethodNames = new HashSet();
+    private final Set<String> m_callNames = new HashSet<String>();
+    private final Collection<String> m_abstractMethodNames =
+        new HashSet<String>();
 
-    public Iterator getParentRenderArgs()
+    public Iterator<RequiredArgument> getParentRenderArgs()
     {
-        return new SequentialIterator
+        return new SequentialIterator<RequiredArgument>
             (m_parentDescription.getRequiredArgs().iterator(),
              m_parentDescription.getFragmentInterfaces().iterator());
     }
 
     public void printImports(CodeWriter p_writer)
     {
-        for (Iterator i = getImports(); i.hasNext(); )
+        for (Iterator<ImportNode> i = getImports(); i.hasNext(); )
         {
-            ImportNode node = (ImportNode) i.next();
+            ImportNode node = i.next();
             p_writer.printLocation(node.getLocation());
             p_writer.println("import " + node.getName() + ";");
         }
@@ -370,16 +378,18 @@ public class TemplateUnit
         printArgsDecl(p_writer, getParentRenderArgs());
     }
 
-    public Iterator getDeclaredRenderArgs()
+    public Iterator<RequiredArgument> getDeclaredRenderArgs()
     {
-        return new SequentialIterator(m_declaredRequiredArgs.iterator(),
-                                      m_declaredFragmentArgs.iterator());
+        return new SequentialIterator<RequiredArgument>(
+            m_declaredRequiredArgs.iterator(), 
+            m_declaredFragmentArgs.iterator());
     }
 
-    public Iterator getDeclaredArgs()
+    public Iterator<AbstractArgument> getDeclaredArgs()
     {
-        return new SequentialIterator(getDeclaredRenderArgs(),
-                                      m_declaredOptionalArgs.iterator());
+        return new SequentialIterator<AbstractArgument>(
+                getDeclaredRenderArgs(),
+                m_declaredOptionalArgs.iterator());
     }
 
     public void printDeclaredRenderArgs(CodeWriter p_writer)
@@ -397,7 +407,7 @@ public class TemplateUnit
         if (m_interfaces.size() > 0)
         {
             p_writer.print("  implements ");
-            for (Iterator i = m_interfaces.iterator(); i.hasNext(); )
+            for (Iterator<String> i = m_interfaces.iterator(); i.hasNext(); )
             {
                 p_writer.print(i.next());
                 if (i.hasNext())
@@ -418,9 +428,9 @@ public class TemplateUnit
             p_buf.append(m_parentDescription.getSignature());
             p_buf.append("\n");
         }
-        for(Iterator i = getFragmentArgs(); i.hasNext(); )
+        for(Iterator<FragmentArgument> i = getFragmentArgs(); i.hasNext(); )
         {
-            FragmentArgument arg = (FragmentArgument) i.next();
+            FragmentArgument arg = i.next();
             p_buf.append("Fragment: ");
             p_buf.append(arg.getName());
             p_buf.append("\n");

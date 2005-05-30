@@ -44,7 +44,8 @@ public class TemplateDescriber
         m_classLoader = p_classLoader;
     }
 
-    private final Map m_descriptionCache = new HashMap();
+    private final Map<String, TemplateDescription> m_descriptionCache = 
+        new HashMap<String, TemplateDescription>();
     private final TemplateSource m_templateSource;
     private final ClassLoader m_classLoader;
 
@@ -55,19 +56,19 @@ public class TemplateDescriber
         return getTemplateDescription(p_path,
                                       p_location,
                                       p_templateIdentifier,
-                                      new HashSet());
+                                      new HashSet<String>());
     }
 
     public TemplateDescription getTemplateDescription(
         final String p_path,
         final Location p_location,
         final String p_templateIdentifier,
-        final Set p_children)
+        final Set<String> p_children)
          throws IOException, ParserError
     {
         if (m_descriptionCache.containsKey(p_path))
         {
-            return (TemplateDescription) m_descriptionCache.get(p_path);
+            return m_descriptionCache.get(p_path);
         }
         else
         {
@@ -82,7 +83,7 @@ public class TemplateDescriber
         final String p_path,
         final Location p_location,
         final String p_templateIdentifier,
-        final Set p_children)
+        final Set<String> p_children)
         throws IOException, ParserError
      {
          if (m_templateSource.available(p_path))

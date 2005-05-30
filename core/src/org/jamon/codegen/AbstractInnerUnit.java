@@ -42,7 +42,7 @@ public abstract class AbstractInnerUnit extends AbstractUnit
         m_optionalArgs.add(p_arg);
     }
 
-    public Iterator getOptionalArgs()
+    public Iterator<OptionalArgument> getOptionalArgs()
     {
         return m_optionalArgs.iterator();
     }
@@ -57,22 +57,22 @@ public abstract class AbstractInnerUnit extends AbstractUnit
         m_requiredArgs.add(p_arg);
     }
 
-    public List getRequiredArgsList()
+    public List<RequiredArgument> getRequiredArgsList()
     {
         return m_requiredArgs;
     }
 
-    public Set getOptionalArgsSet()
+    public Set<OptionalArgument> getOptionalArgsSet()
     {
         return m_optionalArgs;
     }
 
-    public Iterator getRequiredArgs()
+    public Iterator<RequiredArgument> getRequiredArgs()
     {
         return getRequiredArgsList().iterator();
     }
 
-    public Iterator getDeclaredRequiredArgs()
+    public Iterator<RequiredArgument> getDeclaredRequiredArgs()
     {
         return m_requiredArgs.iterator();
     }
@@ -82,26 +82,28 @@ public abstract class AbstractInnerUnit extends AbstractUnit
         return ! getRequiredArgsList().isEmpty();
     }
 
-    @Override protected void addFragmentArg(FragmentArgument p_arg, Location p_location)
+    @Override protected void addFragmentArg(
+        FragmentArgument p_arg, Location p_location)
     {
         m_fragmentArgs.add(p_arg);
     }
 
-    @Override public Iterator getFragmentArgs()
+    @Override public Iterator<FragmentArgument> getFragmentArgs()
     {
         return m_fragmentArgs.iterator();
     }
 
-    @Override public List getFragmentArgsList()
+    @Override public List<FragmentArgument> getFragmentArgsList()
     {
         return m_fragmentArgs;
     }
 
-    @Override public Iterator getRenderArgs()
+    @Override public Iterator<AbstractArgument> getRenderArgs()
     {
-        return new SequentialIterator(getDeclaredRequiredArgs(),
-                                      getOptionalArgs(),
-                                      getFragmentArgs());
+        return new SequentialIterator<AbstractArgument>(
+                getDeclaredRequiredArgs(),
+                getOptionalArgs(),
+                getFragmentArgs());
     }
 
     @Override public Iterator getVisibleArgs()
@@ -109,19 +111,22 @@ public abstract class AbstractInnerUnit extends AbstractUnit
         return getRenderArgs();
     }
 
-    @Override public Iterator getSignatureRequiredArgs()
+    @Override public Iterator<RequiredArgument> getSignatureRequiredArgs()
     {
         return getRequiredArgs();
     }
 
-    @Override public Iterator getSignatureOptionalArgs()
+    @Override public Iterator<OptionalArgument> getSignatureOptionalArgs()
     {
         return getOptionalArgs();
     }
 
 
 
-    private final List m_requiredArgs = new LinkedList();
-    private final Set m_optionalArgs = new HashSet();
-    private final List m_fragmentArgs = new LinkedList();
+    private final List<RequiredArgument> m_requiredArgs = 
+        new LinkedList<RequiredArgument>();
+    private final Set<OptionalArgument> m_optionalArgs = 
+        new HashSet<OptionalArgument>();
+    private final List<FragmentArgument> m_fragmentArgs = 
+        new LinkedList<FragmentArgument>();
 }

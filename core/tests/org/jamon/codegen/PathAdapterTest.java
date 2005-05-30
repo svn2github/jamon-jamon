@@ -49,7 +49,7 @@ public class PathAdapterTest extends TestCase
     
     @Override protected void setUp() throws Exception
     {
-        Map aliases = new HashMap();
+        Map<String, String> aliases = new HashMap<String, String>();
         aliases.put("/", "/root/dir");
         aliases.put("foo", "/foo/dir");
         m_errors = new ParserErrors();
@@ -104,7 +104,7 @@ public class PathAdapterTest extends TestCase
             .addPathElement(new UpdirNode(s_location))
             .addPathElement(new UpdirNode(location2))
             .apply(m_adapter);
-        Iterator errors = m_errors.getErrors();
+        Iterator<ParserError> errors = m_errors.getErrors();
         assertTrue(errors.hasNext());
         assertEquals(
             new ParserError(

@@ -5,8 +5,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Iterator;
-
 import org.jamon.TemplateLocation;
 import org.jamon.TemplateSource;
 import org.jamon.FileTemplateSource;
@@ -27,9 +25,9 @@ public class ParserBenchmarks
         long start = System.currentTimeMillis();
         for (int i = 0; i < ITERATIONS; i++)
         {
-            for (Iterator comp = p_start.getSubNodes(); comp.hasNext(); )
+            for (AbstractNode subNode : p_start.getSubNodes())
             {
-                ((AbstractNode) comp.next()).apply(adapter);
+                subNode.apply(adapter);
             }
         }
         return System.currentTimeMillis() - start;

@@ -20,6 +20,7 @@
 
 package org.jamon.codegen;
 
+import java.util.Collections;
 import java.util.Map;
 import java.util.Iterator;
 
@@ -28,21 +29,29 @@ import org.jamon.node.Location;
 
 public class NamedParamValues implements ParamValues
 {
-    public NamedParamValues(Map p_params, Location p_location)
+    public NamedParamValues(Map<String, String> p_params, Location p_location)
     {
-        m_params = p_params;
+        if (p_params == null)
+        {
+            m_params = Collections.emptyMap();
+        }
+        else
+        {
+            m_params = p_params;
+        }
         m_location = p_location;
     }
 
-    public void generateRequiredArgs(Iterator p_args, CodeWriter p_writer)
+    public void generateRequiredArgs(
+        Iterator<RequiredArgument> p_args, CodeWriter p_writer)
         throws ParserError
     {
         boolean multipleArgsAreMissing= false;
         StringBuffer missingArgs = null;
         while (p_args.hasNext())
         {
-            String name = ((RequiredArgument) p_args.next()).getName();
-            String expr = (String) m_params.remove(name);
+            String name = p_args.next().getName();
+            String expr = m_params.remove(name);
             if (expr == null)
             {
                 if (missingArgs == null)
@@ -70,7 +79,7 @@ public class NamedParamValues implements ParamValues
 
     public String getOptionalArgValue(String p_argName)
     {
-        return (String) m_params.remove(p_argName);
+        return m_params.remove(p_argName);
     }
 
     public boolean hasUnusedParams()
@@ -78,12 +87,12 @@ public class NamedParamValues implements ParamValues
         return ! m_params.isEmpty();
     }
 
-    public Iterator getUnusedParams()
+    public Iterator<String> getUnusedParams()
     {
         return m_params.keySet().iterator();
     }
 
 
-    private final Map m_params;
+    private final Map<String, String> m_params;
     private final Location m_location;
 }

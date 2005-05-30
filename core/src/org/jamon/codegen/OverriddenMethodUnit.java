@@ -60,17 +60,17 @@ public class OverriddenMethodUnit
     private final DeclaredMethodUnit m_declaredMethodUnit;
     private final InheritedArgs m_inheritedArgs;
 
-    @Override public Iterator getFragmentArgs()
+    @Override public Iterator<FragmentArgument> getFragmentArgs()
     {
         return m_declaredMethodUnit.getFragmentArgs();
     }
 
-    @Override public Iterator getSignatureRequiredArgs()
+    @Override public Iterator<RequiredArgument> getSignatureRequiredArgs()
     {
         return m_declaredMethodUnit.getSignatureRequiredArgs();
     }
 
-    @Override public Iterator getSignatureOptionalArgs()
+    @Override public Iterator<OptionalArgument> getSignatureOptionalArgs()
     {
         return m_declaredMethodUnit.getSignatureOptionalArgs();
     }
@@ -82,9 +82,10 @@ public class OverriddenMethodUnit
 
     @Override public void printRenderArgsDecl(CodeWriter p_writer)
     {
-        for (Iterator i = m_declaredMethodUnit.getRenderArgs(); i.hasNext(); )
+        for (Iterator<AbstractArgument> i = m_declaredMethodUnit.getRenderArgs(); 
+             i.hasNext(); )
         {
-            AbstractArgument arg = (AbstractArgument) i.next();
+            AbstractArgument arg = i.next();
             p_writer.printArg("final " + arg.getType() + " "
                               + (m_inheritedArgs.isArgVisible(arg)
                                  ? "" : "p__jamon__" )
@@ -103,7 +104,7 @@ public class OverriddenMethodUnit
         throw new UnsupportedOperationException();
     }
 
-    @Override public List getFragmentArgsList()
+    @Override public List<FragmentArgument> getFragmentArgsList()
     {
         throw new UnsupportedOperationException();
     }
@@ -118,7 +119,7 @@ public class OverriddenMethodUnit
         throw new UnsupportedOperationException();
     }
 
-    public Iterator getOptionalArgsWithDefaults()
+    public Iterator<OptionalArgument> getOptionalArgsWithDefaults()
     {
         return m_inheritedArgs.getOptionalArgsWithNewDefaultValues();
     }

@@ -115,7 +115,7 @@ public class TemplateUnitTest
         TemplateUnit unit = new TemplateUnit("/foo", null);
         TemplateUnit parent = new TemplateUnit("/bar", null);
 
-        Set sigs = new HashSet();
+        Set<String> sigs = new HashSet<String>();
         checkSigIsUnique(unit, sigs);
 
         RequiredArgument i = new RequiredArgument("i", "int");
@@ -170,7 +170,7 @@ public class TemplateUnitTest
         assertTrue(dependencies.contains("/foo/wazza"));
     }
 
-    private void checkSigIsUnique(TemplateUnit p_unit, Set p_set)
+    private void checkSigIsUnique(TemplateUnit p_unit, Set<String> p_set)
         throws Exception
     {
         String sig = p_unit.getSignature();
@@ -179,23 +179,24 @@ public class TemplateUnitTest
     }
 
     private void checkArgList(AbstractArgument[] p_expected,
-                              Iterator p_actual)
+                              Iterator<? extends AbstractArgument> p_actual)
     {
         for(int i = 0; i < p_expected.length; i++)
         {
             assertEquals(p_expected[i].getName(),
-                         ((AbstractArgument) p_actual.next()).getName());
+                         p_actual.next().getName());
         }
         assertTrue(! p_actual.hasNext());
     }
 
     private void checkArgSet(AbstractArgument[] p_expected,
-                                          Iterator p_actual)
+                             Iterator<? extends AbstractArgument> p_actual)
     {
-        Map actual = new HashMap();
+        Map<String, AbstractArgument> actual = 
+            new HashMap<String, AbstractArgument>();
         while (p_actual.hasNext())
         {
-            AbstractArgument arg = (AbstractArgument) p_actual.next();
+            AbstractArgument arg = p_actual.next();
             actual.put(arg.getName(), arg);
         }
         assertEquals(p_expected.length, actual.size());

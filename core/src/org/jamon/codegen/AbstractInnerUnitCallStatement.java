@@ -68,9 +68,10 @@ public abstract class AbstractInnerUnitCallStatement
         //FIXME - do we need to surround args with parens?
         getParams().generateRequiredArgs(m_unit.getSignatureRequiredArgs(),
                                          p_writer);
-        for (Iterator o = m_unit.getSignatureOptionalArgs(); o.hasNext(); )
+        for (Iterator<OptionalArgument> o = m_unit.getSignatureOptionalArgs(); 
+             o.hasNext(); )
         {
-            OptionalArgument arg = (OptionalArgument) o.next();
+            OptionalArgument arg = o.next();
             String name = arg.getName();
             String expr = getParams().getOptionalArgValue(name);
             p_writer.printArg(expr == null ? getDefault(arg) : expr);

@@ -58,8 +58,9 @@ public abstract class AbstractParserTest extends TestCase
     }
 
 
-    private void assertParserError(
-        Iterator p_errors, int p_line, int p_column, String p_message)
+    private void assertParserError(Iterator<ParserError> p_errors, 
+                                   int p_line, int p_column,
+                                   String p_message)
         throws Exception
     {
         assertTrue(p_errors.hasNext());
@@ -69,7 +70,7 @@ public abstract class AbstractParserTest extends TestCase
             p_errors.next());
     }
     
-    private void assertNoMoreErrors(Iterator p_errors)
+    private void assertNoMoreErrors(Iterator<ParserError> p_errors)
     {
         if (p_errors.hasNext())
         {
@@ -89,7 +90,7 @@ public abstract class AbstractParserTest extends TestCase
         }
         catch (ParserErrors e)
         {
-            Iterator iter = e.getErrors();
+            Iterator<ParserError> iter = e.getErrors();
             assertParserError(iter, p_line, p_column, p_message);
             assertNoMoreErrors(iter);
         }
@@ -108,7 +109,7 @@ public abstract class AbstractParserTest extends TestCase
         }
         catch (ParserErrors e)
         {
-            Iterator iter = e.getErrors();
+            Iterator<ParserError> iter = e.getErrors();
             assertParserError(iter, p_line1, p_column1, p_message1);
             assertParserError(iter, p_line2, p_column2, p_message2);
             assertNoMoreErrors(iter);
@@ -129,7 +130,7 @@ public abstract class AbstractParserTest extends TestCase
         }
         catch (ParserErrors e)
         {
-            Iterator iter = e.getErrors();
+            Iterator<ParserError> iter = e.getErrors();
             assertParserError(iter, p_line1, p_column1, p_message1);
             assertParserError(iter, p_line2, p_column2, p_message2);
             assertParserError(iter, p_line3, p_column3, p_message3);

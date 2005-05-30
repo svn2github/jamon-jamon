@@ -73,9 +73,10 @@ public class ComponentCallStatement
                          + "new " + getComponentProxyClassName()
                          +"(this.getTemplateManager());");
 
-        for (Iterator i = desc.getOptionalArgs().iterator(); i.hasNext(); )
+        for (Iterator<OptionalArgument> i = desc.getOptionalArgs().iterator();
+             i.hasNext(); )
         {
-            OptionalArgument arg = (OptionalArgument) i.next();
+            OptionalArgument arg = i.next();
             String value = getParams().getOptionalArgValue(arg.getName());
             if (value != null)
             {

@@ -33,11 +33,11 @@ public interface Unit
 {
     String getName();
     Unit getParent();
-    Iterator getFragmentArgs();
+    Iterator<FragmentArgument> getFragmentArgs();
     FragmentUnit getFragmentUnitIntf(String p_path);
-    Iterator getSignatureRequiredArgs();
-    Iterator getSignatureOptionalArgs();
-    List getFragmentArgsList();
+    Iterator<RequiredArgument> getSignatureRequiredArgs();
+    Iterator<OptionalArgument> getSignatureOptionalArgs();
+    List<FragmentArgument> getFragmentArgsList();
 
     void addStatement(Statement p_statement);
 

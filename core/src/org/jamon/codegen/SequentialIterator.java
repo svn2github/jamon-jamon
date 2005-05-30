@@ -23,35 +23,39 @@ package org.jamon.codegen;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-public class SequentialIterator
-    implements Iterator
+public class SequentialIterator<T>
+    implements Iterator<T>
 {
-    public SequentialIterator(Iterator[] p_iters)
+    public SequentialIterator(Iterator<? extends T>[] p_iters)
     {
         m_iters = p_iters;
     }
 
-    public SequentialIterator(Iterator p_iter1, Iterator p_iter2)
+    @SuppressWarnings("unchecked")
+    public SequentialIterator(Iterator<? extends T> p_iter1, 
+                              Iterator<? extends T> p_iter2)
     {
         this(new Iterator[] {p_iter1, p_iter2});
     }
 
-    public SequentialIterator(Iterator p_iter1,
-                              Iterator p_iter2,
-                              Iterator p_iter3)
+    @SuppressWarnings("unchecked")
+    public SequentialIterator(Iterator<? extends T> p_iter1,
+                              Iterator<? extends T> p_iter2,
+                              Iterator<? extends T> p_iter3)
     {
         this(new Iterator[] {p_iter1, p_iter2, p_iter3});
     }
 
-    public SequentialIterator(Iterator p_iter1,
-                              Iterator p_iter2,
-                              Iterator p_iter3,
-                              Iterator p_iter4)
+    @SuppressWarnings("unchecked")
+    public SequentialIterator(Iterator<? extends T> p_iter1,
+                              Iterator<? extends T> p_iter2,
+                              Iterator<? extends T> p_iter3,
+                              Iterator<? extends T> p_iter4)
     {
         this(new Iterator[] {p_iter1, p_iter2, p_iter3, p_iter4});
     }
 
-    private final Iterator[] m_iters;
+    private final Iterator<? extends T>[] m_iters;
     private int currentIter = 0;
 
     public boolean hasNext()
@@ -71,7 +75,7 @@ public class SequentialIterator
         }
     }
 
-    public Object next()
+    public T next()
         throws NoSuchElementException
     {
         if(hasNext())

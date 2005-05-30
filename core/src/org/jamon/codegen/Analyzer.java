@@ -21,8 +21,6 @@
 package org.jamon.codegen;
 
 import java.io.IOException;
-import java.util.Collections;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -41,7 +39,7 @@ public class Analyzer
 {
     public Analyzer(String p_templatePath,
                     TemplateDescriber p_describer,
-                    Set p_children)
+                    Set<String> p_children)
     {
         m_templateUnit = new TemplateUnit(p_templatePath, m_errors);
         m_templateDir =
@@ -55,7 +53,7 @@ public class Analyzer
 
     public Analyzer(String p_templatePath, TemplateDescriber p_describer)
     {
-        this(p_templatePath, p_describer, new HashSet());
+        this(p_templatePath, p_describer, new HashSet<String>());
     }
 
     public TemplateUnit analyze()
@@ -168,7 +166,7 @@ public class Analyzer
 
     private CallStatement getCurrentCallStatement()
     {
-        return (CallStatement) m_callStatements.getLast();
+        return m_callStatements.getLast();
     }
 
     private TemplateUnit getTemplateUnit()
@@ -185,9 +183,10 @@ public class Analyzer
     private final TemplateUnit m_templateUnit;
     private Unit m_currentUnit;
     private final TemplateDescriber m_describer;
-    private final Set m_children;
-    private final LinkedList m_callStatements = new LinkedList();
-    private final Map m_aliases = new HashMap();
+    private final Set<String> m_children;
+    private final LinkedList<CallStatement> m_callStatements = 
+        new LinkedList<CallStatement>();
+    private final Map<String, String> m_aliases = new HashMap<String, String>();
     private final String m_templateDir;
     private final String m_templateIdentifier;
     private Location m_currentTextLocation;
@@ -688,24 +687,20 @@ public class Analyzer
             }
             else
             {
-                return new NamedParamValues(
-                    m_paramsMap == null
-                    ? Collections.EMPTY_MAP
-                    : m_paramsMap,
-                    p_node.getLocation());
+                return new NamedParamValues(m_paramsMap, p_node.getLocation());
             }
         }
 
         @Override
         public void inNamedParamsNode(NamedParamsNode p_node)
         {
-            m_paramsMap = new HashMap();
+            m_paramsMap = new HashMap<String, String>();
         }
         
         @Override
         public void inUnnamedParamsNode(UnnamedParamsNode p_node)
         {
-            m_paramsList = new LinkedList();
+            m_paramsList = new LinkedList<String>();
         }
         
         @Override
@@ -721,8 +716,8 @@ public class Analyzer
             m_paramsList.add(p_node.getValue());
         }
         
-        private Map m_paramsMap = null;
-        private List m_paramsList = null;
+        private Map<String, String> m_paramsMap = null;
+        private List<String> m_paramsList = null;
     }
     
     private ParamValues makeParamValues(AbstractParamsNode p_params)

@@ -32,8 +32,9 @@ import org.jamon.node.UpdirNode;
 
 class PathAdapter extends DepthFirstAnalysisAdapter
 {
-    public PathAdapter(
-        String p_templateDir, final Map p_aliases, ParserErrors p_errors)
+    public PathAdapter(String p_templateDir, 
+                       final Map<String, String> p_aliases,
+                       ParserErrors p_errors)
     {
         m_templateDir = p_templateDir;
         m_aliases = p_aliases;
@@ -41,7 +42,7 @@ class PathAdapter extends DepthFirstAnalysisAdapter
     }
     
     private final String m_templateDir;
-    private final Map m_aliases;
+    private final Map<String, String> m_aliases;
     private final ParserErrors m_errors;
     private final StringBuffer m_path = new StringBuffer();
     private boolean m_absolutePath = false;
@@ -84,7 +85,7 @@ class PathAdapter extends DepthFirstAnalysisAdapter
 
     @Override public void inNamedAliasPathNode(NamedAliasPathNode p_node)
     {
-        String alias = (String) m_aliases.get(p_node.getAlias());
+        String alias = m_aliases.get(p_node.getAlias());
         if (alias == null)
         {
             m_errors.addError(
@@ -99,7 +100,7 @@ class PathAdapter extends DepthFirstAnalysisAdapter
     
     @Override public void inRootAliasPathNode(RootAliasPathNode p_node)
     {
-        String alias = (String) m_aliases.get("/");
+        String alias = m_aliases.get("/");
         if (alias == null)
         {
             m_errors.addError("Unknown alias " + alias, p_node.getLocation());

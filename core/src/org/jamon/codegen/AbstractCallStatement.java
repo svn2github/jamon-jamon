@@ -53,10 +53,12 @@ public abstract class AbstractCallStatement
 
     private final String m_path;
     private final ParamValues m_params;
-    private final Map m_fragParams = new HashMap();
+    private final Map<String, FragmentUnit> m_fragParams =
+        new HashMap<String, FragmentUnit>();
     private final static String FRAGMENT_IMPL_PREFIX = "__jamon__instanceOf__";
     private static int s_fragmentImplCounter = 0;
-    private final Map m_fragmentImplNames = new HashMap();
+    private final Map<FragmentUnit, String> m_fragmentImplNames = 
+        new HashMap<FragmentUnit, String>();
 
     protected abstract String getFragmentIntfName(
         FragmentUnit p_fragmentUnitIntf);
@@ -70,7 +72,7 @@ public abstract class AbstractCallStatement
                      FRAGMENT_IMPL_PREFIX + (s_fragmentImplCounter++) + "__"
                      + p_fragmentUnitIntf.getFragmentInterfaceName());
         }
-        return (String) m_fragmentImplNames.get(p_fragmentUnitIntf);
+        return m_fragmentImplNames.get(p_fragmentUnitIntf);
     }
 
     private void makeFragmentImplClass(FragmentUnit p_fragmentUnitIntf,
@@ -79,7 +81,7 @@ public abstract class AbstractCallStatement
                                        EmitMode p_emitMode) throws ParserError
     {
         final FragmentUnit fragmentUnitImpl =
-            (FragmentUnit) m_fragParams.remove(p_fragmentUnitIntf.getName());
+            m_fragParams.remove(p_fragmentUnitIntf.getName());
         if (fragmentUnitImpl == null)
         {
             throw new ParserError(
@@ -130,11 +132,11 @@ public abstract class AbstractCallStatement
         p_writer.closeBlock();
     }
 
-    protected void makeFragmentImplClasses(List p_fragmentInterfaces,
-                                           CodeWriter p_writer,
-                                           TemplateDescriber p_describer,
-                                           EmitMode p_emitMode)
-        throws ParserError
+    protected void makeFragmentImplClasses(
+        List<FragmentArgument> p_fragmentInterfaces,
+        CodeWriter p_writer,
+        TemplateDescriber p_describer,
+        EmitMode p_emitMode) throws ParserError
     {
         if (m_fragParams.size() == 1
             && m_fragParams.keySet().iterator().next() == null)
@@ -152,31 +154,30 @@ public abstract class AbstractCallStatement
             }
             else
             {
-                m_fragParams.put
-                    (((AbstractArgument) p_fragmentInterfaces.get(0))
-                     .getName(),
-                     m_fragParams.remove(null));
+                m_fragParams.put(p_fragmentInterfaces.get(0).getName(),
+                                 m_fragParams.remove(null));
             }
         }
-        for (Iterator i = p_fragmentInterfaces.iterator(); i.hasNext(); )
+        for (FragmentArgument arg : p_fragmentInterfaces)
         {
             makeFragmentImplClass
-                (((FragmentArgument) i.next()).getFragmentUnit(),
+                (arg.getFragmentUnit(),
                  p_writer,
                  p_describer,
                  p_emitMode);
         }
     }
 
-    protected void generateFragmentParams(CodeWriter p_writer,
-                                          Iterator p_fragmentInterfaces)
+    protected void generateFragmentParams(
+        CodeWriter p_writer,
+        Iterator<FragmentArgument> p_fragmentInterfaces)
     {
         while (p_fragmentInterfaces.hasNext())
         {
             p_writer.printArg(
                 "new "
                 + getFragmentImplName(
-                    (((FragmentArgument) p_fragmentInterfaces.next())
+                    (p_fragmentInterfaces.next()
                      .getFragmentUnit()))
                 + "(this.getTemplateManager())");
         }
@@ -198,7 +199,7 @@ public abstract class AbstractCallStatement
     }
 
     ParserError constructExtraParamsException(String p_paramType,
-                                                 Iterator p_extraParams)
+                                              Iterator<String> p_extraParams)
     {
         StringBuffer message = new StringBuffer("Call provides unused ");
         message.append(p_paramType);

@@ -26,12 +26,13 @@ import org.jamon.ParserError;
 
 public interface ParamValues
 {
-    void generateRequiredArgs(Iterator p_args, CodeWriter p_writer)
+    void generateRequiredArgs(
+        Iterator<RequiredArgument> p_args, CodeWriter p_writer)
         throws ParserError;
 
     String getOptionalArgValue(String p_argName);
 
     boolean hasUnusedParams();
 
-    Iterator getUnusedParams();
+    Iterator<String> getUnusedParams();
 }

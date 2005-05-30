@@ -34,7 +34,7 @@ public class EscapingDirective
 
     public static EscapingDirective get(String p_abbreviation)
     {
-        return (EscapingDirective) s_standardDirectives.get(p_abbreviation);
+        return s_standardDirectives.get(p_abbreviation);
     }
 
 
@@ -45,7 +45,8 @@ public class EscapingDirective
 
     private final String m_java;
 
-    private static final Map s_standardDirectives = new HashMap();
+    private static final Map<String, EscapingDirective> s_standardDirectives =
+        new HashMap<String, EscapingDirective>();
 
     private static final String PREFIX =
         org.jamon.escaping.Escaping.class.getName() + ".";

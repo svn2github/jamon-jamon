@@ -61,14 +61,14 @@ public abstract class AbstractUnit
     }
 
     protected abstract void addFragmentArg(FragmentArgument p_arg, Location p_location);
-    public abstract Iterator getFragmentArgs();
-    public abstract List getFragmentArgsList();
+    public abstract Iterator<FragmentArgument> getFragmentArgs();
+    public abstract List<FragmentArgument> getFragmentArgsList();
 
     public FragmentUnit getFragmentUnitIntf(String p_path)
     {
-        for (Iterator i = getFragmentArgs(); i.hasNext(); )
+        for (Iterator<FragmentArgument> i = getFragmentArgs(); i.hasNext(); )
         {
-            FragmentArgument arg = (FragmentArgument) i.next();
+            FragmentArgument arg = i.next();
             if (p_path.equals(arg.getName()))
             {
                 return arg.getFragmentUnit();
@@ -82,7 +82,7 @@ public abstract class AbstractUnit
         m_statements.add(p_statement);
     }
 
-    public List getStatements()
+    public List<Statement> getStatements()
     {
         return m_statements;
     }
@@ -101,11 +101,9 @@ public abstract class AbstractUnit
                                  TemplateDescriber p_describer,
                                  EmitMode p_emitMode) throws ParserError
     {
-        for (Iterator i = getStatements().iterator(); i.hasNext(); )
+        for (Statement statement : getStatements())
         {
-            ((Statement)i.next()).generateSource(p_writer,
-                                                 p_describer,
-                                                 p_emitMode);
+            statement.generateSource(p_writer, p_describer, p_emitMode);
         }
     }
 
@@ -115,15 +113,15 @@ public abstract class AbstractUnit
 
     public abstract void addRequiredArg(RequiredArgument p_arg);
     public abstract void addOptionalArg(OptionalArgument p_arg);
-    public abstract Iterator getSignatureRequiredArgs();
-    public abstract Iterator getSignatureOptionalArgs();
+    public abstract Iterator<RequiredArgument> getSignatureRequiredArgs();
+    public abstract Iterator<OptionalArgument> getSignatureOptionalArgs();
     public abstract Iterator getVisibleArgs();
 
     private final String m_name;
     private final Unit m_parent;
     private final ParserErrors m_errors;
-    private final List m_statements = new LinkedList();
-    private final Set m_argNames = new HashSet();
+    private final List<Statement> m_statements = new LinkedList<Statement>();
+    private final Set<String> m_argNames = new HashSet<String>();
 
     public FragmentUnit addFragment(FragmentArgsNode p_node)
     {
@@ -163,10 +161,11 @@ public abstract class AbstractUnit
         }
     }
 
-    public Iterator getRenderArgs()
+    public Iterator<AbstractArgument> getRenderArgs()
     {
-        return new SequentialIterator(getSignatureRequiredArgs(),
-                                      getFragmentArgs());
+        return new SequentialIterator<AbstractArgument>(
+                getSignatureRequiredArgs(),
+                getFragmentArgs());
     }
 
     public void printRenderArgsDecl(CodeWriter p_writer)
@@ -179,44 +178,48 @@ public abstract class AbstractUnit
         printArgs(p_writer, getRenderArgs());
     }
 
-    protected static void printArgsDecl(CodeWriter p_writer, Iterator i)
+    protected static void printArgsDecl(
+        CodeWriter p_writer, Iterator<? extends AbstractArgument> i)
     {
         while (i.hasNext())
         {
-            AbstractArgument arg = (AbstractArgument) i.next();
+            AbstractArgument arg = i.next();
             p_writer.printArg("final " + arg.getType() + " " + arg.getName());
         }
     }
 
-    protected static void printArgs(CodeWriter p_writer, Iterator p_args)
+    protected static void printArgs(
+        CodeWriter p_writer, Iterator<? extends AbstractArgument> p_args)
     {
         while (p_args.hasNext())
         {
-            p_writer.printArg(((AbstractArgument) p_args.next()).getName());
+            p_writer.printArg(p_args.next().getName());
         }
     }
 
     protected void generateInterfaceSummary(StringBuffer p_buf)
     {
         p_buf.append("Required\n");
-        for (Iterator i = getSignatureRequiredArgs(); i.hasNext(); /* */)
+        for (Iterator<RequiredArgument> i = getSignatureRequiredArgs(); 
+             i.hasNext(); )
         {
-            AbstractArgument arg = (AbstractArgument) i.next();
+            AbstractArgument arg = i.next();
             p_buf.append(arg.getName());
             p_buf.append(":");
             p_buf.append(arg.getType());
             p_buf.append("\n");
         }
         p_buf.append("Optional\n");
-        TreeMap optArgs = new TreeMap();
-        for (Iterator i = getSignatureOptionalArgs(); i.hasNext(); /* */)
+        TreeMap<String, OptionalArgument> optArgs = 
+            new TreeMap<String, OptionalArgument>();
+        for (Iterator<OptionalArgument> i = getSignatureOptionalArgs(); 
+             i.hasNext(); )
         {
-            AbstractArgument arg = (AbstractArgument) i.next();
+            OptionalArgument arg = i.next();
             optArgs.put(arg.getName(), arg);
         }
-        for (Iterator i = optArgs.values().iterator(); i.hasNext(); /* */)
+        for (OptionalArgument arg : optArgs.values())
         {
-            AbstractArgument arg = (AbstractArgument) i.next();
             p_buf.append(arg.getName());
             p_buf.append(":");
             p_buf.append(arg.getType());

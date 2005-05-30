@@ -25,7 +25,7 @@ import java.util.Iterator;
 public interface MethodUnit extends Unit
 {
     String getOptionalArgDefaultMethod(OptionalArgument p_arg);
-    Iterator getOptionalArgsWithDefaults();
+    Iterator<OptionalArgument> getOptionalArgsWithDefaults();
     String getDefaultForArg(OptionalArgument p_arg);
     boolean isAbstract();
     boolean isOverride();

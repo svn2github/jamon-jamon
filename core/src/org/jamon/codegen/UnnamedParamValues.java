@@ -28,13 +28,14 @@ import org.jamon.node.Location;
 
 public class UnnamedParamValues implements ParamValues
 {
-    public UnnamedParamValues(List p_params, Location p_location)
+    public UnnamedParamValues(List<String> p_params, Location p_location)
     {
         m_params = p_params;
         m_location = p_location;
     }
 
-    public void generateRequiredArgs(Iterator p_args, CodeWriter p_writer)
+    public void generateRequiredArgs(
+        Iterator<RequiredArgument> p_args, CodeWriter p_writer)
         throws ParserError
     {
         int numberOfRequiredArgs = 0;
@@ -51,9 +52,9 @@ public class UnnamedParamValues implements ParamValues
                 "Call provides " + m_params.size() + " arguments when "
                 + numberOfRequiredArgs + " are expected");
         }
-        for (Iterator i = m_params.iterator(); i.hasNext(); )
+        for (String param : m_params)
         {
-            p_writer.printArg(i.next());
+            p_writer.printArg(param);
         }
     }
 
@@ -67,12 +68,12 @@ public class UnnamedParamValues implements ParamValues
         return false;
     }
 
-    public Iterator getUnusedParams()
+    public Iterator<String> getUnusedParams()
     {
         throw new IllegalStateException();
     }
 
 
-    private final List m_params;
+    private final List<String> m_params;
     private final Location m_location;
 }

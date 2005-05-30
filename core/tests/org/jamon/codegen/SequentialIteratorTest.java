@@ -30,64 +30,65 @@ public class SequentialIteratorTest
 {
     public void testNoIters()
     {
-        assertEquals(constructIterator(new Object[0]),
-                     new SequentialIterator(new Iterator[0]));
+        assertIterEquals(constructIterator(new String[0]),
+                     new SequentialIterator<Object>(new Iterator<?>[0]));
     }
 
     public void testOneEmptyIter()
     {
-        Iterator i1 = constructIterator(new String[0]);
-        assertEquals(i1, new SequentialIterator(new Iterator[] {i1}));
+        Iterator<String> i1 = constructIterator(new String[0]);
+        assertIterEquals(i1, new SequentialIterator<Object>(new Iterator<?>[] {i1}));
     }
 
     public void testOneIter()
     {
-        Iterator i1 = constructIterator(new String[] {"one", "two"});
-        assertEquals(i1, new SequentialIterator
-            (new Iterator[] {constructIterator(new String[] {"one", "two"})}));
+        Iterator<String> i1 = constructIterator(new String[] {"one", "two"});
+        assertIterEquals(i1, new SequentialIterator<Object>
+            (new Iterator<?>[] {constructIterator(new String[] {"one", "two"})}));
     }
 
     public void testTwoIters()
     {
-        Iterator i1 = constructIterator(new String[] {"one", "two"});
-        Iterator i2 = constructIterator(new String[] {"three", "four"});
-        Iterator combined = constructIterator
+        Iterator<String> i1 = constructIterator(new String[] {"one", "two"});
+        Iterator<String> i2 = constructIterator(new String[] {"three", "four"});
+        Iterator<String> combined = constructIterator
             (new String[] {"one", "two", "three", "four"});
-        assertEquals(combined, new SequentialIterator(i1, i2));
+        assertIterEquals(combined, new SequentialIterator<String>(i1, i2));
     }
 
     public void testTwoItersFirstEmpty()
     {
-        Iterator i1 = constructIterator(new String[0]);
-        Iterator i2 = constructIterator(new String[] {"three", "four"});
-        Iterator combined = constructIterator(new String[] {"three", "four"});
-        assertEquals(combined, new SequentialIterator(i1, i2));
+        Iterator<String> i1 = constructIterator(new String[0]);
+        Iterator<String> i2 = constructIterator(new String[] {"three", "four"});
+        Iterator<String> combined = constructIterator(new String[] {"three", "four"});
+        assertIterEquals(combined, new SequentialIterator<String>(i1, i2));
     }
 
     public void testTwoItersSecondEmpty()
     {
-        Iterator i1 = constructIterator(new String[] {"one", "two"});
-        Iterator i2 = constructIterator(new String[0]);
-        Iterator combined = constructIterator(new String[] {"one", "two"});
-        assertEquals(combined, new SequentialIterator(i1, i2));
+        Iterator<String> i1 = constructIterator(new String[] {"one", "two"});
+        Iterator<String> i2 = constructIterator(new String[0]);
+        Iterator<String> combined = constructIterator(new String[] {"one", "two"});
+        assertIterEquals(combined, new SequentialIterator<String>(i1, i2));
     }
 
     public void testThreeItersSecondEmpty()
     {
-        Iterator i1 = constructIterator(new String[] {"one", "two"});
-        Iterator i2 = constructIterator(new String[0]);
-        Iterator i3 = constructIterator(new String[] {"three", "four"});
-        Iterator combined = constructIterator
+        Iterator<String> i1 = constructIterator(new String[] {"one", "two"});
+        Iterator<String> i2 = constructIterator(new String[0]);
+        Iterator<String> i3 = constructIterator(new String[] {"three", "four"});
+        Iterator<String> combined = constructIterator
             (new String[] {"one", "two", "three", "four"});
-        assertEquals(combined, new SequentialIterator(i1, i2, i3));
+        assertIterEquals(combined, new SequentialIterator<String>(i1, i2, i3));
     }
 
-    private static Iterator constructIterator(Object[] p_objs)
+    private static Iterator<String> constructIterator(String[] p_objs)
     {
         return Arrays.asList(p_objs).iterator();
     }
 
-    private void assertEquals(Iterator p_expected, Iterator p_actual)
+    private void assertIterEquals(Iterator<? extends Object> p_expected,
+                                  Iterator<? extends Object> p_actual)
     {
         while(p_expected.hasNext())
         {

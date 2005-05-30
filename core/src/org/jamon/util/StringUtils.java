@@ -190,11 +190,11 @@ public class StringUtils
         return "000".substring(0,pad) + s;
     }
 
-    public static void commaJoin(StringBuffer p_buf, Iterator p_iter)
+    public static void commaJoin(StringBuffer p_buf, Iterator<String> p_iter)
     {
         while(p_iter.hasNext())
         {
-            p_buf.append((String) p_iter.next());
+            p_buf.append(p_iter.next());
             if (p_iter.hasNext())
             {
                 p_buf.append(", ");

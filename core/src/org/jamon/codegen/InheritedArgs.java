@@ -36,9 +36,9 @@ public class InheritedArgs
 {
     public InheritedArgs(String p_unitName,
                          String p_parentName,
-                         Collection p_requiredArgs,
-                         Collection p_optionalArgs,
-                         Collection p_fragmentArgs,
+                         Collection<RequiredArgument> p_requiredArgs,
+                         Collection<OptionalArgument> p_optionalArgs,
+                         Collection<FragmentArgument> p_fragmentArgs,
                          ParserErrors p_errors)
     {
         m_parentName = p_parentName;
@@ -50,13 +50,15 @@ public class InheritedArgs
 
     private final String m_parentName;
     private final ParserErrors m_errors;
-    private final Set m_visibleArgs = new HashSet();
-    private final Collection m_requiredArgs;
-    private final Collection m_optionalArgs;
-    private final Collection m_fragmentArgs;
-    private final Map m_defaultOverrides = new HashMap(); 
+    private final Set<AbstractArgument> m_visibleArgs = 
+        new HashSet<AbstractArgument>();
+    private final Collection<RequiredArgument> m_requiredArgs;
+    private final Collection<OptionalArgument> m_optionalArgs;
+    private final Collection<FragmentArgument> m_fragmentArgs;
+    private final Map<OptionalArgument, String> m_defaultOverrides = 
+        new HashMap<OptionalArgument, String>(); 
 
-    public Iterator getVisibleArgs()
+    public Iterator<AbstractArgument> getVisibleArgs()
     {
         return m_visibleArgs.iterator();
     }
@@ -72,9 +74,8 @@ public class InheritedArgs
         ArgValueNode value = (p_node instanceof ParentArgWithDefaultNode)
             ? ((ParentArgWithDefaultNode) p_node).getValue()
             : null;
-        for (Iterator i = m_requiredArgs.iterator(); i.hasNext(); )
+        for (RequiredArgument arg : m_requiredArgs)
         {
-            AbstractArgument arg = (AbstractArgument) i.next();
             if(arg.getName().equals(name))
             {
                 if (value == null)
@@ -90,9 +91,8 @@ public class InheritedArgs
                 return;
             }
         }
-        for (Iterator i = m_optionalArgs.iterator(); i.hasNext(); )
+        for (OptionalArgument arg : m_optionalArgs)
         {
-            OptionalArgument arg = (OptionalArgument) i.next();
             if(arg.getName().equals(name))
             {
                 if (value != null)
@@ -103,9 +103,8 @@ public class InheritedArgs
                 return;
             }
         }
-        for (Iterator i = m_fragmentArgs.iterator(); i.hasNext(); )
+        for (FragmentArgument arg : m_fragmentArgs)
         {
-            AbstractArgument arg = (AbstractArgument) i.next();
             if(arg.getName().equals(name))
             {
                 if (value == null)
@@ -128,10 +127,10 @@ public class InheritedArgs
     
     public String getDefaultValue(OptionalArgument p_arg)
     {
-        return (String) m_defaultOverrides.get(p_arg);
+        return m_defaultOverrides.get(p_arg);
     }
     
-    public Iterator getOptionalArgsWithNewDefaultValues()
+    public Iterator<OptionalArgument> getOptionalArgsWithNewDefaultValues()
     {
         return m_defaultOverrides.keySet().iterator();
     }

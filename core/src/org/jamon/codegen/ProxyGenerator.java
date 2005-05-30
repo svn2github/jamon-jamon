@@ -142,10 +142,11 @@ public class ProxyGenerator
 
     private void generateFragmentInterfaces(boolean p_inner)
     {
-        for (Iterator f = m_templateUnit.getDeclaredFragmentArgs();
+        for (Iterator<FragmentArgument> f = 
+                m_templateUnit.getDeclaredFragmentArgs();
              f.hasNext(); )
         {
-            ((FragmentArgument) f.next()).getFragmentUnit()
+            f.next().getFragmentUnit()
                 .printInterface(m_writer, "public", ! p_inner);
             m_writer.println();
         }
@@ -183,15 +184,16 @@ public class ProxyGenerator
         m_writer.print("public static final String[] "
                        + p_prefix + "FRAGMENT_ARG_NAMES = ");
         m_writer.openBlock();
-        for (Iterator i = p_unit.getFragmentArgs(); i.hasNext(); )
+        for (Iterator<FragmentArgument> i = p_unit.getFragmentArgs(); 
+             i.hasNext(); )
         {
-            printQuoted(((FragmentArgument) i.next()).getName());
+            printQuoted(i.next().getName());
         }
         m_writer.closeBlock(";");
 
-        for (Iterator i = p_unit.getFragmentArgs(); i.hasNext(); )
+        for (Iterator<FragmentArgument> i = p_unit.getFragmentArgs(); i.hasNext(); )
         {
-            FragmentArgument frag = (FragmentArgument) i.next();
+            FragmentArgument frag = i.next();
             printArgNames(p_prefix + "FRAGMENT_ARG_" + frag.getName(),
                           frag.getFragmentUnit().getRequiredArgs());
         }
@@ -201,16 +203,16 @@ public class ProxyGenerator
     {
         m_writer.print("public static final String[] METHOD_NAMES = ");
         m_writer.openBlock();
-        for (Iterator i = m_templateUnit.getSignatureMethodUnits();
+        for (Iterator<MethodUnit> i = m_templateUnit.getSignatureMethodUnits();
              i.hasNext(); )
         {
-            printQuoted(((MethodUnit) i.next()).getName());
+            printQuoted(i.next().getName());
         }
         m_writer.closeBlock(";");
-        for (Iterator i = m_templateUnit.getSignatureMethodUnits();
+        for (Iterator<MethodUnit> i = m_templateUnit.getSignatureMethodUnits();
              i.hasNext(); )
         {
-            MethodUnit methodUnit = (MethodUnit) i.next();
+            MethodUnit methodUnit = i.next();
             generateArgArrays(methodUnit,
                               "METHOD_" + methodUnit.getName() + "_");
         }
@@ -218,34 +220,35 @@ public class ProxyGenerator
         m_writer.print(
             "public final static String[] ABSTRACT_METHOD_NAMES = ");
         m_writer.openBlock();
-        for (Iterator i = m_templateUnit.getAbstractMethodNames().iterator();
-             i.hasNext(); )
+        for (String name : m_templateUnit.getAbstractMethodNames())
         {
-            printQuoted((String) i.next());
+            printQuoted(name);
         }
         m_writer.closeBlock(";");
     }
 
-    private void printArgNames(String p_argsType, Iterator p_args)
+    private void printArgNames(
+        String p_argsType, Iterator<? extends AbstractArgument> p_args)
     {
         m_writer.print("public static final String[] "
                        + p_argsType + "_ARG_NAMES = ");
         m_writer.openBlock();
         while (p_args.hasNext())
         {
-            printQuoted(((AbstractArgument) p_args.next()).getName());
+            printQuoted(p_args.next().getName());
         }
         m_writer.closeBlock(";");
     }
 
-    private void printArgTypes(String p_argsType, Iterator p_args)
+    private void printArgTypes(
+        String p_argsType, Iterator<? extends AbstractArgument> p_args)
     {
         m_writer.print("public static final String[] "
                        + p_argsType + "_ARG_TYPES = ");
         m_writer.openBlock();
         while (p_args.hasNext())
         {
-            printQuoted(((AbstractArgument) p_args.next()).getType());
+            printQuoted(p_args.next().getType());
         }
         m_writer.closeBlock(";");
     }
@@ -332,9 +335,10 @@ public class ProxyGenerator
         if (m_templateUnit.getRenderArgs().hasNext())
         {
             m_writer.println("ImplData implData = (ImplData) getImplData();");
-            for (Iterator i = m_templateUnit.getRenderArgs(); i.hasNext(); )
+            for (Iterator<AbstractArgument> i = m_templateUnit.getRenderArgs();
+                 i.hasNext(); )
             {
-                AbstractArgument arg = (AbstractArgument) i.next();
+                AbstractArgument arg = i.next();
                 m_writer.println("implData." + arg.getSetterName()
                                  + "(" + arg.getName() + ");");
             }
@@ -392,9 +396,10 @@ public class ProxyGenerator
         }
         m_writer.println();
         m_writer.openBlock();
-        for (Iterator i = m_templateUnit.getDeclaredArgs(); i.hasNext(); )
+        for (Iterator<AbstractArgument> i = m_templateUnit.getDeclaredArgs(); 
+             i.hasNext(); )
         {
-            ((AbstractArgument) i.next()).generateImplDataCode(m_writer);
+            i.next().generateImplDataCode(m_writer);
         }
         m_writer.closeBlock();
 
@@ -412,10 +417,11 @@ public class ProxyGenerator
 
     private void generateOptionalArgs()
     {
-        for (Iterator i = m_templateUnit.getDeclaredOptionalArgs();
+        for (Iterator<OptionalArgument> i = 
+                m_templateUnit.getDeclaredOptionalArgs();
              i.hasNext(); )
         {
-            OptionalArgument arg = (OptionalArgument) i.next();
+            OptionalArgument arg = i.next();
             m_writer.println();
             m_writer.println("protected " + arg.getType() + " "
                              + arg.getName() + ";");
@@ -479,10 +485,11 @@ public class ProxyGenerator
         m_writer.openBlock();
         m_writer.println("protected ParentRenderer() {}");
 
-        for (Iterator i = m_templateUnit.getSignatureOptionalArgs();
+        for (Iterator<OptionalArgument> i = 
+                m_templateUnit.getSignatureOptionalArgs();
              i.hasNext(); )
         {
-            OptionalArgument arg = (OptionalArgument) i.next();
+            OptionalArgument arg = i.next();
             m_writer.println();
             String name = arg.getName();
             m_writer.print("public final ParentRenderer ");

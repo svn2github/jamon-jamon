@@ -33,44 +33,44 @@ import java.util.List;
 
 public class TemplateDescription
 {
-    private final List m_requiredArgs;
-    private final Set m_optionalArgs;
+    private final List<RequiredArgument> m_requiredArgs;
+    private final Set<OptionalArgument> m_optionalArgs;
     private final String m_signature;
-    private final List m_fragmentInterfaces;
-    private final Map m_methodUnits;
+    private final List<FragmentArgument> m_fragmentInterfaces;
+    private final Map<String, MethodUnit> m_methodUnits;
     private final int m_inheritanceDepth;
-    private final Collection m_abstractMethodNames;
+    private final Collection<String> m_abstractMethodNames;
 
     public final static TemplateDescription EMPTY = new TemplateDescription();
 
     private TemplateDescription()
     {
-        m_requiredArgs = Collections.EMPTY_LIST;
-        m_optionalArgs = Collections.EMPTY_SET;
+        m_requiredArgs = Collections.emptyList();
+        m_optionalArgs = Collections.emptySet();
         m_signature = null;
-        m_fragmentInterfaces = Collections.EMPTY_LIST;
-        m_methodUnits = Collections.EMPTY_MAP;
+        m_fragmentInterfaces = Collections.emptyList();
+        m_methodUnits = Collections.emptyMap();
         m_inheritanceDepth = -1;
-        m_abstractMethodNames = Collections.EMPTY_LIST;
+        m_abstractMethodNames = Collections.emptyList();
     }
 
     public TemplateDescription(TemplateUnit p_templateUnit)
     {
-        m_requiredArgs = new LinkedList();
+        m_requiredArgs = new LinkedList<RequiredArgument>();
         addAll(m_requiredArgs, p_templateUnit.getSignatureRequiredArgs() );
-        m_optionalArgs = new HashSet();
+        m_optionalArgs = new HashSet<OptionalArgument>();
         addAll(m_optionalArgs, p_templateUnit.getSignatureOptionalArgs() );
-        for (Iterator i = m_optionalArgs.iterator(); i.hasNext(); )
+        for (OptionalArgument arg : m_optionalArgs)
         {
-            ((OptionalArgument) i.next()).setDefault(null);
+            arg.setDefault(null);
         }
         m_signature = p_templateUnit.getSignature();
         m_fragmentInterfaces = p_templateUnit.getFragmentArgsList();
-        m_methodUnits = new HashMap();
-        for (Iterator i = p_templateUnit.getSignatureMethodUnits();
+        m_methodUnits = new HashMap<String, MethodUnit>();
+        for (Iterator<MethodUnit> i = p_templateUnit.getSignatureMethodUnits();
              i.hasNext(); )
         {
-            MethodUnit methodUnit = (MethodUnit) i.next();
+            MethodUnit methodUnit = i.next();
             m_methodUnits.put(methodUnit.getName(), methodUnit);
         }
         m_inheritanceDepth = p_templateUnit.getInheritanceDepth();
@@ -84,27 +84,30 @@ public class TemplateDescription
         m_optionalArgs = getOptionalArgs(p_intf, "");
         m_fragmentInterfaces =
             getFragmentArgs(p_intf, "", new TemplateUnit(null, null));
-        m_methodUnits = new HashMap();
+        m_methodUnits = new HashMap<String, MethodUnit>();
         String[] methodNames = getStringArray(p_intf, "METHOD_NAMES");
         for (int i = 0; i < methodNames.length; i++)
         {
             DeclaredMethodUnit method =
                 new DeclaredMethodUnit(methodNames[i], null, null);
             String prefix = "METHOD_" + methodNames[i] + "_";
-            for (Iterator j = getRequiredArgs(p_intf, prefix).iterator();
+            for (Iterator<RequiredArgument> j = 
+                     getRequiredArgs(p_intf, prefix).iterator();
                  j.hasNext(); )
             {
-                method.addRequiredArg((RequiredArgument) j.next());
+                method.addRequiredArg(j.next());
             }
-            for (Iterator j = getOptionalArgs(p_intf, prefix).iterator();
+            for (Iterator<OptionalArgument> j =
+                    getOptionalArgs(p_intf, prefix).iterator();
                  j.hasNext(); )
             {
-                method.addOptionalArg((OptionalArgument) j.next());
+                method.addOptionalArg(j.next());
             }
-            for (Iterator j = getFragmentArgs(p_intf, prefix, method).iterator();
-                     j.hasNext(); )
+            for (Iterator<FragmentArgument> j =
+                    getFragmentArgs(p_intf, prefix, method).iterator();
+                 j.hasNext(); )
             {
-                method.addFragmentArg((FragmentArgument) j.next());
+                method.addFragmentArg(j.next());
             }
             m_methodUnits.put(method.getName(), method);
         }
@@ -115,10 +118,11 @@ public class TemplateDescription
             ((Integer) p_intf.getField("INHERITANCE_DEPTH").get(null)).intValue();
     }
 
-    private static List getRequiredArgs(Class p_class, String p_prefix)
+    private static List<RequiredArgument> getRequiredArgs(
+        Class p_class, String p_prefix)
         throws NoSuchFieldException, IllegalAccessException
     {
-        List args = new LinkedList();
+        List<RequiredArgument> args = new LinkedList<RequiredArgument>();
         String[] requiredArgNames =
             getStringArray(p_class, p_prefix + "REQUIRED_ARG_NAMES");
         String[] requiredArgTypes =
@@ -131,10 +135,11 @@ public class TemplateDescription
         return args;
     }
 
-    private static Set getOptionalArgs(Class p_class, String p_prefix)
+    private static Set<OptionalArgument> getOptionalArgs(
+        Class p_class, String p_prefix)
         throws NoSuchFieldException, IllegalAccessException
     {
-        Set args = new HashSet();
+        Set<OptionalArgument> args = new HashSet<OptionalArgument>();
         String[] optionalArgNames =
             getStringArray(p_class, p_prefix + "OPTIONAL_ARG_NAMES");
         String[] optionalArgTypes =
@@ -148,10 +153,11 @@ public class TemplateDescription
         return args;
     }
 
-    private static List getFragmentArgs(Class p_class, String p_prefix, Unit p_parentUnit)
+    private static List<FragmentArgument> getFragmentArgs(
+        Class p_class, String p_prefix, Unit p_parentUnit)
         throws NoSuchFieldException, IllegalAccessException
     {
-        List fragmentArgs = new LinkedList();
+        List<FragmentArgument> fragmentArgs = new LinkedList<FragmentArgument>();
         String[] fragmentArgNames =
             getStringArray(p_class, p_prefix + "FRAGMENT_ARG_NAMES");
         for (int i = 0; i < fragmentArgNames.length; i++)
@@ -178,12 +184,12 @@ public class TemplateDescription
         return (String[]) p_class.getField(p_fieldName).get(null);
     }
 
-    public List getRequiredArgs()
+    public List<RequiredArgument> getRequiredArgs()
     {
         return m_requiredArgs;
     }
 
-    public Set getOptionalArgs()
+    public Set<OptionalArgument> getOptionalArgs()
     {
         return m_optionalArgs;
     }
@@ -193,17 +199,17 @@ public class TemplateDescription
         return m_signature;
     }
 
-    public List getFragmentInterfaces()
+    public List<FragmentArgument> getFragmentInterfaces()
     {
         return m_fragmentInterfaces;
     }
 
-    public Map getMethodUnits()
+    public Map<String, MethodUnit> getMethodUnits()
     {
         return m_methodUnits;
     }
 
-    public Collection getAbstractMethodNames()
+    public Collection<String> getAbstractMethodNames()
     {
         return m_abstractMethodNames;
     }
@@ -213,7 +219,7 @@ public class TemplateDescription
         return m_inheritanceDepth;
     }
 
-    private static void addAll(Collection p_collection, Iterator p_iter)
+    private static<T> void addAll(Collection<T> p_collection, Iterator<T> p_iter)
     {
         while (p_iter.hasNext())
         {
