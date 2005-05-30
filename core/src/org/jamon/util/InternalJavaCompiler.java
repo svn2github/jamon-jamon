@@ -32,7 +32,7 @@ public class InternalJavaCompiler
 {
     private final String m_classPath;
     private final Method m_compile;
-    private final Class m_compilerClass;
+    private final Class<? extends Object> m_compilerClass;
     private Object m_compiler;
 
     public InternalJavaCompiler(String p_classPath)

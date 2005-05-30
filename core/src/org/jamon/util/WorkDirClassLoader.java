@@ -62,7 +62,7 @@ public class WorkDirClassLoader
             return super.toString() + " { " + " parent: " + getParent() + " }";
         }
 
-        private final Map m_cache = new HashMap();
+        private final Map<String, Class> m_cache = new HashMap<String, Class>();
 
         private byte [] readBytesForClass(String p_name)
             throws IOException
@@ -93,7 +93,7 @@ public class WorkDirClassLoader
             }
         }
 
-        @Override protected Class loadClass(String p_name, boolean p_resolve)
+        @Override protected Class<?> loadClass(String p_name, boolean p_resolve)
             throws ClassNotFoundException
         {
             if (! getFileForClass(p_name).exists())
@@ -102,7 +102,7 @@ public class WorkDirClassLoader
             }
             else
             {
-                Class c = (Class) m_cache.get(p_name);
+                Class c = m_cache.get(p_name);
                 if (c == null)
                 {
                     try
@@ -127,7 +127,7 @@ public class WorkDirClassLoader
     }
 
     @Override
-    protected synchronized Class loadClass(String p_name, boolean p_resolve)
+    protected synchronized Class<?> loadClass(String p_name, boolean p_resolve)
         throws ClassNotFoundException
     {
         if (! getFileForClass(p_name).exists())
