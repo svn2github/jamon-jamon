@@ -19,7 +19,7 @@ public class TemplateDependenciesTest extends TestCase {
 		TemplateDependencies deps = new TemplateDependencies();
 		final String caller = "/foo/bar";
 		final String callee1 = "/b1/b2";
-		final Set callees = new HashSet();
+		final Set<String> callees = new HashSet<String>();
 		callees.add(callee1);
 		deps.setCalledBy(caller, callees);
 		assertEquals(1, deps.getDependenciesOf(callee1).size());
@@ -33,7 +33,7 @@ public class TemplateDependenciesTest extends TestCase {
 		final String callee1 = "/b1/b2";
 		final String callee2 = "/b1/b3";
 		final String callee3 = "/b1/b4";
-		final Set callees = new HashSet();
+		final Set<String> callees = new HashSet<String>();
 		callees.add(callee1);
 		callees.add(callee2);
 		callees.add(callee3);
@@ -53,7 +53,7 @@ public class TemplateDependenciesTest extends TestCase {
 		final String callee = "/b1/b2";
 		final String caller2 = "/b1/b3";
 		final String caller3 = "/b1/b4";
-		final Set callees = new HashSet();
+		final Set<String> callees = new HashSet<String>();
 		callees.add(callee);
 
 		deps.setCalledBy(caller1, callees);
@@ -71,7 +71,7 @@ public class TemplateDependenciesTest extends TestCase {
 	public void testRemoveDependencies() {
 		TemplateDependencies deps = new TemplateDependencies();
 		final String caller = "/foo/bar";
-		Set callees = new HashSet();
+		Set<String> callees = new HashSet<String>();
 		callees.add("a1");
 		callees.add("a2");
 		callees.add("a3");
@@ -79,7 +79,7 @@ public class TemplateDependenciesTest extends TestCase {
 		final String callee1 = "/b1/b2";
 		final String callee2 = "/b1/b3";
 		final String callee3 = "/b1/b4";
-		callees = new HashSet();
+		callees = new HashSet<String>();
 		callees.add(callee1);
 		callees.add(callee2);
 		callees.add(callee3);
@@ -96,7 +96,7 @@ public class TemplateDependenciesTest extends TestCase {
 	public void testSaveAndLoad() throws Exception {
 		TemplateDependencies deps = new TemplateDependencies();
 		final String caller = "/foo/bar";
-		Set callees = new HashSet();
+		Set<String> callees = new HashSet<String>();
 		final String callee1 = "/b1/b2";
 		final String callee2 = "/b1/b3";
 		final String callee3 = "/b1/b4";

@@ -31,7 +31,8 @@ import org.eclipse.jface.text.source.ISourceViewer;
 
 public class JamonAnnotationHover implements IAnnotationHover
 {
-    protected List getAnnotationsForLine(ISourceViewer p_viewer, int p_line) 
+    protected List<Annotation> getAnnotationsForLine(
+        ISourceViewer p_viewer, int p_line) 
     {
         //FIXME - should we only be looking at jamon-generated annotations?
         IDocument document= p_viewer.getDocument();
@@ -40,11 +41,11 @@ public class JamonAnnotationHover implements IAnnotationHover
         if (model == null)
             return null;
         
-        List exact = new ArrayList();
+        List<Annotation> exact = new ArrayList<Annotation>();
         
-        for (Iterator i = model.getAnnotationIterator(); i.hasNext(); )
+        for (Iterator<Annotation> i = model.getAnnotationIterator(); i.hasNext(); )
         {
-            Annotation annotation = (Annotation) i.next();
+            Annotation annotation = i.next();
             try
             {
                 if (annotation.getText() != null 
@@ -64,14 +65,14 @@ public class JamonAnnotationHover implements IAnnotationHover
 
     public String getHoverInfo(ISourceViewer sourceViewer, int lineNumber) 
     {
-        List annotations = getAnnotationsForLine(sourceViewer, lineNumber);
+        Iterable<Annotation> annotations = 
+            getAnnotationsForLine(sourceViewer, lineNumber);
         if (annotations != null)
         {
             StringBuffer messages = new StringBuffer();
             boolean printedLines = false;
-            for (Iterator i = annotations.iterator(); i.hasNext(); )
+            for (Annotation annotation : annotations)
             {
-                Annotation annotation = (Annotation) i.next();
                 String message= annotation.getText();
                 if (message != null && message.trim().length() > 0)
                 {

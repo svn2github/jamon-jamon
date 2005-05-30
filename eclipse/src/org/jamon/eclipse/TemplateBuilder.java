@@ -12,7 +12,6 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -141,14 +140,17 @@ public class TemplateBuilder extends IncrementalProjectBuilder {
 	private synchronized void incrementalBuild(IResourceDelta delta, IProgressMonitor monitor) throws CoreException {
 		BuildVisitor visitor = new BuildVisitor();
 		delta.accept(visitor);
-		Set changed = visitor.getChanged();
+		Set<IPath> changed = visitor.getChanged();
 		logInfo("Changed templates are " + changed);
 		IFolder templateDir = getNature().getTemplateSourceFolder();
-		for (Iterator i = changed.iterator(); i.hasNext(); ) {
-			IPath s = (IPath) i.next();
-			Collection c = m_dependencies.getDependenciesOf(s.toString());
-			for (Iterator j = c.iterator(); j.hasNext(); ) {
-				visitor.visit(templateDir.findMember((new Path((String) j.next())).addFileExtension(JamonNature.JAMON_EXTENSION)));
+		for (Iterator<IPath> i = changed.iterator(); i.hasNext(); ) 
+        {
+			IPath s = i.next();
+            for (String dependency : m_dependencies.getDependenciesOf(s.toString()))
+            {
+                visitor.visit(templateDir.findMember(
+                    new Path(dependency).addFileExtension(
+                        JamonNature.JAMON_EXTENSION)));
 			}
 		}
 	}
@@ -163,16 +165,18 @@ public class TemplateBuilder extends IncrementalProjectBuilder {
 			m_source = new ResourceTemplateSource(m_templateDir);
 			m_describer = new TemplateDescriber(m_source, classLoader());
 			m_outFolder = getNature().getTemplateOutputFolder();
-			m_changed = new HashSet();
+			m_changed = new HashSet<IPath>();
 		}
 		
 		Set getChanged() {
 			return m_changed;
 		}
 		
-		private List classpathUrlsForProject(IJavaProject p_project) throws CoreException {
+		private List<URL> classpathUrlsForProject(IJavaProject p_project)
+            throws CoreException 
+        {
 			logInfo("Computing classpath for project " + p_project.getProject().getName());
-			List urls = new ArrayList();
+			List<URL> urls = new ArrayList<URL>();
 			String[] entries = JavaRuntime.computeDefaultRuntimeClassPath(p_project);
 			for (int i = 0; i < entries.length; ++i) {
 				logInfo("Found entry " + entries[i]);
@@ -196,10 +200,9 @@ public class TemplateBuilder extends IncrementalProjectBuilder {
 		}
 		
 		private ClassLoader classLoader() throws CoreException {
-			List urls = classpathUrlsForProject(getJavaProject());
-			logInfo("Classpath URLs are " + urls);
+			List<URL> urls = classpathUrlsForProject(getJavaProject());
 			// TODO: does this have the proper parent?
-			return new URLClassLoader((URL[]) urls.toArray(new URL[urls.size()]));
+			return new URLClassLoader(urls.toArray(new URL[urls.size()]));
 			
 		}
 
@@ -207,7 +210,7 @@ public class TemplateBuilder extends IncrementalProjectBuilder {
 		private final TemplateDescriber m_describer;
 		private final IFolder m_templateDir;
 		private final IFolder m_outFolder;
-		private final Set m_changed;
+		private final Set<IPath> m_changed;
 		
 		private void createParents(IContainer p_container) throws CoreException {
 			if (! p_container.exists()) {
@@ -231,9 +234,9 @@ public class TemplateBuilder extends IncrementalProjectBuilder {
         
         private void addMarkers(ParserErrors p_errors) throws CoreException
         {
-            for (Iterator i = p_errors.getErrors(); i.hasNext(); )
+            for (Iterator<ParserError> i = p_errors.getErrors(); i.hasNext(); )
             {
-                markFile((ParserError) i.next());
+                markFile(i.next());
             }
         }
 		
@@ -403,18 +406,19 @@ public class TemplateBuilder extends IncrementalProjectBuilder {
 
 	public static void addToProject(IProject p_project) throws CoreException {
 		IProjectDescription description = p_project.getDescription();
-		ArrayList cmds = new ArrayList();
+		List<ICommand> cmds = new ArrayList<ICommand>();
 		cmds.addAll(Arrays.asList(description.getBuildSpec()));
-		for (Iterator i = cmds.iterator(); i.hasNext();) {
-			if (((ICommand) i.next()).getBuilderName().equals(builderId())) {
+        for (ICommand command : cmds)
+        {
+			if (command.getBuilderName().equals(builderId())) 
+            {
 				return;
 			}
 		}
 		ICommand jamonCmd = description.newCommand();
 		jamonCmd.setBuilderName(builderId());
 		cmds.add(0, jamonCmd);
-		description.setBuildSpec((ICommand[]) cmds.toArray(new ICommand[cmds
-				.size()]));
+		description.setBuildSpec(cmds.toArray(new ICommand[cmds.size()]));
 		p_project.setDescription(description, null);
 	}
 
