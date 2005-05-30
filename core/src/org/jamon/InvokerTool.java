@@ -36,14 +36,14 @@ public class InvokerTool
      */
     public static interface ObjectParser
     {
-        Object parseObject(Class p_type, String p_value)
+        Object parseObject(Class<?> p_type, String p_value)
             throws TemplateArgumentException;
     }
 
     public static class DefaultObjectParser
         implements ObjectParser
     {
-        public Object parseObject(Class p_type, String p_string)
+        public Object parseObject(Class<?> p_type, String p_string)
             throws TemplateArgumentException
         {
             try
@@ -147,7 +147,7 @@ public class InvokerTool
     }
 
     private void parseArgString(TemplateInspector p_inspector,
-                                Map p_argMap,
+                                Map<String, Object> p_argMap,
                                 String p_arg)
         throws UsageException, TemplateArgumentException
     {
@@ -241,7 +241,7 @@ public class InvokerTool
             new TemplateInspector(new RecompilingTemplateManager(data),
                                   templateName);
 
-        HashMap argMap = new HashMap();
+        HashMap<String, Object> argMap = new HashMap<String, Object>();
         while (a < args.length)
         {
             parseArgString(inspector, argMap, args[a++]);

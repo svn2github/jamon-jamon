@@ -165,7 +165,7 @@ public class TemplateUnit
         return m_declaredOptionalArgs.iterator();
     }
 
-    public Collection getTemplateDependencies()
+    public Collection<String> getTemplateDependencies()
     {
         return m_dependencies;
     }
@@ -338,7 +338,7 @@ public class TemplateUnit
     private String m_parentPath;
     private boolean m_isParent = false;
     private final List m_classContent = new LinkedList();
-    private final Set m_dependencies = new HashSet();
+    private final Set<String> m_dependencies = new HashSet<String>();
     private final Set m_callNames = new HashSet();
     private final Collection m_abstractMethodNames = new HashSet();
 

@@ -77,7 +77,7 @@ public class BasicTemplateManager
     {
         try
         {
-            return (AbstractTemplateProxy) getProxyClass(p_path)
+            return getProxyClass(p_path)
                 .getConstructor(new Class [] { TemplateManager.class })
                 .newInstance(new Object [] { this });
         }
@@ -95,10 +95,11 @@ public class BasicTemplateManager
         }
     }
 
-    private Class getProxyClass(String p_path)
+    @SuppressWarnings("unchecked")
+    private Class<? extends AbstractTemplateProxy> getProxyClass(String p_path)
         throws ClassNotFoundException
     {
-        return m_classLoader.loadClass
+        return (Class<? extends AbstractTemplateProxy>) m_classLoader.loadClass
             (StringUtils.templatePathToClassName(p_path));
     }
 

@@ -75,11 +75,11 @@ public class JUnitTemplateManager
      * @param p_requiredArgs the expected required argument values
      */
     public JUnitTemplateManager(String p_path,
-                                Map p_optionalArgs,
+                                Map<String, Object> p_optionalArgs,
                                 Object[] p_requiredArgs)
     {
         m_path = p_path;
-        m_optionalArgs = new HashMap(p_optionalArgs);
+        m_optionalArgs = new HashMap<String, Object>(p_optionalArgs);
         m_requiredArgs = p_requiredArgs;
     }
 
@@ -91,7 +91,7 @@ public class JUnitTemplateManager
      * @param p_requiredArgs the expected required argument values
      */
     public JUnitTemplateManager(Class p_class,
-                                Map p_optionalArgs,
+                                Map<String, Object> p_optionalArgs,
                                 Object[] p_requiredArgs)
     {
         this(StringUtils.classToTemplatePath(p_class),
@@ -111,7 +111,7 @@ public class JUnitTemplateManager
     }
 
 
-    private final Map m_optionalArgs;
+    private final Map<String, Object> m_optionalArgs;
     private final Object[] m_requiredArgs;
     private final String m_path;
     private boolean m_rendered;

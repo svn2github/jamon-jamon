@@ -258,7 +258,7 @@ public class RecompilingTemplateManager
         try
         {
             // need to do this first to check dependencies if so enabled
-            return (AbstractTemplateProxy) getProxyClass(p_path)
+            return getProxyClass(p_path)
                 .getConstructor(new Class [] { TemplateManager.class })
                 .newInstance(new Object [] { this });
         }
@@ -364,10 +364,11 @@ public class RecompilingTemplateManager
                                 p_proxyClass.getName() + "Impl");
     }
 
-    private Class getProxyClass(String p_path)
+    @SuppressWarnings("unchecked")
+    private Class<AbstractTemplateProxy> getProxyClass(String p_path)
     {
-        return getTemplateClass(p_path,
-                                StringUtils.templatePathToClassName(p_path));
+        return (Class<AbstractTemplateProxy>) getTemplateClass(
+            p_path, StringUtils.templatePathToClassName(p_path));
     }
 
     private Class getTemplateClass(String p_path, String p_className)
@@ -430,14 +431,14 @@ public class RecompilingTemplateManager
                                              TemplateDescriber p_describer)
         throws IOException
     {
-        Collection seen = new HashSet();
-        Collection outOfDateJavaFiles = new HashSet();
-        List workQueue = new LinkedList();
+        Collection<String> seen = new HashSet<String>();
+        Collection<String> outOfDateJavaFiles = new HashSet<String>();
+        List<String> workQueue = new LinkedList<String>();
         workQueue.add(p_path);
 
         while (!workQueue.isEmpty())
         {
-            String path = (String) workQueue.remove(0);
+            String path = workQueue.remove(0);
             if (TRACE)
             {
                 trace("processing " + path);
@@ -495,15 +496,15 @@ public class RecompilingTemplateManager
                 outOfDateJavaFiles.add(javaImpl(path));
             }
 
-            DependencyEntry d = (DependencyEntry) m_dependencyCache.get(path);
+            DependencyEntry d = m_dependencyCache.get(path);
             if (d == null || d.lastUpdated() < modTime)
             {
                 d = new DependencyEntry(computeDependencies(path,p_describer));
                 m_dependencyCache.put(path, d);
             }
-            for (Iterator y = d.getDependencies(); y.hasNext(); /* */)
+            for (Iterator<String> y = d.getDependencies(); y.hasNext(); /* */)
             {
-                String dp = (String) y.next();
+                String dp = y.next();
                 if (! seen.contains(dp))
                 {
                     workQueue.add(dp);
@@ -558,8 +559,8 @@ public class RecompilingTemplateManager
     /**
      * @return dependencies
      */
-    private Collection generateImpl(String p_path,
-                                    TemplateDescriber p_describer)
+    private Collection<String> generateImpl(String p_path,
+                                            TemplateDescriber p_describer)
         throws IOException
     {
         if (TRACE)
@@ -650,7 +651,7 @@ public class RecompilingTemplateManager
         }
     }
 
-    private String compile(Collection p_sourceFiles)
+    private String compile(Collection<String> p_sourceFiles)
     {
         if (p_sourceFiles.isEmpty())
         {
@@ -659,7 +660,7 @@ public class RecompilingTemplateManager
 
         StringBuffer buf = new StringBuffer();
         buf.append("compiling: ");
-        for (Iterator i = p_sourceFiles.iterator(); i.hasNext(); /* */)
+        for (Iterator<String> i = p_sourceFiles.iterator(); i.hasNext(); /* */)
         {
             buf.append(i.next());
             if (i.hasNext())
@@ -671,12 +672,11 @@ public class RecompilingTemplateManager
         {
             trace(buf.toString());
         }
-        return m_javaCompiler
-            .compile((String []) p_sourceFiles.toArray(new String [0]));
+        return m_javaCompiler.compile(p_sourceFiles.toArray(new String [0]));
     }
 
-    private Collection computeDependencies(String p_path,
-                                           TemplateDescriber p_describer)
+    private Collection<String> computeDependencies(
+        String p_path, TemplateDescriber p_describer)
         throws IOException
     {
         if (TRACE)
@@ -690,20 +690,21 @@ public class RecompilingTemplateManager
     }
 
 
-    private Map m_dependencyCache = new HashMap();
+    private Map<String, DependencyEntry> m_dependencyCache = 
+        new HashMap<String, DependencyEntry>();
 
     private static class DependencyEntry
     {
-        DependencyEntry(Collection p_dependencies)
+        DependencyEntry(Collection<String> p_dependencies)
         {
             m_dependencies = p_dependencies;
             m_lastUpdated = System.currentTimeMillis();
         }
 
-        Collection m_dependencies;
+        Collection<String> m_dependencies;
         long m_lastUpdated;
 
-        Iterator getDependencies()
+        Iterator<String> getDependencies()
         {
             return m_dependencies.iterator();
         }

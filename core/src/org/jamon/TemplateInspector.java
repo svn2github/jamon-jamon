@@ -125,7 +125,7 @@ public class TemplateInspector
      * @param p_writer the Writer to render to
      * @param p_argMap a Map&lt;String,String&gt; of arguments
      */
-    public void render(Writer p_writer, Map p_argMap)
+    public void render(Writer p_writer, Map<String, Object> p_argMap)
         throws InvalidTemplateException,
                UnknownArgumentsException,
                IOException
@@ -142,7 +142,7 @@ public class TemplateInspector
      * "extra" arguments are supplied
      */
     public void render(Writer p_writer,
-                       Map p_argMap,
+                       Map<String, Object> p_argMap,
                        boolean p_ignoreUnusedParams)
         throws InvalidTemplateException,
                UnknownArgumentsException,
@@ -212,7 +212,8 @@ public class TemplateInspector
         }
     }
 
-    private Object[] computeRenderArguments(Map p_argMap, Writer p_writer)
+    private Object[] computeRenderArguments(Map<String, Object> p_argMap,
+                                            Writer p_writer)
     {
         Object[] actuals = new Object[1 + m_requiredArgNames.size()];
         actuals[0] = p_writer;
@@ -224,12 +225,12 @@ public class TemplateInspector
         return actuals;
     }
 
-    private void invokeOptionalArguments(Map p_argMap)
+    private void invokeOptionalArguments(Map<String, Object> p_argMap)
         throws InvalidTemplateException
     {
         for (int i = 0; i < m_optionalArgNames.size(); ++i)
         {
-            String name = (String) m_optionalArgNames.get(i);
+            String name = m_optionalArgNames.get(i);
             if (p_argMap.containsKey(name))
             {
                 invokeSet(name, p_argMap.get(name));
@@ -246,10 +247,10 @@ public class TemplateInspector
         }
     }
 
-    private void validateArguments(Map p_argMap)
+    private void validateArguments(Map<String, Object> p_argMap)
         throws UnknownArgumentsException
     {
-        Set argNames = new HashSet();
+        Set<String> argNames = new HashSet<String>();
         argNames.addAll(p_argMap.keySet());
         argNames.removeAll(m_requiredArgNames);
         argNames.removeAll(m_optionalArgNames);
@@ -257,7 +258,7 @@ public class TemplateInspector
         {
             StringBuffer msg =
                 new StringBuffer("Unknown arguments supplied: ");
-            for (Iterator i = argNames.iterator(); i.hasNext(); )
+            for (Iterator<String> i = argNames.iterator(); i.hasNext(); )
             {
                 msg.append(i.next());
                 if (i.hasNext())
@@ -330,6 +331,6 @@ public class TemplateInspector
     private final Class m_templateClass;
     private final AbstractTemplateProxy m_template;
     private final Method m_renderMethod;
-    private final List m_requiredArgNames;
-    private final List m_optionalArgNames;
+    private final List<String> m_requiredArgNames;
+    private final List<String> m_optionalArgNames;
 }
