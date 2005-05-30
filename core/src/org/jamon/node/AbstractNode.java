@@ -94,7 +94,7 @@ public abstract class AbstractNode
     protected static void addPropertyList(
         StringBuffer p_buffer,
         String p_name,
-        Iterator<AbstractNode> p_properties)
+        Iterator<? extends AbstractNode> p_properties)
     {
         p_buffer.append(", ");
         p_buffer.append(p_name);
