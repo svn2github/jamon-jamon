@@ -91,9 +91,8 @@ public class InvokerTask
         Properties sysprops = (Properties) System.getProperties().clone();
         try
         {
-            for (Iterator p = m_sysprops.iterator(); p.hasNext(); )
+            for (Environment.Variable var : m_sysprops)
             {
-                Environment.Variable var = (Environment.Variable) p.next();
                 System.setProperty(var.getKey(), var.getValue());
             }
             Writer writer = computeWriter();
@@ -129,10 +128,10 @@ public class InvokerTask
         catch (ParserErrors e)
         {
             e.printErrors(System.err); //FIXME - is this the right thing to do?
-            Iterator i = e.getErrors();
+            Iterator<ParserError> i = e.getErrors();
             if (i.hasNext())
             {
-                ParserError error = (ParserError) i.next();
+                ParserError error = i.next();
                 throw new BuildException(
                     error.getMessage(), new JamonLocation(error.getLocation()));
             }
@@ -157,12 +156,11 @@ public class InvokerTask
     {
         InvokerTool.ObjectParser parser =
             new InvokerTool.DefaultObjectParser();
-        for (Iterator i = m_args.entrySet().iterator(); i.hasNext(); )
+        for (Map.Entry<String, Object> entry : m_args.entrySet())
         {
-            Map.Entry entry = (Map.Entry) i.next();
             entry.setValue
                 (parser.parseObject
-                 (p_inspector.getArgumentType((String) entry.getKey()),
+                 (p_inspector.getArgumentType(entry.getKey()),
                   (String)entry.getValue()));
         }
     }
@@ -240,8 +238,9 @@ public class InvokerTask
     private final RecompilingTemplateManager.Data m_recompilingManagerData;
     private boolean m_dynamicRecompilation = true;
     private String m_path;
-    private HashMap m_args = new HashMap();
-    private Collection m_sysprops = new HashSet();
+    private HashMap<String, Object> m_args = new HashMap<String, Object>();
+    private Collection<Environment.Variable> m_sysprops = 
+        new HashSet<Environment.Variable>();
     private File m_output;
     private String m_outputPropertyName;
     private ClassLoader m_classLoader;

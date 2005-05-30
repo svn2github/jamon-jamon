@@ -177,10 +177,10 @@ public class JamonTask
                 catch (ParserErrors e)
                 {
                     e.printErrors(System.err); //FIXME - is this the right thing to do?
-                    Iterator errors = e.getErrors();
+                    Iterator<ParserError> errors = e.getErrors();
                     if (errors.hasNext())
                     {
-                        ParserError error = (ParserError) errors.next();
+                        ParserError error = errors.next();
                         throw new BuildException(
                             error.getMessage(), new JamonLocation(error.getLocation()));
                     }
