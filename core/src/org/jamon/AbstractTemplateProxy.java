@@ -48,7 +48,8 @@ public abstract class AbstractTemplateProxy
     private final TemplateManager m_templateManager;
     private ImplData m_implData = makeImplData();
 
-    protected abstract AbstractTemplateImpl constructImpl(Class p_class);
+    protected abstract AbstractTemplateImpl constructImpl(
+        Class<? extends AbstractTemplateImpl> p_class);
 
     protected abstract AbstractTemplateImpl constructImpl();
 

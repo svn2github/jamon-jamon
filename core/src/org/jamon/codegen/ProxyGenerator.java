@@ -264,11 +264,11 @@ public class ProxyGenerator
         m_writer.println("@Override");
         m_writer.print(
             "protected " + ClassNames.BASE_TEMPLATE + " constructImpl"
-            + "(Class p_class)");
+            + "(Class<? extends " + ClassNames.BASE_TEMPLATE + "> p_class)");
         m_writer.openBlock();
         m_writer.println("try");
         m_writer.openBlock();
-        m_writer.println("return (" + ClassNames.BASE_TEMPLATE + ") p_class");
+        m_writer.println("return p_class");
         m_writer.indent(2);
         m_writer.println(".getConstructor(new Class [] { "
                          + ClassNames.TEMPLATE_MANAGER + ".class"
