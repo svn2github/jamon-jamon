@@ -23,9 +23,11 @@ package org.jamon.emit;
 import java.util.Map;
 import java.util.HashMap;
 
+//FIXME - make this an enumeration?
 public class EmitMode
 {
-    private static Map s_modes = new HashMap();
+    private static Map<String, EmitMode> s_modes = 
+        new HashMap<String, EmitMode>();
 
     public static final EmitMode STANDARD =
         new EmitMode(StandardEmitter.class);
@@ -36,7 +38,7 @@ public class EmitMode
 
     public static EmitMode fromString(String p_string)
     {
-        return (EmitMode) s_modes.get(p_string.toUpperCase());
+        return s_modes.get(p_string.toUpperCase());
     }
 
     @Override public boolean equals(Object p_obj)
