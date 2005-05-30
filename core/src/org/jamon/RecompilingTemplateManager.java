@@ -358,7 +358,9 @@ public class RecompilingTemplateManager
         return path.toString();
     }
 
-    private Class getImplClass(Class p_proxyClass)
+    @SuppressWarnings("unchecked")
+    private Class<? extends AbstractTemplateImpl> getImplClass(
+        Class<? extends AbstractTemplateProxy> p_proxyClass)
     {
         return getTemplateClass(StringUtils.classToTemplatePath(p_proxyClass),
                                 p_proxyClass.getName() + "Impl");
