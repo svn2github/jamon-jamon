@@ -62,6 +62,7 @@ public abstract class AbstractInnerUnitCallStatement
                                 p_writer,
                                 p_describer,
                                 p_emitMode);
+        generateSourceLine(p_writer);
         p_writer.print("__jamon_innerUnit__" + getPath());
         p_writer.openList();
         p_writer.printArg(ArgNames.WRITER);
