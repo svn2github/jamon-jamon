@@ -25,6 +25,7 @@ import java.io.LineNumberReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IMarker;
@@ -62,18 +63,25 @@ public class JavaMarkerListener implements IResourceChangeListener
             {
                 GeneratedResource generatedResource = 
                     new GeneratedResource((IFile) p_delta.getResource());
-                generatedResource.getTemplateFile().deleteMarkers(
-                    javaMarkerId, true, IResource.DEPTH_ZERO);
-                
                 IMarkerDelta[] markerDeltas = p_delta.getMarkerDeltas();
+                
+                if (markerDeltas.length > 0)
+                {
+                    generatedResource.getTemplateFile().deleteMarkers(
+                        javaMarkerId, true, IResource.DEPTH_ZERO);
+                }
+                
                 for (IMarkerDelta markerDelta : markerDeltas)
                 {
                     switch(markerDelta.getKind())
                     {
                     case IResourceDelta.ADDED:
                     case IResourceDelta.CHANGED:
-                        copyMarker(generatedResource, 
-                                   markerDelta.getMarker());
+                    {
+                        IMarker marker = markerDelta.getMarker();
+                        copyMarker(generatedResource, marker);
+                        marker.delete();
+                    }
                     break;
                     }
                 }
