@@ -95,6 +95,12 @@ public class JavaMarkerListener implements IResourceChangeListener
             if (p_marker.isSubtypeOf(IMarker.PROBLEM))
             {
                 String message = p_marker.getAttribute(IMarker.MESSAGE, null);
+                if (!p_generatedResource.isImpl()   
+                    && message.startsWith("The import ")    
+                    && message.endsWith(" is never used"))     
+                {
+                    return;
+                }
                 if (message != null && message.length() > 0)
                 {
                     EclipseUtils.populateProblemMarker(
