@@ -27,9 +27,14 @@
   Input submit => null;
   org.jamon.render.html.CgiParameters hiddenParams => null;
   boolean post => false;
+  String onSubmit => null;
 </%args>\
 \
-<form method='<% post ? "POST" : "GET" %>' action='<% action %>'>
+<form method='<% post ? "POST" : "GET" %>' action='<% action %>'\
+% if (onSubmit != null) {
+ onSubmit="<% onSubmit %>"\
+% }
+>
 % if( submit != null ) {
   <& HiddenInput; input => submit &>
 % }
