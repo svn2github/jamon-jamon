@@ -62,7 +62,7 @@ public class TopLevelParser extends AbstractBodyParser
     {
         super(
             new TopNode(new Location(p_location, 1, 1)),
-            new PositionalPushbackReader(p_location, p_reader),
+            new PositionalPushbackReader(p_location, p_reader, 2),
             new ParserErrors());
         if (m_errors.hasErrors())
         {

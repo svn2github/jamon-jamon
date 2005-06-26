@@ -1,3 +1,23 @@
+/*
+ * The contents of this file are subject to the Mozilla Public
+ * License Version 1.1 (the "License"); you may not use this file
+ * except in compliance with the License. You may obtain a copy of
+ * the License at http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS
+ * IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
+ * implied. See the License for the specific language governing
+ * rights and limitations under the License.
+ *
+ * The Original Code is Jamon code, released February, 2003.
+ *
+ * The Initial Developer of the Original Code is Ian Robertson.  Portions
+ * created by Ian Robertson are Copyright (C) 2005 Ian Robertson.  All Rights
+ * Reserved.
+ *
+ * Contributor(s):
+ */
+
 package org.jamon.parser;
 
 import java.io.IOException;
@@ -15,6 +35,64 @@ import org.jamon.node.Location;
 
 public class PositionalPushbackReader
 {
+    private static class Position
+    {
+        void assign(Position p_position)
+        {
+            m_row = p_position.m_row;
+            m_column = p_position.m_column;
+            m_ignoredNewLine = p_position.m_ignoredNewLine;
+            m_seenCarriageReturn = p_position.m_seenCarriageReturn;
+        }
+        
+        public void handleNewLine()
+        {
+            if (!m_seenCarriageReturn)
+            {
+                m_ignoredNewLine = false;
+                nextRow();
+            }
+            else
+            {
+                m_seenCarriageReturn = false;
+                m_ignoredNewLine = true;
+            }
+        }
+        
+        public void handleCarriageReturn()
+        {
+            m_ignoredNewLine = false;
+            m_seenCarriageReturn= true;
+            nextRow();
+        }
+        
+        public void nextColumn()
+        {
+            m_column++;
+            m_ignoredNewLine = m_seenCarriageReturn = false;
+        }
+        
+        public void nextRow()
+        {
+            m_row++;
+            m_column = 1;
+        }
+        
+        public Location location(TemplateLocation p_templateLocation)
+        {
+            return new Location(p_templateLocation, m_row, m_column);
+        }
+        
+        public boolean isLineStart()
+        {
+            return m_column == 1;
+        }
+        
+        private int m_row = 1;
+        private int m_column = 1;
+        private boolean m_ignoredNewLine = false, m_seenCarriageReturn = false;
+    }
+    
     /**
      * @param p_templateLocation The path to the resource being read.
      * @param p_reader The underlying reader to use
@@ -22,73 +100,67 @@ public class PositionalPushbackReader
     public PositionalPushbackReader(
         TemplateLocation p_templateLocation, Reader p_reader)
     {
-        m_reader = p_reader;
-        m_templateLocation = p_templateLocation;
+        this(p_templateLocation, p_reader, 1);
     }
 
+    public PositionalPushbackReader(TemplateLocation p_templateLocation,
+                                    Reader p_reader,
+                                    int p_pushbackBufferSize)
+    {
+        m_reader = p_reader;
+        m_templateLocation = p_templateLocation;
+        m_positions = new Position[p_pushbackBufferSize + 2];
+        {
+            for (int i = 0; i < m_positions.length; i++)
+            {
+                m_positions[i] = new Position();
+            }
+        }
+        m_pushedbackChars = new int[p_pushbackBufferSize];
+    }
+    
     public int read() throws IOException
     {
         int c;
-        if (m_pushedbackCharPending)
+        if (m_pushedbackCharsPending > 0)
         {
-            c = m_pushedbackChar;
-            m_pushedbackCharPending = false;
+            c = m_pushedbackChars[--m_pushedbackCharsPending];
         }
         else
         {
             c = m_reader.read();
         }
-        m_previousLine = m_line;
-        m_previousColumn = m_column;
-        m_line = m_nextLine;
-        m_column = m_nextColumn;
+        for (int i = m_positions.length - 1; i > 0; i--)
+        {
+            m_positions[i].assign(m_positions[i-1]);
+        }
+        
         switch (c)
         {
-            case '\n' :
-                if (!m_seenCr)
-                {
-                    m_ignoredNl = false;
-                    newLine();
-                }
-                else
-                {
-                    m_seenCr = false;
-                    m_ignoredNl = true;
-                }
+            case '\n':
+                m_positions[0].handleNewLine();
                 break;
-            case '\r' :
-                m_ignoredNl = false;
-                m_seenCr = true;
-                newLine();
+            case '\r':
+                m_positions[0].handleCarriageReturn();
                 break;
             default :
-                m_ignoredNl = false;
-                m_seenCr = false;
-                m_nextColumn++;
+                m_positions[0].nextColumn(); 
         }
         return c;
     }
 
-    private void newLine()
-    {
-        m_nextLine++;
-        m_nextColumn = 1;
-    }
-
     public void unread(int c) throws IOException
     {
-        if (m_pushedbackCharPending)
+        if (m_pushedbackCharsPending >= m_pushedbackChars.length)
         {
-            throw new IOException("Trying to push back more than one character");
+            throw new IOException("Trying to push back characters than allowed");
         }
-        m_pushedbackChar = c;
-        m_pushedbackCharPending = true;
-        m_nextLine = m_line;
-        m_nextColumn = m_column;
-        m_line = m_previousLine;
-        m_column = m_previousColumn;
+        m_pushedbackChars[m_pushedbackCharsPending++] = c;
 
-        m_seenCr = m_ignoredNl;
+        for (int i = 0; i < m_positions.length - 1; i++)
+        {
+            m_positions[i].assign(m_positions[i+1]);
+        }
     }
 
     /**
@@ -97,7 +169,7 @@ public class PositionalPushbackReader
      */
     public Location getLocation()
     {
-        return new Location(m_templateLocation, m_line, m_column);
+        return m_positions[1].location(m_templateLocation);
     }
 
     /**
@@ -106,7 +178,7 @@ public class PositionalPushbackReader
      */
     public Location getNextLocation()
     {
-        return new Location(m_templateLocation, m_nextLine, m_nextColumn);
+        return m_positions[0].location(m_templateLocation);
     }
 
     /**
@@ -114,7 +186,7 @@ public class PositionalPushbackReader
      */
     public boolean isLineStart()
     {
-        return m_column == 1;
+        return m_positions[1].isLineStart();
     }
 
     /**
@@ -122,8 +194,7 @@ public class PositionalPushbackReader
      **/
     public void markNodeBeginning()
     {
-        m_currentNodeLine = m_line;
-        m_currentNodeColumn = m_column;
+        m_currentNodePosition.assign(m_positions[1]);
     }
 
     /**
@@ -131,8 +202,7 @@ public class PositionalPushbackReader
      **/
     public void markNodeEnd()
     {
-        m_currentNodeLine = m_nextLine;
-        m_currentNodeColumn = m_nextColumn;
+        m_currentNodePosition.assign(m_positions[0]);
     }
 
     /**
@@ -143,18 +213,14 @@ public class PositionalPushbackReader
      */
     public Location getCurrentNodeLocation()
     {
-        return new Location(
-            m_templateLocation, m_currentNodeLine, m_currentNodeColumn);
+        return m_currentNodePosition.location(m_templateLocation);
     }
 
     private final Reader m_reader;
     private final TemplateLocation m_templateLocation;
-    boolean m_pushedbackCharPending = false;
-    int m_pushedbackChar;
-    private int m_line = 1, m_column = 1;
-    private int m_nextLine = 1, m_nextColumn = 1;
-    private int m_previousLine, m_previousColumn;
-    private int m_currentNodeLine = 1, m_currentNodeColumn = 1;
-    private boolean m_seenCr = false;
-    private boolean m_ignoredNl = false;
+    int m_pushedbackCharsPending = 0;
+    final int m_pushedbackChars[];
+    
+    private final Position[] m_positions;
+    private Position m_currentNodePosition = new Position();
 }
