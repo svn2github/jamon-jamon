@@ -85,6 +85,11 @@
         </classpath>
         <compilerarg line="${org.jamon.jike.options}" compiler="jikes"/>
       </javac>
+      <copy todir="${classes.dir}">
+        <fileset dir="${src.dir}">
+            <include name="**/*.properties"/>
+        </fileset>
+      </copy>
   </target>
 
   <target name="clean">
