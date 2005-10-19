@@ -39,7 +39,6 @@ public class InternalJavaCompiler
         throws Exception
     {
         m_classPath = p_classPath;
-
         m_compilerClass = Class.forName("com.sun.tools.javac.Main");
         m_compiler = m_compilerClass.newInstance();
         m_compile = m_compilerClass.getMethod("compile", 

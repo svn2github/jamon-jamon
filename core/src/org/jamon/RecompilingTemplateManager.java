@@ -340,12 +340,33 @@ public class RecompilingTemplateManager
             cp.append(getRtJarPath());
         }
 
+        pruneJniLibs(cp);
+
         if (TRACE)
         {
             trace("Jamon compilation CLASSPATH is " + cp);
         }
 
         return cp.toString();
+    }
+    
+    private static void pruneJniLibs(StringBuffer cp) 
+    {
+        String[] components = cp.toString().split(File.pathSeparator);
+        cp.delete(0, cp.length());
+        boolean first = true;
+        for (String c : components) 
+        {
+            if (! c.endsWith(".jnilib") && ! c.endsWith(".dylib")) 
+            {
+                if (!first) 
+                {
+                    cp.append(File.pathSeparator);
+                }
+                first = false;
+                cp.append(c);
+            }
+        }
     }
 
     private static String getRtJarPath()
