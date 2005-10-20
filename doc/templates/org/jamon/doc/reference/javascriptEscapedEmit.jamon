@@ -1,6 +1,0 @@
-<a 
-href="about:blank"
-onclick="<&| /org/jamon/escape/StrictHtml 
-  &>return confirm("<% '"' +
-                       "<b>this\n'n\nthat</b>" +
-                       '"' #j %>")</&>">this</a>

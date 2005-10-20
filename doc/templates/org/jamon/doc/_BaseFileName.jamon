@@ -1,3 +1,0 @@
-<%abstract>
-
-jamon-<% org.jamon.Version.CURRENT %><& *CHILD &>

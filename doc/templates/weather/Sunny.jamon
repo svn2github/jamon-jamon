@@ -1,8 +1,0 @@
-<%extends Report>
-<%override title>
-  <%xargs>
-    dayOfWeek;
-  </%xargs>
-  <% dayOfWeek %> looks Sunny!
-</%override>
-Head for the beach!  It's going to be sunny and beautiful.

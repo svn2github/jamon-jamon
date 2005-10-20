@@ -1,9 +1,0 @@
-<%args>
-  java.util.Date date;
-  String [] s;
-</%args>
-Hello, world on <% date %>.
-The arguments are:
-% for (int i = 0; i < s.length; ++i) {
-<% s[i] %>
-% }

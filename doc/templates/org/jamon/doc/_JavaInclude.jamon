@@ -1,5 +1,0 @@
-<%args>
-  String path;
-</%args>
-
-<& _FileInclude; path => path + ".java"; cssClass => "java" &>

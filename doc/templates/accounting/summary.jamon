@@ -1,4 +1,0 @@
-<& /accounting/bill; amount => 30; payee => "the phone company" &>
-<& /accounting/bill; payee => "the gas company"; amount => 35 &>
-<& /accounting/bill: 25; "the mechanic" &>
-<& /accounting/bill; amount => 400; payee => "Dad"; overdue => true &>

@@ -1,9 +1,0 @@
-<%args>
-  String name => "Somebody";
-  String greeting;
-</%args>
-<html>
-  <body>
-    <% greeting %> <% name %> <br />
-  </body>
-</html>
