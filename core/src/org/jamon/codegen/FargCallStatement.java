@@ -43,11 +43,11 @@ public class FargCallStatement
     @Override
     public void addFragmentImpl(FragmentUnit p_unit, ParserErrors p_errors)
     {
-        p_errors.addError("Fragment args for fragments not implemented", 
+        p_errors.addError("Fragment args for fragments not implemented",
                           getLocation());
     }
 
-    @Override 
+    @Override
     protected String getFragmentIntfName(FragmentUnit p_fragmentUnitIntf)
     {
         throw new UnsupportedOperationException();

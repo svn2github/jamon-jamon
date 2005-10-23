@@ -31,6 +31,7 @@
           depends="base">
     <jar jarfile="${jarfile.core}" manifest="manifest" >
       <fileset dir="core/build/classes" />
+      <fileset dir="core/src" includes="**/*.properties"/>
     </jar>
     <jar jarfile="${jarfile.anttask}" manifest="manifest-anttask" >
       <fileset dir="anttask/build/classes" />

@@ -19,12 +19,12 @@ public class ParserErrorsTest extends AbstractParserTest
 
     public void testMalformedExtendsTag() throws Exception
     {
-        assertError("<%extends>", 
+        assertError("<%extends>",
                     1, 1, TopLevelParser.MALFORMED_EXTENDS_TAG_ERROR);
-        assertError("<%extends /foo f>", 
+        assertError("<%extends /foo f>",
                     1, 15, TopLevelParser.MALFORMED_TAG_ERROR);
     }
-    
+
     public void testUnfinishedJavaTag() throws Exception
     {
         assertError(
@@ -85,7 +85,7 @@ public class ParserErrorsTest extends AbstractParserTest
     {
         assertError("</%def>", 1, 1, "Unexpected tag close </%def>");
     }
-    
+
     public void testUnexpectedCloseTags() throws Exception
     {
         assertError(
@@ -107,13 +107,13 @@ public class ParserErrorsTest extends AbstractParserTest
 
     public void testNoMethodCloseTag() throws Exception
     {
-        assertError("<%method a>abc", 1, 12, 
+        assertError("<%method a>abc", 1, 12,
                     SubcomponentParser.makeError("method"));
     }
 
     public void testNoOverrideCloseTag() throws Exception
     {
-        assertError("<%override a>abc", 1, 14, 
+        assertError("<%override a>abc", 1, 14,
                     SubcomponentParser.makeError("override"));
     }
 
@@ -152,7 +152,7 @@ public class ParserErrorsTest extends AbstractParserTest
             14,
             "<%absmeth> sections only allowed at the top level of a document");
     }
-    
+
     public void testContentInAbsMethod() throws Exception
     {
         assertError(
@@ -202,59 +202,62 @@ public class ParserErrorsTest extends AbstractParserTest
             "<%def foo>\n<%implements></%def>",
             2, 1, AbstractBodyParser.IMPLEMENTS_TAG_IN_SUBCOMPONENT);
     }
-    
+
     public void testParentArgsInSubcomponent() throws Exception
     {
         assertError(
             "<%def foo>\n<%xargs></%def>",
             2, 1, AbstractBodyParser.PARENT_ARGS_TAG_IN_SUBCOMPONENT);
     }
-    
+
     public void testEscapeTagInSubcomponent() throws Exception
     {
         assertError(
             "<%def foo>\n<%escape #u></%def>",
             2, 1, AbstractBodyParser.ESCAPE_TAG_IN_SUBCOMPONENT);
     }
-    
+
+    public void testGenericTagInSubcomponent() throws Exception
+    {
+        assertError(
+            "<%def foo>\n<%generic></%def>",
+            2, 1, AbstractBodyParser.GENERIC_TAG_IN_SUBCOMPONENT);
+    }
+
     public void testImplementMissingSemi() throws Exception
     {
-        // FIXME - not the most intuitive error - the parser is treating the
-        // close tag as part of a generic specification.
-        assertErrorPair(
-            "<%implements>\nfoo.bar\n</%implements>",
-            3, 1, AbstractParser.BAD_JAVA_TYPE_SPECIFIER,
-            2, 1, TopLevelParser.EXPECTING_IMPLEMENTS_CLOSE);
+        assertError("<%implements>\nfoo.bar\n</%implements>",
+                    3, 1, TopLevelParser.EXPECTING_SEMI);
     }
-    
+
     public void testMalformedImplementsOpen() throws Exception
     {
         assertError(
-            "<%implements foo>", 
+            "<%implements foo>",
             1, 1, AbstractBodyParser.MALFORMED_TAG_ERROR);
     }
-    
+
     public void testMalformedImplementsClose() throws Exception
     {
         assertError(
-            "<%implements>\n<foo", 
+            "<%implements>\n<foo",
             2, 1, TopLevelParser.EXPECTING_IMPLEMENTS_CLOSE);
     }
-    
+
     public void testMalformedImportsOpen() throws Exception
     {
         assertError(
-            "<%import foo>", 
+            "<%import foo>",
             1, 1, AbstractBodyParser.MALFORMED_TAG_ERROR);
     }
-    
+
     public void testMalformedImportsClose() throws Exception
     {
         assertError(
-            "<%import>\n<foo", 
+            "<%import>\n<foo",
             2, 1, TopLevelParser.EXPECTING_IMPORTS_CLOSE);
     }
-    
+
     public void testMalformedParentArgsClose() throws Exception
     {
         assertError("<%xargs>\n</%>", 2, 1, ParentArgsParser.MALFORMED_PARENT_ARGS_CLOSE);

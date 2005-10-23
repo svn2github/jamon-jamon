@@ -20,6 +20,8 @@ public abstract class AbstractBodyParser extends AbstractParser
 {
     public static final String ESCAPE_TAG_IN_SUBCOMPONENT =
         "<%escape> tags only allowed at the top level of a document";
+    public static final String GENERIC_TAG_IN_SUBCOMPONENT =
+        "<%generic> tags only allowed at the top level of a document";
     public static final String CLASS_TAG_IN_SUBCOMPONENT =
         "<%class> sections only allowed at the top level of a document";
     public static final String UNEXPECTED_NAMED_FRAGMENT_CLOSE_ERROR =
@@ -34,9 +36,9 @@ public abstract class AbstractBodyParser extends AbstractParser
         "Reached end of file while reading emit value";
     public static final String EXTENDS_TAG_IN_SUBCOMPONENT =
         "<%extends ...> tag only allowed at the top level of a document";
-    private static final String ALIASES_TAG_IN_SUBCOMPONENT = 
+    private static final String ALIASES_TAG_IN_SUBCOMPONENT =
         "<%aliases> sections only allowed at the top level of a document";
-    public static final String IMPLEMENTS_TAG_IN_SUBCOMPONENT = 
+    public static final String IMPLEMENTS_TAG_IN_SUBCOMPONENT =
         "<%implements> sections only allowed at the top level of a document";
     private static final String IMPORT_TAG_IN_SUBCOMPONENT =
         "<%import> sections only allowed at the top level of a document";
@@ -65,7 +67,7 @@ public abstract class AbstractBodyParser extends AbstractParser
                 new TextNode(
                     m_reader.getCurrentNodeLocation(),
                     m_text.toString()));
-            m_text = new StringBuffer();
+            m_text = new StringBuilder();
         }
         m_reader.markNodeBeginning();
     }
@@ -241,7 +243,7 @@ public abstract class AbstractBodyParser extends AbstractParser
                             new EmitNode(
                                 p_tagLocation,
                                 emitExpr,
-                                new EscapeNode(escapingLocation, 
+                                new EscapeNode(escapingLocation,
                                                Character.toString((char) c))));
                     }
                     else
@@ -370,6 +372,10 @@ public abstract class AbstractBodyParser extends AbstractParser
         {
             handleEscapeTag(p_tagLocation);
         }
+        else if ("generic".equals(p_tagName))
+        {
+            handleGenericTag(p_tagLocation);
+        }
         else
         {
             if (checkForTagClosure(p_tagLocation))
@@ -453,7 +459,7 @@ public abstract class AbstractBodyParser extends AbstractParser
             "<%def> sections only allowed at the top level of a document");
     }
 
-    protected void handleAbsMethodTag(Location p_tagLocation) 
+    protected void handleAbsMethodTag(Location p_tagLocation)
         throws IOException
     {
         addError(
@@ -466,16 +472,21 @@ public abstract class AbstractBodyParser extends AbstractParser
     {
         addError(p_tagLocation, PARENT_ARGS_TAG_IN_SUBCOMPONENT);
     }
-    
+
     protected void handleParentMarkerTag(Location p_tagLocation)
         throws IOException
     {
         addError(p_tagLocation, PARENT_MARKER_TAG_IN_SUBCOMPONENT);
     }
-    
+
     protected void handleEscapeTag(Location p_tagLocation) throws IOException
     {
         addError(p_tagLocation, ESCAPE_TAG_IN_SUBCOMPONENT);
+    }
+
+    protected void handleGenericTag(Location p_tagLocation) throws IOException
+    {
+        addError(p_tagLocation, GENERIC_TAG_IN_SUBCOMPONENT);
     }
 
     private static class JavaTagDetector implements TagEndDetector
@@ -550,7 +561,7 @@ public abstract class AbstractBodyParser extends AbstractParser
     {
         addError(p_tagLocation, CLASS_TAG_IN_SUBCOMPONENT);
     }
-    
+
     protected void handleExtendsTag(Location p_tagLocation) throws IOException
     {
         addError(p_tagLocation, EXTENDS_TAG_IN_SUBCOMPONENT);
@@ -588,7 +599,7 @@ public abstract class AbstractBodyParser extends AbstractParser
 
     protected String readTagName() throws IOException
     {
-        StringBuffer buffer = new StringBuffer();
+        StringBuilder buffer = new StringBuilder();
         int c;
         while ((c = m_reader.read()) >= 0
             && !Character.isWhitespace((char) c)
@@ -606,7 +617,7 @@ public abstract class AbstractBodyParser extends AbstractParser
     protected String readLine() throws IOException
     {
         int c;
-        StringBuffer line = new StringBuffer();
+        StringBuilder line = new StringBuilder();
         while ((c = m_reader.read()) >= 0)
         {
             line.append((char) c);
@@ -618,7 +629,7 @@ public abstract class AbstractBodyParser extends AbstractParser
         return line.toString();
     }
 
-    protected StringBuffer m_text = new StringBuffer();
+    protected StringBuilder m_text = new StringBuilder();
     protected final AbstractBodyNode m_root;
     protected final Location m_bodyStart;
 }

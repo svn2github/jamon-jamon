@@ -94,15 +94,20 @@ public class ImplGenerator
         {
             m_writer.print(" abstract");
         }
-        m_writer.println(" class " + getClassName());
+        m_writer.println(
+            " class " + getClassName()
+            + m_templateUnit.getGenericParams().generateGenericsDeclaration());
         m_writer.println("  extends "
                          + (m_templateUnit.hasParentPath()
                             ? PathUtils.getFullyQualifiedImplClassName(
                                 m_templateUnit.getParentPath())
                             : ClassNames.BASE_TEMPLATE));
-        m_writer.println("  implements " + getProxyClassName() + ".Intf");
+        m_writer.println(
+            "  implements " + getProxyClassName() + ".Intf"
+            + m_templateUnit.getGenericParams().generateGenericParamsList());
+        m_writer.println();
         m_writer.openBlock();
-        for (Iterator<AbstractArgument> i = m_templateUnit.getVisibleArgs(); 
+        for (Iterator<AbstractArgument> i = m_templateUnit.getVisibleArgs();
              i.hasNext(); )
         {
             AbstractArgument arg = i.next();
@@ -114,11 +119,14 @@ public class ImplGenerator
 
     private void generateSetOptionalArguments()
     {
-        m_writer.println("protected static " + getImplDataClassName()
-                         + " " + SET_OPTS + "("
-                         + getImplDataClassName() + " p_implData)");
+        m_writer.println(
+            "protected static "
+            + m_templateUnit.getGenericParams().generateGenericsDeclaration()
+            + getImplDataClassName()
+            + " " + SET_OPTS + "("
+            + getImplDataClassName() + " p_implData)");
         m_writer.openBlock();
-        for (Iterator<OptionalArgument> i = 
+        for (Iterator<OptionalArgument> i =
                 m_templateUnit.getSignatureOptionalArgs();
              i.hasNext(); )
         {
@@ -152,7 +160,7 @@ public class ImplGenerator
         m_writer.openBlock();
         m_writer.println(
             "super(p_templateManager, " + SET_OPTS + "(p_implData));");
-        for (Iterator<AbstractArgument> i = m_templateUnit.getVisibleArgs(); 
+        for (Iterator<AbstractArgument> i = m_templateUnit.getVisibleArgs();
              i.hasNext(); )
         {
             AbstractArgument arg = i.next();
@@ -173,8 +181,8 @@ public class ImplGenerator
         }
     }
 
-    private void generateInnerUnitFargInterface(FragmentUnit p_fragmentUnit,
-                                                boolean p_private)
+    private void generateInnerUnitFargInterface(
+        FragmentUnit p_fragmentUnit, boolean p_private)
     {
         p_fragmentUnit.printInterface(m_writer,
                                       p_private ? "private" : "protected",
@@ -188,11 +196,10 @@ public class ImplGenerator
         {
             DefUnit defUnit = i.next();
             m_writer.println();
-            for (Iterator<FragmentArgument> f = defUnit.getFragmentArgs(); 
+            for (Iterator<FragmentArgument> f = defUnit.getFragmentArgs();
                  f.hasNext(); )
             {
-                generateInnerUnitFargInterface(f.next().getFragmentUnit(),
-                                               true);
+                generateInnerUnitFargInterface(f.next().getFragmentUnit(), true);
             }
 
             m_writer.print("private void __jamon_innerUnit__");
@@ -225,14 +232,13 @@ public class ImplGenerator
     private void generateMethodIntf(MethodUnit p_methodUnit)
     {
         m_writer.println();
-        for (Iterator<FragmentArgument> f = p_methodUnit.getFragmentArgs(); 
+        for (Iterator<FragmentArgument> f = p_methodUnit.getFragmentArgs();
              f.hasNext(); )
         {
             generateInnerUnitFargInterface(f.next().getFragmentUnit(), false);
         }
 
     }
-
 
     private void generateMethodImpl(MethodUnit p_methodUnit) throws ParserError
     {
@@ -324,7 +330,8 @@ public class ImplGenerator
 
     private String getImplDataClassName()
     {
-        return getProxyClassName() + ".ImplData";
+        return getProxyClassName() + ".ImplData"
+            + m_templateUnit.getGenericParams().generateGenericParamsList();
     }
 
     private String getParentImplClassName()

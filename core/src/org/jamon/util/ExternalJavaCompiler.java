@@ -98,7 +98,7 @@ public class ExternalJavaCompiler
             m_stream = p_stream;
         }
         private final InputStream m_stream;
-        private final StringBuffer m_buffer = new StringBuffer();
+        private final StringBuilder m_buffer = new StringBuilder();
 
         private void close()
             throws IOException

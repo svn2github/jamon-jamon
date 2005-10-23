@@ -54,15 +54,15 @@ public abstract class AbstractNode
     }
 
     public abstract void apply(Analysis p_analysis);
-    
-    protected void propertiesToString(StringBuffer p_buffer)
+
+    protected void propertiesToString(StringBuilder p_buffer)
     {
         p_buffer.append(m_location.toString());
     }
 
     @Override final public String toString()
     {
-        StringBuffer buffer = new StringBuffer(getClass().getName());
+        StringBuilder buffer = new StringBuilder(getClass().getName());
         buffer.append("{");
         propertiesToString(buffer);
         buffer.append("}");
@@ -70,7 +70,7 @@ public abstract class AbstractNode
     }
 
     protected static void addProperty(
-        StringBuffer p_buffer,
+        StringBuilder p_buffer,
         String p_label,
         char p_char)
     {
@@ -81,7 +81,7 @@ public abstract class AbstractNode
     }
 
     protected static void addProperty(
-        StringBuffer p_buffer,
+        StringBuilder p_buffer,
         String p_label,
         Object p_obj)
     {
@@ -92,7 +92,7 @@ public abstract class AbstractNode
     }
 
     protected static void addPropertyList(
-        StringBuffer p_buffer,
+        StringBuilder p_buffer,
         String p_name,
         Iterator<? extends AbstractNode> p_properties)
     {

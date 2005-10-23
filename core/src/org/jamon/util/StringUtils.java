@@ -49,7 +49,7 @@ public class StringUtils
             return "";
         }
 
-        StringBuffer sb = new StringBuffer(p_path.substring(0,k));
+        StringBuilder sb = new StringBuilder(p_path.substring(0,k));
         int j = 1;
         for (int i = 0; i < sb.length() - 1; ++i)
         {
@@ -92,7 +92,7 @@ public class StringUtils
     private static String pathToClassName(String p_path,
                                           String p_fromSep)
     {
-        StringBuffer sb = new StringBuffer(p_path);
+        StringBuilder sb = new StringBuilder(p_path);
         final int len = p_fromSep.length();
         while (sb.length() > 0 && p_fromSep.equals(sb.substring(0,len)))
         {
@@ -112,7 +112,7 @@ public class StringUtils
 
     public static String filePathToTemplatePath(String p_path)
     {
-        StringBuffer sb = new StringBuffer(p_path);
+        StringBuilder sb = new StringBuilder(p_path);
         final int len = File.separator.length();
         int j = len;
         for (int i = 0; i < sb.length() - len; ++i)
@@ -128,7 +128,7 @@ public class StringUtils
 
     public static String classNameToFilePath(String p_className)
     {
-        StringBuffer sb = new StringBuffer(File.separator);
+        StringBuilder sb = new StringBuilder(File.separator);
         sb.append(p_className);
         for (int i = File.separator.length(); i < sb.length(); ++i)
         {
@@ -168,7 +168,7 @@ public class StringUtils
 
     public static String byteArrayToHexString(final byte[] bytes)
     {
-	StringBuffer buffer = new StringBuffer(bytes.length * 2);
+	StringBuilder buffer = new StringBuilder(bytes.length * 2);
 	for (int i = 0; i < bytes.length; i++)
         {
             buffer.append(HEXCHARS[(bytes[i] & 0xF0) >>  4]);
@@ -190,7 +190,7 @@ public class StringUtils
         return "000".substring(0,pad) + s;
     }
 
-    public static void commaJoin(StringBuffer p_buf, Iterator<String> p_iter)
+    public static void commaJoin(StringBuilder p_buf, Iterator<String> p_iter)
     {
         while(p_iter.hasNext())
         {

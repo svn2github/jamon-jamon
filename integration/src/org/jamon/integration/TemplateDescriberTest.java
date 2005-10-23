@@ -112,6 +112,14 @@ public class TemplateDescriberTest
         checkFragArgArgs(frag, new String[] {"mk"});
     }
 
+    public void checkGenericIntrospection() throws Exception
+    {
+        assertEquals(
+            3,
+            m_describer.getTemplateDescription(
+                "test/jamon/ClassOnly", null, null).getGenericParamsCount());
+    }
+
     private void checkArgs(Iterator p_args, String[] p_names, String[] p_types)
     {
         assertEquals(p_names.length, p_types.length);

@@ -42,15 +42,15 @@ import org.jamon.node.TopNode;
 
 public class TopLevelParser extends AbstractBodyParser
 {
-    public static final String BAD_ABSMETH_CONTENT = 
+    public static final String BAD_ABSMETH_CONTENT =
         "<%absmeth> sections can only contain <%args> and <%frag> blocks";
     public static final String EXPECTING_SEMI = "Expecting ';'";
     public static final String EXPECTING_ARROW = "Expecting '=>'";
-    public static final String MALFORMED_EXTENDS_TAG_ERROR = 
+    public static final String MALFORMED_EXTENDS_TAG_ERROR =
         "Malformed <%extends ...> tag";
-    private static final String BAD_ALIASES_CLOSE_TAG = 
+    private static final String BAD_ALIASES_CLOSE_TAG =
         "Malformed </%alias> tag";
-    private static final String BAD_ABS_METHOD_CLOSE_TAG = 
+    private static final String BAD_ABS_METHOD_CLOSE_TAG =
         "Malformed </%absmeth> tag";
     public static final String EXPECTING_IMPLEMENTS_CLOSE =
         "Expecting class name or </%implements>";
@@ -88,7 +88,7 @@ public class TopLevelParser extends AbstractBodyParser
             addError(p_tagLocation, "malformed <%method methodName> tag");
         }
     }
-    
+
     @Override
     protected void handleOverrideTag(Location p_tagLocation) throws IOException
     {
@@ -107,7 +107,7 @@ public class TopLevelParser extends AbstractBodyParser
             addError(p_tagLocation, "malformed <%override methodName> tag");
         }
     }
-    
+
     @Override
     protected void handleDefTag(Location p_tagLocation) throws IOException
     {
@@ -139,7 +139,7 @@ public class TopLevelParser extends AbstractBodyParser
             soakWhitespace();
         }
     }
-    
+
     @Override protected void handleExtendsTag(Location p_tagLocation)
         throws IOException
     {
@@ -177,7 +177,7 @@ public class TopLevelParser extends AbstractBodyParser
                     soakWhitespace();
                     return;
                 }
-                String className = 
+                String className =
                     readClassName(m_reader.getCurrentNodeLocation());
                 if (className.length() == 0)
                 {
@@ -192,9 +192,9 @@ public class TopLevelParser extends AbstractBodyParser
                     new ImplementNode(location, className));
             }
         }
-    }   
+    }
 
-    @Override protected void handleImportTag(Location p_tagLocation) 
+    @Override protected void handleImportTag(Location p_tagLocation)
         throws IOException
     {
         if (checkForTagClosure(p_tagLocation))
@@ -214,7 +214,7 @@ public class TopLevelParser extends AbstractBodyParser
                     soakWhitespace();
                     return;
                 }
-                String className = 
+                String className =
                     readImport(m_reader.getCurrentNodeLocation());
                 if (className.length() == 0)
                 {
@@ -229,9 +229,9 @@ public class TopLevelParser extends AbstractBodyParser
                 importsNode.addImport(new ImportNode(location, className));
             }
         }
-    }   
+    }
 
-    
+
     @Override protected void handleAliasesTag(Location p_tagLocation)
         throws IOException
     {
@@ -254,7 +254,7 @@ public class TopLevelParser extends AbstractBodyParser
             String name = readChar('/') ? "/" : readIdentifier();
             if (name.length() == 0)
             {
-                addError(m_reader.getCurrentNodeLocation(), 
+                addError(m_reader.getCurrentNodeLocation(),
                          "Identifier expected");
             }
             soakWhitespace();
@@ -277,7 +277,7 @@ public class TopLevelParser extends AbstractBodyParser
         }
     }
 
-    
+
     @Override protected void handleAbsMethodTag(Location p_tagLocation)
         throws IOException
     {
@@ -285,7 +285,7 @@ public class TopLevelParser extends AbstractBodyParser
         {
             String name = readIdentifier();
             checkForTagClosure(p_tagLocation);
-            AbsMethodNode absMethodNode = 
+            AbsMethodNode absMethodNode =
                 new AbsMethodNode(p_tagLocation, name);
             m_root.addSubNode(absMethodNode);
             while(true)
@@ -303,7 +303,7 @@ public class TopLevelParser extends AbstractBodyParser
                             {
                                 absMethodNode.addArgsBlock(
                                     new ArgsParser(
-                                        m_reader, m_errors, 
+                                        m_reader, m_errors,
                                         m_reader.getCurrentNodeLocation())
                                         .getArgsNode());
                             }
@@ -329,7 +329,7 @@ public class TopLevelParser extends AbstractBodyParser
                         }
                         else
                         {
-                            addError(m_reader.getLocation(), 
+                            addError(m_reader.getLocation(),
                                      BAD_ABSMETH_CONTENT);
                             return;
                         }
@@ -338,7 +338,7 @@ public class TopLevelParser extends AbstractBodyParser
                     {
                         if (!checkToken("/%absmeth>"))
                         {
-                            addError(m_reader.getLocation(), 
+                            addError(m_reader.getLocation(),
                                      BAD_ABS_METHOD_CLOSE_TAG);
                         }
                         soakWhitespace();
@@ -354,13 +354,13 @@ public class TopLevelParser extends AbstractBodyParser
         }
         else
         {
-            addError(m_reader.getLocation(), 
+            addError(m_reader.getLocation(),
                      "malformed <%absmeth methodName> tag");
         }
     }
-    
-    
-    
+
+
+
     @Override protected void handleParentArgsNode(Location p_tagLocation)
             throws IOException
     {
@@ -368,8 +368,8 @@ public class TopLevelParser extends AbstractBodyParser
             new ParentArgsParser(m_reader, m_errors, p_tagLocation)
                 .getParentArgsNode());
     }
-    
-    
+
+
 
     @Override protected void handleParentMarkerTag(Location p_tagLocation)
         throws IOException
@@ -386,7 +386,7 @@ public class TopLevelParser extends AbstractBodyParser
         // end of file is a fine thing at the top level
     }
 
-    @Override protected void handleEscapeTag(Location p_tagLocation) 
+    @Override protected void handleEscapeTag(Location p_tagLocation)
         throws IOException
     {
         soakWhitespace();
@@ -401,7 +401,7 @@ public class TopLevelParser extends AbstractBodyParser
             if (Character.isLetter((char) c))
             {
                 m_root.addSubNode(
-                    new EscapeDirectiveNode(p_tagLocation, 
+                    new EscapeDirectiveNode(p_tagLocation,
                                             new String(new char[] {(char) c})));
             }
             else
@@ -413,7 +413,14 @@ public class TopLevelParser extends AbstractBodyParser
         }
         soakWhitespace();
     }
-    
+
+    @Override protected void handleGenericTag(Location p_tagLocation)
+        throws IOException
+    {
+        m_root.addSubNode(new GenericsParser(m_reader, m_errors, p_tagLocation)
+            .getGenericsNode());
+    }
+
     @Override protected boolean isTopLevel()
     {
         return true;

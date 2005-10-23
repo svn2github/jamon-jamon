@@ -41,7 +41,8 @@ public interface Unit
 
     void addStatement(Statement p_statement);
 
-    FragmentUnit addFragment(FragmentArgsNode p_node);
+    FragmentUnit addFragment(
+        FragmentArgsNode p_node, GenericParams p_genericParams);
     void addRequiredArg(ArgNode p_node);
     void addOptionalArg(OptionalArgNode p_node);
 

@@ -262,7 +262,7 @@ public class InheritanceTest
     private void assertStringSetEquals(String[] p_expected, String[] p_actual)
     {
         assertEquals(p_expected.length, p_actual.length);
-        Set s = new HashSet(Arrays.asList(p_actual));
+        Set<String> s = new HashSet<String>(Arrays.asList(p_actual));
         for(int i = 0; i < p_expected.length; i++)
         {
             assertTrue(s.contains(p_expected[i]));

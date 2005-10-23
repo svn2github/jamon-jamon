@@ -121,7 +121,7 @@ public class EncodingReader
         final int WAITFORCLOSE = 2;
         final int CLOSED = 3;
 
-        StringBuffer encoding = new StringBuffer();
+        StringBuilder encoding = new StringBuilder();
         boolean lowByte = true;
         int state = 0;
         while (true)

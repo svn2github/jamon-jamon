@@ -54,7 +54,7 @@ public abstract class AbstractUnit
     {
         return m_parent;
     }
-    
+
     protected final ParserErrors getErrors()
     {
         return m_errors;
@@ -122,26 +122,26 @@ public abstract class AbstractUnit
     private final ParserErrors m_errors;
     private final List<Statement> m_statements = new LinkedList<Statement>();
     private final Set<String> m_argNames = new HashSet<String>();
-
-    public FragmentUnit addFragment(FragmentArgsNode p_node)
+    public FragmentUnit addFragment(
+        FragmentArgsNode p_node, GenericParams p_genericParams)
     {
         checkArgName(p_node.getFragmentName(), p_node.getLocation());
-        FragmentUnit frag = 
-            new FragmentUnit(p_node.getFragmentName(), this, m_errors);
+        FragmentUnit frag = new FragmentUnit(
+            p_node.getFragmentName(), this, p_genericParams, m_errors);
         addFragmentArg(new FragmentArgument(frag), p_node.getLocation());
         return frag;
     }
 
     public void addRequiredArg(ArgNode p_node)
     {
-        checkArgName(p_node.getName().getName(), 
+        checkArgName(p_node.getName().getName(),
                      p_node.getName().getLocation());
         addRequiredArg(new RequiredArgument(p_node));
     }
 
     public void addOptionalArg(OptionalArgNode p_node)
     {
-        checkArgName(p_node.getName().getName(), 
+        checkArgName(p_node.getName().getName(),
             p_node.getName().getLocation());
         addOptionalArg(new OptionalArgument(p_node));
     }
@@ -197,10 +197,10 @@ public abstract class AbstractUnit
         }
     }
 
-    protected void generateInterfaceSummary(StringBuffer p_buf)
+    protected void generateInterfaceSummary(StringBuilder p_buf)
     {
         p_buf.append("Required\n");
-        for (Iterator<RequiredArgument> i = getSignatureRequiredArgs(); 
+        for (Iterator<RequiredArgument> i = getSignatureRequiredArgs();
              i.hasNext(); )
         {
             AbstractArgument arg = i.next();
@@ -210,9 +210,9 @@ public abstract class AbstractUnit
             p_buf.append("\n");
         }
         p_buf.append("Optional\n");
-        TreeMap<String, OptionalArgument> optArgs = 
+        TreeMap<String, OptionalArgument> optArgs =
             new TreeMap<String, OptionalArgument>();
-        for (Iterator<OptionalArgument> i = getSignatureOptionalArgs(); 
+        for (Iterator<OptionalArgument> i = getSignatureOptionalArgs();
              i.hasNext(); )
         {
             OptionalArgument arg = i.next();

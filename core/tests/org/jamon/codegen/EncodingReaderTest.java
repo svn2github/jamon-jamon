@@ -34,19 +34,19 @@ public class EncodingReaderTest
     public void testEmptyStream() throws Exception
     {
         assertEquals(
-            "", 
+            "",
             readAll(new EncodingReader(new ByteArrayInputStream(new byte[0]))));
     }
-    
+
     public void testOneCharStream() throws Exception
     {
         assertEquals(
-            "x", 
+            "x",
             readAll(new EncodingReader(
                 new ByteArrayInputStream(new byte[] {'x'}))));
     }
-    
-    
+
+
     public void testNoEncodingTag() throws Exception
     {
         String stuff = "abcdefg12345!@#$%^~";
@@ -55,7 +55,7 @@ public class EncodingReaderTest
             readAll(new EncodingReader(
                 new ByteArrayInputStream(stuff.getBytes("latin1")))));
     }
-    
+
     public void testLatin1()
         throws Exception
     {
@@ -95,7 +95,7 @@ public class EncodingReaderTest
         throws IOException
     {
         BufferedReader reader = new BufferedReader(p_reader);
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         String s = null;
         while ((s = reader.readLine()) != null)
         {

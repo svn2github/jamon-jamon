@@ -8,6 +8,7 @@ import org.jamon.node.AbstractCallNode;
 import org.jamon.node.AbstractNode;
 import org.jamon.node.ChildCallNode;
 import org.jamon.node.FragmentCallNode;
+import org.jamon.node.GenericCallParam;
 import org.jamon.node.MultiFragmentCallNode;
 import org.jamon.node.NamedFragmentNode;
 import org.jamon.node.NamedParamNode;
@@ -60,6 +61,45 @@ public class CallParserTest extends AbstractParserTest
                 new NoParamsNode(location(1, 8))),
             parse("<& foo &>"));
     }
+   
+    public void testSimpleCallWithGenericParam() throws Exception
+    {
+        assertEquals(
+            new SimpleCallNode(
+                START_LOC,
+                new RelativePathNode(location(1, 4)).addPathElement(
+                    new PathElementNode(location(1, 4), "foo")),
+                new NoParamsNode(location(1, 16)))
+                .addGenericParam(
+                    new GenericCallParam(location(1, 8), "String")),
+            parse("<& foo<String> &>"));
+    }
+
+    public void testSimpleCallWithGenericParams() throws Exception
+    {
+        assertEquals(
+            new SimpleCallNode(
+                START_LOC,
+                new RelativePathNode(location(1, 4)).addPathElement(
+                    new PathElementNode(location(1, 4), "foo")),
+                new NoParamsNode(location(1, 13)))
+                .addGenericParam(new GenericCallParam(location(1, 8), "A"))
+                .addGenericParam(new GenericCallParam(location(1, 10), "B")),
+            parse("<& foo<A,B> &>"));
+    }
+
+    public void testSimpleCallWithComplexGenericParam() throws Exception
+    {
+        assertEquals(
+            new SimpleCallNode(
+                START_LOC,
+                new RelativePathNode(location(1, 4)).addPathElement(
+                    new PathElementNode(location(1, 4), "foo")),
+                new NoParamsNode(location(1, 16)))
+                .addGenericParam(
+                    new GenericCallParam(location(1, 8), "A<B,C>")),
+            parse("<& foo<A<B,C>> &>"));
+    }
 
     public void testParseNamedArgCall() throws Exception
     {
@@ -111,6 +151,22 @@ public class CallParserTest extends AbstractParserTest
             parse("<& /foo; a => \"a;\"; b => '&' &>"));
     }
 
+    public void testNamedArgCallWithGenericParam() throws Exception
+    {
+        assertEquals(
+            new SimpleCallNode(
+                START_LOC,
+                new AbsolutePathNode(location(1, 4)).addPathElement(
+                    new PathElementNode(location(1, 5), "foo")),
+                new NamedParamsNode(location(1, 11)).addParam(
+                    new NamedParamNode(
+                        location(1, 13),
+                        new ParamNameNode(location(1, 13), "a"),
+                        new ParamValueNode(location(1, 18), "1 "))))
+                .addGenericParam(new GenericCallParam(location(1, 9), "A")),
+            parse("<& /foo<A>; a => 1 &>"));
+    }
+
     public void testParseUnnamedArgCall() throws Exception
     {
         assertEquals(
@@ -154,6 +210,19 @@ public class CallParserTest extends AbstractParserTest
                     .addValue(
                         new ParamValueNode(location(1, 10), "x && a > b "))),
             parse("<& /foo: x && a > b &>"));
+    }
+    
+    public void testUnnamedArgCallWithGenericParam() throws Exception
+    {
+        assertEquals(
+            new SimpleCallNode(
+                START_LOC,
+                new AbsolutePathNode(location(1, 4)).addPathElement(
+                    new PathElementNode(location(1, 5), "foo")),
+                new UnnamedParamsNode(location(1, 11)).addValue(
+                    new ParamValueNode(location(1, 13), "1 ")))
+               .addGenericParam(new GenericCallParam(location(1,9), "A")),
+            parse("<& /foo<A>: 1 &>"));
     }
     
     public void testChildCall() throws IOException
@@ -268,6 +337,12 @@ public class CallParserTest extends AbstractParserTest
             AbstractParser.NOT_AN_IDENTIFIER_ERROR);
     }
 
+    public void testMissingGenericCallParamClose() throws Exception
+    {
+        assertError(
+            "<& foo<x\n&>", 2, 1, CallParser.MISSING_GENERIC_PARAM_CLOSE_ERROR); 
+    }
+    
     public void testAsterixNonChildCall() throws Exception
     {
         assertError(

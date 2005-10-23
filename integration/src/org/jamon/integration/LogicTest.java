@@ -42,7 +42,7 @@ public class LogicTest
     public void testIterateNotEmpty()
         throws Exception
     {
-        ArrayList list = new ArrayList();
+        ArrayList<String> list = new ArrayList<String>();
         list.add("a");
         list.add("b");
         list.add("c");

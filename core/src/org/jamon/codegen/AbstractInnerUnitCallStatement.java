@@ -21,7 +21,6 @@
 package org.jamon.codegen;
 
 import java.util.Iterator;
-
 import org.jamon.ParserError;
 import org.jamon.emit.EmitMode;
 import org.jamon.node.Location;
@@ -49,7 +48,7 @@ public abstract class AbstractInnerUnitCallStatement
     @Override
     protected String getFragmentIntfName(FragmentUnit p_fragmentUnitIntf)
     {
-        return p_fragmentUnitIntf.getFragmentInterfaceName();
+        return p_fragmentUnitIntf.getFragmentInterfaceName(true);
     }
 
     public void generateSource(CodeWriter p_writer,
@@ -69,7 +68,7 @@ public abstract class AbstractInnerUnitCallStatement
         //FIXME - do we need to surround args with parens?
         getParams().generateRequiredArgs(m_unit.getSignatureRequiredArgs(),
                                          p_writer);
-        for (Iterator<OptionalArgument> o = m_unit.getSignatureOptionalArgs(); 
+        for (Iterator<OptionalArgument> o = m_unit.getSignatureOptionalArgs();
              o.hasNext(); )
         {
             OptionalArgument arg = o.next();

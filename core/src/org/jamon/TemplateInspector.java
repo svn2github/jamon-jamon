@@ -256,8 +256,8 @@ public class TemplateInspector
         argNames.removeAll(m_optionalArgNames);
         if (! argNames.isEmpty())
         {
-            StringBuffer msg =
-                new StringBuffer("Unknown arguments supplied: ");
+            StringBuilder msg =
+                new StringBuilder("Unknown arguments supplied: ");
             for (Iterator<String> i = argNames.iterator(); i.hasNext(); )
             {
                 msg.append(i.next());

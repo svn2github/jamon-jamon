@@ -91,7 +91,7 @@ public class StringUtilsTest
     public void testCommaJoin0()
         throws Exception
     {
-        StringBuffer buf = new StringBuffer("prefix ");
+        StringBuilder buf = new StringBuilder("prefix ");
         StringUtils.commaJoin(buf,
                               (Arrays.asList(new String[] {}).iterator()));
         assertEquals("prefix ", buf.toString());
@@ -100,7 +100,7 @@ public class StringUtilsTest
     public void testCommaJoin1()
         throws Exception
     {
-        StringBuffer buf = new StringBuffer("prefix ");
+        StringBuilder buf = new StringBuilder("prefix ");
         StringUtils.commaJoin(buf,
                               (Arrays.asList(new String[] {"foo"})
                                .iterator()));
@@ -110,7 +110,7 @@ public class StringUtilsTest
     public void testCommaJoin2()
         throws Exception
     {
-        StringBuffer buf = new StringBuffer("prefix ");
+        StringBuilder buf = new StringBuilder("prefix ");
         StringUtils.commaJoin(buf,
                               (Arrays.asList(new String[] {"foo", "bar"})
                                .iterator()));
@@ -120,7 +120,7 @@ public class StringUtilsTest
     public void testCommaJoin3()
         throws Exception
     {
-        StringBuffer buf = new StringBuffer("prefix ");
+        StringBuilder buf = new StringBuilder("prefix ");
         StringUtils.commaJoin(buf,
                               Arrays.asList(new String[] {"foo", "bar", "baz"})
                               .iterator());

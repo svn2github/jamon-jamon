@@ -27,8 +27,9 @@ ImplementNode String:name
 ImplementsNode ImplementNode:implement*
 ImportNode String:name
 ImportsNode ImportNode:import*
+GenericCallParam String:className
 AbstractCallNode
-AbstractComponentCallNode:AbstractCallNode AbstractPathNode:callPath AbstractParamsNode:params
+AbstractComponentCallNode:AbstractCallNode AbstractPathNode:callPath GenericCallParam:genericParam* AbstractParamsNode:params
 SimpleCallNode:AbstractComponentCallNode
 ChildCallNode:AbstractCallNode
 UnnamedFragmentNode:AbstractBodyNode
@@ -55,3 +56,6 @@ AbsMethodNode String:name AbstractArgsNode:argsBlock*
 ParentArgNode ArgNameNode:name
 ParentArgWithDefaultNode:ParentArgNode ArgValueNode:value
 ParentArgsNode ParentArgNode:arg*
+GenericsBoundNode String:className
+GenericsParamNode String:name GenericsBoundNode:bound*
+GenericsNode GenericsParamNode:param*

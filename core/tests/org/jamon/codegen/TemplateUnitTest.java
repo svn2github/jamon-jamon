@@ -30,6 +30,8 @@ import java.util.Set;
 import org.jamon.TemplateFileLocation;
 import org.jamon.node.ArgNameNode;
 import org.jamon.node.ArgValueNode;
+import org.jamon.node.GenericsBoundNode;
+import org.jamon.node.GenericsParamNode;
 import org.jamon.node.Location;
 import org.jamon.node.ParentArgNode;
 import org.jamon.node.ParentArgWithDefaultNode;
@@ -91,8 +93,8 @@ public class TemplateUnitTest
         checkArgSet(new OptionalArgument[] {co3},
                      child.getDeclaredOptionalArgs());
 
-        FragmentArgument f =
-            new FragmentArgument( new FragmentUnit("f", child, null));
+        FragmentArgument f = new FragmentArgument(
+            new FragmentUnit("f", child, new GenericParams(), null));
         child.addFragmentArg(f, null);
         checkArgSet(new AbstractArgument[] {pr2, cr3, po2, co3, f},
                     child.getVisibleArgs());
@@ -122,8 +124,8 @@ public class TemplateUnitTest
         RequiredArgument j = new RequiredArgument("j", "Integer");
         OptionalArgument a = new OptionalArgument("a", "boolean", "true");
         OptionalArgument b = new OptionalArgument("b", "Boolean", "null");
-        FragmentUnit f = new FragmentUnit("f", null, null);
-        FragmentUnit g = new FragmentUnit("g", null, null);
+        FragmentUnit f = new FragmentUnit("f", unit, new GenericParams(), null);
+        FragmentUnit g = new FragmentUnit("g", unit, new GenericParams(), null);
 
         unit.addRequiredArg(i);
         checkSigIsUnique(unit, sigs);
@@ -152,6 +154,12 @@ public class TemplateUnitTest
         f.addRequiredArg(new RequiredArgument("x", "float"));
         checkSigIsUnique(unit, sigs);
         unit.addFragmentArg(new FragmentArgument(g), null);
+
+        Location loc = new Location(null, 1, 1);
+        GenericsParamNode genericsParamNode = new GenericsParamNode(loc, "d");
+        unit.addGenericsParamNode(genericsParamNode);
+        checkSigIsUnique(unit, sigs);
+        genericsParamNode.addBound(new GenericsBoundNode(loc, "String"));
         checkSigIsUnique(unit, sigs);
     }
 
@@ -192,7 +200,7 @@ public class TemplateUnitTest
     private void checkArgSet(AbstractArgument[] p_expected,
                              Iterator<? extends AbstractArgument> p_actual)
     {
-        Map<String, AbstractArgument> actual = 
+        Map<String, AbstractArgument> actual =
             new HashMap<String, AbstractArgument>();
         while (p_actual.hasNext())
         {

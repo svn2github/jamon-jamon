@@ -1,3 +1,4 @@
+<%generic>S,T,U</%generic>
 <%args>
   int i;
   String foo => "bar";

@@ -15,7 +15,7 @@ public class AbstractParser
     public static final String MALFORMED_TAG_ERROR = "Malformed tag";
     public static final String EOF_IN_JAVA_QUOTE_ERROR =
         "Reached end of file while inside a java quote";
-    public static final String NOT_AN_IDENTIFIER_ERROR = 
+    public static final String NOT_AN_IDENTIFIER_ERROR =
         "identifier exepected";
     public static final String BAD_JAVA_TYPE_SPECIFIER = "Bad java type specifier";
     public static final String BAD_ARGS_CLOSE_TAG = "malformed </%args> tag";
@@ -57,15 +57,14 @@ public class AbstractParser
     }
 
     protected class NotAnIdentifierException extends Exception {}
-    
+
     /**
      * Reads in a java identifier.
-     * @param p_throwExceptionOnFailure If true, and no identifier is found,
-     *        then throw a NotAnIdentifierException. Otherwise, call addError.
      * @return The identifier read.
      * @throws IOException
+     * @throws NotAnIdentifierException if no identifier is found
      */
-    protected String readIdentifierOrThrow() 
+    protected String readIdentifierOrThrow()
         throws IOException, NotAnIdentifierException
     {
         int c;
@@ -89,7 +88,7 @@ public class AbstractParser
         m_reader.unread(c);
         return builder.toString();
     }
-    
+
     protected String readIdentifier() throws IOException
     {
         try
@@ -106,7 +105,7 @@ public class AbstractParser
     protected final PositionalPushbackReader m_reader;
     protected final ParserErrors m_errors;
     /**
-         * Read a single character from the reader.  If it is the expected 
+         * Read a single character from the reader.  If it is the expected
          * character, return true; otherwise, unread it and return false
          * @param p_char The expected character.
          * @return True if the character read was that expected.
@@ -131,13 +130,13 @@ public class AbstractParser
      * @param end The end marker for the string
      * @param startLocation The location marking the start of the block being
      *         read - only used for construcing error messages.
-     * @param passOverQuotes True if the material being read is java which 
-     *         might contain the ending token inside quotes 
+     * @param passOverQuotes True if the material being read is java which
+     *         might contain the ending token inside quotes
      **/
     protected String readUntil(String p_end, Location p_startLocation)
         throws IOException
     {
-        StringBuffer buffer = new StringBuffer();
+        StringBuilder buffer = new StringBuilder();
         int charsSeen = 0;
         int c = -1;
         while (charsSeen < p_end.length() && (c = m_reader.read()) >= 0)
@@ -171,7 +170,7 @@ public class AbstractParser
         TagEndDetector p_tagEndDetector)
         throws IOException, ParserError
     {
-        StringBuffer buffer = new StringBuffer();
+        StringBuilder buffer = new StringBuilder();
         int c = -1;
         boolean inString = false;
         boolean inChar = false;
@@ -279,7 +278,7 @@ public class AbstractParser
             return "";
         }
     }
-    
+
     protected String readClassName(final Location p_location) throws IOException
     {
         try
@@ -292,7 +291,7 @@ public class AbstractParser
             return "";
         }
     }
-    
+
     protected String readImport(final Location p_location) throws IOException
     {
         try

@@ -115,9 +115,9 @@ public abstract class TestBase
                 .setWorkDir(WORK_DIR));
     }
 
-    private String removeCrs(StringBuffer p_string)
+    private String removeCrs(CharSequence p_string)
     {
-        StringBuffer buffer = new StringBuffer(p_string.length());
+        StringBuilder buffer = new StringBuilder(p_string.length());
         for (int i = 0; i < p_string.length(); ++i)
         {
             char c = p_string.charAt(i);
@@ -170,8 +170,8 @@ public abstract class TestBase
             assertEquals(
                 new ParserError(
                     new Location(
-                        new TemplateFileLocation(getTemplateFilePath(path)), 
-                        p_line, p_column), 
+                        new TemplateFileLocation(getTemplateFilePath(path)),
+                        p_line, p_column),
                     p_message),
                 errors.next());
             if (errors.hasNext())

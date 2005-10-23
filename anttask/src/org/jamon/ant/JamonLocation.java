@@ -35,7 +35,7 @@ public class JamonLocation extends Location
     @Override
     public String toString()
     {
-        StringBuffer buf = new StringBuffer(super.toString());
+        StringBuilder buf = new StringBuilder(super.toString());
         buf.insert(buf.length() - 2, ":");
         buf.insert(buf.length() - 2, m_columnNumber);
         return buf.toString();

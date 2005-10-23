@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry output="anttask/build/classes" kind="src" path="anttask/src"/>
-	<classpathentry excluding="test/jamon/broken/**" output="integration/build/classes" kind="src" path="integration/build/src"/>
+	<classpathentry kind="src" path="integration/templates"/>
+	<classpathentry excluding="test/jamon/broken/**|test/jamon/external/**.java" output="integration/build/classes" kind="src" path="integration/build/src"/>
 	<classpathentry output="integration/build/classes" kind="src" path="integration/src"/>
 	<classpathentry output="benchmark/build/classes" kind="src" path="benchmark/build/src"/>
 	<classpathentry output="benchmark/build/classes" kind="src" path="benchmark/src"/>

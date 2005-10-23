@@ -93,7 +93,7 @@ public class PathParser extends AbstractParser
         throws IOException
     {
         int c;
-        StringBuffer identifier = new StringBuffer();
+        StringBuilder identifier = new StringBuilder();
         boolean identStart = true;
         Location location = m_reader.getNextLocation();
         while ((c = m_reader.read()) >= 0)
@@ -109,7 +109,7 @@ public class PathParser extends AbstractParser
                 {
                     p_path.addPathElement(
                         new PathElementNode(location, identifier.toString()));
-                    identifier = new StringBuffer();
+                    identifier = new StringBuilder();
                     identStart = true;
                     p_updirsAllowed = false;
                     location = m_reader.getNextLocation();
@@ -122,7 +122,7 @@ public class PathParser extends AbstractParser
                     if ((c = m_reader.read()) == '.')
                     {
                         p_path.addPathElement(new UpdirNode(location));
-                        identifier = new StringBuffer();
+                        identifier = new StringBuilder();
                         identStart = true;
                         if ((c = m_reader.read()) == '/')
                         {

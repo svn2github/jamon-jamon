@@ -33,6 +33,7 @@ import java.util.Set;
 
 import org.jamon.ParserErrors;
 import org.jamon.node.ClassNode;
+import org.jamon.node.GenericsParamNode;
 import org.jamon.node.ImportNode;
 import org.jamon.node.Location;
 import org.jamon.node.ParentArgNode;
@@ -72,7 +73,7 @@ public class TemplateUnit
                                             p_parent.getFragmentInterfaces(),
                                             getErrors());
 
-        for (Iterator<AbstractArgument> i = 
+        for (Iterator<AbstractArgument> i =
                 new SequentialIterator<AbstractArgument>(
                         p_parent.getRequiredArgs().iterator(),
                         p_parent.getOptionalArgs().iterator(),
@@ -149,7 +150,7 @@ public class TemplateUnit
             ? p_arg.getDefault()
             : m_inheritedArgs.getDefaultValue(p_arg);
     }
-    
+
     @Override
     public Iterator<AbstractArgument> getVisibleArgs()
     {
@@ -326,19 +327,19 @@ public class TemplateUnit
     private InheritedArgs m_inheritedArgs;
     private TemplateDescription m_parentDescription =
         TemplateDescription.EMPTY;
-    private final List<RequiredArgument> m_declaredRequiredArgs = 
+    private final List<RequiredArgument> m_declaredRequiredArgs =
         new LinkedList<RequiredArgument>();
-    private final List<FragmentArgument> m_fragmentArgs = 
+    private final List<FragmentArgument> m_fragmentArgs =
         new LinkedList<FragmentArgument>();
     private final Set<OptionalArgument> m_declaredOptionalArgs =
         new HashSet<OptionalArgument>();
-    private final Set<FragmentArgument> m_declaredFragmentArgs = 
+    private final Set<FragmentArgument> m_declaredFragmentArgs =
         new HashSet<FragmentArgument>();
 
     private final Map<String, DefUnit> m_defs = new HashMap<String, DefUnit>();
-    private final Map<String, MethodUnit> m_methods = 
+    private final Map<String, MethodUnit> m_methods =
         new HashMap<String, MethodUnit>();
-    private final List<OverriddenMethodUnit> m_overrides = 
+    private final List<OverriddenMethodUnit> m_overrides =
         new LinkedList<OverriddenMethodUnit>();
     private final List<ImportNode> m_imports = new LinkedList<ImportNode>();
     private final List<String> m_interfaces = new LinkedList<String>();
@@ -349,6 +350,7 @@ public class TemplateUnit
     private final Set<String> m_callNames = new HashSet<String>();
     private final Collection<String> m_abstractMethodNames =
         new HashSet<String>();
+    private final GenericParams m_genericParams = new GenericParams();
 
     public Iterator<RequiredArgument> getParentRenderArgs()
     {
@@ -381,7 +383,7 @@ public class TemplateUnit
     public Iterator<RequiredArgument> getDeclaredRenderArgs()
     {
         return new SequentialIterator<RequiredArgument>(
-            m_declaredRequiredArgs.iterator(), 
+            m_declaredRequiredArgs.iterator(),
             m_declaredFragmentArgs.iterator());
     }
 
@@ -419,9 +421,12 @@ public class TemplateUnit
     }
 
     @Override
-    protected void generateInterfaceSummary(StringBuffer p_buf)
+    protected void generateInterfaceSummary(StringBuilder p_buf)
     {
         super.generateInterfaceSummary(p_buf);
+        p_buf.append("GenericParams:");
+        p_buf.append(getGenericParams().generateGenericsDeclaration());
+        p_buf.append("\n");
         if(m_parentDescription != null)
         {
             p_buf.append("Parent sig: ");
@@ -442,7 +447,7 @@ public class TemplateUnit
     {
         try
         {
-            StringBuffer buf = new StringBuffer();
+            StringBuilder buf = new StringBuilder();
             generateInterfaceSummary(buf);
             return StringUtils.byteArrayToHexString
                 (MessageDigest.getInstance("MD5").digest
@@ -452,5 +457,12 @@ public class TemplateUnit
         {
             throw new RuntimeException("Unable to get md5 instance");
         }
+    }
+
+    public GenericParams getGenericParams() { return m_genericParams; }
+
+    public void addGenericsParamNode(GenericsParamNode p_node)
+    {
+        m_genericParams.addParam(p_node);
     }
 }

@@ -40,7 +40,7 @@ public class JUnitTemplateManagerTest
     private void prepareTemplate(Integer p_iValue)
         throws Exception
     {
-        HashMap optMap = new HashMap();
+        HashMap<String, Object> optMap = new HashMap<String, Object>();
         if (p_iValue != null)
         {
             optMap.put("i", p_iValue);
@@ -146,12 +146,12 @@ public class JUnitTemplateManagerTest
     public void testConstructProxy()
         throws Exception
     {
-        assertEquals(JUnitTemplate.class,
-                     new JUnitTemplateManager(JUnitTemplate.class,
-                                              Collections.EMPTY_MAP,
-                                              new Object[0])
-                         .constructProxy(
-                             "/test/jamon/JUnitTemplate")
+        assertEquals(
+            JUnitTemplate.class,
+            new JUnitTemplateManager(JUnitTemplate.class,
+                                     Collections.<String, Object>emptyMap(),
+                                     new Object[0])
+                         .constructProxy("/test/jamon/JUnitTemplate")
                          .getClass());
     }
 }

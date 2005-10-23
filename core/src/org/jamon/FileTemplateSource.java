@@ -103,7 +103,7 @@ public class FileTemplateSource
     private String templatePathToFilePath(String p_path)
     {
         StringTokenizer tokenizer = new StringTokenizer(p_path, "/");
-        StringBuffer path = new StringBuffer(p_path.length());
+        StringBuilder path = new StringBuilder(p_path.length());
         while (tokenizer.hasMoreTokens())
         {
             path.append(tokenizer.nextToken());

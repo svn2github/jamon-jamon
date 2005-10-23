@@ -45,7 +45,7 @@ public class NodeGenerator
         p_writer.println("  }");
         p_writer.println();
     }
-    
+
     private static void writeHeader(
         PrintWriter p_writer, List<NodeMember> p_members)
     {
@@ -71,7 +71,7 @@ public class NodeGenerator
         {
             if (!member.isList())
             {
-                p_writer.print(", " + member.getType() 
+                p_writer.print(", " + member.getType()
                                + " p_" + member.getName());
             }
         }
@@ -160,7 +160,7 @@ public class NodeGenerator
                 p_writer.println("    return this;");
                 p_writer.println("  }");
                 p_writer.println(
-                    "  public Iterable<" + member.getType() + "> "
+                    "  public List<" + member.getType() + "> "
                     + member.getGetter()
                     + " { return " + member.instanceName() + "; }");
             }
@@ -174,8 +174,8 @@ public class NodeGenerator
                         + ";");
                 p_writer.println(
                     "  public "
-                        + member.getType() + " " 
-                        + member.getGetter() 
+                        + member.getType() + " "
+                        + member.getGetter()
                         + " { return " + member.instanceName() + "; }");
             }
             p_writer.println();
@@ -235,7 +235,7 @@ public class NodeGenerator
         PrintWriter p_writer, List<NodeMember> p_members)
     {
         p_writer.println(
-            "  @Override protected void propertiesToString(StringBuffer p_buffer)");
+            "  @Override protected void propertiesToString(StringBuilder p_buffer)");
         p_writer.println("  {");
         p_writer.println("    super.propertiesToString(p_buffer);");
         for (NodeMember member : p_members)
@@ -260,7 +260,7 @@ public class NodeGenerator
 
     /**
      * Create Java source files for nodes described in a node file.
-     * @param p_nodesDescriptor A description of the nodes 
+     * @param p_nodesDescriptor A description of the nodes
      *         to generate Java sources for.
      * @param p_sourceDir The directory to place generated files in.
      * @throws IOException

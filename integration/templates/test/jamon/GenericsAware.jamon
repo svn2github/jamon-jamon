@@ -10,7 +10,7 @@
 </%def>
 
 <%java>
-  Map<Integer, String> m = new HashMap();
+  Map<Integer, String> m = new HashMap<Integer, String>();
   m.put(1,"abc");
 </%java>\
 <& handleMap: m &>

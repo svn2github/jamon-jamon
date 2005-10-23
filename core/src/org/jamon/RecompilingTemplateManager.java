@@ -295,7 +295,7 @@ public class RecompilingTemplateManager
 
 
     private static void extractClasspath(ClassLoader p_classLoader,
-                                         StringBuffer p_classpath)
+                                         StringBuilder p_classpath)
     {
         if (p_classLoader instanceof URLClassLoader)
         {
@@ -321,7 +321,7 @@ public class RecompilingTemplateManager
                                        boolean p_includeRtJar,
                                        ClassLoader p_classLoader)
     {
-        StringBuffer cp = new StringBuffer(p_start);
+        StringBuilder cp = new StringBuilder(p_start);
         if (p_classpath != null)
         {
             cp.append(File.pathSeparator);
@@ -350,7 +350,7 @@ public class RecompilingTemplateManager
         return cp.toString();
     }
     
-    private static void pruneJniLibs(StringBuffer cp) 
+    private static void pruneJniLibs(StringBuilder cp) 
     {
         String[] components = cp.toString().split(File.pathSeparator);
         cp.delete(0, cp.length());
@@ -371,7 +371,7 @@ public class RecompilingTemplateManager
 
     private static String getRtJarPath()
     {
-        StringBuffer path = new StringBuffer(System.getProperty("java.home"));
+        StringBuilder path = new StringBuilder(System.getProperty("java.home"));
         path.append(File.separator);
         path.append("lib");
         path.append(File.separator);
@@ -681,7 +681,7 @@ public class RecompilingTemplateManager
             return null;
         }
 
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         buf.append("compiling: ");
         for (Iterator<String> i = p_sourceFiles.iterator(); i.hasNext(); /* */)
         {
@@ -713,7 +713,7 @@ public class RecompilingTemplateManager
     }
 
 
-    private Map<String, DependencyEntry> m_dependencyCache = 
+    private Map<String, DependencyEntry> m_dependencyCache =
         new HashMap<String, DependencyEntry>();
 
     private static class DependencyEntry

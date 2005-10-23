@@ -26,21 +26,26 @@ import org.jamon.node.OptionalArgNode;
 
 public class FragmentUnit extends AbstractInnerUnit
 {
-    public FragmentUnit(String p_name, Unit p_parent, ParserErrors p_errors)
+    public FragmentUnit(String p_name, Unit p_parent,
+                        GenericParams p_genericParams, ParserErrors p_errors)
     {
         super(p_name, p_parent, p_errors);
+        m_genericParams = p_genericParams;
     }
 
-    public String getFragmentInterfaceName()
+    public String getFragmentInterfaceName(boolean p_makeGeneric)
     {
+        String genericParamsClause = p_makeGeneric
+            ? m_genericParams.generateGenericParamsList()
+            : "";
         if(getParent() instanceof AbstractInnerUnit)
         {
             return "Fragment_" + getParent().getName()
-                + "__jamon__" + getName();
+                + "__jamon__" + getName() + genericParamsClause;
         }
         else
         {
-            return "Fragment_" + getName();
+            return "Fragment_" + getName() + genericParamsClause;
         }
     }
 
@@ -61,7 +66,7 @@ public class FragmentUnit extends AbstractInnerUnit
     @Override
     protected void addFragmentArg(FragmentArgument p_arg, Location p_location)
     {
-        getErrors().addError("Fragments cannot have fragment arguments", 
+        getErrors().addError("Fragments cannot have fragment arguments",
                              p_location);
     }
 
@@ -75,11 +80,12 @@ public class FragmentUnit extends AbstractInnerUnit
                                String p_interfaceModifiers,
                                boolean p_isCopy)
     {
+        m_genericParams.suppressGenericHidingWarnings(p_writer);
         p_writer.println(p_interfaceModifiers + " static interface "
-                         + getFragmentInterfaceName());
+                         + getFragmentInterfaceName(true));
         if (p_isCopy)
         {
-            p_writer.println("  extends Intf." + getFragmentInterfaceName());
+            p_writer.println("  extends Intf." + getFragmentInterfaceName(true));
         }
         p_writer.openBlock();
         if (! p_isCopy)
@@ -100,4 +106,6 @@ public class FragmentUnit extends AbstractInnerUnit
         p_writer.closeBlock();
         p_writer.println();
     }
+
+    private final GenericParams m_genericParams;
 }

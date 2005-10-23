@@ -57,7 +57,7 @@ public abstract class AbstractCallStatement
         new HashMap<String, FragmentUnit>();
     private final static String FRAGMENT_IMPL_PREFIX = "__jamon__instanceOf__";
     private static int s_fragmentImplCounter = 0;
-    private final Map<FragmentUnit, String> m_fragmentImplNames = 
+    private final Map<FragmentUnit, String> m_fragmentImplNames =
         new HashMap<FragmentUnit, String>();
 
     protected abstract String getFragmentIntfName(
@@ -70,7 +70,8 @@ public abstract class AbstractCallStatement
             m_fragmentImplNames
                 .put(p_fragmentUnitIntf,
                      FRAGMENT_IMPL_PREFIX + (s_fragmentImplCounter++) + "__"
-                     + p_fragmentUnitIntf.getFragmentInterfaceName());
+                     + p_fragmentUnitIntf.getFragmentInterfaceName(false)
+                     );
         }
         return m_fragmentImplNames.get(p_fragmentUnitIntf);
     }
@@ -89,13 +90,14 @@ public abstract class AbstractCallStatement
                 "Call is missing fragment " + p_fragmentUnitIntf.getName());
         }
 
-        p_writer.println("class " + getFragmentImplName(p_fragmentUnitIntf));
+        p_writer.println(
+            "class " + getFragmentImplName(p_fragmentUnitIntf));
         p_writer.println("  extends " + ClassNames.BASE_TEMPLATE);
-        p_writer.println("  implements "
-                         + getFragmentIntfName(p_fragmentUnitIntf));
+        p_writer.println("  implements " + getFragmentIntfName(p_fragmentUnitIntf));
         p_writer.openBlock();
-        p_writer.println("public " + getFragmentImplName(p_fragmentUnitIntf)
-                         + "(" + ClassNames.TEMPLATE_MANAGER + " p_manager)");
+        p_writer.println(
+            "public " + getFragmentImplName(p_fragmentUnitIntf)
+            + "(" + ClassNames.TEMPLATE_MANAGER + " p_manager)");
         p_writer.openBlock();
         p_writer.println("super(p_manager);");
         p_writer.closeBlock();
@@ -177,8 +179,7 @@ public abstract class AbstractCallStatement
             p_writer.printArg(
                 "new "
                 + getFragmentImplName(
-                    (p_fragmentInterfaces.next()
-                     .getFragmentUnit()))
+                    (p_fragmentInterfaces.next().getFragmentUnit()))
                 + "(this.getTemplateManager())");
         }
     }
@@ -201,7 +202,7 @@ public abstract class AbstractCallStatement
     ParserError constructExtraParamsException(String p_paramType,
                                               Iterator<String> p_extraParams)
     {
-        StringBuffer message = new StringBuffer("Call provides unused ");
+        StringBuilder message = new StringBuilder("Call provides unused ");
         message.append(p_paramType);
         message.append(" ");
         StringUtils.commaJoin(message, p_extraParams);

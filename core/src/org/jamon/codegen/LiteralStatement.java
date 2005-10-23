@@ -50,7 +50,7 @@ public class LiteralStatement
     private static String javaEscape(String p_string)
     {
         // assert p_string != null
-        StringBuffer s = new StringBuffer();
+        StringBuilder s = new StringBuilder();
         for (int i = 0; i < p_string.length(); ++i)
         {
             char c = p_string.charAt(i);

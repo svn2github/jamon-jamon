@@ -60,7 +60,7 @@ public abstract class AbstractTemplateProxy
         m_implData = null;
     }
 
-    protected final ImplData getImplData()
+    protected ImplData getImplData()
     {
         if (m_implData == null)
         {

@@ -1,6 +1,28 @@
+/*
+ * The contents of this file are subject to the Mozilla Public
+ * License Version 1.1 (the "License"); you may not use this file
+ * except in compliance with the License. You may obtain a copy of
+ * the License at http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS
+ * IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
+ * implied. See the License for the specific language governing
+ * rights and limitations under the License.
+ *
+ * The Original Code is Jamon code, released February, 2003.
+ *
+ * The Initial Developer of the Original Code is Ian Robertson.  Portions
+ * created by Ian Robertson are Copyright (C) 2005 Ian Robertson.  All Rights
+ * Reserved.
+ *
+ * Contributor(s):
+ */
+
 package org.jamon.parser;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.jamon.ParserError;
 import org.jamon.ParserErrors;
@@ -11,6 +33,7 @@ import org.jamon.node.AbstractParamsNode;
 import org.jamon.node.AbstractPathNode;
 import org.jamon.node.ChildCallNode;
 import org.jamon.node.FragmentCallNode;
+import org.jamon.node.GenericCallParam;
 import org.jamon.node.Location;
 import org.jamon.node.MultiFragmentCallNode;
 import org.jamon.node.NamedFragmentNode;
@@ -23,9 +46,6 @@ import org.jamon.node.SimpleCallNode;
 import org.jamon.node.UnnamedFragmentNode;
 import org.jamon.node.UnnamedParamsNode;
 
-/**
- * @author ian
- **/
 public class CallParser extends AbstractParser
 {
     public static final String INVALID_CALL_TARGET_ERROR = "Invalid call target";
@@ -39,7 +59,9 @@ public class CallParser extends AbstractParser
         "Reached end of file while reading parameter value";
     public static final String FRAGMENTS_EOF_ERROR =
         "Reached end of file while reading call fragments; '</&>' Expected";
-
+    public static final String MISSING_GENERIC_PARAM_CLOSE_ERROR =
+        "Expecing ',' or '>'";
+    
     public CallParser(
         PositionalPushbackReader p_reader,
         ParserErrors p_errors,
@@ -59,38 +81,22 @@ public class CallParser extends AbstractParser
                 {
                     m_callNode = parseUnnamedFragmentCall(p_callStartLocation);
                 }
+                addGenericParams();
             }
             else
             {
                 soakWhitespace();
                 if (readChar('*'))
                 {
-                    Location callTargetLocation = m_reader.getLocation();
-                    if (checkToken("CHILD"))
-                    {
-                        soakWhitespace();
-                        Location endLocation = m_reader.getNextLocation();
-                        if (checkToken("&>"))
-                        {
-                            m_callNode = new ChildCallNode(p_callStartLocation);
-                        }
-                        else
-                        {
-                            throw new ParserError(
-                                endLocation, MISSING_CALL_CLOSE_ERROR);
-                        }
-                    }
-                    else
-                    {
-                        throw new ParserError(
-                            callTargetLocation, INVALID_CALL_TARGET_ERROR);
-                    }
+                    parseChildCall(p_callStartLocation);
                 }
                 else
                 {
                     AbstractPathNode path = parsePath();
+                    parseGenericParams();
                     m_callNode = new SimpleCallNode(
                         p_callStartLocation, path, parseParams());
+                    addGenericParams();
                 }
             }
         }
@@ -105,11 +111,38 @@ public class CallParser extends AbstractParser
         }
     }
 
-    private AbstractComponentCallNode parseNamedFragmentCall(Location p_callStartLocation)
+    private void parseChildCall(Location p_callStartLocation)
+        throws IOException, ParserError
+    {
+        Location callTargetLocation = m_reader.getLocation();
+        if (checkToken("CHILD"))
+        {
+            soakWhitespace();
+            Location endLocation = m_reader.getNextLocation();
+            if (checkToken("&>"))
+            {
+                m_callNode = new ChildCallNode(p_callStartLocation);
+            }
+            else
+            {
+                throw new ParserError(
+                    endLocation, MISSING_CALL_CLOSE_ERROR);
+            }
+        }
+        else
+        {
+            throw new ParserError(
+                callTargetLocation, INVALID_CALL_TARGET_ERROR);
+        }
+    }
+
+    private AbstractComponentCallNode parseNamedFragmentCall(
+        Location p_callStartLocation)
         throws IOException, ParserError
     {
         soakWhitespace();
         AbstractPathNode path = parsePath();
+        parseGenericParams();
         MultiFragmentCallNode callNode =
             new MultiFragmentCallNode(p_callStartLocation, path, parseParams());
         Location fragmentsStart = m_reader.getNextLocation();
@@ -176,6 +209,7 @@ public class CallParser extends AbstractParser
     {
         soakWhitespace();
         AbstractPathNode path = parsePath();
+        parseGenericParams();
         AbstractParamsNode params = parseParams();
         return new FragmentCallNode(
             p_callStartLocation,
@@ -329,6 +363,41 @@ public class CallParser extends AbstractParser
         }
     }
 
+    private void parseGenericParams() throws ParserError, IOException
+    {
+        m_genericParams = new ArrayList<GenericCallParam>();
+        if (readChar('<'))
+        {
+            do
+            {
+               soakWhitespace();
+               Location location = m_reader.getNextLocation();
+               m_genericParams.add(
+                   new GenericCallParam(
+                       location,
+                       new ClassNameParser(location, m_reader, m_errors)
+                       .getType()));
+               soakWhitespace();
+            }
+            while(readChar(','));
+            if (!readChar('>'))
+            {
+                throw new ParserError(m_reader.getNextLocation(), 
+                                      MISSING_GENERIC_PARAM_CLOSE_ERROR);
+            }
+        }
+    }
+    
+    private void addGenericParams()
+    {
+        AbstractComponentCallNode callNode = 
+            (AbstractComponentCallNode) m_callNode;
+        for (GenericCallParam param : m_genericParams)
+        {
+            callNode.addGenericParam(param);
+        }
+    }
+    
     private void readArrow() throws ParserError, IOException
     {
         soakWhitespace();
@@ -350,4 +419,5 @@ public class CallParser extends AbstractParser
     }
 
     private AbstractCallNode m_callNode;
+    private List<GenericCallParam> m_genericParams = null; 
 }

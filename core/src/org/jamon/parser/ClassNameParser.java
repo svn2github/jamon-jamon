@@ -61,20 +61,35 @@ public class ClassNameParser extends AbstractTypeParser
     protected void parseTypeElaborations()
         throws IOException, NotAnIdentifierException, ParserError
     {
-        if (readAndAppendChar('<'))
+        int c = m_reader.read();
+        if (c != '<')
         {
-            soakWhitespace();
-            readGenericsParameter();
-            soakWhitespace();
-            while(readAndAppendChar(','))
+            m_reader.unread(c);
+        }
+        else
+        {
+            c = m_reader.read();
+            m_reader.unread(c);
+            if (c == '/' || c == '%') // looks like a jamon tag
             {
+                m_reader.unread('<');
+            }
+            else
+            {
+                m_type.append('<');
                 soakWhitespace();
                 readGenericsParameter();
                 soakWhitespace();
-            }
-            if (!readAndAppendChar('>'))
-            {
-                throw new NotAnIdentifierException();
+                while(readAndAppendChar(','))
+                {
+                    soakWhitespace();
+                    readGenericsParameter();
+                    soakWhitespace();
+                }
+                if (!readAndAppendChar('>'))
+                {
+                    throw new NotAnIdentifierException();
+                }
             }
         }
     }

@@ -25,7 +25,7 @@ public class FragmentArgument extends RequiredArgument
     public FragmentArgument(FragmentUnit p_fragmentUnit)
     {
         super(p_fragmentUnit.getName(),
-              p_fragmentUnit.getFragmentInterfaceName());
+              p_fragmentUnit.getFragmentInterfaceName(true));
         m_fragmentUnit = p_fragmentUnit;
     }
 
@@ -34,5 +34,11 @@ public class FragmentArgument extends RequiredArgument
         return m_fragmentUnit;
     }
 
+
     private final FragmentUnit m_fragmentUnit;
+
+    @Override public String getType()
+    {
+        return super.getType();
+    }
 }

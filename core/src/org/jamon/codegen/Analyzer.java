@@ -31,8 +31,6 @@ import java.util.Set;
 import org.jamon.ParserError;
 import org.jamon.ParserErrors;
 import org.jamon.node.*;
-import org.jamon.node.AnalysisAdapter;
-import org.jamon.node.DepthFirstAnalysisAdapter;
 import org.jamon.util.StringUtils;
 
 public class Analyzer
@@ -109,8 +107,8 @@ public class Analyzer
                     @Override
                     public void caseExtendsNode(ExtendsNode p_extends)
                     {
-                        StringBuffer message =
-                            new StringBuffer("The abstract method(s) ");
+                        StringBuilder message =
+                            new StringBuilder("The abstract method(s) ");
                         StringUtils.commaJoin(message,
                                   getTemplateUnit().getAbstractMethodNames()
                                   .iterator());
@@ -139,8 +137,11 @@ public class Analyzer
 
     private FragmentUnit pushFragmentUnitImpl(String p_fragName)
     {
-        m_currentUnit = 
-            new FragmentUnit(p_fragName, getCurrentUnit(), m_errors);
+        m_currentUnit = new FragmentUnit(
+            p_fragName,
+            getCurrentUnit(),
+            getTemplateUnit().getGenericParams(),
+            m_errors);
         return (FragmentUnit) m_currentUnit;
     }
 
@@ -179,12 +180,12 @@ public class Analyzer
         return m_currentUnit;
     }
 
-    private StringBuffer m_current = new StringBuffer();
+    private StringBuilder m_current = new StringBuilder();
     private final TemplateUnit m_templateUnit;
     private Unit m_currentUnit;
     private final TemplateDescriber m_describer;
     private final Set<String> m_children;
-    private final LinkedList<CallStatement> m_callStatements = 
+    private final LinkedList<CallStatement> m_callStatements =
         new LinkedList<CallStatement>();
     private final Map<String, String> m_aliases = new HashMap<String, String>();
     private final String m_templateDir;
@@ -201,7 +202,7 @@ public class Analyzer
 
     private String computePath(AbstractPathNode p_path)
     {
-        PathAdapter adapter = 
+        PathAdapter adapter =
             new PathAdapter(m_templateDir, m_aliases, m_errors);
         p_path.apply(adapter);
         return adapter.getPath();
@@ -370,7 +371,8 @@ public class Analyzer
         @Override
         public void inFragmentArgsNode(FragmentArgsNode p_node)
         {
-            pushFragmentArg(getCurrentUnit().addFragment(p_node));
+            pushFragmentArg(getCurrentUnit().addFragment(
+                p_node, getTemplateUnit().getGenericParams()));
         }
 
         @Override
@@ -390,7 +392,7 @@ public class Analyzer
         {
             getCurrentUnit().addOptionalArg(p_node);
         }
-        
+
         @Override
         public void inDefNode(DefNode p_node)
         {
@@ -452,13 +454,20 @@ public class Analyzer
             popUnit();
         }
 
-        @Override
-        public void caseSimpleCallNode(SimpleCallNode p_node)
+        @Override public void caseGenericsParamNode(GenericsParamNode p_node)
+        {
+            if (m_templateUnit.isParent())
+            {
+                addError("<%generics> tag not allowed in abstract templates",
+                         p_node.getLocation());
+            }
+            m_templateUnit.addGenericsParamNode(p_node);
+        }
+
+        @Override public void caseSimpleCallNode(SimpleCallNode p_node)
         {
             handleBody();
-            addStatement(makeCallStatement(p_node.getCallPath(),
-                                           p_node.getParams(),
-                                           p_node.getLocation()));
+            addStatement(makeCallStatement(p_node));
         }
 
         @Override
@@ -496,10 +505,7 @@ public class Analyzer
         public void inMultiFragmentCallNode(MultiFragmentCallNode p_node)
         {
             handleBody();
-            CallStatement s = makeCallStatementWithFragments(
-                p_node.getLocation(),
-                p_node.getCallPath(),
-                p_node.getParams());
+            CallStatement s = makeCallStatement(p_node);
             addStatement(s);
             pushCallStatement(s);
         }
@@ -528,10 +534,7 @@ public class Analyzer
         public void inFragmentCallNode(FragmentCallNode p_node)
         {
             handleBody();
-            CallStatement s =
-                makeCallStatementWithFragments(p_node.getLocation(),
-                                               p_node.getCallPath(),
-                                               p_node.getParams());
+            CallStatement s = makeCallStatement(p_node);
             addStatement(s);
             s.addFragmentImpl(pushFragmentUnitImpl(null), m_errors);
         }
@@ -567,25 +570,25 @@ public class Analyzer
                 m_escapeCode = EscapingDirective.get(p_node.getEscapeCode());
                 if (m_escapeCode == null)
                 {
-                    addError("Unknown escaping directive '" 
+                    addError("Unknown escaping directive '"
                              + p_node.getEscapeCode()+ "'",
                              p_node.getLocation());
                 }
             }
-            
+
             @Override
             public void caseDefaultEscapeNode(DefaultEscapeNode p_node)
             {
-                m_escapeCode = getDefaultEscaping(); 
+                m_escapeCode = getDefaultEscaping();
             }
-            
+
             public EscapingDirective getEscape(AbstractEscapeNode p_node)
             {
                 p_node.apply(this);
                 return m_escapeCode;
             }
         }
-        
+
         @Override
         public void caseEmitNode(EmitNode p_node)
         {
@@ -612,32 +615,28 @@ public class Analyzer
             addStatement(new LiteralStatement(m_current.toString(),
                                               m_currentTextLocation,
                                               m_templateIdentifier));
-            m_current = new StringBuffer();
+            m_current = new StringBuilder();
             m_currentTextLocation = null;
         }
     }
 
-    private CallStatement makeCallStatementWithFragments(
-        Location p_location,
-        AbstractPathNode p_callPath, 
-        AbstractParamsNode p_params)
+    private CallStatement makeCallStatement(AbstractComponentCallNode p_node)
     {
-        return makeCallStatement(p_callPath, p_params, p_location);
-    }
-
-    private CallStatement makeCallStatement(AbstractPathNode p_path,
-                                            AbstractParamsNode p_params,
-                                            Location p_location)
-    {
-        String path = computePath(p_path);
+        String path = computePath(p_node.getCallPath());
+        ParamValues paramValues = makeParamValues(p_node.getParams());
         FragmentUnit fragmentUnit = getCurrentUnit().getFragmentUnitIntf(path);
-        ParamValues paramValues = makeParamValues(p_params);
+        List<GenericCallParam> genericParams = p_node.getGenericParams();
         if (fragmentUnit != null)
         {
+            if (!genericParams.isEmpty())
+            {
+                addError("Fragment" + " calls may not have generic params",
+                         p_node.getLocation());
+            }
             return new FargCallStatement(path,
                                          paramValues,
                                          fragmentUnit,
-                                         p_location,
+                                         p_node.getLocation(),
                                          m_templateIdentifier);
         }
         else
@@ -645,22 +644,33 @@ public class Analyzer
             DefUnit defUnit = getTemplateUnit().getDefUnit(path);
             if (defUnit != null)
             {
+                if (! genericParams.isEmpty())
+                {
+                    addError("def " + defUnit.getName() +
+                             " is being called with generic parameters",
+                             p_node.getLocation());
+                }
                 return new DefCallStatement(path,
                                             paramValues,
                                             defUnit,
-                                            p_location,
+                                            p_node.getLocation(),
                                             m_templateIdentifier);
             }
             else
             {
-                MethodUnit methodUnit =
-                    getTemplateUnit().getMethodUnit(path);
+                MethodUnit methodUnit = getTemplateUnit().getMethodUnit(path);
                 if (methodUnit != null)
                 {
+                    if (! genericParams.isEmpty())
+                    {
+                        addError("method" + methodUnit.getName() +
+                                 " is being called with generic parameters",
+                                 p_node.getLocation());
+                    }
                     return new MethodCallStatement(path,
                                                    paramValues,
                                                    methodUnit,
-                                                   p_location,
+                                                   p_node.getLocation(),
                                                    m_templateIdentifier);
                 }
                 else
@@ -668,8 +678,9 @@ public class Analyzer
                     getTemplateUnit().addCallPath(getAbsolutePath(path));
                     return new ComponentCallStatement(getAbsolutePath(path),
                                                       paramValues,
-                                                      p_location,
-                                                      m_templateIdentifier);
+                                                      p_node.getLocation(),
+                                                      m_templateIdentifier,
+                                                      genericParams);
                 }
             }
         }
@@ -696,30 +707,30 @@ public class Analyzer
         {
             m_paramsMap = new HashMap<String, String>();
         }
-        
+
         @Override
         public void inUnnamedParamsNode(UnnamedParamsNode p_node)
         {
             m_paramsList = new LinkedList<String>();
         }
-        
+
         @Override
         public void caseNamedParamNode(NamedParamNode p_node)
         {
-            m_paramsMap.put(p_node.getName().getName(), 
+            m_paramsMap.put(p_node.getName().getName(),
                             p_node.getValue().getValue());
         }
-        
+
         @Override
         public void caseParamValueNode(ParamValueNode p_node)
         {
             m_paramsList.add(p_node.getValue());
         }
-        
+
         private Map<String, String> m_paramsMap = null;
         private List<String> m_paramsList = null;
     }
-    
+
     private ParamValues makeParamValues(AbstractParamsNode p_params)
     {
         return new ParamsAdapter().getParamValues(p_params);

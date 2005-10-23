@@ -47,7 +47,7 @@ public class NamedParamValues implements ParamValues
         throws ParserError
     {
         boolean multipleArgsAreMissing= false;
-        StringBuffer missingArgs = null;
+        StringBuilder missingArgs = null;
         while (p_args.hasNext())
         {
             String name = p_args.next().getName();
@@ -56,7 +56,7 @@ public class NamedParamValues implements ParamValues
             {
                 if (missingArgs == null)
                 {
-                    missingArgs = new StringBuffer(name);
+                    missingArgs = new StringBuilder(name);
                 }
                 else
                 {

@@ -122,9 +122,7 @@ public class ProxyGenerator
         m_writer.println();
         if (m_templateUnit.isParent())
         {
-            m_writer.println("protected "
-                             + getClassName()
-                             + "(String p_path)");
+            m_writer.println("protected " + getClassName() + "(String p_path)");
             m_writer.openBlock();
             m_writer.println("super(p_path);");
             m_writer.closeBlock();
@@ -142,12 +140,12 @@ public class ProxyGenerator
 
     private void generateFragmentInterfaces(boolean p_inner)
     {
-        for (Iterator<FragmentArgument> f = 
+        for (Iterator<FragmentArgument> f =
                 m_templateUnit.getDeclaredFragmentArgs();
              f.hasNext(); )
         {
-            f.next().getFragmentUnit()
-                .printInterface(m_writer, "public", ! p_inner);
+            f.next().getFragmentUnit().printInterface(
+                m_writer, "public", !p_inner);
             m_writer.println();
         }
         m_writer.println();
@@ -160,7 +158,10 @@ public class ProxyGenerator
         {
             m_writer.print("abstract ");
         }
-        m_writer.println("class " + getClassName());
+        m_writer.println(
+            "class " + getClassName()
+            + m_templateUnit.getGenericParams().generateGenericsDeclaration());
+
         m_writer.println("  extends "
                          + (m_templateUnit.hasParentPath()
                             ? PathUtils.getFullyQualifiedIntfClassName(
@@ -172,6 +173,13 @@ public class ProxyGenerator
 
     private void generateArgArrays(Unit p_unit, String p_prefix)
     {
+        if (p_unit instanceof TemplateUnit)
+        {
+            TemplateUnit templateUnit = (TemplateUnit) p_unit;
+            m_writer.println(
+                "public static final int " + p_prefix + "GENERICS_COUNT = "
+                + templateUnit.getGenericParams().getCount() + ";");
+        }
         printArgNames(p_prefix + "REQUIRED",
                       p_unit.getSignatureRequiredArgs());
         printArgTypes(p_prefix + "REQUIRED",
@@ -184,7 +192,7 @@ public class ProxyGenerator
         m_writer.print("public static final String[] "
                        + p_prefix + "FRAGMENT_ARG_NAMES = ");
         m_writer.openBlock();
-        for (Iterator<FragmentArgument> i = p_unit.getFragmentArgs(); 
+        for (Iterator<FragmentArgument> i = p_unit.getFragmentArgs();
              i.hasNext(); )
         {
             printQuoted(i.next().getName());
@@ -273,8 +281,8 @@ public class ProxyGenerator
         m_writer.println(".getConstructor(new Class [] { "
                          + ClassNames.TEMPLATE_MANAGER + ".class"
                          + ", ImplData.class })");
-        m_writer.println(".newInstance(new Object [] "
-                         + "{ getTemplateManager(), getImplData() });");
+        m_writer.println(
+            ".newInstance(new Object [] { getTemplateManager(), getImplData()});");
         m_writer.outdent(2);
         m_writer.closeBlock();
         m_writer.println("catch (RuntimeException e)");
@@ -297,7 +305,8 @@ public class ProxyGenerator
         m_writer.println(
             "return new "
             + PathUtils.getImplClassName(m_templateUnit.getName())
-            + "(getTemplateManager(), (ImplData) getImplData());");
+            + m_templateUnit.getGenericParams().generateGenericParamsList()
+            + "(getTemplateManager(), getImplData());");
         m_writer.closeBlock();
     }
 
@@ -334,7 +343,10 @@ public class ProxyGenerator
         m_writer.openBlock();
         if (m_templateUnit.getRenderArgs().hasNext())
         {
-            m_writer.println("ImplData implData = (ImplData) getImplData();");
+            m_writer.println(
+                "ImplData"
+                + m_templateUnit.getGenericParams().generateGenericParamsList()
+                + " implData = getImplData();");
             for (Iterator<AbstractArgument> i = m_templateUnit.getRenderArgs();
                  i.hasNext(); )
             {
@@ -382,8 +394,12 @@ public class ProxyGenerator
 
     private void generateImplData()
     {
-        m_writer.println("protected static class ImplData");
-        m_writer.println("  extends ");
+        m_templateUnit.getGenericParams()
+            .suppressGenericHidingWarnings(m_writer);
+        m_writer.println(
+            "protected static class ImplData"
+            + m_templateUnit.getGenericParams().generateGenericsDeclaration());
+        m_writer.print("  extends ");
         if(m_templateUnit.hasParentPath())
         {
             m_writer.println(PathUtils.getFullyQualifiedIntfClassName(
@@ -394,9 +410,8 @@ public class ProxyGenerator
         {
             m_writer.println(ClassNames.IMPL_DATA);
         }
-        m_writer.println();
         m_writer.openBlock();
-        for (Iterator<AbstractArgument> i = m_templateUnit.getDeclaredArgs(); 
+        for (Iterator<AbstractArgument> i = m_templateUnit.getDeclaredArgs();
              i.hasNext(); )
         {
             i.next().generateImplDataCode(m_writer);
@@ -407,17 +422,33 @@ public class ProxyGenerator
         if (! m_templateUnit.isParent())
         {
             m_writer.println("@Override");
-            m_writer.println("protected " + ClassNames.IMPL_DATA
-                             + " makeImplData()");
+            m_writer.println(
+                "protected ImplData"
+                + m_templateUnit.getGenericParams().generateGenericParamsList()
+                + " makeImplData()");
             m_writer.openBlock();
-            m_writer.println("return new ImplData();");
+            m_writer.println(
+                "return new ImplData"
+                + m_templateUnit.getGenericParams().generateGenericParamsList()
+                             + "();");
             m_writer.closeBlock();
         }
+
+        m_writer.println(
+            "@Override @SuppressWarnings(\"unchecked\") protected ImplData"
+            + m_templateUnit.getGenericParams().generateGenericParamsList()
+            + " getImplData()");
+        m_writer.openBlock();
+        m_writer.println(
+            "return (ImplData"
+            + m_templateUnit.getGenericParams().generateGenericParamsList()
+            + ") super.getImplData();");
+        m_writer.closeBlock();
     }
 
     private void generateOptionalArgs()
     {
-        for (Iterator<OptionalArgument> i = 
+        for (Iterator<OptionalArgument> i =
                 m_templateUnit.getDeclaredOptionalArgs();
              i.hasNext(); )
         {
@@ -437,7 +468,7 @@ public class ProxyGenerator
                 + "(" + arg.getType() +" p_" + arg.getName() + ")");
             m_writer.openBlock();
             m_writer.println(
-                "((ImplData) getImplData())."
+                "(" + "getImplData()" + ")."
                 + arg.getSetterName() + "(p_" + arg.getName() + ");");
             m_writer.println("return this;");
             m_writer.closeBlock();
@@ -460,7 +491,11 @@ public class ProxyGenerator
 
     private void generateIntf()
     {
-        m_writer.println("protected interface Intf");
+        m_templateUnit.getGenericParams()
+            .suppressGenericHidingWarnings(m_writer);
+        m_writer.println(
+            "protected interface Intf"
+            + m_templateUnit.getGenericParams().generateGenericsDeclaration());
         m_writer.print("  extends "
                        + (m_templateUnit.hasParentPath()
                           ? PathUtils.getFullyQualifiedIntfClassName(
@@ -485,7 +520,7 @@ public class ProxyGenerator
         m_writer.openBlock();
         m_writer.println("protected ParentRenderer() {}");
 
-        for (Iterator<OptionalArgument> i = 
+        for (Iterator<OptionalArgument> i =
                 m_templateUnit.getSignatureOptionalArgs();
              i.hasNext(); )
         {

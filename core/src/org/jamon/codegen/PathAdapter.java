@@ -32,7 +32,7 @@ import org.jamon.node.UpdirNode;
 
 class PathAdapter extends DepthFirstAnalysisAdapter
 {
-    public PathAdapter(String p_templateDir, 
+    public PathAdapter(String p_templateDir,
                        final Map<String, String> p_aliases,
                        ParserErrors p_errors)
     {
@@ -40,11 +40,11 @@ class PathAdapter extends DepthFirstAnalysisAdapter
         m_aliases = p_aliases;
         m_errors = p_errors;
     }
-    
+
     private final String m_templateDir;
     private final Map<String, String> m_aliases;
     private final ParserErrors m_errors;
-    private final StringBuffer m_path = new StringBuffer();
+    private final StringBuilder m_path = new StringBuilder();
     private boolean m_absolutePath = false;
 
     public String getPath()
@@ -58,7 +58,7 @@ class PathAdapter extends DepthFirstAnalysisAdapter
         m_absolutePath = true;
         m_path.append('/');
     }
-    
+
     @Override public void inUpdirNode(UpdirNode p_updir)
     {
         if (! m_absolutePath)
@@ -76,7 +76,7 @@ class PathAdapter extends DepthFirstAnalysisAdapter
         m_path.delete(lastSlash + 1, m_path.length());
     }
 
-    
+
     @Override public void inPathElementNode(PathElementNode p_relativePath)
     {
         m_path.append(p_relativePath.getName());
@@ -97,7 +97,7 @@ class PathAdapter extends DepthFirstAnalysisAdapter
             m_path.append('/');
         }
     }
-    
+
     @Override public void inRootAliasPathNode(RootAliasPathNode p_node)
     {
         String alias = m_aliases.get("/");

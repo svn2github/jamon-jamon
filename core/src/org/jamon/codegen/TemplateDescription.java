@@ -40,6 +40,7 @@ public class TemplateDescription
     private final Map<String, MethodUnit> m_methodUnits;
     private final int m_inheritanceDepth;
     private final Collection<String> m_abstractMethodNames;
+    private final int m_genericParamsCount;
 
     public final static TemplateDescription EMPTY = new TemplateDescription();
 
@@ -52,6 +53,7 @@ public class TemplateDescription
         m_methodUnits = Collections.emptyMap();
         m_inheritanceDepth = -1;
         m_abstractMethodNames = Collections.emptyList();
+        m_genericParamsCount = 0;
     }
 
     public TemplateDescription(TemplateUnit p_templateUnit)
@@ -75,6 +77,7 @@ public class TemplateDescription
         }
         m_inheritanceDepth = p_templateUnit.getInheritanceDepth();
         m_abstractMethodNames = p_templateUnit.getAbstractMethodNames();
+        m_genericParamsCount = p_templateUnit.getGenericParams().getCount();
     }
 
     public TemplateDescription(Class p_intf)
@@ -91,7 +94,7 @@ public class TemplateDescription
             DeclaredMethodUnit method =
                 new DeclaredMethodUnit(methodNames[i], null, null);
             String prefix = "METHOD_" + methodNames[i] + "_";
-            for (Iterator<RequiredArgument> j = 
+            for (Iterator<RequiredArgument> j =
                      getRequiredArgs(p_intf, prefix).iterator();
                  j.hasNext(); )
             {
@@ -115,7 +118,9 @@ public class TemplateDescription
             Arrays.asList(getStringArray(p_intf, "ABSTRACT_METHOD_NAMES"));
         m_signature = (String) p_intf.getField("SIGNATURE").get(null);
         m_inheritanceDepth =
-            ((Integer) p_intf.getField("INHERITANCE_DEPTH").get(null)).intValue();
+            ((Integer) p_intf.getField("INHERITANCE_DEPTH").get(null));
+        m_genericParamsCount =
+            ((Integer) p_intf.getField("GENERICS_COUNT").get(null));
     }
 
     private static List<RequiredArgument> getRequiredArgs(
@@ -162,8 +167,8 @@ public class TemplateDescription
             getStringArray(p_class, p_prefix + "FRAGMENT_ARG_NAMES");
         for (int i = 0; i < fragmentArgNames.length; i++)
         {
-            FragmentUnit frag =
-                new FragmentUnit(fragmentArgNames[i], p_parentUnit, null);
+            FragmentUnit frag =new FragmentUnit(
+                fragmentArgNames[i], p_parentUnit, new GenericParams(), null);
             String[] fragmentArgArgNames = getStringArray
                 (p_class,
                  p_prefix + "FRAGMENT_ARG_"
@@ -217,6 +222,11 @@ public class TemplateDescription
     public int getInheritanceDepth()
     {
         return m_inheritanceDepth;
+    }
+
+    public int getGenericParamsCount()
+    {
+        return m_genericParamsCount;
     }
 
     private static<T> void addAll(Collection<T> p_collection, Iterator<T> p_iter)
