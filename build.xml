@@ -52,7 +52,6 @@
     <ant dir="integration" target="cvsignores"/>
     <ant dir="anttask" target="cvsignores"/>
     <ant dir="stdlib" target="cvsignores"/>
-    <ant dir="doc" target="cvsignores"/>
     <echo file=".cvsignore">
       .cvsignore
       ${jarfile.core}
@@ -69,7 +68,6 @@
     <ant dir="integration" target="spotless"/>
     <ant dir="anttask" target="spotless"/>
     <ant dir="stdlib" target="spotless"/>
-    <ant dir="doc" target="spotless"/>
     <delete file="${jarfile.core}" />
     <delete file="${jarfile.anttask}" />
     <delete file="${jarfile.stdlib}" />
@@ -89,7 +87,6 @@
     <ant dir="integration" target="clean"/>
     <ant dir="stdlib" target="clean"/>
     <ant dir="anttask" target="clean"/>
-    <ant dir="doc" target="clean"/>
   </target>
 
   <target name="promote-release" depends="base">
@@ -158,11 +155,7 @@
     <ant dir="core" target="javadoc"/>
   </target>
 
-  <target name="doc" depends="jar" description="Build documentation">
-    <ant dir="doc" target="build" />
-  </target>
-
-  <target name="prepdist" depends="doc">
+  <target name="prepdist" depends="test">
     <taskdef name="invoker"
              classname="org.jamon.ant.InvokerTask"
              classpath="${jarfile.core}:${jarfile.stdlib}:${jarfile.anttask}:doc/build/work" />
@@ -246,7 +239,7 @@
 
   <target name="dist" depends="srcdist,bindist"/>
 
-  <target name="localstage" depends="dist,doc" >
+  <target name="localstage" depends="dist" >
     <mkdir dir="${stage.dir}" />
     <copy todir="${stage.dir}" >
       <fileset dir="doc/build/www" />
