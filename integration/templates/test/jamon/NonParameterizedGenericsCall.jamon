@@ -1,0 +1,7 @@
+% java.util.List<String> list = new java.util.ArrayList<String>();
+% list.add("x");
+% list.add("y");
+<&| Generics: list &>\
+<%args>Object s;</%args>\
+Got: <% s %>
+</&>

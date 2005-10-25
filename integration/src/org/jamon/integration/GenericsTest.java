@@ -5,6 +5,7 @@ import java.io.Writer;
 import org.jamon.AbstractTemplateProxy;
 
 import test.jamon.GenericsCall;
+import test.jamon.NonParameterizedGenericsCall;
 
 public class GenericsTest extends TestBase
 {
@@ -12,6 +13,12 @@ public class GenericsTest extends TestBase
     {
         new GenericsCall().render(getWriter());
         checkOutput("Got: x\nGot: y\n");
+    }
+
+    public void testNonParameterizedGenericsCall() throws Exception
+    {
+       new NonParameterizedGenericsCall().render(getWriter());
+       checkOutput("Got: x\nGot: y\n");
     }
 
     public void testExternalGenericCall() throws Exception
