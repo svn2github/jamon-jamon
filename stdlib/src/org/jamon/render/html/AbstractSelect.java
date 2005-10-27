@@ -15,7 +15,7 @@
  * created by Jay Sachs are Copyright (C) 2003 Jay Sachs.  All Rights
  * Reserved.
  *
- * Contributor(s):
+ * Contributor(s): Ian Robertson
  */
 
 package org.jamon.render.html;
@@ -25,16 +25,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public abstract class AbstractSelect
+public abstract class AbstractSelect<Renderable>
     extends AbstractInput
-    implements Select
+    implements Select<Renderable>
 {
-    public static abstract class Item
-        implements Select.Item
+
+    @SuppressWarnings("hiding")
+    public static abstract class Item<Renderable>
+        implements Select.Item<Renderable>
     {
-        public abstract Object getRenderable();
-        public abstract String getValue();
-        public abstract boolean isSelected();
         public final String getName()
         {
             return m_select.getName();
@@ -50,32 +49,36 @@ public abstract class AbstractSelect
         private AbstractSelect m_select;
     }
 
-    public Select.Item[] getItems()
+    public Item<? extends Renderable>[] getItems()
     {
         return m_items;
     }
 
-    public interface ItemMaker
+
+    @SuppressWarnings("hiding")
+    public interface ItemMaker<DataType, Renderable>
     {
-        Select.Item makeItem(Object data);
+        Select.Item<Renderable> makeItem(DataType data);
     }
 
-    protected AbstractSelect(String p_name,
-                             Object[] p_data,
-                             ItemMaker p_maker)
+    protected <DataType> AbstractSelect(
+        String p_name,
+        DataType[] p_data,
+        ItemMaker<? super DataType, Renderable> p_maker)
     {
         this(p_name, Arrays.asList(p_data).iterator(), p_maker);
     }
 
-    protected AbstractSelect(String p_name,
-                             Iterator p_data,
-                             ItemMaker p_maker)
+    protected <DataType> AbstractSelect(
+        String p_name,
+        Iterator<? extends DataType> p_data,
+        ItemMaker<? super DataType, Renderable> p_maker)
     {
         this(p_name, create(p_data, p_maker));
     }
 
     protected AbstractSelect(String p_name,
-                             Item[] p_items)
+                             Item<? extends Renderable>[] p_items)
     {
         super(p_name);
         m_items = p_items;
@@ -85,15 +88,18 @@ public abstract class AbstractSelect
         }
     }
 
-    private static Item[] create(Iterator<?> p_data, ItemMaker p_maker)
+    @SuppressWarnings("unchecked")
+    private static<Renderable, DataType> Item<? extends Renderable>[] create(
+       Iterator<? extends DataType> p_data,
+       ItemMaker<DataType, Renderable> p_maker)
     {
         List<Select.Item> items = new ArrayList<Select.Item>();
         while( p_data.hasNext() )
         {
-            items.add( p_maker.makeItem( p_data.next() ) );
+            items.add(p_maker.makeItem( p_data.next()));
         }
         return items.toArray(new Item[0]);
     }
 
-    private final Item[] m_items;
+    private final Item<? extends Renderable>[] m_items;
 }

@@ -15,29 +15,41 @@
  * created by Jay Sachs are Copyright (C) 2003 Jay Sachs.  All Rights
  * Reserved.
  *
- * Contributor(s):
+ * Contributor(s): Ian Robertson
  */
 
 package org.jamon.render.html;
 
 import java.util.Iterator;
 
-public class SingleSelect
-    extends AbstractSelect
+public class SingleSelect<Renderable>
+    extends AbstractSelect<Renderable>
 {
-    public static abstract class Item
-        extends AbstractSelect.Item
+    @SuppressWarnings("hiding")
+    public static abstract class Item<Renderable>
+        extends AbstractSelect.Item<Renderable>
     {
-        @Override public final boolean isSelected()
+        public final boolean isSelected()
         {
             return getValue().equals(((SingleSelect) getSelect()).m_selectedValue);
         }
     }
 
-    public SingleSelect(String p_name,
-                        String p_selectedValue,
-                        Object[] p_data,
-                        ItemMaker p_maker)
+    public <DataType> SingleSelect(
+       String p_name,
+       String p_selectedValue,
+       DataType[] p_data,
+       ItemMaker<? super DataType, Renderable> p_maker)
+    {
+        super(p_name, p_data, p_maker);
+        m_selectedValue = p_selectedValue;
+    }
+
+    public <DataType> SingleSelect(
+        String p_name,
+        String p_selectedValue,
+        Iterator<? extends DataType> p_data,
+        ItemMaker<? super DataType, Renderable> p_maker)
     {
         super(p_name, p_data, p_maker);
         m_selectedValue = p_selectedValue;
@@ -45,16 +57,7 @@ public class SingleSelect
 
     public SingleSelect(String p_name,
                         String p_selectedValue,
-                        Iterator p_data,
-                        ItemMaker p_maker)
-    {
-        super(p_name, p_data, p_maker);
-        m_selectedValue = p_selectedValue;
-    }
-
-    public SingleSelect(String p_name,
-                        String p_selectedValue,
-                        Item[] p_items)
+                        Item<? extends Renderable>[] p_items)
     {
         super(p_name, p_items);
         m_selectedValue = p_selectedValue;

@@ -15,21 +15,22 @@
  * created by Jay Sachs are Copyright (C) 2003 Jay Sachs.  All Rights
  * Reserved.
  *
- * Contributor(s):
+ * Contributor(s): Ian Robertson
  */
 
 package org.jamon.render.html;
 
-public interface Select
+public interface Select<Renderable>
 {
-    interface Item
+    @SuppressWarnings("hiding")
+    interface Item<Renderable>
     {
-        Object getRenderable();
+        Renderable getRenderable();
         String getValue();
         boolean isSelected();
     }
 
     String getName();
 
-    Item[] getItems();
+    Item<? extends Renderable>[] getItems();
 }

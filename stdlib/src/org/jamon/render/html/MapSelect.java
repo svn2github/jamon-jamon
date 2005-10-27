@@ -15,35 +15,40 @@
  * created by Jay Sachs are Copyright (C) 2003 Jay Sachs.  All Rights
  * Reserved.
  *
- * Contributor(s):
+ * Contributor(s): Ian Robertson
  */
 
 package org.jamon.render.html;
 
 import java.util.Map;
 
-public class MapSelect
-    extends SingleSelect
+public class MapSelect<Renderable>
+    extends SingleSelect<Renderable>
 {
-    public MapSelect(String p_name, final Map p_options)
+    public <DataType> MapSelect(
+        String p_name,
+        final Map<? extends DataType, ? extends Renderable> p_options)
     {
         this(p_name, p_options,null);
     }
 
-    public MapSelect(String p_name, final Map<?,?> p_options, Object p_default)
+    public <DataType> MapSelect(
+        String p_name,
+        final Map<? extends DataType, ? extends Renderable> p_options,
+        Object p_default)
     {
         super(p_name,
               p_default == null ? null : p_default.toString(),
               p_options.keySet().iterator(),
-              new ItemMaker() {
-                  public Select.Item makeItem(final Object p_data)
+              new ItemMaker<DataType, Renderable>() {
+                  public Select.Item<Renderable> makeItem(final DataType p_data)
                   {
-                      return new SingleSelect.Item()
-                          {
-                              @Override public Object getRenderable()
-                                  { return p_options.get(p_data); }
-                              @Override public String getValue()
-                                  { return p_data.toString(); }
+                      return new SingleSelect.Item<Renderable>()
+                      {
+                         public Renderable getRenderable()
+                             { return p_options.get(p_data); }
+                         public String getValue()
+                             { return p_data.toString(); }
                           };
                   }
               } );
