@@ -34,7 +34,7 @@ public class WhitespaceSoakingTest extends AbstractParserTest
     private static class WhitespaceSearcher extends DepthFirstAnalysisAdapter
     {
         private static final Pattern whitespace = Pattern.compile(".*\\s.*");
-        
+
         @Override public void caseTextNode(TextNode p_node)
         {
             if (whitespace.matcher(p_node.getText()).matches())
@@ -42,43 +42,43 @@ public class WhitespaceSoakingTest extends AbstractParserTest
                 m_seenWhitespace = true;
             }
         }
-        
+
         public boolean seenWhitespace()
         {
             return m_seenWhitespace;
         }
-        
+
         private boolean m_seenWhitespace = false;
     }
-    
+
     private void assertNoWhitespace(String p_document) throws Exception
     {
         WhitespaceSearcher searcher = new WhitespaceSearcher();
         parse(p_document).apply(searcher);
         assertFalse(searcher.seenWhitespace());
     }
-    
+
     public void testWhitespaceAfterArgs() throws Exception
     {
         assertNoWhitespace("<%args></%args>  \n test");
     }
-    
+
     public void testWhitespaceAfterDoc() throws Exception
     {
         assertNoWhitespace("<%doc> </%doc>  \n test");
     }
-    
+
     public void testWhitespaceAfterFrag() throws Exception
     {
         assertNoWhitespace("<%frag f />  \n test");
         assertNoWhitespace("<%frag f> </%frag>  \n test");
     }
-    
+
     public void testWhitespaceAfterXargs() throws Exception
     {
         assertNoWhitespace("<%xargs> </%xargs>  \n test");
     }
-    
+
     public void testWhitespaceAfterAbstract() throws Exception
     {
         assertNoWhitespace("<%abstract>  \n test");
@@ -88,12 +88,12 @@ public class WhitespaceSoakingTest extends AbstractParserTest
     {
         assertNoWhitespace("<%escape # u>  \n test");
     }
-      
+
     public void testWhitespaceAfterExtends() throws Exception
     {
         assertNoWhitespace("<%extends foo>  \n test");
     }
-    
+
     public void testWhitespaceAfterImport() throws Exception
     {
         assertNoWhitespace("<%import> </%import>  \n test");
@@ -118,19 +118,24 @@ public class WhitespaceSoakingTest extends AbstractParserTest
     {
         assertNoWhitespace("<%absmeth foo></%absmeth>  \n test");
     }
-    
+
     public void testWhitespaceAfterDef() throws Exception
     {
         assertNoWhitespace("<%def foo></%def>  \n test");
     }
-    
+
     public void testWhitespaceAfterMethod() throws Exception
     {
         assertNoWhitespace("<%method foo></%method>  \n test");
     }
-    
+
     public void testWhitespaceAfterOvereride() throws Exception
     {
         assertNoWhitespace("<%override foo></%override>  \n test");
+    }
+
+    public void testWhitespaceAfterGeneric() throws Exception
+    {
+       assertNoWhitespace("<%generic> T </%generic>  \n test");
     }
 }

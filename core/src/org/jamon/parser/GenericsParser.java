@@ -74,6 +74,7 @@ public class GenericsParser extends AbstractParser
                     addError(m_reader.getLocation(),
                              EXPECTING_EXTENDS_OR_GENERIC_ERROR);
                 }
+                soakWhitespace();
                 return;
             case 'e':
                 if (checkToken("xtends"))
@@ -113,6 +114,7 @@ public class GenericsParser extends AbstractParser
                             addError(m_reader.getLocation(),
                                      EXPECTING_GENERIC_ERROR);
                         }
+                        soakWhitespace();
                         return;
                     }
                 }
