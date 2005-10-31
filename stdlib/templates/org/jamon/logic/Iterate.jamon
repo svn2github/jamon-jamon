@@ -17,12 +17,13 @@
 
   Contributor(s):
 </%doc>
+<%generic>T</%generic>
 
 <%args>
-  java.util.Iterator iterator;
+  java.util.Iterator<T> iterator;
 </%args>
 <%frag Body>
-  Object value;
+  T value;
 </%frag>
 
 % while (iterator.hasNext())
