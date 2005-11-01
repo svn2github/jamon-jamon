@@ -189,15 +189,25 @@ public abstract class AbstractBodyParser extends AbstractParser
             switch (p_char)
             {
                 case '%' :
+                    seenPercent = true;
                     return 0;
                 case '>' :
-                    defaultEscaping = true;
-                    return 2;
+                    if (seenPercent)
+                    {
+                        defaultEscaping = true;
+                        return 2;
+                    }
+                    else
+                    {
+                       seenPercent = false;
+                       return 0;
+                    }
                 case '#' :
                     defaultEscaping = false;
                     return 1;
                 default :
-                    return 0;
+                   seenPercent = false;
+                   return 0;
             }
         }
 
@@ -211,6 +221,7 @@ public abstract class AbstractBodyParser extends AbstractParser
         }
 
         private boolean defaultEscaping = false;
+        private boolean seenPercent = false;
     }
 
     /**

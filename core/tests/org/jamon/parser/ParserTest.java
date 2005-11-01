@@ -281,6 +281,26 @@ public class ParserTest extends AbstractParserTest
                 parse(BEFORE + escapedEmit + AFTER));
     }
     
+    public void testEmitWithGreaterThan() throws Exception
+    {
+       String emitExpr = "foo > bar";
+       String emit = EMIT_START + emitExpr + EMIT_END;
+       assertEquals(
+           topNode()
+               .addSubNode(new TextNode(START_LOC, BEFORE))
+               .addSubNode(
+                   new EmitNode(
+                       location(1, 1 + BEFORE.length()),
+                       emitExpr,
+                       new DefaultEscapeNode(
+                           location(1, (BEFORE + emit).length()))))
+               .addSubNode(
+                   new TextNode(
+                       location(1, 1 + (BEFORE + emit).length()),
+                       AFTER)),
+           parse(BEFORE + emit + AFTER));
+    }
+    
     public void testClassTag() throws Exception
     {
         assertEquals(
