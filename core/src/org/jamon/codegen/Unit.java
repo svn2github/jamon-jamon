@@ -25,26 +25,14 @@ import java.util.List;
 
 import org.jamon.ParserError;
 import org.jamon.emit.EmitMode;
-import org.jamon.node.ArgNode;
-import org.jamon.node.FragmentArgsNode;
-import org.jamon.node.OptionalArgNode;
 
-public interface Unit
+public interface Unit extends StatementBlock
 {
     String getName();
-    Unit getParent();
     Iterator<FragmentArgument> getFragmentArgs();
-    FragmentUnit getFragmentUnitIntf(String p_path);
     Iterator<RequiredArgument> getSignatureRequiredArgs();
     Iterator<OptionalArgument> getSignatureOptionalArgs();
     List<FragmentArgument> getFragmentArgsList();
-
-    void addStatement(Statement p_statement);
-
-    FragmentUnit addFragment(
-        FragmentArgsNode p_node, GenericParams p_genericParams);
-    void addRequiredArg(ArgNode p_node);
-    void addOptionalArg(OptionalArgNode p_node);
 
     void printRenderArgsDecl(CodeWriter p_writer);
     void generateRenderBody(CodeWriter p_writer,

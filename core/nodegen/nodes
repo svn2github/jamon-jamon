@@ -59,3 +59,7 @@ ParentArgsNode ParentArgNode:arg*
 GenericsBoundNode String:className
 GenericsParamNode String:name GenericsBoundNode:bound*
 GenericsNode GenericsParamNode:param*
+IfNode:SubcomponentNode String:condition
+ForNode:SubcomponentNode String:loopTerms
+WhileNode:AbstractBodyNode String:condition
+ForNode:AbstractBodyNode String:loopSpecifier

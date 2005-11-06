@@ -1,3 +1,22 @@
+/*
+ * The contents of this file are subject to the Mozilla Public
+ * License Version 1.1 (the "License"); you may not use this file
+ * except in compliance with the License. You may obtain a copy of
+ * the License at http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS
+ * IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
+ * implied. See the License for the specific language governing
+ * rights and limitations under the License.
+ *
+ * The Original Code is Jamon code, released February, 2003.
+ *
+ * The Initial Developer of the Original Code is Ian Robertson.  Portions
+ * created by Ian Robertson are Copyright (C) 2005 Ian Robertson.  All Rights
+ * Reserved.
+ *
+ * Contributor(s):
+ */
 package org.jamon.parser;
 
 import java.io.IOException;
@@ -18,6 +37,10 @@ import org.jamon.node.TextNode;
 
 public abstract class AbstractBodyParser extends AbstractParser
 {
+    public static final String MALFORMED_WHILE_TAG =
+        "Malformed <%while ...%> tag";
+    public static final String MALFORMED_FOR_TAG =
+        "Malformed <%while ...%> tag";
     public static final String ESCAPE_TAG_IN_SUBCOMPONENT =
         "<%escape> tags only allowed at the top level of a document";
     public static final String GENERIC_TAG_IN_SUBCOMPONENT =
@@ -316,6 +339,14 @@ public abstract class AbstractBodyParser extends AbstractParser
         {
             handleOverrideTag(p_tagLocation);
         }
+        else if ("while".equals(p_tagName))
+        {
+           handleWhileTag(p_tagLocation);
+        }
+        else if ("for".equals(p_tagName))
+        {
+            handleForTag(p_tagLocation);
+        }
         else if ("args".equals(p_tagName))
         {
             //FIXME - either all handlers should throw these, or none.
@@ -476,6 +507,98 @@ public abstract class AbstractBodyParser extends AbstractParser
         addError(
             p_tagLocation,
             "<%absmeth> sections only allowed at the top level of a document");
+    }
+
+    private class ConditionEndDetector implements TagEndDetector
+    {
+        public ConditionEndDetector(String p_tagName)
+        {
+           m_tagName = p_tagName;
+        }
+
+        public int checkEnd(char p_char)
+        {
+            switch (p_char)
+            {
+                case '%' :
+                    m_seenPercent = true;
+                    return 0;
+                case '>' :
+                    if (m_seenPercent)
+                    {
+                        return 2;
+                    }
+                    else
+                    {
+                       m_seenPercent = false;
+                       return 0;
+                    }
+                default :
+                   m_seenPercent = false;
+                   return 0;
+            }
+        }
+
+        public ParserError getEofError(Location p_startLocation)
+        {
+            return new ParserError(
+               p_startLocation,
+               "Reached end of file while reading " + m_tagName + " tag");
+        }
+
+        public void resetEndMatch()
+        {
+        }
+
+        private boolean m_seenPercent = false;
+        private final String m_tagName;
+    }
+
+
+    protected void handleWhileTag(Location p_tagLocation) throws IOException
+    {
+        if (!soakWhitespace())
+        {
+            addError(p_tagLocation, MALFORMED_WHILE_TAG);
+        }
+        else
+        {
+           try
+           {
+               String condition = readJava(
+                   p_tagLocation, new ConditionEndDetector("<%while ...%>"));
+               m_root.addSubNode(new WhileParser(
+                   p_tagLocation, condition, m_reader, m_errors)
+                   .getRootNode());
+           }
+           catch (ParserError e)
+           {
+               addError(e);
+           }
+        }
+    }
+
+    protected void handleForTag(Location p_tagLocation) throws IOException
+    {
+        if (!soakWhitespace())
+        {
+            addError(p_tagLocation, MALFORMED_FOR_TAG);
+        }
+        else
+        {
+           try
+           {
+               String condition = readJava(
+                   p_tagLocation, new ConditionEndDetector("<%for ...%>"));
+               m_root.addSubNode(new ForParser(
+                   p_tagLocation, condition, m_reader, m_errors)
+                   .getRootNode());
+           }
+           catch (ParserError e)
+           {
+               addError(e);
+           }
+        }
     }
 
     protected void handleParentArgsNode(Location p_tagLocation)

@@ -1,0 +1,4 @@
+% int[] outer = new int[] {1, 2, 3};
+<%for int i : outer %>\
+<%for int j = 4; j <= 6; j++ %><% i %><% j %></%for>
+</%for>

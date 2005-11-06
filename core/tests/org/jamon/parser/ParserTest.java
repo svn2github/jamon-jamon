@@ -1,3 +1,24 @@
+/*
+ * The contents of this file are subject to the Mozilla Public
+ * License Version 1.1 (the "License"); you may not use this file
+ * except in compliance with the License. You may obtain a copy of
+ * the License at http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS
+ * IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
+ * implied. See the License for the specific language governing
+ * rights and limitations under the License.
+ *
+ * The Original Code is Jamon code, released February, 2003.
+ *
+ * The Initial Developer of the Original Code is Ian Robertson.  Portions
+ * created by Ian Robertson are Copyright (C) 2005 Ian Robertson.  All Rights
+ * Reserved.
+ *
+ * Contributor(s):
+ */
+
+
 package org.jamon.parser;
 
 import java.io.IOException;
@@ -80,7 +101,7 @@ public class ParserTest extends AbstractParserTest
                 new TextNode(location(1,1), line1 + line2)),
             parse(line1 + "\\\n" + line2));
     }
-    
+
     public void testJavaTag() throws Exception
     {
         String java = "int c = 4;";
@@ -139,7 +160,7 @@ public class ParserTest extends AbstractParserTest
     {
         SubcomponentNode makeNode(Location p_location, String p_name);
     }
-    
+
     private void doSubcomponentTest(
             String p_prefix, String p_suffix, SubcomponentBuilder p_builder)
         throws IOException
@@ -153,7 +174,7 @@ public class ParserTest extends AbstractParserTest
                 .addSubNode(new TextNode(START_LOC, BEFORE))
                 .addSubNode(
                     p_builder
-                        .makeNode(location(1, 1 + BEFORE.length()), 
+                        .makeNode(location(1, 1 + BEFORE.length()),
                                   name)
                         .addSubNode(new TextNode(
                             location(1, 1 + (BEFORE + start).length()),
@@ -170,12 +191,12 @@ public class ParserTest extends AbstractParserTest
         doSubcomponentTest(
             "<%def", "</%def>",
             new SubcomponentBuilder() {
-                public SubcomponentNode makeNode(Location p_location, 
+                public SubcomponentNode makeNode(Location p_location,
                                                  String p_name)
                 {
                     return new DefNode(p_location, p_name);
                 }
-                
+
             });
     }
 
@@ -184,12 +205,12 @@ public class ParserTest extends AbstractParserTest
         doSubcomponentTest(
             "<%method", "</%method>",
             new SubcomponentBuilder() {
-                public SubcomponentNode makeNode(Location p_location, 
+                public SubcomponentNode makeNode(Location p_location,
                                                  String p_name)
                 {
                     return new MethodNode(p_location, p_name);
                 }
-                
+
             });
     }
 
@@ -202,25 +223,25 @@ public class ParserTest extends AbstractParserTest
                         .addArgsBlock(
                             new ArgsNode(location(2,1))
                                 .addArg(
-                                    new ArgNode(location(3,1), 
+                                    new ArgNode(location(3,1),
                                     new ArgTypeNode(location(3,1), "int"),
                                     new ArgNameNode(location(3, 5), "i"))))
                         .addArgsBlock(
                             new FragmentArgsNode(location(5,1), "f"))),
              parse("<%absmeth foo>\n<%args>\nint i;\n</%args>\n<%frag f/></%absmeth>"));
     }
-    
+
     public void testOverride() throws Exception
     {
         doSubcomponentTest(
             "<%override", "</%override>",
             new SubcomponentBuilder() {
-                public SubcomponentNode makeNode(Location p_location, 
+                public SubcomponentNode makeNode(Location p_location,
                                                  String p_name)
                 {
                     return new OverrideNode(p_location, p_name);
                 }
-                
+
             });
     }
 
@@ -280,7 +301,7 @@ public class ParserTest extends AbstractParserTest
                         AFTER)),
                 parse(BEFORE + escapedEmit + AFTER));
     }
-    
+
     public void testEmitWithGreaterThan() throws Exception
     {
        String emitExpr = "foo > bar";
@@ -300,7 +321,7 @@ public class ParserTest extends AbstractParserTest
                        AFTER)),
            parse(BEFORE + emit + AFTER));
     }
-    
+
     public void testClassTag() throws Exception
     {
         assertEquals(
@@ -308,7 +329,7 @@ public class ParserTest extends AbstractParserTest
                 new ClassNode(location(1,1), "foo")),
             parse("<%class>foo</%class>"));
     }
-    
+
     public void testExtendsTag() throws Exception
     {
         String path = "/foo/bar";
@@ -316,9 +337,9 @@ public class ParserTest extends AbstractParserTest
         assertEquals(
             topNode().addSubNode(
                 new ExtendsNode(
-                    location(1,1), 
+                    location(1,1),
                     buildPath(
-                        location(1, extendsTagStart.length() + 2), 
+                        location(1, extendsTagStart.length() + 2),
                         new AbsolutePathNode(
                             location(1, extendsTagStart.length() + 1)),
                         path))),
@@ -331,7 +352,7 @@ public class ParserTest extends AbstractParserTest
             topNode().addSubNode(new ImplementsNode(START_LOC)),
             parse("<%implements></%implements>"));
     }
-    
+
     public void testSingleImplementsTag() throws Exception
     {
         assertEquals(
@@ -366,7 +387,7 @@ public class ParserTest extends AbstractParserTest
             topNode().addSubNode(new ImportsNode(START_LOC)),
             parse("<%import></%import>"));
     }
-    
+
     public void testSingleImportsTag() throws Exception
     {
         assertEquals(
@@ -385,7 +406,7 @@ public class ParserTest extends AbstractParserTest
                    .addImport(new ImportNode(location(3,1), "c.*"))),
             parse("<%import>\naa.bb;\nc.*;\n</%import>"));
     }
-    
+
     public void testImportsWhitespace() throws Exception
     {
         assertEquals(
@@ -402,14 +423,14 @@ public class ParserTest extends AbstractParserTest
             topNode().addSubNode(new ParentArgsNode(START_LOC)),
             parse("<%xargs></%xargs>"));
     }
-    
+
     public void testParentArgsTag() throws Exception
     {
         assertEquals(
             topNode().addSubNode(
                 new ParentArgsNode(START_LOC)
                     .addArg(new ParentArgNode(
-                        location(2,1), 
+                        location(2,1),
                         new ArgNameNode(location(2, 1), "a")))
                     .addArg(new ParentArgWithDefaultNode(
                         location(3,1),
@@ -417,7 +438,7 @@ public class ParserTest extends AbstractParserTest
                         new ArgValueNode(location(3, 6), "x")))),
             parse("<%xargs>\na;\nb => x;</%xargs>"));
     }
-    
+
     public void testParentArgsInOverrideTag() throws Exception
     {
         assertEquals(
@@ -425,7 +446,7 @@ public class ParserTest extends AbstractParserTest
                 new OverrideNode(START_LOC, "m").addSubNode(
                     new ParentArgsNode(location(2, 1))
                         .addArg(new ParentArgNode(
-                            location(3,1), 
+                            location(3,1),
                             new ArgNameNode(location(3, 1), "a")))
                         .addArg(new ParentArgWithDefaultNode(
                             location(4,1),
@@ -433,7 +454,7 @@ public class ParserTest extends AbstractParserTest
                             new ArgValueNode(location(4, 6), "x"))))),
             parse("<%override m>\n<%xargs>\na;\nb => x;</%xargs></%override>"));
     }
-    
+
     public void testDocTag() throws Exception
     {
         String begining = "before<%doc>some docs</%doc>";
@@ -444,19 +465,48 @@ public class ParserTest extends AbstractParserTest
                                          "after")),
             parse(begining + "after"));
     }
-    
+
     public void testParentMarkerTag() throws Exception
     {
         assertEquals(
             topNode().addSubNode(new ParentMarkerNode(location(1,1))),
             parse("<%abstract>"));
     }
-    
+
     public void testEscapeTag() throws Exception
     {
         assertEquals(
             topNode()
                 .addSubNode(new EscapeDirectiveNode(location(1,1), "u")),
             parse("<%escape #u>"));
+    }
+
+    public void testWhileTag() throws Exception
+    {
+        final String whileTag = "<%while cond%>";
+        assertEquals(
+            topNode()
+            .addSubNode(new WhileNode(location(1,1), "cond")
+                .addSubNode(new TextNode(
+                    location(1, 1 + whileTag.length()), "text"))),
+            parse(whileTag + "text</%while>"));
+    }
+
+    public void testForTag() throws Exception
+    {
+        final String forTag = "<%for loop : baz%>";
+        assertEquals(
+            topNode()
+            .addSubNode(new ForNode(location(1,1), "loop : baz")
+                .addSubNode(new EmitNode(
+                    location(
+                        1,
+                        1 + forTag.length()), "x ",
+                        new DefaultEscapeNode(location(
+                            1, 1 + forTag.length() + "<% x %".length()))))
+                .addSubNode(new TextNode(
+                    location(1, 1 + forTag.length() + "<% x %>".length()),
+                    "text"))),
+            parse(forTag + "<% x %>text</%for>"));
     }
 }

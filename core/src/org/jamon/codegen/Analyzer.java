@@ -42,7 +42,7 @@ public class Analyzer
         m_templateUnit = new TemplateUnit(p_templatePath, m_errors);
         m_templateDir =
             p_templatePath.substring(0,1 + p_templatePath.lastIndexOf('/'));
-        m_currentUnit = m_templateUnit;
+        m_currentStatementBlock = m_templateUnit;
         m_describer = p_describer;
         m_children = p_children;
         m_templateIdentifier =
@@ -121,38 +121,56 @@ public class Analyzer
 
     private void pushDefUnit(String p_defName)
     {
-        m_currentUnit = getTemplateUnit().getDefUnit(p_defName);
+        m_currentStatementBlock = getTemplateUnit().getDefUnit(p_defName);
     }
 
     private void pushMethodUnit(String p_methodName)
     {
-        m_currentUnit = getTemplateUnit().getMethodUnit(p_methodName);
+        m_currentStatementBlock = getTemplateUnit().getMethodUnit(p_methodName);
     }
 
     private void pushOverriddenMethodUnit(OverrideNode p_node)
     {
-        m_currentUnit = getTemplateUnit()
+        m_currentStatementBlock = getTemplateUnit()
             .makeOverridenMethodUnit(p_node.getName(), p_node.getLocation());
+    }
+
+    private void pushWhileBlock(WhileNode p_node)
+    {
+        WhileBlock whileBlock = new WhileBlock(p_node.getCondition(),
+                                               m_currentStatementBlock,
+                                               p_node.getLocation());
+        addStatement(whileBlock);
+        m_currentStatementBlock = whileBlock;
+    }
+
+    private void pushForBlock(ForNode p_node)
+    {
+        ForBlock forBlock = new ForBlock(p_node.getLoopSpecifier(),
+                                         m_currentStatementBlock,
+                                         p_node.getLocation());
+        addStatement(forBlock);
+        m_currentStatementBlock = forBlock;
     }
 
     private FragmentUnit pushFragmentUnitImpl(String p_fragName)
     {
-        m_currentUnit = new FragmentUnit(
+        m_currentStatementBlock = new FragmentUnit(
             p_fragName,
-            getCurrentUnit(),
+            getCurrentStatementBlock(),
             getTemplateUnit().getGenericParams(),
             m_errors);
-        return (FragmentUnit) m_currentUnit;
+        return (FragmentUnit) m_currentStatementBlock;
     }
 
     private void pushFragmentArg(FragmentUnit p_frag)
     {
-        m_currentUnit = p_frag;
+        m_currentStatementBlock = p_frag;
     }
 
-    private void popUnit()
+    private void popStatementBlock()
     {
-        m_currentUnit = m_currentUnit.getParent();
+        m_currentStatementBlock = m_currentStatementBlock.getParent();
     }
 
     private void pushCallStatement(CallStatement p_callStatement)
@@ -175,14 +193,14 @@ public class Analyzer
         return m_templateUnit;
     }
 
-    private Unit getCurrentUnit()
+    private StatementBlock getCurrentStatementBlock()
     {
-        return m_currentUnit;
+        return m_currentStatementBlock;
     }
 
     private StringBuilder m_current = new StringBuilder();
     private final TemplateUnit m_templateUnit;
-    private Unit m_currentUnit;
+    private StatementBlock m_currentStatementBlock;
     private final TemplateDescriber m_describer;
     private final Set<String> m_children;
     private final LinkedList<CallStatement> m_callStatements =
@@ -342,8 +360,8 @@ public class Analyzer
         @Override
         public void caseParentArgsNode(ParentArgsNode p_node)
         {
-            if (getCurrentUnit() instanceof TemplateUnit
-                && ! ((TemplateUnit) getCurrentUnit()).hasParentPath())
+            if (getCurrentStatementBlock() instanceof TemplateUnit
+                && ! ((TemplateUnit) getCurrentStatementBlock()).hasParentPath())
             {
                 addError(
                     "xargs may not be declared without extending another template",
@@ -358,39 +376,39 @@ public class Analyzer
         @Override
         public void caseParentArgNode(ParentArgNode p_node)
         {
-            ((InheritedUnit) getCurrentUnit()).addParentArg(p_node);
+            ((InheritedUnit) getCurrentStatementBlock()).addParentArg(p_node);
         }
 
         @Override
         public void caseParentArgWithDefaultNode(
             ParentArgWithDefaultNode p_node)
         {
-            ((InheritedUnit) getCurrentUnit()).addParentArg(p_node);
+            ((InheritedUnit) getCurrentStatementBlock()).addParentArg(p_node);
         }
 
         @Override
         public void inFragmentArgsNode(FragmentArgsNode p_node)
         {
-            pushFragmentArg(getCurrentUnit().addFragment(
+            pushFragmentArg(getCurrentStatementBlock().addFragment(
                 p_node, getTemplateUnit().getGenericParams()));
         }
 
         @Override
         public void outFragmentArgsNode(FragmentArgsNode p_node)
         {
-            popUnit();
+            popStatementBlock();
         }
 
         @Override
         public void caseArgNode(ArgNode p_node)
         {
-            getCurrentUnit().addRequiredArg(p_node);
+            getCurrentStatementBlock().addRequiredArg(p_node);
         }
 
         @Override
         public void caseOptionalArgNode(OptionalArgNode p_node)
         {
-            getCurrentUnit().addOptionalArg(p_node);
+            getCurrentStatementBlock().addOptionalArg(p_node);
         }
 
         @Override
@@ -404,7 +422,7 @@ public class Analyzer
         public void outDefNode(DefNode p_def)
         {
             handleBody();
-            popUnit();
+            popStatementBlock();
         }
 
         @Override
@@ -418,7 +436,7 @@ public class Analyzer
         public void outMethodNode(MethodNode p_node)
         {
             handleBody();
-            popUnit();
+            popStatementBlock();
         }
 
         @Override
@@ -437,7 +455,7 @@ public class Analyzer
         @Override
         public void outAbsMethodNode(AbsMethodNode p_node)
         {
-            popUnit();
+            popStatementBlock();
         }
 
         @Override
@@ -451,7 +469,7 @@ public class Analyzer
         public void outOverrideNode(OverrideNode p_node)
         {
             handleBody();
-            popUnit();
+            popStatementBlock();
         }
 
         @Override public void caseGenericsParamNode(GenericsParamNode p_node)
@@ -527,7 +545,7 @@ public class Analyzer
         public void outNamedFragmentNode(NamedFragmentNode p_node)
         {
             handleBody();
-            popUnit();
+            popStatementBlock();
         }
 
         @Override
@@ -543,7 +561,31 @@ public class Analyzer
         public void outFragmentCallNode(FragmentCallNode p_node)
         {
             handleBody();
-            popUnit();
+            popStatementBlock();
+        }
+
+        @Override public void inWhileNode(WhileNode p_node)
+        {
+            handleBody();
+            pushWhileBlock(p_node);
+        }
+
+        @Override public void outWhileNode(WhileNode p_node)
+        {
+            handleBody();
+            popStatementBlock();
+        }
+
+        @Override public void inForNode(ForNode p_node)
+        {
+            handleBody();
+            pushForBlock(p_node);
+        }
+
+        @Override public void outForNode(ForNode p_node)
+        {
+            handleBody();
+            popStatementBlock();
         }
 
         @Override
@@ -624,7 +666,8 @@ public class Analyzer
     {
         String path = computePath(p_node.getCallPath());
         ParamValues paramValues = makeParamValues(p_node.getParams());
-        FragmentUnit fragmentUnit = getCurrentUnit().getFragmentUnitIntf(path);
+        FragmentUnit fragmentUnit =
+            getCurrentStatementBlock().getFragmentUnitIntf(path);
         List<GenericCallParam> genericParams = p_node.getGenericParams();
         if (fragmentUnit != null)
         {
@@ -738,6 +781,6 @@ public class Analyzer
 
     private void addStatement(Statement p_statement)
     {
-        getCurrentUnit().addStatement(p_statement);
+        getCurrentStatementBlock().addStatement(p_statement);
     }
 }

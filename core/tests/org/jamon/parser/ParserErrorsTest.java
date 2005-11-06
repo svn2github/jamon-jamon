@@ -262,4 +262,15 @@ public class ParserErrorsTest extends AbstractParserTest
     {
         assertError("<%xargs>\n</%>", 2, 1, ParentArgsParser.MALFORMED_PARENT_ARGS_CLOSE);
     }
+
+    public void testMalformedWhileTag() throws Exception
+    {
+        assertError("<%while>", 1, 1, AbstractBodyParser.MALFORMED_WHILE_TAG);
+    }
+
+    public void testMalformedWhileCondition() throws Exception
+    {
+        assertError("<%while foo>", 1, 1,
+                    "Reached end of file while reading <%while ...%> tag");
+    }
 }

@@ -32,7 +32,7 @@ import org.jamon.node.Location;
 public abstract class AbstractInnerUnit extends AbstractUnit
 {
     public AbstractInnerUnit(
-        String p_name, Unit p_parent, ParserErrors p_errors)
+        String p_name, StatementBlock p_parent, ParserErrors p_errors)
     {
         super(p_name, p_parent, p_errors);
     }
@@ -123,10 +123,10 @@ public abstract class AbstractInnerUnit extends AbstractUnit
 
 
 
-    private final List<RequiredArgument> m_requiredArgs = 
+    private final List<RequiredArgument> m_requiredArgs =
         new LinkedList<RequiredArgument>();
-    private final Set<OptionalArgument> m_optionalArgs = 
+    private final Set<OptionalArgument> m_optionalArgs =
         new HashSet<OptionalArgument>();
-    private final List<FragmentArgument> m_fragmentArgs = 
+    private final List<FragmentArgument> m_fragmentArgs =
         new LinkedList<FragmentArgument>();
 }

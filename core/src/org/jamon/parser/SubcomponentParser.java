@@ -22,12 +22,12 @@ package org.jamon.parser;
 import java.io.IOException;
 
 import org.jamon.ParserErrors;
+import org.jamon.node.AbstractBodyNode;
 import org.jamon.node.Location;
-import org.jamon.node.SubcomponentNode;
 
 public abstract class SubcomponentParser extends AbstractBodyParser
 {
-    protected SubcomponentParser(SubcomponentNode p_node, 
+    protected SubcomponentParser(AbstractBodyNode p_node,
                                  PositionalPushbackReader p_reader,
                                  ParserErrors p_errors)
         throws IOException
@@ -35,44 +35,50 @@ public abstract class SubcomponentParser extends AbstractBodyParser
         super(p_node, p_reader, p_errors);
     }
 
-    
+
     @Override protected void parse() throws IOException
     {
-        soakWhitespace();
+        handlePostTag();
         super.parse();
+        handlePostTag();
+    }
+
+
+    protected void handlePostTag() throws IOException
+    {
         soakWhitespace();
     }
-    
+
     protected abstract String tagName();
 
     @Override
     protected void handleTagClose(String p_tagName, Location p_tagLocation)
         throws IOException
     {
-        if (!p_tagName.equals(tagName()))    
-        {   
+        if (!p_tagName.equals(tagName()))
+        {
             super.handleTagClose(p_tagName, p_tagLocation);
         }
         else
         {
-            soakWhitespace();
+            handlePostTag();
         }
     }
 
     @Override protected void handleEof()
-    {   
+    {
         addError(m_bodyStart, makeError(tagName()));
-    }   
+    }
 
     public static String makeError(String p_tagName)
     {
-        return "Reached end of file inside a " + p_tagName + 
+        return "Reached end of file inside a " + p_tagName +
          "; </%" + p_tagName + "> expected";
     }
 
-    public SubcomponentNode getRootNode()
+    public AbstractBodyNode getRootNode()
     {
-        return (SubcomponentNode) m_root;
+        return m_root;
     }
-    
+
 }

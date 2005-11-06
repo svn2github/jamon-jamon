@@ -38,7 +38,8 @@ import org.jamon.node.OptionalArgNode;
 public abstract class AbstractUnit
     implements Unit
 {
-    public AbstractUnit(String p_name, Unit p_parent, ParserErrors p_errors)
+    public AbstractUnit(
+        String p_name, StatementBlock p_parent, ParserErrors p_errors)
     {
         m_name = p_name;
         m_parent = p_parent;
@@ -50,7 +51,12 @@ public abstract class AbstractUnit
         return m_name;
     }
 
-    public final Unit getParent()
+    public final Unit getParentUnit()
+    {
+        return (Unit) m_parent;
+    }
+
+    public final StatementBlock getParent()
     {
         return m_parent;
     }
@@ -118,7 +124,7 @@ public abstract class AbstractUnit
     public abstract Iterator getVisibleArgs();
 
     private final String m_name;
-    private final Unit m_parent;
+    private final StatementBlock m_parent;
     private final ParserErrors m_errors;
     private final List<Statement> m_statements = new LinkedList<Statement>();
     private final Set<String> m_argNames = new HashSet<String>();

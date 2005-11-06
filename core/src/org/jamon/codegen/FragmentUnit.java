@@ -26,7 +26,7 @@ import org.jamon.node.OptionalArgNode;
 
 public class FragmentUnit extends AbstractInnerUnit
 {
-    public FragmentUnit(String p_name, Unit p_parent,
+    public FragmentUnit(String p_name, StatementBlock p_parent,
                         GenericParams p_genericParams, ParserErrors p_errors)
     {
         super(p_name, p_parent, p_errors);
@@ -40,7 +40,7 @@ public class FragmentUnit extends AbstractInnerUnit
             : "";
         if(getParent() instanceof AbstractInnerUnit)
         {
-            return "Fragment_" + getParent().getName()
+            return "Fragment_" + getParentUnit().getName()
                 + "__jamon__" + getName() + genericParamsClause;
         }
         else
