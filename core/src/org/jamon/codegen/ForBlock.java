@@ -3,7 +3,7 @@ package org.jamon.codegen;
 
 import org.jamon.node.Location;
 
-public class ForBlock extends AbstractStatementBlock implements Statement
+public class ForBlock extends AbstractControlFlowBlock implements Statement
 {
     public ForBlock(String p_condition,
                     StatementBlock p_parent,

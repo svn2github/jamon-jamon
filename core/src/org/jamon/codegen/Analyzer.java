@@ -198,7 +198,6 @@ public class Analyzer
         return m_currentStatementBlock;
     }
 
-    private StringBuilder m_current = new StringBuilder();
     private final TemplateUnit m_templateUnit;
     private StatementBlock m_currentStatementBlock;
     private final TemplateDescriber m_describer;
@@ -208,7 +207,6 @@ public class Analyzer
     private final Map<String, String> m_aliases = new HashMap<String, String>();
     private final String m_templateDir;
     private final String m_templateIdentifier;
-    private Location m_currentTextLocation;
     private ParserErrors m_errors = new ParserErrors();
 
     private String getAbsolutePath(String p_path)
@@ -414,35 +412,30 @@ public class Analyzer
         @Override
         public void inDefNode(DefNode p_node)
         {
-            handleBody();
             pushDefUnit(p_node.getName());
         }
 
         @Override
         public void outDefNode(DefNode p_def)
         {
-            handleBody();
             popStatementBlock();
         }
 
         @Override
         public void inMethodNode(MethodNode p_node)
         {
-            handleBody();
             pushMethodUnit(p_node.getName());
         }
 
         @Override
         public void outMethodNode(MethodNode p_node)
         {
-            handleBody();
             popStatementBlock();
         }
 
         @Override
         public void inAbsMethodNode(AbsMethodNode p_node)
         {
-            handleBody();
             if (! getTemplateUnit().isParent())
             {
                 addError(
@@ -461,14 +454,12 @@ public class Analyzer
         @Override
         public void inOverrideNode(OverrideNode p_node)
         {
-            handleBody();
             pushOverriddenMethodUnit(p_node);
         }
 
         @Override
         public void outOverrideNode(OverrideNode p_node)
         {
-            handleBody();
             popStatementBlock();
         }
 
@@ -484,14 +475,12 @@ public class Analyzer
 
         @Override public void caseSimpleCallNode(SimpleCallNode p_node)
         {
-            handleBody();
             addStatement(makeCallStatement(p_node));
         }
 
         @Override
         public void caseChildCallNode(ChildCallNode p_node)
         {
-            handleBody();
             TemplateUnit unit = getTemplateUnit();
             if (! unit.isParent())
             {
@@ -505,24 +494,19 @@ public class Analyzer
         @Override
         public void caseClassNode(ClassNode p_node)
         {
-            handleBody();
             getTemplateUnit().addClassContent(p_node);
         }
 
         @Override
         public void caseTextNode(TextNode p_node)
         {
-            if (m_currentTextLocation == null)
-            {
-                m_currentTextLocation = p_node.getLocation();
-            }
-            m_current.append(p_node.getText());
+            addStatement(new LiteralStatement(
+                p_node.getText(), p_node.getLocation(), m_templateIdentifier));
         }
 
         @Override
         public void inMultiFragmentCallNode(MultiFragmentCallNode p_node)
         {
-            handleBody();
             CallStatement s = makeCallStatement(p_node);
             addStatement(s);
             pushCallStatement(s);
@@ -544,14 +528,12 @@ public class Analyzer
         @Override
         public void outNamedFragmentNode(NamedFragmentNode p_node)
         {
-            handleBody();
             popStatementBlock();
         }
 
         @Override
         public void inFragmentCallNode(FragmentCallNode p_node)
         {
-            handleBody();
             CallStatement s = makeCallStatement(p_node);
             addStatement(s);
             s.addFragmentImpl(pushFragmentUnitImpl(null), m_errors);
@@ -560,44 +542,37 @@ public class Analyzer
         @Override
         public void outFragmentCallNode(FragmentCallNode p_node)
         {
-            handleBody();
             popStatementBlock();
         }
 
         @Override public void inWhileNode(WhileNode p_node)
         {
-            handleBody();
             pushWhileBlock(p_node);
         }
 
         @Override public void outWhileNode(WhileNode p_node)
         {
-            handleBody();
             popStatementBlock();
         }
 
         @Override public void inForNode(ForNode p_node)
         {
-            handleBody();
             pushForBlock(p_node);
         }
 
         @Override public void outForNode(ForNode p_node)
         {
-            handleBody();
             popStatementBlock();
         }
 
         @Override
         public void outTopNode(TopNode p_node)
         {
-            handleBody();
         }
 
         @Override
         public void caseJavaNode(JavaNode p_node)
         {
-            handleBody();
             addStatement(new RawStatement(p_node.getJava(),
                                           p_node.getLocation(),
                                           m_templateIdentifier));
@@ -634,7 +609,6 @@ public class Analyzer
         @Override
         public void caseEmitNode(EmitNode p_node)
         {
-            handleBody();
             addStatement(new WriteStatement
                          (p_node.getEmitExpression(),
                           new EmitAdapter().getEscape(p_node.getEscaping()),
@@ -648,18 +622,6 @@ public class Analyzer
     private EscapingDirective getDefaultEscaping()
     {
         return EscapingDirective.get(m_defaultEscaping);
-    }
-
-    private void handleBody()
-    {
-        if (m_current.length() > 0)
-        {
-            addStatement(new LiteralStatement(m_current.toString(),
-                                              m_currentTextLocation,
-                                              m_templateIdentifier));
-            m_current = new StringBuilder();
-            m_currentTextLocation = null;
-        }
     }
 
     private CallStatement makeCallStatement(AbstractComponentCallNode p_node)

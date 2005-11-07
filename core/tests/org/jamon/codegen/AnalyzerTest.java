@@ -84,19 +84,22 @@ public class AnalyzerTest extends TestCase
         assertEquals(p_expected, ((LiteralStatement) p_statement).getText());
     }
 
+    private TemplateUnit analyzeText(String p_templateText) throws IOException
+    {
+        return new Analyzer(
+            PATH,
+            new TemplateDescriber(new MockTemplateSource(p_templateText),
+                getClass().getClassLoader()))
+        .analyze();
+    }
+
     private void checkLoopBlock(
         Class<? extends AbstractStatementBlock> p_loopClass, String p_loopName)
         throws IOException
     {
-        TemplateUnit unit =
-            new Analyzer(
-                PATH,
-                new TemplateDescriber(
-                    new MockTemplateSource(
-                        "a<%" + p_loopName + " l%>b<% x %>c</%"
-                        + p_loopName + ">d"),
-                    getClass().getClassLoader()))
-            .analyze();
+        String templateText = "a<%" + p_loopName + " l%>b<% x %>c</%"
+                        + p_loopName + ">d";
+        TemplateUnit unit = analyzeText(templateText);
         checkTypes(
             unit.getStatements(),
             LiteralStatement.class, p_loopClass, LiteralStatement.class);
@@ -119,5 +122,19 @@ public class AnalyzerTest extends TestCase
     public void testWhileBlock() throws Exception
     {
         checkLoopBlock(WhileBlock.class, "while");
+    }
+
+    public void testTextCompactification() throws Exception
+    {
+        TemplateUnit unit = analyzeText("a<%def d></%def>b");
+        checkTypes(unit.getStatements(), LiteralStatement.class);
+        assertStatementText("ab", unit.getStatements().get(0));
+    }
+
+    public void testLiteralCompactification() throws Exception
+    {
+        TemplateUnit unit = analyzeText("a<%LITERAL>b\n</%LITERAL>\nc");
+        checkTypes(unit.getStatements(), LiteralStatement.class);
+        assertStatementText("ab\n\nc", unit.getStatements().get(0));
     }
 }

@@ -16,16 +16,6 @@ public abstract class AbstractStatementBlock implements StatementBlock
         m_parent = p_parent;
     }
 
-    public void generateSource(
-        CodeWriter p_writer, TemplateDescriber p_describer, EmitMode p_emitMode)
-        throws ParserError
-    {
-        printOpening(p_writer);
-        p_writer.openBlock();
-        printStatements(p_writer, p_describer, p_emitMode);
-        p_writer.closeBlock();
-    }
-
     protected void printStatements(
         CodeWriter p_writer, TemplateDescriber p_describer, EmitMode p_emitMode)
         throws ParserError
@@ -36,8 +26,6 @@ public abstract class AbstractStatementBlock implements StatementBlock
         }
     }
 
-    protected abstract void printOpening(CodeWriter p_writer);
-
     public FragmentUnit getFragmentUnitIntf(String p_path)
     {
         return getParentUnit().getFragmentUnitIntf(p_path);
@@ -45,7 +33,18 @@ public abstract class AbstractStatementBlock implements StatementBlock
 
     public void addStatement(Statement p_statement)
     {
-        m_statements.add(p_statement);
+        if (p_statement instanceof LiteralStatement
+            && !m_statements.isEmpty()
+            && m_statements.get(m_statements.size() - 1)
+                instanceof LiteralStatement)
+        {
+            ((LiteralStatement) m_statements.get(m_statements.size() - 1))
+                .appendText(((LiteralStatement) p_statement).getText());
+        }
+        else
+        {
+            m_statements.add(p_statement);
+        }
     }
 
     public List<Statement> getStatements()

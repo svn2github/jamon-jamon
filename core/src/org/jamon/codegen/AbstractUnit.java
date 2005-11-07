@@ -22,7 +22,6 @@ package org.jamon.codegen;
 
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeMap;
@@ -36,13 +35,14 @@ import org.jamon.node.Location;
 import org.jamon.node.OptionalArgNode;
 
 public abstract class AbstractUnit
+    extends AbstractStatementBlock
     implements Unit
 {
     public AbstractUnit(
         String p_name, StatementBlock p_parent, ParserErrors p_errors)
     {
+        super(p_parent);
         m_name = p_name;
-        m_parent = p_parent;
         m_errors = p_errors;
     }
 
@@ -51,14 +51,9 @@ public abstract class AbstractUnit
         return m_name;
     }
 
-    public final Unit getParentUnit()
+    @Override public final Unit getParentUnit()
     {
-        return (Unit) m_parent;
-    }
-
-    public final StatementBlock getParent()
-    {
-        return m_parent;
+        return (Unit) getParent();
     }
 
     protected final ParserErrors getErrors()
@@ -70,7 +65,7 @@ public abstract class AbstractUnit
     public abstract Iterator<FragmentArgument> getFragmentArgs();
     public abstract List<FragmentArgument> getFragmentArgsList();
 
-    public FragmentUnit getFragmentUnitIntf(String p_path)
+    @Override public FragmentUnit getFragmentUnitIntf(String p_path)
     {
         for (Iterator<FragmentArgument> i = getFragmentArgs(); i.hasNext(); )
         {
@@ -83,16 +78,6 @@ public abstract class AbstractUnit
         return null;
     }
 
-    public void addStatement(Statement p_statement)
-    {
-        m_statements.add(p_statement);
-    }
-
-    public List<Statement> getStatements()
-    {
-        return m_statements;
-    }
-
     public void generateRenderBody(CodeWriter p_writer,
                                    TemplateDescriber p_describer,
                                    EmitMode p_emitMode) throws ParserError
@@ -101,16 +86,6 @@ public abstract class AbstractUnit
         printStatements(p_writer, p_describer, p_emitMode);
         printRenderBodyEnd(p_writer);
         p_writer.closeBlock();
-    }
-
-    private void printStatements(CodeWriter p_writer,
-                                 TemplateDescriber p_describer,
-                                 EmitMode p_emitMode) throws ParserError
-    {
-        for (Statement statement : getStatements())
-        {
-            statement.generateSource(p_writer, p_describer, p_emitMode);
-        }
     }
 
     protected void printRenderBodyEnd(CodeWriter p_writer)
@@ -124,11 +99,9 @@ public abstract class AbstractUnit
     public abstract Iterator getVisibleArgs();
 
     private final String m_name;
-    private final StatementBlock m_parent;
     private final ParserErrors m_errors;
-    private final List<Statement> m_statements = new LinkedList<Statement>();
     private final Set<String> m_argNames = new HashSet<String>();
-    public FragmentUnit addFragment(
+    @Override public FragmentUnit addFragment(
         FragmentArgsNode p_node, GenericParams p_genericParams)
     {
         checkArgName(p_node.getFragmentName(), p_node.getLocation());
@@ -138,14 +111,14 @@ public abstract class AbstractUnit
         return frag;
     }
 
-    public void addRequiredArg(ArgNode p_node)
+    @Override public void addRequiredArg(ArgNode p_node)
     {
         checkArgName(p_node.getName().getName(),
                      p_node.getName().getLocation());
         addRequiredArg(new RequiredArgument(p_node));
     }
 
-    public void addOptionalArg(OptionalArgNode p_node)
+    @Override public void addOptionalArg(OptionalArgNode p_node)
     {
         checkArgName(p_node.getName().getName(),
             p_node.getName().getLocation());

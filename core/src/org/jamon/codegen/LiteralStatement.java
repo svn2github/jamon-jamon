@@ -28,10 +28,16 @@ public class LiteralStatement
     extends AbstractStatement
     implements Statement
 {
-    LiteralStatement(String p_text, Location p_token, String p_templateIdentifier)
+    LiteralStatement(
+        String p_text, Location p_token, String p_templateIdentifier)
     {
         super(p_token, p_templateIdentifier);
-        m_text = javaEscape(p_text);
+        m_text = new StringBuilder(p_text);
+    }
+
+    public void appendText(String p_text)
+    {
+        m_text.append(p_text);
     }
 
     public void generateSource(CodeWriter p_writer,
@@ -42,42 +48,45 @@ public class LiteralStatement
         {
             generateSourceLine(p_writer);
             p_writer.print(ArgNames.WRITER + ".write(\"");
-            p_writer.print(m_text);
+            javaEscape(m_text.toString(), p_writer);
             p_writer.println("\");");
         }
     }
 
-    private static String javaEscape(String p_string)
+    private void javaEscape(String p_string, CodeWriter p_writer)
     {
         // assert p_string != null
-        StringBuilder s = new StringBuilder();
         for (int i = 0; i < p_string.length(); ++i)
         {
             char c = p_string.charAt(i);
             switch(c)
             {
-              case '\\': s.append("\\\\"); break;
-              case '\n': s.append("\\n"); break;
-              case '\r': s.append("\\r"); break;
-              case '\t': s.append("\\t"); break;
-              case '\"': s.append("\\\""); break;
+              case '\\': p_writer.print("\\\\"); break;
+              case '\n': p_writer.print("\\n"); break;
+              case '\r': p_writer.print("\\r"); break;
+              case '\t': p_writer.print("\\t"); break;
+              case '\"': p_writer.print("\\\""); break;
               default:
                   {
                       int ci = c;
                       if (ci < 32 || ci > 127)
                       {
-                          s.append("\\u");
-                          s.append(StringUtils.hexify4(ci));
+                          p_writer.print("\\u");
+                          p_writer.print(StringUtils.hexify4(ci));
                       }
                       else
                       {
-                          s.append(c);
+                          p_writer.print(c);
                       }
                   }
             }
         }
-        return s.toString();
     }
 
-    private final String m_text;
+    public String getText()
+    {
+        return m_text.toString();
+    }
+
+    private final StringBuilder m_text;
 }
