@@ -57,19 +57,19 @@ public class TemplateBuilder extends IncrementalProjectBuilder {
 	private void logInfo(String p_message) {
 		JamonProjectPlugin.getDefault().logInfo(p_message);
 	}
-	
+
 	private void logError(Throwable p_error) {
 		JamonProjectPlugin.getDefault().logError(p_error);
 	}
-	
+
 	private IPath getWorkDir() {
 		return getProject().getWorkingLocation(JamonProjectPlugin.getDefault().pluginId());
 	}
-	
+
 	private File getDependencyFile() {
 		return new File(getWorkDir().toOSString(), "dependencies");
 	}
-	
+
 	private void loadDependencies() {
 		FileInputStream in;
 		try {
@@ -85,7 +85,7 @@ public class TemplateBuilder extends IncrementalProjectBuilder {
 			return;
 		}
 	}
-	
+
 	private void saveDependencies() {
 		try {
 			FileOutputStream out = new FileOutputStream(getDependencyFile());
@@ -96,7 +96,7 @@ public class TemplateBuilder extends IncrementalProjectBuilder {
 			e.printStackTrace();
 		}
 	}
-	
+
 	@Override
     protected IProject[] build(int kind, Map args, IProgressMonitor monitor)
 			throws CoreException {
@@ -117,7 +117,7 @@ public class TemplateBuilder extends IncrementalProjectBuilder {
 		saveDependencies();
 		return null;
 	}
-	
+
 	@Override
     protected void clean(IProgressMonitor monitor) throws CoreException {
 		IFolder tsrc = getNature().getTemplateOutputFolder();
@@ -132,7 +132,7 @@ public class TemplateBuilder extends IncrementalProjectBuilder {
 		m_dependencies = new TemplateDependencies();
 		getProject().accept(new BuildVisitor());
 	}
-	
+
 	private JamonNature getNature() throws CoreException {
 		return (JamonNature) getProject().getNature(JamonNature.natureId());
 	}
@@ -140,10 +140,10 @@ public class TemplateBuilder extends IncrementalProjectBuilder {
 	private synchronized void incrementalBuild(IResourceDelta delta, IProgressMonitor monitor) throws CoreException {
 		BuildVisitor visitor = new BuildVisitor();
 		delta.accept(visitor);
-		Set<IPath> changed = visitor.getChanged();
+		@SuppressWarnings("unchecked") Set<IPath> changed = visitor.getChanged();
 		logInfo("Changed templates are " + changed);
 		IFolder templateDir = getNature().getTemplateSourceFolder();
-		for (Iterator<IPath> i = changed.iterator(); i.hasNext(); ) 
+		for (Iterator<IPath> i = changed.iterator(); i.hasNext(); )
         {
 			IPath s = i.next();
             for (String dependency : m_dependencies.getDependenciesOf(s.toString()))
@@ -158,7 +158,7 @@ public class TemplateBuilder extends IncrementalProjectBuilder {
 	private IJavaProject getJavaProject() throws CoreException {
 		return (IJavaProject) (getProject().getNature(JavaCore.NATURE_ID));
 	}
-	
+
 	private class BuildVisitor implements IResourceVisitor, IResourceDeltaVisitor {
 		BuildVisitor() throws CoreException  {
 			m_templateDir = getNature().getTemplateSourceFolder();
@@ -167,13 +167,13 @@ public class TemplateBuilder extends IncrementalProjectBuilder {
 			m_outFolder = getNature().getTemplateOutputFolder();
 			m_changed = new HashSet<IPath>();
 		}
-		
+
 		Set getChanged() {
 			return m_changed;
 		}
-		
+
 		private List<URL> classpathUrlsForProject(IJavaProject p_project)
-            throws CoreException 
+            throws CoreException
         {
 			logInfo("Computing classpath for project " + p_project.getProject().getName());
 			List<URL> urls = new ArrayList<URL>();
@@ -198,12 +198,12 @@ public class TemplateBuilder extends IncrementalProjectBuilder {
 			}
 			return urls;
 		}
-		
+
 		private ClassLoader classLoader() throws CoreException {
 			List<URL> urls = classpathUrlsForProject(getJavaProject());
 			// TODO: does this have the proper parent?
 			return new URLClassLoader(urls.toArray(new URL[urls.size()]));
-			
+
 		}
 
 		private final ResourceTemplateSource m_source;
@@ -211,27 +211,27 @@ public class TemplateBuilder extends IncrementalProjectBuilder {
 		private final IFolder m_templateDir;
 		private final IFolder m_outFolder;
 		private final Set<IPath> m_changed;
-		
+
 		private void createParents(IContainer p_container) throws CoreException {
 			if (! p_container.exists()) {
 				createParents(p_container.getParent());
 				((IFolder) p_container).create(true, true, null);
 			}
 		}
-		
+
 		private CoreException createCoreException(Exception e) {
 			return new CoreException(new Status(IStatus.ERROR,JamonProjectPlugin.getDefault().getBundle().getSymbolicName(), 0, e.getMessage(), e));
 		}
-		
+
 		private void markFile(ParserError e) throws CoreException
         {
             EclipseUtils.populateProblemMarker(
                 ((ResourceTemplateLocation) e.getLocation().getTemplateLocation())
-                    .getFile().createMarker(IMarker.PROBLEM), 
+                    .getFile().createMarker(IMarker.PROBLEM),
                 e.getLocation().getLine(),
                 e.getMessage(), IMarker.SEVERITY_ERROR);
 		}
-        
+
         private void addMarkers(ParserErrors p_errors) throws CoreException
         {
             for (Iterator<ParserError> i = p_errors.getErrors(); i.hasNext(); )
@@ -239,12 +239,12 @@ public class TemplateBuilder extends IncrementalProjectBuilder {
                 markFile(i.next());
             }
         }
-		
+
 		private TemplateUnit analyze(IPath path, IFile file) throws CoreException {
 			file.deleteMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE);
 			try {
 				return new Analyzer(
-                    "/" + StringUtils.filePathToTemplatePath(path.toString()), 
+                    "/" + StringUtils.filePathToTemplatePath(path.toString()),
                     m_describer)
                     .analyze();
 			}
@@ -259,7 +259,7 @@ public class TemplateBuilder extends IncrementalProjectBuilder {
 				throw createCoreException(e);
 			}
 		}
-		
+
 		private byte[] generateProxy(TemplateUnit templateUnit, IFile file) throws CoreException {
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			try {
@@ -277,11 +277,11 @@ public class TemplateBuilder extends IncrementalProjectBuilder {
 			}
 			return baos.toByteArray();
 		}
-		
+
 		private byte[] generateImpl(TemplateUnit templateUnit, IFile file) throws CoreException {
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			try {
-				new ImplGenerator(baos, m_describer, templateUnit, EmitMode.STANDARD).generateSource();			
+				new ImplGenerator(baos, m_describer, templateUnit, EmitMode.STANDARD).generateSource();
 			}
             catch (ParserErrors e) {
                 addMarkers(e);
@@ -294,7 +294,7 @@ public class TemplateBuilder extends IncrementalProjectBuilder {
 			}
 			return baos.toByteArray();
 		}
-		
+
         private class TemplateResources
         {
             public TemplateResources(IFile p_templateFile)
@@ -312,13 +312,13 @@ public class TemplateBuilder extends IncrementalProjectBuilder {
                         .append(m_path.lastSegment() + "Impl")
                         .addFileExtension("java"));
             }
-            
+
             public void clearGeneratedResources() throws CoreException
             {
                 delete(m_impl);
                 delete(m_proxy);
             }
-            
+
             public void generateResources() throws CoreException
             {
                 delete(m_impl);
@@ -336,16 +336,16 @@ public class TemplateBuilder extends IncrementalProjectBuilder {
                         generateImpl(templateUnit, m_template), m_impl);
                 }
             }
-            
+
             private void createSourceFile(byte[] contents, IFile p_file) throws CoreException {
                 createParents(p_file.getParent());
                 p_file.create(new ByteArrayInputStream(contents), true, null);
                 // p_file.setReadOnly(true);
             }
-            
+
             private void delete(IFile p_file) throws CoreException
             {
-                if (p_file.exists()) 
+                if (p_file.exists())
                 {
                     EclipseUtils.unsetReadOnly(p_file);
                     p_file.delete(true, null);
@@ -355,10 +355,10 @@ public class TemplateBuilder extends IncrementalProjectBuilder {
             private final IPath m_path;
             private final IFile m_template, m_proxy, m_impl;
         }
-        
+
         private TemplateResources makeResources(IResource p_resource)
         {
-            if (p_resource.getType() == IResource.FILE) 
+            if (p_resource.getType() == IResource.FILE)
             {
                 IFile file = (IFile) p_resource;
                 if (JamonNature.JAMON_EXTENSION.equals(file.getFileExtension())
@@ -369,8 +369,8 @@ public class TemplateBuilder extends IncrementalProjectBuilder {
             }
             return null;
         }
-        
-		public boolean visit(IResource p_resource) throws CoreException 
+
+		public boolean visit(IResource p_resource) throws CoreException
         {
             TemplateResources resources = makeResources(p_resource);
             if (resources != null)
@@ -380,7 +380,7 @@ public class TemplateBuilder extends IncrementalProjectBuilder {
             return true;
 		}
 
-		public boolean visit(IResourceDelta p_delta) throws CoreException 
+		public boolean visit(IResourceDelta p_delta) throws CoreException
         {
             switch(p_delta.getKind())
             {
@@ -389,7 +389,7 @@ public class TemplateBuilder extends IncrementalProjectBuilder {
                     visit(p_delta.getResource());
                 break;
                 case IResourceDelta.REMOVED:
-                    TemplateResources resources = 
+                    TemplateResources resources =
                         makeResources(p_delta.getResource());
                     if (resources != null)
                     {
@@ -410,7 +410,7 @@ public class TemplateBuilder extends IncrementalProjectBuilder {
 		cmds.addAll(Arrays.asList(description.getBuildSpec()));
         for (ICommand command : cmds)
         {
-			if (command.getBuilderName().equals(builderId())) 
+			if (command.getBuilderName().equals(builderId()))
             {
 				return;
 			}
