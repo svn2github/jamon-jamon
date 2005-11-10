@@ -38,7 +38,8 @@ import org.jamon.node.WhileNode;
  * @author ian
  **/
 
-public abstract class AbstractBodyParser extends AbstractParser
+public abstract class AbstractBodyParser<Node extends AbstractBodyNode>
+    extends AbstractParser
 {
     public static final String ENCOUNTERED_ELSE_TAG_WITHOUT_PRIOR_IF_TAG =
         "encountered <%else> tag without prior <%if ...%> tag";
@@ -74,7 +75,7 @@ public abstract class AbstractBodyParser extends AbstractParser
         "<%abstract> tag only allowed at the top level of a document";
 
     protected AbstractBodyParser(
-        AbstractBodyNode p_rootNode,
+        Node p_rootNode,
         PositionalPushbackReader p_reader,
         ParserErrors p_errors)
         throws IOException
@@ -82,7 +83,6 @@ public abstract class AbstractBodyParser extends AbstractParser
         super(p_reader, p_errors);
         m_root = p_rootNode;
         m_bodyStart = m_reader.getNextLocation();
-        parse();
     }
 
     protected void handleText()
@@ -98,7 +98,7 @@ public abstract class AbstractBodyParser extends AbstractParser
         m_reader.markNodeBeginning();
     }
 
-    protected void parse() throws IOException
+    public AbstractBodyParser<Node> parse() throws IOException
     {
         int c;
         m_doneParsing = false;
@@ -210,6 +210,7 @@ public abstract class AbstractBodyParser extends AbstractParser
         {
             handleEof();
         }
+        return this;
     }
 
     protected void doneParsing()
@@ -588,6 +589,7 @@ public abstract class AbstractBodyParser extends AbstractParser
                     p_tagLocation, readCondition(p_tagLocation, "while")),
                 m_reader,
                 m_errors)
+                .parse()
                 .getRootNode());
         }
         catch (ParserError e)
@@ -604,6 +606,7 @@ public abstract class AbstractBodyParser extends AbstractParser
                 new ForNode(p_tagLocation, readCondition(p_tagLocation, "for")),
                 m_reader,
                 m_errors)
+                .parse()
                 .getRootNode());
         }
         catch (ParserError e)
@@ -616,13 +619,13 @@ public abstract class AbstractBodyParser extends AbstractParser
     {
         try
         {
-            for (IfParser parser = new IfParser(
-                    new IfNode(p_tagLocation,
-                               readCondition(p_tagLocation, "if")),
-                    m_reader,
-                    m_errors);
-                 parser != null;
-                 parser = parser.getContinuation())
+            IfParser parser = new IfParser(
+                new IfNode(p_tagLocation,
+                           readCondition(p_tagLocation, "if")),
+                m_reader,
+                m_errors);
+            parser.parse();
+            for ( ; parser != null; parser = parser.getContinuation() )
             {
                 m_root.addSubNode(parser.getRootNode());
             }
@@ -821,8 +824,13 @@ public abstract class AbstractBodyParser extends AbstractParser
         return line.toString();
     }
 
+    public Node getRootNode()
+    {
+        return m_root;
+    }
+
     protected StringBuilder m_text = new StringBuilder();
-    protected final AbstractBodyNode m_root;
+    protected final Node m_root;
     protected final Location m_bodyStart;
     private boolean m_doneParsing;
 }

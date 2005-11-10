@@ -61,7 +61,7 @@ public class CallParser extends AbstractParser
         "Reached end of file while reading call fragments; '</&>' Expected";
     public static final String MISSING_GENERIC_PARAM_CLOSE_ERROR =
         "Expecing ',' or '>'";
-    
+
     public CallParser(
         PositionalPushbackReader p_reader,
         ParserErrors p_errors,
@@ -164,7 +164,8 @@ public class CallParser extends AbstractParser
                             new NamedFragmentParser(
                                 fragmentNode,
                                 m_reader,
-                                m_errors);
+                                m_errors)
+                                .parse();
                             callNode.addFragment(fragmentNode);
                         }
                         else
@@ -216,10 +217,11 @@ public class CallParser extends AbstractParser
             path,
             params,
             new UnamedFragmentParser(
-                new UnnamedFragmentNode(m_reader.getNextLocation()),
-                m_reader,
-                m_errors)
-                .getRootNode());
+            new UnnamedFragmentNode(m_reader.getNextLocation()),
+            m_reader,
+            m_errors)
+            .parse()
+            .getRootNode());
     }
 
     private AbstractParamsNode parseParams() throws IOException, ParserError
@@ -263,7 +265,7 @@ public class CallParser extends AbstractParser
                 m_seenAmpersand = true;
                 return 0;
             }
-            else if (p_char == '>' && m_seenAmpersand) 
+            else if (p_char == '>' && m_seenAmpersand)
             {
                 m_noMoreParams = true;
                 return 2;
@@ -382,22 +384,22 @@ public class CallParser extends AbstractParser
             while(readChar(','));
             if (!readChar('>'))
             {
-                throw new ParserError(m_reader.getNextLocation(), 
+                throw new ParserError(m_reader.getNextLocation(),
                                       MISSING_GENERIC_PARAM_CLOSE_ERROR);
             }
         }
     }
-    
+
     private void addGenericParams()
     {
-        AbstractComponentCallNode callNode = 
+        AbstractComponentCallNode callNode =
             (AbstractComponentCallNode) m_callNode;
         for (GenericCallParam param : m_genericParams)
         {
             callNode.addGenericParam(param);
         }
     }
-    
+
     private void readArrow() throws ParserError, IOException
     {
         soakWhitespace();
@@ -419,5 +421,5 @@ public class CallParser extends AbstractParser
     }
 
     private AbstractCallNode m_callNode;
-    private List<GenericCallParam> m_genericParams = null; 
+    private List<GenericCallParam> m_genericParams = null;
 }

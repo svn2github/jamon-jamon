@@ -5,7 +5,7 @@ import java.io.IOException;
 import org.jamon.ParserErrors;
 import org.jamon.node.WhileNode;
 
-public class WhileParser extends AbstractFlowControlBlockParser
+public class WhileParser extends AbstractFlowControlBlockParser<WhileNode>
 {
 
     public WhileParser(WhileNode p_node,

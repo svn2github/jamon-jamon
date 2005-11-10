@@ -40,7 +40,7 @@ import org.jamon.node.Location;
 import org.jamon.node.ParentMarkerNode;
 import org.jamon.node.TopNode;
 
-public class TopLevelParser extends AbstractBodyParser
+public class TopLevelParser extends AbstractBodyParser<TopNode>
 {
     public static final String BAD_ABSMETH_CONTENT =
         "<%absmeth> sections can only contain <%args> and <%frag> blocks";
@@ -60,14 +60,19 @@ public class TopLevelParser extends AbstractBodyParser
     public TopLevelParser(TemplateLocation p_location, Reader p_reader)
         throws IOException
     {
-        super(
-            new TopNode(new Location(p_location, 1, 1)),
-            new PositionalPushbackReader(p_location, p_reader, 2),
-            new ParserErrors());
+        super(new TopNode(new Location(p_location, 1, 1)),
+              new PositionalPushbackReader(p_location, p_reader, 2),
+              new ParserErrors());
+    }
+
+    @Override public AbstractBodyParser<TopNode> parse() throws IOException
+    {
+        super.parse();
         if (m_errors.hasErrors())
         {
             throw m_errors;
         }
+        return this;
     }
 
     @Override
@@ -80,6 +85,7 @@ public class TopLevelParser extends AbstractBodyParser
             {
                 m_root.addSubNode(
                     new MethodParser(name, p_tagLocation, m_reader, m_errors)
+                        .parse()
                         .getRootNode());
             }
         }
@@ -99,6 +105,7 @@ public class TopLevelParser extends AbstractBodyParser
             {
                 m_root.addSubNode(
                     new OverrideParser(name, p_tagLocation, m_reader, m_errors)
+                        .parse()
                         .getRootNode());
             }
         }
@@ -118,6 +125,7 @@ public class TopLevelParser extends AbstractBodyParser
             {
                 m_root.addSubNode(
                     new DefParser(name, p_tagLocation, m_reader, m_errors)
+                        .parse()
                         .getRootNode());
             }
         }
@@ -424,10 +432,5 @@ public class TopLevelParser extends AbstractBodyParser
     @Override protected boolean isTopLevel()
     {
         return true;
-    }
-
-    public TopNode getRootNode()
-    {
-        return (TopNode) m_root;
     }
 }

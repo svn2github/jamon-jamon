@@ -25,9 +25,10 @@ import org.jamon.ParserErrors;
 import org.jamon.node.AbstractBodyNode;
 import org.jamon.node.Location;
 
-public abstract class SubcomponentParser extends AbstractBodyParser
+public abstract class SubcomponentParser<Node extends AbstractBodyNode>
+    extends AbstractBodyParser<Node>
 {
-    protected SubcomponentParser(AbstractBodyNode p_node,
+    protected SubcomponentParser(Node p_node,
                                  PositionalPushbackReader p_reader,
                                  ParserErrors p_errors)
         throws IOException
@@ -36,11 +37,12 @@ public abstract class SubcomponentParser extends AbstractBodyParser
     }
 
 
-    @Override protected void parse() throws IOException
+    @Override public AbstractBodyParser<Node> parse() throws IOException
     {
         handlePostTag();
         super.parse();
         handlePostTag();
+        return this;
     }
 
 
@@ -75,10 +77,4 @@ public abstract class SubcomponentParser extends AbstractBodyParser
         return "Reached end of file inside a " + p_tagName +
          "; </%" + p_tagName + "> expected";
     }
-
-    public AbstractBodyNode getRootNode()
-    {
-        return m_root;
-    }
-
 }

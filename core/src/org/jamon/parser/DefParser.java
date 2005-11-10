@@ -26,7 +26,7 @@ import org.jamon.ParserErrors;
 import org.jamon.node.DefNode;
 import org.jamon.node.Location;
 
-public class DefParser extends SubcomponentParser
+public class DefParser extends SubcomponentParser<DefNode>
 {
     /**
      * @param p_reader

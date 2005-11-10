@@ -9,7 +9,7 @@ import org.jamon.node.ElseIfNode;
 import org.jamon.node.ElseNode;
 import org.jamon.node.Location;
 
-public class IfParser extends AbstractFlowControlBlockParser
+public class IfParser extends AbstractFlowControlBlockParser<AbstractBodyNode>
 {
     public static final String ENCOUNTERED_MULTIPLE_ELSE_TAGS_FOR_ONE_IF_TAG =
         "encountered multiple <%else> tags for one <%if ...%> tag";
@@ -35,6 +35,7 @@ public class IfParser extends AbstractFlowControlBlockParser
             {
                 m_continuation = new IfParser(
                     new ElseNode(p_tagLocation), m_reader, m_errors);
+                m_continuation.parse();
             }
             doneParsing();
         }
@@ -57,6 +58,7 @@ public class IfParser extends AbstractFlowControlBlockParser
                         p_tagLocation, readCondition(p_tagLocation, "elseif")),
                     m_reader,
                     m_errors);
+                m_continuation.parse();
             }
             catch (ParserError e)
             {

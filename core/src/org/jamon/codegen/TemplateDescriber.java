@@ -44,7 +44,7 @@ public class TemplateDescriber
         m_classLoader = p_classLoader;
     }
 
-    private final Map<String, TemplateDescription> m_descriptionCache = 
+    private final Map<String, TemplateDescription> m_descriptionCache =
         new HashMap<String, TemplateDescription>();
     private final TemplateSource m_templateSource;
     private final ClassLoader m_classLoader;
@@ -107,12 +107,12 @@ public class TemplateDescriber
              }
              catch (NoSuchFieldException e)
              {
-                 throw new ParserError(p_location, 
+                 throw new ParserError(p_location,
                                        "Malformed class for " + p_path);
              }
              catch (IllegalAccessException e)
              {
-                 throw new ParserError(p_location, 
+                 throw new ParserError(p_location,
                                        "Malformed class for " + p_path);
              }
          }
@@ -124,10 +124,12 @@ public class TemplateDescriber
         InputStream stream = m_templateSource.getStreamFor(p_path);
         try
         {
-            return 
+            return
                 new TopLevelParser(
-                    m_templateSource.getTemplateLocation(p_path), 
-                    new EncodingReader(stream)).getRootNode();
+                    m_templateSource.getTemplateLocation(p_path),
+                    new EncodingReader(stream))
+                    .parse()
+                    .getRootNode();
         }
         catch (EncodingReader.Exception e)
         {
@@ -137,7 +139,7 @@ public class TemplateDescriber
                         m_templateSource.getTemplateLocation(p_path),
                         1,
                         e.getPos()),
-                    e.getMessage())); 
+                    e.getMessage()));
         }
         catch (ParserErrors e)
         {

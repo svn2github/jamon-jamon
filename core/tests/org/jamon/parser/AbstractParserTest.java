@@ -23,13 +23,13 @@ import org.jamon.node.UpdirNode;
  **/
 public abstract class AbstractParserTest extends TestCase
 {
-    protected final static TemplateLocation TEMPLATE_LOC = 
+    protected final static TemplateLocation TEMPLATE_LOC =
         new TemplateFileLocation("x");
-    protected final static Location START_LOC = 
+    protected final static Location START_LOC =
         new Location(TEMPLATE_LOC, 1, 1);
 
     public AbstractParserTest() {}
-    
+
     public AbstractParserTest(String p_name)
     {
         super(p_name);
@@ -50,15 +50,16 @@ public abstract class AbstractParserTest extends TestCase
     {
         return new Location(TEMPLATE_LOC, p_line, p_column);
     }
-    
+
     protected AbstractNode parse(String p_text) throws IOException
     {
         return new TopLevelParser(TEMPLATE_LOC, new StringReader(p_text))
+            .parse()
             .getRootNode();
     }
 
 
-    private void assertParserError(Iterator<ParserError> p_errors, 
+    private void assertParserError(Iterator<ParserError> p_errors,
                                    int p_line, int p_column,
                                    String p_message)
         throws Exception
@@ -69,7 +70,7 @@ public abstract class AbstractParserTest extends TestCase
                             p_message),
             p_errors.next());
     }
-    
+
     private void assertNoMoreErrors(Iterator<ParserError> p_errors)
     {
         if (p_errors.hasNext())
@@ -77,7 +78,7 @@ public abstract class AbstractParserTest extends TestCase
             fail("More errors still: " + p_errors.next());
         }
     }
-    
+
     protected void assertError(
         String p_body,
         int p_line, int p_column, String p_message)
@@ -105,7 +106,7 @@ public abstract class AbstractParserTest extends TestCase
         try
         {
            parse(p_body);
-                fail("No failure registered for '" + p_body + "'");
+           fail("No failure registered for '" + p_body + "'");
         }
         catch (ParserErrors e)
         {
@@ -115,7 +116,7 @@ public abstract class AbstractParserTest extends TestCase
             assertNoMoreErrors(iter);
         }
     }
-    
+
     protected void assertErrorTripple(
             String p_body,
             int p_line1, int p_column1, String p_message1,
@@ -154,8 +155,8 @@ public abstract class AbstractParserTest extends TestCase
                 p_path.addPathElement(new PathElementNode(loc, elt));
             }
             loc =
-                new Location(loc.getTemplateLocation(), 
-                             loc.getLine(), 
+                new Location(loc.getTemplateLocation(),
+                             loc.getLine(),
                              loc.getColumn() + 1 + elt.length());
         }
         return p_path;

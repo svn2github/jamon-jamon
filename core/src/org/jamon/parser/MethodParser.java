@@ -26,7 +26,7 @@ import org.jamon.ParserErrors;
 import org.jamon.node.MethodNode;
 import org.jamon.node.Location;
 
-public class MethodParser extends SubcomponentParser
+public class MethodParser extends SubcomponentParser<MethodNode>
 {
     /**
      * @param p_reader

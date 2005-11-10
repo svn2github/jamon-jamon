@@ -50,7 +50,7 @@ public class ParserTest extends AbstractParserTest
         assertEquals(
             topNode().addSubNode(new TextNode(START_LOC, p_text)),
             new TopLevelParser(
-                TEMPLATE_LOC, new StringReader(p_text)).getRootNode());
+                TEMPLATE_LOC, new StringReader(p_text)).parse().getRootNode());
     }
 
     public void testParseText() throws Exception
@@ -79,6 +79,7 @@ public class ParserTest extends AbstractParserTest
                 new JavaNode(location(2, 1), java)),
             new TopLevelParser(
                 TEMPLATE_LOC, new StringReader(text + "%" + java))
+                .parse()
                 .getRootNode());
     }
 

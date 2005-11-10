@@ -26,7 +26,7 @@ import org.jamon.ParserErrors;
 import org.jamon.node.OverrideNode;
 import org.jamon.node.Location;
 
-public class OverrideParser extends SubcomponentParser
+public class OverrideParser extends SubcomponentParser<OverrideNode>
 {
     /**
      * @param p_reader
@@ -54,6 +54,6 @@ public class OverrideParser extends SubcomponentParser
         m_root.addSubNode(
             new ParentArgsParser(m_reader, m_errors, p_tagLocation)
                 .getParentArgsNode());
-    } 
+    }
 }
 

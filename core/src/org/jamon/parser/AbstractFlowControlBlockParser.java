@@ -5,10 +5,11 @@ import java.io.IOException;
 import org.jamon.ParserErrors;
 import org.jamon.node.AbstractBodyNode;
 
-public abstract class AbstractFlowControlBlockParser extends SubcomponentParser
+public abstract class AbstractFlowControlBlockParser<Node extends AbstractBodyNode>
+    extends SubcomponentParser<Node>
 {
     public AbstractFlowControlBlockParser(
-        AbstractBodyNode p_node,
+        Node p_node,
         PositionalPushbackReader p_reader,
         ParserErrors p_errors) throws IOException
     {

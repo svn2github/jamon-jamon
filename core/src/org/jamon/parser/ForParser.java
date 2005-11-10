@@ -5,7 +5,7 @@ import java.io.IOException;
 import org.jamon.ParserErrors;
 import org.jamon.node.ForNode;
 
-public class ForParser extends AbstractFlowControlBlockParser
+public class ForParser extends AbstractFlowControlBlockParser<ForNode>
 {
 
     public ForParser(ForNode p_node,
