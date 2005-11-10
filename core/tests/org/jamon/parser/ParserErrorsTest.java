@@ -265,7 +265,7 @@ public class ParserErrorsTest extends AbstractParserTest
 
     public void testMalformedWhileTag() throws Exception
     {
-        assertError("<%while>", 1, 1, AbstractBodyParser.MALFORMED_WHILE_TAG);
+        assertError("<%while>", 1, 1, "Malformed <%while ...%> tag");
     }
 
     public void testMalformedWhileCondition() throws Exception
@@ -273,4 +273,26 @@ public class ParserErrorsTest extends AbstractParserTest
         assertError("<%while foo>", 1, 1,
                     "Reached end of file while reading <%while ...%> tag");
     }
+
+    public void testElseWithoutIf() throws Exception
+    {
+        assertError(
+            "<%else>", 1, 1,
+            AbstractBodyParser.ENCOUNTERED_ELSE_TAG_WITHOUT_PRIOR_IF_TAG);
+    }
+
+    public void testElseIfWithoutIf() throws Exception
+    {
+        assertError(
+            "<%elseif foo%>>", 1, 1,
+            AbstractBodyParser.ENCOUNTERED_ELSEIF_TAG_WITHOUT_PRIOR_IF_TAG);
+    }
+
+    public void testMultipleElseTags() throws Exception
+    {
+        assertError(
+            "<%if foo%><%else>\n<%else></%if>", 2, 1,
+            IfParser.ENCOUNTERED_MULTIPLE_ELSE_TAGS_FOR_ONE_IF_TAG);
+    }
+
 }

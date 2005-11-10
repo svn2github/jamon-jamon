@@ -63,3 +63,6 @@ IfNode:SubcomponentNode String:condition
 ForNode:SubcomponentNode String:loopTerms
 WhileNode:AbstractBodyNode String:condition
 ForNode:AbstractBodyNode String:loopSpecifier
+IfNode:AbstractBodyNode String:condition
+ElseIfNode:AbstractBodyNode String:condition
+ElseNode:AbstractBodyNode

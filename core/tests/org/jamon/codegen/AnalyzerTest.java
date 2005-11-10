@@ -116,12 +116,12 @@ public class AnalyzerTest extends TestCase
 
     public void testForBlock() throws Exception
     {
-        checkLoopBlock(ForBlock.class, "for");
+        checkLoopBlock(FlowControlBlock.class, "for");
     }
 
     public void testWhileBlock() throws Exception
     {
-        checkLoopBlock(WhileBlock.class, "while");
+        checkLoopBlock(FlowControlBlock.class, "while");
     }
 
     public void testTextCompactification() throws Exception

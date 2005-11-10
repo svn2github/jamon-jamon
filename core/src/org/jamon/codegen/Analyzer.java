@@ -135,22 +135,14 @@ public class Analyzer
             .makeOverridenMethodUnit(p_node.getName(), p_node.getLocation());
     }
 
-    private void pushWhileBlock(WhileNode p_node)
+    private void pushFlowControlBlock(Location p_location, String p_header)
     {
-        WhileBlock whileBlock = new WhileBlock(p_node.getCondition(),
-                                               m_currentStatementBlock,
-                                               p_node.getLocation());
-        addStatement(whileBlock);
-        m_currentStatementBlock = whileBlock;
-    }
-
-    private void pushForBlock(ForNode p_node)
-    {
-        ForBlock forBlock = new ForBlock(p_node.getLoopSpecifier(),
-                                         m_currentStatementBlock,
-                                         p_node.getLocation());
-        addStatement(forBlock);
-        m_currentStatementBlock = forBlock;
+        FlowControlBlock flowControlBlock = new FlowControlBlock(
+            m_currentStatementBlock,
+            p_header,
+            p_location);
+        addStatement(flowControlBlock);
+        m_currentStatementBlock = flowControlBlock;
     }
 
     private FragmentUnit pushFragmentUnitImpl(String p_fragName)
@@ -547,7 +539,8 @@ public class Analyzer
 
         @Override public void inWhileNode(WhileNode p_node)
         {
-            pushWhileBlock(p_node);
+            pushFlowControlBlock(
+                p_node.getLocation(), "while (" + p_node.getCondition() + ")");
         }
 
         @Override public void outWhileNode(WhileNode p_node)
@@ -557,7 +550,8 @@ public class Analyzer
 
         @Override public void inForNode(ForNode p_node)
         {
-            pushForBlock(p_node);
+            pushFlowControlBlock(
+                p_node.getLocation(), "for (" + p_node.getLoopSpecifier() + ")");
         }
 
         @Override public void outForNode(ForNode p_node)
@@ -565,13 +559,44 @@ public class Analyzer
             popStatementBlock();
         }
 
-        @Override
-        public void outTopNode(TopNode p_node)
+        @Override public void inIfNode(IfNode p_node)
+        {
+            pushFlowControlBlock(
+                p_node.getLocation(), "if (" + p_node.getCondition() + ")");
+        }
+
+        @Override public void outIfNode(IfNode p_node)
+        {
+            popStatementBlock();
+        }
+
+        @Override public void inElseIfNode(ElseIfNode p_node)
+        {
+            pushFlowControlBlock(
+                p_node.getLocation(), "else if (" + p_node.getCondition() + ")");
+        }
+
+        @Override public void outElseIfNode(ElseIfNode p_node)
+        {
+            popStatementBlock();
+        }
+
+        @Override public void inElseNode(ElseNode p_node)
+        {
+            pushFlowControlBlock(p_node.getLocation(), "else");
+        }
+
+
+        @Override public void outElseNode(ElseNode p_node)
+        {
+            popStatementBlock();
+        }
+
+        @Override public void outTopNode(TopNode p_node)
         {
         }
 
-        @Override
-        public void caseJavaNode(JavaNode p_node)
+        @Override public void caseJavaNode(JavaNode p_node)
         {
             addStatement(new RawStatement(p_node.getJava(),
                                           p_node.getLocation(),

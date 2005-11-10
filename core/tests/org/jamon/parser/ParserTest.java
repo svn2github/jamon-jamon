@@ -509,4 +509,82 @@ public class ParserTest extends AbstractParserTest
                     "text"))),
             parse(forTag + "<% x %>text</%for>"));
     }
+
+    public void testIfTag() throws Exception
+    {
+        final String ifTag = "<%if cond%>";
+        assertEquals(
+            topNode()
+            .addSubNode(new IfNode(location(1,1), "cond")
+                .addSubNode(new TextNode(
+                    location(1, 1 + ifTag.length()), "text"))),
+            parse(ifTag + "text</%if>"));
+    }
+
+    public void testIfElseTags() throws Exception
+    {
+        final String ifTag = "<%if cond%>";
+        assertEquals(
+            topNode()
+            .addSubNode(new IfNode(location(1,1), "cond")
+                .addSubNode(new TextNode(
+                    location(1, 1 + ifTag.length()), "text\n")))
+            .addSubNode(new ElseNode(location(2,1))
+                .addSubNode(new TextNode(location(2, 8), "other"))),
+            parse(ifTag + "text\n<%else>other</%if>"));
+    }
+
+    public void testIfElseIfTags() throws Exception
+    {
+        final String ifTag = "<%if cond%>";
+        final String elseIfTag = "<%elseif cond2%>";
+        assertEquals(
+            topNode()
+            .addSubNode(new IfNode(location(1,1), "cond")
+                .addSubNode(new TextNode(
+                    location(1, 1 + ifTag.length()), "text\n")))
+            .addSubNode(new ElseIfNode(location(2,1), "cond2")
+                .addSubNode(
+                    new TextNode(location(2, 1 + elseIfTag.length()), "other"))),
+            parse(ifTag + "text\n" + elseIfTag + "other</%if>"));
+    }
+
+    public void testIfElseIfElseTags() throws Exception
+    {
+        final String ifTag = "<%if cond%>";
+        final String elseIfTag = "<%elseif cond2%>";
+        assertEquals(
+            topNode()
+            .addSubNode(new IfNode(location(1,1), "cond")
+                .addSubNode(new TextNode(
+                    location(1, 1 + ifTag.length()), "text\n")))
+            .addSubNode(new ElseIfNode(location(2,1), "cond2")
+                .addSubNode(new TextNode(
+                    location(2, 1 + elseIfTag.length()), "other\n")))
+            .addSubNode(new ElseNode(location(3, 1))
+                .addSubNode(new TextNode(location(3, 8), "third"))),
+            parse(ifTag + "text\n" + elseIfTag + "other\n<%else>third</%if>"));
+    }
+
+    public void testMultipleElseIfTags() throws Exception
+    {
+        final String ifTag = "<%if cond%>";
+        final String elseIfTag1 = "<%elseif cond1%>";
+        final String elseIfTag2 = "<%elseif cond2%>";
+        assertEquals(
+            topNode()
+            .addSubNode(new IfNode(location(1,1), "cond")
+                .addSubNode(new TextNode(
+                    location(1, 1 + ifTag.length()), "text\n")))
+            .addSubNode(new ElseIfNode(location(2,1), "cond1")
+                .addSubNode(new TextNode(
+                    location(2, 1 + elseIfTag1.length()), "one\n")))
+            .addSubNode(new ElseIfNode(location(3,1), "cond2")
+                .addSubNode(
+                    new TextNode(location(3, 1 + elseIfTag2.length()), "two"))),
+            parse(
+                ifTag + "text\n"
+                + elseIfTag1 + "one\n"
+                + elseIfTag2 + "two</%if>"));
+    }
 }

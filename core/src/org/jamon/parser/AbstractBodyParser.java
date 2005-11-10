@@ -27,9 +27,12 @@ import org.jamon.node.AbstractBodyNode;
 import org.jamon.node.DefaultEscapeNode;
 import org.jamon.node.EmitNode;
 import org.jamon.node.EscapeNode;
+import org.jamon.node.ForNode;
+import org.jamon.node.IfNode;
 import org.jamon.node.JavaNode;
 import org.jamon.node.Location;
 import org.jamon.node.TextNode;
+import org.jamon.node.WhileNode;
 
 /**
  * @author ian
@@ -37,10 +40,10 @@ import org.jamon.node.TextNode;
 
 public abstract class AbstractBodyParser extends AbstractParser
 {
-    public static final String MALFORMED_WHILE_TAG =
-        "Malformed <%while ...%> tag";
-    public static final String MALFORMED_FOR_TAG =
-        "Malformed <%while ...%> tag";
+    public static final String ENCOUNTERED_ELSE_TAG_WITHOUT_PRIOR_IF_TAG =
+        "encountered <%else> tag without prior <%if ...%> tag";
+    public static final String ENCOUNTERED_ELSEIF_TAG_WITHOUT_PRIOR_IF_TAG =
+        "encountered <%elseif ...%> tag without prior <%if ...%> tag";
     public static final String ESCAPE_TAG_IN_SUBCOMPONENT =
         "<%escape> tags only allowed at the top level of a document";
     public static final String GENERIC_TAG_IN_SUBCOMPONENT =
@@ -98,10 +101,10 @@ public abstract class AbstractBodyParser extends AbstractParser
     protected void parse() throws IOException
     {
         int c;
-        boolean doneParsing = false;
+        m_doneParsing = false;
         m_reader.markNodeEnd();
         boolean isTopLevel = isTopLevel();
-        while ((isTopLevel || !doneParsing) && (c = m_reader.read()) >= 0)
+        while ((isTopLevel || !m_doneParsing) && (c = m_reader.read()) >= 0)
         {
             if (c == '<')
             {
@@ -133,7 +136,7 @@ public abstract class AbstractBodyParser extends AbstractParser
                         {
                             case '%' :
                                 String tagName = readTagName();
-                                doneParsing = true;
+                                doneParsing();
                                 if (checkForTagClosure(tagLocation))
                                 {
                                     handleTagClose(tagName, tagLocation);
@@ -142,8 +145,10 @@ public abstract class AbstractBodyParser extends AbstractParser
                             case '&' :
                                 if (readChar('>'))
                                 {
-                                    doneParsing =
-                                        handleFragmentsClose(tagLocation);
+                                    if(handleFragmentsClose(tagLocation))
+                                    {
+                                        doneParsing();
+                                    }
                                 }
                                 else
                                 {
@@ -153,8 +158,10 @@ public abstract class AbstractBodyParser extends AbstractParser
                             case '|' :
                                 if (readChar('>'))
                                 {
-                                    doneParsing =
-                                        handleNamedFragmentClose(tagLocation);
+                                    if (handleNamedFragmentClose(tagLocation))
+                                    {
+                                        doneParsing();
+                                    }
                                 }
                                 else
                                 {
@@ -199,10 +206,15 @@ public abstract class AbstractBodyParser extends AbstractParser
             }
         }
         handleText();
-        if (!(doneParsing || isTopLevel))
+        if (!(m_doneParsing || isTopLevel))
         {
             handleEof();
         }
+    }
+
+    protected void doneParsing()
+    {
+        m_doneParsing = true;
     }
 
     private class EmitEndDetector implements TagEndDetector
@@ -346,6 +358,18 @@ public abstract class AbstractBodyParser extends AbstractParser
         else if ("for".equals(p_tagName))
         {
             handleForTag(p_tagLocation);
+        }
+        else if ("if".equals(p_tagName))
+        {
+            handleIfTag(p_tagLocation);
+        }
+        else if ("else".equals(p_tagName))
+        {
+            handleElseTag(p_tagLocation);
+        }
+        else if ("elseif".equals(p_tagName))
+        {
+            handleElseIfTag(p_tagLocation);
         }
         else if ("args".equals(p_tagName))
         {
@@ -557,48 +581,82 @@ public abstract class AbstractBodyParser extends AbstractParser
 
     protected void handleWhileTag(Location p_tagLocation) throws IOException
     {
-        if (!soakWhitespace())
+        try
         {
-            addError(p_tagLocation, MALFORMED_WHILE_TAG);
+            m_root.addSubNode(new WhileParser(
+                new WhileNode(
+                    p_tagLocation, readCondition(p_tagLocation, "while")),
+                m_reader,
+                m_errors)
+                .getRootNode());
         }
-        else
+        catch (ParserError e)
         {
-           try
-           {
-               String condition = readJava(
-                   p_tagLocation, new ConditionEndDetector("<%while ...%>"));
-               m_root.addSubNode(new WhileParser(
-                   p_tagLocation, condition, m_reader, m_errors)
-                   .getRootNode());
-           }
-           catch (ParserError e)
-           {
-               addError(e);
-           }
+            addError(e);
         }
     }
 
     protected void handleForTag(Location p_tagLocation) throws IOException
     {
+        try
+        {
+            m_root.addSubNode(new ForParser(
+                new ForNode(p_tagLocation, readCondition(p_tagLocation, "for")),
+                m_reader,
+                m_errors)
+                .getRootNode());
+        }
+        catch (ParserError e)
+        {
+            addError(e);
+        }
+    }
+
+    protected void handleIfTag(Location p_tagLocation) throws IOException
+    {
+        try
+        {
+            for (IfParser parser = new IfParser(
+                    new IfNode(p_tagLocation,
+                               readCondition(p_tagLocation, "if")),
+                    m_reader,
+                    m_errors);
+                 parser != null;
+                 parser = parser.getContinuation())
+            {
+                m_root.addSubNode(parser.getRootNode());
+            }
+        }
+        catch (ParserError e)
+        {
+            addError(e);
+        }
+    }
+
+    protected String readCondition(Location p_tagLocation, String p_tagName)
+        throws IOException, ParserError
+    {
         if (!soakWhitespace())
         {
-            addError(p_tagLocation, MALFORMED_FOR_TAG);
+            throw new ParserError(
+                p_tagLocation, "Malformed <%" + p_tagName + " ...%> tag");
         }
         else
         {
-           try
-           {
-               String condition = readJava(
-                   p_tagLocation, new ConditionEndDetector("<%for ...%>"));
-               m_root.addSubNode(new ForParser(
-                   p_tagLocation, condition, m_reader, m_errors)
-                   .getRootNode());
-           }
-           catch (ParserError e)
-           {
-               addError(e);
-           }
+            return readJava(
+                p_tagLocation,
+                new ConditionEndDetector("<%" + p_tagName + " ...%>"));
         }
+    }
+
+    protected void handleElseTag(Location p_tagLocation) throws IOException
+    {
+        addError(p_tagLocation, ENCOUNTERED_ELSE_TAG_WITHOUT_PRIOR_IF_TAG);
+    }
+
+    protected void handleElseIfTag(Location p_tagLocation) throws IOException
+    {
+        addError(p_tagLocation, ENCOUNTERED_ELSEIF_TAG_WITHOUT_PRIOR_IF_TAG);
     }
 
     protected void handleParentArgsNode(Location p_tagLocation)
@@ -766,4 +824,5 @@ public abstract class AbstractBodyParser extends AbstractParser
     protected StringBuilder m_text = new StringBuilder();
     protected final AbstractBodyNode m_root;
     protected final Location m_bodyStart;
+    private boolean m_doneParsing;
 }
