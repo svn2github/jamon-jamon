@@ -295,7 +295,7 @@ public class CallParserTest extends AbstractParserTest
             "<&| foo &>bob",
             1,
             11,
-            UnamedFragmentParser.FRAGMENT_CLOSE_EXPECTED);
+            UnnamedFragmentParser.FRAGMENT_CLOSE_EXPECTED);
         assertError("<& foo:", 1, 8, CallParser.PARAM_VALUE_EOF_ERROR);
         assertError(
             "<&|| foo &><|foo></|>",

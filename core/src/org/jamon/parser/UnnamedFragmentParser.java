@@ -6,13 +6,13 @@ import org.jamon.ParserErrors;
 import org.jamon.node.Location;
 import org.jamon.node.UnnamedFragmentNode;
 
-public class UnamedFragmentParser
+public class UnnamedFragmentParser
     extends AbstractBodyParser<UnnamedFragmentNode>
 {
     public static final String FRAGMENT_CLOSE_EXPECTED =
         "Reached end of file while inside a call fragment; '</&>' expected";
 
-    public UnamedFragmentParser(
+    public UnnamedFragmentParser(
         UnnamedFragmentNode p_rootNode,
         PositionalPushbackReader p_reader,
         ParserErrors p_errors)
