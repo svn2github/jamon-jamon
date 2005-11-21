@@ -50,11 +50,12 @@
          name="Jamon Template Editor"
          point="org.eclipse.ui.editors">
 	      <editor
-            name="Jamon Template Editor"
-    		icon="icons/jamon.gif"        
-            extensions="jamon"
-            class="org.jamon.eclipse.JamonEditor"
-            id="org.jamon.eclipse.editor">
+             class="org.jamon.eclipse.JamonEditor"
+             contributorClass="org.eclipse.ui.editors.text.TextEditorActionContributor"
+             extensions="jamon"
+             icon="icons/jamon.gif"
+             id="org.jamon.eclipse.editor"
+             name="Jamon Template Editor">
       </editor>
    </extension>
        <extension
