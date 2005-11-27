@@ -32,23 +32,24 @@ import org.eclipse.jface.text.source.ISourceViewer;
 public class JamonAnnotationHover implements IAnnotationHover
 {
     protected List<Annotation> getAnnotationsForLine(
-        ISourceViewer p_viewer, int p_line) 
+        ISourceViewer p_viewer, int p_line)
     {
         //FIXME - should we only be looking at jamon-generated annotations?
         IDocument document= p_viewer.getDocument();
         IAnnotationModel model= p_viewer.getAnnotationModel();
-        
+
         if (model == null)
             return null;
-        
+
         List<Annotation> exact = new ArrayList<Annotation>();
-        
-        for (Iterator<Annotation> i = model.getAnnotationIterator(); i.hasNext(); )
+
+        for (@SuppressWarnings("unchecked") Iterator<Annotation> i
+                = model.getAnnotationIterator(); i.hasNext(); )
         {
             Annotation annotation = i.next();
             try
             {
-                if (annotation.getText() != null 
+                if (annotation.getText() != null
                     && document.getLineOfOffset(
                         model.getPosition(annotation).getOffset()) ==  p_line)
                 {
@@ -63,9 +64,9 @@ public class JamonAnnotationHover implements IAnnotationHover
         return exact;
     }
 
-    public String getHoverInfo(ISourceViewer sourceViewer, int lineNumber) 
+    public String getHoverInfo(ISourceViewer sourceViewer, int lineNumber)
     {
-        Iterable<Annotation> annotations = 
+        Iterable<Annotation> annotations =
             getAnnotationsForLine(sourceViewer, lineNumber);
         if (annotations != null)
         {
