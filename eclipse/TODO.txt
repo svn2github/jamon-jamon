@@ -3,14 +3,7 @@ Allow setting breakpoints in templates
 
 Allow user-specified template folder(s) and generated source folder(s)
 
-Primitive Jamon editor and file type
-
 Possibly hide / alternate display of generated source folder
-
-"Trampoline" compilation errors in generated templates to have markers
-indicate template source problem. Do this by registering a "post" builder
-which traverses markers on generated sources and "moves" them to the templates.
-Will need a map from generated source line numbers to template line numbers.
 
 New Jamon project wizard
 
@@ -18,7 +11,7 @@ Add interfaces so that can have Eclipse use Jamon generation classes
 from a project (so can develop Jamon in Eclipse)
 
 Provide a view similar to the Package Explorer for templates, geared towards
-hiding empty parent packages as the PE does.  Ideally, we could extended the 
-PE itself, but there appear to be no extension points available.  Perhaps we 
-could trick it by claiming that the template directory was a source directory, 
+hiding empty parent packages as the PE does.  Ideally, we could extended the
+PE itself, but there appear to be no extension points available.  Perhaps we
+could trick it by claiming that the template directory was a source directory,
 but this probably would have some unintended consequences.
