@@ -20,9 +20,6 @@
 package org.jamon.eclipse;
 
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.LineNumberReader;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -46,7 +43,7 @@ public class JavaMarkerListener implements IResourceChangeListener
         m_templateFolder = p_templateFolder;
         m_generatedSourcesFolder = p_generatedSourcesFolder;
     }
-    
+
     public class ResourceDeltaVisitor implements IResourceDeltaVisitor
     {
         public boolean visit(IResourceDelta p_delta) throws CoreException
@@ -61,16 +58,16 @@ public class JavaMarkerListener implements IResourceChangeListener
             if (p_delta.getResource().getType() == IResource.FILE
                 && "java".equals(p_delta.getFullPath().getFileExtension()))
             {
-                GeneratedResource generatedResource = 
+                GeneratedResource generatedResource =
                     new GeneratedResource((IFile) p_delta.getResource());
                 IMarkerDelta[] markerDeltas = p_delta.getMarkerDeltas();
-                
+
                 if (markerDeltas.length > 0)
                 {
                     generatedResource.getTemplateFile().deleteMarkers(
                         javaMarkerId, true, IResource.DEPTH_ZERO);
                 }
-                
+
                 for (IMarkerDelta markerDelta : markerDeltas)
                 {
                     switch(markerDelta.getKind())
@@ -89,15 +86,15 @@ public class JavaMarkerListener implements IResourceChangeListener
             return true;
         }
 
-        private void copyMarker(GeneratedResource p_generatedResource, 
+        private void copyMarker(GeneratedResource p_generatedResource,
                                 IMarker p_marker) throws CoreException
         {
             if (p_marker.isSubtypeOf(IMarker.PROBLEM))
             {
                 String message = p_marker.getAttribute(IMarker.MESSAGE, null);
-                if (!p_generatedResource.isImpl()   
-                    && message.startsWith("The import ")    
-                    && message.endsWith(" is never used"))     
+                if (!p_generatedResource.isImpl()
+                    && message.startsWith("The import ")
+                    && message.endsWith(" is never used"))
                 {
                     return;
                 }
@@ -106,18 +103,18 @@ public class JavaMarkerListener implements IResourceChangeListener
                     EclipseUtils.populateProblemMarker(
                         p_generatedResource
                             .getTemplateFile()
-                            .createMarker(javaMarkerId), 
+                            .createMarker(javaMarkerId),
                         p_generatedResource.getTemplateLineNumber(
                             p_marker.getAttribute(IMarker.LINE_NUMBER, 1)),
                         (p_generatedResource.isImpl() ? "Impl: " : "Proxy: ")
-                        + message, 
+                        + message,
                         p_marker.getAttribute(
                             IMarker.SEVERITY, IMarker.SEVERITY_ERROR));
                     p_marker.delete();
                 }
             }
         }
-        
+
         private class GeneratedResource
         {
             public GeneratedResource(IFile p_generatedJavaFile)
@@ -141,10 +138,10 @@ public class JavaMarkerListener implements IResourceChangeListener
                         .removeLastSegments(1)
                         .append(className)
                         .addFileExtension(JamonNature.JAMON_EXTENSION));
-                
+
                 try
                 {
-                    m_locations = readLineNumberMappings(p_generatedJavaFile);
+                    m_locations = JamonUtils.readLineNumberMappings(p_generatedJavaFile);
                 }
                 catch (IOException e)
                 {
@@ -152,49 +149,7 @@ public class JavaMarkerListener implements IResourceChangeListener
                     JamonProjectPlugin.getDefault().logError(e);
                 }
             }
-            
-            private List<Integer> readLineNumberMappings(
-                IFile p_generatedJavaFile)
-                throws CoreException, IOException
-            {
-                List<Integer> lineNumbers = new ArrayList<Integer>();
-                
-                int currentTemplateLineNumber = 1;
-                LineNumberReader reader = null;
-                try
-                {
-                    reader = new LineNumberReader(new InputStreamReader(
-                        p_generatedJavaFile.getContents()));
-                    String line;
-                    while ((line = reader.readLine()) != null)
-                    {
-                        String trimmedLine = line.trim();
-                        if (trimmedLine.startsWith("// "))
-                        {
-                            int commaPosition = trimmedLine.indexOf(',', 3);
-                            if (commaPosition > 0)
-                            {
-                                try
-                                {
-                                    currentTemplateLineNumber = Integer.parseInt(
-                                       trimmedLine.substring(3, commaPosition));
-                                }
-                                catch (NumberFormatException e)
-                                {}
-                            }
-                        }
-                        lineNumbers.add(currentTemplateLineNumber);
-                    }
-                }
-                finally
-                {
-                    if (reader != null)
-                    {
-                        reader.close();
-                    }
-                }
-                return lineNumbers;
-            }
+
 
             public int getTemplateLineNumber(int p_javaLineNumber)
             {
@@ -208,23 +163,23 @@ public class JavaMarkerListener implements IResourceChangeListener
                         Math.min(p_javaLineNumber, m_locations.size() - 1));
                 }
             }
-            
+
             public boolean isImpl()
             {
                 return m_isImpl;
             }
-            
+
             public IFile getTemplateFile()
             {
                 return m_templateFile;
             }
-            
+
             private final IFile m_templateFile;
             private final boolean m_isImpl;
             private List<Integer> m_locations;
         }
     }
-    
+
     public void resourceChanged(IResourceChangeEvent p_event)
     {
         try
@@ -236,8 +191,8 @@ public class JavaMarkerListener implements IResourceChangeListener
             JamonProjectPlugin.getDefault().logError(e);
         }
     }
-    
+
     private final IFolder m_templateFolder, m_generatedSourcesFolder;
-    private final String javaMarkerId = 
+    private final String javaMarkerId =
         JamonProjectPlugin.getDefault().pluginId() + ".javaMarker";
 }

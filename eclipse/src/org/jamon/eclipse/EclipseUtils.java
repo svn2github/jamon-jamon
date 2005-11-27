@@ -22,15 +22,45 @@ package org.jamon.eclipse;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourceAttributes;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 
 public class EclipseUtils
 {
+    public static void delete(IFile p_file) throws CoreException
+    {
+        if (p_file.exists())
+        {
+            EclipseUtils.unsetReadOnly(p_file);
+            p_file.delete(true, null);
+        }
+    }
+
+    public static void logError(Throwable p_error) {
+    	JamonProjectPlugin.getDefault().logError(p_error);
+    }
+
+    public static void logInfo(String p_message) {
+        JamonProjectPlugin.getDefault().logInfo(p_message);
+    }
+
+    public static CoreException createCoreException(Exception e)
+    {
+        return new CoreException(new Status(
+            IStatus.ERROR,
+            JamonProjectPlugin.getDefault().getBundle().getSymbolicName(),
+            0,
+            e.getMessage(),
+            e));
+    }
+
     private EclipseUtils() {}
-    
+
     public static void populateProblemMarker(
         IMarker p_marker, int p_lineNumber, String p_message, int p_severity)
         throws CoreException
@@ -44,7 +74,7 @@ public class EclipseUtils
 
     public static void unsetReadOnly(IResource p_resource) throws CoreException
     {
-        ResourceAttributes resourceAttributes = 
+        ResourceAttributes resourceAttributes =
             p_resource.getResourceAttributes();
         if (resourceAttributes != null && resourceAttributes.isReadOnly())
         {

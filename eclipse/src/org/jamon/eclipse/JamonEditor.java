@@ -19,10 +19,27 @@
  */
 package org.jamon.eclipse;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.source.ISourceViewer;
+import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IPathEditorInput;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditor;
 
 public class JamonEditor extends AbstractDecoratedTextEditor
 {
+    private static final String EDITOR_CONTEXT_MENU_ID =
+        JamonProjectPlugin.getDefault().pluginId() + ".editorContext";
+
+    public JamonEditor()
+    {
+        setEditorContextMenuId(EDITOR_CONTEXT_MENU_ID);
+    }
     @Override
     protected void initializeEditor()
     {
@@ -30,4 +47,48 @@ public class JamonEditor extends AbstractDecoratedTextEditor
         setSourceViewerConfiguration(
             new JamonEditorSourceViewerConfiguration());
     }
+
+    public synchronized TemplateResources getTemplateResources()
+        throws CoreException
+    {
+        if (m_templateResources == null)
+        {
+            IEditorInput editorInput = getEditorInput();
+            if (editorInput instanceof IPathEditorInput)
+            {
+                IPath path = ((IPathEditorInput)editorInput).getPath();
+                IFile[] files = ResourcesPlugin
+                    .getWorkspace()
+                    .getRoot()
+                    .findFilesForLocation(path);
+                if (files.length > 0)
+                {
+                    IProject project = files[0].getProject();
+                    JamonNature nature =
+                        (JamonNature) project.getNature(JamonNature.natureId());
+                    m_templateResources = new TemplateResources(
+                        files[0],
+                        nature.getTemplateOutputFolder(),
+                        nature.getTemplateSourceFolder());
+                }
+            }
+        }
+        return m_templateResources;
+    }
+
+    public Location getCursorLocation() throws BadLocationException
+    {
+        ISourceViewer sourceViewer = getSourceViewer();
+        int caret = widgetOffset2ModelOffset(
+            sourceViewer, sourceViewer.getTextWidget().getCaretOffset());
+        IDocument document= sourceViewer.getDocument();
+
+        int line = document.getLineOfOffset(caret);
+
+        int lineOffset = document.getLineOffset(line);
+        int column = caret - lineOffset;
+        return new Location(line + 1, column + 1);
+    }
+
+    private TemplateResources m_templateResources;
 }
