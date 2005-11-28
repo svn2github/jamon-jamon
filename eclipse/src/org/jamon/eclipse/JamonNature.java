@@ -25,21 +25,21 @@ public class JamonNature implements IProjectNature {
 	static String natureId() {
 		return JamonProjectPlugin.getDefault().pluginId() + ".jamonnature";
 	}
-	
+
 	public static boolean projectHasNature(IProject p_project) throws CoreException {
 		return p_project.getProject().hasNature(natureId());
 	}
-	
+
 	private static List<String> naturesList(IProjectDescription p_desc) {
 		return new ArrayList<String>(Arrays.asList(p_desc.getNatureIds()));
 	}
-	
+
 	private static void setNatures(
         IProjectDescription p_description, List<String> p_natures)
     {
 		p_description.setNatureIds(p_natures.toArray(new String[p_natures.size()]));
 	}
-	
+
 	public static void addToProject(IProject p_project, String p_templateSourceDir) throws CoreException {
 		IProjectDescription description = p_project.getDescription();
 		List<String> natures = naturesList(description);
@@ -62,7 +62,7 @@ public class JamonNature implements IProjectNature {
         	System.err.println("Couldn't find preferences node");
         }
 	}
-	
+
 	private static IEclipsePreferences preferences(IProject p_project) {
 		IScopeContext projectScope = new ProjectScope(p_project);
 		return projectScope.getNode(JAMON_PREFERENCES_NODE);
@@ -70,8 +70,8 @@ public class JamonNature implements IProjectNature {
 
 	private static final String TEMPLATE_SOURCE_DIR_PROPERTY = "templateSourceDir";
 	private static final String JAMON_PREFERENCES_NODE = "org.jamon";
-	
-	public static void removeFromProject(IProject p_project) throws CoreException 
+
+	public static void removeFromProject(IProject p_project) throws CoreException
     {
 		IProjectDescription description = p_project.getDescription();
 		List<String> natures = naturesList(description);
@@ -91,21 +91,20 @@ public class JamonNature implements IProjectNature {
     public IFolder getTemplateOutputFolder() {
         return templateOutputFolder(getProject());
     }
-    
+
     static String templateSourceFolderName(IProject p_project) {
 		return preferences(p_project)
             .get(TEMPLATE_SOURCE_DIR_PROPERTY, DEFAULT_TEMPLATE_SOURCE);
 	}
-    
+
     static IFolder templateSourceFolder(IProject p_project)
     {
         return p_project.getFolder(
             new Path(templateSourceFolderName(p_project)));
     }
-	
+
 	public IFolder getTemplateSourceFolder() {
-		IProject project = getProject();
-		return project.getFolder(new Path(templateSourceFolderName(project)));
+        return templateSourceFolder(getProject());
 	}
 
 	private void unsetReadOnly(IContainer p_container) throws CoreException {
@@ -122,7 +121,7 @@ public class JamonNature implements IProjectNature {
     private void removeTsrc() throws CoreException {
 		IFolder tsrc = getTemplateOutputFolder();
 		IJavaProject jp = getJavaProject();
-		List<IClasspathEntry> e = 
+		List<IClasspathEntry> e =
             new ArrayList<IClasspathEntry>(Arrays.asList(jp.getRawClasspath()));
 		e.remove(JavaCore.newSourceEntry(tsrc.getFullPath()));
 		jp.setRawClasspath(e.toArray(new IClasspathEntry[e.size()]), null);
@@ -131,8 +130,8 @@ public class JamonNature implements IProjectNature {
 			tsrc.delete(IResource.DEPTH_INFINITE, null);
 		}
 	}
-	
-	public void configure() throws CoreException 
+
+	public void configure() throws CoreException
     {
 		TemplateBuilder.addToProject(getProject());
         MarkerUpdaterBuilder.addToProject(getProject());
@@ -140,14 +139,14 @@ public class JamonNature implements IProjectNature {
 		IFolder tsrc = getTemplateOutputFolder();
 		tsrc.create(true, true, null);
 		tsrc.setDerived(true);
-			
+
 		IJavaProject jp = getJavaProject();
-		List<IClasspathEntry> e = 
+		List<IClasspathEntry> e =
             new ArrayList<IClasspathEntry>(Arrays.asList(jp.getRawClasspath()));
 		e.add(JavaCore.newSourceEntry(tsrc.getFullPath()));
 		jp.setRawClasspath(e.toArray(new IClasspathEntry[e.size()]), null);
     }
-	
+
 	private IJavaProject getJavaProject() throws CoreException {
 		return (IJavaProject) (getProject().getNature(JavaCore.NATURE_ID));
 	}
@@ -163,7 +162,7 @@ public class JamonNature implements IProjectNature {
 	public void setProject(IProject project) {
 		m_project = project;
 	}
-	
+
 	private IProject m_project;
     static final String JAMON_EXTENSION = "jamon";
 	static final String DEFAULT_TEMPLATE_SOURCE = "templates";
