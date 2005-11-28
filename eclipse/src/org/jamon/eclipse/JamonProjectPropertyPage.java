@@ -21,15 +21,15 @@ public class JamonProjectPropertyPage extends PropertyPage {
 	}
 
 	private Button isJamonProjectCheckbox;
-	
+
 	private IJavaProject getJavaProject() throws CoreException {
 		return (IJavaProject) getProject().getNature(JavaCore.NATURE_ID);
 	}
-	
+
 	private IProject getProject() {
 		return (IProject) getElement().getAdapter(IProject.class);
 	}
-	
+
 	private void addFirstSection(Composite parent) {
 			Composite isJamonProjectGroup = new Composite(parent,SWT.NONE);
 			isJamonProjectGroup.setLayout(new GridLayout(3, false));
@@ -40,14 +40,14 @@ public class JamonProjectPropertyPage extends PropertyPage {
 			isJamonProjectCheckbox.setText("Is Jamon Project");
 			isJamonProjectCheckbox.setEnabled(true);
 
-			try {		
+			try {
 				isJamonProjectCheckbox.setSelection(JamonNature.projectHasNature(getJavaProject().getProject()));
 			}
 			catch (CoreException ex) {
 				ex.printStackTrace();
 			}
 	}
-	
+
 	private void addSeparator(Composite parent) {
 		Label separator = new Label(parent, SWT.SEPARATOR | SWT.HORIZONTAL);
 		GridData gridData = new GridData();
@@ -55,9 +55,9 @@ public class JamonProjectPropertyPage extends PropertyPage {
 		gridData.grabExcessHorizontalSpace = true;
 		separator.setLayoutData(gridData);
 	}
-	
+
 	private Text templateSourceText;
-    
+
 	private void addSecondSection(Composite parent) {
 		Composite composite = createDefaultComposite(parent);
 
@@ -69,7 +69,10 @@ public class JamonProjectPropertyPage extends PropertyPage {
 		templateSourceText.setLayoutData(gd);
 
 		String templateSourceFolder = JamonNature.templateSourceFolderName(getProject());
-		templateSourceText.setText((templateSourceFolder != null) ? templateSourceFolder : JamonNature.DEFAULT_TEMPLATE_SOURCE);
+		templateSourceText.setText(
+            (templateSourceFolder != null)
+            ? templateSourceFolder
+            : JamonNature.DEFAULT_TEMPLATE_SOURCE);
 	}
 
     @Override protected Control createContents(Composite parent) {
@@ -102,7 +105,7 @@ public class JamonProjectPropertyPage extends PropertyPage {
 
     @Override protected void performDefaults() {
 	}
-	
+
     @Override public boolean performOk() {
 		try {
 			if (isJamonProjectCheckbox.getSelection()) {
