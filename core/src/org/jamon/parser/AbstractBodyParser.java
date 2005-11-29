@@ -25,11 +25,13 @@ import org.jamon.ParserError;
 import org.jamon.ParserErrors;
 import org.jamon.node.AbstractBodyNode;
 import org.jamon.node.DefaultEscapeNode;
+import org.jamon.node.DocNode;
 import org.jamon.node.EmitNode;
 import org.jamon.node.EscapeNode;
 import org.jamon.node.ForNode;
 import org.jamon.node.IfNode;
 import org.jamon.node.JavaNode;
+import org.jamon.node.LiteralNode;
 import org.jamon.node.Location;
 import org.jamon.node.TextNode;
 import org.jamon.node.WhileNode;
@@ -746,7 +748,7 @@ public abstract class AbstractBodyParser<Node extends AbstractBodyNode>
         if (checkForTagClosure(p_tagLocation))
         {
             m_root.addSubNode(
-                new TextNode(
+                new LiteralNode(
                     p_tagLocation,
                     readUntil("</%LITERAL>", p_tagLocation)));
         }
@@ -782,7 +784,8 @@ public abstract class AbstractBodyParser<Node extends AbstractBodyNode>
     {
         if (checkForTagClosure(p_tagLocation))
         {
-            readUntil("</%doc>", p_tagLocation);
+            m_root.addSubNode(
+                new DocNode(p_tagLocation, readUntil("</%doc>", p_tagLocation)));
         }
         soakWhitespace();
     }

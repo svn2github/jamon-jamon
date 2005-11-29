@@ -489,8 +489,13 @@ public class Analyzer
             getTemplateUnit().addClassContent(p_node);
         }
 
-        @Override
-        public void caseTextNode(TextNode p_node)
+        @Override public void caseTextNode(TextNode p_node)
+        {
+            addStatement(new LiteralStatement(
+                p_node.getText(), p_node.getLocation(), m_templateIdentifier));
+        }
+
+        @Override public void caseLiteralNode(LiteralNode p_node)
         {
             addStatement(new LiteralStatement(
                 p_node.getText(), p_node.getLocation(), m_templateIdentifier));

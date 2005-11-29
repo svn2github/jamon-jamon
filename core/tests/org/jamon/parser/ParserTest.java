@@ -142,7 +142,7 @@ public class ParserTest extends AbstractParserTest
             topNode()
                 .addSubNode(new TextNode(START_LOC, BEFORE))
                 .addSubNode(
-                    new TextNode(
+                    new LiteralNode(
                         location(1, 1 + BEFORE.length()),
                         JAVA_START))
                 .addSubNode(
@@ -458,10 +458,12 @@ public class ParserTest extends AbstractParserTest
 
     public void testDocTag() throws Exception
     {
-        String begining = "before<%doc>some docs</%doc>";
+        String begining = BEFORE + "<%doc>some docs</%doc>";
         assertEquals(
             topNode()
-                .addSubNode(new TextNode(START_LOC, "before"))
+                .addSubNode(new TextNode(START_LOC, BEFORE))
+                .addSubNode(
+                    new DocNode(location(1, BEFORE.length() + 1), "some docs"))
                 .addSubNode(new TextNode(location(1, begining.length() + 1),
                                          "after")),
             parse(begining + "after"));

@@ -39,6 +39,8 @@ MultiFragmentCallNode:AbstractComponentCallNode NamedFragmentNode:fragment*
 JavaNode String:java
 ClassNode String:content
 TextNode String:text
+LiteralNode String:text
+DocNode String:content
 AbstractEscapeNode
 ParentMarkerNode
 DefaultEscapeNode:AbstractEscapeNode
