@@ -37,6 +37,7 @@ NamedFragmentNode:AbstractBodyNode String:name
 FragmentCallNode:AbstractComponentCallNode UnnamedFragmentNode:fragment
 MultiFragmentCallNode:AbstractComponentCallNode NamedFragmentNode:fragment*
 JavaNode String:java
+JavaLineNode String:java
 ClassNode String:content
 TextNode String:text
 LiteralNode String:text

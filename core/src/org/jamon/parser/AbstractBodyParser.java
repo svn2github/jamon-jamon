@@ -30,6 +30,7 @@ import org.jamon.node.EmitNode;
 import org.jamon.node.EscapeNode;
 import org.jamon.node.ForNode;
 import org.jamon.node.IfNode;
+import org.jamon.node.JavaLineNode;
 import org.jamon.node.JavaNode;
 import org.jamon.node.LiteralNode;
 import org.jamon.node.Location;
@@ -188,7 +189,7 @@ public abstract class AbstractBodyParser<Node extends AbstractBodyNode>
             {
                 handleText();
                 m_root.addSubNode(
-                    new JavaNode(
+                    new JavaLineNode(
                         m_reader.getCurrentNodeLocation(),
                         readLine()));
                 m_reader.markNodeEnd();
