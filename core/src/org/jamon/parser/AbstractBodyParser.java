@@ -791,11 +791,6 @@ public abstract class AbstractBodyParser<Node extends AbstractBodyNode>
         soakWhitespace();
     }
 
-    protected static boolean isNewLine(final int p_c)
-    {
-        return p_c == '\n' || p_c == '\r';
-    }
-
     protected String readTagName() throws IOException
     {
         StringBuilder buffer = new StringBuilder();
@@ -817,12 +812,29 @@ public abstract class AbstractBodyParser<Node extends AbstractBodyNode>
     {
         int c;
         StringBuilder line = new StringBuilder();
+        boolean seenCarriageReturn = false;
         while ((c = m_reader.read()) >= 0)
         {
+            if (seenCarriageReturn)
+            {
+                if (c != '\n')
+                {
+                    m_reader.unread(c);
+                }
+                else
+                {
+                    line.append((char) c);
+                }
+                break;
+            }
             line.append((char) c);
-            if (isNewLine(c))
+            if (c == '\n')
             {
                 break;
+            }
+            if (c == '\r')
+            {
+                seenCarriageReturn = true;
             }
         }
         return line.toString();
