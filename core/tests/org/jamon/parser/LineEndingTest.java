@@ -18,17 +18,8 @@ public class LineEndingTest extends AbstractParserTest
     {
         assertEquals(
             topNode()
-                .addSubNode(new JavaLineNode(location(1,1), " java\r\n"))
+                .addSubNode(new JavaLineNode(location(1,1), " java\rmore java\r\n"))
                 .addSubNode(new TextNode(location(2,1), "text")),
-            parse("% java\r\ntext"));
-    }
-
-    public void testJavaLineForMac() throws Exception
-    {
-        assertEquals(
-            topNode()
-                .addSubNode(new JavaLineNode(location(1,1), " java\r"))
-                .addSubNode(new TextNode(location(2,1), "text")),
-            parse("% java\rtext"));
+            parse("% java\rmore java\r\ntext"));
     }
 }

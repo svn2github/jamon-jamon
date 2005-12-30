@@ -812,29 +812,12 @@ public abstract class AbstractBodyParser<Node extends AbstractBodyNode>
     {
         int c;
         StringBuilder line = new StringBuilder();
-        boolean seenCarriageReturn = false;
         while ((c = m_reader.read()) >= 0)
         {
-            if (seenCarriageReturn)
-            {
-                if (c != '\n')
-                {
-                    m_reader.unread(c);
-                }
-                else
-                {
-                    line.append((char) c);
-                }
-                break;
-            }
             line.append((char) c);
             if (c == '\n')
             {
                 break;
-            }
-            if (c == '\r')
-            {
-                seenCarriageReturn = true;
             }
         }
         return line.toString();

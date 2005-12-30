@@ -27,8 +27,8 @@ import org.jamon.TemplateLocation;
 import org.jamon.node.Location;
 
 /**
- * A "pushback reader" which also tracks the current position in the file.  
- * Unlike {@link java.io.PushbackReader}, this class allows pushing back an EOF 
+ * A "pushback reader" which also tracks the current position in the file.
+ * Unlike {@link java.io.PushbackReader}, this class allows pushing back an EOF
  * marker as well
  * @author ian
  **/
@@ -41,58 +41,33 @@ public class PositionalPushbackReader
         {
             m_row = p_position.m_row;
             m_column = p_position.m_column;
-            m_ignoredNewLine = p_position.m_ignoredNewLine;
-            m_seenCarriageReturn = p_position.m_seenCarriageReturn;
         }
-        
-        public void handleNewLine()
-        {
-            if (!m_seenCarriageReturn)
-            {
-                m_ignoredNewLine = false;
-                nextRow();
-            }
-            else
-            {
-                m_seenCarriageReturn = false;
-                m_ignoredNewLine = true;
-            }
-        }
-        
-        public void handleCarriageReturn()
-        {
-            m_ignoredNewLine = false;
-            m_seenCarriageReturn= true;
-            nextRow();
-        }
-        
+
         public void nextColumn()
         {
             m_column++;
-            m_ignoredNewLine = m_seenCarriageReturn = false;
         }
-        
+
         public void nextRow()
         {
             m_row++;
             m_column = 1;
         }
-        
+
         public Location location(TemplateLocation p_templateLocation)
         {
             return new Location(p_templateLocation, m_row, m_column);
         }
-        
+
         public boolean isLineStart()
         {
             return m_column == 1;
         }
-        
+
         private int m_row = 1;
         private int m_column = 1;
-        private boolean m_ignoredNewLine = false, m_seenCarriageReturn = false;
     }
-    
+
     /**
      * @param p_templateLocation The path to the resource being read.
      * @param p_reader The underlying reader to use
@@ -118,7 +93,7 @@ public class PositionalPushbackReader
         }
         m_pushedbackChars = new int[p_pushbackBufferSize];
     }
-    
+
     public int read() throws IOException
     {
         int c;
@@ -134,17 +109,14 @@ public class PositionalPushbackReader
         {
             m_positions[i].assign(m_positions[i-1]);
         }
-        
-        switch (c)
+
+        if (c == '\n')
         {
-            case '\n':
-                m_positions[0].handleNewLine();
-                break;
-            case '\r':
-                m_positions[0].handleCarriageReturn();
-                break;
-            default :
-                m_positions[0].nextColumn(); 
+            m_positions[0].nextRow();
+        }
+        else
+        {
+            m_positions[0].nextColumn();
         }
         return c;
     }
@@ -206,9 +178,9 @@ public class PositionalPushbackReader
     }
 
     /**
-     * Get the location of the current node, as set by 
+     * Get the location of the current node, as set by
      * {@link #markNodeBeginning()} or {@link #markNodeEnd()}
-     * 
+     *
      * @return The location of the current node
      */
     public Location getCurrentNodeLocation()
@@ -220,7 +192,7 @@ public class PositionalPushbackReader
     private final TemplateLocation m_templateLocation;
     int m_pushedbackCharsPending = 0;
     final int m_pushedbackChars[];
-    
+
     private final Position[] m_positions;
     private Position m_currentNodePosition = new Position();
 }

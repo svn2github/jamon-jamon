@@ -36,14 +36,14 @@ public class PositionalPushbackReaderTest extends TestCase
         super(p_name);
     }
 
-    private static TemplateLocation TEMPLATE_LOC = 
+    private static TemplateLocation TEMPLATE_LOC =
         new TemplateFileLocation("x");
-    
+
     private static Location location(int p_line, int p_column)
     {
         return new Location(TEMPLATE_LOC, p_line, p_column);
     }
-    
+
     public void testUnixLinefeeds() throws Exception
     {
         checkLocations("ab\ncd", 1,1, 1,2, 1,3, 2,1, 2,2);
@@ -51,15 +51,16 @@ public class PositionalPushbackReaderTest extends TestCase
 
     public void testWindowsLineFeeds() throws Exception
     {
-        checkLocations("ab\r\ncd", 1,1, 1,2, 1,3, 2,1, 2,1, 2,2);
+        checkLocations("ab\r\ncd", 1,1, 1,2, 1,3, 1,4, 2,1, 2,2);
     }
 
     public void testMacLineFeeds() throws Exception
     {
-        checkLocations("ab\rcd", 1,1, 1,2, 1,3, 2,1, 2,2);
+        // OS 9 is (presumed) dead
+        checkLocations("ab\rcd", 1,1, 1,2, 1,3, 1,4, 1,5);
     }
 
-    private void checkLocations(final String p_text, final int... p_locations) 
+    private void checkLocations(final String p_text, final int... p_locations)
         throws IOException
     {
         assertTrue(p_locations.length % 2 == 0);
@@ -72,7 +73,7 @@ public class PositionalPushbackReaderTest extends TestCase
         checkUnread(p_text, locations);
         checkIsLineStart(p_text);
     }
-    
+
     private void checkRead(final String p_text, final Location[] p_locations)
         throws IOException
     {
@@ -92,7 +93,7 @@ public class PositionalPushbackReaderTest extends TestCase
         {
             PositionalPushbackReader reader = makeReader(p_text, pushbackSize);
             for (int i = 0; i < p_text.length() - pushbackSize; i++)
-            {   
+            {
                 assertEquals(p_locations[i], reader.getNextLocation());
                 for (int j = 0; j <= pushbackSize; j++)
                 {
@@ -168,7 +169,7 @@ public class PositionalPushbackReaderTest extends TestCase
             TEMPLATE_LOC, new StringReader(p_text), p_pushbackSize);
     }
 
-    
+
     private PositionalPushbackReader makeReader(String p_text)
     {
         return makeReader(p_text, 1);
