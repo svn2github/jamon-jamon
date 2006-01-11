@@ -34,11 +34,6 @@ public class RequiredArgument extends AbstractArgument
         super(p_name, p_type);
     }
 
-    public RequiredArgument(RequiredArgument p_arg)
-    {
-        this(p_arg.getName(), p_arg.getType());
-    }
-
     @Override public String toString()
     {
         return "RequiredArg: {name => " +getName()
