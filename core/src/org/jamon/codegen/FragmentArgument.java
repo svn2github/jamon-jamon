@@ -20,12 +20,15 @@
 
 package org.jamon.codegen;
 
+import org.jamon.node.Location;
+
 public class FragmentArgument extends RequiredArgument
 {
-    public FragmentArgument(FragmentUnit p_fragmentUnit)
+    public FragmentArgument(FragmentUnit p_fragmentUnit, Location p_location)
     {
         super(p_fragmentUnit.getName(),
-              p_fragmentUnit.getFragmentInterfaceName(true));
+              p_fragmentUnit.getFragmentInterfaceName(true),
+              p_location);
         m_fragmentUnit = p_fragmentUnit;
     }
 

@@ -105,7 +105,7 @@ public class TemplateUnit
     }
 
     @Override
-    public void addFragmentArg(FragmentArgument p_arg, Location p_location)
+    public void addFragmentArg(FragmentArgument p_arg)
     {
         m_fragmentArgs.add(p_arg);
         m_declaredFragmentArgs.add(p_arg);

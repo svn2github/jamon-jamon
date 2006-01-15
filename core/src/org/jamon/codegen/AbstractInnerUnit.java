@@ -27,7 +27,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.jamon.ParserErrors;
-import org.jamon.node.Location;
 
 public abstract class AbstractInnerUnit extends AbstractUnit
 {
@@ -83,7 +82,7 @@ public abstract class AbstractInnerUnit extends AbstractUnit
     }
 
     @Override protected void addFragmentArg(
-        FragmentArgument p_arg, Location p_location)
+        FragmentArgument p_arg)
     {
         m_fragmentArgs.add(p_arg);
     }

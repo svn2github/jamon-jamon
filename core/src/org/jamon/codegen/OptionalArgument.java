@@ -30,9 +30,10 @@ public class OptionalArgument extends AbstractArgument
         m_default = p_arg.getValue().getValue();
     }
 
-    public OptionalArgument(String p_name, String p_type, String p_default)
+    public OptionalArgument(
+        String p_name, String p_type, String p_default)
     {
-        super(p_name, p_type);
+        super(p_name, p_type, null);
         m_default = p_default;
     }
 

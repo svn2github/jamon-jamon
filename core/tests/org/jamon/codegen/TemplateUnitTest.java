@@ -61,9 +61,9 @@ public class TemplateUnitTest
         TemplateUnit child = new TemplateUnit("/child", null);
         TemplateUnit grandchild = new TemplateUnit("/grandchild", null);
 
-        RequiredArgument pr1 = new RequiredArgument("pr1", "int");
-        RequiredArgument pr2 = new RequiredArgument("pr2", "int");
-        RequiredArgument cr3 = new RequiredArgument("cr2", "int");
+        RequiredArgument pr1 = new RequiredArgument("pr1", "int", null);
+        RequiredArgument pr2 = new RequiredArgument("pr2", "int", null);
+        RequiredArgument cr3 = new RequiredArgument("cr2", "int", null);
         OptionalArgument po1 = new OptionalArgument("po1", "int", "op1");
         OptionalArgument po2 = new OptionalArgument("po2", "int", "op2");
         OptionalArgument co3 = new OptionalArgument("co2", "int", "oc3");
@@ -94,8 +94,8 @@ public class TemplateUnitTest
                      child.getDeclaredOptionalArgs());
 
         FragmentArgument f = new FragmentArgument(
-            new FragmentUnit("f", child, new GenericParams(), null));
-        child.addFragmentArg(f, null);
+            new FragmentUnit("f", child, new GenericParams(), null), null);
+        child.addFragmentArg(f);
         checkArgSet(new AbstractArgument[] {pr2, cr3, po2, co3, f},
                     child.getVisibleArgs());
 
@@ -120,8 +120,8 @@ public class TemplateUnitTest
         Set<String> sigs = new HashSet<String>();
         checkSigIsUnique(unit, sigs);
 
-        RequiredArgument i = new RequiredArgument("i", "int");
-        RequiredArgument j = new RequiredArgument("j", "Integer");
+        RequiredArgument i = new RequiredArgument("i", "int",null);
+        RequiredArgument j = new RequiredArgument("j", "Integer", null);
         OptionalArgument a = new OptionalArgument("a", "boolean", "true");
         OptionalArgument b = new OptionalArgument("b", "Boolean", "null");
         FragmentUnit f = new FragmentUnit("f", unit, new GenericParams(), null);
@@ -149,11 +149,11 @@ public class TemplateUnitTest
         // suboptimal - if the parent's sig changes, so does the child's
         checkSigIsUnique(unit, sigs);
 
-        unit.addFragmentArg(new FragmentArgument(f), null);
+        unit.addFragmentArg(new FragmentArgument(f, null));
         checkSigIsUnique(unit, sigs);
-        f.addRequiredArg(new RequiredArgument("x", "float"));
+        f.addRequiredArg(new RequiredArgument("x", "float", null));
         checkSigIsUnique(unit, sigs);
-        unit.addFragmentArg(new FragmentArgument(g), null);
+        unit.addFragmentArg(new FragmentArgument(g, null));
 
         Location loc = new Location(null, 1, 1);
         GenericsParamNode genericsParamNode = new GenericsParamNode(loc, "d");

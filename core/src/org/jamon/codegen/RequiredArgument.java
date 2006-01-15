@@ -21,6 +21,7 @@
 package org.jamon.codegen;
 
 import org.jamon.node.ArgNode;
+import org.jamon.node.Location;
 
 public class RequiredArgument extends AbstractArgument
 {
@@ -29,9 +30,9 @@ public class RequiredArgument extends AbstractArgument
         super(p_arg);
     }
 
-    public RequiredArgument(String p_name, String p_type)
+    public RequiredArgument(String p_name, String p_type, Location p_location)
     {
-        super(p_name, p_type);
+        super(p_name, p_type, p_location);
     }
 
     @Override public String toString()

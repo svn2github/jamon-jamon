@@ -134,8 +134,8 @@ public class TemplateDescription
             getStringArray(p_class, p_prefix + "REQUIRED_ARG_TYPES");
         for(int i = 0; i < requiredArgNames.length; i++)
         {
-            args.add(new RequiredArgument(requiredArgNames[i],
-                                            requiredArgTypes[i]));
+            args.add(new RequiredArgument(
+                requiredArgNames[i], requiredArgTypes[i], null));
         }
         return args;
     }
@@ -176,9 +176,9 @@ public class TemplateDescription
             for(int j = 0; j < fragmentArgArgNames.length; j++)
             {
                 frag.addRequiredArg
-                    (new RequiredArgument(fragmentArgArgNames[j], null));
+                    (new RequiredArgument(fragmentArgArgNames[j], null, null));
             }
-            fragmentArgs.add(new FragmentArgument(frag));
+            fragmentArgs.add(new FragmentArgument(frag, null));
         }
         return fragmentArgs;
     }

@@ -66,7 +66,12 @@ public class CodeWriter
 
     public void printLocation(Location p_location)
     {
-        println("// " + p_location.getLine() + ", " + p_location.getColumn());
+        // In some cases, (such as children of class-only templates), we have
+        // no location.
+        if (p_location != null)
+        {
+            println("// " + p_location.getLine() + ", " + p_location.getColumn());
+        }
     }
 
     public void println()

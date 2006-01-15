@@ -61,7 +61,7 @@ public abstract class AbstractUnit
         return m_errors;
     }
 
-    protected abstract void addFragmentArg(FragmentArgument p_arg, Location p_location);
+    protected abstract void addFragmentArg(FragmentArgument p_arg);
     public abstract Iterator<FragmentArgument> getFragmentArgs();
     public abstract List<FragmentArgument> getFragmentArgsList();
 
@@ -107,7 +107,7 @@ public abstract class AbstractUnit
         checkArgName(p_node.getFragmentName(), p_node.getLocation());
         FragmentUnit frag = new FragmentUnit(
             p_node.getFragmentName(), this, p_genericParams, m_errors);
-        addFragmentArg(new FragmentArgument(frag), p_node.getLocation());
+        addFragmentArg(new FragmentArgument(frag, p_node.getLocation()));
         return frag;
     }
 

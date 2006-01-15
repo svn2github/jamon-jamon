@@ -24,7 +24,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.jamon.ParserErrors;
-import org.jamon.node.Location;
 import org.jamon.node.ParentArgNode;
 
 public class OverriddenMethodUnit
@@ -99,7 +98,7 @@ public class OverriddenMethodUnit
     }
 
 
-    @Override public void addFragmentArg(org.jamon.codegen.FragmentArgument p_arg, Location p_location)
+    @Override public void addFragmentArg(org.jamon.codegen.FragmentArgument p_arg)
     {
         throw new UnsupportedOperationException();
     }

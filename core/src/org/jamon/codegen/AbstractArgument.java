@@ -22,18 +22,22 @@ package org.jamon.codegen;
 
 import org.jamon.util.StringUtils;
 import org.jamon.node.ArgNode;
+import org.jamon.node.Location;
 
 public abstract class AbstractArgument
 {
-    public AbstractArgument(String p_name, String p_type)
+    public AbstractArgument(String p_name, String p_type, Location p_location)
     {
         m_name = p_name;
         m_type = p_type;
+        m_location = p_location;
     }
 
     public AbstractArgument(ArgNode p_arg)
     {
-        this(p_arg.getName().getName(), p_arg.getType().getType());
+        this(p_arg.getName().getName(),
+             p_arg.getType().getType(),
+             p_arg.getLocation());
     }
 
     public String getName()
@@ -44,6 +48,11 @@ public abstract class AbstractArgument
     public String getType()
     {
         return m_type;
+    }
+
+    public Location getLocation()
+    {
+        return m_location;
     }
 
     public String getSetterName()
@@ -58,6 +67,7 @@ public abstract class AbstractArgument
 
     public void generateImplDataCode(CodeWriter p_writer)
     {
+        p_writer.printLocation(getLocation());
         p_writer.println( "public void " + getSetterName()
                           + "(" + getType() + " " + getName() + ")");
         p_writer.openBlock();
@@ -73,9 +83,11 @@ public abstract class AbstractArgument
 
     protected void generateImplDataSetterCode(CodeWriter p_writer)
     {
+        p_writer.printLocation(getLocation());
         p_writer.println("m_" + getName() + " = " + getName() + ";");
     }
 
     private final String m_name;
     private final String m_type;
+    private final Location m_location;
 }

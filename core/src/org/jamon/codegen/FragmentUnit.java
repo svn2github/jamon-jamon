@@ -21,7 +21,6 @@
 package org.jamon.codegen;
 
 import org.jamon.ParserErrors;
-import org.jamon.node.Location;
 import org.jamon.node.OptionalArgNode;
 
 public class FragmentUnit extends AbstractInnerUnit
@@ -64,10 +63,10 @@ public class FragmentUnit extends AbstractInnerUnit
     }
 
     @Override
-    protected void addFragmentArg(FragmentArgument p_arg, Location p_location)
+    protected void addFragmentArg(FragmentArgument p_arg)
     {
         getErrors().addError("Fragments cannot have fragment arguments",
-                             p_location);
+                             p_arg.getLocation());
     }
 
     @Override

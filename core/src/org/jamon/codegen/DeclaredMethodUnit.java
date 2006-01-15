@@ -67,7 +67,7 @@ public class DeclaredMethodUnit
 
     public void addFragmentArg(FragmentArgument p_argument)
     {
-        super.addFragmentArg(p_argument, null);
+        super.addFragmentArg(p_argument);
     }
 
 
