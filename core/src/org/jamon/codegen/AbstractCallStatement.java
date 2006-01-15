@@ -110,7 +110,8 @@ public abstract class AbstractCallStatement
         p_writer.print(  "return new " + ClassNames.ABSTRACT_RENDERER + "()");
         p_writer.openBlock();
         p_writer.println("@Override");
-        p_writer.println("public void renderTo(" + ArgNames.WRITER_DECL + ")");
+        p_writer.println(
+            "public void renderTo(" + ArgNames.MAYBE_UNUSED_WRITER_DECL + ")");
         p_writer.println("  throws " + ClassNames.IOEXCEPTION);
         p_writer.openBlock();
         p_writer.print("renderNoFlush");
@@ -125,7 +126,7 @@ public abstract class AbstractCallStatement
 
         p_writer.print("public void renderNoFlush");
         p_writer.openList();
-        p_writer.printArg(ArgNames.WRITER_DECL);
+        p_writer.printArg(ArgNames.MAYBE_UNUSED_WRITER_DECL);
         fragmentUnitImpl.printRenderArgsDecl(p_writer);
         p_writer.closeList();
         p_writer.println(" throws "+ ClassNames.IOEXCEPTION);

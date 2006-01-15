@@ -205,7 +205,7 @@ public class ImplGenerator
             m_writer.print("private void __jamon_innerUnit__");
             m_writer.print(defUnit.getName());
             m_writer.openList();
-            m_writer.printArg(ArgNames.WRITER_DECL);
+            m_writer.printArg(ArgNames.MAYBE_UNUSED_WRITER_DECL);
             defUnit.printRenderArgsDecl(m_writer);
             m_writer.closeList();
             m_writer.println();
@@ -253,7 +253,7 @@ public class ImplGenerator
                        + "void __jamon_innerUnit__");
         m_writer.print(p_methodUnit.getName());
         m_writer.openList();
-        m_writer.printArg(ArgNames.WRITER_DECL);
+        m_writer.printArg(ArgNames.MAYBE_UNUSED_WRITER_DECL);
         p_methodUnit.printRenderArgsDecl(m_writer);
         m_writer.closeList();
         m_writer.println();
@@ -287,15 +287,16 @@ public class ImplGenerator
     {
         if (m_templateUnit.hasParentPath())
         {
-            m_writer.println("@Override protected void child_render_"
-                             + m_templateUnit.getInheritanceDepth()
-                             + "("  + ArgNames.WRITER_DECL + ") throws "
-                             + ClassNames.IOEXCEPTION);
+            m_writer.println(
+                "@Override protected void child_render_"
+                + m_templateUnit.getInheritanceDepth()
+                + "("  + ArgNames.MAYBE_UNUSED_WRITER_DECL + ") throws "
+                + ClassNames.IOEXCEPTION);
         }
         else
         {
             m_writer.println("public void renderNoFlush("
-                             + ArgNames.WRITER_DECL + ") throws "
+                             + ArgNames.MAYBE_UNUSED_WRITER_DECL + ") throws "
                              + ClassNames.IOEXCEPTION);
         }
         m_templateUnit.generateRenderBody(m_writer, m_describer, m_emitMode);
