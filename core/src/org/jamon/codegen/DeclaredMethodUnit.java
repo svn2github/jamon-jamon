@@ -65,12 +65,6 @@ public class DeclaredMethodUnit
         return p_arg.getDefault();
     }
 
-    public void addFragmentArg(FragmentArgument p_argument)
-    {
-        super.addFragmentArg(p_argument);
-    }
-
-
     public boolean isOverride()
     {
         return false;
