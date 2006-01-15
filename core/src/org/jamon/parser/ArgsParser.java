@@ -27,7 +27,7 @@ public class ArgsParser extends AbstractArgsParser
     {
         return m_argsNode = new ArgsNode(p_tagLocation);
     }
-    
+
     @Override protected String postArgNameTokenError()
     {
         return OptionalValueTagEndDetector.NEED_SEMI_OR_ARROW;
@@ -43,30 +43,23 @@ public class ArgsParser extends AbstractArgsParser
 
     @Override
     protected boolean handleDefaultValue(
-        AbstractArgsNode argsNode, ArgTypeNode argType, ArgNameNode argName) 
+        AbstractArgsNode argsNode, ArgTypeNode argType, ArgNameNode argName)
         throws IOException, ParserError
     {
         if (readChar('='))
         {
-            if (readChar('>'))
-            {
-                soakWhitespace();
-                Location valueLocation = m_reader.getNextLocation();
-                argsNode.addArg(new OptionalArgNode(
-                    argType.getLocation(), 
-                    argType,
-                    argName,
-                    new ArgValueNode(valueLocation,
-                        readJava(
-                            valueLocation,
-                            new OptionalValueTagEndDetector()))));
-                return true;
-            }
-            else
-            {
-                throw new ParserError(
-                    m_reader.getLocation(), postArgNameTokenError());
-            }
+            readChar('>'); // support old-style syntax
+            soakWhitespace();
+            Location valueLocation = m_reader.getNextLocation();
+            argsNode.addArg(new OptionalArgNode(
+                argType.getLocation(),
+                argType,
+                argName,
+                new ArgValueNode(valueLocation,
+                    readJava(
+                        valueLocation,
+                        new OptionalValueTagEndDetector()))));
+            return true;
         }
         else return false;
     }
@@ -78,6 +71,6 @@ public class ArgsParser extends AbstractArgsParser
     }
 
     private ArgsNode m_argsNode;
-    public static final String EOF_LOOKING_FOR_SEMI = 
-    "Reached end of file while looking for ';'";
+    public static final String EOF_LOOKING_FOR_SEMI =
+        "Reached end of file while looking for ';'";
 }

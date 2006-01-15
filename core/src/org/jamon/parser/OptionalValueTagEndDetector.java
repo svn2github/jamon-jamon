@@ -25,16 +25,16 @@ import org.jamon.node.Location;
 
 class OptionalValueTagEndDetector implements TagEndDetector
 {
-    public static final String NEED_SEMI_OR_ARROW = 
-        "Expecting a ';' or '=>'";
+    public static final String NEED_SEMI_OR_ARROW =
+        "Expecting a ';', '=' or '=>'";
 
-    public int checkEnd(char p_char) 
+    public int checkEnd(char p_char)
        { return p_char == ';' ? 1 : 0; }
 
     public ParserError getEofError(Location p_startLocation)
     {
         return new ParserError(p_startLocation, ArgsParser.EOF_LOOKING_FOR_SEMI);
     }
-    
+
     public void resetEndMatch() {}
 }

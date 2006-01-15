@@ -33,11 +33,11 @@ import org.jamon.node.ParentArgsNode;
 public final class ParentArgsParser extends AbstractParser
 {
     private final ParentArgsNode m_parentArgsNode;
-    public static final String MALFORMED_PARENT_ARGS_CLOSE = 
+    public static final String MALFORMED_PARENT_ARGS_CLOSE =
     "Expecting parent arg declaration or '</%xargs>'";
     public ParentArgsParser(
-        PositionalPushbackReader p_reader, 
-        ParserErrors p_errors, 
+        PositionalPushbackReader p_reader,
+        ParserErrors p_errors,
         Location p_tagLocation) throws IOException
     {
         super(p_reader, p_errors);
@@ -64,12 +64,12 @@ public final class ParentArgsParser extends AbstractParser
             }
         }
     }
-    
+
     public ParentArgsNode getParentArgsNode()
     {
         return m_parentArgsNode;
     }
-    
+
     private void handleParentArg(ParentArgsNode parentArgsNode)
         throws IOException
     {
@@ -83,35 +83,28 @@ public final class ParentArgsParser extends AbstractParser
         }
         else if (readChar('='))
         {
-            if (readChar('>'))
+            readChar('>'); // support old-style syntax
+            soakWhitespace();
+            Location valueLocation = m_reader.getNextLocation();
+            try
             {
-                soakWhitespace();
-                Location valueLocation = m_reader.getNextLocation();
-                try
-                {
-                    parentArgsNode.addArg(
-                        new ParentArgWithDefaultNode(
-                            argName.getLocation(),
-                            argName,
-                            new ArgValueNode(valueLocation,
-                                readJava(
-                                    valueLocation,
-                                    new OptionalValueTagEndDetector()))));
-                }
-                catch (ParserError e)
-                {
-                    addError(e);
-                }
+                parentArgsNode.addArg(
+                    new ParentArgWithDefaultNode(
+                        argName.getLocation(),
+                        argName,
+                        new ArgValueNode(valueLocation,
+                            readJava(
+                                valueLocation,
+                                new OptionalValueTagEndDetector()))));
             }
-            else
+            catch (ParserError e)
             {
-                addError(m_reader.getLocation(), 
-                         OptionalValueTagEndDetector.NEED_SEMI_OR_ARROW);
+                addError(e);
             }
         }
         else
         {
-            addError(m_reader.getLocation(), 
+            addError(m_reader.getLocation(),
                 OptionalValueTagEndDetector.NEED_SEMI_OR_ARROW);
         }
     }

@@ -29,8 +29,8 @@ public class ArgsParserTest extends AbstractParserTest
             {
                 throw errors;
             }
-            else    
-            {       
+            else
+            {
                 return result;
             }
         }
@@ -67,8 +67,8 @@ public class ArgsParserTest extends AbstractParserTest
                     new ArgNameNode(location(3, 8), "s"))),
             parse(ARGS_START + "\nint i;\nString s;\n" + ARGS_END));
     }
-    
-    public void testOptionalArgs() throws Exception
+
+    public void testOldStyleOptionalArgs() throws Exception
     {
         assertEquals(
             argsNode()
@@ -86,6 +86,27 @@ public class ArgsParserTest extends AbstractParserTest
                         new ArgValueNode(location(3, 13), "\";\""))),
             parse(
                 ARGS_START + "\nint i => 3;\nString s => \";\";\n" + ARGS_END));
+
+    }
+
+    public void testNewStyleOptionalArgs() throws Exception
+    {
+        assertEquals(
+            argsNode()
+                .addArg(
+                    new OptionalArgNode(
+                        location(2, 1),
+                        new ArgTypeNode(location(2, 1), "int"),
+                        new ArgNameNode(location(2, 5), "i"),
+                        new ArgValueNode(location(2, 9), "3")))
+                .addArg(
+                    new OptionalArgNode(
+                        location(3, 1),
+                        new ArgTypeNode(location(3, 1), "String"),
+                        new ArgNameNode(location(3, 8), "s"),
+                        new ArgValueNode(location(3, 12), "\";\""))),
+            parse(
+                ARGS_START + "\nint i = 3;\nString s = \";\";\n" + ARGS_END));
 
     }
 
@@ -107,7 +128,7 @@ public class ArgsParserTest extends AbstractParserTest
                               new ArgNameNode(location(2,7), "x"))),
             parse(ARGS_START + "\nint[] x;\n"  + ARGS_END));
     }
-    
+
     public void testWhitespace() throws Exception
     {
         assertEquals(
@@ -123,7 +144,7 @@ public class ArgsParserTest extends AbstractParserTest
                 new ArgValueNode(location(6, 1), "3 "))),
             parse(ARGS_START + "\na . b [ ]\nfoo ;\na . b\nx =>\n3 ;" + ARGS_END));
     }
-    
+
     public void testBadArray() throws Exception
     {
         assertError(
@@ -136,7 +157,7 @@ public class ArgsParserTest extends AbstractParserTest
         assertError(ARGS_START + "\nf;" + ARGS_END, 2, 2,
                 AbstractParser.NOT_AN_IDENTIFIER_ERROR);
     }
- 
+
     public void testMissingSemiAfterName() throws Exception
     {
         assertError(ARGS_START + "\nf a" + ARGS_END,
@@ -145,7 +166,7 @@ public class ArgsParserTest extends AbstractParserTest
 
     public void testMissingSemiAfterValue() throws Exception
     {
-        assertError(ARGS_START + "\nf a => c" + ARGS_END, 
+        assertError(ARGS_START + "\nf a => c" + ARGS_END,
                     2, 8, ArgsParser.EOF_LOOKING_FOR_SEMI);
     }
 
@@ -162,31 +183,31 @@ public class ArgsParserTest extends AbstractParserTest
     {
         assertErrorTripple(
             ARGS_START,
-            1, ARGS_START.length() + 1, 
+            1, ARGS_START.length() + 1,
             AbstractBodyParser.BAD_JAVA_TYPE_SPECIFIER,
             1, ARGS_START.length() + 1,
             AbstractBodyParser.NOT_AN_IDENTIFIER_ERROR,
             1, ARGS_START.length() + 1,
             OptionalValueTagEndDetector.NEED_SEMI_OR_ARROW);
-            
+
     }
-    
+
     public void testEofLookingForName() throws Exception
     {
         assertErrorPair(ARGS_START + "\na",
                         2, 2, AbstractBodyParser.NOT_AN_IDENTIFIER_ERROR,
                         2, 2, OptionalValueTagEndDetector.NEED_SEMI_OR_ARROW);
     }
-    
+
     public void testEofLookingForPostNameSemi() throws Exception
     {
-        assertError(ARGS_START + "\na b", 
+        assertError(ARGS_START + "\na b",
                     2, 4, OptionalValueTagEndDetector.NEED_SEMI_OR_ARROW);
     }
 
     public void testEofLookingForValue() throws Exception
     {
-        assertError(ARGS_START + "\na b =>\n", 
+        assertError(ARGS_START + "\na b =>\n",
                     3, 1, ArgsParser.EOF_LOOKING_FOR_SEMI);
     }
 

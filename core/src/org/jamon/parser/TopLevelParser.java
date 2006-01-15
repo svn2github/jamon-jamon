@@ -45,7 +45,7 @@ public class TopLevelParser extends AbstractBodyParser<TopNode>
     public static final String BAD_ABSMETH_CONTENT =
         "<%absmeth> sections can only contain <%args> and <%frag> blocks";
     public static final String EXPECTING_SEMI = "Expecting ';'";
-    public static final String EXPECTING_ARROW = "Expecting '=>'";
+    public static final String EXPECTING_ARROW = "Expecting '=' or '=>'";
     public static final String MALFORMED_EXTENDS_TAG_ERROR =
         "Malformed <%extends ...> tag";
     private static final String BAD_ALIASES_CLOSE_TAG =
@@ -266,8 +266,9 @@ public class TopLevelParser extends AbstractBodyParser<TopNode>
                          "Identifier expected");
             }
             soakWhitespace();
-            if (readChar('=') && readChar('>'))
+            if (readChar('='))
             {
+                readChar('>'); // support old-style syntax
                 soakWhitespace();
                 aliases.addAlias(new AliasDefNode(
                     m_reader.getCurrentNodeLocation(),

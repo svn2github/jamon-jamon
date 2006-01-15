@@ -53,7 +53,7 @@ public class CallParser extends AbstractParser
     public static final String UNEXPECTED_IN_MULTI_FRAG_ERROR =
         "Expecting either '<|identifier>' or '</&>'";
     public static final String MISSING_ARG_ARROW_ERROR =
-        "Expecting '=>' to separate param name and value";
+        "Expecting '=' or '=>' to separate param name and value";
     public static final String GENERIC_ERROR = "Malformed call tag";
     public static final String PARAM_VALUE_EOF_ERROR =
         "Reached end of file while reading parameter value";
@@ -403,12 +403,13 @@ public class CallParser extends AbstractParser
     private void readArrow() throws ParserError, IOException
     {
         soakWhitespace();
-        if (!(readChar('=') && readChar('>')))
+        if (!readChar('='))
         {
             throw new ParserError(
                 m_reader.getNextLocation(),
                 MISSING_ARG_ARROW_ERROR);
         }
+        readChar('>'); // support old-style syntax
         soakWhitespace();
     }
 

@@ -1,5 +1,5 @@
 <%args>
-  int i => 0;
+  int i = 0;
   boolean b;
   String s;
 </%args><% i %><% b %><% s %>
