@@ -24,10 +24,10 @@
 </%frag>\
 <%args>
   String action;
-  Input submit => null;
-  org.jamon.render.html.CgiParameters hiddenParams => null;
-  boolean post => false;
-  String onSubmit => null;
+  Input submit = null;
+  org.jamon.render.html.CgiParameters hiddenParams = null;
+  boolean post = false;
+  String onSubmit = null;
 </%args>\
 \
 <form method='<% post ? "POST" : "GET" %>' action='<% action %>'\
@@ -36,12 +36,12 @@
 % }
 >
 % if( submit != null ) {
-  <& HiddenInput; input => submit &>
+  <& HiddenInput; input = submit &>
 % }
 % if( hiddenParams != null ) {
 %   Input[] inputs = hiddenParams.getInputs();
 %   for( int i = 0; i < inputs.length; ++i ) {
-      <& HiddenInput; input => inputs[i] &>
+      <& HiddenInput; input = inputs[i] &>
 %   }
 % }
   <& body &>

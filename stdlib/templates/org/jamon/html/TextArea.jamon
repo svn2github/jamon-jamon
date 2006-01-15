@@ -22,8 +22,8 @@
 
 <%args>
   org.jamon.render.html.Input input;
-  int cols => 0;
-  int rows => 0;
+  int cols = 0;
+  int rows = 0;
 </%args>
 
 <textarea name="<% input.getName() #H %>"

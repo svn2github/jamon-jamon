@@ -25,7 +25,7 @@
 
 <%args>
   org.jamon.render.html.Select<Renderable> input;
-  boolean multiple => false;
+  boolean multiple = false;
 </%args>
 
 <select name="<% input.getName() #H %>" \
@@ -40,6 +40,6 @@
 % if (items[i].isSelected()) {
  selected\
 % }
-><& renderOption; renderable => items[i].getRenderable() &></option>
+><& renderOption; renderable = items[i].getRenderable() &></option>
 % }
 </select>

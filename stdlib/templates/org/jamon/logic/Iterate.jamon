@@ -28,5 +28,5 @@
 
 % while (iterator.hasNext())
 % {
-<& Body; value => iterator.next() &>\
+<& Body; value = iterator.next() &>\
 % }

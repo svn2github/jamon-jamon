@@ -20,8 +20,8 @@
 
 <%args>
   org.jamon.render.html.TextInput input;
-  String type => "text";
-  int size => -1;
+  String type = "text";
+  int size = -1;
 </%args>
 
 <input type='<% type #H %>'
