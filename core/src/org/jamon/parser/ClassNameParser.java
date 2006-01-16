@@ -39,7 +39,7 @@ public class ClassNameParser extends AbstractTypeParser
         throws IOException, NotAnIdentifierException, ParserError
     {
         boolean boundsAllowed;
-        if (readAndAppendChar('?'))
+        if (readAndAppendChar('?', m_type))
         {
             boundsAllowed = true;
         }
@@ -80,13 +80,13 @@ public class ClassNameParser extends AbstractTypeParser
                 soakWhitespace();
                 readGenericsParameter();
                 soakWhitespace();
-                while(readAndAppendChar(','))
+                while(readAndAppendChar(',', m_type))
                 {
                     soakWhitespace();
                     readGenericsParameter();
                     soakWhitespace();
                 }
-                if (!readAndAppendChar('>'))
+                if (!readAndAppendChar('>', m_type))
                 {
                     throw new NotAnIdentifierException();
                 }

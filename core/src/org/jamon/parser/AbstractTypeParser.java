@@ -39,13 +39,9 @@ public class AbstractTypeParser extends AbstractParser
         try
         {
             parseComponent();
-            while (readAndAppendChar('.'))
+            while (readAndAppendChar('.', m_type))
             {
                 soakWhitespace();
-                if (checkForImportWildcards())
-                {
-                    return;
-                }
                 parseComponent();
             }
         }
@@ -56,7 +52,7 @@ public class AbstractTypeParser extends AbstractParser
         checkForArrayBrackets();
     }
 
-    private void parseComponent() 
+    private void parseComponent()
         throws IOException, NotAnIdentifierException, ParserError
     {
         m_type.append(readIdentifierOrThrow());
@@ -64,16 +60,11 @@ public class AbstractTypeParser extends AbstractParser
         parseTypeElaborations();
     }
 
-    protected void parseTypeElaborations() 
+    protected void parseTypeElaborations()
         throws IOException, NotAnIdentifierException, ParserError
     {
     }
 
-    protected boolean checkForImportWildcards() throws IOException
-    {
-        return false;
-    }
-    
     protected void checkForArrayBrackets() throws IOException, ParserError
     {
         if (readChar('['))
@@ -87,18 +78,5 @@ public class AbstractTypeParser extends AbstractParser
         return m_type.toString();
     }
 
-    protected boolean readAndAppendChar(char p_char) throws IOException
-    {
-        if (readChar(p_char))
-        {
-            m_type.append(p_char);
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-    
     protected final StringBuilder m_type = new StringBuilder();
 }

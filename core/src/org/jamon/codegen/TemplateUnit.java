@@ -37,6 +37,7 @@ import org.jamon.node.GenericsParamNode;
 import org.jamon.node.ImportNode;
 import org.jamon.node.Location;
 import org.jamon.node.ParentArgNode;
+import org.jamon.node.StaticImportNode;
 import org.jamon.util.StringUtils;
 
 public class TemplateUnit
@@ -264,9 +265,19 @@ public class TemplateUnit
         return m_abstractMethodNames;
     }
 
-    private Iterator<ImportNode> getImports()
+    private Iterable<ImportNode> getImports()
     {
-        return m_imports.iterator();
+        return m_imports;
+    }
+
+    public void addStaticImport(StaticImportNode p_node)
+    {
+        m_staticImports.add(p_node);
+    }
+
+    private Iterable<StaticImportNode> getStaticImports()
+    {
+        return m_staticImports;
     }
 
     public void addImport(ImportNode p_node)
@@ -342,6 +353,8 @@ public class TemplateUnit
     private final List<OverriddenMethodUnit> m_overrides =
         new LinkedList<OverriddenMethodUnit>();
     private final List<ImportNode> m_imports = new LinkedList<ImportNode>();
+    private final List<StaticImportNode> m_staticImports =
+        new LinkedList<StaticImportNode>();
     private final List<String> m_interfaces = new LinkedList<String>();
     private String m_parentPath;
     private boolean m_isParent = false;
@@ -361,11 +374,15 @@ public class TemplateUnit
 
     public void printImports(CodeWriter p_writer)
     {
-        for (Iterator<ImportNode> i = getImports(); i.hasNext(); )
+        for (ImportNode node : getImports())
         {
-            ImportNode node = i.next();
             p_writer.printLocation(node.getLocation());
             p_writer.println("import " + node.getName() + ";");
+        }
+        for (StaticImportNode node : getStaticImports())
+        {
+            p_writer.printLocation(node.getLocation());
+            p_writer.println("import static " + node.getName() + ";");
         }
         p_writer.println();
     }

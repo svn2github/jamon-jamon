@@ -34,7 +34,6 @@ import org.jamon.node.EscapeDirectiveNode;
 import org.jamon.node.ExtendsNode;
 import org.jamon.node.ImplementNode;
 import org.jamon.node.ImplementsNode;
-import org.jamon.node.ImportNode;
 import org.jamon.node.ImportsNode;
 import org.jamon.node.Location;
 import org.jamon.node.ParentMarkerNode;
@@ -222,11 +221,15 @@ public class TopLevelParser extends AbstractBodyParser<TopNode>
                     soakWhitespace();
                     return;
                 }
-                String className =
-                    readImport(m_reader.getCurrentNodeLocation());
-                if (className.length() == 0)
+                try
                 {
-                    addError(location, EXPECTING_IMPORTS_CLOSE);
+                    importsNode.addImport(
+                        new ImportParser(m_reader, m_errors).parse().getNode());
+                }
+                catch (ParserError e)
+                {
+                    addError(e);
+                    addError(m_reader.getLocation(), EXPECTING_IMPORTS_CLOSE);
                     return;
                 }
                 soakWhitespace();
@@ -234,7 +237,7 @@ public class TopLevelParser extends AbstractBodyParser<TopNode>
                 {
                     addError(m_reader.getNextLocation(), EXPECTING_SEMI);
                 }
-                importsNode.addImport(new ImportNode(location, className));
+
             }
         }
     }

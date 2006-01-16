@@ -335,10 +335,14 @@ public class Analyzer
 
     private class Adapter extends DepthFirstAnalysisAdapter
     {
-        @Override
-        public void caseImportNode(ImportNode p_import)
+        @Override public void caseImportNode(ImportNode p_import)
         {
             getTemplateUnit().addImport(p_import);
+        }
+
+        @Override public void caseStaticImportNode(StaticImportNode p_import)
+        {
+            getTemplateUnit().addStaticImport(p_import);
         }
 
         @Override

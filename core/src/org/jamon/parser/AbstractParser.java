@@ -292,21 +292,29 @@ public class AbstractParser
         }
     }
 
-    protected String readImport(final Location p_location) throws IOException
-    {
-        try
-        {
-            return new ImportParser(p_location, m_reader, m_errors).getType();
-        }
-        catch (ParserError e)
-        {
-            addError(e);
-            return "";
-        }
-    }
-
     protected AbstractPathNode parsePath() throws IOException
     {
         return new PathParser(m_reader, m_errors).getPathNode();
+    }
+
+    /**
+     * Determine if the next character is a particular one, and if so, read and
+     * append it to a StringBuilder.  Otherwise, do nothing.
+     * @param p_char The character being looked for
+     * @param builder The StringBuilder
+     * @return true if the character matched and was appended.
+     * @throws IOException
+     */
+    protected boolean readAndAppendChar(char p_char, StringBuilder builder) throws IOException
+    {
+        if (readChar(p_char))
+        {
+            builder.append(p_char);
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 }

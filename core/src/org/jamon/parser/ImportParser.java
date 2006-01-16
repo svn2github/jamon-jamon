@@ -23,30 +23,81 @@ import java.io.IOException;
 
 import org.jamon.ParserError;
 import org.jamon.ParserErrors;
+import org.jamon.node.AbstractImportNode;
+import org.jamon.node.ImportNode;
 import org.jamon.node.Location;
+import org.jamon.node.StaticImportNode;
 
-public class ImportParser extends AbstractTypeParser
+public class ImportParser extends AbstractParser
 {
 
-    public ImportParser(Location p_location, 
-                        PositionalPushbackReader p_reader, 
-                        ParserErrors p_errors) throws IOException, ParserError
+    public static final String MISSING_WHITESPACE_AFTER_STATIC_DECLARATION =
+        "missing whitespace after static declaration";
+    public ImportParser(Location p_location,
+                        PositionalPushbackReader p_reader,
+                        ParserErrors p_errors)
     {
-        super(p_location, p_reader, p_errors);
+        super(p_reader, p_errors);
+        m_location = p_location;
     }
 
-    @Override
-    protected boolean checkForImportWildcards() throws IOException
+    public ImportParser(
+        PositionalPushbackReader p_reader, ParserErrors p_errors)
     {
-        if (readAndAppendChar('*'))
+        super(p_reader, p_errors);
+        m_location = m_reader.getNextLocation();
+    }
+
+    public ImportParser parse() throws IOException, ParserError
+    {
+        StringBuilder builder = new StringBuilder();
+        try
         {
-            return true;
+            String firstComponent = readIdentifierOrThrow();
+            if ("static".equals(firstComponent))
+            {
+                m_isStatic = true;
+                if (!soakWhitespace())
+                {
+                    throw new ParserError(
+                        m_location, MISSING_WHITESPACE_AFTER_STATIC_DECLARATION);
+                }
+                firstComponent = readIdentifierOrThrow();
+            }
+            soakWhitespace();
+            builder.append(firstComponent);
+            while (readAndAppendChar('.', builder))
+            {
+                soakWhitespace();
+                if (readAndAppendChar('*', builder))
+                {
+                    break;
+                }
+                builder.append(readIdentifierOrThrow());
+                soakWhitespace();
+            }
+            m_import = builder.toString();
+            return this;
         }
-        else
+        catch (NotAnIdentifierException e)
         {
-            return false;
+            throw new ParserError(m_location, BAD_JAVA_TYPE_SPECIFIER);
         }
     }
 
-    
+    public AbstractImportNode getNode()
+    {
+        return m_isStatic
+            ? new StaticImportNode(m_location, m_import.toString())
+            : new ImportNode(m_location, m_import.toString());
+    }
+
+    public boolean isStatic()
+    {
+        return m_isStatic;
+    }
+
+    private final Location m_location;
+    private String m_import;
+    private boolean m_isStatic = false;
 }

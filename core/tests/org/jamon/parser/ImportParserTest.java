@@ -19,34 +19,64 @@
  */
 package org.jamon.parser;
 
+import org.jamon.ParserError;
 import org.jamon.ParserErrors;
+import org.jamon.node.AbstractImportNode;
+import org.jamon.node.ImportNode;
+import org.jamon.node.StaticImportNode;
 
 public class ImportParserTest extends AbstractParserTest
 {
     public void testParseSimpleImport() throws Exception
     {
-        assertEquals("foo", parseImport("foo "));
+        assertEquals(new ImportNode(START_LOC, "foo"), parseImport("foo "));
     }
-    
+
     public void testParseCompoundImport() throws Exception
     {
-        assertEquals("foo.bar", parseImport("foo . bar "));
+        assertEquals(
+            new ImportNode(START_LOC, "foo.bar"), parseImport("foo . bar "));
     }
-    
+
     public void testParseStarImport() throws Exception
     {
-        assertEquals("foo.bar.*", parseImport("foo.bar . *"));
+        assertEquals(
+            new ImportNode(START_LOC, "foo.bar.*"), parseImport("foo.bar . *"));
     }
-    
-    private String parseImport(String p_content) throws Exception
+
+    public void testStaticImport() throws Exception
+    {
+        assertEquals(
+            new StaticImportNode(START_LOC, "foo.bar"), parseImport("static foo.bar"));
+    }
+
+    public void testBadStaticImport() throws Exception
+    {
+        try
+        {
+            parseImport("static.foo.bar");
+            fail("exception expected");
+        }
+        catch (ParserError e)
+        {
+           assertEquals(
+               new ParserError(
+                   START_LOC,
+                   ImportParser.MISSING_WHITESPACE_AFTER_STATIC_DECLARATION),
+               e);
+        }
+    }
+
+    private AbstractImportNode parseImport(String p_content)
+        throws Exception
     {
         ParserErrors errors = new ParserErrors();
-        String result = 
-            new ImportParser(START_LOC, makeReader(p_content), errors).getType();
+        AbstractImportNode node = new ImportParser(
+            START_LOC, makeReader(p_content), errors).parse().getNode();
         if (errors.hasErrors())
         {
             throw errors;
         }
-        return result;
+        return node;
     }
 }
