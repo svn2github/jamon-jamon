@@ -1,3 +1,0 @@
-<%frag content />
-
-<% content.makeRenderer().asString() #u %>

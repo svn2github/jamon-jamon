@@ -1,8 +1,0 @@
-<%args>
-  java.util.Iterator i;
-</%args>
-<%alias>
-  logic => /org/jamon/logic;
-</%alias>
-
-<&| logic//Iterate; iterator => i &><%args>Object value;</%args><% value %><% value %></&>
