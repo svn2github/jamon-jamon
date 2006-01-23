@@ -1,4 +1,4 @@
 <%alias>
-  foo => /test;
-  foo => /bar;
+  foo = /test;
+  foo = /bar;
 </%alias>

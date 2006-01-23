@@ -2,16 +2,16 @@
 <%extends /test/jamon/Parent>\
 <%xargs>
     i;
-    opt1 => "o1m";
-    opt2 => "o2m";
-    opt5 => "o5m";
+    opt1 = "o1m";
+    opt2 = "o2m";
+    opt5 = "o5m";
     opt6;
 </%xargs>\
 <%args>
   String a;
   boolean b;
-  String opt7 => "o7m";
-  String opt8 => "o8m";
-  String opt9 => "o9m";
+  String opt7 = "o7m";
+  String opt8 = "o8m";
+  String opt9 = "o9m";
 </%args>{<% a %> <% i %> <% b %> <& *CHILD &>\
  <% opt1 %> <% opt2 %> <% opt5 %> <% opt6 %> <% opt7 %> <% opt8 %> <% opt9 %>}

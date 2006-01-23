@@ -1,4 +1,4 @@
 <%args>
   int i;
-  int j => 0;
+  int j = 0;
 </%args><&| HtmlEscape &><% i %> <% j %></&>

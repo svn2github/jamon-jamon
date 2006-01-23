@@ -1,10 +1,10 @@
 <%extends /test/jamon/Parent>\
 <%xargs>
-  opt1 => "o1c";
+  opt1 = "o1c";
   opt5; i;
 </%xargs>\
 <%args>
   String a;
   boolean k;
-  String opt7 => "o7c";
+  String opt7 = "o7c";
 </%args>{<% a %> <% i %> <% k %> <% opt1 %> <% opt5 %> <% opt7 %>}

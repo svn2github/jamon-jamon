@@ -2,11 +2,11 @@
 <%frag f> int numByAnyOtherName; </%frag>\
 <%args> int[] nums; </%args>\
 % for (int i = 0; i < nums.length; i++) {
-<& f; numByAnyOtherName => nums[i] &>\
+<& f; numByAnyOtherName = nums[i] &>\
 % }
 </%def>\
 <%args> int[] nums; </%args>\
-<&| subX; nums => nums &>\
+<&| subX; nums = nums &>\
 <%args> int num; </%args>\
 % if (num > 0) {
 +\

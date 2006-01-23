@@ -1,4 +1,4 @@
 <%alias>
-  foo => bar//test;
-  bar => foo//jamon;
+  foo = bar//test;
+  bar = foo//jamon;
 </%alias>

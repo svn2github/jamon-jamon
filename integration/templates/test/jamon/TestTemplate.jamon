@@ -7,8 +7,8 @@ is some starting doc.
 
 <%args>
   BigDecimal amount;
-  int x => 3;
-  int y => 7;
+  int x = 3;
+  int y = 7;
 </%args>
 
 Here is a template. It has two arguments:
@@ -52,30 +52,30 @@ No lines should be between here
 \
 and here.
 
-This is a call: <& /test/jamon/SubTemplate; z => 3; y => "yes" &>
-So is this: <& SubTemplate; z => 12; y => "no"; x => 1 &>
+This is a call: <& /test/jamon/SubTemplate; z = 3; y = "yes" &>
+So is this: <& SubTemplate; z = 12; y = "no"; x = 1 &>
 
-A call to a def: <& foo; qq => "yes" &>.
+A call to a def: <& foo; qq = "yes" &>.
 % for (int q = 0; q < 10; q++) {
-<& foo; qq => "loop"; rr => q &>
+<& foo; qq = "loop"; rr = q &>
 % }
 
-Another call to foo: <& foo; qq => "&>"; rr => 5 &>
-And another: <& foo; qq => ";"; rr => 6 &>
-One more: <& foo; qq => "\""; rr => 8 &>
+Another call to foo: <& foo; qq = "&>"; rr = 5 &>
+And another: <& foo; qq = ";"; rr = 6 &>
+One more: <& foo; qq = "\""; rr = 8 &>
 
 <%def foo>
   <%args>
     String qq;
-    int rr => 7;
+    int rr = 7;
   </%args>
 <% qq %>  in def foo. <% rr %></%def>
 
 A call with a template fragment: \
 % final int i = 3;
-<&| Sub2; x => 5 &>This is the body <% i %>
-<& foo; qq=>"yes"; rr => i+1 &>
-<& SubTemplate; z => 77; y => "icky" &>
+<&| Sub2; x = 5 &>This is the body <% i %>
+<& foo; qq="yes"; rr = i+1 &>
+<& SubTemplate; z = 77; y = "icky" &>
 </&>
 
 <%import>
@@ -83,24 +83,24 @@ A call with a template fragment: \
 </%import>
 3 more fragment calls:\
 % final LinkedList<Integer> list = new LinkedList<Integer>();
-<&| Sub2; x => 5 &>This is the body <% list.size() %>
+<&| Sub2; x = 5 &>This is the body <% list.size() %>
 % list.add(new Integer(x));
 </&>
-<&| Sub2; x => 5 &>This is the body <% list.size() %>
+<&| Sub2; x = 5 &>This is the body <% list.size() %>
 % list.add(new Integer(x));
 </&>
-<&| Sub2; x => 5 &>This is the body <% list.size() %>
+<&| Sub2; x = 5 &>This is the body <% list.size() %>
 % list.add(new Integer(x));
 </&>
 
 Call to a template with args declared before frags:
-<&| Sub3; x => 5 &>Body</&>
+<&| Sub3; x = 5 &>Body</&>
 
 And now some def frag calls:
   <&| sub1 &><% i %>
 body
 </&>
-  <&| sub1; y => 3 &>
+  <&| sub1; y = 3 &>
 body3
 </&>
 
@@ -108,7 +108,7 @@ body3
   <%frag f1>
   </%frag>
   <%args>
-    int y => 5;
+    int y = 5;
   </%args>
   A def component (<% y+1 %>) with frag param: <& f1 &>.\
 </%def>
@@ -116,7 +116,7 @@ body3
 
 Nested frag param calls:
 
-<&| sub1 &><&| Sub2; x => 7 &>in sub2body</&>in sub1</&>
+<&| sub1 &><&| Sub2; x = 7 &>in sub2body</&>in sub1</&>
 
 And frag calling frag:
 <%def sub3> \
@@ -136,8 +136,8 @@ front<&| sub3 &>before<& f2 &>middle<&f2&>after</&>back</%def> \
     int i;
     String s;
   </%frag>
-  <& f; i => 3; s => "yes" &>
-  <& f; i => 7; s => "no" &>
+  <& f; i = 3; s = "yes" &>
+  <& f; i = 7; s = "no" &>
 </%def>
 
 <&| subX &>

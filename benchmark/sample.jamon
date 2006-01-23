@@ -7,7 +7,7 @@
 <%override title>Jamon Template Reference Manual</%override>
 
 <%alias>
-  escape => /org/jamon/escape;
+  escape = /org/jamon/escape;
 </%alias>
 
 <h2>Template Reference Manual</h2>
@@ -239,7 +239,7 @@ This component has been accessed <% pageViews++ %> times.
     Arguments to a template are specified in
     <code><% "<%args>...</%args>" %></code>
     blocks. Each argument consists of a type followed by the
-    argument name, optionally followed by <code><% "=>" %></code> and a
+    argument name, optionally followed by <code><% "=" %></code> and a
     default value. Each argument must appear on a separate line, and
     each argument declaration must be terminated by a semicolon.
 
@@ -258,7 +258,7 @@ This component has been accessed <% pageViews++ %> times.
     For example:
     <&| _Template &><%LITERAL>
 <%args>
-  String[] nicknames => new String[0];
+  String[] nicknames = new String[0];
   Address address;
   java.util.Iterator friends;
 </%args>
@@ -305,9 +305,9 @@ Your nicknames are
 <%abstract>
 <%args>
   String name;
-  String favoriteColor => "red";
-  String favoriteFood => "Jamon";
-  int luckyNumber => 7;
+  String favoriteColor = "red";
+  String favoriteFood = "Jamon";
+  int luckyNumber = 7;
 </%args>
 <font color="<% favoriteColor %>">Hello <% name %></font>.
 Would you like some <% favoriteFood %>?
@@ -323,7 +323,7 @@ Remember, today's lucky number is <% luckyNumber %>.
 </%args>
 <%xargs>
   name;
-  favoriteColor => "green"
+  favoriteColor = "green"
   luckyNumber;
 </%xargs>
 Today's temperature is
@@ -351,7 +351,7 @@ a good sign for you, <% name %>.
     with named parameters via the
     <code>
       <% "<& " %><var>template-name</var>;
-                 <var>argument1</var> <% "=>" %> <var>value1</var>; ...
+                 <var>argument1</var> <% "=" %> <var>value1</var>; ...
       <% " &>" %>
     </code>
     construct.  All arguments without default values
@@ -517,7 +517,7 @@ a good sign for you, <% name %>.
     It is possible to create aliases for path-names.  The basic syntax is:
     <code>
       <% "<%alias>" %>
-        <var>shortcut</var> <% "=>" %> <var>/full/path</var>;
+        <var>shortcut</var> <% "=" %> <var>/full/path</var>;
         ...
       <% "</%alias>" %>
     </code>
@@ -540,9 +540,9 @@ a good sign for you, <% name %>.
     For example:
     <&| _Template &><%LITERAL>
 <%alias>
-  / => /com/foo/bar;
-  nav => //navigation;
-  legal => /attorneys/documents;
+  / = /com/foo/bar;
+  nav = //navigation;
+  legal = /attorneys/documents;
 </%alias>
 
 <& //Home &>  -- calls /com/foo/bar/Home

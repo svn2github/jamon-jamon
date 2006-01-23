@@ -1,1 +1,1 @@
-<& /test/jamon/Arguments; b => true; s => null; &>
+<& /test/jamon/Arguments; b = true; s = null; &>

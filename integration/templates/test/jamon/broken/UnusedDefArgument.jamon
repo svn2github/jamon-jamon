@@ -1,2 +1,2 @@
 <%def foo></%def>
-<&foo; x => 2 &>
+<&foo; x = 2 &>

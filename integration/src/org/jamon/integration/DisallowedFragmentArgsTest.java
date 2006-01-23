@@ -36,7 +36,7 @@ public class DisallowedFragmentArgsTest
     {
         expectParserError("OptionalArgInFragment",
                           "Fragments cannot have optional arguments",
-                          5, 19);
+                          5, 18);
     }
 
     public void testUnusedArgumentToFragment()

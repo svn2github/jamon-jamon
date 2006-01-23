@@ -26,7 +26,7 @@ public class IllegalAliasTest
     public void testCircularAlias()
         throws Exception
     {
-        expectParserError("CircularAlias", "Unknown alias bar", 2, 10);
+        expectParserError("CircularAlias", "Unknown alias bar", 2, 9);
     }
 
     public void testUnknownAlias()

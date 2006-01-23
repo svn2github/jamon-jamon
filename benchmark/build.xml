@@ -17,14 +17,12 @@
     <dirname property="jamon.top.dir" file="."/>
     <property name="java.lib.jamon" value="${jamon.top.dir}/jamon.jar"/>
     <property name="java.lib.jamon.anttask" value="${jamon.top.dir}/jamon-anttask.jar"/>
-    <property name="java.lib.jamon.stdlib" value="${jamon.top.dir}/jamon-stdlib.jar"/>
   </target>
 
   <target name="templates" depends="init">
     <dependset>
       <srcfileset file="${java.lib.jamon}"/>
       <srcfileset file="${java.lib.jamon.anttask}"/>
-      <srcfileset file="${java.lib.jamon.stdlib}"/>
       <targetfileset dir="${build.src.dir}"/>
     </dependset>
     <mkdir dir="${build.src.dir}"/>

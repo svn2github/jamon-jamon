@@ -1,2 +1,2 @@
 <%extends /test/jamon/ParentFragment>
-<& f; i => 1 &>
+<& f; i = 1 &>

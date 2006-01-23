@@ -133,7 +133,7 @@ public class ParametersTest
     {
         expectParserError("DefaultForInheritedRequiredArg",
                           "i is an inherited required argument, and may not be given a default value",
-                          3, 8);
+                          3, 7);
     }
 
     public void testSettingDefaultForInheritedFragmentArg()
@@ -141,7 +141,7 @@ public class ParametersTest
     {
         expectParserError("DefaultForInheritedFragmentArg",
                           "f is an inherited fragment argument, and may not be given a default value",
-                          3, 8);
+                          3, 7);
     }
 
     public void testDuplicateArgument()

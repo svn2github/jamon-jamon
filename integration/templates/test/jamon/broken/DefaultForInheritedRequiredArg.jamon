@@ -1,4 +1,4 @@
 <%extends ../Parent>
 <%xargs>
-  i => 4;
+  i = 4;
 </%xargs>

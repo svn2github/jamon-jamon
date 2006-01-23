@@ -2,5 +2,5 @@
   <%frag bar/>
 </%def>
 <&| foo &>
-  <%args>int x => 3;</%args>
+  <%args>int x = 3;</%args>
 </&>

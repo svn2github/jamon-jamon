@@ -1,4 +1,4 @@
-<& foo; b => true; s => "s" &>
+<& foo; b = true; s = "s" &>
 <& foo; b = true; s = "s"; i = 1 &>\
 <%def foo><%args>
     boolean b;

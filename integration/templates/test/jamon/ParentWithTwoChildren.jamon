@@ -1,6 +1,6 @@
 <%abstract>
 <%args>
-  int i1 => 0;
-  int i2 => 0;
+  int i1 = 0;
+  int i2 = 0;
 </%args>
 <% i1 %><% i2 %>

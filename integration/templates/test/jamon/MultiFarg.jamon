@@ -5,7 +5,7 @@
 <% x %><& content1 &><% x %><& content2 &><% x %>\
 </%def>\
 <%args> int x; </%args>\
-<&|| foo; x => x &>
+<&|| foo; x = x &>
   <|content1>(<% x + 1 %>)</|>
   <|content2>(<% x + 7 %>)</|>
 </&>

@@ -1,7 +1,7 @@
 <%generic>S,T,U</%generic>
 <%args>
   int i;
-  String foo => "bar";
+  String foo = "bar";
   Integer j;
 </%args>
 
@@ -20,7 +20,7 @@
 <%method m>
   <%args>
     int mi;
-    int mj => 4;
+    int mj = 4;
   </%args>
   <%frag mf>
     int mk;

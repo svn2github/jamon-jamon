@@ -5,4 +5,4 @@
   </%args>
   <%frag f/>
 </%absmeth>\
-<&| foo; i => 3 &>some content</&>
+<&| foo; i = 3 &>some content</&>
