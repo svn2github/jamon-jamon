@@ -1,5 +1,2 @@
 # where to find JUnit
 java.lib.junit=/usr/local/share/java/classes/junit.jar
-
-# If using jikes 1.19, don't be overly pedantic
-org.jamon.jike.options=+Pno-naming-convention +Pno-effective-java +Pno-shadow
