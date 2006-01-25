@@ -148,7 +148,7 @@
   <target name="prepdist" depends="test">
     <taskdef name="invoker"
              classname="org.jamon.ant.InvokerTask"
-             classpath="${jarfile.core}:${jarfile.anttask}:doc/build/work" />
+             classpath="${jarfile.core}:${jarfile.anttask}:../doc/build/work" />
     <invoker dynamicRecompilation="false"
              template="/org/jamon/doc/SrcTgzName"
              property="tarball.src"/>
@@ -171,7 +171,7 @@
       <tarfileset dir="."
                   prefix="${archive.base}"
                   includes="${jarfile.core},${jarfile.anttask},LICENSE,README" />
-      <tarfileset dir="doc/build/www"
+      <tarfileset dir="../doc/build/www"
                   prefix="${archive.base}/doc"
                   includes="**" />
       <tarfileset dir="core/build"
@@ -182,7 +182,7 @@
       <zipfileset dir="."
                   prefix="${archive.base}"
                   includes="${jarfile.core},${jarfile.anttask},LICENSE,README" />
-      <zipfileset dir="doc/build/www"
+      <zipfileset dir="../doc/build/www"
                   prefix="${archive.base}/doc"
                   includes="**" />
       <zipfileset dir="core/build"
@@ -230,7 +230,7 @@
   <target name="localstage" depends="dist" >
     <mkdir dir="${stage.dir}" />
     <copy todir="${stage.dir}" >
-      <fileset dir="doc/build/www" />
+      <fileset dir="../doc/build/www" />
       <fileset dir="core/build" includes="javadoc/**" />
     </copy>
     <copy todir="${dist.dir}" >
