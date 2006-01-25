@@ -35,12 +35,7 @@
     <!-- we only need to specify classpath here because we're bootstrapping
          Jamon; in "normal" invocations, all Jamon classes are available -->
     <tempfile property="temp.file" destdir="${build.dir}" />
-    <condition property="org.jamon.invoker.compiler" value="${build.compiler}">
-      <isset property="build.compiler"/>
-    </condition>
-    <condition property="org.jamon.invoker.compiler" value="jikes">
-      <equals arg1="${build.compiler}" arg2="jikes"/>
-    </condition>
+    <property name="org.jamon.invoker.compiler" value="javac"/>
     <condition property="org.jamon.invoker.compiler" value="javac">
       <equals arg1="${build.compiler}" arg2="extJavac"/>
     </condition>

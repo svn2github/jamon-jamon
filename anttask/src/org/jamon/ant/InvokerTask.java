@@ -179,11 +179,6 @@ public class InvokerTask
         if (p_javac != null && p_javac.length() > 0)
         {
             m_recompilingManagerData.setJavaCompiler(p_javac);
-            // slight hack but convenient
-            if (p_javac.toLowerCase().endsWith("jikes"))
-            {
-                m_recompilingManagerData.setJavaCompilerNeedsRtJar(true);
-            }
         }
     }
 
@@ -239,7 +234,7 @@ public class InvokerTask
     private boolean m_dynamicRecompilation = true;
     private String m_path;
     private HashMap<String, Object> m_args = new HashMap<String, Object>();
-    private Collection<Environment.Variable> m_sysprops = 
+    private Collection<Environment.Variable> m_sysprops =
         new HashSet<Environment.Variable>();
     private File m_output;
     private String m_outputPropertyName;

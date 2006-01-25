@@ -76,11 +76,6 @@ import org.jamon.emit.EmitMode;
  *   <tt>bin/javac</tt> under the directory specified by the system
  *   property <tt>java.home</tt>.
 
- *   <li><b>setJavaCompilerNeedsRtJar</b> - determines whether rt.jar
- *   needs to be explicitly supplied in the classpath when compiling
- *   generated Java source files; this is useful to enable compilation
- *   via <code>Jikes</code>. Default is false.
-
  *   <li><b>setClasspath</b> - used to specify additional components
  *   to prepend to the classpath when compiling generated Java source
  *   files. Default is null.
@@ -131,13 +126,6 @@ public class RecompilingTemplateManager
             return this;
         }
         private String javaCompiler;
-
-        public Data setJavaCompilerNeedsRtJar(boolean p_javaCompilerNeedsRtJar)
-        {
-            javaCompilerNeedsRtJar = new Boolean(p_javaCompilerNeedsRtJar);
-            return this;
-        }
-        private Boolean javaCompilerNeedsRtJar;
 
         public Data setClasspath(String p_classpath)
         {
@@ -193,10 +181,8 @@ public class RecompilingTemplateManager
         {
             try
             {
-                return getInternalJavaCompiler(getClasspath(p_workDir,
-                                                            p_data.classpath,
-                                                            false,
-                                                            p_classLoader));
+                return getInternalJavaCompiler(getClasspath(
+                    p_workDir, p_data.classpath, p_classLoader));
             }
             catch (Exception e)
             {
@@ -205,13 +191,7 @@ public class RecompilingTemplateManager
             }
         }
         return new ExternalJavaCompiler
-            (javac,
-             getClasspath(p_workDir,
-                          p_data.classpath,
-                          p_data.javaCompilerNeedsRtJar == null
-                          ? javac.endsWith("jikes")
-                          : p_data.javaCompilerNeedsRtJar.booleanValue(),
-                          p_classLoader));
+            (javac, getClasspath(p_workDir, p_data.classpath, p_classLoader));
     }
 
     public RecompilingTemplateManager(Data p_data)
@@ -318,7 +298,6 @@ public class RecompilingTemplateManager
 
     private static String getClasspath(String p_start,
                                        String p_classpath,
-                                       boolean p_includeRtJar,
                                        ClassLoader p_classLoader)
     {
         StringBuilder cp = new StringBuilder(p_start);
@@ -334,12 +313,6 @@ public class RecompilingTemplateManager
         cp.append(File.pathSeparator);
         cp.append(System.getProperty("java.class.path"));
 
-        if (p_includeRtJar)
-        {
-            cp.append(File.pathSeparator);
-            cp.append(getRtJarPath());
-        }
-
         pruneJniLibs(cp);
 
         if (TRACE)
@@ -349,17 +322,17 @@ public class RecompilingTemplateManager
 
         return cp.toString();
     }
-    
-    private static void pruneJniLibs(StringBuilder cp) 
+
+    private static void pruneJniLibs(StringBuilder cp)
     {
         String[] components = cp.toString().split(File.pathSeparator);
         cp.delete(0, cp.length());
         boolean first = true;
-        for (String c : components) 
+        for (String c : components)
         {
-            if (! c.endsWith(".jnilib") && ! c.endsWith(".dylib")) 
+            if (! c.endsWith(".jnilib") && ! c.endsWith(".dylib"))
             {
-                if (!first) 
+                if (!first)
                 {
                     cp.append(File.pathSeparator);
                 }
@@ -367,16 +340,6 @@ public class RecompilingTemplateManager
                 cp.append(c);
             }
         }
-    }
-
-    private static String getRtJarPath()
-    {
-        StringBuilder path = new StringBuilder(System.getProperty("java.home"));
-        path.append(File.separator);
-        path.append("lib");
-        path.append(File.separator);
-        path.append("rt.jar");
-        return path.toString();
     }
 
     @SuppressWarnings("unchecked")

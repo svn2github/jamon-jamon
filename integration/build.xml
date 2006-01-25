@@ -100,7 +100,6 @@
            deprecation="true">
       <src path="${src.dir}"/>
       <src path="${build.src.dir}"/>
-    <compilerarg line="${org.jamon.jike.options}" compiler="jikes"/>
     </javac>
   </target>
 
@@ -128,9 +127,6 @@
     </path>
     <property name="org.jamon.integration.classpath"
               refid="org.jamon.integration.classpath"/>
-    <condition property="org.jamon.integration.compiler" value="jikes">
-      <equals arg1="${tests.compiler}" arg2="jikes"/>
-    </condition>
     <condition property="org.jamon.integration.compiler" value="javac">
       <not><equals arg1="${tests.compiler}" arg2="jikes"/></not>
     </condition>

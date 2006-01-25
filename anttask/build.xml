@@ -27,7 +27,6 @@
            classpath="${java.lib.jamon}"
            deprecation="true">
       <src path="${src.dir}"/>
-      <compilerarg line="${org.jamon.jike.options}" compiler="jikes"/>
     </javac>
   </target>
 
@@ -39,7 +38,7 @@
 
   <target name="cvsignores">
     <echo file=".cvsignore">
-      .cvsignore 
+      .cvsignore
       ${build.dir}
       build.properties
     </echo>
