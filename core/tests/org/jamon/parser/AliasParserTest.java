@@ -38,7 +38,7 @@ public class AliasParserTest extends AbstractParserTest
                 new AliasesNode(START_LOC)),
             parse("<%alias></%alias>"));
     }
-    
+
     public void testRootAlias() throws Exception
     {
         assertEquals(
@@ -62,7 +62,7 @@ public class AliasParserTest extends AbstractParserTest
                         makeAbsolutePath("/foo/bar", 2, 8)))),
             parse("<%alias>\nbaz => /foo/bar;\n</%alias>"));
     }
-    
+
     public void testMultipleAliases() throws Exception
     {
         assertEquals(
@@ -77,6 +77,13 @@ public class AliasParserTest extends AbstractParserTest
                         "bar",
                         makeAbsolutePath("b", 3, 8)))),
             parse("<%alias>\nfoo => /a;\nbar => /b;\n</%alias>"));
+    }
+
+    public void testQuotedAlias() throws Exception
+    {
+        assertErrorPair("<%alias>\nhtml = \"/foo;\n</%alias>",
+                        2, 8, PathParser.GENERIC_PATH_ERROR,
+                        3, 1, "Unexpected tag close </%alias>");
     }
 
     private AbstractPathNode makeAbsolutePath(

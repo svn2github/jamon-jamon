@@ -27,6 +27,7 @@ import org.jamon.ParserError;
 import org.jamon.ParserErrors;
 import org.jamon.TemplateLocation;
 import org.jamon.node.AbsMethodNode;
+import org.jamon.node.AbstractPathNode;
 import org.jamon.node.AliasDefNode;
 import org.jamon.node.AliasesNode;
 import org.jamon.node.ClassNode;
@@ -273,10 +274,15 @@ public class TopLevelParser extends AbstractBodyParser<TopNode>
             {
                 readChar('>'); // support old-style syntax
                 soakWhitespace();
+                AbstractPathNode path = parsePath();
+                if (path.getPathElements().isEmpty())
+                {
+                    return;
+                }
                 aliases.addAlias(new AliasDefNode(
                     m_reader.getCurrentNodeLocation(),
                     name,
-                    parsePath()));
+                    path));
                 if (!readChar(';'))
                 {
                     addError(m_reader.getLocation(), EXPECTING_SEMI);
