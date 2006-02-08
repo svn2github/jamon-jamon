@@ -22,7 +22,6 @@ package org.jamon.codegen;
 
 import java.util.Iterator;
 import org.jamon.ParserError;
-import org.jamon.emit.EmitMode;
 import org.jamon.node.Location;
 
 public abstract class AbstractInnerUnitCallStatement
@@ -52,15 +51,13 @@ public abstract class AbstractInnerUnitCallStatement
     }
 
     public void generateSource(CodeWriter p_writer,
-                               TemplateDescriber p_describer,
-                               EmitMode p_emitMode) throws ParserError
+                               TemplateDescriber p_describer) throws ParserError
     {
         generateSourceLine(p_writer);
         p_writer.openBlock();
         makeFragmentImplClasses(m_unit.getFragmentArgsList(),
                                 p_writer,
-                                p_describer,
-                                p_emitMode);
+                                p_describer);
         generateSourceLine(p_writer);
         p_writer.print("__jamon_innerUnit__" + getPath());
         p_writer.openList();

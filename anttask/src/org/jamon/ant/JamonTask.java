@@ -137,12 +137,13 @@ public class JamonTask
                 {
                     String target = p_sourceName;
                     int i = target.lastIndexOf('.');
-                    if (i > 0)
+                    if (i > 0 && "jamon".equals(target.substring(i+1)))
                     {
                         target = target.substring(0,i);
+                        return new String[] { target + ".java",
+                                target + "Impl.java" };
                     }
-                    return new String[] { target + ".java",
-                                          target + "Impl.java" };
+                    return null;
                 }
             };
         SourceFileScanner sfs = new SourceFileScanner(this);
@@ -158,10 +159,17 @@ public class JamonTask
                 + " template" + (files.length == 1 ? "" : "s")
                 + " to " + m_destDir);
 
-            TemplateProcessor processor = new TemplateProcessor(m_destDir,
-                                                                m_srcDir,
-                                                                m_classLoader,
-                                                                m_emitMode);
+            TemplateProcessor processor;
+            try
+            {
+                processor = new TemplateProcessor(
+                    m_destDir, m_srcDir, m_classLoader, m_emitMode);
+            }
+            catch (IOException e)
+            {
+                throw new BuildException(
+                    "Unable to instantiate template processor, e");
+            }
 
             for (int i = 0; i < files.length; i++)
             {

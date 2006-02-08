@@ -22,6 +22,7 @@ package org.jamon;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Properties;
 
 /**
  * An interface representing a "repository" of template sources. One
@@ -71,6 +72,15 @@ public interface TemplateSource
      * @return an identifying string
      */
     String getExternalIdentifier(String p_templatePath);
-    
+
     TemplateLocation getTemplateLocation(String p_templatePath);
+
+    /**
+     * Get any properties that might be used to influence the processing of
+     * templates.
+     *
+     * @return properties used to influence the processing of templates
+     * @throws IOException
+     */
+    Properties getProperties() throws IOException;
 }

@@ -48,6 +48,7 @@ public class ProxyGenerator
         generateInheritanceDepth();
         generateIntf();
         generateImplData();
+        generateJamonContextSetter();
         generateOptionalArgs();
         generateFragmentInterfaces(false);
         if (! m_templateUnit.isParent())
@@ -411,6 +412,24 @@ public class ProxyGenerator
             m_writer.println(ClassNames.IMPL_DATA);
         }
         m_writer.openBlock();
+        if (!m_templateUnit.hasParentPath())
+        {
+            m_writer.println(
+                "private " + m_describer.getJamonContextType()
+                + " m_jamonContext;");
+            m_writer.println(
+                "public " + m_describer.getJamonContextType()
+                + " getJamonContext()");
+            m_writer.openBlock();
+            m_writer.println("return m_jamonContext;");
+            m_writer.closeBlock();
+            m_writer.println(
+                "public void setJamonContext("
+                + m_describer.getJamonContextType() + " p_jamonContext)");
+            m_writer.openBlock();
+            m_writer.println("m_jamonContext = p_jamonContext;");
+            m_writer.closeBlock();
+        }
         for (Iterator<AbstractArgument> i = m_templateUnit.getDeclaredArgs();
              i.hasNext(); )
         {
@@ -446,6 +465,24 @@ public class ProxyGenerator
         m_writer.closeBlock();
     }
 
+    private void generateJamonContextSetter()
+    {
+        m_writer.println();
+        if (m_templateUnit.hasParentPath())
+        {
+            m_writer.print("@Override ");
+        }
+        m_writer.print("public " );
+        printFullProxyType();
+        m_writer.println(
+            " setJamonContext(" + m_describer.getJamonContextType()
+            + " p_jamonContext)");
+        m_writer.openBlock();
+        m_writer.println("getImplData().setJamonContext(p_jamonContext);");
+        m_writer.println("return this;");
+        m_writer.closeBlock();
+    }
+
     private void generateOptionalArgs()
     {
         for (Iterator<OptionalArgument> i =
@@ -457,12 +494,7 @@ public class ProxyGenerator
             m_writer.println("protected " + arg.getType() + " "
                              + arg.getName() + ";");
             m_writer.print("public final ");
-            String pkgName = getPackageName();
-            if (pkgName.length() > 0)
-            {
-                m_writer.print(pkgName + ".");
-            }
-            m_writer.print(getClassName());
+            printFullProxyType();
             m_writer.println(
                 " " + arg.getSetterName()
                 + "(" + arg.getType() +" p_" + arg.getName() + ")");
@@ -473,6 +505,16 @@ public class ProxyGenerator
             m_writer.println("return this;");
             m_writer.closeBlock();
         }
+    }
+
+    private void printFullProxyType()
+    {
+        String pkgName = getPackageName();
+        if (pkgName.length() > 0)
+        {
+            m_writer.print(pkgName + ".");
+        }
+        m_writer.print(getClassName());
     }
 
     private void generateSignature()

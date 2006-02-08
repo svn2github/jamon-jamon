@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.FileInputStream;
 import java.io.File;
+import java.util.Properties;
 import java.util.StringTokenizer;
 
 /**
@@ -118,6 +119,17 @@ public class FileTemplateSource
     public TemplateLocation getTemplateLocation(String p_templatePath)
     {
         return new TemplateFileLocation(getExternalIdentifier(p_templatePath));
+    }
+
+    public Properties getProperties() throws IOException
+    {
+        Properties properties = new Properties();
+        File propertiesFile = new File(m_templateSourceDir, "jamon.properties");
+        if (propertiesFile.canRead())
+        {
+            properties.load(new FileInputStream(propertiesFile));
+        }
+        return properties;
     }
 
     private final File m_templateSourceDir;

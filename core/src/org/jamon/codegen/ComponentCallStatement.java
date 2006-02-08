@@ -27,7 +27,6 @@ import org.jamon.JamonRuntimeException;
 import org.jamon.ParserError;
 import org.jamon.node.GenericCallParam;
 import org.jamon.node.Location;
-import org.jamon.emit.EmitMode;
 
 public class ComponentCallStatement
     extends AbstractCallStatement
@@ -51,8 +50,7 @@ public class ComponentCallStatement
     }
 
     public void generateSource(CodeWriter p_writer,
-                               TemplateDescriber p_describer,
-                               EmitMode p_emitMode) throws ParserError
+                               TemplateDescriber p_describer) throws ParserError
     {
         generateSourceLine(p_writer);
         p_writer.openBlock();
@@ -82,14 +80,15 @@ public class ComponentCallStatement
         }
         makeFragmentImplClasses(desc.getFragmentInterfaces(),
                                 p_writer,
-                                p_describer,
-                                p_emitMode);
+                                p_describer);
         String instanceVar = getUniqueName();
         p_writer.println(
             getComponentProxyClassName() + getGenericParams() + " "
             + instanceVar + " = "
             + "new " + getComponentProxyClassName() + getGenericParams()
             +"(this.getTemplateManager());");
+
+        p_writer.println(instanceVar + ".setJamonContext(jamonContext);");
 
         for (Iterator<OptionalArgument> i = desc.getOptionalArgs().iterator();
              i.hasNext(); )

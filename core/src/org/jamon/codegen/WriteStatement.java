@@ -21,7 +21,6 @@
 package org.jamon.codegen;
 
 import org.jamon.node.Location;
-import org.jamon.emit.EmitMode;
 
 public class WriteStatement
     extends AbstractStatement
@@ -37,14 +36,13 @@ public class WriteStatement
     }
 
     public void generateSource(CodeWriter p_writer,
-                               TemplateDescriber p_describer,
-                               EmitMode p_emitMode)
+                               TemplateDescriber p_describer)
     {
         if (! "\"\"".equals(m_expr))
         {
             generateSourceLine(p_writer);
             p_writer.println(m_escapingDirective.toJava() + ".write("
-                             + p_emitMode.getEmitterClassName()
+                             + p_describer.getEmitMode().getEmitterClassName()
                              + ".valueOf(" + m_expr + ")"
                              + ", " + ArgNames.WRITER + ");");
         }

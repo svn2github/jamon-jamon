@@ -28,7 +28,6 @@ import java.util.TreeMap;
 
 import org.jamon.ParserError;
 import org.jamon.ParserErrors;
-import org.jamon.emit.EmitMode;
 import org.jamon.node.ArgNode;
 import org.jamon.node.FragmentArgsNode;
 import org.jamon.node.Location;
@@ -79,11 +78,10 @@ public abstract class AbstractUnit
     }
 
     public void generateRenderBody(CodeWriter p_writer,
-                                   TemplateDescriber p_describer,
-                                   EmitMode p_emitMode) throws ParserError
+                                   TemplateDescriber p_describer) throws ParserError
     {
         p_writer.openBlock();
-        printStatements(p_writer, p_describer, p_emitMode);
+        printStatements(p_writer, p_describer);
         printRenderBodyEnd(p_writer);
         p_writer.closeBlock();
     }

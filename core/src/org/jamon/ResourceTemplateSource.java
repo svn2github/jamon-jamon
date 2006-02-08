@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.Properties;
 
 /**
  * An implementation of {@link TemplateSource} which retrieves
@@ -100,9 +101,21 @@ public class ResourceTemplateSource
     private final ClassLoader m_classLoader;
     private final String m_templateSourceDir;
     private final String m_extension;
-    
+
     public TemplateLocation getTemplateLocation(String p_templatePath)
     {
         return new TemplateResourceLocation(resourceName(p_templatePath));
+    }
+
+    public Properties getProperties() throws IOException
+    {
+        Properties properties = new Properties();
+        InputStream inputStream = m_classLoader.getResourceAsStream(
+            m_templateSourceDir + "/jamon.properties");
+        if (inputStream != null)
+        {
+            properties.load(inputStream);
+        }
+        return properties;
     }
 }

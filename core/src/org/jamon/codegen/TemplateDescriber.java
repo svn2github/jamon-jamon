@@ -23,13 +23,16 @@ package org.jamon.codegen;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 import java.io.InputStream;
 import java.io.IOException;
 
+import org.jamon.JamonRuntimeException;
 import org.jamon.ParserError;
 import org.jamon.ParserErrors;
 import org.jamon.TemplateSource;
+import org.jamon.emit.EmitMode;
 import org.jamon.node.Location;
 import org.jamon.node.TopNode;
 import org.jamon.parser.TopLevelParser;
@@ -37,17 +40,38 @@ import org.jamon.util.StringUtils;
 
 public class TemplateDescriber
 {
+    private static final String JAMON_CONTEXT_TYPE_KEY = "org.jamon.contextType";
+    private static final String EMIT_MODE_KEY = "org.jamon.emitMode";
+
     public TemplateDescriber(TemplateSource p_templateSource,
-                             ClassLoader p_classLoader)
+                             ClassLoader p_classLoader,
+                             EmitMode p_emitMode) throws IOException
     {
         m_templateSource = p_templateSource;
         m_classLoader = p_classLoader;
+        m_properties = m_templateSource.getProperties();
+        String emitModeName = m_properties.getProperty(EMIT_MODE_KEY);
+        if (emitModeName != null)
+        {
+            m_emitMode = EmitMode.fromString(emitModeName);
+            if (m_emitMode == null)
+            {
+                throw new JamonRuntimeException(
+                    "Unknown emit mode: " + emitModeName);
+            }
+        }
+        else
+        {
+            m_emitMode = p_emitMode;
+        }
     }
 
     private final Map<String, TemplateDescription> m_descriptionCache =
         new HashMap<String, TemplateDescription>();
     private final TemplateSource m_templateSource;
     private final ClassLoader m_classLoader;
+    private final Properties m_properties;
+    private final EmitMode m_emitMode;
 
     public TemplateDescription getTemplateDescription(
         String p_path, Location p_location, String p_templateIdentifier)
@@ -154,5 +178,16 @@ public class TemplateDescriber
     public String getExternalIdentifier(String p_path)
     {
         return m_templateSource.getExternalIdentifier(p_path);
+    }
+
+    public String getJamonContextType()
+    {
+        return m_properties.getProperty(
+            JAMON_CONTEXT_TYPE_KEY, Object.class.getName());
+    }
+
+    public EmitMode getEmitMode()
+    {
+        return m_emitMode;
     }
 }

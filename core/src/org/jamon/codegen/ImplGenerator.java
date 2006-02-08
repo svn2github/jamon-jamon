@@ -25,19 +25,16 @@ import java.util.Iterator;
 
 import org.jamon.ParserError;
 import org.jamon.ParserErrors;
-import org.jamon.emit.EmitMode;
 
 public class ImplGenerator
 {
     public ImplGenerator(OutputStream p_out,
                          TemplateDescriber p_describer,
-                         TemplateUnit p_templateUnit,
-                         EmitMode p_emitMode)
+                         TemplateUnit p_templateUnit)
     {
         m_writer = new CodeWriter(p_out);
         m_describer = p_describer;
         m_templateUnit = p_templateUnit;
-        m_emitMode = p_emitMode;
     }
 
     public void generateSource()
@@ -66,7 +63,6 @@ public class ImplGenerator
     private final CodeWriter m_writer;
     private final TemplateDescriber m_describer;
     private final TemplateUnit m_templateUnit;
-    private final EmitMode m_emitMode;
 
     private final String getPath()
     {
@@ -107,6 +103,12 @@ public class ImplGenerator
             + m_templateUnit.getGenericParams().generateGenericParamsList());
         m_writer.println();
         m_writer.openBlock();
+        if (! m_templateUnit.hasParentPath())
+        {
+            m_writer.println(
+                "protected final " + m_describer.getJamonContextType() +
+                " jamonContext;");
+        }
         for (Iterator<AbstractArgument> i = m_templateUnit.getVisibleArgs();
              i.hasNext(); )
         {
@@ -160,6 +162,10 @@ public class ImplGenerator
         m_writer.openBlock();
         m_writer.println(
             "super(p_templateManager, " + SET_OPTS + "(p_implData));");
+        if (! m_templateUnit.hasParentPath())
+        {
+            m_writer.println("jamonContext = p_implData.getJamonContext();");
+        }
         for (Iterator<AbstractArgument> i = m_templateUnit.getVisibleArgs();
              i.hasNext(); )
         {
@@ -210,7 +216,7 @@ public class ImplGenerator
             m_writer.closeList();
             m_writer.println();
             m_writer.println("  throws " + ClassNames.IOEXCEPTION);
-            defUnit.generateRenderBody(m_writer, m_describer, m_emitMode);
+            defUnit.generateRenderBody(m_writer, m_describer);
             m_writer.println();
         }
     }
@@ -264,7 +270,7 @@ public class ImplGenerator
         }
         else
         {
-            p_methodUnit.generateRenderBody(m_writer, m_describer, m_emitMode);
+            p_methodUnit.generateRenderBody(m_writer, m_describer);
         }
         m_writer.println();
 
@@ -299,7 +305,7 @@ public class ImplGenerator
                              + ArgNames.MAYBE_UNUSED_WRITER_DECL + ") throws "
                              + ClassNames.IOEXCEPTION);
         }
-        m_templateUnit.generateRenderBody(m_writer, m_describer, m_emitMode);
+        m_templateUnit.generateRenderBody(m_writer, m_describer);
 
         m_writer.println();
         if (m_templateUnit.isParent())

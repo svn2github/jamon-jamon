@@ -27,7 +27,7 @@ public class LiteralStatementTest extends TestCase
             "\n \r \t \" \\ \u1234", new Location(null, 1, 1), null);
         ByteArrayOutputStream bos= new ByteArrayOutputStream();
         CodeWriter codeWriter = new CodeWriter(bos);
-        statement.generateSource(codeWriter, null, null);
+        statement.generateSource(codeWriter, null);
         codeWriter.finish();
         assertEquals(
             "// 1, 1\n" +

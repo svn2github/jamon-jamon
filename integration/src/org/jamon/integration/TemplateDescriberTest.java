@@ -35,6 +35,7 @@ import org.jamon.codegen.AbstractArgument;
 import org.jamon.codegen.RequiredArgument;
 import org.jamon.codegen.TemplateDescriber;
 import org.jamon.codegen.TemplateDescription;
+import org.jamon.emit.EmitMode;
 
 public class TemplateDescriberTest
     extends TestCase
@@ -48,7 +49,8 @@ public class TemplateDescriberTest
         nonexistent.deleteOnExit();
         m_describer =
             new TemplateDescriber(new FileTemplateSource(nonexistent),
-                                  getClass().getClassLoader());
+                                  getClass().getClassLoader(),
+                                  EmitMode.STANDARD);
     }
 
     public void testArgumentIntrospection()

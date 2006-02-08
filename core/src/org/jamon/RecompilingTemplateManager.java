@@ -363,9 +363,10 @@ public class RecompilingTemplateManager
         {
             try
             {
-                ensureUpToDate(p_path,
-                               new TemplateDescriber(m_templateSource,
-                                                     m_loader));
+                ensureUpToDate(
+                    p_path,
+                    new TemplateDescriber(
+                        m_templateSource, m_loader, m_emitMode));
                 return m_loader.loadClass(p_className);
             }
             catch (ClassNotFoundException e)
@@ -560,7 +561,7 @@ public class RecompilingTemplateManager
         FileOutputStream out = new FileOutputStream(javaFile);
         try
         {
-            new ImplGenerator(out, p_describer, templateUnit, m_emitMode)
+            new ImplGenerator(out, p_describer, templateUnit)
                 .generateSource();
             out.close();
             return templateUnit.getTemplateDependencies();

@@ -15,41 +15,20 @@
  * created by Jay Sachs are Copyright (C) 2003 Jay Sachs.  All Rights
  * Reserved.
  *
- * Contributor(s):
+ * Contributor(s): Ian Robertson
  */
 
 package org.jamon.emit;
 
-import java.util.Map;
-import java.util.HashMap;
-
-//FIXME - make this an enumeration?
-public class EmitMode
+public enum EmitMode
 {
-    private static Map<String, EmitMode> s_modes = 
-        new HashMap<String, EmitMode>();
-
-    public static final EmitMode STANDARD =
-        new EmitMode(StandardEmitter.class);
-    public static final EmitMode LIMITED =
-        new EmitMode(LimitedEmitter.class);
-    public static final EmitMode STRICT =
-        new EmitMode(StrictEmitter.class);
+    STANDARD(StandardEmitter.class),
+    LIMITED(LimitedEmitter.class),
+    STRICT(StrictEmitter.class);
 
     public static EmitMode fromString(String p_string)
     {
-        return s_modes.get(p_string.toUpperCase());
-    }
-
-    @Override public boolean equals(Object p_obj)
-    {
-        return (p_obj instanceof EmitMode)
-            && ((EmitMode)p_obj).m_class.equals(m_class);
-    }
-
-    @Override public int hashCode()
-    {
-        return m_class.hashCode();
+        return valueOf(p_string.toUpperCase());
     }
 
     public String getEmitterClassName()
@@ -63,26 +42,9 @@ public class EmitMode
     }
 
 
-    private static String extractModeName(Class p_class)
-    {
-        final String EMITTER = "Emitter";
-        String name = p_class.getName();
-        name = name.substring(name.lastIndexOf('.')+1);
-        if (name.endsWith(EMITTER))
-        {
-            return name.substring(0, name.length() - EMITTER.length());
-        }
-        else
-        {
-            throw new IllegalArgumentException("Not an emitter class "
-                                               + p_class);
-        }
-    }
-
     private EmitMode(Class p_emitterClass)
     {
         m_class = p_emitterClass;
-        s_modes.put(extractModeName(p_emitterClass).toUpperCase(), this);
     }
 
     private final Class m_class;

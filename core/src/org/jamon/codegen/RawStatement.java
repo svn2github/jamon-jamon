@@ -21,7 +21,6 @@
 package org.jamon.codegen;
 
 import org.jamon.node.Location;
-import org.jamon.emit.EmitMode;
 
 public class RawStatement
     extends AbstractStatement
@@ -35,8 +34,7 @@ public class RawStatement
     }
 
     public void generateSource(CodeWriter p_writer,
-                               TemplateDescriber p_describer,
-                               EmitMode p_emitMode)
+                               TemplateDescriber p_describer)
     {
         generateSourceLine(p_writer);
         p_writer.println(m_code);

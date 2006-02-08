@@ -5,10 +5,13 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Properties;
+
 import org.jamon.TemplateLocation;
 import org.jamon.TemplateSource;
 import org.jamon.FileTemplateSource;
 import org.jamon.codegen.TemplateDescriber;
+import org.jamon.emit.EmitMode;
 import org.jamon.node.AbstractNode;
 import org.jamon.node.Analysis;
 import org.jamon.node.AnalysisAdapter;
@@ -92,12 +95,19 @@ public class ParserBenchmarks
         {
             return null;
         }
+
+        public Properties getProperties() throws IOException
+        {
+            return new Properties();
+        }
     }
 
     private static long benchmarkParser(String p_fileName) throws IOException
     {
         TemplateDescriber describer = new TemplateDescriber(
-            new StringTemplateSource(new File(p_fileName)), null);
+            new StringTemplateSource(new File(p_fileName)),
+            null,
+            EmitMode.STANDARD);
         long start = System.currentTimeMillis();
         for (int i = 0; i < ITERATIONS; i++)
         {
@@ -122,7 +132,7 @@ public class ParserBenchmarks
 
         TemplateSource templateSource = new FileTemplateSource(templatesDir);
         TemplateDescriber templateDescriber =
-            new TemplateDescriber(templateSource, null);
+            new TemplateDescriber(templateSource, null, EmitMode.STANDARD);
 
         TopNode start = templateDescriber.parseTemplate(template);
         System.out.println("AnalysisAdapter total time: " +

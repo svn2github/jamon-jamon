@@ -22,7 +22,6 @@ package org.jamon.codegen;
 
 import org.jamon.node.Location;
 import org.jamon.util.StringUtils;
-import org.jamon.emit.EmitMode;
 
 public class LiteralStatement
     extends AbstractStatement
@@ -41,8 +40,7 @@ public class LiteralStatement
     }
 
     public void generateSource(CodeWriter p_writer,
-                               TemplateDescriber p_describer,
-                               EmitMode p_emitMode)
+                               TemplateDescriber p_describer)
     {
         if (m_text.length() > 0)
         {

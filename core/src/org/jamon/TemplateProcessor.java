@@ -38,18 +38,17 @@ public class TemplateProcessor
     public TemplateProcessor(File p_destDir,
                              File p_sourceDir,
                              ClassLoader p_classLoader,
-                             EmitMode p_emitMode)
+                             EmitMode p_emitMode) throws IOException
     {
         m_destDir = p_destDir;
-        m_emitMode = p_emitMode;
         m_describer =
             new TemplateDescriber(new FileTemplateSource(p_sourceDir),
-                                  p_classLoader);
+                                  p_classLoader,
+                                  p_emitMode);
     }
 
     private final File m_destDir;
     private final TemplateDescriber m_describer;
-    private final EmitMode m_emitMode;
 
     public void generateSource(String p_filename)
         throws IOException
@@ -118,7 +117,7 @@ public class TemplateProcessor
         out = new FileOutputStream(javaFile);
         try
         {
-            new ImplGenerator(out, m_describer, templateUnit, m_emitMode)
+            new ImplGenerator(out, m_describer, templateUnit)
                 .generateSource();
         }
         catch (RuntimeException e)
@@ -155,7 +154,7 @@ public class TemplateProcessor
         System.out.println("  -h|--help         - print this help");
         System.out.println(
             "  -d|--directories  - treat paths as directories, " +
-            "                      and parse all .jamon files therein"); 
+            "                      and parse all .jamon files therein");
         System.out.println(
             "  "
             + DESTDIR
@@ -163,11 +162,22 @@ public class TemplateProcessor
         System.out.println("  "
                            + SRCDIR
                            + "<path>   - path to template directory");
+        //FIXME - autogenerate list of allowable emit modes
+        System.out.println(
+            "  "
+            + EMITMODE
+            + "<emitMode>  - emit mode to use - one of Standard, Limited or Strict");
+        System.out.println(
+            "  "
+            + CONTEXTTYPE
+            + "<contextType>  - class type for jamonContext variable; defaults to java.lang.Object");
+
     }
 
     private static final String DESTDIR = "--destDir=";
     private static final String SRCDIR = "--srcDir=";
     private static final String EMITMODE = "--emitMode=";
+    private static final String CONTEXTTYPE = "--contextType";
 
     public static void main(String [] args)
     {
@@ -178,14 +188,14 @@ public class TemplateProcessor
             File sourceDir = new File(".");
             File destDir = null;
             EmitMode emitMode = EmitMode.STANDARD;
-            while (arg<args.length && args[arg].startsWith("-"))
+            while (arg < args.length && args[arg].startsWith("-"))
             {
                 if ("-h".equals(args[arg]) || "--help".equals(args[arg]))
                 {
                     showHelp();
                     System.exit(0);
                 }
-                else if ("-d".equals(args[arg]) 
+                else if ("-d".equals(args[arg])
                          || "--directories".equals(args[arg]))
                 {
                     processDirectories = true;

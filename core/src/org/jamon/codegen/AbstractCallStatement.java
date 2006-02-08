@@ -28,7 +28,6 @@ import java.util.HashMap;
 import org.jamon.ParserError;
 import org.jamon.ParserErrors;
 import org.jamon.util.StringUtils;
-import org.jamon.emit.EmitMode;
 
 import org.jamon.node.Location;
 
@@ -78,8 +77,7 @@ public abstract class AbstractCallStatement
 
     private void makeFragmentImplClass(FragmentUnit p_fragmentUnitIntf,
                                        CodeWriter p_writer,
-                                       TemplateDescriber p_describer,
-                                       EmitMode p_emitMode) throws ParserError
+                                       TemplateDescriber p_describer) throws ParserError
     {
         final FragmentUnit fragmentUnitImpl =
             m_fragParams.remove(p_fragmentUnitIntf.getName());
@@ -130,7 +128,7 @@ public abstract class AbstractCallStatement
         fragmentUnitImpl.printRenderArgsDecl(p_writer);
         p_writer.closeList();
         p_writer.println(" throws "+ ClassNames.IOEXCEPTION);
-        fragmentUnitImpl.generateRenderBody(p_writer, p_describer, p_emitMode);
+        fragmentUnitImpl.generateRenderBody(p_writer, p_describer);
 
         p_writer.closeBlock();
     }
@@ -138,8 +136,7 @@ public abstract class AbstractCallStatement
     protected void makeFragmentImplClasses(
         List<FragmentArgument> p_fragmentInterfaces,
         CodeWriter p_writer,
-        TemplateDescriber p_describer,
-        EmitMode p_emitMode) throws ParserError
+        TemplateDescriber p_describer) throws ParserError
     {
         if (m_fragParams.size() == 1
             && m_fragParams.keySet().iterator().next() == null)
@@ -166,8 +163,7 @@ public abstract class AbstractCallStatement
             makeFragmentImplClass
                 (arg.getFragmentUnit(),
                  p_writer,
-                 p_describer,
-                 p_emitMode);
+                 p_describer);
         }
     }
 

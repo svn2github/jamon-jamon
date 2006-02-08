@@ -24,10 +24,13 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Properties;
 
 import org.jamon.TemplateLocation;
 import org.jamon.TemplateResourceLocation;
 import org.jamon.TemplateSource;
+import org.jamon.emit.EmitMode;
+
 import junit.framework.TestCase;
 
 public class AnalyzerTest extends TestCase
@@ -64,6 +67,11 @@ public class AnalyzerTest extends TestCase
             return new TemplateResourceLocation(p_templatePath);
         }
 
+        public Properties getProperties() throws IOException
+        {
+            return new Properties();
+        }
+
         private final byte[] m_bytes;
     }
 
@@ -89,7 +97,8 @@ public class AnalyzerTest extends TestCase
         return new Analyzer(
             PATH,
             new TemplateDescriber(new MockTemplateSource(p_templateText),
-                getClass().getClassLoader()))
+                                  getClass().getClassLoader(),
+                                  EmitMode.STANDARD))
         .analyze();
     }
 

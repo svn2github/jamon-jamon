@@ -22,7 +22,6 @@ package org.jamon.codegen;
 
 import org.jamon.ParserError;
 import org.jamon.ParserErrors;
-import org.jamon.emit.EmitMode;
 import org.jamon.node.Location;
 
 public class FargCallStatement
@@ -54,8 +53,7 @@ public class FargCallStatement
     }
 
     public void generateSource(CodeWriter p_writer,
-                               TemplateDescriber p_describer,
-                               EmitMode p_emitMode) throws ParserError
+                               TemplateDescriber p_describer) throws ParserError
     {
         generateSourceLine(p_writer);
         String tn = getPath();
