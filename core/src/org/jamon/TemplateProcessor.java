@@ -89,26 +89,14 @@ public class TemplateProcessor
         }
         catch (RuntimeException e)
         {
-            try
-            {
-                out.close();
-                javaFile.delete();
-            }
-            finally
-            {
-            }
+            out.close();
+            javaFile.delete();
             throw e;
         }
         catch (IOException e)
         {
-            try
-            {
-                out.close();
-                javaFile.delete();
-            }
-            finally
-            {
-            }
+            out.close();
+            javaFile.delete();
             throw e;
         }
         out.close();
@@ -122,26 +110,14 @@ public class TemplateProcessor
         }
         catch (RuntimeException e)
         {
-            try
-            {
-                out.close();
-                javaFile.delete();
-            }
-            finally
-            {
-            }
+            out.close();
+            javaFile.delete();
             throw e;
         }
         catch (IOException e)
         {
-            try
-            {
-                out.close();
-                javaFile.delete();
-            }
-            finally
-            {
-            }
+            out.close();
+            javaFile.delete();
             throw e;
         }
         out.close();
