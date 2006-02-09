@@ -127,7 +127,15 @@ public class FileTemplateSource
         File propertiesFile = new File(m_templateSourceDir, "jamon.properties");
         if (propertiesFile.canRead())
         {
-            properties.load(new FileInputStream(propertiesFile));
+            FileInputStream fileInputStream = new FileInputStream(propertiesFile);
+            try
+            {
+                properties.load(fileInputStream);
+            }
+            finally
+            {
+                fileInputStream.close();
+            }
         }
         return properties;
     }
