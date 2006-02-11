@@ -23,20 +23,19 @@ package org.jamon.codegen;
 import java.io.OutputStream;
 import java.util.Iterator;
 
-public class ProxyGenerator
+public class ProxyGenerator implements SourceGenerator
 {
-    public ProxyGenerator(OutputStream p_out,
-                          TemplateDescriber p_describer,
+    public ProxyGenerator(TemplateDescriber p_describer,
                           TemplateUnit p_templateUnit)
     {
-        m_writer = new CodeWriter(p_out);
         m_describer = p_describer;
         m_templateUnit = p_templateUnit;
     }
 
-    public void generateClassSource()
+    public void generateSource(OutputStream p_out)
         throws java.io.IOException
     {
+        m_writer = new CodeWriter(p_out);
         generateHeader();
         generatePrologue();
         generateImports();

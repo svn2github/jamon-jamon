@@ -38,6 +38,7 @@ import org.jamon.util.ExternalJavaCompiler;
 import org.jamon.util.InternalJavaCompiler;
 import org.jamon.util.StringUtils;
 import org.jamon.util.WorkDirClassLoader;
+import org.jamon.codegen.SourceGenerator;
 import org.jamon.codegen.TemplateDescriber;
 import org.jamon.codegen.Analyzer;
 import org.jamon.codegen.ImplGenerator;
@@ -543,6 +544,24 @@ public class RecompilingTemplateManager
         return file;
     }
 
+    private void generateSource(
+        String p_filename, SourceGenerator p_sourceGenerator) throws IOException
+    {
+        File javaFile = getWriteableFile(p_filename);
+        FileOutputStream out = new FileOutputStream(javaFile);
+        try
+        {
+            p_sourceGenerator.generateSource(out);
+            out.close();
+        }
+        catch (IOException e)
+        {
+            out.close();
+            javaFile.delete();
+            throw e;
+        }
+    }
+
     /**
      * @return dependencies
      */
@@ -557,22 +576,26 @@ public class RecompilingTemplateManager
 
         TemplateUnit templateUnit = new Analyzer(p_path,p_describer).analyze();
 
-        File javaFile = getWriteableFile(javaImpl(p_path));
-        FileOutputStream out = new FileOutputStream(javaFile);
-        try
-        {
-            new ImplGenerator(out, p_describer, templateUnit)
-                .generateSource();
-            out.close();
-            return templateUnit.getTemplateDependencies();
-        }
-        catch (IOException e)
-        {
-            out.close();
-            javaFile.delete();
-            throw e;
-        }
+        generateSource(
+            javaImpl(p_path), new ImplGenerator(p_describer, templateUnit));
+        return templateUnit.getTemplateDependencies();
     }
+
+
+    private void generateIntf(String p_path,
+                              TemplateDescriber p_describer,
+                              TemplateUnit p_templateUnit)
+        throws IOException
+    {
+        if (TRACE)
+        {
+            trace("generating intf for " + p_path);
+        }
+
+        generateSource(javaIntf(p_path),
+                       new ProxyGenerator(p_describer, p_templateUnit));
+    }
+
 
     private String getIntfSignatureFromClass(String p_path,
                                              ClassLoader p_loader)
@@ -611,31 +634,6 @@ public class RecompilingTemplateManager
     {
         return ! p_signature.equals(getIntfSignatureFromClass(p_path,
                                                               p_loader));
-    }
-
-    private void generateIntf(String p_path,
-                                 TemplateDescriber p_describer,
-                                 TemplateUnit p_templateUnit)
-        throws IOException
-    {
-        if (TRACE)
-        {
-            trace("generating intf for " + p_path);
-        }
-        File javaFile = getWriteableFile(javaIntf(p_path));
-        FileOutputStream out = new FileOutputStream(javaFile);
-        try
-        {
-            new ProxyGenerator(out, p_describer, p_templateUnit)
-                .generateClassSource();
-            out.close();
-        }
-        catch (IOException e)
-        {
-            out.close();
-            javaFile.delete();
-            throw e;
-        }
     }
 
     private String compile(Collection<String> p_sourceFiles)

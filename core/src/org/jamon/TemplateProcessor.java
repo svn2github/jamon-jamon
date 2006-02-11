@@ -26,6 +26,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 import org.jamon.util.StringUtils;
+import org.jamon.codegen.SourceGenerator;
 import org.jamon.codegen.TemplateDescriber;
 import org.jamon.codegen.Analyzer;
 import org.jamon.codegen.ImplGenerator;
@@ -73,40 +74,26 @@ public class TemplateProcessor
 
         File pkgDir = new File(m_destDir,
                                StringUtils.classNameToFilePath(pkg));
-        File javaFile = new File(pkgDir, className + ".java");
 
         TemplateUnit templateUnit = new Analyzer
             ("/" + StringUtils.filePathToTemplatePath(templateName),
              m_describer)
             .analyze();
         pkgDir.mkdirs();
+        generateSource(new File(pkgDir, className + ".java"),
+                       new ProxyGenerator(m_describer, templateUnit));
+
+        generateSource(new File(pkgDir, className + "Impl.java"),
+                       new ImplGenerator(m_describer, templateUnit));
+    }
+
+    private void generateSource(File javaFile, SourceGenerator sourceGenerator)
+        throws IOException
+    {
         FileOutputStream out = new FileOutputStream(javaFile);
-
         try
         {
-            new ProxyGenerator(out, m_describer, templateUnit)
-                .generateClassSource();
-        }
-        catch (RuntimeException e)
-        {
-            out.close();
-            javaFile.delete();
-            throw e;
-        }
-        catch (IOException e)
-        {
-            out.close();
-            javaFile.delete();
-            throw e;
-        }
-        out.close();
-
-        javaFile = new File(pkgDir, className + "Impl.java");
-        out = new FileOutputStream(javaFile);
-        try
-        {
-            new ImplGenerator(out, m_describer, templateUnit)
-                .generateSource();
+            sourceGenerator.generateSource(out);
         }
         catch (RuntimeException e)
         {

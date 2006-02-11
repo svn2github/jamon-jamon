@@ -26,20 +26,19 @@ import java.util.Iterator;
 import org.jamon.ParserError;
 import org.jamon.ParserErrors;
 
-public class ImplGenerator
+public class ImplGenerator implements SourceGenerator
 {
-    public ImplGenerator(OutputStream p_out,
-                         TemplateDescriber p_describer,
+    public ImplGenerator(TemplateDescriber p_describer,
                          TemplateUnit p_templateUnit)
     {
-        m_writer = new CodeWriter(p_out);
         m_describer = p_describer;
         m_templateUnit = p_templateUnit;
     }
 
-    public void generateSource()
+    public void generateSource(OutputStream p_out)
         throws java.io.IOException
     {
+        m_writer = new CodeWriter(p_out);
         try
         {
             generateHeader();
@@ -60,7 +59,7 @@ public class ImplGenerator
         }
     }
 
-    private final CodeWriter m_writer;
+    private CodeWriter m_writer;
     private final TemplateDescriber m_describer;
     private final TemplateUnit m_templateUnit;
 
