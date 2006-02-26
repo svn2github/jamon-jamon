@@ -157,7 +157,7 @@ public class PositionalPushbackReaderTest extends TestCase
     {
         PositionalPushbackReader reader = makeReader("123");
         int c;
-        while ((c = reader.read()) >= 0);
+        while ((c = reader.read()) >= 0) {}
         reader.unread(c);
         assertEquals(-1, reader.read());
     }
