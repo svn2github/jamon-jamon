@@ -20,8 +20,6 @@
 
 package org.jamon.parser;
 
-import java.io.IOException;
-
 import org.jamon.ParserErrors;
 import org.jamon.node.MethodNode;
 import org.jamon.node.Location;
@@ -31,14 +29,12 @@ public class MethodParser extends SubcomponentParser<MethodNode>
     /**
      * @param p_reader
      * @param p_errors
-     * @throws IOException
      */
     public MethodParser(
         String p_name,
         Location p_tagLocation,
         PositionalPushbackReader p_reader,
         ParserErrors p_errors)
-        throws IOException
     {
         super(new MethodNode(p_tagLocation, p_name), p_reader, p_errors);
     }

@@ -31,7 +31,6 @@ public abstract class SubcomponentParser<Node extends AbstractBodyNode>
     protected SubcomponentParser(Node p_node,
                                  PositionalPushbackReader p_reader,
                                  ParserErrors p_errors)
-        throws IOException
     {
         super(p_node, p_reader, p_errors);
     }

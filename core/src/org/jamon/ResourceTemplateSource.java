@@ -64,7 +64,6 @@ public class ResourceTemplateSource
     }
 
     public boolean available(String p_templatePath)
-        throws IOException
     {
         // FIXME: is this the way to implement this?
         return getUrl(p_templatePath) != null;

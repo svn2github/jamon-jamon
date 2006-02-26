@@ -42,17 +42,17 @@ public class AnalyzerTest extends TestCase
             m_bytes = p_content.getBytes();
         }
 
-        public long lastModified(String p_templatePath) throws IOException
+        public long lastModified(String p_templatePath)
         {
             return 0;
         }
 
-        public boolean available(String p_templatePath) throws IOException
+        public boolean available(String p_templatePath)
         {
             return false;
         }
 
-        public InputStream getStreamFor(String p_templatePath) throws IOException
+        public InputStream getStreamFor(String p_templatePath)
         {
             return new ByteArrayInputStream(m_bytes);
         }
@@ -67,7 +67,7 @@ public class AnalyzerTest extends TestCase
             return new TemplateResourceLocation(p_templatePath);
         }
 
-        public Properties getProperties() throws IOException
+        public Properties getProperties()
         {
             return new Properties();
         }

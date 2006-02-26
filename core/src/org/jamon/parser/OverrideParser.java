@@ -31,14 +31,12 @@ public class OverrideParser extends SubcomponentParser<OverrideNode>
     /**
      * @param p_reader
      * @param p_errors
-     * @throws IOException
      */
     public OverrideParser(
         String p_name,
         Location p_tagLocation,
         PositionalPushbackReader p_reader,
         ParserErrors p_errors)
-        throws IOException
     {
         super(new OverrideNode(p_tagLocation, p_name), p_reader, p_errors);
     }

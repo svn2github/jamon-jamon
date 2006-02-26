@@ -34,15 +34,14 @@ public class TypeNameParser extends ClassNameParser
         super(p_location, p_reader, p_errors);
     }
 
-    @Override
-    protected void checkForArrayBrackets() throws IOException, ParserError
+    @Override protected void checkForArrayBrackets() throws IOException
     {
         while (readChar('['))
         {
             soakWhitespace();
             if (!readChar(']'))
             {
-                addError(m_reader.getNextLocation(), 
+                addError(m_reader.getNextLocation(),
                          INCOMPLETE_ARRAY_SPECIFIER_ERROR);
                 return;
             }

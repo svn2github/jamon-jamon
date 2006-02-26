@@ -60,7 +60,7 @@ public class AbstractTypeParser extends AbstractParser
         parseTypeElaborations();
     }
 
-    protected void parseTypeElaborations()
+    @SuppressWarnings("unused") protected void parseTypeElaborations()
         throws IOException, NotAnIdentifierException, ParserError
     {
     }

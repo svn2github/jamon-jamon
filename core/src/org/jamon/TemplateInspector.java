@@ -20,7 +20,6 @@
 
 package org.jamon;
 
-import java.io.IOException;
 import java.io.Writer;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -127,8 +126,7 @@ public class TemplateInspector
      */
     public void render(Writer p_writer, Map<String, Object> p_argMap)
         throws InvalidTemplateException,
-               UnknownArgumentsException,
-               IOException
+               UnknownArgumentsException
     {
         render(p_writer, p_argMap, false);
     }
@@ -145,8 +143,7 @@ public class TemplateInspector
                        Map<String, Object> p_argMap,
                        boolean p_ignoreUnusedParams)
         throws InvalidTemplateException,
-               UnknownArgumentsException,
-               IOException
+               UnknownArgumentsException
     {
         try
         {

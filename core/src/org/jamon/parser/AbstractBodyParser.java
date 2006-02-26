@@ -81,7 +81,6 @@ public abstract class AbstractBodyParser<Node extends AbstractBodyNode>
         Node p_rootNode,
         PositionalPushbackReader p_reader,
         ParserErrors p_errors)
-        throws IOException
     {
         super(p_reader, p_errors);
         m_root = p_rootNode;
@@ -461,7 +460,7 @@ public abstract class AbstractBodyParser<Node extends AbstractBodyNode>
      * @param p_tagLocation The tag location
      * @throws IOException
      */
-    protected void handleTagClose(
+    @SuppressWarnings("unused") protected void handleTagClose(
         final String p_tagName,
         final Location p_tagLocation)
         throws IOException
@@ -480,6 +479,7 @@ public abstract class AbstractBodyParser<Node extends AbstractBodyNode>
      * @return <code>true</code> if this parser is done
      * @throws IOException
      **/
+    @SuppressWarnings("unused")
     protected boolean handleNamedFragmentClose(Location p_tagLocation)
         throws IOException
     {
@@ -492,6 +492,7 @@ public abstract class AbstractBodyParser<Node extends AbstractBodyNode>
      * @return <code>true</code> if this parser is done
      * @throws IOException
      **/
+    @SuppressWarnings("unused")
     protected boolean handleFragmentsClose(Location p_tagLocation)
         throws IOException
     {
@@ -502,6 +503,7 @@ public abstract class AbstractBodyParser<Node extends AbstractBodyNode>
     /**
      * @param p_tagLocation location of the def tag
      */
+    @SuppressWarnings("unused")
     protected void handleMethodTag(Location p_tagLocation) throws IOException
     {
         addError(
@@ -512,6 +514,7 @@ public abstract class AbstractBodyParser<Node extends AbstractBodyNode>
     /**
      * @param p_tagLocation location of the def tag
      */
+    @SuppressWarnings("unused")
     protected void handleOverrideTag(Location p_tagLocation) throws IOException
     {
         addError(
@@ -522,6 +525,7 @@ public abstract class AbstractBodyParser<Node extends AbstractBodyNode>
     /**
      * @param p_tagLocation location of the def tag
      */
+    @SuppressWarnings("unused")
     protected void handleDefTag(Location p_tagLocation) throws IOException
     {
         addError(
@@ -529,8 +533,8 @@ public abstract class AbstractBodyParser<Node extends AbstractBodyNode>
             "<%def> sections only allowed at the top level of a document");
     }
 
-    protected void handleAbsMethodTag(Location p_tagLocation)
-        throws IOException
+    @SuppressWarnings("unused")
+    protected void handleAbsMethodTag(Location p_tagLocation) throws IOException
     {
         addError(
             p_tagLocation,
@@ -655,33 +659,39 @@ public abstract class AbstractBodyParser<Node extends AbstractBodyNode>
         }
     }
 
+    @SuppressWarnings("unused")
     protected void handleElseTag(Location p_tagLocation) throws IOException
     {
         addError(p_tagLocation, ENCOUNTERED_ELSE_TAG_WITHOUT_PRIOR_IF_TAG);
     }
 
+    @SuppressWarnings("unused")
     protected void handleElseIfTag(Location p_tagLocation) throws IOException
     {
         addError(p_tagLocation, ENCOUNTERED_ELSEIF_TAG_WITHOUT_PRIOR_IF_TAG);
     }
 
+    @SuppressWarnings("unused")
     protected void handleParentArgsNode(Location p_tagLocation)
         throws IOException
     {
         addError(p_tagLocation, PARENT_ARGS_TAG_IN_SUBCOMPONENT);
     }
 
+    @SuppressWarnings("unused")
     protected void handleParentMarkerTag(Location p_tagLocation)
         throws IOException
     {
         addError(p_tagLocation, PARENT_MARKER_TAG_IN_SUBCOMPONENT);
     }
 
+    @SuppressWarnings("unused")
     protected void handleEscapeTag(Location p_tagLocation) throws IOException
     {
         addError(p_tagLocation, ESCAPE_TAG_IN_SUBCOMPONENT);
     }
 
+    @SuppressWarnings("unused")
     protected void handleGenericTag(Location p_tagLocation) throws IOException
     {
         addError(p_tagLocation, GENERIC_TAG_IN_SUBCOMPONENT);
@@ -755,27 +765,32 @@ public abstract class AbstractBodyParser<Node extends AbstractBodyNode>
         }
     }
 
+    @SuppressWarnings("unused")
     protected void handleClassTag(Location p_tagLocation) throws IOException
     {
         addError(p_tagLocation, CLASS_TAG_IN_SUBCOMPONENT);
     }
 
+    @SuppressWarnings("unused")
     protected void handleExtendsTag(Location p_tagLocation) throws IOException
     {
         addError(p_tagLocation, EXTENDS_TAG_IN_SUBCOMPONENT);
     }
 
+    @SuppressWarnings("unused")
     protected void handleImplementsTag(Location p_tagLocation)
         throws IOException
     {
         addError(p_tagLocation, IMPLEMENTS_TAG_IN_SUBCOMPONENT);
     }
 
+    @SuppressWarnings("unused")
     protected void handleImportTag(Location p_tagLocation) throws IOException
     {
         addError(p_tagLocation, IMPORT_TAG_IN_SUBCOMPONENT);
     }
 
+    @SuppressWarnings("unused")
     protected void handleAliasesTag(Location p_tagLocation) throws IOException
     {
         addError(p_tagLocation, ALIASES_TAG_IN_SUBCOMPONENT);

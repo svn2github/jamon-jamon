@@ -36,10 +36,9 @@ public class FragmentArgsParser extends AbstractArgsParser
     {
         return m_fragmentArgsNode;
     }
-    
+
     @Override protected boolean handleDefaultValue(
         AbstractArgsNode argsNode, ArgTypeNode argType, ArgNameNode argName)
-        throws IOException, ParserError
     {
         //Fragment arguments cannot have default values
         return false;
@@ -60,11 +59,11 @@ public class FragmentArgsParser extends AbstractArgsParser
 
     @Override protected AbstractArgsNode makeArgsNode(Location p_tagLocation)
     {
-        return m_fragmentArgsNode = 
+        return m_fragmentArgsNode =
             new FragmentArgsNode(p_tagLocation, m_fragmentName);
     }
 
-    @Override protected boolean finishOpenTag(Location p_tagLocation) 
+    @Override protected boolean finishOpenTag(Location p_tagLocation)
         throws IOException
     {
         if(!soakWhitespace())
@@ -92,7 +91,7 @@ public class FragmentArgsParser extends AbstractArgsParser
             }
             else
             {
-                m_fragmentArgsNode = 
+                m_fragmentArgsNode =
                     new FragmentArgsNode(p_tagLocation, m_fragmentName);
                 soakWhitespace();
             }
@@ -100,7 +99,7 @@ public class FragmentArgsParser extends AbstractArgsParser
         }
         return checkForTagClosure(p_tagLocation);
     }
-    
+
     private String m_fragmentName;
     private FragmentArgsNode m_fragmentArgsNode;
 }

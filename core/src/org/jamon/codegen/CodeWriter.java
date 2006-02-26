@@ -26,7 +26,7 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
-import org.jamon.node.Location;;
+import org.jamon.node.Location;
 
 public class CodeWriter
 {

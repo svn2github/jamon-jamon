@@ -87,7 +87,6 @@ public class CodeWriterTest
     }
 
     public void testClosingUnopenedList()
-        throws IOException
     {
         try
         {
@@ -98,7 +97,6 @@ public class CodeWriterTest
     }
 
     public void testPrintArgOutsideOfList()
-        throws IOException
     {
         try
         {

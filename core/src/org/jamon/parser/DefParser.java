@@ -20,8 +20,6 @@
 
 package org.jamon.parser;
 
-import java.io.IOException;
-
 import org.jamon.ParserErrors;
 import org.jamon.node.DefNode;
 import org.jamon.node.Location;
@@ -31,14 +29,12 @@ public class DefParser extends SubcomponentParser<DefNode>
     /**
      * @param p_reader
      * @param p_errors
-     * @throws IOException
      */
     public DefParser(
         String p_name,
         Location p_tagLocation,
         PositionalPushbackReader p_reader,
         ParserErrors p_errors)
-        throws IOException
     {
         super(new DefNode(p_tagLocation, p_name), p_reader, p_errors);
     }

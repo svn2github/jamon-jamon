@@ -533,7 +533,6 @@ public class RecompilingTemplateManager
     }
 
     private File getWriteableFile(String p_filename)
-        throws IOException
     {
         File file = new File(p_filename);
         File parent = file.getParentFile();

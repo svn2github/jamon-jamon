@@ -16,7 +16,7 @@ public class IfParser extends AbstractFlowControlBlockParser<AbstractBodyNode>
 
     public IfParser(AbstractBodyNode p_node,
                     PositionalPushbackReader p_reader,
-                    ParserErrors p_errors) throws IOException
+                    ParserErrors p_errors)
     {
         super(p_node, p_reader, p_errors);
     }

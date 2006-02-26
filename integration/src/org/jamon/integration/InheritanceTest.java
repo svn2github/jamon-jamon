@@ -20,7 +20,6 @@
 
 package org.jamon.integration;
 
-import java.io.IOException;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -232,7 +231,6 @@ public class InheritanceTest
     }
 
     private void checkCompilationFailure(String p_path)
-        throws IOException
     {
         try
         {

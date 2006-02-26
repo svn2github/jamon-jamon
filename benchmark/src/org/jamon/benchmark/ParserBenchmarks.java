@@ -55,7 +55,7 @@ public class ParserBenchmarks
             try
             {
                 input = new FileInputStream(p_file);
-                final int bufferSize = 102400;;
+                final int bufferSize = 102400;
                 byte[] buffer = new byte[bufferSize];
                 m_contents = new byte[input.read(buffer, 0, bufferSize)];
                 System.arraycopy(buffer, 0, m_contents, 0, m_contents.length);
@@ -96,7 +96,7 @@ public class ParserBenchmarks
             return null;
         }
 
-        public Properties getProperties() throws IOException
+        public Properties getProperties()
         {
             return new Properties();
         }

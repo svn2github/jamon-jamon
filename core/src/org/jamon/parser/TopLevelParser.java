@@ -58,7 +58,6 @@ public class TopLevelParser extends AbstractBodyParser<TopNode>
         "Expecting import or </%import>";
 
     public TopLevelParser(TemplateLocation p_location, Reader p_reader)
-        throws IOException
     {
         super(new TopNode(new Location(p_location, 1, 1)),
               new PositionalPushbackReader(p_location, p_reader, 2),

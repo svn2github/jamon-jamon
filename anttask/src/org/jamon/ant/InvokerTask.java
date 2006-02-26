@@ -211,7 +211,6 @@ public class InvokerTask
     }
 
     public void setOutput(File p_output)
-        throws IOException
     {
         if (m_outputPropertyName != null)
         {

@@ -23,7 +23,6 @@ package org.jamon.integration;
 import java.io.File;
 import java.io.Writer;
 import java.io.StringWriter;
-import java.io.IOException;
 import java.util.Iterator;
 
 import org.jamon.ParserError;
@@ -64,33 +63,28 @@ public abstract class TestBase
     }
 
     protected void checkOutputContains(String p_expected)
-        throws IOException
     {
         assertTrue("output doesn't contain: \"" + p_expected + "\"",
                    getOutput().indexOf(p_expected) >= 0);
     }
 
     protected void checkOutput(String p_expected)
-        throws IOException
     {
         assertEquals(p_expected, getOutput());
     }
 
     protected void checkOutput(String p_message, String p_expected)
-        throws IOException
     {
         assertEquals(p_message, p_expected, getOutput());
     }
 
     protected TemplateManager getRecompilingTemplateManager()
-        throws IOException
     {
         return getRecompilingTemplateManager(EmitMode.STANDARD);
     }
 
     protected TemplateManager getRecompilingTemplateManager
         (EmitMode p_emitMode)
-        throws IOException
     {
         if(m_recompilingTemplateManager == null)
         {
@@ -102,7 +96,6 @@ public abstract class TestBase
 
     private TemplateManager constructRecompilingTemplateManager
         (EmitMode p_emitMode)
-        throws IOException
     {
         return new RecompilingTemplateManager(
             new RecompilingTemplateManager.Data()

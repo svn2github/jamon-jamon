@@ -19,17 +19,17 @@ public class TemplateDescriberTest extends TestCase
             m_properties = p_properties;
         }
 
-        public long lastModified(String p_templatePath) throws IOException
+        public long lastModified(String p_templatePath)
         {
             return 0;
         }
 
-        public boolean available(String p_templatePath) throws IOException
+        public boolean available(String p_templatePath)
         {
             return false;
         }
 
-        public InputStream getStreamFor(String p_templatePath) throws IOException
+        public InputStream getStreamFor(String p_templatePath)
         {
             return null;
         }
@@ -44,7 +44,7 @@ public class TemplateDescriberTest extends TestCase
             return null;
         }
 
-        public Properties getProperties() throws IOException
+        public Properties getProperties()
         {
             return m_properties;
         }
