@@ -29,7 +29,7 @@ public class DeclaredMethodUnit
     implements MethodUnit
 {
     public DeclaredMethodUnit(String p_name,
-                              Unit p_parent,
+                              TemplateUnit p_parent,
                               ParserErrors p_errors,
                               boolean p_isAbstract)
     {
@@ -38,7 +38,7 @@ public class DeclaredMethodUnit
     }
 
     public DeclaredMethodUnit(
-        String p_name, Unit p_parent, ParserErrors p_errors)
+        String p_name, TemplateUnit p_parent, ParserErrors p_errors)
     {
         this(p_name, p_parent, p_errors, false);
     }
@@ -51,6 +51,13 @@ public class DeclaredMethodUnit
     public boolean isAbstract()
     {
         return m_isAbstract;
+    }
+
+    @Override public boolean canThrowIOException()
+    {
+        return m_isAbstract
+        || super.canThrowIOException()
+        || ((TemplateUnit) getParentUnit()).isParent();
     }
 
     private final boolean m_isAbstract;

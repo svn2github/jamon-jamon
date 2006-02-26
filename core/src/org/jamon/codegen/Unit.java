@@ -36,4 +36,5 @@ public interface Unit extends StatementBlock
     void printRenderArgsDecl(CodeWriter p_writer);
     void generateRenderBody(CodeWriter p_writer,
                             TemplateDescriber p_describer) throws ParserError;
+    boolean canThrowIOException();
 }

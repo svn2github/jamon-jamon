@@ -214,7 +214,10 @@ public class ImplGenerator implements SourceGenerator
             defUnit.printRenderArgsDecl(m_writer);
             m_writer.closeList();
             m_writer.println();
-            m_writer.println("  throws " + ClassNames.IOEXCEPTION);
+            if (defUnit.canThrowIOException())
+            {
+                m_writer.println("  throws " + ClassNames.IOEXCEPTION);
+            }
             defUnit.generateRenderBody(m_writer, m_describer);
             m_writer.println();
         }
@@ -262,7 +265,10 @@ public class ImplGenerator implements SourceGenerator
         p_methodUnit.printRenderArgsDecl(m_writer);
         m_writer.closeList();
         m_writer.println();
-        m_writer.println("  throws " + ClassNames.IOEXCEPTION);
+        if (p_methodUnit.canThrowIOException())
+        {
+            m_writer.println("  throws " + ClassNames.IOEXCEPTION);
+        }
         if (p_methodUnit.isAbstract())
         {
             m_writer.println("  ;");
@@ -295,14 +301,16 @@ public class ImplGenerator implements SourceGenerator
             m_writer.println(
                 "@Override protected void child_render_"
                 + m_templateUnit.getInheritanceDepth()
-                + "("  + ArgNames.MAYBE_UNUSED_WRITER_DECL + ") throws "
-                + ClassNames.IOEXCEPTION);
+                + "("  + ArgNames.MAYBE_UNUSED_WRITER_DECL + ")");
         }
         else
         {
             m_writer.println("public void renderNoFlush("
-                             + ArgNames.MAYBE_UNUSED_WRITER_DECL + ") throws "
-                             + ClassNames.IOEXCEPTION);
+                             + ArgNames.MAYBE_UNUSED_WRITER_DECL + ")");
+        }
+        if (m_templateUnit.canThrowIOException())
+        {
+            m_writer.println("  throws " + ClassNames.IOEXCEPTION);
         }
         m_templateUnit.generateRenderBody(m_writer, m_describer);
 

@@ -51,6 +51,11 @@ public abstract class AbstractStatementBlock implements StatementBlock
         return m_statements;
     }
 
+    public boolean canThrowIOException()
+    {
+        return ! m_statements.isEmpty();
+    }
+
     public FragmentUnit addFragment(FragmentArgsNode p_node, GenericParams p_genericParams)
     {
         throw new UnsupportedOperationException();
