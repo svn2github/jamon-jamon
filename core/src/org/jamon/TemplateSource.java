@@ -76,11 +76,13 @@ public interface TemplateSource
     TemplateLocation getTemplateLocation(String p_templatePath);
 
     /**
-     * Get any properties that might be used to influence the processing of
-     * templates.
-     *
-     * @return properties used to influence the processing of templates
+     * Load any properties that might be used to influence the processing of
+     * templates within the specified directory.
+     * @param p_path The directory to to look for
+     * @param p_properties The {@code Properties} instance to add any found
+     *        properties to.
      * @throws IOException
      */
-    Properties getProperties() throws IOException;
+    void loadProperties(String p_path, Properties p_properties)
+        throws IOException;
 }

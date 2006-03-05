@@ -30,6 +30,7 @@ import java.util.Set;
 
 import org.jamon.ParserError;
 import org.jamon.ParserErrors;
+import org.jamon.emit.EmitMode;
 import org.jamon.node.*;
 import org.jamon.util.StringUtils;
 
@@ -37,19 +38,24 @@ public class Analyzer
 {
     public Analyzer(String p_templatePath,
                     TemplateDescriber p_describer,
-                    Set<String> p_children)
+                    Set<String> p_children) throws IOException
     {
-        m_templateUnit = new TemplateUnit(p_templatePath, m_errors);
+        m_templateUnit = new TemplateUnit(
+            p_templatePath,
+            m_errors,
+            p_describer.getJamonContextType(p_templatePath));
         m_templateDir =
             p_templatePath.substring(0,1 + p_templatePath.lastIndexOf('/'));
         m_currentStatementBlock = m_templateUnit;
         m_describer = p_describer;
         m_children = p_children;
+        m_emitMode = p_describer.getEmitMode(p_templatePath);
         m_templateIdentifier =
             m_describer.getExternalIdentifier(p_templatePath);
     }
 
     public Analyzer(String p_templatePath, TemplateDescriber p_describer)
+        throws IOException
     {
         this(p_templatePath, p_describer, new HashSet<String>());
     }
@@ -199,6 +205,7 @@ public class Analyzer
     private final Map<String, String> m_aliases = new HashMap<String, String>();
     private final String m_templateDir;
     private final String m_templateIdentifier;
+    private final EmitMode m_emitMode;
     private ParserErrors m_errors = new ParserErrors();
 
     private String getAbsolutePath(String p_path)
@@ -654,7 +661,8 @@ public class Analyzer
                          (p_node.getEmitExpression(),
                           new EmitAdapter().getEscape(p_node.getEscaping()),
                           p_node.getLocation(),
-                          m_templateIdentifier));
+                          m_templateIdentifier,
+                          m_emitMode));
         }
     }
 
@@ -722,11 +730,13 @@ public class Analyzer
                 else
                 {
                     getTemplateUnit().addCallPath(getAbsolutePath(path));
-                    return new ComponentCallStatement(getAbsolutePath(path),
-                                                      paramValues,
-                                                      p_node.getLocation(),
-                                                      m_templateIdentifier,
-                                                      genericParams);
+                    return new ComponentCallStatement(
+                        getAbsolutePath(path),
+                        paramValues,
+                        p_node.getLocation(),
+                        m_templateIdentifier,
+                        genericParams,
+                        getTemplateUnit().getJamonContextType());
                 }
             }
         }

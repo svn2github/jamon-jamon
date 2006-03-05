@@ -101,8 +101,12 @@ public class FileTemplateSource
                         templatePathToFilePath(p_templatePath) + m_extension);
     }
 
-    private String templatePathToFilePath(String p_path)
+    private static String templatePathToFilePath(String p_path)
     {
+        if (File.separatorChar == '/')
+        {
+            return p_path;
+        }
         StringTokenizer tokenizer = new StringTokenizer(p_path, "/");
         StringBuilder path = new StringBuilder(p_path.length());
         while (tokenizer.hasMoreTokens())
@@ -121,23 +125,25 @@ public class FileTemplateSource
         return new TemplateFileLocation(getExternalIdentifier(p_templatePath));
     }
 
-    public Properties getProperties() throws IOException
+    public void loadProperties(String p_path, Properties p_properties)
+        throws IOException
     {
-        Properties properties = new Properties();
-        File propertiesFile = new File(m_templateSourceDir, "jamon.properties");
+        File propertiesFile = new File(
+            m_templateSourceDir,
+            templatePathToFilePath(p_path + "/jamon.properties"));
         if (propertiesFile.canRead())
         {
-            FileInputStream fileInputStream = new FileInputStream(propertiesFile);
+            FileInputStream fileInputStream =
+                new FileInputStream(propertiesFile);
             try
             {
-                properties.load(fileInputStream);
+                p_properties.load(fileInputStream);
             }
             finally
             {
                 fileInputStream.close();
             }
         }
-        return properties;
     }
 
     private final File m_templateSourceDir;

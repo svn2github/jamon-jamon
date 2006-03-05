@@ -31,7 +31,6 @@ import org.jamon.RecompilingTemplateManager;
 import org.jamon.TemplateFileLocation;
 import org.jamon.TemplateManager;
 import org.jamon.TemplateProcessor;
-import org.jamon.emit.EmitMode;
 import org.jamon.node.Location;
 
 import junit.framework.TestCase;
@@ -80,26 +79,18 @@ public abstract class TestBase
 
     protected TemplateManager getRecompilingTemplateManager()
     {
-        return getRecompilingTemplateManager(EmitMode.STANDARD);
-    }
-
-    protected TemplateManager getRecompilingTemplateManager
-        (EmitMode p_emitMode)
-    {
         if(m_recompilingTemplateManager == null)
         {
             m_recompilingTemplateManager =
-                constructRecompilingTemplateManager(p_emitMode);
+                constructRecompilingTemplateManager();
         }
         return m_recompilingTemplateManager;
     }
 
-    private TemplateManager constructRecompilingTemplateManager
-        (EmitMode p_emitMode)
+    private TemplateManager constructRecompilingTemplateManager()
     {
         return new RecompilingTemplateManager(
             new RecompilingTemplateManager.Data()
-                .setEmitMode(p_emitMode)
                 .setSourceDir(SOURCE_DIR)
                 .setJavaCompiler(System.getProperty
                                  ("org.jamon.integration.compiler"))
@@ -128,22 +119,15 @@ public abstract class TestBase
         return removeCrs(m_writer.getBuffer());
     }
 
-    protected void generateSource(String p_path, EmitMode p_emitMode)
+    protected void generateSource(String p_path)
         throws Exception
     {
         String integrationDir =
             System.getProperty("org.jamon.integration.basedir");
         new TemplateProcessor(new File(integrationDir + "/build/src"),
                               new File(integrationDir + "/templates"),
-                              getClass().getClassLoader(),
-                              p_emitMode)
+                              getClass().getClassLoader())
             .generateSource(p_path);
-    }
-
-    protected void generateSource(String p_path)
-        throws Exception
-    {
-        generateSource(p_path, EmitMode.STANDARD);
     }
 
     protected void expectParserError(

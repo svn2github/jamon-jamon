@@ -44,7 +44,6 @@ import org.jamon.codegen.Analyzer;
 import org.jamon.codegen.ImplGenerator;
 import org.jamon.codegen.ProxyGenerator;
 import org.jamon.codegen.TemplateUnit;
-import org.jamon.emit.EmitMode;
 
 /**
  * An implementation of the {@link TemplateManager} interface which
@@ -113,13 +112,6 @@ public class RecompilingTemplateManager
             return this;
         }
         private String workDir;
-
-        public Data setEmitMode(EmitMode p_emitMode)
-        {
-            emitMode = p_emitMode;
-            return this;
-        }
-        private EmitMode emitMode = EmitMode.STANDARD;
 
         public Data setJavaCompiler(String p_javaCompiler)
         {
@@ -205,7 +197,6 @@ public class RecompilingTemplateManager
             ? getDefaultWorkDir()
             : p_data.workDir;
         m_javaCompiler = makeCompiler(p_data, m_workDir, m_classLoader);
-        m_emitMode = p_data.emitMode;
         if (p_data.templateSource != null)
         {
             m_templateSource = p_data.templateSource;
@@ -366,8 +357,7 @@ public class RecompilingTemplateManager
             {
                 ensureUpToDate(
                     p_path,
-                    new TemplateDescriber(
-                        m_templateSource, m_loader, m_emitMode));
+                    new TemplateDescriber(m_templateSource, m_loader));
                 return m_loader.loadClass(p_className);
             }
             catch (ClassNotFoundException e)
@@ -393,7 +383,6 @@ public class RecompilingTemplateManager
     private final ClassLoader m_classLoader;
     private final JavaCompiler m_javaCompiler;
     private final WorkDirClassLoader m_loader;
-    private final EmitMode m_emitMode;
 
     private String prefix()
     {

@@ -20,6 +20,7 @@
 
 package org.jamon.codegen;
 
+import org.jamon.emit.EmitMode;
 import org.jamon.node.Location;
 
 public class WriteStatement
@@ -28,11 +29,13 @@ public class WriteStatement
     WriteStatement(String p_expr,
                    EscapingDirective p_escapingDirective,
                    Location p_location,
-                   String p_templateIdentifier)
+                   String p_templateIdentifier,
+                   EmitMode p_emitMode)
     {
         super(p_location, p_templateIdentifier);
         m_expr = p_expr.trim();
         m_escapingDirective = p_escapingDirective;
+        m_emitMode = p_emitMode;
     }
 
     public void generateSource(CodeWriter p_writer,
@@ -42,7 +45,7 @@ public class WriteStatement
         {
             generateSourceLine(p_writer);
             p_writer.println(m_escapingDirective.toJava() + ".write("
-                             + p_describer.getEmitMode().getEmitterClassName()
+                             + m_emitMode.getEmitterClassName()
                              + ".valueOf(" + m_expr + ")"
                              + ", " + ArgNames.WRITER + ");");
         }
@@ -50,4 +53,5 @@ public class WriteStatement
 
     private final String m_expr;
     private final EscapingDirective m_escapingDirective;
+    private final EmitMode m_emitMode;
 }

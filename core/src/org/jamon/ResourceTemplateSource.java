@@ -106,15 +106,14 @@ public class ResourceTemplateSource
         return new TemplateResourceLocation(resourceName(p_templatePath));
     }
 
-    public Properties getProperties() throws IOException
+    public void loadProperties(String p_dirPath, Properties p_properties)
+        throws IOException
     {
-        Properties properties = new Properties();
         InputStream inputStream = m_classLoader.getResourceAsStream(
-            m_templateSourceDir + "/jamon.properties");
+            m_templateSourceDir + p_dirPath + "/jamon.properties");
         if (inputStream != null)
         {
-            properties.load(inputStream);
+            p_properties.load(inputStream);
         }
-        return properties;
     }
 }

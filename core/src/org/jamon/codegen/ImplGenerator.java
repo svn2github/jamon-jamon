@@ -102,10 +102,10 @@ public class ImplGenerator implements SourceGenerator
             + m_templateUnit.getGenericParams().generateGenericParamsList());
         m_writer.println();
         m_writer.openBlock();
-        if (! m_templateUnit.hasParentPath())
+        if (m_templateUnit.getJamonContextType() != null)
         {
             m_writer.println(
-                "protected final " + m_describer.getJamonContextType() +
+                "private final " + m_templateUnit.getJamonContextType() +
                 " jamonContext;");
         }
         for (Iterator<AbstractArgument> i = m_templateUnit.getVisibleArgs();
@@ -161,7 +161,7 @@ public class ImplGenerator implements SourceGenerator
         m_writer.openBlock();
         m_writer.println(
             "super(p_templateManager, " + SET_OPTS + "(p_implData));");
-        if (! m_templateUnit.hasParentPath())
+        if (m_templateUnit.getJamonContextType() != null)
         {
             m_writer.println("jamonContext = p_implData.getJamonContext();");
         }

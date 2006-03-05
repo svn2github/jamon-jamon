@@ -21,7 +21,6 @@
 package org.jamon.integration;
 
 import org.jamon.TemplateCompilationException;
-import org.jamon.emit.EmitMode;
 
 public class EmitModeTest
     extends TestBase
@@ -29,11 +28,10 @@ public class EmitModeTest
     public void testLimited()
         throws Exception
     {
-        String path = "test/jamon/broken/BadEmit1";
         try
         {
-            getRecompilingTemplateManager(EmitMode.STRICT)
-                .constructProxy(path);
+            getRecompilingTemplateManager()
+                .constructProxy("test/jamon/broken/limitedEmit/BadEmit1");
             fail();
         }
         catch (TemplateCompilationException e)
@@ -45,11 +43,10 @@ public class EmitModeTest
     public void testStrict()
         throws Exception
     {
-        String path = "test/jamon/broken/BadEmit2";
         try
         {
-            getRecompilingTemplateManager(EmitMode.STRICT)
-                .constructProxy(path);
+            getRecompilingTemplateManager()
+                .constructProxy("test/jamon/broken/strictEmit/BadEmit2");
             fail();
         }
         catch (TemplateCompilationException e)

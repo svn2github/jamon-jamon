@@ -32,20 +32,17 @@ import org.jamon.codegen.Analyzer;
 import org.jamon.codegen.ImplGenerator;
 import org.jamon.codegen.ProxyGenerator;
 import org.jamon.codegen.TemplateUnit;
-import org.jamon.emit.EmitMode;
 
 public class TemplateProcessor
 {
     public TemplateProcessor(File p_destDir,
                              File p_sourceDir,
-                             ClassLoader p_classLoader,
-                             EmitMode p_emitMode) throws IOException
+                             ClassLoader p_classLoader)
     {
         m_destDir = p_destDir;
         m_describer =
             new TemplateDescriber(new FileTemplateSource(p_sourceDir),
-                                  p_classLoader,
-                                  p_emitMode);
+                                  p_classLoader);
     }
 
     private final File m_destDir;
@@ -150,7 +147,6 @@ public class TemplateProcessor
             boolean processDirectories = false;
             File sourceDir = new File(".");
             File destDir = null;
-            EmitMode emitMode = EmitMode.STANDARD;
             while (arg < args.length && args[arg].startsWith("-"))
             {
                 if ("-h".equals(args[arg]) || "--help".equals(args[arg]))
@@ -166,17 +162,6 @@ public class TemplateProcessor
                 else if (args[arg].startsWith(DESTDIR))
                 {
                     destDir = new File(args[arg].substring(DESTDIR.length()));
-                }
-                else if (args[arg].startsWith(EMITMODE))
-                {
-                    String modeName = args[arg].substring(EMITMODE.length());
-                    emitMode = EmitMode.fromString(modeName);
-                    if (emitMode == null)
-                    {
-                        System.err.println("Unknown emit mode: " + modeName);
-                        showHelp();
-                        System.exit(1);
-                    }
                 }
                 else if (args[arg].startsWith(SRCDIR))
                 {
@@ -207,8 +192,7 @@ public class TemplateProcessor
             TemplateProcessor processor =
                 new TemplateProcessor(destDir,
                                       sourceDir,
-                                      TemplateProcessor.class.getClassLoader(),
-                                      emitMode);
+                                      TemplateProcessor.class.getClassLoader());
 
             while (arg < args.length)
             {

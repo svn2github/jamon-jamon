@@ -41,6 +41,7 @@ public class TemplateDescription
     private final int m_inheritanceDepth;
     private final Collection<String> m_abstractMethodNames;
     private final int m_genericParamsCount;
+    private final String m_jamonContextType;
 
     public final static TemplateDescription EMPTY = new TemplateDescription();
 
@@ -54,6 +55,7 @@ public class TemplateDescription
         m_inheritanceDepth = -1;
         m_abstractMethodNames = Collections.emptyList();
         m_genericParamsCount = 0;
+        m_jamonContextType = null;
     }
 
     public TemplateDescription(TemplateUnit p_templateUnit)
@@ -78,6 +80,7 @@ public class TemplateDescription
         m_inheritanceDepth = p_templateUnit.getInheritanceDepth();
         m_abstractMethodNames = p_templateUnit.getAbstractMethodNames();
         m_genericParamsCount = p_templateUnit.getGenericParams().getCount();
+        m_jamonContextType = p_templateUnit.getJamonContextType();
     }
 
     public TemplateDescription(Class p_intf)
@@ -86,7 +89,7 @@ public class TemplateDescription
         m_requiredArgs = getRequiredArgs(p_intf, "");
         m_optionalArgs = getOptionalArgs(p_intf, "");
         m_fragmentInterfaces =
-            getFragmentArgs(p_intf, "", new TemplateUnit(null, null));
+            getFragmentArgs(p_intf, "", new TemplateUnit(null, null, null));
         m_methodUnits = new HashMap<String, MethodUnit>();
         String[] methodNames = getStringArray(p_intf, "METHOD_NAMES");
         for (int i = 0; i < methodNames.length; i++)
@@ -121,6 +124,20 @@ public class TemplateDescription
             ((Integer) p_intf.getField("INHERITANCE_DEPTH").get(null));
         m_genericParamsCount =
             ((Integer) p_intf.getField("GENERICS_COUNT").get(null));
+        m_jamonContextType = computeJamonContextType(p_intf);
+    }
+
+    private static String computeJamonContextType(Class p_intf)
+        throws IllegalAccessException
+    {
+        String jamonContextType = null;
+        try
+        {
+            jamonContextType =
+                (String) p_intf.getField("JAMON_CONTEXT_TYPE").get(null);
+        }
+        catch (NoSuchFieldException e) {} //backwards compatibility
+        return jamonContextType;
     }
 
     private static List<RequiredArgument> getRequiredArgs(
@@ -227,6 +244,11 @@ public class TemplateDescription
     public int getGenericParamsCount()
     {
         return m_genericParamsCount;
+    }
+
+    public String getJamonContextType()
+    {
+        return m_jamonContextType;
     }
 
     private static<T> void addAll(Collection<T> p_collection, Iterator<T> p_iter)

@@ -25,6 +25,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.util.StringTokenizer;
 import java.io.InputStream;
 import java.io.IOException;
 
@@ -44,34 +45,16 @@ public class TemplateDescriber
     private static final String EMIT_MODE_KEY = "org.jamon.emitMode";
 
     public TemplateDescriber(TemplateSource p_templateSource,
-                             ClassLoader p_classLoader,
-                             EmitMode p_emitMode) throws IOException
+                             ClassLoader p_classLoader)
     {
         m_templateSource = p_templateSource;
         m_classLoader = p_classLoader;
-        m_properties = m_templateSource.getProperties();
-        String emitModeName = m_properties.getProperty(EMIT_MODE_KEY);
-        if (emitModeName != null)
-        {
-            m_emitMode = EmitMode.fromString(emitModeName);
-            if (m_emitMode == null)
-            {
-                throw new JamonRuntimeException(
-                    "Unknown emit mode: " + emitModeName);
-            }
-        }
-        else
-        {
-            m_emitMode = p_emitMode;
-        }
     }
 
     private final Map<String, TemplateDescription> m_descriptionCache =
         new HashMap<String, TemplateDescription>();
     private final TemplateSource m_templateSource;
     private final ClassLoader m_classLoader;
-    private final Properties m_properties;
-    private final EmitMode m_emitMode;
 
     public TemplateDescription getTemplateDescription(
         String p_path, Location p_location, String p_templateIdentifier)
@@ -180,14 +163,46 @@ public class TemplateDescriber
         return m_templateSource.getExternalIdentifier(p_path);
     }
 
-    public String getJamonContextType()
+    private Properties getProperties(String p_path) throws IOException
     {
-        return m_properties.getProperty(
-            JAMON_CONTEXT_TYPE_KEY, Object.class.getName());
+        StringTokenizer tokenizer = new StringTokenizer(p_path, "/");
+        StringBuffer partialPath = new StringBuffer("/");
+        Properties properties = new Properties();
+        while (tokenizer.hasMoreTokens())
+        {
+            m_templateSource.loadProperties(
+                partialPath.toString(), properties);
+            String nextComponent = tokenizer.nextToken();
+            if (tokenizer.hasMoreTokens()) // still talking directories
+            {
+                partialPath.append(nextComponent);
+                partialPath.append("/");
+            }
+        }
+        return properties;
     }
 
-    public EmitMode getEmitMode()
+    public String getJamonContextType(String p_path) throws IOException
     {
-        return m_emitMode;
+        return getProperties(p_path).getProperty(JAMON_CONTEXT_TYPE_KEY);
+    }
+
+    public EmitMode getEmitMode(String p_path) throws IOException
+    {
+        String emitModeName = getProperties(p_path).getProperty(EMIT_MODE_KEY);
+        if (emitModeName != null)
+        {
+            EmitMode emitMode = EmitMode.fromString(emitModeName);
+            if (emitMode == null)
+            {
+                throw new JamonRuntimeException(
+                    "Unknown emit mode: " + emitModeName);
+            }
+            return emitMode;
+        }
+        else
+        {
+            return EmitMode.STANDARD;
+        }
     }
 }

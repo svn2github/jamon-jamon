@@ -35,10 +35,12 @@ public class ComponentCallStatement
                            ParamValues p_params,
                            Location p_location,
                            String p_templateIdentifier,
-                           List<GenericCallParam> p_genericParams)
+                           List<GenericCallParam> p_genericParams,
+                           String p_callingTemlpateJamonContextType)
     {
         super(p_path, p_params, p_location, p_templateIdentifier);
         m_genericParams = p_genericParams;
+        m_callingTemlpateJamonContextType = p_callingTemlpateJamonContextType;
     }
 
     @Override
@@ -66,6 +68,15 @@ public class ComponentCallStatement
             throw new JamonRuntimeException(e);
         }
 
+        if (desc.getJamonContextType() != null
+            && m_callingTemlpateJamonContextType == null)
+        {
+            throw new ParserError(
+                getLocation(),
+                "Calling component does not have a jamonContext, but called " +
+                "component " + getPath() + " expects one of type " +
+                desc.getJamonContextType());
+        }
         if (hasGenericParams())
         {
             if (desc.getGenericParamsCount() != getGenericParamCount())
@@ -78,6 +89,7 @@ public class ComponentCallStatement
                     + desc.getGenericParamsCount());
             }
         }
+
         makeFragmentImplClasses(desc.getFragmentInterfaces(),
                                 p_writer,
                                 p_describer);
@@ -88,7 +100,10 @@ public class ComponentCallStatement
             + "new " + getComponentProxyClassName() + getGenericParams()
             +"(this.getTemplateManager());");
 
-        p_writer.println(instanceVar + ".setJamonContext(jamonContext);");
+        if (desc.getJamonContextType() != null)
+        {
+            p_writer.println(instanceVar + ".setJamonContext(jamonContext);");
+        }
 
         for (Iterator<OptionalArgument> i = desc.getOptionalArgs().iterator();
              i.hasNext(); )
@@ -161,4 +176,5 @@ public class ComponentCallStatement
 
     private static int m_uniqueId = 0;
     private final List<GenericCallParam> m_genericParams;
+    private final String m_callingTemlpateJamonContextType;
 }

@@ -411,20 +411,20 @@ public class ProxyGenerator implements SourceGenerator
             m_writer.println(ClassNames.IMPL_DATA);
         }
         m_writer.openBlock();
-        if (!m_templateUnit.hasParentPath())
+        if (m_templateUnit.isOriginatingJamonContext())
         {
             m_writer.println(
-                "private " + m_describer.getJamonContextType()
+                "private " + m_templateUnit.getJamonContextType()
                 + " m_jamonContext;");
             m_writer.println(
-                "public " + m_describer.getJamonContextType()
+                "public " + m_templateUnit.getJamonContextType()
                 + " getJamonContext()");
             m_writer.openBlock();
             m_writer.println("return m_jamonContext;");
             m_writer.closeBlock();
             m_writer.println(
                 "public void setJamonContext("
-                + m_describer.getJamonContextType() + " p_jamonContext)");
+                + m_templateUnit.getJamonContextType() + " p_jamonContext)");
             m_writer.openBlock();
             m_writer.println("m_jamonContext = p_jamonContext;");
             m_writer.closeBlock();
@@ -466,15 +466,19 @@ public class ProxyGenerator implements SourceGenerator
 
     private void generateJamonContextSetter()
     {
+        if (m_templateUnit.getJamonContextType() == null)
+        {
+            return;
+        }
         m_writer.println();
-        if (m_templateUnit.hasParentPath())
+        if (! m_templateUnit.isOriginatingJamonContext())
         {
             m_writer.print("@Override ");
         }
         m_writer.print("public " );
         printFullProxyType();
         m_writer.println(
-            " setJamonContext(" + m_describer.getJamonContextType()
+            " setJamonContext(" + m_templateUnit.getJamonContextType()
             + " p_jamonContext)");
         m_writer.openBlock();
         m_writer.println("getImplData().setJamonContext(p_jamonContext);");

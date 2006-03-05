@@ -1,7 +1,8 @@
 package org.jamon.codegen;
 
-import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 import org.jamon.TemplateLocation;
@@ -12,13 +13,11 @@ import junit.framework.TestCase;
 
 public class TemplateDescriberTest extends TestCase
 {
+    private MockTemplateSource m_mockTemplateSource;
+    private TemplateDescriber m_templateDescriber;
+
     private static class MockTemplateSource implements TemplateSource
     {
-        public MockTemplateSource(Properties p_properties)
-        {
-            m_properties = p_properties;
-        }
-
         public long lastModified(String p_templatePath)
         {
             return 0;
@@ -44,39 +43,59 @@ public class TemplateDescriberTest extends TestCase
             return null;
         }
 
-        public Properties getProperties()
+        public void setProperties(String p_path, Properties p_properties)
         {
-            return m_properties;
+            m_properties.put(p_path, p_properties);
         }
 
-        private Properties m_properties;
+        public void loadProperties(String p_path, Properties p_properties)
+        {
+            Properties properties = m_properties.get(p_path);
+            if (properties != null)
+            {
+                p_properties.putAll(properties);
+            }
+        }
+
+        private Map<String, Properties> m_properties =
+            new HashMap<String, Properties>();
     }
 
-    private TemplateDescriber makeTemplateDescriber(Properties properties) throws IOException
+    @Override protected void setUp() throws Exception
     {
-        return new TemplateDescriber(
-            new MockTemplateSource(properties), null, EmitMode.STANDARD);
+        super.setUp();
+        m_mockTemplateSource = new MockTemplateSource();
+        m_templateDescriber = new TemplateDescriber(m_mockTemplateSource, null);
     }
 
    public void testGetJamonContextType() throws Exception
     {
+        assertNull(m_templateDescriber.getJamonContextType("/foo"));
+
         Properties properties = new Properties();
-        assertEquals(
-            "java.lang.Object",
-            makeTemplateDescriber(properties).getJamonContextType());
         properties.put("org.jamon.contextType", "foo.bar");
+        m_mockTemplateSource.setProperties("/", properties);
         assertEquals(
             "foo.bar",
-            makeTemplateDescriber(properties).getJamonContextType());
+            m_templateDescriber.getJamonContextType("/foo"));
+
+        Properties subProperties = new Properties();
+        subProperties.put("org.jamon.contextType", "foo.baz");
+        m_mockTemplateSource.setProperties("/foo/", subProperties);
+        assertEquals(
+            "foo.baz",
+            m_templateDescriber.getJamonContextType("/foo/bat"));
     }
 
     public void testGetEmitMode() throws Exception
     {
         Properties properties = new Properties();
+        setUp();
         assertEquals(
-            EmitMode.STANDARD, makeTemplateDescriber(properties).getEmitMode());
+            EmitMode.STANDARD, m_templateDescriber.getEmitMode("/foo"));
         properties.put("org.jamon.emitMode", "strict");
+        m_mockTemplateSource.setProperties("/", properties);
         assertEquals(
-            EmitMode.STRICT, makeTemplateDescriber(properties).getEmitMode());
+            EmitMode.STRICT, m_templateDescriber.getEmitMode("/foo"));
     }
 }

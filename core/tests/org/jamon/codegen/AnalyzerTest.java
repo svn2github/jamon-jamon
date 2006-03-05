@@ -29,8 +29,6 @@ import java.util.Properties;
 import org.jamon.TemplateLocation;
 import org.jamon.TemplateResourceLocation;
 import org.jamon.TemplateSource;
-import org.jamon.emit.EmitMode;
-
 import junit.framework.TestCase;
 
 public class AnalyzerTest extends TestCase
@@ -67,10 +65,8 @@ public class AnalyzerTest extends TestCase
             return new TemplateResourceLocation(p_templatePath);
         }
 
-        public Properties getProperties()
-        {
-            return new Properties();
-        }
+        public void loadProperties(String p_path, Properties p_properties)
+        {}
 
         private final byte[] m_bytes;
     }
@@ -97,8 +93,7 @@ public class AnalyzerTest extends TestCase
         return new Analyzer(
             PATH,
             new TemplateDescriber(new MockTemplateSource(p_templateText),
-                                  getClass().getClassLoader(),
-                                  EmitMode.STANDARD))
+                                  getClass().getClassLoader()))
         .analyze();
     }
 
