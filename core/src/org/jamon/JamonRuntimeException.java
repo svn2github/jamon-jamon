@@ -30,8 +30,7 @@ public class JamonRuntimeException
 
     public JamonRuntimeException(String p_msg, Throwable p_rootCause)
     {
-        super(p_msg);
-        m_rootCause = p_rootCause;
+        super(p_msg, p_rootCause);
     }
 
     public JamonRuntimeException(Throwable p_rootCause)
@@ -39,11 +38,14 @@ public class JamonRuntimeException
         this(p_rootCause.getMessage(),p_rootCause);
     }
 
-    private final Throwable m_rootCause;
-
+    /**
+     * @return the root cause for this exception
+     * @deprecated use {@link #getCause} instead
+     */
+    @Deprecated
     public Throwable getRootCause()
     {
-        return m_rootCause;
+        return getCause();
     }
 
     @Override public void printStackTrace(java.io.PrintWriter p_writer)
