@@ -44,12 +44,9 @@ public class TemplateUnit
     extends AbstractUnit
     implements InheritedUnit
 {
-    public TemplateUnit(String p_path,
-                        ParserErrors p_errors,
-                        String p_jamonContextType)
+    public TemplateUnit(String p_path, ParserErrors p_errors)
     {
         super(p_path, null, p_errors);
-        m_jamonContextType = p_jamonContextType;
     }
 
     public int getInheritanceDepth()
@@ -89,6 +86,9 @@ public class TemplateUnit
 
         m_callNames.addAll(p_parent.getMethodUnits().keySet());
         m_abstractMethodNames.addAll(p_parent.getAbstractMethodNames());
+        if (m_jamonContextType == null) {
+            setJamonContextType(p_parent.getJamonContextType());
+        }
     }
 
     public void addParentArg(ParentArgNode p_arg)
@@ -367,7 +367,7 @@ public class TemplateUnit
     private final Collection<String> m_abstractMethodNames =
         new HashSet<String>();
     private final GenericParams m_genericParams = new GenericParams();
-    private final String m_jamonContextType;
+    private String m_jamonContextType;
 
     public Iterator<RequiredArgument> getParentRenderArgs()
     {
@@ -481,6 +481,11 @@ public class TemplateUnit
     }
 
     public GenericParams getGenericParams() { return m_genericParams; }
+
+    public void setJamonContextType(String p_jamonContextType)
+    {
+        m_jamonContextType = p_jamonContextType;
+    }
 
     public String getJamonContextType() { return m_jamonContextType; }
 

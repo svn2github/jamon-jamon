@@ -44,10 +44,10 @@ public class TemplateUnitTest
 
     public void testInheritanceDepth() throws Exception
     {
-        TemplateUnit parent = new TemplateUnit("/parent", null, null);
-        TemplateUnit child = new TemplateUnit("/child", null, null);
+        TemplateUnit parent = new TemplateUnit("/parent", null);
+        TemplateUnit child = new TemplateUnit("/child", null);
         TemplateUnit grandchild =
-            new TemplateUnit("/grandchild", null, null);
+            new TemplateUnit("/grandchild", null);
         child.setParentDescription(new TemplateDescription(parent));
         grandchild.setParentDescription(new TemplateDescription(child));
 
@@ -58,10 +58,10 @@ public class TemplateUnitTest
 
     public void testParentArgs() throws Exception
     {
-        TemplateUnit parent = new TemplateUnit("/parent", null, null);
-        TemplateUnit child = new TemplateUnit("/child", null, null);
+        TemplateUnit parent = new TemplateUnit("/parent", null);
+        TemplateUnit child = new TemplateUnit("/child", null);
         TemplateUnit grandchild =
-            new TemplateUnit("/grandchild", null, null);
+            new TemplateUnit("/grandchild", null);
 
         RequiredArgument pr1 = new RequiredArgument("pr1", "int", null);
         RequiredArgument pr2 = new RequiredArgument("pr2", "int", null);
@@ -116,8 +116,8 @@ public class TemplateUnitTest
     public void testSignature()
         throws Exception
     {
-        TemplateUnit unit = new TemplateUnit("/foo", null, null);
-        TemplateUnit parent = new TemplateUnit("/bar", null, null);
+        TemplateUnit unit = new TemplateUnit("/foo", null);
+        TemplateUnit parent = new TemplateUnit("/bar", null);
 
         Set<String> sigs = new HashSet<String>();
         checkSigIsUnique(unit, sigs);
@@ -141,11 +141,11 @@ public class TemplateUnitTest
         unit.addOptionalArg(b);
         checkSigIsUnique(unit, sigs);
 
-        unit = new TemplateUnit("/foo", null, null);
+        unit = new TemplateUnit("/foo", null);
         unit.setParentDescription(new TemplateDescription(parent));
         checkSigIsUnique(unit, sigs);
 
-        unit = new TemplateUnit("/foo", null, null);
+        unit = new TemplateUnit("/foo", null);
         parent.addRequiredArg(i);
         unit.setParentDescription(new TemplateDescription(parent));
         // suboptimal - if the parent's sig changes, so does the child's
@@ -169,7 +169,7 @@ public class TemplateUnitTest
     public void testDependencies()
         throws Exception
     {
-        TemplateUnit unit = new TemplateUnit("/foo/bar", null, null);
+        TemplateUnit unit = new TemplateUnit("/foo/bar", null);
         unit.addCallPath("/baz");
         unit.addCallPath("/foo/wazza");
         unit.setParentPath("/foo/balla");
@@ -180,33 +180,42 @@ public class TemplateUnitTest
         assertTrue(dependencies.contains("/foo/wazza"));
     }
 
+    private TemplateUnit makeUnitWithContext(
+        String p_path, String p_context, TemplateUnit p_parent)
+    {
+        TemplateUnit unit = new TemplateUnit(p_path, null);
+        unit.setJamonContextType(p_context);
+        if (p_parent != null)
+        {
+            unit.setParentPath(p_parent.getName());
+            unit.setParentDescription(new TemplateDescription(p_parent));
+        }
+        return unit;
+    }
+
     public void testSimpleUnitIsOriginatingJamonContext() throws Exception
     {
-        assertFalse(new TemplateUnit("/foo/bar", null, null)
+        assertFalse(new TemplateUnit("/foo/bar", null)
             .isOriginatingJamonContext());
-        assertTrue(new TemplateUnit("/foo/bar", null, "someContext")
+        assertTrue(makeUnitWithContext("/foo/bar", "someContext", null)
             .isOriginatingJamonContext());
     }
 
     public void testChildOfContextTemplateIsOriginatingJamonContext()
     {
-        TemplateUnit unit =
-            new TemplateUnit("/foo/bar", null, "someContext");
-        TemplateUnit parent =
-            new TemplateUnit("/foo/baz", null, "someContext");
-        unit.setParentPath(parent.getName());
-        unit.setParentDescription(new TemplateDescription(parent));
-        assertFalse(unit.isOriginatingJamonContext());
+        assertFalse(makeUnitWithContext(
+            "/foo/baz",
+            "someContext",
+            makeUnitWithContext("/foo/bar", "someContext", null))
+            .isOriginatingJamonContext());
     }
 
     public void testChildOfContextlessTemplateIsOriginatingJamonContext()
     {
-        TemplateUnit unit =
-            new TemplateUnit("/foo/bar", null, "someContext");
-        TemplateUnit parent = new TemplateUnit("/foo/baz", null, null);
-        unit.setParentPath(parent.getName());
-        unit.setParentDescription(new TemplateDescription(parent));
-        assertTrue(unit.isOriginatingJamonContext());
+        assertTrue(
+            makeUnitWithContext(
+                "/foo/bar", "jamonContext", new TemplateUnit("/foo/baz", null))
+            .isOriginatingJamonContext());
     }
 
     private void checkSigIsUnique(TemplateUnit p_unit, Set<String> p_set)

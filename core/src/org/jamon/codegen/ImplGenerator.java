@@ -105,7 +105,7 @@ public class ImplGenerator implements SourceGenerator
         if (m_templateUnit.getJamonContextType() != null)
         {
             m_writer.println(
-                "private final " + m_templateUnit.getJamonContextType() +
+                "protected final " + m_templateUnit.getJamonContextType() +
                 " jamonContext;");
         }
         for (Iterator<AbstractArgument> i = m_templateUnit.getVisibleArgs();

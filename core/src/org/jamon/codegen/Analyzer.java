@@ -40,10 +40,7 @@ public class Analyzer
                     TemplateDescriber p_describer,
                     Set<String> p_children) throws IOException
     {
-        m_templateUnit = new TemplateUnit(
-            p_templatePath,
-            m_errors,
-            p_describer.getJamonContextType(p_templatePath));
+        m_templateUnit = new TemplateUnit(p_templatePath, m_errors);
         m_templateDir =
             p_templatePath.substring(0,1 + p_templatePath.lastIndexOf('/'));
         m_currentStatementBlock = m_templateUnit;
@@ -52,6 +49,8 @@ public class Analyzer
         m_emitMode = p_describer.getEmitMode(p_templatePath);
         m_templateIdentifier =
             m_describer.getExternalIdentifier(p_templatePath);
+        m_templateUnit.setJamonContextType(
+            p_describer.getJamonContextType(p_templatePath));
     }
 
     public Analyzer(String p_templatePath, TemplateDescriber p_describer)

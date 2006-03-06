@@ -89,7 +89,7 @@ public class TemplateDescription
         m_requiredArgs = getRequiredArgs(p_intf, "");
         m_optionalArgs = getOptionalArgs(p_intf, "");
         m_fragmentInterfaces =
-            getFragmentArgs(p_intf, "", new TemplateUnit(null, null, null));
+            getFragmentArgs(p_intf, "", new TemplateUnit(null, null));
         m_methodUnits = new HashMap<String, MethodUnit>();
         String[] methodNames = getStringArray(p_intf, "METHOD_NAMES");
         for (int i = 0; i < methodNames.length; i++)

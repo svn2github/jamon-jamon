@@ -5,7 +5,8 @@ import java.util.Iterator;
 import org.jamon.JamonRuntimeException;
 import org.jamon.ParserError;
 import org.jamon.ParserErrors;
-import org.jamon.TemplateCompilationException;
+
+import test.jamon.context.Child;
 import test.jamon.context.ContextCaller;
 
 public class ContextTest extends TestBase
@@ -18,6 +19,21 @@ public class ContextTest extends TestBase
         checkOutput("Caller: 3\n" +
                     "Parent: 3\nCallee: 3\nCalleeFragment: 3\n" +
                     "Def: 3\n");
+    }
+
+    public void testParentRenderer() throws Exception
+    {
+        new Child().setJamonContext(new TestJamonContext(3)).makeParentRenderer()
+            .render(getWriter());
+        checkOutput("3");
+    }
+
+    public void testSetContextViaParentRenderer() throws Exception
+    {
+        new Child().makeParentRenderer()
+            .setJamonContext(new TestJamonContext(3))
+            .render(getWriter());
+        checkOutput("3");
     }
 
     public void testCallContextFromContextless() throws Exception

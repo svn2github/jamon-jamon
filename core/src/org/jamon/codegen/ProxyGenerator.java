@@ -47,7 +47,10 @@ public class ProxyGenerator implements SourceGenerator
         generateInheritanceDepth();
         generateIntf();
         generateImplData();
-        generateJamonContextSetter();
+        if (m_templateUnit.getJamonContextType() != null)
+        {
+            generateJamonContextSetter();
+        }
         generateOptionalArgs();
         generateFragmentInterfaces(false);
         if (! m_templateUnit.isParent())
@@ -466,10 +469,6 @@ public class ProxyGenerator implements SourceGenerator
 
     private void generateJamonContextSetter()
     {
-        if (m_templateUnit.getJamonContextType() == null)
-        {
-            return;
-        }
         m_writer.println();
         if (! m_templateUnit.isOriginatingJamonContext())
         {
@@ -578,6 +577,19 @@ public class ProxyGenerator implements SourceGenerator
             m_writer.openBlock();
             m_writer.println(getClassName() + ".this." + arg.getSetterName()
                              + "(" + "p_" + name + ");");
+            m_writer.println("return this;");
+            m_writer.closeBlock();
+        }
+
+        if (m_templateUnit.getJamonContextType() != null)
+        {
+            m_writer.print(
+                "public final ParentRenderer setJamonContext("
+                + m_templateUnit.getJamonContextType()
+                + " p_jamonContext)");
+            m_writer.openBlock();
+            m_writer.println(
+                getClassName() + ".this.setJamonContext(p_jamonContext);");
             m_writer.println("return this;");
             m_writer.closeBlock();
         }
