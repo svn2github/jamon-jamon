@@ -184,7 +184,9 @@ public class TemplateDescriber
 
     public String getJamonContextType(String p_path) throws IOException
     {
-        return getProperties(p_path).getProperty(JAMON_CONTEXT_TYPE_KEY);
+        String contextType =
+            getProperties(p_path).getProperty(JAMON_CONTEXT_TYPE_KEY, "").trim();
+        return contextType.length() > 0 ? contextType : null;
     }
 
     public EmitMode getEmitMode(String p_path) throws IOException

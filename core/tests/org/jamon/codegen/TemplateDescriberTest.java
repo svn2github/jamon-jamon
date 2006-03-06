@@ -85,6 +85,11 @@ public class TemplateDescriberTest extends TestCase
         assertEquals(
             "foo.baz",
             m_templateDescriber.getJamonContextType("/foo/bat"));
+
+        Properties subSubProperties = new Properties();
+        subProperties.put("org.jamon.contextType", "");
+        m_mockTemplateSource.setProperties("/foo/bar/", subSubProperties);
+        assertNull(m_templateDescriber.getJamonContextType("/foo/bar/baz"));
     }
 
     public void testGetEmitMode() throws Exception
