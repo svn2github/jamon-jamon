@@ -142,7 +142,7 @@ public abstract class TestBase
         }
         catch(ParserErrors e)
         {
-            Iterator errors = e.getErrors();
+            Iterator<ParserError> errors = e.getErrors();
             assertTrue(errors.hasNext());
             assertEquals(
                 new ParserError(

@@ -70,14 +70,14 @@ public class TemplateDescriberTest
     public void testFragmentUnitIntrospection()
         throws Exception
     {
-        List fragmentUnitIntfs =
+        List<FragmentArgument> fragmentUnitIntfs =
             m_describer.getTemplateDescription(
                 "/test/jamon/ClassOnly", null, null)
             .getFragmentInterfaces();
 
         assertEquals(2, fragmentUnitIntfs.size());
-        FragmentArgument f2 = (FragmentArgument) fragmentUnitIntfs.get(0);
-        FragmentArgument f1 = (FragmentArgument) fragmentUnitIntfs.get(1);
+        FragmentArgument f2 = fragmentUnitIntfs.get(0);
+        FragmentArgument f1 = fragmentUnitIntfs.get(1);
 
         assertEquals("f1", f1.getName());
         assertEquals("f2", f2.getName());
@@ -89,11 +89,11 @@ public class TemplateDescriberTest
     public void testMethodUnitIntrospection()
         throws Exception
     {
-        Map methods = m_describer
+        Map<String, MethodUnit> methods = m_describer
             .getTemplateDescription("/test/jamon/ClassOnly", null, null)
             .getMethodUnits();
         assertEquals(1, methods.size());
-        MethodUnit method = (MethodUnit) methods.get("m");
+        MethodUnit method = methods.get("m");
 
         assertNotNull(method);
         assertEquals("m", method.getName());
@@ -120,13 +120,16 @@ public class TemplateDescriberTest
                 "test/jamon/ClassOnly", null, null).getGenericParamsCount());
     }
 
-    private void checkArgs(Iterator p_args, String[] p_names, String[] p_types)
+    private void checkArgs(
+        Iterator<? extends AbstractArgument> p_args,
+        String[] p_names,
+        String[] p_types)
     {
         assertEquals(p_names.length, p_types.length);
         for (int i = 0; i < p_names.length; i++)
         {
             assertTrue(p_args.hasNext());
-            AbstractArgument a = (AbstractArgument) p_args.next();
+            AbstractArgument a = p_args.next();
             assertEquals(p_names[i], a.getName());
             assertEquals(p_types[i], a.getType());
         }
@@ -135,11 +138,11 @@ public class TemplateDescriberTest
 
     private void checkFragArgArgs(FragmentArgument f, String[] p_names)
     {
-        Iterator args = f.getFragmentUnit().getRequiredArgs();
+        Iterator<RequiredArgument> args = f.getFragmentUnit().getRequiredArgs();
         for (int i = 0; i < p_names.length; i++)
         {
             assertTrue(args.hasNext());
-            RequiredArgument a = (RequiredArgument) args.next();
+            RequiredArgument a = args.next();
             assertEquals(p_names[i], a.getName());
             assertNull(a.getType());
         }

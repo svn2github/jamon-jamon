@@ -31,7 +31,7 @@ public class TemplateInspectorTest
     {
         TemplateInspector inspector =
             new TemplateInspector("/test/jamon/Grandchild");
-        List args = inspector.getRequiredArgumentNames();
+        List<String> args = inspector.getRequiredArgumentNames();
         assertEquals(5, args.size());
         assertEquals("i", args.get(0));
         assertEquals("j", args.get(1));
