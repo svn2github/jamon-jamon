@@ -95,12 +95,12 @@ public class BasicTemplateManager
         }
     }
 
-    @SuppressWarnings("unchecked")
     private Class<? extends AbstractTemplateProxy> getProxyClass(String p_path)
         throws ClassNotFoundException
     {
-        return (Class<? extends AbstractTemplateProxy>) m_classLoader.loadClass
-            (StringUtils.templatePathToClassName(p_path));
+        return m_classLoader
+            .loadClass(StringUtils.templatePathToClassName(p_path))
+            .asSubclass(AbstractTemplateProxy.class);
     }
 
     private final ClassLoader m_classLoader;

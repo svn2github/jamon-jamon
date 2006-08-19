@@ -179,17 +179,17 @@ public class TemplateInspector
         }
     }
 
-    public List getRequiredArgumentNames()
+    public List<String> getRequiredArgumentNames()
     {
         return m_requiredArgNames;
     }
 
-    public List getOptionalArgumentNames()
+    public List<String> getOptionalArgumentNames()
     {
         return m_optionalArgNames;
     }
 
-    public Class getArgumentType(String p_argName)
+    public Class<?> getArgumentType(String p_argName)
     {
         if (m_optionalArgNames.contains(p_argName))
         {
@@ -325,7 +325,7 @@ public class TemplateInspector
     }
 
 
-    private final Class m_templateClass;
+    private final Class<?> m_templateClass;
     private final AbstractTemplateProxy m_template;
     private final Method m_renderMethod;
     private final List<String> m_requiredArgNames;

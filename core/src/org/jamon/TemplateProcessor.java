@@ -180,6 +180,7 @@ public class TemplateProcessor
                 System.err.println("You must specify " + DESTDIR);
                 showHelp();
                 System.exit(1);
+                return;  //silence warning about possibly null destDir
             }
 
             destDir.mkdirs();

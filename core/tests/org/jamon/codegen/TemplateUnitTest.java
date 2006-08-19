@@ -173,7 +173,7 @@ public class TemplateUnitTest
         unit.addCallPath("/baz");
         unit.addCallPath("/foo/wazza");
         unit.setParentPath("/foo/balla");
-        Collection dependencies = unit.getTemplateDependencies();
+        Collection<String> dependencies = unit.getTemplateDependencies();
         assertEquals(3, dependencies.size());
         assertTrue(dependencies.contains("/baz"));
         assertTrue(dependencies.contains("/foo/balla"));

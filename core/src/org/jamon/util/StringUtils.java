@@ -84,7 +84,7 @@ public class StringUtils
         return pathToClassName(p_path, "/");
     }
 
-    public static String classToTemplatePath(Class p_class)
+    public static String classToTemplatePath(Class<?> p_class)
     {
         return filePathToTemplatePath(classNameToFilePath(p_class.getName()));
     }
@@ -168,13 +168,13 @@ public class StringUtils
 
     public static String byteArrayToHexString(final byte[] bytes)
     {
-	StringBuilder buffer = new StringBuilder(bytes.length * 2);
-	for (int i = 0; i < bytes.length; i++)
+    StringBuilder buffer = new StringBuilder(bytes.length * 2);
+    for (int i = 0; i < bytes.length; i++)
         {
             buffer.append(HEXCHARS[(bytes[i] & 0xF0) >>  4]);
             buffer.append(HEXCHARS[bytes[i] & 0x0F]);
-	}
-	return buffer.toString();
+    }
+    return buffer.toString();
     }
 
     public static String hexify4(int p_int)

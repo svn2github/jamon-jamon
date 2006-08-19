@@ -105,7 +105,7 @@ public abstract class AbstractInnerUnit extends AbstractUnit
                 getFragmentArgs());
     }
 
-    @Override public Iterator getVisibleArgs()
+    @Override public Iterator<AbstractArgument> getVisibleArgs()
     {
         return getRenderArgs();
     }

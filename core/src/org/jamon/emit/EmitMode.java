@@ -42,10 +42,10 @@ public enum EmitMode
     }
 
 
-    private EmitMode(Class p_emitterClass)
+    private EmitMode(Class<?> p_emitterClass)
     {
         m_class = p_emitterClass;
     }
 
-    private final Class m_class;
+    private final Class<?> m_class;
 }

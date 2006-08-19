@@ -104,9 +104,9 @@ public class TemplateDescriberTest
                   new String[] {"mj"},
                   new String[] {"int"});
 
-        Iterator fragments = method.getFragmentArgs();
+        Iterator<FragmentArgument> fragments = method.getFragmentArgs();
         assertTrue(fragments.hasNext());
-        FragmentArgument frag = (FragmentArgument) fragments.next();
+        FragmentArgument frag = fragments.next();
         assertTrue(! fragments.hasNext());
         assertEquals("mf", frag.getName());
         checkFragArgArgs(frag, new String[] {"mk"});

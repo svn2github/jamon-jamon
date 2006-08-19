@@ -90,7 +90,7 @@ public class JUnitTemplateManager
      * @param p_optionalArgs the expect optional arguments
      * @param p_requiredArgs the expected required argument values
      */
-    public JUnitTemplateManager(Class p_class,
+    public JUnitTemplateManager(Class<? extends AbstractTemplateProxy> p_class,
                                 Map<String, Object> p_optionalArgs,
                                 Object[] p_requiredArgs)
     {
@@ -129,15 +129,21 @@ public class JUnitTemplateManager
 
             String className = StringUtils.templatePathToClassName(path)
                 + "$Intf";
-            Class intfClass;
+            Class<? extends AbstractTemplateImpl> intfClass;
             try
             {
-                intfClass = Class.forName(className);
+                intfClass = Class.forName(className)
+                    .asSubclass(AbstractTemplateImpl.class);
             }
             catch (ClassNotFoundException e)
             {
                 throw new JamonRuntimeException
                     ("couldn't find class for template " + path);
+            }
+            catch (ClassCastException e) {
+                throw new JamonRuntimeException(
+                    "Impl class for template " + path
+                    + " does not extend " + AbstractTemplateImpl.class.getName());
             }
 
             try

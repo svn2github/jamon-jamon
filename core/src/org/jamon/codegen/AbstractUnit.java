@@ -94,7 +94,7 @@ public abstract class AbstractUnit
     public abstract void addOptionalArg(OptionalArgument p_arg);
     public abstract Iterator<RequiredArgument> getSignatureRequiredArgs();
     public abstract Iterator<OptionalArgument> getSignatureOptionalArgs();
-    public abstract Iterator getVisibleArgs();
+    public abstract Iterator<AbstractArgument> getVisibleArgs();
 
     private final String m_name;
     private final ParserErrors m_errors;

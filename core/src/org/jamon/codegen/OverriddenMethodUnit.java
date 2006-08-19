@@ -51,7 +51,7 @@ public class OverriddenMethodUnit
         m_inheritedArgs.addParentArg(p_node);
     }
 
-    @Override public Iterator getVisibleArgs()
+    @Override public Iterator<AbstractArgument> getVisibleArgs()
     {
         return m_inheritedArgs.getVisibleArgs();
     }
@@ -81,7 +81,7 @@ public class OverriddenMethodUnit
 
     @Override public void printRenderArgsDecl(CodeWriter p_writer)
     {
-        for (Iterator<AbstractArgument> i = m_declaredMethodUnit.getRenderArgs(); 
+        for (Iterator<AbstractArgument> i = m_declaredMethodUnit.getRenderArgs();
              i.hasNext(); )
         {
             AbstractArgument arg = i.next();
@@ -127,7 +127,7 @@ public class OverriddenMethodUnit
     {
         return m_inheritedArgs.getDefaultValue(p_arg);
     }
-    
+
     public boolean isOverride()
     {
         return true;

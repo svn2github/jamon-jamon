@@ -339,17 +339,20 @@ public class RecompilingTemplateManager
         Class<? extends AbstractTemplateProxy> p_proxyClass)
     {
         return getTemplateClass(StringUtils.classToTemplatePath(p_proxyClass),
-                                p_proxyClass.getName() + "Impl");
+                                p_proxyClass.getName() + "Impl")
+                                    .asSubclass(AbstractTemplateImpl.class);
     }
 
     @SuppressWarnings("unchecked")
-    private Class<AbstractTemplateProxy> getProxyClass(String p_path)
+    private Class<? extends AbstractTemplateProxy> getProxyClass(String p_path)
     {
-        return (Class<AbstractTemplateProxy>) getTemplateClass(
-            p_path, StringUtils.templatePathToClassName(p_path));
+        return getTemplateClass(
+            p_path, StringUtils.templatePathToClassName(p_path))
+            .asSubclass(AbstractTemplateProxy.class);
     }
 
-    private Class getTemplateClass(String p_path, String p_className)
+    private Class<?> getTemplateClass(
+        String p_path, String p_className)
     {
         try
         {

@@ -83,7 +83,7 @@ public class TemplateDescription
         m_jamonContextType = p_templateUnit.getJamonContextType();
     }
 
-    public TemplateDescription(Class p_intf)
+    public TemplateDescription(Class<?> p_intf)
         throws NoSuchFieldException, IllegalAccessException
     {
         m_requiredArgs = getRequiredArgs(p_intf, "");
@@ -127,7 +127,7 @@ public class TemplateDescription
         m_jamonContextType = computeJamonContextType(p_intf);
     }
 
-    private static String computeJamonContextType(Class p_intf)
+    private static String computeJamonContextType(Class<?> p_intf)
         throws IllegalAccessException
     {
         String jamonContextType = null;
@@ -141,7 +141,7 @@ public class TemplateDescription
     }
 
     private static List<RequiredArgument> getRequiredArgs(
-        Class p_class, String p_prefix)
+        Class<?> p_class, String p_prefix)
         throws NoSuchFieldException, IllegalAccessException
     {
         List<RequiredArgument> args = new LinkedList<RequiredArgument>();
@@ -158,7 +158,7 @@ public class TemplateDescription
     }
 
     private static Set<OptionalArgument> getOptionalArgs(
-        Class p_class, String p_prefix)
+        Class<?> p_class, String p_prefix)
         throws NoSuchFieldException, IllegalAccessException
     {
         Set<OptionalArgument> args = new HashSet<OptionalArgument>();
@@ -176,7 +176,7 @@ public class TemplateDescription
     }
 
     private static List<FragmentArgument> getFragmentArgs(
-        Class p_class, String p_prefix, Unit p_parentUnit)
+        Class<?> p_class, String p_prefix, Unit p_parentUnit)
         throws NoSuchFieldException, IllegalAccessException
     {
         List<FragmentArgument> fragmentArgs = new LinkedList<FragmentArgument>();
@@ -200,7 +200,7 @@ public class TemplateDescription
         return fragmentArgs;
     }
 
-    private static String[] getStringArray(Class p_class, String p_fieldName)
+    private static String[] getStringArray(Class<?> p_class, String p_fieldName)
         throws NoSuchFieldException, IllegalAccessException
     {
         return (String[]) p_class.getField(p_fieldName).get(null);

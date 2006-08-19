@@ -62,7 +62,7 @@ public class WorkDirClassLoader
             return super.toString() + " { " + " parent: " + getParent() + " }";
         }
 
-        private final Map<String, Class> m_cache = new HashMap<String, Class>();
+        private final Map<String, Class<?>> m_cache = new HashMap<String, Class<?>>();
 
         private byte [] readBytesForClass(String p_name)
             throws IOException
@@ -102,7 +102,7 @@ public class WorkDirClassLoader
             }
             else
             {
-                Class c = m_cache.get(p_name);
+                Class<?> c = m_cache.get(p_name);
                 if (c == null)
                 {
                     try

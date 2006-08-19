@@ -73,7 +73,7 @@ public class AnalyzerTest extends TestCase
 
     private static String PATH = "/test";
 
-    private void checkTypes(List p_list, Class<?> ...p_classes)
+    private void checkTypes(List<Statement> p_list, Class<?> ...p_classes)
     {
         assertEquals(p_classes.length, p_list.size());
         int i = 0;
