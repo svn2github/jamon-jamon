@@ -129,11 +129,11 @@ public class JUnitTemplateManager
 
             String className = StringUtils.templatePathToClassName(path)
                 + "$Intf";
-            Class<? extends AbstractTemplateImpl> intfClass;
+            Class<? extends AbstractTemplateProxy.Intf> intfClass;
             try
             {
                 intfClass = Class.forName(className)
-                    .asSubclass(AbstractTemplateImpl.class);
+                    .asSubclass(AbstractTemplateProxy.Intf.class);
             }
             catch (ClassNotFoundException e)
             {
