@@ -2,6 +2,6 @@
   No test to go with this - just checking that the generated fragment
   classes all have different names.
 </%doc>
-<%frag f/>
+<%frag f/> <& f &>
 <%def d><%frag f/></%def><&| d &></&>
 <%method m><%frag f/></%method>
