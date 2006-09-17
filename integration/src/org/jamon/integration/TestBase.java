@@ -21,9 +21,12 @@
 package org.jamon.integration;
 
 import java.io.File;
-import java.io.Writer;
 import java.io.StringWriter;
+import java.io.Writer;
 import java.util.Iterator;
+
+import junit.framework.Assert;
+import junit.framework.TestCase;
 
 import org.jamon.ParserError;
 import org.jamon.ParserErrors;
@@ -32,8 +35,6 @@ import org.jamon.TemplateFileLocation;
 import org.jamon.TemplateManager;
 import org.jamon.TemplateProcessor;
 import org.jamon.node.Location;
-
-import junit.framework.TestCase;
 
 public abstract class TestBase
     extends TestCase
@@ -172,7 +173,7 @@ public abstract class TestBase
         }
         else
         {
-            TestCase.assertEquals(p_first, p_second);
+            Assert.assertEquals(p_first, p_second);
         }
     }
 
