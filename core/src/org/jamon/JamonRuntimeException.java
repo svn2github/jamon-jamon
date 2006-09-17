@@ -68,4 +68,6 @@ public class JamonRuntimeException
     {
         printStackTrace(System.err);
     }
+
+    private static final long serialVersionUID = 2006091701L;
 }

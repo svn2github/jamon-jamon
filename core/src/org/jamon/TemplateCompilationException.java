@@ -27,4 +27,6 @@ public class TemplateCompilationException
     {
         super(p_msg);
     }
+
+    private static final long serialVersionUID = 2006091701L;
 }

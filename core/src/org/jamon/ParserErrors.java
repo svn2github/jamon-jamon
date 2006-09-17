@@ -70,4 +70,5 @@ public final class ParserErrors extends IOException
         }
     }
 
+    private static final long serialVersionUID = 2006091701L;
 }

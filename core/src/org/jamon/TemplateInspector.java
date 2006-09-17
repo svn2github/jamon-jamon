@@ -55,6 +55,8 @@ public class TemplateInspector
                   + " does not appear to be a valid template class",
                   t);
         }
+
+        private static final long serialVersionUID = 2006091701L;
     }
 
     /**
@@ -238,6 +240,8 @@ public class TemplateInspector
     public static class UnknownArgumentsException
         extends JamonException
     {
+        private static final long serialVersionUID = 2006091701L;
+
         UnknownArgumentsException(String p_msg)
         {
             super(p_msg);

@@ -23,6 +23,8 @@ package org.jamon;
 public class UnknownTemplateException
     extends JamonRuntimeException
 {
+    private static final long serialVersionUID = 2006091701L;
+
     public UnknownTemplateException(String p_path)
     {
         super("The template at path " + p_path + " could not be found");

@@ -55,4 +55,6 @@ public class ParserError extends Exception
                + getLocation().getColumn() + ": "
                + getMessage();
     }
+
+    private static final long serialVersionUID = 2006091701L;
 }
