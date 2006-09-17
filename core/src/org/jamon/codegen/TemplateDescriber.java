@@ -20,14 +20,14 @@
 
 package org.jamon.codegen;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.StringTokenizer;
-import java.io.InputStream;
-import java.io.IOException;
 
 import org.jamon.JamonRuntimeException;
 import org.jamon.ParserError;
@@ -180,6 +180,28 @@ public class TemplateDescriber
             }
         }
         return properties;
+    }
+    
+    private static final String ALIAS_PROPERTY_PREFIX = "org.jamon.alias.";
+    
+    public Map<String,String> getAliases(String p_path) throws IOException
+    {
+        Map<String,String> result = new HashMap<String,String>();
+        Properties props = getProperties(p_path);
+        for (Object okey : props.keySet()) {
+            String key = (String) okey;
+            if (key.startsWith(ALIAS_PROPERTY_PREFIX)) {
+                String aliasName = key.substring(ALIAS_PROPERTY_PREFIX.length());
+                String alias = props.getProperty(key);
+                if (alias == null || alias.trim().length() == 0) {
+                    result.remove(aliasName);
+                }
+                else {
+                    result.put(aliasName, props.getProperty(key));
+                }
+            }
+        }
+        return result;
     }
 
     public String getJamonContextType(String p_path) throws IOException

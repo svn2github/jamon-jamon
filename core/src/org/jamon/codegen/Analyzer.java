@@ -51,6 +51,7 @@ public class Analyzer
             m_describer.getExternalIdentifier(p_templatePath);
         m_templateUnit.setJamonContextType(
             p_describer.getJamonContextType(p_templatePath));
+        m_aliases.putAll(m_describer.getAliases(p_templatePath));
     }
 
     public Analyzer(String p_templatePath, TemplateDescriber p_describer)

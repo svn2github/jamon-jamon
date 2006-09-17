@@ -23,13 +23,15 @@ package org.jamon.codegen;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collection;
 import java.util.List;
 import java.util.Properties;
+
+import junit.framework.TestCase;
 
 import org.jamon.TemplateLocation;
 import org.jamon.TemplateResourceLocation;
 import org.jamon.TemplateSource;
-import junit.framework.TestCase;
 
 public class AnalyzerTest extends TestCase
 {
@@ -66,7 +68,10 @@ public class AnalyzerTest extends TestCase
         }
 
         public void loadProperties(String p_path, Properties p_properties)
-        {}
+        {
+            p_properties.put("org.jamon.alias.foo", "/x/y");
+            p_properties.put("org.jamon.alias.bar", "/z/q");
+        }
 
         private final byte[] m_bytes;
     }
@@ -116,6 +121,17 @@ public class AnalyzerTest extends TestCase
             LiteralStatement.class, WriteStatement.class, LiteralStatement.class);
         assertStatementText("b", loopBlock.getStatements().get(0));
         assertStatementText("c", loopBlock.getStatements().get(2));
+    }
+    
+    public void testAliases() throws Exception
+    {
+        String templateText = "<& foo//baz &><& bar//hit/me &>";
+        TemplateUnit unit = analyzeText(templateText);
+        Collection<String> deps = unit.getTemplateDependencies();
+        assertEquals(2, deps.size());
+        System.err.println(deps);
+        assertTrue(deps.contains("/x/y/baz"));
+        assertTrue(deps.contains("/z/q/hit/me"));
     }
 
     public void testForBlock() throws Exception
