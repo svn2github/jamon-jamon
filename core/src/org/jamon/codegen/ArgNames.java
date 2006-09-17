@@ -25,6 +25,6 @@ public interface ArgNames
     public final static String WRITER = "jamonWriter";
     public final static String WRITER_DECL =
         "final " + ClassNames.WRITER + " " + WRITER;
-    public final static String MAYBE_UNUSED_WRITER_DECL =
-        "@SuppressWarnings(\"unused\") " + WRITER_DECL;
+    public final static String ANNOTATED_WRITER_DECL =
+        "@SuppressWarnings({\"unused\",\"hiding\"}) " + WRITER_DECL;
 }

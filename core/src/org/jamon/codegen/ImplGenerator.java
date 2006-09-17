@@ -210,7 +210,7 @@ public class ImplGenerator implements SourceGenerator
             m_writer.print("private void __jamon_innerUnit__");
             m_writer.print(defUnit.getName());
             m_writer.openList();
-            m_writer.printArg(ArgNames.MAYBE_UNUSED_WRITER_DECL);
+            m_writer.printArg(ArgNames.ANNOTATED_WRITER_DECL);
             defUnit.printRenderArgsDecl(m_writer);
             m_writer.closeList();
             m_writer.println();
@@ -261,7 +261,7 @@ public class ImplGenerator implements SourceGenerator
                        + "void __jamon_innerUnit__");
         m_writer.print(p_methodUnit.getName());
         m_writer.openList();
-        m_writer.printArg(ArgNames.MAYBE_UNUSED_WRITER_DECL);
+        m_writer.printArg(ArgNames.ANNOTATED_WRITER_DECL);
         p_methodUnit.printRenderArgsDecl(m_writer);
         m_writer.closeList();
         m_writer.println();
@@ -301,12 +301,12 @@ public class ImplGenerator implements SourceGenerator
             m_writer.println(
                 "@Override protected void child_render_"
                 + m_templateUnit.getInheritanceDepth()
-                + "("  + ArgNames.MAYBE_UNUSED_WRITER_DECL + ")");
+                + "("  + ArgNames.ANNOTATED_WRITER_DECL + ")");
         }
         else
         {
             m_writer.println("public void renderNoFlush("
-                             + ArgNames.MAYBE_UNUSED_WRITER_DECL + ")");
+                             + ArgNames.ANNOTATED_WRITER_DECL + ")");
         }
         if (m_templateUnit.canThrowIOException())
         {
