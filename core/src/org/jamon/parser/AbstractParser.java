@@ -56,7 +56,11 @@ public class AbstractParser
         m_errors.addError(p_error);
     }
 
-    protected class NotAnIdentifierException extends Exception {}
+    protected static class NotAnIdentifierException extends Exception {
+
+        private static final long serialVersionUID = 2006091701L;
+        
+    }
 
     /**
      * Reads in a java identifier.
