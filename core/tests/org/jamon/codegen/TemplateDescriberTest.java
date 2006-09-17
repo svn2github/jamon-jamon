@@ -67,6 +67,24 @@ public class TemplateDescriberTest extends TestCase
         m_mockTemplateSource = new MockTemplateSource();
         m_templateDescriber = new TemplateDescriber(m_mockTemplateSource, null);
     }
+    
+    public void testGetAliases() throws Exception
+    {
+        assertEquals(0, m_templateDescriber.getAliases("/foo").size());
+        Properties properties = new Properties();
+        properties.put("org.jamon.alias.bar", "/a/b");
+        m_mockTemplateSource.setProperties("/", properties);
+        assertEquals(1, m_templateDescriber.getAliases("/foo").size());
+        assertEquals("/a/b", m_templateDescriber.getAliases("/foo").get("bar"));
+        Properties subProperties = new Properties();
+        subProperties.put("org.jamon.alias.bar", "/b/c");
+        m_mockTemplateSource.setProperties("/foo/", subProperties);
+        subProperties.put("org.jamon.alias.bar2", "/c/d");
+        assertEquals("/b/c", m_templateDescriber.getAliases("/foo/a").get("bar"));
+        assertEquals("/c/d", m_templateDescriber.getAliases("/foo/a").get("bar2"));
+        subProperties.put("org.jamon.alias.bar", "");
+        assertFalse(m_templateDescriber.getAliases("/foo/a").containsKey("bar"));
+    }
 
    public void testGetJamonContextType() throws Exception
     {
