@@ -4,11 +4,11 @@
 <%frag f>T element;</%frag>
 % for(T t : list) {
 <% t.doubleValue() %>
-<&| d: t &><%args>T t;</%args><& f: t &></&>
+<&| d: t &><%args>T t3;</%args><& f: t3 &></&>
 %}
 <%def d>
-<%args>T t;</%args>
+<%args>T t2;</%args>
 <%frag f>T element;</%frag>
-<& f: t &>
-<% t.doubleValue() %>
+<& f: t2 &>
+<% t2.doubleValue() %>
 </%def>

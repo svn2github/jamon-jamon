@@ -3,5 +3,5 @@
 <%args> int x; </%args>\
 <% x %><& content &><% x %>\
 </%def>\
-<%args> int x; </%args>\
-<&| foo; x = x &>(<% x + 1 %>)</&>
+<%args> int x2; </%args>\
+<&| foo; x = x2 &>(<% x2 + 1 %>)</&>

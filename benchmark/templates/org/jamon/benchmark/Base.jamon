@@ -3,5 +3,5 @@
 <%args>
   int k = 0;
 </%args>
-
+% while (k != k) { }
 <& *CHILD &>

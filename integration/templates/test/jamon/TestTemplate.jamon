@@ -100,7 +100,7 @@ And now some def frag calls:
   <&| sub1 &><% i %>
 body
 </&>
-  <&| sub1; y = 3 &>
+  <&| sub1; y2 = 3 &>
 body3
 </&>
 
@@ -108,9 +108,9 @@ body3
   <%frag f1>
   </%frag>
   <%args>
-    int y = 5;
+    int y2 = 5;
   </%args>
-  A def component (<% y+1 %>) with frag param: <& f1 &>.\
+  A def component (<% y2+1 %>) with frag param: <& f1 &>.\
 </%def>
 
 
@@ -142,16 +142,16 @@ front<&| sub3 &>before<& f2 &>middle<&f2&>after</&>back</%def> \
 
 <&| subX &>
   <%args>
-    int i;
+    int i2;
     String s;
   </%args>
-  i is <% i %> and s is <% s %>.
+  i is <% i2 %> and s is <% s %>.
 </&>
 
 <&| SubZ &>
   <%args>
-    int i;
+    int i3;
     String s;
   </%args>
-  i is <% i %> and s is <% s %>.
+  i is <% i3 %> and s is <% s %>.
 </&>
