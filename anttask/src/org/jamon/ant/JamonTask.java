@@ -125,13 +125,13 @@ public class JamonTask
                 public void setTo(String p_to) {}
                 public String[] mapFileName(String p_sourceName)
                 {
-                    String target = p_sourceName;
-                    int i = target.lastIndexOf('.');
-                    if (i > 0 && "jamon".equals(target.substring(i+1)))
+                    String targetFileName = p_sourceName;
+                    int i = targetFileName.lastIndexOf('.');
+                    if (i > 0 && "jamon".equals(targetFileName.substring(i+1)))
                     {
-                        target = target.substring(0,i);
-                        return new String[] { target + ".java",
-                                target + "Impl.java" };
+                        targetFileName = targetFileName.substring(0,i);
+                        return new String[] { targetFileName + ".java",
+                                targetFileName + "Impl.java" };
                     }
                     return null;
                 }
