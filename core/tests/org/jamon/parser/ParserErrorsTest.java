@@ -22,7 +22,7 @@ public class ParserErrorsTest extends AbstractParserTest
         assertError("<%extends>",
                     1, 1, TopLevelParser.MALFORMED_EXTENDS_TAG_ERROR);
         assertError("<%extends /foo f>",
-                    1, 15, TopLevelParser.MALFORMED_TAG_ERROR);
+                    1, 15, AbstractParser.MALFORMED_TAG_ERROR);
     }
 
     public void testUnfinishedJavaTag() throws Exception
@@ -234,7 +234,7 @@ public class ParserErrorsTest extends AbstractParserTest
     {
         assertError(
             "<%implements foo>",
-            1, 1, AbstractBodyParser.MALFORMED_TAG_ERROR);
+            1, 1, AbstractParser.MALFORMED_TAG_ERROR);
     }
 
     public void testMalformedImplementsClose() throws Exception
@@ -248,7 +248,7 @@ public class ParserErrorsTest extends AbstractParserTest
     {
         assertError(
             "<%import foo>",
-            1, 1, AbstractBodyParser.MALFORMED_TAG_ERROR);
+            1, 1, AbstractParser.MALFORMED_TAG_ERROR);
     }
 
     public void testMalformedImportsClose() throws Exception

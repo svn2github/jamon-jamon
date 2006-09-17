@@ -71,7 +71,7 @@ public abstract class AbstractClassNameParserTest extends AbstractParserTest
     public void testParameterizingDottedName() throws Exception
     {
         assertError("foo<bar.baz extends flap>", 
-                    1, 1, AbstractTypeParser.BAD_JAVA_TYPE_SPECIFIER);
+                    1, 1, AbstractParser.BAD_JAVA_TYPE_SPECIFIER);
     }
     
     /**

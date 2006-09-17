@@ -104,22 +104,22 @@ public class FragmentArgsParserTest extends AbstractParserTest
             " foo>\n<bar",
             2,
             1,
-            AbstractBodyParser.BAD_ARGS_CLOSE_TAG);
+            AbstractParser.BAD_ARGS_CLOSE_TAG);
     }
 
     public void testEofAfterArgStart() throws Exception
     {
         assertErrorTripple(
             " foo>\n",
-            2, 1, AbstractBodyParser.BAD_JAVA_TYPE_SPECIFIER,
-            2, 1, AbstractBodyParser.NOT_AN_IDENTIFIER_ERROR,
+            2, 1, AbstractParser.BAD_JAVA_TYPE_SPECIFIER,
+            2, 1, AbstractParser.NOT_AN_IDENTIFIER_ERROR,
             2, 1, FragmentArgsParser.NEED_SEMI);
     }
     
     public void testEofLookingForName() throws Exception
     {
         assertErrorPair(" foo>\na",
-                        2, 2, AbstractBodyParser.NOT_AN_IDENTIFIER_ERROR,
+                        2, 2, AbstractParser.NOT_AN_IDENTIFIER_ERROR,
                         2, 2, FragmentArgsParser.NEED_SEMI);
     }
     

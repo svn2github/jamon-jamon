@@ -176,7 +176,7 @@ public class ArgsParserTest extends AbstractParserTest
             ARGS_START + "\n<foo",
             2,
             1,
-            AbstractBodyParser.BAD_ARGS_CLOSE_TAG);
+            AbstractParser.BAD_ARGS_CLOSE_TAG);
     }
 
     public void testEofAfterArgStart() throws Exception
@@ -184,9 +184,9 @@ public class ArgsParserTest extends AbstractParserTest
         assertErrorTripple(
             ARGS_START,
             1, ARGS_START.length() + 1,
-            AbstractBodyParser.BAD_JAVA_TYPE_SPECIFIER,
+            AbstractParser.BAD_JAVA_TYPE_SPECIFIER,
             1, ARGS_START.length() + 1,
-            AbstractBodyParser.NOT_AN_IDENTIFIER_ERROR,
+            AbstractParser.NOT_AN_IDENTIFIER_ERROR,
             1, ARGS_START.length() + 1,
             OptionalValueTagEndDetector.NEED_SEMI_OR_ARROW);
 
@@ -195,7 +195,7 @@ public class ArgsParserTest extends AbstractParserTest
     public void testEofLookingForName() throws Exception
     {
         assertErrorPair(ARGS_START + "\na",
-                        2, 2, AbstractBodyParser.NOT_AN_IDENTIFIER_ERROR,
+                        2, 2, AbstractParser.NOT_AN_IDENTIFIER_ERROR,
                         2, 2, OptionalValueTagEndDetector.NEED_SEMI_OR_ARROW);
     }
 

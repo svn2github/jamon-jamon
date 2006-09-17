@@ -100,7 +100,7 @@ public class GenericsParserTest extends AbstractParserTest
     public void testBadBounds() throws Exception
     {
         assertErrorPair("<%generic>a extends\n*</%generic>",
-                    2,1, TopLevelParser.BAD_JAVA_TYPE_SPECIFIER,
+                    2,1, AbstractParser.BAD_JAVA_TYPE_SPECIFIER,
                     2,2, UNEXPECTED_CLOSE);
     }
 }
