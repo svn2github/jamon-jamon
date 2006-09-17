@@ -3,5 +3,5 @@
   classes all have different names.
 </%doc>
 <%frag f/>
-<%def d><%frag f/></%def>
+<%def d><%frag f/></%def><&| d &></&>
 <%method m><%frag f/></%method>
