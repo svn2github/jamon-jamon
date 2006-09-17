@@ -35,6 +35,8 @@ public class EncodingReader
     public static class Exception
         extends IOException
     {
+        private static final long serialVersionUID = 2006091701L;
+
         public Exception(String p_message, int p_pos)
         {
             super(p_message);
