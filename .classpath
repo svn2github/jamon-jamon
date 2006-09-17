@@ -12,6 +12,6 @@
 	<classpathentry output="core/build/testclasses" kind="src" path="core/tests"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="var" path="ANT_JAR"/>
-	<classpathentry kind="var" path="JUNIT_JAR"/>
+	<classpathentry kind="lib" path="lib/junit4.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

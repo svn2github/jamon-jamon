@@ -18,7 +18,7 @@
 
   <property name="sample.template1" value="test/jamon/TestTemplate"/>
   <property name="sample.template2" value="test/jamon/Arguments"/>
-  <property name="java.lib.junit" value="/usr/local/share/java/junit.jar"/>
+  <property name="java.lib.junit" value="../lib/junit.jar"/>
 
   <property name="junit.timeout" value="15000"/>
   <property name="junit.printsummary" value="off"/>

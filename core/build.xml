@@ -15,7 +15,7 @@
   <property name="classes.dir" value="${build.dir}/classes"/>
   <property name="tests.classes.dir" value="${build.dir}/testclasses"/>
   <property name="tests.src.dir" value="tests"/>
-  <property name="java.lib.junit" value="junit.jar" />
+  <property name="java.lib.junit" value="../lib/junit.jar" />
 
   <property name="junit.timeout" value="1000" />
   <property name="junit.printsummary" value="off" />
@@ -38,12 +38,12 @@
   </target>
 
   <target name="buildNodeGenerator" description="Build the node generator">
-	<dependset>
-	  <srcfileset dir="${nodeGen.src.dir}" includes="**/*.java"/>
-	  <targetfileset dir="${nodeGen.build.dir}"/>
-	</dependset>
-	<mkdir dir="${nodeGen.build.dir}"/>
-	<javac srcdir = "${nodeGen.src.dir}" destdir="${nodeGen.build.dir}"/>
+  <dependset>
+    <srcfileset dir="${nodeGen.src.dir}" includes="**/*.java"/>
+    <targetfileset dir="${nodeGen.build.dir}"/>
+  </dependset>
+  <mkdir dir="${nodeGen.build.dir}"/>
+  <javac srcdir = "${nodeGen.src.dir}" destdir="${nodeGen.build.dir}"/>
   </target>
 
   <target name="check-nodes">
