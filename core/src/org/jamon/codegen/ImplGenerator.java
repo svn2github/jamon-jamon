@@ -284,6 +284,9 @@ public class ImplGenerator implements SourceGenerator
              i.hasNext(); )
         {
             OptionalArgument arg = i.next();
+            if (p_methodUnit.isOverride()) {
+                m_writer.print("@Override ");
+            }
             m_writer.println("protected " + arg.getType() + " "
                              + p_methodUnit.getOptionalArgDefaultMethod(arg)
                              + "()");
