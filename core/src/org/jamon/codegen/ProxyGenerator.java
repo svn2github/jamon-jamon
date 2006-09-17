@@ -156,7 +156,7 @@ public class ProxyGenerator implements SourceGenerator
 
     private void generateDeclaration()
     {
-        m_writer.print("public ");
+        m_writer.print("@SuppressWarnings(\"unused\") public ");
         if(m_templateUnit.isParent())
         {
             m_writer.print("abstract ");
@@ -358,6 +358,9 @@ public class ProxyGenerator implements SourceGenerator
                                  + "(" + arg.getName() + ");");
             }
         }
+        if (m_templateUnit.getGenericParams().getCount() > 0) {
+            m_writer.print("@SuppressWarnings(\"unchecked\") ");
+        }
         m_writer.println(
             "Intf instance = (Intf) getTemplateManager().constructImpl(this);"
             );
@@ -517,6 +520,7 @@ public class ProxyGenerator implements SourceGenerator
             m_writer.print(pkgName + ".");
         }
         m_writer.print(getClassName());
+        m_writer.print(m_templateUnit.getGenericParams().generateGenericsDeclaration());
     }
 
     private void generateSignature()
