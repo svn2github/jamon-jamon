@@ -6,6 +6,6 @@
 %}
 <%def d>
 <%args>T t;</%args>
-<%frag f>T element;</%frag>\
-<& f: t &>\
+<%frag g>T element;</%frag>\
+<& g: t &>\
 </%def>

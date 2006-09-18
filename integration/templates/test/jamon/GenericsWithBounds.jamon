@@ -8,7 +8,7 @@
 %}
 <%def d>
 <%args>T t2;</%args>
-<%frag f>T element;</%frag>
-<& f: t2 &>
+<%frag g>T element;</%frag>
+<& g: t2 &>
 <% t2.doubleValue() %>
 </%def>
