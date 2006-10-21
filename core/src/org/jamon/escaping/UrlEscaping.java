@@ -129,10 +129,11 @@ public class UrlEscaping
         throws IOException
     {
         percentEscape(p_writer, (char) (p_prefix | p_unicode >> p_bits));
-        while(p_bits > 0)
+        int bits = p_bits;
+        while(bits > 0)
         {
             percentEscape(p_writer,
-                          (char) (0x80 | 0x3F & (p_unicode >> (p_bits -= 6))));
+                          (char) (0x80 | 0x3F & (p_unicode >> (bits -= 6))));
         }
     }
 

@@ -95,6 +95,7 @@ public class PathParser extends AbstractParser
         int c;
         StringBuilder identifier = new StringBuilder();
         boolean identStart = true;
+        boolean updirsAllowed = p_updirsAllowed;
         Location location = m_reader.getNextLocation();
         while ((c = m_reader.read()) >= 0)
         {
@@ -111,13 +112,13 @@ public class PathParser extends AbstractParser
                         new PathElementNode(location, identifier.toString()));
                     identifier = new StringBuilder();
                     identStart = true;
-                    p_updirsAllowed = false;
+                    updirsAllowed = false;
                     location = m_reader.getNextLocation();
                 }
             }
             else if (c == '.')
             {
-                if (p_updirsAllowed)
+                if (updirsAllowed)
                 {
                     if ((c = m_reader.read()) == '.')
                     {

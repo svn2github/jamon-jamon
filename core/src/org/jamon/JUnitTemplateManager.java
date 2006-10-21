@@ -203,22 +203,21 @@ public class JUnitTemplateManager
                             p_args.length);
     }
 
+    private static final Object[] EMPTY_ARGS = new Object[0];
+    
     public Object invoke(Object p_proxy, Method p_method, Object[] p_args)
         throws Throwable
     {
         // sanity:
         Assert.assertTrue(m_impl == p_proxy);
 
-        if (p_args == null)
-        {
-            p_args = new Object[0];
-        }
+        final Object[] args = p_args == null ? EMPTY_ARGS : p_args;
 
         // from the generated template Intf
         if ("render".equals(p_method.getName())
                  || "renderNoFlush".equals(p_method.getName()))
         {
-            checkArgsLength(p_method, p_args, 1);
+            checkArgsLength(p_method, args, 1);
             checkArgValues();
             m_rendered = true;
             return null;

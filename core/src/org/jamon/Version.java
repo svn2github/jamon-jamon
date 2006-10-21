@@ -124,13 +124,14 @@ public class Version
 
     private Version(String p_current)
     {
-        m_beta = p_current.charAt(p_current.length() - 1) == 'b';
+        String current = p_current;
+        m_beta = current.charAt(current.length() - 1) == 'b';
         if (m_beta)
         {
-            p_current = p_current.substring(0, p_current.length() - 1);
+            current = current.substring(0, current.length() - 1);
         }
 
-        StringTokenizer tokenizer = new StringTokenizer(p_current,".");
+        StringTokenizer tokenizer = new StringTokenizer(current,".");
         m_major = Integer.parseInt(tokenizer.nextToken());
         m_minor = Integer.parseInt(tokenizer.nextToken());
         m_sub = tokenizer.hasMoreTokens()
