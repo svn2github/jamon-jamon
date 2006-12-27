@@ -42,7 +42,7 @@ public class XmlEscaping
           case '&': p_writer.write("&amp;"); break;
           case '"': p_writer.write("&quot;"); break;
           case '\'': p_writer.write("&apos;"); break;
-            // FIXME: numerically escape other chars
+            // FIXME: numerically escape other chars outside ASCII
           default: p_writer.write(p_char);
         }
     }
