@@ -79,8 +79,12 @@ public class ParentArgsParserTest extends AbstractParserTest
             1, 3, OptionalValueTagEndDetector.NEED_SEMI_OR_ARROW);
     }
 
-    @Test public void testNoSemiAfterXargWithDefault() throws Exception {
-        //parse(PARENT_ARGS_START + "x=3" + PARENT_ARGS_END);
+    @Test(timeout=100) public void testNoSemiAfterXargWithDefault() throws Exception {
+        parse(PARENT_ARGS_START + "x=3" + PARENT_ARGS_END);
+    }
+
+    @Test(timeout=100) public void testXargWithType() throws Exception {
+        parse(PARENT_ARGS_START + "a.b c;" + PARENT_ARGS_END);
     }
 
     public static junit.framework.Test suite()
