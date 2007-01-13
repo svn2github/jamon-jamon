@@ -104,7 +104,7 @@ public final class ParentArgsParser extends AbstractParser
         }
         else
         {
-            addError(m_reader.getLocation(),
+            addError(m_reader.getNextLocation(),
                 OptionalValueTagEndDetector.NEED_SEMI_OR_ARROW);
         }
     }
