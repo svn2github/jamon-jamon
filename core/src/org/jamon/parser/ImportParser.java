@@ -88,8 +88,8 @@ public class ImportParser extends AbstractParser
     public AbstractImportNode getNode()
     {
         return m_isStatic
-            ? new StaticImportNode(m_location, m_import.toString())
-            : new ImportNode(m_location, m_import.toString());
+            ? new StaticImportNode(m_location, m_import)
+            : new ImportNode(m_location, m_import);
     }
 
     public boolean isStatic()
