@@ -15,7 +15,7 @@
   <property name="classes.dir" value="${build.dir}/classes"/>
   <property name="tests.classes.dir" value="${build.dir}/testclasses"/>
   <property name="tests.src.dir" value="tests"/>
-  <property name="java.lib.junit" value="../lib/junit.jar" />
+  <property name="java.lib.junit" value="../lib/junit4.jar" />
 
   <property name="junit.timeout" value="1000" />
   <property name="junit.printsummary" value="off" />

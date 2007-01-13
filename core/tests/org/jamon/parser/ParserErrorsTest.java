@@ -1,23 +1,20 @@
 package org.jamon.parser;
 
+import org.junit.Test;
+
 public class ParserErrorsTest extends AbstractParserTest
 {
-    public ParserErrorsTest(String p_name)
-    {
-        super(p_name);
-    }
-
-    public void testMaformedJavaTag() throws Exception
+    @Test public void testMaformedJavaTag() throws Exception
     {
         assertError("foo<%java >", 1, 4, "Malformed tag");
     }
 
-    public void testMalformedLiteralTag() throws Exception
+    @Test public void testMalformedLiteralTag() throws Exception
     {
         assertError("<%LITERAL >", 1, 1, "Malformed tag");
     }
 
-    public void testMalformedExtendsTag() throws Exception
+    @Test public void testMalformedExtendsTag() throws Exception
     {
         assertError("<%extends>",
                     1, 1, TopLevelParser.MALFORMED_EXTENDS_TAG_ERROR);
@@ -25,7 +22,7 @@ public class ParserErrorsTest extends AbstractParserTest
                     1, 15, AbstractParser.MALFORMED_TAG_ERROR);
     }
 
-    public void testUnfinishedJavaTag() throws Exception
+    @Test public void testUnfinishedJavaTag() throws Exception
     {
         assertError(
             "foo<%java>ab</%java",
@@ -34,7 +31,7 @@ public class ParserErrorsTest extends AbstractParserTest
             "Reached end of file while looking for '</%java>'");
     }
 
-    public void testUnfinishedLiteralTag() throws Exception
+    @Test public void testUnfinishedLiteralTag() throws Exception
     {
         assertError(
             "<%LITERAL>",
@@ -43,7 +40,7 @@ public class ParserErrorsTest extends AbstractParserTest
             "Reached end of file while looking for '</%LITERAL>'");
     }
 
-    public void testUnfinishedClassTag() throws Exception
+    @Test public void testUnfinishedClassTag() throws Exception
     {
         assertError(
             "<%class>",
@@ -52,7 +49,7 @@ public class ParserErrorsTest extends AbstractParserTest
             "Reached end of file while looking for '</%class>'");
     }
 
-    public void testCloseOnEscapeInString() throws Exception
+    @Test public void testCloseOnEscapeInString() throws Exception
     {
         assertError(
             "<%java> \"\\",
@@ -61,7 +58,7 @@ public class ParserErrorsTest extends AbstractParserTest
             "Reached end of file while inside a java quote");
     }
 
-    public void testMalformedCloseTag() throws Exception
+    @Test public void testMalformedCloseTag() throws Exception
     {
         assertError("</%foo", 1, 1, "Malformed tag");
         assertError("</%foo >", 1, 1, "Malformed tag");
@@ -72,7 +69,7 @@ public class ParserErrorsTest extends AbstractParserTest
             "Malformed tag");
     }
 
-    public void testWrongCloseTag() throws Exception
+    @Test public void testWrongCloseTag() throws Exception
     {
         assertError(
             "<%def bob></%foo>",
@@ -81,12 +78,12 @@ public class ParserErrorsTest extends AbstractParserTest
             "Unexpected tag close </%foo>");
     }
 
-    public void testTopLevelCloseTag() throws Exception
+    @Test public void testTopLevelCloseTag() throws Exception
     {
         assertError("</%def>", 1, 1, "Unexpected tag close </%def>");
     }
 
-    public void testUnexpectedCloseTags() throws Exception
+    @Test public void testUnexpectedCloseTags() throws Exception
     {
         assertError(
             "</&>",
@@ -100,24 +97,24 @@ public class ParserErrorsTest extends AbstractParserTest
             AbstractBodyParser.UNEXPECTED_NAMED_FRAGMENT_CLOSE_ERROR);
     }
 
-    public void testNoDefCloseTag() throws Exception
+    @Test public void testNoDefCloseTag() throws Exception
     {
         assertError("<%def a>abc", 1, 9, SubcomponentParser.makeError("def"));
     }
 
-    public void testNoMethodCloseTag() throws Exception
+    @Test public void testNoMethodCloseTag() throws Exception
     {
         assertError("<%method a>abc", 1, 12,
                     SubcomponentParser.makeError("method"));
     }
 
-    public void testNoOverrideCloseTag() throws Exception
+    @Test public void testNoOverrideCloseTag() throws Exception
     {
         assertError("<%override a>abc", 1, 14,
                     SubcomponentParser.makeError("override"));
     }
 
-    public void testNestedDefs() throws Exception
+    @Test public void testNestedDefs() throws Exception
     {
         assertError(
             "<%def foo><%def bar></%def>",
@@ -126,7 +123,7 @@ public class ParserErrorsTest extends AbstractParserTest
             "<%def> sections only allowed at the top level of a document");
     }
 
-    public void testNestedMethods() throws Exception
+    @Test public void testNestedMethods() throws Exception
     {
         assertError(
             "<%def foo><%method bar></%def>",
@@ -135,7 +132,7 @@ public class ParserErrorsTest extends AbstractParserTest
             "<%method> sections only allowed at the top level of a document");
     }
 
-    public void testNestedOverrides() throws Exception
+    @Test public void testNestedOverrides() throws Exception
     {
         assertError(
             "<%method foo><%override bar></%method>",
@@ -144,7 +141,7 @@ public class ParserErrorsTest extends AbstractParserTest
             "<%override> sections only allowed at the top level of a document");
     }
 
-    public void testNestedAbsMethods() throws Exception
+    @Test public void testNestedAbsMethods() throws Exception
     {
         assertError(
             "<%method foo><%absmeth bar></%method>",
@@ -153,20 +150,20 @@ public class ParserErrorsTest extends AbstractParserTest
             "<%absmeth> sections only allowed at the top level of a document");
     }
 
-    public void testContentInAbsMethod() throws Exception
+    @Test public void testContentInAbsMethod() throws Exception
     {
         assertError(
             "<%absmeth foo>bar",
             1, 14, TopLevelParser.BAD_ABSMETH_CONTENT);
     }
 
-    public void testUnknownTag() throws Exception
+    @Test public void testUnknownTag() throws Exception
     {
         assertError("<%foo>", 1, 1, "Unknown tag <%foo>");
         assertError("<%foo", 1, 1, "Malformed tag");
     }
 
-    public void testEmitErrors() throws Exception
+    @Test public void testEmitErrors() throws Exception
     {
         assertError(
             "<% foo #. %>",
@@ -182,117 +179,121 @@ public class ParserErrorsTest extends AbstractParserTest
         assertError("<% \". %>", 1, 4, AbstractParser.EOF_IN_JAVA_QUOTE_ERROR);
     }
 
-    public void testClassInSubcomponent() throws Exception
+    @Test public void testClassInSubcomponent() throws Exception
     {
         assertError(
             "<%def d><%class></%def>",
             1, 9, AbstractBodyParser.CLASS_TAG_IN_SUBCOMPONENT);
     }
 
-    public void testExtendsInSubcomponent() throws Exception
+    @Test public void testExtendsInSubcomponent() throws Exception
     {
         assertError(
             "<%def d><%extends foo></%def>",
             1, 9, AbstractBodyParser.EXTENDS_TAG_IN_SUBCOMPONENT);
     }
 
-    public void testImplementsInSubcomponent() throws Exception
+    @Test public void testImplementsInSubcomponent() throws Exception
     {
         assertError(
             "<%def foo>\n<%implements></%def>",
             2, 1, AbstractBodyParser.IMPLEMENTS_TAG_IN_SUBCOMPONENT);
     }
 
-    public void testParentArgsInSubcomponent() throws Exception
+    @Test public void testParentArgsInSubcomponent() throws Exception
     {
         assertError(
             "<%def foo>\n<%xargs></%def>",
             2, 1, AbstractBodyParser.PARENT_ARGS_TAG_IN_SUBCOMPONENT);
     }
 
-    public void testEscapeTagInSubcomponent() throws Exception
+    @Test public void testEscapeTagInSubcomponent() throws Exception
     {
         assertError(
             "<%def foo>\n<%escape #u></%def>",
             2, 1, AbstractBodyParser.ESCAPE_TAG_IN_SUBCOMPONENT);
     }
 
-    public void testGenericTagInSubcomponent() throws Exception
+    @Test public void testGenericTagInSubcomponent() throws Exception
     {
         assertError(
             "<%def foo>\n<%generic></%def>",
             2, 1, AbstractBodyParser.GENERIC_TAG_IN_SUBCOMPONENT);
     }
 
-    public void testImplementMissingSemi() throws Exception
+    @Test public void testImplementMissingSemi() throws Exception
     {
         assertError("<%implements>\nfoo.bar\n</%implements>",
                     3, 1, TopLevelParser.EXPECTING_SEMI);
     }
 
-    public void testMalformedImplementsOpen() throws Exception
+    @Test public void testMalformedImplementsOpen() throws Exception
     {
         assertError(
             "<%implements foo>",
             1, 1, AbstractParser.MALFORMED_TAG_ERROR);
     }
 
-    public void testMalformedImplementsClose() throws Exception
+    @Test public void testMalformedImplementsClose() throws Exception
     {
         assertError(
             "<%implements>\n<foo",
             2, 1, TopLevelParser.EXPECTING_IMPLEMENTS_CLOSE);
     }
 
-    public void testMalformedImportsOpen() throws Exception
+    @Test public void testMalformedImportsOpen() throws Exception
     {
         assertError(
             "<%import foo>",
             1, 1, AbstractParser.MALFORMED_TAG_ERROR);
     }
 
-    public void testMalformedImportsClose() throws Exception
+    @Test public void testMalformedImportsClose() throws Exception
     {
         assertError(
             "<%import>\n<foo",
             2, 1, TopLevelParser.EXPECTING_IMPORTS_CLOSE);
     }
 
-    public void testMalformedParentArgsClose() throws Exception
+    @Test public void testMalformedParentArgsClose() throws Exception
     {
         assertError("<%xargs>\n</%>", 2, 1, ParentArgsParser.MALFORMED_PARENT_ARGS_CLOSE);
     }
 
-    public void testMalformedWhileTag() throws Exception
+    @Test public void testMalformedWhileTag() throws Exception
     {
         assertError("<%while>", 1, 1, "Malformed <%while ...%> tag");
     }
 
-    public void testMalformedWhileCondition() throws Exception
+    @Test public void testMalformedWhileCondition() throws Exception
     {
         assertError("<%while foo>", 1, 1,
                     "Reached end of file while reading <%while ...%> tag");
     }
 
-    public void testElseWithoutIf() throws Exception
+    @Test public void testElseWithoutIf() throws Exception
     {
         assertError(
             "<%else>", 1, 1,
             AbstractBodyParser.ENCOUNTERED_ELSE_TAG_WITHOUT_PRIOR_IF_TAG);
     }
 
-    public void testElseIfWithoutIf() throws Exception
+    @Test public void testElseIfWithoutIf() throws Exception
     {
         assertError(
             "<%elseif foo%>>", 1, 1,
             AbstractBodyParser.ENCOUNTERED_ELSEIF_TAG_WITHOUT_PRIOR_IF_TAG);
     }
 
-    public void testMultipleElseTags() throws Exception
+    @Test public void testMultipleElseTags() throws Exception
     {
         assertError(
             "<%if foo%><%else>\n<%else></%if>", 2, 1,
             IfParser.ENCOUNTERED_MULTIPLE_ELSE_TAGS_FOR_ONE_IF_TAG);
     }
 
+    public static junit.framework.Test suite()
+    {
+        return new junit.framework.JUnit4TestAdapter(ParserErrorsTest.class);
+    }
 }

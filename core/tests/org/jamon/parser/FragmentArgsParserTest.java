@@ -1,5 +1,7 @@
 package org.jamon.parser;
 
+import static org.junit.Assert.*;
+
 import java.io.IOException;
 
 import org.jamon.ParserError;
@@ -9,6 +11,7 @@ import org.jamon.node.ArgNameNode;
 import org.jamon.node.ArgNode;
 import org.jamon.node.ArgTypeNode;
 import org.jamon.node.FragmentArgsNode;
+import org.junit.Test;
 
 public class FragmentArgsParserTest extends AbstractParserTest
 {
@@ -26,8 +29,8 @@ public class FragmentArgsParserTest extends AbstractParserTest
             {
                 throw errors;
             }
-            else    
-            {       
+            else
+            {
                 return result;
             }
         }
@@ -44,16 +47,17 @@ public class FragmentArgsParserTest extends AbstractParserTest
         return new FragmentArgsNode(START_LOC, p_name);
     }
 
-    public void testNoArgs() throws Exception
+    @Test public void testNoArgs() throws Exception
     {
         assertEquals(fragmentArgsNode("foo"), parse(" foo>"+ FRAG_END));
     }
 
-    public void testNoArgsConcise() throws Exception
+    @Test public void testNoArgsConcise() throws Exception
     {
         assertEquals(fragmentArgsNode("foo"), parse(" foo/>"));
     }
-    public void testRequiredArgs() throws Exception
+
+    @Test public void testRequiredArgs() throws Exception
     {
         assertEquals(
             fragmentArgsNode("foo")
@@ -69,36 +73,36 @@ public class FragmentArgsParserTest extends AbstractParserTest
                         new ArgNameNode(location(3, 8), "s"))),
             parse(" foo>\nint i;\nString s;\n" + FRAG_END));
     }
-    public void testOptionalArgs() throws Exception
 
+    @Test public void testOptionalArgs() throws Exception
     {
         assertError(" foo>\nint i => 3;" + FRAG_END,
                     2, 7, FragmentArgsParser.NEED_SEMI);
     }
 
-    public void testMissingLabel() throws Exception
+    @Test public void testMissingLabel() throws Exception
     {
         assertError(">" + FRAG_END, 1,1, FragmentArgsParser.FRAGMENT_ARGUMENT_HAS_NO_NAME);
     }
-    
-    public void testMissingLabelConcise() throws Exception
+
+    @Test public void testMissingLabelConcise() throws Exception
     {
         assertError("/>", 1,1, FragmentArgsParser.FRAGMENT_ARGUMENT_HAS_NO_NAME);
     }
-    
-    public void testMissingName() throws Exception
+
+    @Test public void testMissingName() throws Exception
     {
         assertError(" foo>"+ "\nf;" + FRAG_END, 2, 2,
                 AbstractParser.NOT_AN_IDENTIFIER_ERROR);
     }
- 
-    public void testMissingSemiAfterName() throws Exception
+
+    @Test public void testMissingSemiAfterName() throws Exception
     {
         assertError(" foo>\nf a" + FRAG_END,
                     2, 4, FragmentArgsParser.NEED_SEMI);
     }
 
-    public void testBadArgCloseTag() throws Exception
+    @Test public void testBadArgCloseTag() throws Exception
     {
         assertError(
             " foo>\n<bar",
@@ -107,7 +111,7 @@ public class FragmentArgsParserTest extends AbstractParserTest
             AbstractParser.BAD_ARGS_CLOSE_TAG);
     }
 
-    public void testEofAfterArgStart() throws Exception
+    @Test public void testEofAfterArgStart() throws Exception
     {
         assertErrorTripple(
             " foo>\n",
@@ -115,22 +119,21 @@ public class FragmentArgsParserTest extends AbstractParserTest
             2, 1, AbstractParser.NOT_AN_IDENTIFIER_ERROR,
             2, 1, FragmentArgsParser.NEED_SEMI);
     }
-    
-    public void testEofLookingForName() throws Exception
+
+    @Test public void testEofLookingForName() throws Exception
     {
         assertErrorPair(" foo>\na",
                         2, 2, AbstractParser.NOT_AN_IDENTIFIER_ERROR,
                         2, 2, FragmentArgsParser.NEED_SEMI);
     }
-    
-    public void testEofLookingForPostNameSemi() throws Exception
+
+    @Test public void testEofLookingForPostNameSemi() throws Exception
     {
         assertError(" foo>\na b", 2, 4, FragmentArgsParser.NEED_SEMI);
     }
 
-    public FragmentArgsParserTest(String p_name)
+    public static junit.framework.Test suite()
     {
-        super(p_name);
+        return new junit.framework.JUnit4TestAdapter(FragmentArgsParserTest.class);
     }
-
 }

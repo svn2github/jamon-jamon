@@ -23,15 +23,13 @@ import org.jamon.node.AbsolutePathNode;
 import org.jamon.node.AbstractPathNode;
 import org.jamon.node.AliasDefNode;
 import org.jamon.node.AliasesNode;
+import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 public class AliasParserTest extends AbstractParserTest
 {
-    public AliasParserTest(String p_name)
-    {
-        super(p_name);
-    }
-
-    public void testEmptyAliases() throws Exception
+    @Test public void testEmptyAliases() throws Exception
     {
         assertEquals(
             topNode().addSubNode(
@@ -39,7 +37,7 @@ public class AliasParserTest extends AbstractParserTest
             parse("<%alias></%alias>"));
     }
 
-    public void testRootAlias() throws Exception
+    @Test public void testRootAlias() throws Exception
     {
         assertEquals(
             topNode().addSubNode(
@@ -51,7 +49,7 @@ public class AliasParserTest extends AbstractParserTest
             parse("<%alias>\n/ => /foo/bar;\n</%alias>"));
     }
 
-    public void testNamedAlias() throws Exception
+    @Test public void testNamedAlias() throws Exception
     {
         assertEquals(
             topNode().addSubNode(
@@ -63,7 +61,7 @@ public class AliasParserTest extends AbstractParserTest
             parse("<%alias>\nbaz => /foo/bar;\n</%alias>"));
     }
 
-    public void testMultipleAliases() throws Exception
+    @Test public void testMultipleAliases() throws Exception
     {
         assertEquals(
             topNode().addSubNode(
@@ -79,7 +77,7 @@ public class AliasParserTest extends AbstractParserTest
             parse("<%alias>\nfoo => /a;\nbar => /b;\n</%alias>"));
     }
 
-    public void testQuotedAlias() throws Exception
+    @Test public void testQuotedAlias() throws Exception
     {
         assertErrorPair("<%alias>\nhtml = \"/foo;\n</%alias>",
                         2, 8, PathParser.GENERIC_PATH_ERROR,
@@ -93,5 +91,10 @@ public class AliasParserTest extends AbstractParserTest
             location(p_row, p_column + 1),
             new AbsolutePathNode(location(p_row, p_column)),
             p_path);
+    }
+
+    public static junit.framework.Test suite()
+    {
+        return new junit.framework.JUnit4TestAdapter(AliasParserTest.class);
     }
 }

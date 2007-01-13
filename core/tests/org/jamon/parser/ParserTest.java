@@ -21,10 +21,13 @@
 
 package org.jamon.parser;
 
+import static org.junit.Assert.*;
+
 import java.io.IOException;
 import java.io.StringReader;
 
 import org.jamon.node.*;
+import org.junit.Test;
 
 /**
  * @author ian
@@ -40,10 +43,6 @@ public class ParserTest extends AbstractParserTest
 
     private static final String BEFORE = "before";
     private static final String AFTER = "after";
-    public ParserTest(String p_name)
-    {
-        super(p_name);
-    }
 
     private void checkParseText(final String p_text) throws Exception
     {
@@ -53,7 +52,7 @@ public class ParserTest extends AbstractParserTest
                 TEMPLATE_LOC, new StringReader(p_text)).parse().getRootNode());
     }
 
-    public void testParseText() throws Exception
+    @Test public void testParseText() throws Exception
     {
         checkParseText("Hello, world");
         checkParseText("Hello < world");
@@ -61,7 +60,7 @@ public class ParserTest extends AbstractParserTest
         checkParseText("Hello <");
     }
 
-    public void testParseJavaLine() throws Exception
+    @Test public void testParseJavaLine() throws Exception
     {
         String java = "int c = 4;\n";
         assertEquals(
@@ -69,7 +68,7 @@ public class ParserTest extends AbstractParserTest
             parse("%" + java));
     }
 
-    public void testParseTextAndJavaLine() throws Exception
+    @Test public void testParseTextAndJavaLine() throws Exception
     {
         String text = "hello, world\n";
         String java = "int c = 4;";
@@ -83,7 +82,7 @@ public class ParserTest extends AbstractParserTest
                 .getRootNode());
     }
 
-    public void testParseJavaLineAndText() throws Exception
+    @Test public void testParseJavaLineAndText() throws Exception
     {
         String text = "hello, world\n";
         String java = "int c = 4;\n";
@@ -94,7 +93,7 @@ public class ParserTest extends AbstractParserTest
             parse("%" + java + text));
     }
 
-    public void testParseEscapedNewline() throws Exception
+    @Test public void testParseEscapedNewline() throws Exception
     {
         String line1 = "line\\1", line2 = "line2\\";
         assertEquals(
@@ -103,7 +102,7 @@ public class ParserTest extends AbstractParserTest
             parse(line1 + "\\\n" + line2));
     }
 
-    public void testJavaTag() throws Exception
+    @Test public void testJavaTag() throws Exception
     {
         String java = "int c = 4;";
         String javaTag = JAVA_START + java + JAVA_END;
@@ -126,7 +125,7 @@ public class ParserTest extends AbstractParserTest
             parse(JAVA_START + p_java + JAVA_END));
     }
 
-    public void testJavaTagWithQuotes() throws Exception
+    @Test public void testJavaTagWithQuotes() throws Exception
     {
         checkJavaString("String s = \" " + JAVA_END + "\"; ");
         checkJavaString("String s = \" \\\" " + JAVA_END + "\"; ");
@@ -135,7 +134,7 @@ public class ParserTest extends AbstractParserTest
         checkJavaString("int a = 3; \\");
     }
 
-    public void testLiteral() throws Exception
+    @Test public void testLiteral() throws Exception
     {
         String literal = LITERAL_START + JAVA_START + LITERAL_END;
         assertEquals(
@@ -152,7 +151,7 @@ public class ParserTest extends AbstractParserTest
             parse(BEFORE + literal + AFTER));
     }
 
-    public void testFalseStartForJavaTagEnd() throws Exception
+    @Test public void testFalseStartForJavaTagEnd() throws Exception
     {
         checkJavaString("a </% b");
     }
@@ -187,7 +186,7 @@ public class ParserTest extends AbstractParserTest
             parse(BEFORE + subcomponent + AFTER));
     }
 
-    public void testDef() throws Exception
+    @Test public void testDef() throws Exception
     {
         doSubcomponentTest(
             "<%def", "</%def>",
@@ -201,7 +200,7 @@ public class ParserTest extends AbstractParserTest
             });
     }
 
-    public void testMethod() throws Exception
+    @Test public void testMethod() throws Exception
     {
         doSubcomponentTest(
             "<%method", "</%method>",
@@ -215,7 +214,7 @@ public class ParserTest extends AbstractParserTest
             });
     }
 
-    public void testAbsMethod() throws Exception
+    @Test public void testAbsMethod() throws Exception
     {
         assertEquals(
             topNode()
@@ -232,7 +231,7 @@ public class ParserTest extends AbstractParserTest
              parse("<%absmeth foo>\n<%args>\nint i;\n</%args>\n<%frag f/></%absmeth>"));
     }
 
-    public void testOverride() throws Exception
+    @Test public void testOverride() throws Exception
     {
         doSubcomponentTest(
             "<%override", "</%override>",
@@ -246,7 +245,7 @@ public class ParserTest extends AbstractParserTest
             });
     }
 
-    public void testCall() throws Exception
+    @Test public void testCall() throws Exception
     {
         String call = "<& foo &>";
         Location pathStart = location(1, (BEFORE + "<& f").length());
@@ -267,7 +266,7 @@ public class ParserTest extends AbstractParserTest
             parse(BEFORE + call + AFTER));
     }
 
-    public void testEmit() throws Exception
+    @Test public void testEmit() throws Exception
     {
         String emitExpr = "foo";
         String emit = EMIT_START + emitExpr + EMIT_END;
@@ -303,7 +302,7 @@ public class ParserTest extends AbstractParserTest
                 parse(BEFORE + escapedEmit + AFTER));
     }
 
-    public void testEmitWithGreaterThan() throws Exception
+    @Test public void testEmitWithGreaterThan() throws Exception
     {
        String emitExpr = "foo > bar";
        String emit = EMIT_START + emitExpr + EMIT_END;
@@ -323,7 +322,7 @@ public class ParserTest extends AbstractParserTest
            parse(BEFORE + emit + AFTER));
     }
 
-    public void testClassTag() throws Exception
+    @Test public void testClassTag() throws Exception
     {
         assertEquals(
             topNode().addSubNode(
@@ -331,7 +330,7 @@ public class ParserTest extends AbstractParserTest
             parse("<%class>foo</%class>"));
     }
 
-    public void testExtendsTag() throws Exception
+    @Test public void testExtendsTag() throws Exception
     {
         String path = "/foo/bar";
         String extendsTagStart = "<%extends ";
@@ -347,14 +346,14 @@ public class ParserTest extends AbstractParserTest
             parse(extendsTagStart + path + ">"));
     }
 
-    public void testEmptyImplementsTag() throws Exception
+    @Test public void testEmptyImplementsTag() throws Exception
     {
         assertEquals(
             topNode().addSubNode(new ImplementsNode(START_LOC)),
             parse("<%implements></%implements>"));
     }
 
-    public void testSingleImplementsTag() throws Exception
+    @Test public void testSingleImplementsTag() throws Exception
     {
         assertEquals(
             topNode().addSubNode(
@@ -363,7 +362,7 @@ public class ParserTest extends AbstractParserTest
             parse("<%implements>\na.b;\n</%implements>"));
     }
 
-    public void testMultiImplementsTag() throws Exception
+    @Test public void testMultiImplementsTag() throws Exception
     {
         assertEquals(
             topNode().addSubNode(
@@ -373,7 +372,7 @@ public class ParserTest extends AbstractParserTest
             parse("<%implements>\naa.bb;\nc.d;\n</%implements>"));
     }
 
-    public void testImplementsWhitespaceTag() throws Exception
+    @Test public void testImplementsWhitespaceTag() throws Exception
     {
         assertEquals(
             topNode().addSubNode(
@@ -382,14 +381,14 @@ public class ParserTest extends AbstractParserTest
             parse("<%implements>\na . b ;\n</%implements>"));
     }
 
-    public void testEmptyImportsTag() throws Exception
+    @Test public void testEmptyImportsTag() throws Exception
     {
         assertEquals(
             topNode().addSubNode(new ImportsNode(START_LOC)),
             parse("<%import></%import>"));
     }
 
-    public void testSingleImportsTag() throws Exception
+    @Test public void testSingleImportsTag() throws Exception
     {
         assertEquals(
             topNode().addSubNode(
@@ -398,7 +397,7 @@ public class ParserTest extends AbstractParserTest
             parse("<%import>\na.b;\n</%import>"));
     }
 
-    public void testMultiImportsTag() throws Exception
+    @Test public void testMultiImportsTag() throws Exception
     {
         assertEquals(
             topNode().addSubNode(
@@ -408,7 +407,7 @@ public class ParserTest extends AbstractParserTest
             parse("<%import>\naa.bb;\nc.*;\n</%import>"));
     }
 
-    public void testImportsWhitespace() throws Exception
+    @Test public void testImportsWhitespace() throws Exception
     {
         assertEquals(
             topNode().addSubNode(
@@ -418,14 +417,14 @@ public class ParserTest extends AbstractParserTest
             parse("<%import>\naa . bb ;\nc . * ;\n</%import>"));
     }
 
-    public void testEmptyParentArgsTag() throws Exception
+    @Test public void testEmptyParentArgsTag() throws Exception
     {
         assertEquals(
             topNode().addSubNode(new ParentArgsNode(START_LOC)),
             parse("<%xargs></%xargs>"));
     }
 
-    public void testParentArgsTag() throws Exception
+    @Test public void testParentArgsTag() throws Exception
     {
         assertEquals(
             topNode().addSubNode(
@@ -440,7 +439,7 @@ public class ParserTest extends AbstractParserTest
             parse("<%xargs>\na;\nb => x;</%xargs>"));
     }
 
-    public void testParentArgsInOverrideTag() throws Exception
+    @Test public void testParentArgsInOverrideTag() throws Exception
     {
         assertEquals(
             topNode().addSubNode(
@@ -456,7 +455,7 @@ public class ParserTest extends AbstractParserTest
             parse("<%override m>\n<%xargs>\na;\nb => x;</%xargs></%override>"));
     }
 
-    public void testDocTag() throws Exception
+    @Test public void testDocTag() throws Exception
     {
         String begining = BEFORE + "<%doc>some docs</%doc>";
         assertEquals(
@@ -469,14 +468,14 @@ public class ParserTest extends AbstractParserTest
             parse(begining + "after"));
     }
 
-    public void testParentMarkerTag() throws Exception
+    @Test public void testParentMarkerTag() throws Exception
     {
         assertEquals(
             topNode().addSubNode(new ParentMarkerNode(location(1,1))),
             parse("<%abstract>"));
     }
 
-    public void testEscapeTag() throws Exception
+    @Test public void testEscapeTag() throws Exception
     {
         assertEquals(
             topNode()
@@ -484,7 +483,7 @@ public class ParserTest extends AbstractParserTest
             parse("<%escape #u>"));
     }
 
-    public void testWhileTag() throws Exception
+    @Test public void testWhileTag() throws Exception
     {
         final String whileTag = "<%while cond%>";
         assertEquals(
@@ -495,7 +494,7 @@ public class ParserTest extends AbstractParserTest
             parse(whileTag + "text</%while>"));
     }
 
-    public void testForTag() throws Exception
+    @Test public void testForTag() throws Exception
     {
         final String forTag = "<%for loop : baz%>";
         assertEquals(
@@ -513,7 +512,7 @@ public class ParserTest extends AbstractParserTest
             parse(forTag + "<% x %>text</%for>"));
     }
 
-    public void testIfTag() throws Exception
+    @Test public void testIfTag() throws Exception
     {
         final String ifTag = "<%if cond%>";
         assertEquals(
@@ -524,7 +523,7 @@ public class ParserTest extends AbstractParserTest
             parse(ifTag + "text</%if>"));
     }
 
-    public void testIfElseTags() throws Exception
+    @Test public void testIfElseTags() throws Exception
     {
         final String ifTag = "<%if cond%>";
         assertEquals(
@@ -537,7 +536,7 @@ public class ParserTest extends AbstractParserTest
             parse(ifTag + "text\n<%else>other</%if>"));
     }
 
-    public void testIfElseIfTags() throws Exception
+    @Test public void testIfElseIfTags() throws Exception
     {
         final String ifTag = "<%if cond%>";
         final String elseIfTag = "<%elseif cond2%>";
@@ -552,7 +551,7 @@ public class ParserTest extends AbstractParserTest
             parse(ifTag + "text\n" + elseIfTag + "other</%if>"));
     }
 
-    public void testIfElseIfElseTags() throws Exception
+    @Test public void testIfElseIfElseTags() throws Exception
     {
         final String ifTag = "<%if cond%>";
         final String elseIfTag = "<%elseif cond2%>";
@@ -569,7 +568,7 @@ public class ParserTest extends AbstractParserTest
             parse(ifTag + "text\n" + elseIfTag + "other\n<%else>third</%if>"));
     }
 
-    public void testMultipleElseIfTags() throws Exception
+    @Test public void testMultipleElseIfTags() throws Exception
     {
         final String ifTag = "<%if cond%>";
         final String elseIfTag1 = "<%elseif cond1%>";
@@ -589,5 +588,10 @@ public class ParserTest extends AbstractParserTest
                 ifTag + "text\n"
                 + elseIfTag1 + "one\n"
                 + elseIfTag2 + "two</%if>"));
+    }
+
+    public static junit.framework.Test suite()
+    {
+        return new junit.framework.JUnit4TestAdapter(ParserTest.class);
     }
 }

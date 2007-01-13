@@ -25,19 +25,25 @@ import java.io.IOException;
 import org.jamon.ParserError;
 import org.jamon.ParserErrors;
 import org.jamon.node.Location;
+import org.junit.Test;
 
 public class ClassNameParserTest extends AbstractClassNameParserTest
 {
-    public void testUnexpectedArray() throws Exception
+    @Test public void testUnexpectedArray() throws Exception
     {
         assertError("foo[]", 1, 4, AbstractTypeParser.UNEXPECTED_ARRAY_ERROR);
     }
-    
+
     @Override
     protected ClassNameParser makeParser(Location p_location,
         PositionalPushbackReader p_reader,
         ParserErrors p_errors) throws IOException, ParserError
     {
         return new ClassNameParser(p_location, p_reader, p_errors);
+    }
+
+    public static junit.framework.Test suite()
+    {
+        return new junit.framework.JUnit4TestAdapter(ClassNameParserTest.class);
     }
 }

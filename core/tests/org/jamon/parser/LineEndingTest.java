@@ -1,11 +1,14 @@
 package org.jamon.parser;
 
+import static org.junit.Assert.*;
+
 import org.jamon.node.JavaLineNode;
 import org.jamon.node.TextNode;
+import org.junit.Test;
 
 public class LineEndingTest extends AbstractParserTest
 {
-    public void testJavaLineForUnix() throws Exception
+    @Test public void testJavaLineForUnix() throws Exception
     {
         assertEquals(
             topNode()
@@ -14,12 +17,17 @@ public class LineEndingTest extends AbstractParserTest
             parse("% java\ntext"));
     }
 
-    public void testJavaLineForWindows() throws Exception
+    @Test public void testJavaLineForWindows() throws Exception
     {
         assertEquals(
             topNode()
                 .addSubNode(new JavaLineNode(location(1,1), " java\rmore java\r\n"))
                 .addSubNode(new TextNode(location(2,1), "text")),
             parse("% java\rmore java\r\ntext"));
+    }
+
+    public static junit.framework.Test suite()
+    {
+        return new junit.framework.JUnit4TestAdapter(LineEndingTest.class);
     }
 }

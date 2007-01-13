@@ -1,5 +1,7 @@
 package org.jamon.parser;
 
+import static org.junit.Assert.*;
+
 import java.io.IOException;
 
 import org.jamon.ParserErrors;
@@ -10,17 +12,13 @@ import org.jamon.node.Location;
 import org.jamon.node.NamedAliasPathNode;
 import org.jamon.node.RelativePathNode;
 import org.jamon.node.RootAliasPathNode;
+import org.junit.Test;
 
 /**
  * @author ian
  **/
 public class PathParserTest extends AbstractParserTest
 {
-    public PathParserTest(String p_name)
-    {
-        super(p_name);
-    }
-
     @Override protected AbstractNode parse(String p_text)
         throws IOException, ParserErrors
     {
@@ -44,7 +42,7 @@ public class PathParserTest extends AbstractParserTest
         assertEquals(p_nextChar, m_reader.read());
     }
 
-    public void testRelativePath() throws Exception
+    @Test public void testRelativePath() throws Exception
     {
         checkPath(
             buildPath(START_LOC, new RelativePathNode(START_LOC), "foo"),
@@ -78,7 +76,7 @@ public class PathParserTest extends AbstractParserTest
             -1);
     }
 
-    public void testNonEofPaths() throws Exception
+    @Test public void testNonEofPaths() throws Exception
     {
         final String ends = " ,;&";
         for (int i = 0; i < ends.length(); i++)
@@ -97,7 +95,7 @@ public class PathParserTest extends AbstractParserTest
         }
     }
 
-    public void testAbsolutePath() throws Exception
+    @Test public void testAbsolutePath() throws Exception
     {
 
         Location relStart = location(1, 2);
@@ -111,7 +109,7 @@ public class PathParserTest extends AbstractParserTest
             -1);
     }
 
-    public void testAliasPath() throws Exception
+    @Test public void testAliasPath() throws Exception
     {
         checkPath(
             buildPath(
@@ -129,7 +127,7 @@ public class PathParserTest extends AbstractParserTest
             -1);
     }
 
-    public void testErrors() throws Exception
+    @Test public void testErrors() throws Exception
     {
         final String message = PathParser.GENERIC_PATH_ERROR;
         assertError("", 1, 1, message);
@@ -146,4 +144,9 @@ public class PathParserTest extends AbstractParserTest
     }
 
     private PositionalPushbackReader m_reader = null;
+
+    public static junit.framework.Test suite()
+    {
+        return new junit.framework.JUnit4TestAdapter(PathParserTest.class);
+    }
 }

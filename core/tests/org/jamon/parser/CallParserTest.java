@@ -1,5 +1,7 @@
 package org.jamon.parser;
 
+import static org.junit.Assert.*;
+
 import java.io.IOException;
 
 import org.jamon.ParserErrors;
@@ -22,22 +24,18 @@ import org.jamon.node.SimpleCallNode;
 import org.jamon.node.TextNode;
 import org.jamon.node.UnnamedFragmentNode;
 import org.jamon.node.UnnamedParamsNode;
+import org.junit.Test;
 
 /**
  * @author ian
  **/
 public class CallParserTest extends AbstractParserTest
 {
-    public CallParserTest(String p_name)
-    {
-        super(p_name);
-    }
-
     @Override protected AbstractNode parse(String p_text) throws IOException
     {
         final PositionalPushbackReader reader = makeReader(p_text);
-        assertEquals('<', reader.read());
-        assertEquals('&', reader.read());
+        assertEquals('<', (char) reader.read());
+        assertEquals('&', (char) reader.read());
         ParserErrors errors = new ParserErrors();
         AbstractCallNode result =
             new CallParser(reader, errors, START_LOC).getCallNode();
@@ -51,7 +49,7 @@ public class CallParserTest extends AbstractParserTest
         }
     }
 
-    public void testParseBasicCall() throws Exception
+    @Test public void testParseBasicCall() throws Exception
     {
         assertEquals(
             new SimpleCallNode(
@@ -61,8 +59,8 @@ public class CallParserTest extends AbstractParserTest
                 new NoParamsNode(location(1, 8))),
             parse("<& foo &>"));
     }
-   
-    public void testSimpleCallWithGenericParam() throws Exception
+
+    @Test public void testSimpleCallWithGenericParam() throws Exception
     {
         assertEquals(
             new SimpleCallNode(
@@ -75,7 +73,7 @@ public class CallParserTest extends AbstractParserTest
             parse("<& foo<String> &>"));
     }
 
-    public void testSimpleCallWithGenericParams() throws Exception
+    @Test public void testSimpleCallWithGenericParams() throws Exception
     {
         assertEquals(
             new SimpleCallNode(
@@ -88,7 +86,7 @@ public class CallParserTest extends AbstractParserTest
             parse("<& foo<A,B> &>"));
     }
 
-    public void testSimpleCallWithComplexGenericParam() throws Exception
+    @Test public void testSimpleCallWithComplexGenericParam() throws Exception
     {
         assertEquals(
             new SimpleCallNode(
@@ -101,7 +99,7 @@ public class CallParserTest extends AbstractParserTest
             parse("<& foo<A<B,C>> &>"));
     }
 
-    public void testParseNamedArgCall() throws Exception
+    @Test public void testParseNamedArgCall() throws Exception
     {
         assertEquals(
             new SimpleCallNode(
@@ -151,7 +149,7 @@ public class CallParserTest extends AbstractParserTest
             parse("<& /foo; a => \"a;\"; b => '&' &>"));
     }
 
-    public void testNamedArgCallWithGenericParam() throws Exception
+    @Test public void testNamedArgCallWithGenericParam() throws Exception
     {
         assertEquals(
             new SimpleCallNode(
@@ -167,7 +165,7 @@ public class CallParserTest extends AbstractParserTest
             parse("<& /foo<A>; a => 1 &>"));
     }
 
-    public void testParseUnnamedArgCall() throws Exception
+    @Test public void testParseUnnamedArgCall() throws Exception
     {
         assertEquals(
             new SimpleCallNode(
@@ -211,8 +209,8 @@ public class CallParserTest extends AbstractParserTest
                         new ParamValueNode(location(1, 10), "x && a > b "))),
             parse("<& /foo: x && a > b &>"));
     }
-    
-    public void testUnnamedArgCallWithGenericParam() throws Exception
+
+    @Test public void testUnnamedArgCallWithGenericParam() throws Exception
     {
         assertEquals(
             new SimpleCallNode(
@@ -224,14 +222,14 @@ public class CallParserTest extends AbstractParserTest
                .addGenericParam(new GenericCallParam(location(1,9), "A")),
             parse("<& /foo<A>: 1 &>"));
     }
-    
-    public void testChildCall() throws IOException
+
+    @Test public void testChildCall() throws IOException
     {
         String call = "<& *CHILD &>";
-        assertEquals(new ChildCallNode(START_LOC), parse(call));    
+        assertEquals(new ChildCallNode(START_LOC), parse(call));
     }
 
-    public void testFragmentCall() throws Exception
+    @Test public void testFragmentCall() throws Exception
     {
         assertEquals(
             new FragmentCallNode(
@@ -257,7 +255,7 @@ public class CallParserTest extends AbstractParserTest
             new NoParamsNode(location(1, 10)));
     }
 
-    public void testMultiFragmentCall() throws Exception
+    @Test public void testMultiFragmentCall() throws Exception
     {
         assertEquals(
             makeMultiFragmentCall(),
@@ -286,8 +284,8 @@ public class CallParserTest extends AbstractParserTest
                     + "<|bar>baz</|>\n<|bob>joe</|>"
                     + FRAGMENTS_END));
     }
-    
-    public void testMaformedCallTag() throws Exception
+
+    @Test public void testMaformedCallTag() throws Exception
     {
         assertError("<&foo; a b", 1, 10, CallParser.MISSING_ARG_ARROW_ERROR);
         assertError("<& foo a", 1, 8, CallParser.GENERIC_ERROR);
@@ -337,21 +335,26 @@ public class CallParserTest extends AbstractParserTest
             AbstractParser.NOT_AN_IDENTIFIER_ERROR);
     }
 
-    public void testMissingGenericCallParamClose() throws Exception
+    @Test public void testMissingGenericCallParamClose() throws Exception
     {
         assertError(
-            "<& foo<x\n&>", 2, 1, CallParser.MISSING_GENERIC_PARAM_CLOSE_ERROR); 
+            "<& foo<x\n&>", 2, 1, CallParser.MISSING_GENERIC_PARAM_CLOSE_ERROR);
     }
-    
-    public void testAsterixNonChildCall() throws Exception
+
+    @Test public void testAsterixNonChildCall() throws Exception
     {
         assertError(
             "<& *NOTCHILD &>", 1, 4, CallParser.INVALID_CALL_TARGET_ERROR);
     }
-    
-    public void testMalformedChildCall() throws Exception
+
+    @Test public void testMalformedChildCall() throws Exception
     {
         assertError(
             "<& *CHILD foo", 1, 11, CallParser.MISSING_CALL_CLOSE_ERROR);
+    }
+
+    public static junit.framework.Test suite()
+    {
+        return new junit.framework.JUnit4TestAdapter(CallParserTest.class);
     }
 }

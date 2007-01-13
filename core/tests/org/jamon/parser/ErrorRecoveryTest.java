@@ -1,13 +1,10 @@
 package org.jamon.parser;
 
+import org.junit.Test;
+
 public class ErrorRecoveryTest extends AbstractParserTest
 {
-    public ErrorRecoveryTest(String p_name)
-    {
-        super(p_name);
-    }
-
-    public void testCloseTagRecovery() throws Exception
+    @Test public void testCloseTagRecovery() throws Exception
     {
         assertErrorPair(
             "</%foo></%bar>",
@@ -25,5 +22,10 @@ public class ErrorRecoveryTest extends AbstractParserTest
             1,
             18,
             "Unexpected tag close </%def>");
+    }
+
+    public static junit.framework.Test suite()
+    {
+        return new junit.framework.JUnit4TestAdapter(ErrorRecoveryTest.class);
     }
 }

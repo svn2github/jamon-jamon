@@ -20,25 +20,28 @@
 
 package org.jamon.parser;
 
+import static org.junit.Assert.*;
+
 import java.io.IOException;
 
 import org.jamon.ParserError;
 import org.jamon.ParserErrors;
 import org.jamon.node.Location;
+import org.junit.Test;
 
 public class TypeNameParserTest extends AbstractClassNameParserTest
 {
-    
-    public void testParseArray() throws Exception
+
+    @Test public void testParseArray() throws Exception
     {
         assertEquals("foo.bar[]", parseTypeName("foo . bar [ ]"));
     }
-    
-    public void testParseDoubleArray() throws Exception
+
+    @Test public void testParseDoubleArray() throws Exception
     {
         assertEquals("foo.bar[][]", parseTypeName("foo . bar [ ] [ ]"));
     }
-    
+
     @Override
     protected ClassNameParser makeParser(Location p_location,
         PositionalPushbackReader p_reader,
@@ -47,4 +50,8 @@ public class TypeNameParserTest extends AbstractClassNameParserTest
         return new TypeNameParser(p_location, p_reader, p_errors);
     }
 
+    public static junit.framework.Test suite()
+    {
+        return new junit.framework.JUnit4TestAdapter(TypeNameParserTest.class);
+    }
 }

@@ -19,38 +19,41 @@
  */
 package org.jamon.parser;
 
+import static org.junit.Assert.*;
+
 import org.jamon.ParserError;
 import org.jamon.ParserErrors;
 import org.jamon.node.AbstractImportNode;
 import org.jamon.node.ImportNode;
 import org.jamon.node.StaticImportNode;
+import org.junit.Test;
 
 public class ImportParserTest extends AbstractParserTest
 {
-    public void testParseSimpleImport() throws Exception
+    @Test public void testParseSimpleImport() throws Exception
     {
         assertEquals(new ImportNode(START_LOC, "foo"), parseImport("foo "));
     }
 
-    public void testParseCompoundImport() throws Exception
+    @Test public void testParseCompoundImport() throws Exception
     {
         assertEquals(
             new ImportNode(START_LOC, "foo.bar"), parseImport("foo . bar "));
     }
 
-    public void testParseStarImport() throws Exception
+    @Test public void testParseStarImport() throws Exception
     {
         assertEquals(
             new ImportNode(START_LOC, "foo.bar.*"), parseImport("foo.bar . *"));
     }
 
-    public void testStaticImport() throws Exception
+    @Test public void testStaticImport() throws Exception
     {
         assertEquals(
             new StaticImportNode(START_LOC, "foo.bar"), parseImport("static foo.bar"));
     }
 
-    public void testBadStaticImport() throws Exception
+    @Test public void testBadStaticImport() throws Exception
     {
         try
         {
@@ -78,5 +81,10 @@ public class ImportParserTest extends AbstractParserTest
             throw errors;
         }
         return node;
+    }
+
+    public static junit.framework.Test suite()
+    {
+        return new junit.framework.JUnit4TestAdapter(ImportParserTest.class);
     }
 }

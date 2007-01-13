@@ -25,55 +25,58 @@ import org.jamon.ParserError;
 import org.jamon.ParserErrors;
 import org.jamon.node.AbstractNode;
 import org.jamon.node.Location;
+import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 public abstract class AbstractClassNameParserTest extends AbstractParserTest
 {
-    public void testParseSimple() throws Exception
+    @Test public void testParseSimple() throws Exception
     {
         assertEquals("foo", parseTypeName("foo "));
     }
-    
-    public void testParseCompound() throws Exception
+
+    @Test public void testParseCompound() throws Exception
     {
         assertEquals("foo.bar", parseTypeName("foo. bar"));
     }
-    
-    public void testParameterized() throws Exception
+
+    @Test public void testParameterized() throws Exception
     {
         assertEquals("foo<Integer>", parseTypeName("foo < Integer >"));
     }
-    
-    public void testParameterizedWithWildcard() throws Exception
+
+    @Test public void testParameterizedWithWildcard() throws Exception
     {
         assertEquals("foo<?>", parseTypeName("foo < ? >"));
     }
-    
-    public void testParameterizedWithBoundWildcard() throws Exception
+
+    @Test public void testParameterizedWithBoundWildcard() throws Exception
     {
-        assertEquals("foo<? extends a.b>", 
+        assertEquals("foo<? extends a.b>",
                      parseTypeName("foo < ? extends a . b >"));
         assertEquals("foo<? super a.b<c>>",
                      parseTypeName("foo < ? super a.b< c > >"));
     }
-    
-    public void testMultipleParameters() throws Exception
+
+    @Test public void testMultipleParameters() throws Exception
     {
         assertEquals("foo.bar<T,S>", parseTypeName("foo . bar < T , S >"));
     }
-    
-    public void testComplexParameters() throws Exception
+
+    @Test public void testComplexParameters() throws Exception
     {
         String complexType =
             "foo<a,b>.bar<? extends baz.bar<T[]>,a.b<x>,? super c.d<S>>";
         assertEquals(complexType, parseTypeName(complexType));
     }
 
-    public void testParameterizingDottedName() throws Exception
+    @Test public void testParameterizingDottedName() throws Exception
     {
-        assertError("foo<bar.baz extends flap>", 
+        assertError("foo<bar.baz extends flap>",
                     1, 1, AbstractParser.BAD_JAVA_TYPE_SPECIFIER);
     }
-    
+
     /**
      * Provided for use with the AssertError method
      */
@@ -85,17 +88,17 @@ public abstract class AbstractClassNameParserTest extends AbstractParserTest
     }
 
     protected abstract ClassNameParser makeParser(
-        Location p_location, 
-        PositionalPushbackReader p_reader, 
+        Location p_location,
+        PositionalPushbackReader p_reader,
         ParserErrors p_errors) throws IOException, ParserError;
-    
+
     protected String parseTypeName(String p_content) throws IOException
     {
         ParserErrors errors = new ParserErrors();
         String result = null;
         try
         {
-            ClassNameParser parser = 
+            ClassNameParser parser =
                 makeParser(START_LOC, makeReader(p_content), errors);
             result = parser.getType();
         }

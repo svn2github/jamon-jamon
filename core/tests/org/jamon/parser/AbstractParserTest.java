@@ -5,8 +5,6 @@ import java.io.StringReader;
 import java.util.Iterator;
 import java.util.StringTokenizer;
 
-import junit.framework.TestCase;
-
 import org.jamon.ParserError;
 import org.jamon.ParserErrors;
 import org.jamon.TemplateFileLocation;
@@ -18,10 +16,11 @@ import org.jamon.node.PathElementNode;
 import org.jamon.node.TopNode;
 import org.jamon.node.UpdirNode;
 
+import static org.junit.Assert.*;
 /**
  * @author ian
  **/
-public abstract class AbstractParserTest extends TestCase
+public abstract class AbstractParserTest
 {
     protected final static TemplateLocation TEMPLATE_LOC =
         new TemplateFileLocation("x");
@@ -29,11 +28,6 @@ public abstract class AbstractParserTest extends TestCase
         new Location(TEMPLATE_LOC, 1, 1);
 
     public AbstractParserTest() {}
-
-    public AbstractParserTest(String p_name)
-    {
-        super(p_name);
-    }
 
     protected static PositionalPushbackReader makeReader(String p_text)
     {
