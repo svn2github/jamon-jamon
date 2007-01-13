@@ -122,14 +122,13 @@ public class AnalyzerTest extends TestCase
         assertStatementText("b", loopBlock.getStatements().get(0));
         assertStatementText("c", loopBlock.getStatements().get(2));
     }
-    
+
     public void testAliases() throws Exception
     {
         String templateText = "<& foo//baz &><& bar//hit/me &>";
         TemplateUnit unit = analyzeText(templateText);
         Collection<String> deps = unit.getTemplateDependencies();
         assertEquals(2, deps.size());
-        System.err.println(deps);
         assertTrue(deps.contains("/x/y/baz"));
         assertTrue(deps.contains("/z/q/hit/me"));
     }
