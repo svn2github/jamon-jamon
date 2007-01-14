@@ -23,8 +23,7 @@ public class ParentArgsParserTest extends AbstractParserTest
     {
         final PositionalPushbackReader reader = makeReader(p_text);
         ParserErrors errors = new ParserErrors();
-        ParentArgsNode result =
-            new ParentArgsParser(reader, errors, START_LOC).getParentArgsNode();
+        ParentArgsNode result = new ParentArgsParser(reader, errors, START_LOC).getParentArgsNode();
         if (errors.hasErrors())
         {
             throw errors;
@@ -79,12 +78,22 @@ public class ParentArgsParserTest extends AbstractParserTest
             1, 3, OptionalValueTagEndDetector.NEED_SEMI_OR_ARROW);
     }
 
-    @Test(timeout=100) public void testNoSemiAfterXargWithDefault() throws Exception {
-        parse(PARENT_ARGS_START + "x=3" + PARENT_ARGS_END);
+    @Test public void testNoSemiAfterXargWithDefault() throws Exception {
+        assertError(
+            PARENT_ARGS_START + "x=3" + PARENT_ARGS_END,
+            1, 4, AbstractParser.eofErrorMessage(";"));
     }
 
-    @Test(timeout=100) public void testXargWithType() throws Exception {
-        parse(PARENT_ARGS_START + "a.b c;" + PARENT_ARGS_END);
+    @Test public void testXargWithSimpleType() throws Exception {
+        assertError(
+            PARENT_ARGS_START + "a c;" + PARENT_ARGS_END,
+            1, 4, OptionalValueTagEndDetector.NEED_SEMI_OR_ARROW);
+    }
+
+    @Test public void testXargWithFullyScopedType() throws Exception {
+        assertError(
+            PARENT_ARGS_START + "a.b c;" + PARENT_ARGS_END,
+            1, 3, OptionalValueTagEndDetector.NEED_SEMI_OR_ARROW);
     }
 
     public static junit.framework.Test suite()

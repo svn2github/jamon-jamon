@@ -59,7 +59,7 @@ public class AbstractParser
     protected static class NotAnIdentifierException extends Exception {
 
         private static final long serialVersionUID = 2006091701L;
-        
+
     }
 
     /**
@@ -162,11 +162,14 @@ public class AbstractParser
         }
         if (c < 0)
         {
-            addError(
-                p_startLocation,
-                "Reached end of file while looking for '" + p_end + "'");
+            addError(p_startLocation, eofErrorMessage(p_end));
         }
         return buffer.toString();
+    }
+
+    public static String eofErrorMessage(String p_end)
+    {
+        return "Reached end of file while looking for '" + p_end + "'";
     }
 
     protected String readJava(

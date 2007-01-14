@@ -59,7 +59,15 @@ public final class ParentArgsParser extends AbstractParser
                 }
                 else
                 {
-                    handleParentArg(m_parentArgsNode);
+                    try
+                    {
+                        handleParentArg(m_parentArgsNode);
+                    }
+                    catch (ParserError e)
+                    {
+                        addError(e);
+                        return;
+                    }
                 }
             }
         }
@@ -71,7 +79,7 @@ public final class ParentArgsParser extends AbstractParser
     }
 
     private void handleParentArg(ParentArgsNode parentArgsNode)
-        throws IOException
+        throws IOException, ParserError
     {
         ArgNameNode argName = new ArgNameNode(
             m_reader.getNextLocation(), readIdentifier());
@@ -86,25 +94,18 @@ public final class ParentArgsParser extends AbstractParser
             readChar('>'); // support old-style syntax
             soakWhitespace();
             Location valueLocation = m_reader.getNextLocation();
-            try
-            {
-                parentArgsNode.addArg(
-                    new ParentArgWithDefaultNode(
-                        argName.getLocation(),
-                        argName,
-                        new ArgValueNode(valueLocation,
-                            readJava(
-                                valueLocation,
-                                new OptionalValueTagEndDetector()))));
-            }
-            catch (ParserError e)
-            {
-                addError(e);
-            }
+            parentArgsNode.addArg(
+                new ParentArgWithDefaultNode(
+                    argName.getLocation(),
+                    argName,
+                    new ArgValueNode(valueLocation,
+                        readJava(
+                            valueLocation,
+                            new OptionalValueTagEndDetector()))));
         }
         else
         {
-            addError(m_reader.getNextLocation(),
+            throw new ParserError(m_reader.getNextLocation(),
                 OptionalValueTagEndDetector.NEED_SEMI_OR_ARROW);
         }
     }
