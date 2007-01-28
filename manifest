@@ -1,10 +1,10 @@
-Main-Class: org.jamon.Version
+Main-Class: org.jamon.DisplayVersion
 
-Name: org/jamon
+Name: org/jamon/
 Specification-Title: Jamon Core Classes
-Specification-Version: 1.4
-Specification-Vendor: Jay Sachs <jay@jamon.org>
+Specification-Version: @VERSION@
+Specification-Vendor: Jamon Hackers <jamon-hackers@lists.sourceforge.net>
 Implementation-Title: org.jamon
-Implementation-Version: 1.4  ($Name$)
-Implementation-Vendor: Jay Sachs <jay@jamon.org>
+Implementation-Version: @VERSION@
+Implementation-Vendor: Jamon Hackers <jamon-hackers@lists.sourceforge.net>
 Sealed: true

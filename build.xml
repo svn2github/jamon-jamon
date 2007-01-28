@@ -8,10 +8,13 @@
     'integration').
   </description>
 
+  <property name="jamon.version" value="2.2.0.0"/>
+  <property name="jamon.anttask.version" value="2.2.0.0"/>
+  
   <property file="build.properties"/>
   <property file="${user.home}/.ant.properties"/>
-  <property name="jarfile.core" value="jamon.jar" />
-  <property name="jarfile.anttask" value="jamon-anttask.jar" />
+  <property name="jarfile.core" value="jamon-${jamon.version}.jar" />
+  <property name="jarfile.anttask" value="jamon-anttask-${jamon.anttask.version}.jar" />
   <property name="core.classes.dir" value="core/build/classes" />
   <property name="stage.dir" value="site" />
   <property name="dist.dir" value="${stage.dir}/dist" />
@@ -28,11 +31,20 @@
   <target name="jar"
           description="Creates uber JARs"
           depends="base">
-    <jar jarfile="${jarfile.core}" manifest="manifest" >
+    <copy file="manifest" tofile="manifest.mf">
+      <filterset>
+        <filter token="VERSION" value="${jamon.version}"/>
+      </filterset>
+    </copy>
+    <jar jarfile="${jarfile.core}" manifest="manifest.mf" >
       <fileset dir="core/build/classes" />
-      <fileset dir="core/src" includes="**/*.properties"/>
     </jar>
-    <jar jarfile="${jarfile.anttask}" manifest="manifest-anttask" >
+    <copy file="manifest-anttask" tofile="manifest-anttask.mf">
+      <filterset>
+        <filter token="VERSION" value="${jamon.antask.version}"/>
+      </filterset>
+    </copy>
+    <jar jarfile="${jarfile.anttask}" manifest="manifest-anttask.mf" >
       <fileset dir="anttask/build/classes" />
     </jar>
   </target>
@@ -40,18 +52,6 @@
   <target name="base" description="Build and test subprojects">
     <ant dir="core" target="test"/>
     <ant dir="anttask" target="test"/>
-  </target>
-
-  <target name="cvsignores" description="Generates cvsignore files">
-    <ant dir="core" target="cvsignores"/>
-    <ant dir="integration" target="cvsignores"/>
-    <ant dir="anttask" target="cvsignores"/>
-    <echo file=".cvsignore">
-      .cvsignore
-      ${jarfile.core}
-      ${jarfile.anttask}
-      build.properties
-    </echo>
   </target>
 
   <target name="spotless"
@@ -77,68 +77,8 @@
     <ant dir="core" target="clean"/>
     <ant dir="integration" target="clean"/>
     <ant dir="anttask" target="clean"/>
-  </target>
-
-  <target name="promote-release" depends="base">
-    <antcall target="_change-version">
-      <param name="jamon.version.action" value="release"/>
-    </antcall>
-  </target>
-
-  <target name="major-release" depends="base">
-    <antcall target="_change-version">
-      <param name="jamon.version.action" value="nextmajor"/>
-    </antcall>
-  </target>
-
-  <target name="minor-release" depends="base">
-    <antcall target="_change-version">
-      <param name="jamon.version.action" value="nextminor"/>
-    </antcall>
-  </target>
-
-  <target name="bugfix-release" depends="base">
-    <antcall target="_change-version">
-      <param name="jamon.version.action" value="nextsub"/>
-    </antcall>
-  </target>
-
-  <target name="_change-version">
-    <exec executable="java"
-          failonerror="true"
-          outputproperty="jamon.version.next">
-      <arg value="-cp" />
-      <arg value="${core.classes.dir}" />
-      <arg value="org.jamon.Version" />
-      <arg value="${jamon.version.action}"/>
-    </exec>
-    <property name="file" value="core/src/org/jamon/Resources.properties" />
-    <property file="${file}"/>
-    <echo message="Current version: ${org.jamon.version}" />
-    <echo message="Next version: ${jamon.version.next}" />
-    <input message="Press enter to continue ..." />
-    <cvs command="edit ${file}"/>
-    <replace file="${file}"
-             token="version=${org.jamon.version}"
-             value="version=${jamon.version.next}" />
-    <replace file="${file}"
-             token="release=false"
-             value="release=true" />
-    <cvs command="commit -m 'version bump to ${jamon.version.next}' ${file}" />
-    <ant dir="core" target="compile" />
-    <exec executable="java"
-          outputproperty="jamon.version.cvs">
-      <arg value="-cp" />
-      <arg value="${core.classes.dir}" />
-      <arg value="org.jamon.Version" />
-      <arg value="cvstag" />
-    </exec>
-    <cvs command="tag ${jamon.version.cvs}" />
-    <cvs command="edit ${file}"/>
-    <replace file="${file}"
-             token="release=true"
-             value="release=false" />
-    <cvs command="commit -m 'dev version of ${jamon.version.next}' ${file}" />
+    <delete file="manifest.mf"></delete>
+    <delete file="manifest-anttask.mf"></delete>
   </target>
 
   <target name="javadoc" description="Build the javadoc">

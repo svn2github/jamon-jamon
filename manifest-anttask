@@ -1,10 +1,10 @@
-Main-Class: org.jamon.Version
+Main-Class: org.jamon.DisplayVersion
 
 Name: org/jamon/anttask
-Specification-Title: Jamon AntTask Classes
-Specification-Version: 1.4
-Specification-Vendor: Jay Sachs <jay@jamon.org>
-Implementation-Title: org.jamon.anttask
-Implementation-Version: 1.4  ($Name$)
-Implementation-Vendor: Jay Sachs <jay@jamon.org>
+Specification-Title: Jamon Core Classes
+Specification-Version: @VERSION@
+Specification-Vendor: Jamon Hackers <jamon-hackers@lists.sourceforge.net>
+Implementation-Title: org.jamon
+Implementation-Version: @VERSION@
+Implementation-Vendor: Jamon Hackers <jamon-hackers@lists.sourceforge.net>
 Sealed: true
