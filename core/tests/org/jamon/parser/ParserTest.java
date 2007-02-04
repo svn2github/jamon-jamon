@@ -64,7 +64,7 @@ public class ParserTest extends AbstractParserTest
     {
         String java = "int c = 4;\n";
         assertEquals(
-            topNode().addSubNode(new JavaLineNode(START_LOC, java)),
+            topNode().addSubNode(new JavaNode(START_LOC, java)),
             parse("%" + java));
     }
 
@@ -75,7 +75,7 @@ public class ParserTest extends AbstractParserTest
         assertEquals(
             topNode().addSubNode(
                 new TextNode(START_LOC, text)).addSubNode(
-                new JavaLineNode(location(2, 1), java)),
+                new JavaNode(location(2, 1), java)),
             new TopLevelParser(
                 TEMPLATE_LOC, new StringReader(text + "%" + java))
                 .parse()
@@ -88,9 +88,14 @@ public class ParserTest extends AbstractParserTest
         String java = "int c = 4;\n";
         assertEquals(
             topNode().addSubNode(
-                new JavaLineNode(START_LOC, java)).addSubNode(
+                new JavaNode(START_LOC, java)).addSubNode(
                 new TextNode(location(2, 1), text)),
             parse("%" + java + text));
+    }
+
+    @Test public void testParseJavaSnippet() throws Exception
+    {
+
     }
 
     @Test public void testParseEscapedNewline() throws Exception

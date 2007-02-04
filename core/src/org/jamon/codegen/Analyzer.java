@@ -619,13 +619,6 @@ public class Analyzer
                                           m_templateIdentifier));
         }
 
-        @Override public void caseJavaLineNode(JavaLineNode p_node)
-        {
-            addStatement(new RawStatement(p_node.getJava(),
-                                          p_node.getLocation(),
-                                          m_templateIdentifier));
-        }
-
         private class EmitAdapter extends AnalysisAdapter
         {
             EscapingDirective m_escapeCode = null;
