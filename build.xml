@@ -8,9 +8,8 @@
     'integration').
   </description>
 
-  <property name="jamon.version" value="2.2.0.0"/>
-  <property name="jamon.anttask.version" value="2.2.0.0"/>
-  
+  <property file="version.properties"/>
+
   <property file="build.properties"/>
   <property file="${user.home}/.ant.properties"/>
   <property name="jarfile.core" value="jamon-${jamon.version}.jar" />

@@ -1,12 +1,12 @@
 <?xml version="1.0"?>
 
 <project name="Jamon Integration Tests" default="compile">
-
   <description>Integration Tests for the Jamon template engine</description>
 
   <property file="build.properties"/>
   <property file="../build.properties"/>
   <property file="${user.home}/.ant.properties"/>
+  <property file="../version.properties"/>
 
   <property name="org.jamon.integration.verbose" value="false"/>
 
@@ -29,7 +29,8 @@
 
   <target name="jamon-libs-use-jar" if="org.jamon.integration.usejar">
     <dirname property="jamon.top.dir" file="."/>
-    <property name="java.lib.jamon" value="${jamon.top.dir}/jamon.jar:${jamon.top.dir}/jamon-anttask.jar"/>
+    <property name="java.lib.jamon"
+              value="${jamon.top.dir}/jamon-${jamon.version}.jar:${jamon.top.dir}/jamon-anttask-${jamon.anttask.version}.jar"/>
   </target>
 
   <target name="jamon-libs-use-work" unless="org.jamon.integration.usejar">
