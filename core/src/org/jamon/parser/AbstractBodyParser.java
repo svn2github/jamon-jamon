@@ -113,17 +113,21 @@ public abstract class AbstractBodyParser<Node extends AbstractBodyNode>
                 int c1 = m_reader.read();
                 switch (c1)
                 {
-                    case '%' : // a tag or an emit
+                    case '%' : // a tag, emit or java snippet
                         handleText();
                         if (soakWhitespace())
                         {
                             handleEmit(tagLocation);
                         }
+                        else if (readChar('%'))
+                        {
+                            handleJavaSnippet(tagLocation);
+                        }
                         else
                         {
                             handleTag(readTagName(), tagLocation);
-                            m_reader.markNodeEnd();
                         }
+                        m_reader.markNodeEnd();
                         break;
                     case '&' :
                         handleText();
@@ -311,7 +315,6 @@ public abstract class AbstractBodyParser<Node extends AbstractBodyNode>
         {
             addError(e);
         }
-        m_reader.markNodeEnd();
     }
 
     private boolean isLetter(char p_char)
@@ -696,60 +699,53 @@ public abstract class AbstractBodyParser<Node extends AbstractBodyNode>
         addError(p_tagLocation, GENERIC_TAG_IN_SUBCOMPONENT);
     }
 
-    private static class JavaTagDetector implements TagEndDetector
-    {
-        private final static String END_TAG = "</%java>";
-        private final static int END_TAG_LENGTH = END_TAG.length();
-        int charsSeen = 0;
-
-        public int checkEnd(final char p_char)
-        {
-            if (p_char == END_TAG.charAt(charsSeen))
-            {
-                if (++charsSeen == END_TAG_LENGTH)
-                {
-                    return charsSeen;
-                }
-            }
-            else
-            {
-                charsSeen = 0;
-            }
-            return 0;
-        }
-
-        public ParserError getEofError(Location p_startLocation)
-        {
-            return new ParserError(
-                p_startLocation,
-                "Reached end of file while looking for '</%java>'");
-        }
-
-        public void resetEndMatch()
-        {
-            charsSeen = 0;
-        }
-
-    }
-
-    protected void handleJavaTag(final Location p_tagLocation)
+    private void handleJavaTag(final Location p_tagLocation)
         throws IOException
     {
         if (checkForTagClosure(p_tagLocation))
         {
-            try
-            {
-                m_root.addSubNode(
-                    new JavaNode(
-                        p_tagLocation,
-                        readJava(p_tagLocation, new JavaTagDetector())));
-                soakWhitespace();
-            }
-            catch (ParserError e)
-            {
-                addError(e);
-            }
+            handleJavaCode(p_tagLocation, new JavaTagEndDetector());
         }
+    }
+
+    private void handleJavaSnippet(final Location p_tagLocation) throws IOException
+    {
+        handleJavaCode(p_tagLocation, new JavaSnippetTagEndDetector());
+    }
+
+    private void handleJavaCode(final Location p_tagLocation, TagEndDetector p_endTagDetector)
+    throws IOException
+    {
+        try
+        {
+            m_root.addSubNode(
+                new JavaNode(
+                    p_tagLocation,
+                    readJava(p_tagLocation, p_endTagDetector)));
+            soakWhitespace();
+        }
+        catch (ParserError e)
+        {
+            addError(e);
+        }
+    }
+
+    private class JavaTagEndDetector extends AbstractTagEndDetector
+    {
+        public JavaTagEndDetector()
+        {
+            super("</%java>");
+        }
+
+    }
+
+    private class JavaSnippetTagEndDetector extends AbstractTagEndDetector
+    {
+        protected JavaSnippetTagEndDetector()
+        {
+            super("%%>");
+        }
+
     }
 
     protected void handleLiteralTag(final Location p_tagLocation)

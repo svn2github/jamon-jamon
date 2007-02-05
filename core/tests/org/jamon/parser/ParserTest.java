@@ -95,7 +95,20 @@ public class ParserTest extends AbstractParserTest
 
     @Test public void testParseJavaSnippet() throws Exception
     {
+        String java = "int c = 4;";
+        assertEquals(
+            topNode().addSubNode(new JavaNode(START_LOC, java)), parse("<%%" + java + "%%>"));
+    }
 
+    @Test public void testParseJavaSnippetInTextWithQuotes() throws Exception
+    {
+        String text1 = "hello\n", text2 = "goodbye", java = "String c = \"a%%>\";";
+        assertEquals(
+            topNode()
+                .addSubNode(new TextNode(START_LOC, text1))
+                .addSubNode(new JavaNode(location(2,1), java))
+                .addSubNode(new TextNode(location(2, java.length() + 7), text2)),
+            parse(text1 + "<%%" + java + "%%>" + text2));
     }
 
     @Test public void testParseEscapedNewline() throws Exception

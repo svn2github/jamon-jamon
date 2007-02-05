@@ -1,0 +1,9 @@
+<%doc>
+  No need to have a test to exercise this; if it compiles, it's good.
+</%doc>
+<%args>
+  int i;
+</%args>
+<%%
+  int j = i;
+  String x = "%%>";%%>
