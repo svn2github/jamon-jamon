@@ -6,4 +6,4 @@
 </%args>
 <%java
   int j = i;
-  String x = "%>";%>
+  String x = "%>"; j += i; j+= x.length(); %>
