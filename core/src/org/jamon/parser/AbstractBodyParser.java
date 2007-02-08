@@ -119,10 +119,6 @@ public abstract class AbstractBodyParser<Node extends AbstractBodyNode>
                         {
                             handleEmit(tagLocation);
                         }
-                        else if (readChar('%'))
-                        {
-                            handleJavaSnippet(tagLocation);
-                        }
                         else
                         {
                             handleTag(readTagName(), tagLocation);
@@ -702,15 +698,15 @@ public abstract class AbstractBodyParser<Node extends AbstractBodyNode>
     private void handleJavaTag(final Location p_tagLocation)
         throws IOException
     {
-        if (checkForTagClosure(p_tagLocation))
+        if (readChar('>'))
         {
             handleJavaCode(p_tagLocation, new JavaTagEndDetector());
         }
-    }
-
-    private void handleJavaSnippet(final Location p_tagLocation) throws IOException
-    {
-        handleJavaCode(p_tagLocation, new JavaSnippetTagEndDetector());
+        else
+        {
+            soakWhitespace();
+            handleJavaCode(p_tagLocation, new JavaSnippetTagEndDetector());
+        }
     }
 
     private void handleJavaCode(final Location p_tagLocation, TagEndDetector p_endTagDetector)
@@ -743,7 +739,7 @@ public abstract class AbstractBodyParser<Node extends AbstractBodyNode>
     {
         protected JavaSnippetTagEndDetector()
         {
-            super("%%>");
+            super("%>");
         }
 
     }

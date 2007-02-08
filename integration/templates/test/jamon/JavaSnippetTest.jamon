@@ -4,6 +4,6 @@
 <%args>
   int i;
 </%args>
-<%%
+<%java
   int j = i;
-  String x = "%%>";%%>
+  String x = "%>";%>

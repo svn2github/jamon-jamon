@@ -6,7 +6,7 @@ public class ParserErrorsTest extends AbstractParserTest
 {
     @Test public void testMaformedJavaTag() throws Exception
     {
-        assertError("foo<%java >", 1, 4, "Malformed tag");
+        assertError("foo<%java >", 1, 4, "Reached end of file while looking for '%>'");
     }
 
     @Test public void testMalformedLiteralTag() throws Exception
