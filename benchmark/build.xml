@@ -7,6 +7,7 @@
   <property file="build.properties"/>
   <property file="../build.properties"/>
   <property file="${user.home}/.ant.properties"/>
+  <property file="../version.properties"/>
 
   <property name="build.dir" value="build"/>
   <property name="build.src.dir" value="${build.dir}/src"/>
@@ -15,8 +16,8 @@
 
   <target name="init">
     <dirname property="jamon.top.dir" file="."/>
-    <property name="java.lib.jamon" value="${jamon.top.dir}/jamon.jar"/>
-    <property name="java.lib.jamon.anttask" value="${jamon.top.dir}/jamon-anttask.jar"/>
+    <property name="java.lib.jamon" value="${jamon.top.dir}/jamon-${jamon.version}.jar"/>
+    <property name="java.lib.jamon.anttask" value="${jamon.top.dir}/jamon-anttask-${jamon.anttask.version}.jar"/>
   </target>
 
   <target name="templates" depends="init">
