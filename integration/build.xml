@@ -18,7 +18,7 @@
 
   <property name="sample.template1" value="test/jamon/TestTemplate"/>
   <property name="sample.template2" value="test/jamon/Arguments"/>
-  <property name="java.lib.junit" value="../lib/junit.jar"/>
+  <property name="java.lib.junit" value="../lib/junit4.jar"/>
 
   <property name="junit.timeout" value="15000"/>
   <property name="junit.printsummary" value="off"/>
@@ -97,7 +97,7 @@
     <mkdir dir="${classes.dir}"/>
     <javac destdir="${classes.dir}"
            debug="true"
-           classpath="${java.lib.jamon}"
+           classpath="${java.lib.jamon}:${java.lib.junit}"
            deprecation="true">
       <src path="${src.dir}"/>
       <src path="${build.src.dir}"/>
