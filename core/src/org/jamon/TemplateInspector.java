@@ -21,14 +21,17 @@
 package org.jamon;
 
 import java.io.Writer;
-import java.util.Arrays;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.lang.reflect.Method;
-import java.lang.reflect.InvocationTargetException;
+
+import org.jamon.annotations.Argument;
+import org.jamon.annotations.Template;
 
 /**
  * An <code>TemplateInspector</code> manages the reflective rendering of a
@@ -86,38 +89,34 @@ public class TemplateInspector
     {
         m_template = p_manager.constructProxy(p_templateName);
         m_templateClass = m_template.getClass();
-        try
+        Method[] methods = m_templateClass.getMethods();
+        Method renderMethod = null;
+        for (int i = 0; i < methods.length; ++i)
         {
-            Method[] methods = m_templateClass.getMethods();
-            Method renderMethod = null;
-            for (int i = 0; i < methods.length; ++i)
+            if (methods[i].getName().equals("render"))
             {
-                if (methods[i].getName().equals("render"))
-                {
-                    renderMethod = methods[i];
-                    break;
-                }
+                renderMethod = methods[i];
+                break;
             }
-            if (renderMethod == null)
-            {
-                throw new InvalidTemplateException(p_templateName);
-            }
-            m_renderMethod = renderMethod;
-            m_requiredArgNames = Arrays.asList
-                ((String[])
-                 m_templateClass.getField("REQUIRED_ARG_NAMES").get(null));
-            m_optionalArgNames = Arrays.asList
-                ((String[])
-                 m_templateClass.getField("OPTIONAL_ARG_NAMES").get(null));
         }
-        catch (NoSuchFieldException e)
+        if (renderMethod == null)
         {
-            throw new InvalidTemplateException(p_templateName, e);
+            throw new InvalidTemplateException(p_templateName);
         }
-        catch (IllegalAccessException e)
+        m_renderMethod = renderMethod;
+        Template templateAnnotation = m_templateClass.getAnnotation(Template.class);
+        m_requiredArgNames = getArgNames(templateAnnotation.requiredArguments());
+        m_optionalArgNames = getArgNames(templateAnnotation.optionalArguments());
+    }
+
+    private List<String> getArgNames(Argument[] p_arguments)
+    {
+        List<String> argumentNames = new ArrayList<String>(p_arguments.length);
+        for (Argument argument : p_arguments)
         {
-            throw new InvalidTemplateException(p_templateName, e);
+            argumentNames.add(argument.name());
         }
+        return argumentNames;
     }
 
     /**

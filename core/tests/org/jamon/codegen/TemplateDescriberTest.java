@@ -67,7 +67,7 @@ public class TemplateDescriberTest extends TestCase
         m_mockTemplateSource = new MockTemplateSource();
         m_templateDescriber = new TemplateDescriber(m_mockTemplateSource, null);
     }
-    
+
     public void testGetAliases() throws Exception
     {
         assertEquals(0, m_templateDescriber.getAliases("/foo").size());
@@ -86,7 +86,7 @@ public class TemplateDescriberTest extends TestCase
         assertFalse(m_templateDescriber.getAliases("/foo/a").containsKey("bar"));
     }
 
-   public void testGetJamonContextType() throws Exception
+    public void testGetJamonContextType() throws Exception
     {
         assertNull(m_templateDescriber.getJamonContextType("/foo"));
 

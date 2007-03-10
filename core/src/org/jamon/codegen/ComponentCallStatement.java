@@ -118,7 +118,7 @@ public class ComponentCallStatement
         }
         p_writer.print(instanceVar + ".renderNoFlush");
         p_writer.openList();
-        p_writer.printArg(ArgNames.WRITER);
+        p_writer.printListElement(ArgNames.WRITER);
         getParams().generateRequiredArgs(desc.getRequiredArgs().iterator(),
                                          p_writer);
         generateFragmentParams(p_writer,

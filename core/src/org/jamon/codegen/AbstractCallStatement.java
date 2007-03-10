@@ -114,7 +114,7 @@ public abstract class AbstractCallStatement
         p_writer.openBlock();
         p_writer.print("renderNoFlush");
         p_writer.openList();
-        p_writer.printArg(ArgNames.WRITER);
+        p_writer.printListElement(ArgNames.WRITER);
         fragmentUnitImpl.printRenderArgs(p_writer);
         p_writer.closeList();
         p_writer.println(";");
@@ -124,7 +124,7 @@ public abstract class AbstractCallStatement
 
         p_writer.print("public void renderNoFlush");
         p_writer.openList();
-        p_writer.printArg(ArgNames.ANNOTATED_WRITER_DECL);
+        p_writer.printListElement(ArgNames.ANNOTATED_WRITER_DECL);
         fragmentUnitImpl.printRenderArgsDecl(p_writer);
         p_writer.closeList();
         p_writer.println(" throws "+ ClassNames.IOEXCEPTION);
@@ -173,7 +173,7 @@ public abstract class AbstractCallStatement
     {
         while (p_fragmentInterfaces.hasNext())
         {
-            p_writer.printArg(
+            p_writer.printListElement(
                 "new "
                 + getFragmentImplName(
                     (p_fragmentInterfaces.next().getFragmentUnit()))

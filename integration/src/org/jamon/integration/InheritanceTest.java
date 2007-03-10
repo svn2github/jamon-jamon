@@ -21,11 +21,9 @@
 package org.jamon.integration;
 
 import java.lang.reflect.Modifier;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
 
 import org.jamon.TemplateCompilationException;
+import org.jamon.annotations.Template;
 
 import test.jamon.Child;
 import test.jamon.Child1;
@@ -130,47 +128,69 @@ public class InheritanceTest
         checkOutput("s0{s - 1 - g t}2");
     }
 
-    public void testIntfArgs()
-        throws Exception
+    public void testParentAnnotations()
     {
-        assertEquals(new String[] {"i", "j"},
-                     Parent.REQUIRED_ARG_NAMES);
-        assertEquals(new String[] {"int", "Integer"},
-                     Parent.REQUIRED_ARG_TYPES);
-        assertStringSetEquals
-            (new String[] {"opt1", "opt2", "opt3", "opt4", "opt5", "opt6"},
-             Parent.OPTIONAL_ARG_NAMES);
-        assertEquals(new String[] {}, Parent.FRAGMENT_ARG_NAMES);
+        Template templateAnnotation = Parent.class.getAnnotation(Template.class);
+        NameType.checkArgs(
+            templateAnnotation.requiredArguments(),
+            new NameType("i", "int"), new NameType("j", "Integer"));
+        NameType.checkArgSet(
+            templateAnnotation.optionalArguments(),
+            new NameType("opt1", "String"), new NameType("opt2", "String"),
+            new NameType("opt3", "String"), new NameType("opt4", "String"),
+            new NameType("opt5", "String"), new NameType("opt6", "String"));
+        assertEquals(0, templateAnnotation.fragmentArguments().length);
+    }
 
-        assertEquals(new String[] {"i", "j", "a", "k"},
-                     Child.REQUIRED_ARG_NAMES);
-        assertEquals(new String[] {"int", "Integer", "String", "boolean"},
-                     Child.REQUIRED_ARG_TYPES);
-        assertStringSetEquals (new String[] {"opt1", "opt2", "opt3", "opt4",
-                                             "opt5", "opt6", "opt7"},
-                               Child.OPTIONAL_ARG_NAMES);
-        assertEquals(new String[] {}, Child.FRAGMENT_ARG_NAMES);
+    public void testChildAnnotations()
+    {
+        Template templateAnnotation = Child.class.getAnnotation(Template.class);
+        NameType.checkArgs(
+            templateAnnotation.requiredArguments(),
+            new NameType("i", "int"), new NameType("j", "Integer"),
+            new NameType("a", "String"), new NameType("k", "boolean"));
+        NameType.checkArgSet(
+            templateAnnotation.optionalArguments(),
+            new NameType("opt1", "String"), new NameType("opt2", "String"),
+            new NameType("opt3", "String"), new NameType("opt4", "String"),
+            new NameType("opt5", "String"), new NameType("opt6", "String"),
+            new NameType("opt7", "String"));
+        assertEquals(0, templateAnnotation.fragmentArguments().length);
+    }
 
-        assertEquals(new String[] {"i", "j", "a", "b"},
-                     Middle.REQUIRED_ARG_NAMES);
-        assertEquals(new String[] {"int", "Integer", "String", "boolean"},
-                     Middle.REQUIRED_ARG_TYPES);
-        assertStringSetEquals
-            (new String[] {"opt1", "opt2", "opt3", "opt4", "opt5",
-                           "opt6", "opt7", "opt8", "opt9"},
-             Middle.OPTIONAL_ARG_NAMES);
-        assertEquals(new String[] {}, Middle.FRAGMENT_ARG_NAMES);
+    public void testMiddleAnnotations()
+    {
+        Template templateAnnotation = Middle.class.getAnnotation(Template.class);
+        NameType.checkArgs(
+            templateAnnotation.requiredArguments(),
+            new NameType("i", "int"), new NameType("j", "Integer"),
+            new NameType("a", "String"), new NameType("b", "boolean"));
+        NameType.checkArgSet(
+            templateAnnotation.optionalArguments(),
+            new NameType("opt1", "String"), new NameType("opt2", "String"),
+            new NameType("opt3", "String"), new NameType("opt4", "String"),
+            new NameType("opt5", "String"), new NameType("opt6", "String"),
+            new NameType("opt7", "String"), new NameType("opt8", "String"),
+            new NameType("opt9", "String"));
+        assertEquals(0, templateAnnotation.fragmentArguments().length);
+    }
 
-        assertEquals(new String[] {"i", "j", "a", "b", "x"},
-                     Grandchild.REQUIRED_ARG_NAMES);
-        assertEquals
-            (new String[] {"int", "Integer", "String", "boolean", "Boolean"},
-             Grandchild.REQUIRED_ARG_TYPES);
-        assertStringSetEquals (new String[] {"opt1", "opt2", "opt3", "opt4",
-                                             "opt5", "opt6", "opt7", "opt8",
-                                             "opt9", "opt10"},
-                               Grandchild.OPTIONAL_ARG_NAMES);
-        assertEquals(new String[] {}, Grandchild.FRAGMENT_ARG_NAMES);
+    public void testGrandchildAnnotations()
+    {
+        Template templateAnnotation = Grandchild.class.getAnnotation(Template.class);
+        NameType.checkArgs(
+            templateAnnotation.requiredArguments(),
+            new NameType("i", "int"), new NameType("j", "Integer"),
+            new NameType("a", "String"), new NameType("b", "boolean"),
+            new NameType("x", "Boolean"));
+        NameType.checkArgSet(
+            templateAnnotation.optionalArguments(),
+            new NameType("opt1", "String"), new NameType("opt2", "String"),
+            new NameType("opt3", "String"), new NameType("opt4", "String"),
+            new NameType("opt5", "String"), new NameType("opt6", "String"),
+            new NameType("opt7", "String"), new NameType("opt8", "String"),
+            new NameType("opt9", "String"), new NameType("opt10", "String"));
+        assertEquals(0, templateAnnotation.fragmentArguments().length);
     }
 
     public void testTemplateCaching() throws Exception
@@ -245,26 +265,6 @@ public class InheritanceTest
         {
             // Yikes.  If we're compiling with jikes, then we might
             // not get an error.
-        }
-    }
-
-    private void assertEquals(String[] p_expected, String[] p_actual)
-    {
-        assertEquals(p_expected.length,p_actual.length);
-        for(int i = 0; i < p_expected.length; i++)
-        {
-            assertEquals(p_expected[i], p_actual[i]);
-        }
-    }
-
-    private void assertStringSetEquals(String[] p_expected, String[] p_actual)
-    {
-        assertEquals(p_expected.length, p_actual.length);
-        Set<String> s = new HashSet<String>(Arrays.asList(p_actual));
-        for(int i = 0; i < p_expected.length; i++)
-        {
-            assertTrue(s.contains(p_expected[i]));
-            s.remove(p_expected[i]);
         }
     }
 }

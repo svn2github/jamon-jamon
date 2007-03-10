@@ -161,7 +161,7 @@ public abstract class AbstractUnit
         while (i.hasNext())
         {
             AbstractArgument arg = i.next();
-            p_writer.printArg("final " + arg.getType() + " " + arg.getName());
+            p_writer.printListElement("final " + arg.getType() + " " + arg.getName());
         }
     }
 
@@ -170,7 +170,7 @@ public abstract class AbstractUnit
     {
         while (p_args.hasNext())
         {
-            p_writer.printArg(p_args.next().getName());
+            p_writer.printListElement(p_args.next().getName());
         }
     }
 

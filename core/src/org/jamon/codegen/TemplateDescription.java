@@ -20,6 +20,7 @@
 
 package org.jamon.codegen;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -30,6 +31,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.LinkedList;
 import java.util.List;
+
+import org.jamon.annotations.Argument;
+import org.jamon.annotations.Fragment;
+import org.jamon.annotations.Method;
+import org.jamon.annotations.Template;
 
 public class TemplateDescription
 {
@@ -83,127 +89,99 @@ public class TemplateDescription
         m_jamonContextType = p_templateUnit.getJamonContextType();
     }
 
-    public TemplateDescription(Class<?> p_intf)
-        throws NoSuchFieldException, IllegalAccessException
+    public TemplateDescription(Class<?> p_proxy) throws NoSuchFieldException
     {
-        m_requiredArgs = getRequiredArgs(p_intf, "");
-        m_optionalArgs = getOptionalArgs(p_intf, "");
-        m_fragmentInterfaces =
-            getFragmentArgs(p_intf, "", new TemplateUnit(null, null));
+        Template templateAnnotation = p_proxy.getAnnotation(Template.class);
+        if (templateAnnotation == null)
+        {
+            //FIXME - throw something more sensical here
+            throw new NoSuchFieldException(
+                "class " + p_proxy.getName() + " lacks a template annotation");
+        }
+
+        m_requiredArgs = getRequiredArgs(templateAnnotation.requiredArguments());
+        m_optionalArgs = getOptionalArgs(templateAnnotation.optionalArguments());
+        m_fragmentInterfaces = getFragmentArguments(
+            templateAnnotation.fragmentArguments(), new TemplateUnit(null, null));
         m_methodUnits = new HashMap<String, MethodUnit>();
-        String[] methodNames = getStringArray(p_intf, "METHOD_NAMES");
-        for (int i = 0; i < methodNames.length; i++)
+        for (Method methodAnnotation: templateAnnotation.methods())
         {
             DeclaredMethodUnit method =
-                new DeclaredMethodUnit(methodNames[i], null, null);
-            String prefix = "METHOD_" + methodNames[i] + "_";
-            for (Iterator<RequiredArgument> j =
-                     getRequiredArgs(p_intf, prefix).iterator();
-                 j.hasNext(); )
+                new DeclaredMethodUnit(methodAnnotation.name(), null, null);
+            for (Argument argument: methodAnnotation.requiredArguments())
             {
-                method.addRequiredArg(j.next());
+                method.addRequiredArg(makeRequiredArg(argument));
             }
-            for (Iterator<OptionalArgument> j =
-                    getOptionalArgs(p_intf, prefix).iterator();
-                 j.hasNext(); )
+            for (Argument argument: methodAnnotation.optionalArguments())
             {
-                method.addOptionalArg(j.next());
+                method.addOptionalArg(makeOptionalArg(argument));
             }
-            for (Iterator<FragmentArgument> j =
-                    getFragmentArgs(p_intf, prefix, method).iterator();
-                 j.hasNext(); )
+            for (Fragment fragment: methodAnnotation.fragmentArguments())
             {
-                method.addFragmentArg(j.next());
+                method.addFragmentArg(makeFragmentArg(method, fragment));
             }
             m_methodUnits.put(method.getName(), method);
         }
-        m_abstractMethodNames =
-            Arrays.asList(getStringArray(p_intf, "ABSTRACT_METHOD_NAMES"));
-        m_signature = (String) p_intf.getField("SIGNATURE").get(null);
-        m_inheritanceDepth =
-            ((Integer) p_intf.getField("INHERITANCE_DEPTH").get(null));
-        m_genericParamsCount =
-            ((Integer) p_intf.getField("GENERICS_COUNT").get(null));
-        m_jamonContextType = computeJamonContextType(p_intf);
+        m_abstractMethodNames = Arrays.asList(templateAnnotation.abstractMethodNames());
+        m_signature = templateAnnotation.signature();
+        m_inheritanceDepth = templateAnnotation.inheritanceDepth();
+        m_genericParamsCount = templateAnnotation.genericsCount();
+        m_jamonContextType = nullToEmptyString(templateAnnotation.jamonContextType());
     }
 
-    private static String computeJamonContextType(Class<?> p_intf)
-        throws IllegalAccessException
+    private String nullToEmptyString(String jamonContextType)
     {
-        String jamonContextType = null;
-        try
-        {
-            jamonContextType =
-                (String) p_intf.getField("JAMON_CONTEXT_TYPE").get(null);
-        }
-        catch (NoSuchFieldException e) {} //backwards compatibility
-        return jamonContextType;
+        return jamonContextType.equals("") ? null : jamonContextType;
     }
 
-    private static List<RequiredArgument> getRequiredArgs(
-        Class<?> p_class, String p_prefix)
-        throws NoSuchFieldException, IllegalAccessException
+    private static List<RequiredArgument> getRequiredArgs(Argument[] p_arguments)
     {
-        List<RequiredArgument> args = new LinkedList<RequiredArgument>();
-        String[] requiredArgNames =
-            getStringArray(p_class, p_prefix + "REQUIRED_ARG_NAMES");
-        String[] requiredArgTypes =
-            getStringArray(p_class, p_prefix + "REQUIRED_ARG_TYPES");
-        for(int i = 0; i < requiredArgNames.length; i++)
-        {
-            args.add(new RequiredArgument(
-                requiredArgNames[i], requiredArgTypes[i], null));
+        List<RequiredArgument> args = new ArrayList<RequiredArgument>(p_arguments.length);
+        for (Argument argument: p_arguments) {
+            args.add(makeRequiredArg(argument));
         }
         return args;
     }
 
-    private static Set<OptionalArgument> getOptionalArgs(
-        Class<?> p_class, String p_prefix)
-        throws NoSuchFieldException, IllegalAccessException
+    private static Set<OptionalArgument> getOptionalArgs(Argument[] p_arguments)
     {
         Set<OptionalArgument> args = new HashSet<OptionalArgument>();
-        String[] optionalArgNames =
-            getStringArray(p_class, p_prefix + "OPTIONAL_ARG_NAMES");
-        String[] optionalArgTypes =
-            getStringArray(p_class, p_prefix + "OPTIONAL_ARG_TYPES");
-        for(int i = 0; i < optionalArgNames.length; i++)
-        {
-            args.add(new OptionalArgument(optionalArgNames[i],
-                                          optionalArgTypes[i],
-                                          null));
+        for (Argument argument: p_arguments) {
+            args.add(makeOptionalArg(argument));
         }
         return args;
     }
 
-    private static List<FragmentArgument> getFragmentArgs(
-        Class<?> p_class, String p_prefix, Unit p_parentUnit)
-        throws NoSuchFieldException, IllegalAccessException
+    private static RequiredArgument makeRequiredArg(Argument argument)
     {
-        List<FragmentArgument> fragmentArgs = new LinkedList<FragmentArgument>();
-        String[] fragmentArgNames =
-            getStringArray(p_class, p_prefix + "FRAGMENT_ARG_NAMES");
-        for (int i = 0; i < fragmentArgNames.length; i++)
-        {
-            FragmentUnit frag =new FragmentUnit(
-                fragmentArgNames[i], p_parentUnit, new GenericParams(), null);
-            String[] fragmentArgArgNames = getStringArray
-                (p_class,
-                 p_prefix + "FRAGMENT_ARG_"
-                 + fragmentArgNames[i] + "_ARG_NAMES");
-            for(int j = 0; j < fragmentArgArgNames.length; j++)
-            {
-                frag.addRequiredArg
-                    (new RequiredArgument(fragmentArgArgNames[j], null, null));
-            }
-            fragmentArgs.add(new FragmentArgument(frag, null));
-        }
-        return fragmentArgs;
+        return new RequiredArgument(argument.name(), argument.type(), null);
     }
 
-    private static String[] getStringArray(Class<?> p_class, String p_fieldName)
-        throws NoSuchFieldException, IllegalAccessException
+    private static OptionalArgument makeOptionalArg(Argument argument)
     {
-        return (String[]) p_class.getField(p_fieldName).get(null);
+        return new OptionalArgument(argument.name(), argument.type(), null);
+    }
+
+    private static List<FragmentArgument> getFragmentArguments(
+        Fragment[] p_fragments, Unit p_parentUnit)
+    {
+        List<FragmentArgument> fragmentArguments = new ArrayList<FragmentArgument>(p_fragments.length);
+        for (Fragment fragment: p_fragments)
+        {
+            fragmentArguments.add(makeFragmentArg(p_parentUnit, fragment));
+        }
+        return fragmentArguments;
+    }
+
+    private static FragmentArgument makeFragmentArg(Unit p_parentUnit, Fragment p_fragment)
+    {
+        FragmentUnit fragmentUnit =
+            new FragmentUnit(p_fragment.name(), p_parentUnit, new GenericParams(), null);
+        for (Argument argument: p_fragment.requiredArguments()) {
+            fragmentUnit.addRequiredArg(makeRequiredArg(argument));
+        }
+        FragmentArgument fragmentArgument = new FragmentArgument(fragmentUnit, null);
+        return fragmentArgument;
     }
 
     public List<RequiredArgument> getRequiredArgs()
@@ -259,3 +237,4 @@ public class TemplateDescription
         }
     }
 }
+

@@ -20,6 +20,8 @@
 
 package org.jamon;
 
+import org.jamon.annotations.Argument;
+import org.jamon.annotations.Template;
 import org.jamon.util.StringUtils;
 
 import java.util.HashMap;
@@ -145,18 +147,9 @@ public class JUnitTemplateManager
                     "Impl class for template " + path
                     + " does not extend " + AbstractTemplateImpl.class.getName());
             }
-
-            try
-            {
-                m_requiredArgNames = (String[]) p_proxy
-                    .getClass().getField("REQUIRED_ARG_NAMES").get(null);
-                m_optionalArgNames = (String[]) p_proxy
-                    .getClass().getField("OPTIONAL_ARG_NAMES").get(null);
-            }
-            catch (Exception e)
-            {
-                throw new JamonRuntimeException(e);
-            }
+            Template templateAnnotation = p_proxy.getClass().getAnnotation(Template.class);
+            m_requiredArgNames = getArgNames(templateAnnotation.requiredArguments());
+            m_optionalArgNames = getArgNames(templateAnnotation.optionalArguments());
 
             m_implData = p_proxy.getImplData();
             m_impl = (AbstractTemplateProxy.Intf)
@@ -204,7 +197,7 @@ public class JUnitTemplateManager
     }
 
     private static final Object[] EMPTY_ARGS = new Object[0];
-    
+
     public Object invoke(Object p_proxy, Method p_method, Object[] p_args)
         throws Throwable
     {
@@ -284,5 +277,13 @@ public class JUnitTemplateManager
                        + StringUtils.capitalize(p_name),
                        new Class[0])
             .invoke(m_implData, new Object[0]);
+    }
+
+    private static String[] getArgNames(Argument[] p_arguments) {
+        String[] names = new String[p_arguments.length];
+        for (int i = 0; i < p_arguments.length; i++) {
+            names[i] = p_arguments[i].name();
+        }
+        return names;
     }
 }

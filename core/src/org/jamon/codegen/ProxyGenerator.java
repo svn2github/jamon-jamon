@@ -39,12 +39,9 @@ public class ProxyGenerator implements SourceGenerator
         generateHeader();
         generatePrologue();
         generateImports();
+        generateAnnotations();
         generateDeclaration();
         generateConstructors();
-        generateSignature();
-        generateArgArrays(m_templateUnit, "");
-        generateMethodArrays();
-        generateInheritanceDepth();
         generateIntf();
         generateImplData();
         if (m_templateUnit.getJamonContextType() != null)
@@ -154,6 +151,110 @@ public class ProxyGenerator implements SourceGenerator
         m_writer.println();
     }
 
+    private void generateAnnotations()
+    {
+        m_writer.print("@" + ClassNames.TEMPLATE_ANNOTATION);
+        m_writer.openList("(", true);
+        m_writer.printListElement("signature = \"" + m_templateUnit.getSignature() + "\"");
+        if (m_templateUnit.getGenericParams().getCount() > 0) {
+            m_writer.printListElement(
+                "genericsCount = " + m_templateUnit.getGenericParams().getCount());
+        }
+        if (m_templateUnit.getInheritanceDepth() > 0) {
+            m_writer.printListElement("inheritanceDepth = " + m_templateUnit.getInheritanceDepth());
+        }
+        if (m_templateUnit.getJamonContextType() != null) {
+            m_writer.printListElement(
+                "jamonContextType = \"" + m_templateUnit.getJamonContextType() + "\"");
+        }
+        generateArguments(m_templateUnit);
+        generateMethodAnnotations();
+        generateAbstractMethodAnnotations();
+        m_writer.closeList(")");
+        m_writer.println();
+    }
+
+    private void generateMethodAnnotations()
+    {
+        Iterator<MethodUnit> signatureMethodUnits = m_templateUnit.getSignatureMethodUnits();
+        if (signatureMethodUnits.hasNext())
+        {
+            m_writer.printListElement("methods = ");
+            m_writer.openList("{", true);
+            while(signatureMethodUnits.hasNext())
+            {
+                MethodUnit methodUnit = signatureMethodUnits.next();
+                m_writer.printListElement("@" + ClassNames.METHOD_ANNOTATION);
+                m_writer.openList("(", true);
+                m_writer.printListElement("name = \"" + methodUnit.getName() + "\"");
+                generateArguments(methodUnit);
+                m_writer.closeList(")");
+            }
+            m_writer.closeList("}");
+        }
+    }
+
+    private void generateAbstractMethodAnnotations()
+    {
+        if (!m_templateUnit.getAbstractMethodNames().isEmpty())
+        {
+            m_writer.printListElement("abstractMethodNames = ");
+            m_writer.openList("{", false);
+            for (String methodName: m_templateUnit.getAbstractMethodNames())
+            {
+                m_writer.printListElement("\"" + methodName + "\"");
+            }
+            m_writer.closeList("}");
+        }
+    }
+
+    private void generateArguments(Unit p_unit)
+    {
+        generateArgumentAnnotations(
+            "requiredArguments", p_unit.getSignatureRequiredArgs());
+        generateArgumentAnnotations(
+            "optionalArguments", p_unit.getSignatureOptionalArgs());
+        generateFragmentAnnotations(p_unit.getFragmentArgs());
+    }
+
+    private void generateFragmentAnnotations(Iterator<FragmentArgument> p_fargs)
+    {
+        if (p_fargs.hasNext())
+        {
+            m_writer.printListElement("fragmentArguments = ");
+            m_writer.openList("{", true);
+            while (p_fargs.hasNext()) {
+                FragmentArgument farg = p_fargs.next();
+                m_writer.printListElement("@" + ClassNames.FRAGMENT_ANNOTATION);
+                m_writer.openList("(", true);
+                m_writer.printListElement("name = \"" + farg.getName() + "\"");
+                generateArgumentAnnotations("requiredArguments", farg.getFragmentUnit().getRequiredArgs());
+                generateArgumentAnnotations("optionalArguments", farg.getFragmentUnit().getOptionalArgs());
+                m_writer.closeList(")");
+            }
+            m_writer.closeList("}");
+        }
+    }
+
+    private void generateArgumentAnnotations(
+        String p_label,
+        Iterator<? extends AbstractArgument> p_args)
+    {
+        if (p_args.hasNext())
+        {
+            m_writer.printListElement(p_label + " = ");
+            m_writer.openList("{", true);
+            while(p_args.hasNext())
+            {
+                AbstractArgument argument = p_args.next();
+                m_writer.printListElement(
+                    "@" + ClassNames.ARGUMENT_ANNOTATION + "(name = \""
+                    + argument.getName() + "\", type = \"" + argument.getType() + "\")");
+            }
+            m_writer.closeList("}");
+        }
+    }
+
     private void generateDeclaration()
     {
         m_writer.print("@SuppressWarnings(\"unused\") public ");
@@ -174,101 +275,6 @@ public class ProxyGenerator implements SourceGenerator
         m_writer.openBlock();
     }
 
-    private void generateArgArrays(Unit p_unit, String p_prefix)
-    {
-        if (p_unit instanceof TemplateUnit)
-        {
-            TemplateUnit templateUnit = (TemplateUnit) p_unit;
-            m_writer.println(
-                "public static final int " + p_prefix + "GENERICS_COUNT = "
-                + templateUnit.getGenericParams().getCount() + ";");
-        }
-        printArgNames(p_prefix + "REQUIRED",
-                      p_unit.getSignatureRequiredArgs());
-        printArgTypes(p_prefix + "REQUIRED",
-                      p_unit.getSignatureRequiredArgs());
-        printArgNames(p_prefix + "OPTIONAL",
-                      p_unit.getSignatureOptionalArgs());
-        printArgTypes(p_prefix + "OPTIONAL",
-                      p_unit.getSignatureOptionalArgs());
-
-        m_writer.print("public static final String[] "
-                       + p_prefix + "FRAGMENT_ARG_NAMES = ");
-        m_writer.openBlock();
-        for (Iterator<FragmentArgument> i = p_unit.getFragmentArgs();
-             i.hasNext(); )
-        {
-            printQuoted(i.next().getName());
-        }
-        m_writer.closeBlock(";");
-
-        for (Iterator<FragmentArgument> i = p_unit.getFragmentArgs(); i.hasNext(); )
-        {
-            FragmentArgument frag = i.next();
-            printArgNames(p_prefix + "FRAGMENT_ARG_" + frag.getName(),
-                          frag.getFragmentUnit().getRequiredArgs());
-        }
-    }
-
-    private void generateMethodArrays()
-    {
-        m_writer.print("public static final String[] METHOD_NAMES = ");
-        m_writer.openBlock();
-        for (Iterator<MethodUnit> i = m_templateUnit.getSignatureMethodUnits();
-             i.hasNext(); )
-        {
-            printQuoted(i.next().getName());
-        }
-        m_writer.closeBlock(";");
-        for (Iterator<MethodUnit> i = m_templateUnit.getSignatureMethodUnits();
-             i.hasNext(); )
-        {
-            MethodUnit methodUnit = i.next();
-            generateArgArrays(methodUnit,
-                              "METHOD_" + methodUnit.getName() + "_");
-        }
-
-        m_writer.print(
-            "public final static String[] ABSTRACT_METHOD_NAMES = ");
-        m_writer.openBlock();
-        for (String name : m_templateUnit.getAbstractMethodNames())
-        {
-            printQuoted(name);
-        }
-        m_writer.closeBlock(";");
-    }
-
-    private void printArgNames(
-        String p_argsType, Iterator<? extends AbstractArgument> p_args)
-    {
-        m_writer.print("public static final String[] "
-                       + p_argsType + "_ARG_NAMES = ");
-        m_writer.openBlock();
-        while (p_args.hasNext())
-        {
-            printQuoted(p_args.next().getName());
-        }
-        m_writer.closeBlock(";");
-    }
-
-    private void printArgTypes(
-        String p_argsType, Iterator<? extends AbstractArgument> p_args)
-    {
-        m_writer.print("public static final String[] "
-                       + p_argsType + "_ARG_TYPES = ");
-        m_writer.openBlock();
-        while (p_args.hasNext())
-        {
-            printQuoted(p_args.next().getType());
-        }
-        m_writer.closeBlock(";");
-    }
-
-    private void printQuoted(String p_string)
-    {
-        m_writer.print("\"" + p_string + "\", ");
-    }
-
     private void generateConstructImpl()
     {
         m_writer.println();
@@ -280,13 +286,13 @@ public class ProxyGenerator implements SourceGenerator
         m_writer.println("try");
         m_writer.openBlock();
         m_writer.println("return p_class");
-        m_writer.indent(2);
+        m_writer.indent();
         m_writer.println(".getConstructor(new Class [] { "
                          + ClassNames.TEMPLATE_MANAGER + ".class"
                          + ", ImplData.class })");
         m_writer.println(
             ".newInstance(new Object [] { getTemplateManager(), getImplData()});");
-        m_writer.outdent(2);
+        m_writer.outdent();
         m_writer.closeBlock();
         m_writer.println("catch (RuntimeException e)");
         m_writer.openBlock();
@@ -318,7 +324,7 @@ public class ProxyGenerator implements SourceGenerator
         m_writer.print((m_templateUnit.isParent() ? "protected" : "public")
                        + " void render");
         m_writer.openList();
-        m_writer.printArg(ArgNames.WRITER_DECL);
+        m_writer.printListElement(ArgNames.WRITER_DECL);
         m_templateUnit.printRenderArgsDecl(m_writer);
         m_writer.closeList();
         m_writer.println();
@@ -327,7 +333,7 @@ public class ProxyGenerator implements SourceGenerator
         m_writer.openBlock();
         m_writer.print("renderNoFlush");
         m_writer.openList();
-        m_writer.printArg(ArgNames.WRITER);
+        m_writer.printListElement(ArgNames.WRITER);
         m_templateUnit.printRenderArgs(m_writer);
         m_writer.closeList();
         m_writer.println(";");
@@ -337,7 +343,7 @@ public class ProxyGenerator implements SourceGenerator
         m_writer.print((m_templateUnit.isParent() ? "protected" : "public")
                        + " void renderNoFlush");
         m_writer.openList();
-        m_writer.printArg(ArgNames.WRITER_DECL);
+        m_writer.printListElement(ArgNames.WRITER_DECL);
         m_templateUnit.printRenderArgsDecl(m_writer);
         m_writer.closeList();
         m_writer.println();
@@ -388,7 +394,7 @@ public class ProxyGenerator implements SourceGenerator
         m_writer.openBlock();
         m_writer.print("render");
         m_writer.openList();
-        m_writer.printArg(ArgNames.WRITER);
+        m_writer.printListElement(ArgNames.WRITER);
         m_templateUnit.printRenderArgs(m_writer);
         m_writer.closeList();
         m_writer.println(";");
@@ -523,20 +529,6 @@ public class ProxyGenerator implements SourceGenerator
         m_writer.print(m_templateUnit.getGenericParams().generateGenericsDeclaration());
     }
 
-    private void generateSignature()
-    {
-        m_writer.print("public static final String SIGNATURE = \"");
-        m_writer.print(m_templateUnit.getSignature());
-        m_writer.println("\";");
-    }
-
-    private void generateInheritanceDepth()
-    {
-        m_writer.print("public static final int INHERITANCE_DEPTH = ");
-        m_writer.print(String.valueOf(m_templateUnit.getInheritanceDepth()));
-        m_writer.println(";");
-    }
-
     private void generateIntf()
     {
         m_templateUnit.getGenericParams()
@@ -602,7 +594,7 @@ public class ProxyGenerator implements SourceGenerator
         {
             m_writer.print("public void render");
             m_writer.openList();
-            m_writer.printArg(ArgNames.WRITER_DECL);
+            m_writer.printListElement(ArgNames.WRITER_DECL);
             m_templateUnit.printDeclaredRenderArgsDecl(m_writer);
             m_writer.closeList();
             m_writer.println();
@@ -610,7 +602,7 @@ public class ProxyGenerator implements SourceGenerator
             m_writer.openBlock();
             m_writer.print("renderNoFlush");
             m_writer.openList();
-            m_writer.printArg(ArgNames.WRITER);
+            m_writer.printListElement(ArgNames.WRITER);
             m_templateUnit.printDeclaredRenderArgs(m_writer);
             m_writer.closeList();
             m_writer.println(";");
@@ -619,7 +611,7 @@ public class ProxyGenerator implements SourceGenerator
 
             m_writer.print("public void renderNoFlush");
             m_writer.openList();
-            m_writer.printArg(ArgNames.WRITER_DECL);
+            m_writer.printListElement(ArgNames.WRITER_DECL);
             m_templateUnit.printDeclaredRenderArgsDecl(m_writer);
             m_writer.closeList();
             m_writer.println();
@@ -627,7 +619,7 @@ public class ProxyGenerator implements SourceGenerator
             m_writer.openBlock();
             m_writer.print("renderChild");
             m_writer.openList();
-            m_writer.printArg(ArgNames.WRITER);
+            m_writer.printListElement(ArgNames.WRITER);
             m_templateUnit.printDeclaredRenderArgs(m_writer);
             m_writer.closeList();
             m_writer.println(";");
@@ -642,7 +634,7 @@ public class ProxyGenerator implements SourceGenerator
 
         m_writer.print("protected abstract void renderChild");
         m_writer.openList();
-        m_writer.printArg(ArgNames.WRITER_DECL);
+        m_writer.printListElement(ArgNames.WRITER_DECL);
         m_templateUnit.printRenderArgsDecl(m_writer);
         m_writer.closeList();
         m_writer.println();
@@ -667,7 +659,7 @@ public class ProxyGenerator implements SourceGenerator
         m_writer.openBlock();
         m_writer.print("@Override protected void renderChild");
         m_writer.openList();
-        m_writer.printArg(ArgNames.WRITER_DECL);
+        m_writer.printListElement(ArgNames.WRITER_DECL);
         m_templateUnit.printParentRenderArgsDecl(m_writer);
         m_writer.closeList();
         m_writer.println();
@@ -684,7 +676,7 @@ public class ProxyGenerator implements SourceGenerator
             m_writer.print(".this.renderNoFlush");
         }
         m_writer.openList();
-        m_writer.printArg(ArgNames.WRITER);
+        m_writer.printListElement(ArgNames.WRITER);
         m_templateUnit.printRenderArgs(m_writer);
         m_writer.closeList();
         m_writer.println(";");

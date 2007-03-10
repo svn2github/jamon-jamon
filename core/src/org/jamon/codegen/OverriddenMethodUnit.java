@@ -85,7 +85,7 @@ public class OverriddenMethodUnit
              i.hasNext(); )
         {
             AbstractArgument arg = i.next();
-            p_writer.printArg("final " + arg.getType() + " "
+            p_writer.printListElement("final " + arg.getType() + " "
                               + (m_inheritedArgs.isArgVisible(arg)
                                  ? "" : "p__jamon__" )
                               + arg.getName());

@@ -59,7 +59,7 @@ public class FargCallStatement
         String tn = getPath();
         p_writer.print  (tn + ".renderNoFlush");
         p_writer.openList();
-        p_writer.printArg(ArgNames.WRITER);
+        p_writer.printListElement(ArgNames.WRITER);
         getParams().generateRequiredArgs(m_fragmentUnit.getRequiredArgs(),
                                          p_writer);
         p_writer.closeList();

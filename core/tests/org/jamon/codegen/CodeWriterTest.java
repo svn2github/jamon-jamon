@@ -44,16 +44,16 @@ public class CodeWriterTest
         m_codeWriter.println("line3");
         m_codeWriter.openBlock();
         m_codeWriter.println("line5");
-        m_codeWriter.indent(3);
+        m_codeWriter.indent();
         m_codeWriter.println("line6");
-        m_codeWriter.outdent(3);
+        m_codeWriter.outdent();
         m_codeWriter.closeBlock();
         m_codeWriter.closeBlock("suffix");
         m_codeWriter.println("line9");
         String nl = System.getProperty("line.separator");
         checkOutput("line1" + nl
                     + "{" + nl + "  line3" + nl + "  {" + nl
-                    + "    line5" + nl + "       line6" + nl + "  }" + nl
+                    + "    line5" + nl + "      line6" + nl + "  }" + nl
                     + "}suffix" + nl
                     + "line9" + nl);
     }
@@ -100,7 +100,7 @@ public class CodeWriterTest
     {
         try
         {
-            m_codeWriter.printArg("foo");
+            m_codeWriter.printListElement("foo");
             fail("no exception thrown");
         }
         catch(IllegalStateException e) {}
@@ -118,7 +118,7 @@ public class CodeWriterTest
         throws IOException
     {
         m_codeWriter.openList();
-        m_codeWriter.printArg("foo");
+        m_codeWriter.printListElement("foo");
         m_codeWriter.closeList();
         checkOutput("(foo)");
     }
@@ -127,8 +127,8 @@ public class CodeWriterTest
         throws IOException
     {
         m_codeWriter.openList();
-        m_codeWriter.printArg("foo");
-        m_codeWriter.printArg("bar");
+        m_codeWriter.printListElement("foo");
+        m_codeWriter.printListElement("bar");
         m_codeWriter.closeList();
         checkOutput("(foo, bar)");
     }
@@ -137,11 +137,31 @@ public class CodeWriterTest
         throws IOException
     {
         m_codeWriter.openList();
-        m_codeWriter.printArg("foo");
-        m_codeWriter.printArg("bar");
-        m_codeWriter.printArg("baz");
+        m_codeWriter.printListElement("foo");
+        m_codeWriter.printListElement("bar");
+        m_codeWriter.printListElement("baz");
         m_codeWriter.closeList();
         checkOutput("(foo, bar, baz)");
+    }
+
+    public void testNestedList() throws Exception
+    {
+        m_codeWriter.openList();
+        m_codeWriter.printListElement("outer1=");
+        m_codeWriter.openList("{", true);
+        m_codeWriter.closeList("}");
+        m_codeWriter.printListElement("outer2=");
+        m_codeWriter.openList("{", true);
+        m_codeWriter.printListElement("mid1=");
+        m_codeWriter.openList("[", false);
+        m_codeWriter.printListElement("inner1");
+        m_codeWriter.printListElement("inner2");
+        m_codeWriter.closeList("]");
+        m_codeWriter.printListElement("mid2");
+        m_codeWriter.closeList("}");
+        m_codeWriter.printListElement("outer3");
+        m_codeWriter.closeList();
+        checkOutput("(outer1={}, outer2={\n  mid1=[inner1, inner2],\n  mid2}, outer3)");
     }
 
     private void checkOutput(String p_expected)

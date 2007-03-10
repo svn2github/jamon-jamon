@@ -64,7 +64,7 @@ public class NamedParamValues implements ParamValues
                     missingArgs.append(", " + name);
                 }
             }
-            p_writer.printArg(expr);
+            p_writer.printListElement(expr);
         }
         if (missingArgs != null)
         {

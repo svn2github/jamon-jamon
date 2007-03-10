@@ -54,7 +54,7 @@ public class UnnamedParamValues implements ParamValues
         }
         for (String param : m_params)
         {
-            p_writer.printArg(param);
+            p_writer.printListElement(param);
         }
     }
 

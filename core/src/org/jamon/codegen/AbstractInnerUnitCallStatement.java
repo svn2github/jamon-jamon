@@ -61,7 +61,7 @@ public abstract class AbstractInnerUnitCallStatement
         generateSourceLine(p_writer);
         p_writer.print("__jamon_innerUnit__" + getPath());
         p_writer.openList();
-        p_writer.printArg(ArgNames.WRITER);
+        p_writer.printListElement(ArgNames.WRITER);
         //FIXME - do we need to surround args with parens?
         getParams().generateRequiredArgs(m_unit.getSignatureRequiredArgs(),
                                          p_writer);
@@ -71,7 +71,7 @@ public abstract class AbstractInnerUnitCallStatement
             OptionalArgument arg = o.next();
             String name = arg.getName();
             String expr = getParams().getOptionalArgValue(name);
-            p_writer.printArg(expr == null ? getDefault(arg) : expr);
+            p_writer.printListElement(expr == null ? getDefault(arg) : expr);
         }
         generateFragmentParams(p_writer,
                                m_unit.getFragmentArgsList().iterator());

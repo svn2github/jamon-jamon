@@ -26,6 +26,8 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
+import java.util.LinkedList;
+
 import org.jamon.node.Location;
 
 public class CodeWriter
@@ -56,8 +58,8 @@ public class CodeWriter
 
     private final PrintWriter m_writer;
     private int m_indentation = 0;
-    private boolean m_inList;
-    private boolean m_argAlreadyPrinted;
+    private LinkedList<Boolean> m_argAlreadyPrintedStack = new LinkedList<Boolean>();
+    private LinkedList<Boolean> m_itemPerLineStack = new LinkedList<Boolean>();
     private boolean beginingOfLine = true;
     private static final int BASIC_OFFSET = 2;
     private static final String SPACES =
@@ -96,12 +98,12 @@ public class CodeWriter
     public void openBlock()
     {
         println("{");
-        indent(BASIC_OFFSET);
+        indent();
     }
 
     public void closeBlock(String p_extra)
     {
-        outdent(BASIC_OFFSET);
+        outdent();
         println("}" + p_extra);
     }
 
@@ -110,14 +112,14 @@ public class CodeWriter
         closeBlock("");
     }
 
-    public void indent(int p_spaces)
+    public void indent()
     {
-        m_indentation += p_spaces;
+        m_indentation += BASIC_OFFSET;
     }
 
-    public void outdent(int p_spaces)
+    public void outdent()
     {
-        m_indentation -= p_spaces;
+        m_indentation -= BASIC_OFFSET;
         if (m_indentation < 0)
         {
             throw new IllegalStateException("Attempting to outdent past 0");
@@ -126,38 +128,66 @@ public class CodeWriter
 
     public void openList()
     {
-        if(m_inList)
+        openList("(", false);
+    }
+
+    public void openList(String p_openToken, boolean p_itemPerLine)
+    {
+        m_argAlreadyPrintedStack.addLast(Boolean.FALSE);
+        m_itemPerLineStack.addLast(Boolean.valueOf(p_itemPerLine));
+        print(p_openToken);
+        if (p_itemPerLine)
         {
-            throw new IllegalStateException("Nested lists not supported");
+            indent();
         }
-        m_inList = true;
-        m_argAlreadyPrinted = false;
-        print("(");
     }
 
     public void closeList()
     {
-        if(! m_inList)
+        closeList(")");
+    }
+
+    public void closeList(String p_closeToken)
+    {
+        if(m_argAlreadyPrintedStack.isEmpty())
         {
             throw new IllegalStateException("Attempt to close unopened list");
         }
-        m_inList = false;
-        print(")");
+        m_argAlreadyPrintedStack.removeLast();
+        if(m_itemPerLineStack.removeLast())
+        {
+            outdent();
+        }
+        print(p_closeToken);
     }
 
-    public void printArg(Object p_arg)
+    public void printListElement(String p_listElement)
     {
-        if(! m_inList)
+        if(m_argAlreadyPrintedStack.isEmpty())
         {
             throw new IllegalStateException(
                 "Attempt to print arg outside of list");
         }
-        if(m_argAlreadyPrinted)
+        if(m_argAlreadyPrintedStack.getLast())
         {
-            print(", ");
+            if (m_itemPerLineStack.getLast())
+            {
+                println(",");
+            }
+            else
+            {
+                print(", ");
+            }
         }
-        m_argAlreadyPrinted = true;
-        print(p_arg);
+        else
+        {
+            m_argAlreadyPrintedStack.removeLast();
+            m_argAlreadyPrintedStack.addLast(Boolean.TRUE);
+            if (m_itemPerLineStack.getLast()) {
+                println();
+            }
+        }
+        print(p_listElement);
     }
 
 
@@ -168,7 +198,7 @@ public class CodeWriter
             throw new IllegalStateException("indentation is " + m_indentation
                                             + " at end of file");
         }
-        if(m_inList)
+        if(! m_argAlreadyPrintedStack.isEmpty())
         {
             throw new IllegalStateException("in a list at end of file");
         }

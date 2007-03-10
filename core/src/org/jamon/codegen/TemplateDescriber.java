@@ -117,11 +117,6 @@ public class TemplateDescriber
                  throw new ParserError(p_location,
                                        "Malformed class for " + p_path);
              }
-             catch (IllegalAccessException e)
-             {
-                 throw new ParserError(p_location,
-                                       "Malformed class for " + p_path);
-             }
          }
      }
 
@@ -181,9 +176,9 @@ public class TemplateDescriber
         }
         return properties;
     }
-    
+
     private static final String ALIAS_PROPERTY_PREFIX = "org.jamon.alias.";
-    
+
     public Map<String,String> getAliases(String p_path) throws IOException
     {
         Map<String,String> result = new HashMap<String,String>();

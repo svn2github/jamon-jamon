@@ -38,4 +38,12 @@ public interface ClassNames
         org.jamon.TemplateManager.class.getName();
     public static final String BASE_TEMPLATE =
         org.jamon.AbstractTemplateImpl.class.getName();
+    public static final String ARGUMENT_ANNOTATION =
+        org.jamon.annotations.Argument.class.getName();
+    public static final String FRAGMENT_ANNOTATION =
+        org.jamon.annotations.Fragment.class.getName();
+    public static final String METHOD_ANNOTATION =
+        org.jamon.annotations.Method.class.getName();
+    public static final String TEMPLATE_ANNOTATION =
+        org.jamon.annotations.Template.class.getName();
 }

@@ -38,6 +38,7 @@ import org.jamon.util.ExternalJavaCompiler;
 import org.jamon.util.InternalJavaCompiler;
 import org.jamon.util.StringUtils;
 import org.jamon.util.WorkDirClassLoader;
+import org.jamon.annotations.Template;
 import org.jamon.codegen.SourceGenerator;
 import org.jamon.codegen.TemplateDescriber;
 import org.jamon.codegen.Analyzer;
@@ -598,23 +599,13 @@ public class RecompilingTemplateManager
         }
         try
         {
-            return (String)
-                p_loader.loadClass(StringUtils.templatePathToClassName(p_path))
-                .getField("SIGNATURE")
-                .get(null);
+            return p_loader
+                .loadClass(StringUtils.templatePathToClassName(p_path))
+                .getAnnotation(Template.class)
+                .signature();
         }
         catch (ClassNotFoundException e)
         {
-            return null;
-        }
-        catch (NoSuchFieldException e)
-        {
-            // FIXME: this really indicates an old version ...
-            return null;
-        }
-        catch (IllegalAccessException e)
-        {
-            // FIXME: this really indicates an old version ...
             return null;
         }
     }
