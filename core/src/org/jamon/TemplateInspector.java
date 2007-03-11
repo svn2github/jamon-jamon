@@ -280,8 +280,7 @@ public class TemplateInspector
         {
             if (methods[i].getName().equals(name))
             {
-                Class[] paramTypes = methods[i].getParameterTypes();
-                if (paramTypes.length == 1)
+                if (methods[i].getParameterTypes().length == 1)
                 {
                     return methods[i];
                 }
