@@ -32,6 +32,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.jamon.ParserErrors;
+import org.jamon.node.AnnotationNode;
 import org.jamon.node.ClassNode;
 import org.jamon.node.GenericsParamNode;
 import org.jamon.node.ImportNode;
@@ -368,6 +369,8 @@ public class TemplateUnit
         new HashSet<String>();
     private final GenericParams m_genericParams = new GenericParams();
     private String m_jamonContextType;
+    private final List<AnnotationNode> m_proxyAnnotations = new LinkedList<AnnotationNode>();
+    private final List<AnnotationNode> m_implAnnotations = new LinkedList<AnnotationNode>();
 
     public Iterator<RequiredArgument> getParentRenderArgs()
     {
@@ -500,4 +503,18 @@ public class TemplateUnit
     {
         m_genericParams.addParam(p_node);
     }
+
+    public void addProxyAnnotationNode(AnnotationNode p_node)
+    {
+        m_proxyAnnotations.add(p_node);
+    }
+
+    public Iterable<AnnotationNode> getProxyAnnotations() { return m_proxyAnnotations; }
+
+    public void addImplAnnotationNode(AnnotationNode p_node)
+    {
+        m_implAnnotations.add(p_node);
+    }
+
+    public Iterable<AnnotationNode> getImplAnnotations() { return m_implAnnotations; }
 }

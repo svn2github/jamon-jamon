@@ -23,13 +23,14 @@ package org.jamon.codegen;
 import java.io.OutputStream;
 import java.util.Iterator;
 
-public class ProxyGenerator implements SourceGenerator
+import org.jamon.node.AnnotationNode;
+
+public class ProxyGenerator extends AbstractSourceGenerator
 {
     public ProxyGenerator(TemplateDescriber p_describer,
                           TemplateUnit p_templateUnit)
     {
-        m_describer = p_describer;
-        m_templateUnit = p_templateUnit;
+        super(p_describer, p_templateUnit);
     }
 
     public void generateSource(OutputStream p_out)
@@ -67,11 +68,6 @@ public class ProxyGenerator implements SourceGenerator
         generateEpilogue();
         m_writer.finish();
     }
-
-    private final TemplateDescriber m_describer;
-    private CodeWriter m_writer;
-    private final TemplateUnit m_templateUnit;
-
 
     private void generateImports()
     {
@@ -257,7 +253,9 @@ public class ProxyGenerator implements SourceGenerator
 
     private void generateDeclaration()
     {
-        m_writer.print("@SuppressWarnings(\"unused\") public ");
+        Iterable<AnnotationNode> proxyAnnotations = m_templateUnit.getProxyAnnotations();
+        generateCustomAnnotations(proxyAnnotations);
+        m_writer.print("public ");
         if(m_templateUnit.isParent())
         {
             m_writer.print("abstract ");

@@ -26,13 +26,12 @@ import java.util.Iterator;
 import org.jamon.ParserError;
 import org.jamon.ParserErrors;
 
-public class ImplGenerator implements SourceGenerator
+public class ImplGenerator extends AbstractSourceGenerator
 {
     public ImplGenerator(TemplateDescriber p_describer,
                          TemplateUnit p_templateUnit)
     {
-        m_describer = p_describer;
-        m_templateUnit = p_templateUnit;
+        super(p_describer, p_templateUnit);
     }
 
     public void generateSource(OutputStream p_out)
@@ -59,10 +58,6 @@ public class ImplGenerator implements SourceGenerator
         }
     }
 
-    private CodeWriter m_writer;
-    private final TemplateDescriber m_describer;
-    private final TemplateUnit m_templateUnit;
-
     private final String getPath()
     {
         return m_templateUnit.getName();
@@ -84,6 +79,7 @@ public class ImplGenerator implements SourceGenerator
 
     private void generateDeclaration()
     {
+        generateCustomAnnotations(m_templateUnit.getImplAnnotations());
         m_writer.print("public");
         if(m_templateUnit.isParent())
         {

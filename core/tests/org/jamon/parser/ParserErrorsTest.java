@@ -22,6 +22,22 @@ public class ParserErrorsTest extends AbstractParserTest
                     1, 15, AbstractParser.MALFORMED_TAG_ERROR);
     }
 
+    @Test public void testMalformedAnnotateProxyTag() throws Exception
+    {
+        assertError("<%annotateProxy>",
+                    1, 1, TopLevelParser.MALFORMED_ANNOTATE_PROXY_TAG_ERROR);
+        assertError("<%annotateProxy @Whatever>",
+                    1, 1, "Reached end of file while looking for '%>'");
+    }
+
+    @Test public void testMalformedAnnotateImplTag() throws Exception
+    {
+        assertError("<%annotateImpl>",
+                    1, 1, TopLevelParser.MALFORMED_ANNOTATE_IMPL_TAG_ERROR);
+        assertError("<%annotateImpl @Whatever>",
+                    1, 1, "Reached end of file while looking for '%>'");
+    }
+
     @Test public void testUnfinishedJavaTag() throws Exception
     {
         assertError(
@@ -219,6 +235,20 @@ public class ParserErrorsTest extends AbstractParserTest
         assertError(
             "<%def foo>\n<%generic></%def>",
             2, 1, AbstractBodyParser.GENERIC_TAG_IN_SUBCOMPONENT);
+    }
+
+    @Test public void testAnnotateProxyTagInSubcomponent() throws Exception
+    {
+        assertError(
+            "<%def foo>\n<%annotateProxy></%def>",
+            2, 1, AbstractBodyParser.ANNOTATE_PROXY_TAG_IN_SUBCOMPONENT);
+    }
+
+    @Test public void testAnnotateImplTagInSubcomponent() throws Exception
+    {
+        assertError(
+            "<%def foo>\n<%annotateImpl></%def>",
+            2, 1, AbstractBodyParser.ANNOTATE_IMPL_TAG_IN_SUBCOMPONENT);
     }
 
     @Test public void testImplementMissingSemi() throws Exception

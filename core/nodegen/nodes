@@ -70,3 +70,6 @@ ForNode:AbstractBodyNode String:loopSpecifier
 IfNode:AbstractBodyNode String:condition
 ElseIfNode:AbstractBodyNode String:condition
 ElseNode:AbstractBodyNode
+AnnotationNode String:annotations
+ImplAnnotationNode:AnnotationNode
+ProxyAnnotationNode:AnnotationNode

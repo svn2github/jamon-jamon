@@ -1,0 +1,5 @@
+<%import>
+  org.jamon.integration.TestAnnotation;
+</%import>
+<%annotateProxy @TestAnnotation("proxy")%>
+<%annotateImpl @TestAnnotation("Impl")%>

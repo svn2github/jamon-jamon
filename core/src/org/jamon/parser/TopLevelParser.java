@@ -30,14 +30,17 @@ import org.jamon.node.AbsMethodNode;
 import org.jamon.node.AbstractPathNode;
 import org.jamon.node.AliasDefNode;
 import org.jamon.node.AliasesNode;
+import org.jamon.node.AnnotationNode;
 import org.jamon.node.ClassNode;
 import org.jamon.node.EscapeDirectiveNode;
 import org.jamon.node.ExtendsNode;
+import org.jamon.node.ImplAnnotationNode;
 import org.jamon.node.ImplementNode;
 import org.jamon.node.ImplementsNode;
 import org.jamon.node.ImportsNode;
 import org.jamon.node.Location;
 import org.jamon.node.ParentMarkerNode;
+import org.jamon.node.ProxyAnnotationNode;
 import org.jamon.node.TopNode;
 
 public class TopLevelParser extends AbstractBodyParser<TopNode>
@@ -48,6 +51,10 @@ public class TopLevelParser extends AbstractBodyParser<TopNode>
     public static final String EXPECTING_ARROW = "Expecting '=' or '=>'";
     public static final String MALFORMED_EXTENDS_TAG_ERROR =
         "Malformed <%extends ...> tag";
+    public static final String MALFORMED_ANNOTATE_PROXY_TAG_ERROR =
+        "Malformed <%annotateProxy ...> tag";
+    public static final String MALFORMED_ANNOTATE_IMPL_TAG_ERROR =
+        "Malformed <%annotateImpl ...> tag";
     private static final String BAD_ALIASES_CLOSE_TAG =
         "Malformed </%alias> tag";
     private static final String BAD_ABS_METHOD_CLOSE_TAG =
@@ -436,6 +443,59 @@ public class TopLevelParser extends AbstractBodyParser<TopNode>
     {
         m_root.addSubNode(new GenericsParser(m_reader, m_errors, p_tagLocation)
             .getGenericsNode());
+    }
+
+    private static interface AnnotationFactory
+    {
+        AnnotationNode makeNode(Location p_tagLocation, String p_annotations);
+    }
+
+    private final static AnnotationFactory PROXY_ANNOTATION_FACTORY = new AnnotationFactory() {
+        public AnnotationNode makeNode(Location p_tagLocation, String p_annotations) {
+            return new ProxyAnnotationNode(p_tagLocation, p_annotations);
+        }
+    };
+
+    private final static AnnotationFactory IMPL_ANNOTATION_FACTORY = new AnnotationFactory() {
+        public AnnotationNode makeNode(Location p_tagLocation, String p_annotations) {
+            return new ImplAnnotationNode(p_tagLocation, p_annotations);
+        }
+    };
+
+    @Override protected void handleProxyAnnotationTag(Location p_tagLocation) throws IOException
+    {
+        handleAnnotationTag(
+            p_tagLocation, MALFORMED_ANNOTATE_PROXY_TAG_ERROR, PROXY_ANNOTATION_FACTORY);
+    }
+
+    @Override protected void handleImplAnnotationTag(Location p_tagLocation) throws IOException
+    {
+        handleAnnotationTag(
+            p_tagLocation, MALFORMED_ANNOTATE_IMPL_TAG_ERROR, IMPL_ANNOTATION_FACTORY);
+    }
+
+    private void handleAnnotationTag(
+        Location p_tagLocation, String p_malformedTagMessage, AnnotationFactory p_annotationFactory)
+    throws IOException
+    {
+        if(soakWhitespace())
+        {
+            try
+            {
+                m_root.addSubNode(p_annotationFactory.makeNode(
+                    p_tagLocation,
+                    readJava(p_tagLocation, new JavaSnippetTagEndDetector())));
+            }
+            catch (ParserError e)
+            {
+                addError(e);
+            }
+            soakWhitespace();
+        }
+        else
+        {
+            addError(p_tagLocation, p_malformedTagMessage);
+        }
     }
 
     @Override protected boolean isTopLevel()

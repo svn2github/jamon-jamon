@@ -23,6 +23,7 @@ package org.jamon.codegen;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Properties;
@@ -32,6 +33,9 @@ import junit.framework.TestCase;
 import org.jamon.TemplateLocation;
 import org.jamon.TemplateResourceLocation;
 import org.jamon.TemplateSource;
+import org.jamon.node.ImplAnnotationNode;
+import org.jamon.node.Location;
+import org.jamon.node.ProxyAnnotationNode;
 
 public class AnalyzerTest extends TestCase
 {
@@ -155,5 +159,21 @@ public class AnalyzerTest extends TestCase
         TemplateUnit unit = analyzeText("a<%LITERAL>b\n</%LITERAL>\nc");
         checkTypes(unit.getStatements(), LiteralStatement.class);
         assertStatementText("ab\n\nc", unit.getStatements().get(0));
+    }
+
+    public void testAnnotations() throws Exception
+    {
+        TemplateUnit templateUnit = analyzeText(
+                    "a<%annotateProxy @Foo %>\n<%annotateImpl @Bar%>");
+        assertEquals(
+            Arrays.asList(
+                new ProxyAnnotationNode(
+                    new Location(new TemplateResourceLocation(PATH), 1, 2), "@Foo ")),
+            templateUnit.getProxyAnnotations());
+        assertEquals(
+            Arrays.asList(
+                new ImplAnnotationNode(
+                    new Location(new TemplateResourceLocation(PATH), 2, 1), "@Bar")),
+            templateUnit.getImplAnnotations());
     }
 }

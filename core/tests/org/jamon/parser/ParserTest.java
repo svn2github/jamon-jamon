@@ -115,7 +115,7 @@ public class ParserTest extends AbstractParserTest
             parse(text1 + JAVA_SNIPPET_START + java + EMIT_END + text2));
     }
 
-    
+
     @Test public void testParseEscapedNewline() throws Exception
     {
         String line1 = "line\\1", line2 = "line2\\";
@@ -611,6 +611,26 @@ public class ParserTest extends AbstractParserTest
                 ifTag + "text\n"
                 + elseIfTag1 + "one\n"
                 + elseIfTag2 + "two</%if>"));
+    }
+
+    @Test public void testParseAnnotateProxy() throws Exception
+    {
+        String annotation = "@SuppressWarnings(\"%>\"";
+        assertEquals(
+            topNode()
+            .addSubNode(new ProxyAnnotationNode(location(1,1), annotation))
+            .addSubNode(new TextNode(location(2,1), "a")),
+            parse("<%annotateProxy " + annotation + "%>\na"));
+    }
+
+    @Test public void testParseAnnotateImpl() throws Exception
+    {
+        String annotation = "@SuppressWarnings(\"%>\"";
+        assertEquals(
+            topNode()
+            .addSubNode(new ImplAnnotationNode(location(1,1), annotation))
+            .addSubNode(new TextNode(location(2,1), "a")),
+            parse("<%annotateImpl " + annotation + "%>\na"));
     }
 
     public static junit.framework.Test suite()

@@ -312,6 +312,16 @@ public class Analyzer
             }
         }
 
+        @Override public void caseProxyAnnotationNode(ProxyAnnotationNode p_node)
+        {
+            m_templateUnit.addProxyAnnotationNode(p_node);
+        }
+
+        @Override public void caseImplAnnotationNode(ImplAnnotationNode p_node)
+        {
+            m_templateUnit.addImplAnnotationNode(p_node);
+        }
+
         @Override
         public void caseParentMarkerNode(ParentMarkerNode p_node)
         {
