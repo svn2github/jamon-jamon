@@ -33,9 +33,8 @@ import junit.framework.TestCase;
 import org.jamon.TemplateLocation;
 import org.jamon.TemplateResourceLocation;
 import org.jamon.TemplateSource;
-import org.jamon.node.ImplAnnotationNode;
+import org.jamon.node.AnnotationNode;
 import org.jamon.node.Location;
-import org.jamon.node.ProxyAnnotationNode;
 
 public class AnalyzerTest extends TestCase
 {
@@ -164,16 +163,18 @@ public class AnalyzerTest extends TestCase
     public void testAnnotations() throws Exception
     {
         TemplateUnit templateUnit = analyzeText(
-                    "a<%annotateProxy @Foo %>\n<%annotateImpl @Bar%>");
+                    "a<%annotate @Foo #impl%>\n<%annotate @Bar#proxy %>\n<%annotate @Baz%>");
         assertEquals(
             Arrays.asList(
-                new ProxyAnnotationNode(
-                    new Location(new TemplateResourceLocation(PATH), 1, 2), "@Foo ")),
-            templateUnit.getProxyAnnotations());
-        assertEquals(
-            Arrays.asList(
-                new ImplAnnotationNode(
-                    new Location(new TemplateResourceLocation(PATH), 2, 1), "@Bar")),
-            templateUnit.getImplAnnotations());
+                new AnnotationNode(
+                    new Location(new TemplateResourceLocation(PATH), 1, 2),
+                    "@Foo ", AnnotationType.IMPL),
+                new AnnotationNode(
+                    new Location(new TemplateResourceLocation(PATH), 2, 1),
+                    "@Bar", AnnotationType.PROXY),
+                new AnnotationNode(
+                    new Location(new TemplateResourceLocation(PATH), 3, 1),
+                    "@Baz", AnnotationType.BOTH)),
+            templateUnit.getAnnotations());
     }
 }

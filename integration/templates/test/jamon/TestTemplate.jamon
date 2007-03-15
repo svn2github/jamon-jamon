@@ -1,4 +1,4 @@
-<%annotateProxy @SuppressWarnings("unused")%>
+<%annotate @SuppressWarnings("unused") #proxy %>
 <%doc>here
 is some starting doc.
     </%doc>The very top!

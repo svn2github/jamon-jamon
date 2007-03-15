@@ -1,4 +1,4 @@
-<%annotateProxy @SuppressWarnings("unused")%>
+<%annotate @SuppressWarnings("unused") #proxy %>
 <%import>
   java.util.*;
 </%import>

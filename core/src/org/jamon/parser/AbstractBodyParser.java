@@ -51,10 +51,8 @@ public abstract class AbstractBodyParser<Node extends AbstractBodyNode>
         "<%escape> tags only allowed at the top level of a document";
     public static final String GENERIC_TAG_IN_SUBCOMPONENT =
         "<%generic> tags only allowed at the top level of a document";
-    public static final String ANNOTATE_PROXY_TAG_IN_SUBCOMPONENT =
-        "<%annotateProxy> tags only allowed at the top level of a document";
-    public static final String ANNOTATE_IMPL_TAG_IN_SUBCOMPONENT =
-        "<%annotateImpl> tags only allowed at the top level of a document";
+    public static final String ANNOTATE_TAG_IN_SUBCOMPONENT =
+        "<%annotate> tags only allowed at the top level of a document";
     public static final String CLASS_TAG_IN_SUBCOMPONENT =
         "<%class> sections only allowed at the top level of a document";
     public static final String UNEXPECTED_NAMED_FRAGMENT_CLOSE_ERROR =
@@ -65,8 +63,8 @@ public abstract class AbstractBodyParser<Node extends AbstractBodyNode>
         "Emit escaping code must be a letter";
     public static final String EMIT_MISSING_TAG_END_ERROR =
         "Did not see expected '%>' to end a <% ... %> tag";
-    public static final String EMIT_EOF_ERROR =
-        "Reached end of file while reading emit value";
+    public static final String PERCENT_GREATER_THAN_EOF_ERROR =
+        "Reached end of file while looking for '%>'";
     public static final String EXTENDS_TAG_IN_SUBCOMPONENT =
         "<%extends ...> tag only allowed at the top level of a document";
     private static final String ALIASES_TAG_IN_SUBCOMPONENT =
@@ -223,48 +221,6 @@ public abstract class AbstractBodyParser<Node extends AbstractBodyNode>
         m_doneParsing = true;
     }
 
-    private class EmitEndDetector implements TagEndDetector
-    {
-        public int checkEnd(char p_char)
-        {
-            switch (p_char)
-            {
-                case '%' :
-                    seenPercent = true;
-                    return 0;
-                case '>' :
-                    if (seenPercent)
-                    {
-                        defaultEscaping = true;
-                        return 2;
-                    }
-                    else
-                    {
-                       seenPercent = false;
-                       return 0;
-                    }
-                case '#' :
-                    defaultEscaping = false;
-                    return 1;
-                default :
-                   seenPercent = false;
-                   return 0;
-            }
-        }
-
-        public ParserError getEofError(Location p_startLocation)
-        {
-            return new ParserError(p_startLocation, EMIT_EOF_ERROR);
-        }
-
-        public void resetEndMatch()
-        {
-        }
-
-        private boolean defaultEscaping = false;
-        private boolean seenPercent = false;
-    }
-
     /**
      * @param tagLocation Start of the emit.
      **/
@@ -272,9 +228,9 @@ public abstract class AbstractBodyParser<Node extends AbstractBodyNode>
     {
         try
         {
-            EmitEndDetector endDetector = new EmitEndDetector();
+            HashEndDetector endDetector = new HashEndDetector();
             String emitExpr = readJava(p_tagLocation, endDetector);
-            if (endDetector.defaultEscaping)
+            if (! endDetector.endedWithHash())
             {
                 m_root.addSubNode(
                     new EmitNode(
@@ -447,13 +403,9 @@ public abstract class AbstractBodyParser<Node extends AbstractBodyNode>
         {
             handleGenericTag(p_tagLocation);
         }
-        else if ("annotateProxy".equals(p_tagName))
+        else if ("annotate".equals(p_tagName))
         {
-            handleProxyAnnotationTag(p_tagLocation);
-        }
-        else if ("annotateImpl".equals(p_tagName))
-        {
-            handleImplAnnotationTag(p_tagLocation);
+            handleAnnotationTag(p_tagLocation);
         }
         else
         {
@@ -708,15 +660,9 @@ public abstract class AbstractBodyParser<Node extends AbstractBodyNode>
     }
 
     @SuppressWarnings("unused")
-    protected void handleProxyAnnotationTag(Location p_tagLocation) throws IOException
+    protected void handleAnnotationTag(Location p_tagLocation) throws IOException
     {
-        addError(p_tagLocation, ANNOTATE_PROXY_TAG_IN_SUBCOMPONENT);
-    }
-
-    @SuppressWarnings("unused")
-    protected void handleImplAnnotationTag(Location p_tagLocation) throws IOException
-    {
-        addError(p_tagLocation, ANNOTATE_IMPL_TAG_IN_SUBCOMPONENT);
+        addError(p_tagLocation, ANNOTATE_TAG_IN_SUBCOMPONENT);
     }
 
     private void handleJavaTag(final Location p_tagLocation)

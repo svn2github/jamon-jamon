@@ -79,7 +79,7 @@ public class ImplGenerator extends AbstractSourceGenerator
 
     private void generateDeclaration()
     {
-        generateCustomAnnotations(m_templateUnit.getImplAnnotations());
+        generateCustomAnnotations(m_templateUnit.getAnnotations(), AnnotationType.IMPL);
         m_writer.print("public");
         if(m_templateUnit.isParent())
         {

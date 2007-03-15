@@ -22,20 +22,18 @@ public class ParserErrorsTest extends AbstractParserTest
                     1, 15, AbstractParser.MALFORMED_TAG_ERROR);
     }
 
-    @Test public void testMalformedAnnotateProxyTag() throws Exception
+    @Test public void testMalformedAnnotateTag() throws Exception
     {
-        assertError("<%annotateProxy>",
-                    1, 1, TopLevelParser.MALFORMED_ANNOTATE_PROXY_TAG_ERROR);
-        assertError("<%annotateProxy @Whatever>",
-                    1, 1, "Reached end of file while looking for '%>'");
-    }
-
-    @Test public void testMalformedAnnotateImplTag() throws Exception
-    {
-        assertError("<%annotateImpl>",
-                    1, 1, TopLevelParser.MALFORMED_ANNOTATE_IMPL_TAG_ERROR);
-        assertError("<%annotateImpl @Whatever>",
-                    1, 1, "Reached end of file while looking for '%>'");
+        assertError("<%annotate>",
+                    1, 1, TopLevelParser.MALFORMED_ANNOTATE_TAG_ERROR);
+        assertError("<%annotate @Whatever>",
+                    1, 1, AbstractBodyParser.PERCENT_GREATER_THAN_EOF_ERROR);
+        assertError("<%annotate @Whatever\n#huh %>",
+                    2, 1, TopLevelParser.UNRECOGNIZED_ANNOTATION_TYPE_ERROR);
+        assertError("<%annotate @Whatever\n# %>",
+                    2, 1, TopLevelParser.UNRECOGNIZED_ANNOTATION_TYPE_ERROR);
+        assertError("<%annotate @Whatever\n#impl dimple %>",
+                     1, 1, TopLevelParser.MALFORMED_ANNOTATE_TAG_ERROR);
     }
 
     @Test public void testUnfinishedJavaTag() throws Exception
@@ -186,7 +184,7 @@ public class ParserErrorsTest extends AbstractParserTest
             1,
             9,
             AbstractBodyParser.EMIT_ESCAPE_CODE_ERROR);
-        assertError("<% foo", 1, 1, AbstractBodyParser.EMIT_EOF_ERROR);
+        assertError("<% foo", 1, 1, AbstractBodyParser.PERCENT_GREATER_THAN_EOF_ERROR);
         assertError(
             "<% foo #aa %>",
             1,
@@ -237,18 +235,11 @@ public class ParserErrorsTest extends AbstractParserTest
             2, 1, AbstractBodyParser.GENERIC_TAG_IN_SUBCOMPONENT);
     }
 
-    @Test public void testAnnotateProxyTagInSubcomponent() throws Exception
+    @Test public void testAnnotateTagInSubcomponent() throws Exception
     {
         assertError(
-            "<%def foo>\n<%annotateProxy></%def>",
-            2, 1, AbstractBodyParser.ANNOTATE_PROXY_TAG_IN_SUBCOMPONENT);
-    }
-
-    @Test public void testAnnotateImplTagInSubcomponent() throws Exception
-    {
-        assertError(
-            "<%def foo>\n<%annotateImpl></%def>",
-            2, 1, AbstractBodyParser.ANNOTATE_IMPL_TAG_IN_SUBCOMPONENT);
+            "<%def foo>\n<%annotate></%def>",
+            2, 1, AbstractBodyParser.ANNOTATE_TAG_IN_SUBCOMPONENT);
     }
 
     @Test public void testImplementMissingSemi() throws Exception

@@ -14,12 +14,17 @@ public abstract class AbstractSourceGenerator implements SourceGenerator
     protected CodeWriter m_writer;
     protected final TemplateUnit m_templateUnit;
 
-    protected void generateCustomAnnotations(Iterable<AnnotationNode> annotationNodes)
+    protected void generateCustomAnnotations(
+        Iterable<AnnotationNode> p_annotationNodes, AnnotationType p_annotationType)
     {
-        for (AnnotationNode annotationNode: annotationNodes)
+        for (AnnotationNode annotationNode: p_annotationNodes)
         {
-            m_writer.printLocation(annotationNode.getLocation());
-            m_writer.println(annotationNode.getAnnotations());
+            if (annotationNode.getType() == AnnotationType.BOTH
+                    || annotationNode.getType() == p_annotationType)
+            {
+                m_writer.printLocation(annotationNode.getLocation());
+                m_writer.println(annotationNode.getAnnotations());
+            }
         }
     }
 }

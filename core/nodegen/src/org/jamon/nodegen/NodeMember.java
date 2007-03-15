@@ -1,5 +1,9 @@
 package org.jamon.nodegen;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 
 class NodeMember
 {
@@ -38,12 +42,12 @@ class NodeMember
             ? "get" + getCapitalizedName() + "s()"
             : "get" + getCapitalizedName() + "()";
     }
-    
+
     public String getCapitalizedName()
     {
         return m_name.substring(0, 1).toUpperCase() + m_name.substring(1);
     }
-    
+
     public String hashCodeExpr()
     {
         if ("char".equals(m_type))
@@ -63,9 +67,9 @@ class NodeMember
 
     public boolean isNode()
     {
-        return !("String".equals(m_type) || isPrimative()); 
+        return !isPrimative() && !NON_NODE_TYPES.contains(m_type);
     }
-    
+
     public String getName()
     {
         return m_name;
@@ -79,4 +83,7 @@ class NodeMember
     private final String m_type;
     private final String m_name;
     private final boolean m_isList;
+
+    private final static Set<String> NON_NODE_TYPES = new HashSet<String>(
+            Arrays.asList("String", "org.jamon.codegen.AnnotationType"));
 }

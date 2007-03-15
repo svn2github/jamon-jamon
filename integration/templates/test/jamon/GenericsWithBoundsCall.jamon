@@ -1,4 +1,4 @@
-<%annotateProxy @SuppressWarnings("unused")%>
+<%annotate @SuppressWarnings("unused") #proxy %>
 <%doc>If this compiles, the test passes</%doc>
 <%import>java.math.BigDecimal;</%import>
 % java.util.List<BigDecimal> list = new java.util.ArrayList<BigDecimal>();

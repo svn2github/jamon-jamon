@@ -312,14 +312,9 @@ public class Analyzer
             }
         }
 
-        @Override public void caseProxyAnnotationNode(ProxyAnnotationNode p_node)
+        @Override public void caseAnnotationNode(AnnotationNode p_node)
         {
-            m_templateUnit.addProxyAnnotationNode(p_node);
-        }
-
-        @Override public void caseImplAnnotationNode(ImplAnnotationNode p_node)
-        {
-            m_templateUnit.addImplAnnotationNode(p_node);
+            m_templateUnit.addAnnotationNode(p_node);
         }
 
         @Override

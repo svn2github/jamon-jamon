@@ -369,8 +369,7 @@ public class TemplateUnit
         new HashSet<String>();
     private final GenericParams m_genericParams = new GenericParams();
     private String m_jamonContextType;
-    private final List<AnnotationNode> m_proxyAnnotations = new LinkedList<AnnotationNode>();
-    private final List<AnnotationNode> m_implAnnotations = new LinkedList<AnnotationNode>();
+    private final List<AnnotationNode> m_annotations = new LinkedList<AnnotationNode>();
 
     public Iterator<RequiredArgument> getParentRenderArgs()
     {
@@ -504,17 +503,10 @@ public class TemplateUnit
         m_genericParams.addParam(p_node);
     }
 
-    public void addProxyAnnotationNode(AnnotationNode p_node)
+    public void addAnnotationNode(AnnotationNode p_node)
     {
-        m_proxyAnnotations.add(p_node);
+        m_annotations.add(p_node);
     }
 
-    public Iterable<AnnotationNode> getProxyAnnotations() { return m_proxyAnnotations; }
-
-    public void addImplAnnotationNode(AnnotationNode p_node)
-    {
-        m_implAnnotations.add(p_node);
-    }
-
-    public Iterable<AnnotationNode> getImplAnnotations() { return m_implAnnotations; }
+    public Iterable<AnnotationNode> getAnnotations() { return m_annotations; }
 }

@@ -26,6 +26,7 @@ import static org.junit.Assert.*;
 import java.io.IOException;
 import java.io.StringReader;
 
+import org.jamon.codegen.AnnotationType;
 import org.jamon.node.*;
 import org.junit.Test;
 
@@ -44,6 +45,7 @@ public class ParserTest extends AbstractParserTest
 
     private static final String BEFORE = "before";
     private static final String AFTER = "after";
+    private static final String SAMPLE_ANNOTATION = "@SuppressWarnings(\"%> #impl\"";
 
     private void checkParseText(final String p_text) throws Exception
     {
@@ -613,24 +615,32 @@ public class ParserTest extends AbstractParserTest
                 + elseIfTag2 + "two</%if>"));
     }
 
-    @Test public void testParseAnnotateProxy() throws Exception
+    @Test public void testParseAnnotateBoth() throws Exception
     {
-        String annotation = "@SuppressWarnings(\"%>\"";
         assertEquals(
             topNode()
-            .addSubNode(new ProxyAnnotationNode(location(1,1), annotation))
+            .addSubNode(new AnnotationNode(location(1,1), SAMPLE_ANNOTATION, AnnotationType.BOTH))
             .addSubNode(new TextNode(location(2,1), "a")),
-            parse("<%annotateProxy " + annotation + "%>\na"));
+            parse("<%annotate " + SAMPLE_ANNOTATION + "%>\na"));
+
+    }
+
+    @Test public void testParseAnnotateProxy() throws Exception
+    {
+        assertEquals(
+            topNode()
+            .addSubNode(new AnnotationNode(location(1,1), SAMPLE_ANNOTATION, AnnotationType.PROXY))
+            .addSubNode(new TextNode(location(2,1), "a")),
+            parse("<%annotate " + SAMPLE_ANNOTATION + "#proxy %>\na"));
     }
 
     @Test public void testParseAnnotateImpl() throws Exception
     {
-        String annotation = "@SuppressWarnings(\"%>\"";
         assertEquals(
             topNode()
-            .addSubNode(new ImplAnnotationNode(location(1,1), annotation))
+            .addSubNode(new AnnotationNode(location(1,1), SAMPLE_ANNOTATION, AnnotationType.IMPL))
             .addSubNode(new TextNode(location(2,1), "a")),
-            parse("<%annotateImpl " + annotation + "%>\na"));
+            parse("<%annotate " + SAMPLE_ANNOTATION + "#impl%>\na"));
     }
 
     public static junit.framework.Test suite()

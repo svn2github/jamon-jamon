@@ -23,8 +23,6 @@ package org.jamon.codegen;
 import java.io.OutputStream;
 import java.util.Iterator;
 
-import org.jamon.node.AnnotationNode;
-
 public class ProxyGenerator extends AbstractSourceGenerator
 {
     public ProxyGenerator(TemplateDescriber p_describer,
@@ -253,8 +251,7 @@ public class ProxyGenerator extends AbstractSourceGenerator
 
     private void generateDeclaration()
     {
-        Iterable<AnnotationNode> proxyAnnotations = m_templateUnit.getProxyAnnotations();
-        generateCustomAnnotations(proxyAnnotations);
+        generateCustomAnnotations(m_templateUnit.getAnnotations(), AnnotationType.PROXY);
         m_writer.print("public ");
         if(m_templateUnit.isParent())
         {

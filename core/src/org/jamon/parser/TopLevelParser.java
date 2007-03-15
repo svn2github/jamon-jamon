@@ -26,6 +26,7 @@ import java.io.Reader;
 import org.jamon.ParserError;
 import org.jamon.ParserErrors;
 import org.jamon.TemplateLocation;
+import org.jamon.codegen.AnnotationType;
 import org.jamon.node.AbsMethodNode;
 import org.jamon.node.AbstractPathNode;
 import org.jamon.node.AliasDefNode;
@@ -34,13 +35,11 @@ import org.jamon.node.AnnotationNode;
 import org.jamon.node.ClassNode;
 import org.jamon.node.EscapeDirectiveNode;
 import org.jamon.node.ExtendsNode;
-import org.jamon.node.ImplAnnotationNode;
 import org.jamon.node.ImplementNode;
 import org.jamon.node.ImplementsNode;
 import org.jamon.node.ImportsNode;
 import org.jamon.node.Location;
 import org.jamon.node.ParentMarkerNode;
-import org.jamon.node.ProxyAnnotationNode;
 import org.jamon.node.TopNode;
 
 public class TopLevelParser extends AbstractBodyParser<TopNode>
@@ -51,10 +50,10 @@ public class TopLevelParser extends AbstractBodyParser<TopNode>
     public static final String EXPECTING_ARROW = "Expecting '=' or '=>'";
     public static final String MALFORMED_EXTENDS_TAG_ERROR =
         "Malformed <%extends ...> tag";
-    public static final String MALFORMED_ANNOTATE_PROXY_TAG_ERROR =
-        "Malformed <%annotateProxy ...> tag";
-    public static final String MALFORMED_ANNOTATE_IMPL_TAG_ERROR =
-        "Malformed <%annotateImpl ...> tag";
+    public static final String MALFORMED_ANNOTATE_TAG_ERROR =
+        "Malformed <%annotate...> tag";
+    public static final String UNRECOGNIZED_ANNOTATION_TYPE_ERROR =
+        "Unrecognized annotation type";
     private static final String BAD_ALIASES_CLOSE_TAG =
         "Malformed </%alias> tag";
     private static final String BAD_ABS_METHOD_CLOSE_TAG =
@@ -445,46 +444,30 @@ public class TopLevelParser extends AbstractBodyParser<TopNode>
             .getGenericsNode());
     }
 
-    private static interface AnnotationFactory
-    {
-        AnnotationNode makeNode(Location p_tagLocation, String p_annotations);
-    }
-
-    private final static AnnotationFactory PROXY_ANNOTATION_FACTORY = new AnnotationFactory() {
-        public AnnotationNode makeNode(Location p_tagLocation, String p_annotations) {
-            return new ProxyAnnotationNode(p_tagLocation, p_annotations);
-        }
-    };
-
-    private final static AnnotationFactory IMPL_ANNOTATION_FACTORY = new AnnotationFactory() {
-        public AnnotationNode makeNode(Location p_tagLocation, String p_annotations) {
-            return new ImplAnnotationNode(p_tagLocation, p_annotations);
-        }
-    };
-
-    @Override protected void handleProxyAnnotationTag(Location p_tagLocation) throws IOException
-    {
-        handleAnnotationTag(
-            p_tagLocation, MALFORMED_ANNOTATE_PROXY_TAG_ERROR, PROXY_ANNOTATION_FACTORY);
-    }
-
-    @Override protected void handleImplAnnotationTag(Location p_tagLocation) throws IOException
-    {
-        handleAnnotationTag(
-            p_tagLocation, MALFORMED_ANNOTATE_IMPL_TAG_ERROR, IMPL_ANNOTATION_FACTORY);
-    }
-
-    private void handleAnnotationTag(
-        Location p_tagLocation, String p_malformedTagMessage, AnnotationFactory p_annotationFactory)
-    throws IOException
+    @Override protected void handleAnnotationTag(Location p_tagLocation) throws IOException
     {
         if(soakWhitespace())
         {
             try
             {
-                m_root.addSubNode(p_annotationFactory.makeNode(
-                    p_tagLocation,
-                    readJava(p_tagLocation, new JavaSnippetTagEndDetector())));
+                HashEndDetector detector = new HashEndDetector();
+                String annotations = readJava(p_tagLocation, detector);
+                AnnotationType annotationType;
+                if (detector.endedWithHash())
+                {
+                    annotationType = readAnnotationType();
+                    soakWhitespace();
+                    if (!(readChar('%') && readChar('>')))
+                    {
+                        throw new ParserError(p_tagLocation, MALFORMED_ANNOTATE_TAG_ERROR);
+                    }
+                }
+                else
+                {
+                    annotationType = AnnotationType.BOTH;
+                }
+                m_root.addSubNode(new AnnotationNode(p_tagLocation, annotations, annotationType));
+
             }
             catch (ParserError e)
             {
@@ -494,8 +477,28 @@ public class TopLevelParser extends AbstractBodyParser<TopNode>
         }
         else
         {
-            addError(p_tagLocation, p_malformedTagMessage);
+            addError(p_tagLocation, MALFORMED_ANNOTATE_TAG_ERROR);
         }
+    }
+
+    private AnnotationType readAnnotationType() throws IOException, ParserError
+    {
+        Location location = m_reader.getLocation();
+        if (readChar('p'))
+        {
+            if (checkToken("roxy"))
+            {
+                return AnnotationType.PROXY;
+            }
+        }
+        else if (readChar('i'))
+        {
+            if (checkToken("mpl"))
+            {
+                return AnnotationType.IMPL;
+            }
+        }
+        throw new ParserError(location, UNRECOGNIZED_ANNOTATION_TYPE_ERROR);
     }
 
     @Override protected boolean isTopLevel()
@@ -503,3 +506,4 @@ public class TopLevelParser extends AbstractBodyParser<TopNode>
         return true;
     }
 }
+
