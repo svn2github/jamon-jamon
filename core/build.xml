@@ -65,6 +65,10 @@
     </java>
   </target>
 
+  <path id="compile.class.path">
+    <pathelement location="${java.lib.junit}"/>
+  </path>
+
   <target name="compile"
           depends="generateNodes"
           description="Compiles all the Java files">
@@ -80,9 +84,7 @@
              deprecation="true">
         <src path="${src.dir}"/>
         <src path="${build.src.dir}"/>
-        <classpath>
-          <pathelement location="${java.lib.junit}"/>
-        </classpath>
+        <classpath refid="compile.class.path"/>
       </javac>
   </target>
 
@@ -116,7 +118,7 @@
       <include name="**/*.java"/>
       <classpath>
         <pathelement location="${classes.dir}"/>
-        <pathelement location="${java.lib.junit}"/>
+        <classpath refid="compile.class.path"/>
       </classpath>
     </javac>
   </target>
