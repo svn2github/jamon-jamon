@@ -12,14 +12,14 @@
         <not><isset property="${svn.override.property}"/></not>
       </and>
     </condition>
-    <fail if="${mixed.svn.versions}" message="do an svn update (or -D ${svn.override.property})"/>
+    <fail if="${mixed.svn.versions}" message="do an svn update (or -D${svn.override.property}=true)"/>
     <condition property="svn.modified">
       <and>
         <contains string="${svn.version}" substring="M"/>
         <not><isset property="${svn.override.property}"/></not>
       </and>
     </condition>
-    <fail if="svn.modified" message="do an svn commit (or -D ${svn.override.property})"/>
+    <fail if="svn.modified" message="do an svn commit (or -D${svn.override.property}=true)"/>
         <filterset id="svn.version">
       <filter token="SVN_VERSION" value="${svn.version}"/>
     </filterset>
