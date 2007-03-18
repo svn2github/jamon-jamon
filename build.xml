@@ -12,6 +12,8 @@
 
   <property file="build.properties"/>
   <property file="${user.home}/.ant.properties"/>
+
+  <import file="build.version.xml"/>
   <property name="jarfile.core" value="jamon-${jamon.version}.jar" />
   <property name="jarfile.anttask" value="jamon-anttask-${jamon.anttask.version}.jar" />
   <property name="core.classes.dir" value="core/build/classes" />
@@ -29,10 +31,11 @@
 
   <target name="jar"
           description="Creates uber JARs"
-          depends="base">
+          depends="svn-versioning,base">
     <copy file="manifest" tofile="manifest.mf">
       <filterset>
         <filter token="VERSION" value="${jamon.version}"/>
+        <filterset refid="svn.version"/>
       </filterset>
     </copy>
     <jar jarfile="${jarfile.core}" manifest="manifest.mf" >

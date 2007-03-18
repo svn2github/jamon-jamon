@@ -8,3 +8,5 @@ Implementation-Title: org.jamon
 Implementation-Version: @VERSION@
 Implementation-Vendor: Jamon Hackers <jamon-hackers@lists.sourceforge.net>
 Sealed: true
+svn-version: @SVN_VERSION@
+
