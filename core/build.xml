@@ -118,7 +118,7 @@
       <include name="**/*.java"/>
       <classpath>
         <pathelement location="${classes.dir}"/>
-        <classpath refid="compile.class.path"/>
+        <path refid="compile.class.path"/>
       </classpath>
     </javac>
   </target>
