@@ -21,6 +21,7 @@
 package org.jamon.integration;
 
 import test.jamon.Alias;
+import test.jamon.aliasProperties.PropertiesAlias;
 
 /**
  * Test Jamon's aliases.
@@ -29,10 +30,16 @@ import test.jamon.Alias;
 public class AliasTest
     extends TestBase
 {
-    public void testExercise()
+    public void testAliasesFromTemplate()
         throws Exception
     {
         new Alias().render(getWriter());
         checkOutput("simple simple simple");
+    }
+
+    public void testAliasesFromProperties() throws Exception
+    {
+        new PropertiesAlias().render(getWriter());
+        checkOutput("simple simple");
     }
 }

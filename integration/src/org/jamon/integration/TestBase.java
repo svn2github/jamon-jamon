@@ -131,9 +131,28 @@ public abstract class TestBase
             .generateSource(p_path);
     }
 
-    protected void expectParserError(
-        String p_path, String p_message, int p_line, int p_column)
-        throws Exception
+    protected static class PartialError
+    {
+        private final String m_message;
+        private final int m_line, m_column;
+        public PartialError(final String p_message, final int p_line, final int p_column)
+        {
+            m_message = p_message;
+            m_line = p_line;
+            m_column = p_column;
+        }
+
+        public ParserError makeError(String p_path)
+        {
+            return new ParserError(
+                new Location(
+                    new TemplateFileLocation(getTemplateFilePath(p_path)), m_line, m_column),
+                m_message);
+        }
+    }
+
+    protected void expectParserErrors(String p_path, PartialError... p_partialErrors)
+    throws Exception
     {
         String path = "test/jamon/broken/" + p_path;
         try
@@ -144,22 +163,27 @@ public abstract class TestBase
         catch(ParserErrors e)
         {
             Iterator<ParserError> errors = e.getErrors();
-            assertTrue(errors.hasNext());
-            assertEquals(
-                new ParserError(
-                    new Location(
-                        new TemplateFileLocation(getTemplateFilePath(path)),
-                        p_line, p_column),
-                    p_message),
-                errors.next());
+            for (PartialError partialError: p_partialErrors)
+            {
+                assertTrue(errors.hasNext());
+                assertEquals(partialError.makeError(path), errors.next());
+            }
             if (errors.hasNext())
             {
                 fail("Extra errors: " + errors.next());
             }
         }
+
     }
 
-    private String getTemplateFilePath(String p_path)
+    protected void expectParserError(
+        String p_path, String p_message, int p_line, int p_column)
+        throws Exception
+    {
+        expectParserErrors(p_path, new PartialError(p_message, p_line, p_column));
+    }
+
+    private static String getTemplateFilePath(String p_path)
     {
         return System.getProperty("org.jamon.integration.basedir")
             + "/templates/" + p_path + ".jamon";

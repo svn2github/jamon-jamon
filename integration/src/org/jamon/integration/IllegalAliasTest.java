@@ -40,4 +40,12 @@ public class IllegalAliasTest
     {
         expectParserError("DuplicateAlias", "Duplicate alias for foo", 3, 3);
     }
+
+    public void testDuplicateAliasFromProperties() throws Exception
+    {
+        expectParserErrors(
+            "aliasProperties/DuplicateAliasFromProperties",
+            new PartialError("Duplicate alias for jamon", 2, 3),
+            new PartialError("Duplicate alias for /", 3, 3));
+    }
 }
