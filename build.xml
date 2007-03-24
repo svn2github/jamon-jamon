@@ -88,24 +88,11 @@
   </target>
 
   <target name="prepdist" depends="test">
-    <taskdef name="invoker"
-             classname="org.jamon.ant.InvokerTask"
-             classpath="${jarfile.core}:${jarfile.anttask}:../doc/build/work" />
-    <invoker dynamicRecompilation="false"
-             template="/org/jamon/doc/SrcTgzName"
-             property="tarball.src"/>
-    <invoker dynamicRecompilation="false"
-             template="/org/jamon/doc/BinTgzName"
-             property="tarball.bin"/>
-    <invoker dynamicRecompilation="false"
-             template="/org/jamon/doc/SrcZipName"
-             property="zip.src"/>
-    <invoker dynamicRecompilation="false"
-             template="/org/jamon/doc/BinZipName"
-             property="zip.bin"/>
-    <invoker dynamicRecompilation="false"
-             template="/org/jamon/doc/DistName"
-             property="archive.base"/>
+    <property name="archive.base" value="jamon-${jamon.version}"/>
+    <property name="tarball.src" value="${archive.base}-src.tgz"/>
+    <property name="tarball.bin" value="${archive.base}.tgz"/>
+    <property name="zip.src" value="${archive.base}-src.zip"/>
+    <property name="zip.bin" value="${archive.base}.zip"/>
   </target>
 
   <target name="bindist" depends="javadoc, prepdist">
