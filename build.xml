@@ -41,7 +41,7 @@
     <jar jarfile="${jarfile.core}" manifest="manifest.mf" >
       <fileset dir="core/build/classes" />
     </jar>
-    <copy overrwrite="true" file="manifest-anttask" tofile="manifest-anttask.mf">
+    <copy overwrite="true" file="manifest-anttask" tofile="manifest-anttask.mf">
       <filterset>
         <filter token="VERSION" value="${jamon.antask.version}"/>
         <filterset refid="svn.version"/>
