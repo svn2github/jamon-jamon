@@ -32,7 +32,7 @@
   <target name="jar"
           description="Creates uber JARs"
           depends="svn-versioning,base">
-    <copy file="manifest" tofile="manifest.mf">
+    <copy overwrite="true" file="manifest" tofile="manifest.mf">
       <filterset>
         <filter token="VERSION" value="${jamon.version}"/>
         <filterset refid="svn.version"/>
