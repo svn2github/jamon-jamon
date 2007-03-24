@@ -44,7 +44,7 @@ public class IllegalAliasTest
     public void testDuplicateAliasFromProperties() throws Exception
     {
         expectParserErrors(
-            "aliasProperties/DuplicateAliasFromProperties",
+            "aliasProperties/AliasVsProperties",
             new PartialError("Duplicate alias for jamon", 2, 3),
             new PartialError("Duplicate alias for /", 3, 3));
     }
