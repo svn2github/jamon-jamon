@@ -93,7 +93,14 @@ public class AbstractParser
         return builder.toString();
     }
 
-    protected String readIdentifier() throws IOException
+    /**
+     * Read in a java identifier.
+     * @param p_addErrorIfNoneFound if true, and no identifier is found, then call
+     * {@link #addError(ParserError)}
+     * @return the identifier read, or the empty string if no identifier was found.
+     * @throws IOException
+     */
+    protected String readIdentifier(boolean p_addErrorIfNoneFound) throws IOException
     {
         try
         {
@@ -101,7 +108,10 @@ public class AbstractParser
         }
         catch(NotAnIdentifierException e)
         {
-            addError(m_reader.getNextLocation(), NOT_AN_IDENTIFIER_ERROR);
+            if (p_addErrorIfNoneFound)
+            {
+                addError(m_reader.getNextLocation(), NOT_AN_IDENTIFIER_ERROR);
+            }
             return "";
         }
     }

@@ -54,7 +54,7 @@ public class PathParser extends AbstractParser
                 if (Character.isJavaIdentifierStart((char) c))
                 {
                     m_reader.unread(c);
-                    String identifier = readIdentifier();
+                    String identifier = readIdentifier(true);
                     if ((c = m_reader.read()) == '/')
                     {
                         if ((c = m_reader.read()) == '/')

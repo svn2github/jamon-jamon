@@ -156,7 +156,7 @@ public class CallParser extends AbstractParser
                 switch (c = m_reader.read())
                 {
                     case '|' :
-                        String name = readIdentifier();
+                        String name = readIdentifier(true);
                         if (readChar('>'))
                         {
                             NamedFragmentNode fragmentNode =
@@ -316,7 +316,7 @@ public class CallParser extends AbstractParser
                 }
             }
             Location nameLoc = m_reader.getNextLocation();
-            String name = readIdentifier();
+            String name = readIdentifier(true);
             readArrow();
             Location javaLoc = m_reader.getNextLocation();
             params.addParam(

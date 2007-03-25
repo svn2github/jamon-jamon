@@ -84,6 +84,11 @@ public class AliasParserTest extends AbstractParserTest
                         3, 1, "Unexpected tag close </%alias>");
     }
 
+    @Test public void testNonPathCharacters() throws Exception
+    {
+        assertError("<%alias>\n#", 2, 1, "Alias name expected");
+    }
+
     private AbstractPathNode makeAbsolutePath(
         String p_path, int p_row, int p_column)
     {

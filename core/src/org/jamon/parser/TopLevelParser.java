@@ -85,7 +85,7 @@ public class TopLevelParser extends AbstractBodyParser<TopNode>
     {
         if (soakWhitespace())
         {
-            String name = readIdentifier();
+            String name = readIdentifier(true);
             if (checkForTagClosure(p_tagLocation))
             {
                 m_root.addSubNode(
@@ -105,7 +105,7 @@ public class TopLevelParser extends AbstractBodyParser<TopNode>
     {
         if (soakWhitespace())
         {
-            String name = readIdentifier();
+            String name = readIdentifier(true);
             if (checkForTagClosure(p_tagLocation))
             {
                 m_root.addSubNode(
@@ -125,7 +125,7 @@ public class TopLevelParser extends AbstractBodyParser<TopNode>
     {
         if (soakWhitespace())
         {
-            String name = readIdentifier();
+            String name = readIdentifier(true);
             if (checkForTagClosure(p_tagLocation))
             {
                 m_root.addSubNode(
@@ -268,11 +268,12 @@ public class TopLevelParser extends AbstractBodyParser<TopNode>
                 soakWhitespace();
                 return;
             }
-            String name = readChar('/') ? "/" : readIdentifier();
+            String name = readChar('/') ? "/" : readIdentifier(false);
             if (name.length() == 0)
             {
                 addError(m_reader.getCurrentNodeLocation(),
-                         "Identifier expected");
+                         "Alias name expected");
+                return;
             }
             soakWhitespace();
             if (readChar('='))
@@ -306,7 +307,7 @@ public class TopLevelParser extends AbstractBodyParser<TopNode>
     {
         if (soakWhitespace())
         {
-            String name = readIdentifier();
+            String name = readIdentifier(true);
             checkForTagClosure(p_tagLocation);
             AbsMethodNode absMethodNode =
                 new AbsMethodNode(p_tagLocation, name);

@@ -82,7 +82,7 @@ public final class ParentArgsParser extends AbstractParser
         throws IOException, ParserError
     {
         ArgNameNode argName = new ArgNameNode(
-            m_reader.getNextLocation(), readIdentifier());
+            m_reader.getNextLocation(), readIdentifier(true));
         soakWhitespace();
         if (readChar(';'))
         {

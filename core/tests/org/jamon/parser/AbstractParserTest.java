@@ -3,6 +3,8 @@ package org.jamon.parser;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.StringTokenizer;
 
 import org.jamon.ParserError;
@@ -52,6 +54,22 @@ public abstract class AbstractParserTest
             .getRootNode();
     }
 
+    protected static class PartialError
+    {
+        private final String m_message;
+        private final int m_line, m_column;
+        public PartialError(final int p_line, final int p_column, final String p_message)
+        {
+            m_message = p_message;
+            m_line = p_line;
+            m_column = p_column;
+        }
+
+        public ParserError makeError()
+        {
+            return new ParserError(new Location(TEMPLATE_LOC, m_line, m_column), m_message);
+        }
+    }
 
     private void assertParserError(Iterator<ParserError> p_errors,
                                    int p_line, int p_column,
@@ -73,11 +91,35 @@ public abstract class AbstractParserTest
         }
     }
 
+    protected void assertErrors(String p_body, PartialError... p_partialErrors) throws Exception
+    {
+        try
+        {
+            parse(p_body);
+            fail("No failure registered for '" + p_body + "'");
+        }
+        catch (ParserErrors e)
+        {
+            List<ParserError> errors = new LinkedList<ParserError>();
+            for (Iterator<ParserError> i = e.getErrors(); i.hasNext(); )
+            {
+                errors.add(i.next());
+            }
+            List<ParserError> expected = new LinkedList<ParserError>();
+            for (PartialError partialError: p_partialErrors)
+            {
+                expected.add(partialError.makeError());
+            }
+            assertEquals(expected, errors);
+        }
+    }
+
     protected void assertError(
         String p_body,
         int p_line, int p_column, String p_message)
         throws Exception
     {
+        assertErrors(p_body, new PartialError(p_line, p_column, p_message));
         try
         {
             parse(p_body);

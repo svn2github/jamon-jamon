@@ -38,7 +38,7 @@ public abstract class AbstractArgsParser extends AbstractParser
                 ArgNameNode argName =
                     new ArgNameNode(
                         m_reader.getCurrentNodeLocation(),
-                        readIdentifier());
+                        readIdentifier(true));
                 soakWhitespace();
                 if (readChar(';'))
                 {
