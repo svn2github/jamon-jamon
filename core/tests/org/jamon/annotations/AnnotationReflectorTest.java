@@ -2,6 +2,7 @@ package org.jamon.annotations;
 
 import static org.junit.Assert.*;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
@@ -14,10 +15,33 @@ import org.junit.Test;
 
 public class AnnotationReflectorTest
 {
-    @Template(signature="abc", requiredArguments = {@Argument(name="foo", type="bar")})
+    @Template(
+        signature="abc",
+        requiredArguments = {@Argument(name="foo", type="bar")},
+        methods = {@Method(name="m", requiredArguments = {@Argument(name="n", type="t")})})
     public static class Example {}
 
     @Test public void testGetAnnotation() throws Exception
+    {
+        ClassLoader alternateClassLoader = makeAlternateClassLoader();
+
+        assertNotSame(
+            Template.class.getClassLoader(),
+            alternateClassLoader.loadClass(Template.class.getName()));
+
+        Class<?> alternateExample = alternateClassLoader.loadClass(Example.class.getName());
+        assertNotSame(Example.class.getClassLoader(), alternateExample.getClassLoader());
+        AnnotationReflector reflector = new AnnotationReflector(alternateExample);
+        Template template = reflector.getAnnotation(Template.class);
+        assertEquals("abc", template.signature());
+        assertEquals("foo", template.requiredArguments()[0].name());
+        assertEquals(1, template.methods().length);
+        Method method = template.methods()[0];
+        assertEquals("m", method.name());
+        assertEquals("n", method.requiredArguments()[0].name());
+    }
+
+    private ClassLoader makeAlternateClassLoader() throws MalformedURLException
     {
         ClassLoader exampleClassLoader = Example.class.getClassLoader();
         URL[] urls = null;
@@ -38,20 +62,8 @@ public class AnnotationReflectorTest
         {
             urls = ((URLClassLoader) exampleClassLoader).getURLs();
         }
-        System.out.println(Arrays.asList(urls));
         ClassLoader alternateClassLoader = new URLClassLoader(urls, exampleClassLoader.getParent());
-
-        assertNotSame(
-            Template.class.getClassLoader(),
-            alternateClassLoader.loadClass(Template.class.getName()));
-
-        Class<?> alternateExample = alternateClassLoader.loadClass(Example.class.getName());
-        assertNotSame(Example.class.getClassLoader(), alternateExample.getClassLoader());
-        AnnotationReflector reflector = new AnnotationReflector(alternateExample);
-        Template template = reflector.getAnnotation(Template.class);
-        assertEquals("abc", template.signature());
-        System.out.println(template.requiredArguments());
-        assertEquals("foo", template.requiredArguments()[0].name());
+        return alternateClassLoader;
     }
 
     public static junit.framework.Test suite() {
