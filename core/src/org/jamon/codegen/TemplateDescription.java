@@ -32,6 +32,7 @@ import java.util.Set;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.jamon.annotations.AnnotationReflector;
 import org.jamon.annotations.Argument;
 import org.jamon.annotations.Fragment;
 import org.jamon.annotations.Method;
@@ -91,7 +92,8 @@ public class TemplateDescription
 
     public TemplateDescription(Class<?> p_proxy) throws NoSuchFieldException
     {
-        Template templateAnnotation = p_proxy.getAnnotation(Template.class);
+        Template templateAnnotation =
+            new AnnotationReflector(p_proxy).getAnnotation(Template.class);
         if (templateAnnotation == null)
         {
             //FIXME - throw something more sensical here
