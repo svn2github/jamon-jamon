@@ -185,6 +185,8 @@ public class ImplGenerator extends AbstractSourceGenerator
     private void generateInnerUnitFargInterface(
         FragmentUnit p_fragmentUnit, boolean p_private)
     {
+        m_writer.println();
+        m_writer.printLocation(p_fragmentUnit.getLocation());
         p_fragmentUnit.printInterface(m_writer,
                                       p_private ? "private" : "protected",
                                       false);
@@ -196,13 +198,14 @@ public class ImplGenerator extends AbstractSourceGenerator
         for (Iterator<DefUnit> i = m_templateUnit.getDefUnits(); i.hasNext(); )
         {
             DefUnit defUnit = i.next();
-            m_writer.println();
             for (Iterator<FragmentArgument> f = defUnit.getFragmentArgs();
                  f.hasNext(); )
             {
                 generateInnerUnitFargInterface(f.next().getFragmentUnit(), true);
             }
 
+            m_writer.println();
+            m_writer.printLocation(defUnit.getLocation());
             m_writer.print("private void __jamon_innerUnit__");
             m_writer.print(defUnit.getName());
             m_writer.openList();
@@ -248,6 +251,7 @@ public class ImplGenerator extends AbstractSourceGenerator
     {
         //FIXME - cut'n'pasted from generateDefs
         m_writer.println();
+        m_writer.printLocation(p_methodUnit.getLocation());
         if (p_methodUnit.isOverride())
         {
            m_writer.print("@Override ");

@@ -109,7 +109,7 @@ public class TemplateDescription
         for (Method methodAnnotation: templateAnnotation.methods())
         {
             DeclaredMethodUnit method =
-                new DeclaredMethodUnit(methodAnnotation.name(), null, null);
+                new DeclaredMethodUnit(methodAnnotation.name(), null, null, null);
             for (Argument argument: methodAnnotation.requiredArguments())
             {
                 method.addRequiredArg(makeRequiredArg(argument));
@@ -178,7 +178,7 @@ public class TemplateDescription
     private static FragmentArgument makeFragmentArg(Unit p_parentUnit, Fragment p_fragment)
     {
         FragmentUnit fragmentUnit =
-            new FragmentUnit(p_fragment.name(), p_parentUnit, new GenericParams(), null);
+            new FragmentUnit(p_fragment.name(), p_parentUnit, new GenericParams(), null, null);
         for (Argument argument: p_fragment.requiredArguments()) {
             fragmentUnit.addRequiredArg(makeRequiredArg(argument));
         }

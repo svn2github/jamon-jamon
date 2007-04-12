@@ -96,7 +96,7 @@ public class TemplateUnitTest
                      child.getDeclaredOptionalArgs());
 
         FragmentArgument f = new FragmentArgument(
-            new FragmentUnit("f", child, new GenericParams(), null), null);
+            new FragmentUnit("f", child, new GenericParams(), null, null), null);
         child.addFragmentArg(f);
         checkArgSet(new AbstractArgument[] {pr2, cr3, po2, co3, f},
                     child.getVisibleArgs());
@@ -126,8 +126,8 @@ public class TemplateUnitTest
         RequiredArgument j = new RequiredArgument("j", "Integer", null);
         OptionalArgument a = new OptionalArgument("a", "boolean", "true");
         OptionalArgument b = new OptionalArgument("b", "Boolean", "null");
-        FragmentUnit f = new FragmentUnit("f", unit, new GenericParams(), null);
-        FragmentUnit g = new FragmentUnit("g", unit, new GenericParams(), null);
+        FragmentUnit f = new FragmentUnit("f", unit, new GenericParams(), null, null);
+        FragmentUnit g = new FragmentUnit("g", unit, new GenericParams(), null, null);
 
         unit.addRequiredArg(i);
         checkSigIsUnique(unit, sigs);

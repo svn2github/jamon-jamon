@@ -24,6 +24,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.jamon.ParserErrors;
+import org.jamon.node.Location;
 import org.jamon.node.ParentArgNode;
 
 public class OverriddenMethodUnit
@@ -32,9 +33,10 @@ public class OverriddenMethodUnit
 {
     public OverriddenMethodUnit(DeclaredMethodUnit p_declaredMethodUnit,
                                 Unit p_parent,
-                                ParserErrors p_errors)
+                                ParserErrors p_errors,
+                                Location p_location)
     {
-        super(p_declaredMethodUnit.getName(), p_parent, p_errors);
+        super(p_declaredMethodUnit.getName(), p_parent, p_errors, p_location);
         m_declaredMethodUnit = p_declaredMethodUnit;
         m_inheritedArgs =
             new InheritedArgs(getName(),

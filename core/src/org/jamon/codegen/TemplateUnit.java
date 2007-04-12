@@ -47,7 +47,7 @@ public class TemplateUnit
 {
     public TemplateUnit(String p_path, ParserErrors p_errors)
     {
-        super(p_path, null, p_errors);
+        super(p_path, null, p_errors, null);
     }
 
     public int getInheritanceDepth()
@@ -191,7 +191,7 @@ public class TemplateUnit
     public void makeDefUnit(String p_defName, Location p_location)
     {
         checkCallName(p_defName, p_location);
-        m_defs.put(p_defName, new DefUnit(p_defName, this, getErrors()));
+        m_defs.put(p_defName, new DefUnit(p_defName, this, getErrors(), p_location));
     }
 
     public Iterator<DefUnit> getDefUnits()
@@ -210,7 +210,7 @@ public class TemplateUnit
         checkCallName(p_methodName, p_location);
         m_methods.put(p_methodName,
                       new DeclaredMethodUnit(
-                          p_methodName, this, getErrors(), p_isAbstract));
+                          p_methodName, this, getErrors(), p_location, p_isAbstract));
         if(p_isAbstract)
         {
             m_abstractMethodNames.add(p_methodName);
@@ -229,12 +229,12 @@ public class TemplateUnit
                 p_location);
             // Provide a dummy parent, to allow us to catch errors inside the
             // override
-            methodUnit = new DeclaredMethodUnit(p_name, this, getErrors());
+            methodUnit = new DeclaredMethodUnit(p_name, this, getErrors(), p_location);
         }
 
         m_abstractMethodNames.remove(p_name);
         OverriddenMethodUnit override =
-            new OverriddenMethodUnit(methodUnit, this, getErrors());
+            new OverriddenMethodUnit(methodUnit, this, getErrors(), p_location);
         m_overrides.add(override);
         return override;
     }

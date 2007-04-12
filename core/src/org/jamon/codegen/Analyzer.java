@@ -151,13 +151,14 @@ public class Analyzer
         m_currentStatementBlock = flowControlBlock;
     }
 
-    private FragmentUnit pushFragmentUnitImpl(String p_fragName)
+    private FragmentUnit pushFragmentUnitImpl(String p_fragName, Location p_location)
     {
         m_currentStatementBlock = new FragmentUnit(
             p_fragName,
             getCurrentStatementBlock(),
             getTemplateUnit().getGenericParams(),
-            m_errors);
+            m_errors,
+            p_location);
         return (FragmentUnit) m_currentStatementBlock;
     }
 
@@ -535,7 +536,7 @@ public class Analyzer
         public void inNamedFragmentNode(NamedFragmentNode p_node)
         {
             getCurrentCallStatement().addFragmentImpl(
-                pushFragmentUnitImpl(p_node.getName()), m_errors);
+                pushFragmentUnitImpl(p_node.getName(), p_node.getLocation()), m_errors);
         }
 
         @Override
@@ -549,7 +550,7 @@ public class Analyzer
         {
             CallStatement s = makeCallStatement(p_node);
             addStatement(s);
-            s.addFragmentImpl(pushFragmentUnitImpl(null), m_errors);
+            s.addFragmentImpl(pushFragmentUnitImpl(null, p_node.getLocation()), m_errors);
         }
 
         @Override

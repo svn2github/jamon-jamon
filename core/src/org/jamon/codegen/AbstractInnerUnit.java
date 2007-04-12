@@ -27,13 +27,14 @@ import java.util.List;
 import java.util.Set;
 
 import org.jamon.ParserErrors;
+import org.jamon.node.Location;
 
 public abstract class AbstractInnerUnit extends AbstractUnit
 {
     public AbstractInnerUnit(
-        String p_name, StatementBlock p_parent, ParserErrors p_errors)
+        String p_name, StatementBlock p_parent, ParserErrors p_errors, Location p_location)
     {
-        super(p_name, p_parent, p_errors);
+        super(p_name, p_parent, p_errors, p_location);
     }
 
     @Override public void addOptionalArg(OptionalArgument p_arg)

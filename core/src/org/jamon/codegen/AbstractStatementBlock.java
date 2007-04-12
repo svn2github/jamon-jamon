@@ -6,13 +6,15 @@ import java.util.List;
 import org.jamon.ParserError;
 import org.jamon.node.ArgNode;
 import org.jamon.node.FragmentArgsNode;
+import org.jamon.node.Location;
 import org.jamon.node.OptionalArgNode;
 
 public abstract class AbstractStatementBlock implements StatementBlock
 {
-    public AbstractStatementBlock(StatementBlock p_parent)
+    public AbstractStatementBlock(StatementBlock p_parent, Location p_location)
     {
         m_parent = p_parent;
+        m_location = p_location;
     }
 
     protected void printStatements(
@@ -83,6 +85,12 @@ public abstract class AbstractStatementBlock implements StatementBlock
         return m_parent;
     }
 
+    public Location getLocation()
+    {
+        return m_location;
+    }
+
     private final List<Statement> m_statements = new LinkedList<Statement>();
     private final StatementBlock m_parent;
+    private final Location m_location;
 }

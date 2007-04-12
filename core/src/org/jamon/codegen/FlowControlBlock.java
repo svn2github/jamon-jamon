@@ -9,14 +9,13 @@ public class FlowControlBlock
     public FlowControlBlock(
         StatementBlock p_parent, String p_header, Location p_location)
     {
-        super(p_parent);
+        super(p_parent, p_location);
         m_header = p_header;
-        m_location = p_location;
     }
 
     protected void printOpening(CodeWriter p_writer)
     {
-        p_writer.printLocation(m_location);
+        p_writer.printLocation(getLocation());
         p_writer.println(m_header);
     }
 
@@ -31,5 +30,4 @@ public class FlowControlBlock
     }
 
     private final String m_header;
-    private final Location m_location;
 }

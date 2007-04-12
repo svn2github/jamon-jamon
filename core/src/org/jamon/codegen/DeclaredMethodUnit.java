@@ -23,6 +23,7 @@ package org.jamon.codegen;
 import java.util.Iterator;
 
 import org.jamon.ParserErrors;
+import org.jamon.node.Location;
 
 public class DeclaredMethodUnit
     extends AbstractInnerUnit
@@ -31,16 +32,17 @@ public class DeclaredMethodUnit
     public DeclaredMethodUnit(String p_name,
                               TemplateUnit p_parent,
                               ParserErrors p_errors,
+                              Location p_location,
                               boolean p_isAbstract)
     {
-        super(p_name, p_parent, p_errors);
+        super(p_name, p_parent, p_errors, p_location);
         m_isAbstract = p_isAbstract;
     }
 
     public DeclaredMethodUnit(
-        String p_name, TemplateUnit p_parent, ParserErrors p_errors)
+        String p_name, TemplateUnit p_parent, ParserErrors p_errors, Location p_location)
     {
-        this(p_name, p_parent, p_errors, false);
+        this(p_name, p_parent, p_errors, p_location, false);
     }
 
     public String getOptionalArgDefaultMethod(OptionalArgument p_arg)

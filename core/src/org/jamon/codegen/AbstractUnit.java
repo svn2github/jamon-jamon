@@ -38,9 +38,9 @@ public abstract class AbstractUnit
     implements Unit
 {
     public AbstractUnit(
-        String p_name, StatementBlock p_parent, ParserErrors p_errors)
+        String p_name, StatementBlock p_parent, ParserErrors p_errors, Location p_location)
     {
-        super(p_parent);
+        super(p_parent, p_location);
         m_name = p_name;
         m_errors = p_errors;
     }
@@ -104,7 +104,7 @@ public abstract class AbstractUnit
     {
         checkArgName(p_node.getFragmentName(), p_node.getLocation());
         FragmentUnit frag = new FragmentUnit(
-            p_node.getFragmentName(), this, p_genericParams, m_errors);
+            p_node.getFragmentName(), this, p_genericParams, m_errors, p_node.getLocation());
         addFragmentArg(new FragmentArgument(frag, p_node.getLocation()));
         return frag;
     }
