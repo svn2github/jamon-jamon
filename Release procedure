@@ -21,6 +21,15 @@
 *) Build the plugin in eclipse by opening site.xml in updateSite and clicking on "Build All"
 *) In updateSite, run "ant push"
 *) QUESTION - how to generate update sites that can be downloaded from sourceforge?
-*) Build and release maven code (MORE DOCS NEEDED HERE)
+*) Build and release maven code
+**) Get jamon-x.y.z.jar and jamon-anttask-x.y.z.jar from SF
+**) Deploy both to maven.jamon.org via
+mvn -s ~/.m2jamon/settings.xml -DgroupId=org.jamon -DartifactId=jamon -Dversion=2.2.1 -Dfile=jamon-2.2.1.jar -Dpackaging=jar -DrepositoryId=jamon -Durl=scpexe://jamon@maven.jamon.org/home/jamon/maven2 deploy:deploy-file
+mvn -s ~/.m2jamon/settings.xml -DgroupId=org.jamon -DartifactId=jamon-anttask -Dversion=2.2.1 -Dfile=jamon-anttask-2.2.1.jar -Dpackaging=jar -DrepositoryId=jamon -Durl=scpexe://jamon@maven.jamon.org/home/jamon/maven2 deploy:deploy-file
+(the '-s ~/.m2jamon/settings.xml indicates an alternate local maven repo
+ which is useful for hygiene)
+**) Edit mvn2-plugin/pom.xml updating the dependency versions and the pom version
+**) Commit to the tag branch (this yuckiness goes away with repo restructuring)
+**) Commit a similar pom.xml change to trunk, just adding '-SNAPSHOT' to pom version
 *) In docs, run "ant push"
 *) Email release mailing list.
