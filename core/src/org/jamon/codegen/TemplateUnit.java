@@ -474,11 +474,15 @@ public class TemplateUnit
             generateInterfaceSummary(buf);
             return StringUtils.byteArrayToHexString
                 (MessageDigest.getInstance("MD5").digest
-                     (buf.toString().getBytes()));
+                     (buf.toString().getBytes("UTF-8")));
         }
-        catch (NoSuchAlgorithmException e)
+        catch (RuntimeException e)
         {
-            throw new RuntimeException("Unable to get md5 instance");
+            throw e;
+        }
+        catch (Exception e)
+        {
+            throw new RuntimeException("Unable to generate signature", e);
         }
     }
 
