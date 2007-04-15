@@ -1,15 +1,26 @@
 *) Update docs to reflect release.
 *) Run svn up to get latest version number set
 *) In jamon, run "ant test javadoc"
-*) Build jamonStdLib (needed for docs)
+*) In jamonStdLib, run "ant jar" (needed for docs)
 *) In doc, run "ant doc" (since docs go in the dists)
 *) In jamon, run "ant dist"
 *) If necessary, run "ant dist" in jamonStdLib
-*) svn copy .../trunk .../tags/JAMON-X_Y_Z-RELEASE
-*) Upload dist files to sourceforge
+*) svn copy svn copy https://jamon.svn.sourceforge.net/svnroot/jamon/trunk \
+     https://jamon.svn.sourceforge.net/svnroot/jamon/tags/JAMON-X_Y_Z-RELEASE
+*) Upload dist files to sourceforge:
+**) Ftp jamon-X.Y.Z{,-src}.{tgz,zip} and jamon-anttask-X.Y.Z.jar
+    to upload.sf.net, in the incoming directory
+**) From the project home page, go to Admin->File Releases
+**) Click on "Add release" next to package jamon
+**) Create release jamon-X.Y.Z
+**) Copy notes from Changes.html in docs
+**) Select uploaded files
+**) Each file needs to be edited and submitted separately (sigh)
+**) Click on the send release notice
 *) Copy jamon-X.Y.Z.jar to corePlugin
-*) Build the plugin in eclipse (MORE DOCS NEEDED HERE)
+*) Build the plugin in eclipse by opening site.xml in updateSite and clicking on "Build All"
 *) In updateSite, run "ant push"
 *) QUESTION - how to generate update sites that can be downloaded from sourceforge?
-*) Build and release mave code (MORE DOCS NEEDED HERE)
+*) Build and release maven code (MORE DOCS NEEDED HERE)
 *) In docs, run "ant push"
+*) Email release mailing list.
