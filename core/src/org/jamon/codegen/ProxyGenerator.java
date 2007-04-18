@@ -21,7 +21,7 @@
 package org.jamon.codegen;
 
 import java.io.OutputStream;
-import java.util.Iterator;
+import java.util.Collection;
 
 public class ProxyGenerator extends AbstractSourceGenerator
 {
@@ -134,12 +134,9 @@ public class ProxyGenerator extends AbstractSourceGenerator
 
     private void generateFragmentInterfaces(boolean p_inner)
     {
-        for (Iterator<FragmentArgument> f =
-                m_templateUnit.getDeclaredFragmentArgs();
-             f.hasNext(); )
+        for (FragmentArgument farg: m_templateUnit.getDeclaredFragmentArgs())
         {
-            f.next().getFragmentUnit().printInterface(
-                m_writer, "public", !p_inner);
+            farg.getFragmentUnit().printInterface(m_writer, "public", !p_inner);
             m_writer.println();
         }
         m_writer.println();
@@ -170,14 +167,12 @@ public class ProxyGenerator extends AbstractSourceGenerator
 
     private void generateMethodAnnotations()
     {
-        Iterator<MethodUnit> signatureMethodUnits = m_templateUnit.getSignatureMethodUnits();
-        if (signatureMethodUnits.hasNext())
+        if (!m_templateUnit.getSignatureMethodUnits().isEmpty())
         {
             m_writer.printListElement("methods = ");
             m_writer.openList("{", true);
-            while(signatureMethodUnits.hasNext())
+            for(MethodUnit methodUnit: m_templateUnit.getSignatureMethodUnits())
             {
-                MethodUnit methodUnit = signatureMethodUnits.next();
                 m_writer.printListElement("@" + ClassNames.METHOD_ANNOTATION);
                 m_writer.openList("(", true);
                 m_writer.printListElement("name = \"" + methodUnit.getName() + "\"");
@@ -211,14 +206,14 @@ public class ProxyGenerator extends AbstractSourceGenerator
         generateFragmentAnnotations(p_unit.getFragmentArgs());
     }
 
-    private void generateFragmentAnnotations(Iterator<FragmentArgument> p_fargs)
+    private void generateFragmentAnnotations(Collection<FragmentArgument> p_fargs)
     {
-        if (p_fargs.hasNext())
+        if (! p_fargs.isEmpty())
         {
             m_writer.printListElement("fragmentArguments = ");
             m_writer.openList("{", true);
-            while (p_fargs.hasNext()) {
-                FragmentArgument farg = p_fargs.next();
+            for (FragmentArgument farg: p_fargs)
+            {
                 m_writer.printListElement("@" + ClassNames.FRAGMENT_ANNOTATION);
                 m_writer.openList("(", true);
                 m_writer.printListElement("name = \"" + farg.getName() + "\"");
@@ -232,15 +227,14 @@ public class ProxyGenerator extends AbstractSourceGenerator
 
     private void generateArgumentAnnotations(
         String p_label,
-        Iterator<? extends AbstractArgument> p_args)
+        Collection<? extends AbstractArgument> p_args)
     {
-        if (p_args.hasNext())
+        if (! p_args.isEmpty())
         {
             m_writer.printListElement(p_label + " = ");
             m_writer.openList("{", true);
-            while(p_args.hasNext())
+            for(AbstractArgument argument: p_args)
             {
-                AbstractArgument argument = p_args.next();
                 m_writer.printListElement(
                     "@" + ClassNames.ARGUMENT_ANNOTATION + "(name = \""
                     + argument.getName() + "\", type = \"" + argument.getType() + "\")");
@@ -345,16 +339,14 @@ public class ProxyGenerator extends AbstractSourceGenerator
 
         m_writer.println("  throws " + ClassNames.IOEXCEPTION);
         m_writer.openBlock();
-        if (m_templateUnit.getRenderArgs().hasNext())
+        if (! m_templateUnit.getRenderArgs().isEmpty())
         {
             m_writer.println(
                 "ImplData"
                 + m_templateUnit.getGenericParams().generateGenericParamsList()
                 + " implData = getImplData();");
-            for (Iterator<AbstractArgument> i = m_templateUnit.getRenderArgs();
-                 i.hasNext(); )
+            for (AbstractArgument arg: m_templateUnit.getRenderArgs())
             {
-                AbstractArgument arg = i.next();
                 m_writer.println("implData." + arg.getSetterName()
                                  + "(" + arg.getName() + ");");
             }
@@ -436,10 +428,9 @@ public class ProxyGenerator extends AbstractSourceGenerator
             m_writer.println("m_jamonContext = p_jamonContext;");
             m_writer.closeBlock();
         }
-        for (Iterator<AbstractArgument> i = m_templateUnit.getDeclaredArgs();
-             i.hasNext(); )
+        for (AbstractArgument arg: m_templateUnit.getDeclaredArgs())
         {
-            i.next().generateImplDataCode(m_writer);
+            arg.generateImplDataCode(m_writer);
         }
         m_writer.closeBlock();
 
@@ -491,11 +482,8 @@ public class ProxyGenerator extends AbstractSourceGenerator
 
     private void generateOptionalArgs()
     {
-        for (Iterator<OptionalArgument> i =
-                m_templateUnit.getDeclaredOptionalArgs();
-             i.hasNext(); )
+        for (OptionalArgument arg: m_templateUnit.getDeclaredOptionalArgs())
         {
-            OptionalArgument arg = i.next();
             m_writer.println();
             m_writer.println("protected " + arg.getType() + " "
                              + arg.getName() + ";");
@@ -555,11 +543,8 @@ public class ProxyGenerator extends AbstractSourceGenerator
         m_writer.openBlock();
         m_writer.println("protected ParentRenderer() {}");
 
-        for (Iterator<OptionalArgument> i =
-                m_templateUnit.getSignatureOptionalArgs();
-             i.hasNext(); )
+        for (OptionalArgument arg:  m_templateUnit.getSignatureOptionalArgs())
         {
-            OptionalArgument arg = i.next();
             m_writer.println();
             String name = arg.getName();
             m_writer.print("public final ParentRenderer ");

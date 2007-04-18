@@ -21,8 +21,8 @@
 package org.jamon.codegen;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
-import java.util.Iterator;
 
 import org.jamon.ParserError;
 import org.jamon.node.Location;
@@ -43,14 +43,14 @@ public class NamedParamValues implements ParamValues
     }
 
     public void generateRequiredArgs(
-        Iterator<RequiredArgument> p_args, CodeWriter p_writer)
+        List<RequiredArgument> p_args, CodeWriter p_writer)
         throws ParserError
     {
         boolean multipleArgsAreMissing= false;
         StringBuilder missingArgs = null;
-        while (p_args.hasNext())
+        for (RequiredArgument arg: p_args)
         {
-            String name = p_args.next().getName();
+            String name = arg.getName();
             String expr = m_params.remove(name);
             if (expr == null)
             {
@@ -87,9 +87,9 @@ public class NamedParamValues implements ParamValues
         return ! m_params.isEmpty();
     }
 
-    public Iterator<String> getUnusedParams()
+    public Iterable<String> getUnusedParams()
     {
-        return m_params.keySet().iterator();
+        return m_params.keySet();
     }
 
 

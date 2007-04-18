@@ -20,7 +20,7 @@
 
 package org.jamon.codegen;
 
-import java.util.Iterator;
+import java.util.Collection;
 import java.util.List;
 
 import org.jamon.ParserErrors;
@@ -41,9 +41,9 @@ public class OverriddenMethodUnit
         m_inheritedArgs =
             new InheritedArgs(getName(),
                               getName(),
-                              p_declaredMethodUnit.getRequiredArgsList(),
+                              p_declaredMethodUnit.getRequiredArgs(),
                               p_declaredMethodUnit.getOptionalArgsSet(),
-                              p_declaredMethodUnit.getFragmentArgsList(),
+                              p_declaredMethodUnit.getFragmentArgs(),
                               p_errors);
 
     }
@@ -53,7 +53,7 @@ public class OverriddenMethodUnit
         m_inheritedArgs.addParentArg(p_node);
     }
 
-    @Override public Iterator<AbstractArgument> getVisibleArgs()
+    @Override public Collection<AbstractArgument> getVisibleArgs()
     {
         return m_inheritedArgs.getVisibleArgs();
     }
@@ -61,17 +61,17 @@ public class OverriddenMethodUnit
     private final DeclaredMethodUnit m_declaredMethodUnit;
     private final InheritedArgs m_inheritedArgs;
 
-    @Override public Iterator<FragmentArgument> getFragmentArgs()
+    @Override public List<FragmentArgument> getFragmentArgs()
     {
         return m_declaredMethodUnit.getFragmentArgs();
     }
 
-    @Override public Iterator<RequiredArgument> getSignatureRequiredArgs()
+    @Override public List<RequiredArgument> getSignatureRequiredArgs()
     {
         return m_declaredMethodUnit.getSignatureRequiredArgs();
     }
 
-    @Override public Iterator<OptionalArgument> getSignatureOptionalArgs()
+    @Override public Collection<OptionalArgument> getSignatureOptionalArgs()
     {
         return m_declaredMethodUnit.getSignatureOptionalArgs();
     }
@@ -83,10 +83,8 @@ public class OverriddenMethodUnit
 
     @Override public void printRenderArgsDecl(CodeWriter p_writer)
     {
-        for (Iterator<AbstractArgument> i = m_declaredMethodUnit.getRenderArgs();
-             i.hasNext(); )
+        for (AbstractArgument arg: m_declaredMethodUnit.getRenderArgs())
         {
-            AbstractArgument arg = i.next();
             p_writer.printListElement("final " + arg.getType() + " "
                               + (m_inheritedArgs.isArgVisible(arg)
                                  ? "" : "p__jamon__" )
@@ -105,11 +103,6 @@ public class OverriddenMethodUnit
         throw new UnsupportedOperationException();
     }
 
-    @Override public List<FragmentArgument> getFragmentArgsList()
-    {
-        throw new UnsupportedOperationException();
-    }
-
     @Override public void addRequiredArg(org.jamon.codegen.RequiredArgument p_arg)
     {
         throw new UnsupportedOperationException();
@@ -120,7 +113,7 @@ public class OverriddenMethodUnit
         throw new UnsupportedOperationException();
     }
 
-    public Iterator<OptionalArgument> getOptionalArgsWithDefaults()
+    public Collection<OptionalArgument> getOptionalArgsWithDefaults()
     {
         return m_inheritedArgs.getOptionalArgsWithNewDefaultValues();
     }

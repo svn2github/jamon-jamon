@@ -22,6 +22,8 @@ package org.jamon.util;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.Collections;
+
 import junit.framework.TestCase;
 
 public class StringUtilsTest
@@ -92,8 +94,7 @@ public class StringUtilsTest
         throws Exception
     {
         StringBuilder buf = new StringBuilder("prefix ");
-        StringUtils.commaJoin(buf,
-                              (Arrays.asList(new String[] {}).iterator()));
+        StringUtils.commaJoin(buf, Collections.<String>emptyList());
         assertEquals("prefix ", buf.toString());
     }
 
@@ -101,9 +102,7 @@ public class StringUtilsTest
         throws Exception
     {
         StringBuilder buf = new StringBuilder("prefix ");
-        StringUtils.commaJoin(buf,
-                              (Arrays.asList(new String[] {"foo"})
-                               .iterator()));
+        StringUtils.commaJoin(buf, Arrays.asList("foo"));
         assertEquals("prefix foo", buf.toString());
     }
 
@@ -111,9 +110,7 @@ public class StringUtilsTest
         throws Exception
     {
         StringBuilder buf = new StringBuilder("prefix ");
-        StringUtils.commaJoin(buf,
-                              (Arrays.asList(new String[] {"foo", "bar"})
-                               .iterator()));
+        StringUtils.commaJoin(buf, (Arrays.asList("foo", "bar")));
         assertEquals("prefix foo, bar", buf.toString());
     }
 
@@ -121,9 +118,7 @@ public class StringUtilsTest
         throws Exception
     {
         StringBuilder buf = new StringBuilder("prefix ");
-        StringUtils.commaJoin(buf,
-                              Arrays.asList(new String[] {"foo", "bar", "baz"})
-                              .iterator());
+        StringUtils.commaJoin(buf, Arrays.asList("foo", "bar", "baz"));
         assertEquals("prefix foo, bar, baz", buf.toString());
     }
 

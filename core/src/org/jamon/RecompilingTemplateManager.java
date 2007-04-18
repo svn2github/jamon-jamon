@@ -26,7 +26,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 import java.util.LinkedList;
 import java.util.Map;
@@ -483,9 +482,8 @@ public class RecompilingTemplateManager
                 d = new DependencyEntry(computeDependencies(path,p_describer));
                 m_dependencyCache.put(path, d);
             }
-            for (Iterator<String> y = d.getDependencies(); y.hasNext(); /* */)
+            for (String dp: d.getDependencies())
             {
-                String dp = y.next();
                 if (! seen.contains(dp))
                 {
                     workQueue.add(dp);
@@ -627,14 +625,7 @@ public class RecompilingTemplateManager
 
         StringBuilder buf = new StringBuilder();
         buf.append("compiling: ");
-        for (Iterator<String> i = p_sourceFiles.iterator(); i.hasNext(); /* */)
-        {
-            buf.append(i.next());
-            if (i.hasNext())
-            {
-                buf.append(", ");
-            }
-        }
+        StringUtils.commaJoin(buf, p_sourceFiles);
         if (TRACE)
         {
             trace(buf.toString());
@@ -671,9 +662,9 @@ public class RecompilingTemplateManager
         Collection<String> m_dependencies;
         long m_lastUpdated;
 
-        Iterator<String> getDependencies()
+        Collection<String> getDependencies()
         {
-            return m_dependencies.iterator();
+            return m_dependencies;
         }
 
         long lastUpdated()

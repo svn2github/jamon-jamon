@@ -116,8 +116,7 @@ public class Analyzer
                         StringBuilder message =
                             new StringBuilder("The abstract method(s) ");
                         StringUtils.commaJoin(message,
-                                  getTemplateUnit().getAbstractMethodNames()
-                                  .iterator());
+                                  getTemplateUnit().getAbstractMethodNames());
                         message.append(" have no concrete implementation");
                         addError(message.toString(), p_extends.getLocation());
                     }

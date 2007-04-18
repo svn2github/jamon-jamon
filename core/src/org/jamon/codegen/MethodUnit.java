@@ -20,14 +20,13 @@
 
 package org.jamon.codegen;
 
-import java.util.Iterator;
-
+import java.util.Collection;
 import org.jamon.node.Location;
 
 public interface MethodUnit extends Unit
 {
     String getOptionalArgDefaultMethod(OptionalArgument p_arg);
-    Iterator<OptionalArgument> getOptionalArgsWithDefaults();
+    Collection<OptionalArgument> getOptionalArgsWithDefaults();
     String getDefaultForArg(OptionalArgument p_arg);
     boolean isAbstract();
     boolean isOverride();

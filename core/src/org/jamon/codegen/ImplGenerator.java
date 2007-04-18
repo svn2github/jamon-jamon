@@ -21,8 +21,6 @@
 package org.jamon.codegen;
 
 import java.io.OutputStream;
-import java.util.Iterator;
-
 import org.jamon.ParserError;
 import org.jamon.ParserErrors;
 
@@ -104,10 +102,8 @@ public class ImplGenerator extends AbstractSourceGenerator
                 "protected final " + m_templateUnit.getJamonContextType() +
                 " jamonContext;");
         }
-        for (Iterator<AbstractArgument> i = m_templateUnit.getVisibleArgs();
-             i.hasNext(); )
+        for (AbstractArgument arg: m_templateUnit.getVisibleArgs())
         {
-            AbstractArgument arg = i.next();
             m_writer.println(
                 "private final " + arg.getType() + " " + arg.getName() + ";");
         }
@@ -123,11 +119,8 @@ public class ImplGenerator extends AbstractSourceGenerator
             + " " + SET_OPTS + "("
             + getImplDataClassName() + " p_implData)");
         m_writer.openBlock();
-        for (Iterator<OptionalArgument> i =
-                m_templateUnit.getSignatureOptionalArgs();
-             i.hasNext(); )
+        for (OptionalArgument arg: m_templateUnit.getSignatureOptionalArgs())
         {
-            OptionalArgument arg = i.next();
             String value = m_templateUnit.getOptionalArgDefault(arg);
             if (value != null)
             {
@@ -161,10 +154,8 @@ public class ImplGenerator extends AbstractSourceGenerator
         {
             m_writer.println("jamonContext = p_implData.getJamonContext();");
         }
-        for (Iterator<AbstractArgument> i = m_templateUnit.getVisibleArgs();
-             i.hasNext(); )
+        for (AbstractArgument arg: m_templateUnit.getVisibleArgs())
         {
-            AbstractArgument arg = i.next();
             m_writer.println(arg.getName()
                              + " = p_implData." + arg.getGetterName() + "();");
         }
@@ -195,13 +186,11 @@ public class ImplGenerator extends AbstractSourceGenerator
 
     private void generateDefs() throws ParserError
     {
-        for (Iterator<DefUnit> i = m_templateUnit.getDefUnits(); i.hasNext(); )
+        for (DefUnit defUnit: m_templateUnit.getDefUnits())
         {
-            DefUnit defUnit = i.next();
-            for (Iterator<FragmentArgument> f = defUnit.getFragmentArgs();
-                 f.hasNext(); )
+            for (FragmentArgument frag: defUnit.getFragmentArgs())
             {
-                generateInnerUnitFargInterface(f.next().getFragmentUnit(), true);
+                generateInnerUnitFargInterface(frag.getFragmentUnit(), true);
             }
 
             m_writer.println();
@@ -224,25 +213,22 @@ public class ImplGenerator extends AbstractSourceGenerator
 
     private void generateMethods() throws ParserError
     {
-        for (Iterator<MethodUnit> i = m_templateUnit.getDeclaredMethodUnits();
-             i.hasNext(); )
+        for (MethodUnit methodUnit: m_templateUnit.getDeclaredMethodUnits())
         {
-            generateMethodIntf(i.next());
+            generateMethodIntf(methodUnit);
         }
-        for (Iterator<MethodUnit> i = m_templateUnit.getImplementedMethodUnits();
-             i.hasNext(); )
+        for (MethodUnit methodUnit: m_templateUnit.getImplementedMethodUnits())
         {
-            generateMethodImpl(i.next());
+            generateMethodImpl(methodUnit);
         }
     }
 
     private void generateMethodIntf(MethodUnit p_methodUnit)
     {
         m_writer.println();
-        for (Iterator<FragmentArgument> f = p_methodUnit.getFragmentArgs();
-             f.hasNext(); )
+        for (FragmentArgument frag: p_methodUnit.getFragmentArgs())
         {
-            generateInnerUnitFargInterface(f.next().getFragmentUnit(), false);
+            generateInnerUnitFargInterface(frag.getFragmentUnit(), false);
         }
 
     }
@@ -279,11 +265,8 @@ public class ImplGenerator extends AbstractSourceGenerator
         }
         m_writer.println();
 
-        for (Iterator<OptionalArgument> i =
-                p_methodUnit.getOptionalArgsWithDefaults();
-             i.hasNext(); )
+        for (OptionalArgument arg:  p_methodUnit.getOptionalArgsWithDefaults())
         {
-            OptionalArgument arg = i.next();
             if (p_methodUnit.isOverride()) {
                 m_writer.print("@Override ");
             }

@@ -21,7 +21,6 @@
 package org.jamon.codegen;
 
 import java.util.List;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.HashMap;
 
@@ -169,14 +168,13 @@ public abstract class AbstractCallStatement
 
     protected void generateFragmentParams(
         CodeWriter p_writer,
-        Iterator<FragmentArgument> p_fragmentInterfaces)
+        List<FragmentArgument> p_fragmentInterfaces)
     {
-        while (p_fragmentInterfaces.hasNext())
+        for(FragmentArgument fragmentArgument: p_fragmentInterfaces)
         {
             p_writer.printListElement(
                 "new "
-                + getFragmentImplName(
-                    (p_fragmentInterfaces.next().getFragmentUnit()))
+                + getFragmentImplName(fragmentArgument.getFragmentUnit())
                 + "(this.getTemplateManager())");
         }
     }
@@ -192,12 +190,12 @@ public abstract class AbstractCallStatement
         if (! m_fragParams.isEmpty())
         {
             throw constructExtraParamsException(
-                "fragments", m_fragParams.keySet().iterator());
+                "fragments", m_fragParams.keySet());
         }
     }
 
     ParserError constructExtraParamsException(String p_paramType,
-                                              Iterator<String> p_extraParams)
+                                              Iterable<String> p_extraParams)
     {
         StringBuilder message = new StringBuilder("Call provides unused ");
         message.append(p_paramType);

@@ -23,7 +23,6 @@ package org.jamon.codegen;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -50,17 +49,17 @@ public class InheritedArgs
 
     private final String m_parentName;
     private final ParserErrors m_errors;
-    private final Set<AbstractArgument> m_visibleArgs = 
+    private final Set<AbstractArgument> m_visibleArgs =
         new HashSet<AbstractArgument>();
     private final Collection<RequiredArgument> m_requiredArgs;
     private final Collection<OptionalArgument> m_optionalArgs;
     private final Collection<FragmentArgument> m_fragmentArgs;
-    private final Map<OptionalArgument, String> m_defaultOverrides = 
-        new HashMap<OptionalArgument, String>(); 
+    private final Map<OptionalArgument, String> m_defaultOverrides =
+        new HashMap<OptionalArgument, String>();
 
-    public Iterator<AbstractArgument> getVisibleArgs()
+    public Collection<AbstractArgument> getVisibleArgs()
     {
-        return m_visibleArgs.iterator();
+        return m_visibleArgs;
     }
 
     public boolean isArgVisible(AbstractArgument p_arg)
@@ -124,14 +123,14 @@ public class InheritedArgs
             m_parentName + " does not have an arg named " + name,
              p_node.getName().getLocation());
     }
-    
+
     public String getDefaultValue(OptionalArgument p_arg)
     {
         return m_defaultOverrides.get(p_arg);
     }
-    
-    public Iterator<OptionalArgument> getOptionalArgsWithNewDefaultValues()
+
+    public Collection<OptionalArgument> getOptionalArgsWithNewDefaultValues()
     {
-        return m_defaultOverrides.keySet().iterator();
+        return m_defaultOverrides.keySet();
     }
 }

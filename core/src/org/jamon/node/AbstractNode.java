@@ -20,8 +20,6 @@
 
 package org.jamon.node;
 
-import java.util.Iterator;
-
 public abstract class AbstractNode
 {
     /**
@@ -94,18 +92,23 @@ public abstract class AbstractNode
     protected static void addPropertyList(
         StringBuilder p_buffer,
         String p_name,
-        Iterator<? extends AbstractNode> p_properties)
+        Iterable<? extends AbstractNode> p_properties)
     {
         p_buffer.append(", ");
         p_buffer.append(p_name);
         p_buffer.append(": [");
-        while (p_properties.hasNext())
+        boolean seenElement = false;
+        for (AbstractNode node: p_properties)
         {
-            p_buffer.append(p_properties.next().toString());
-            if (p_properties.hasNext())
+            if (seenElement)
             {
                 p_buffer.append(", ");
             }
+            else
+            {
+                seenElement = true;
+            }
+            p_buffer.append(node.toString());
         }
         p_buffer.append("]");
     }

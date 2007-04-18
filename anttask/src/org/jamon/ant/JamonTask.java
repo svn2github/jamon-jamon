@@ -24,8 +24,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.Iterator;
-
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Location;
 
@@ -167,10 +165,9 @@ public class JamonTask
                 catch (ParserErrors e)
                 {
                     e.printErrors(System.err); //FIXME - is this the right thing to do?
-                    Iterator<ParserError> errors = e.getErrors();
-                    if (errors.hasNext())
+                    if (! e.getErrors().isEmpty())
                     {
-                        ParserError error = errors.next();
+                        ParserError error = e.getErrors().get(0);
                         throw new BuildException(
                             error.getMessage(), new JamonLocation(error.getLocation()));
                     }

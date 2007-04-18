@@ -31,7 +31,6 @@ import java.net.URLClassLoader;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 
@@ -40,6 +39,7 @@ import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Environment;
 
+import org.jamon.JamonException;
 import org.jamon.ParserError;
 import org.jamon.ParserErrors;
 import org.jamon.TemplateInspector;
@@ -113,25 +113,16 @@ public class InvokerTask
                                          writer.toString());
             }
         }
-        catch (TemplateInspector.InvalidTemplateException e)
-        {
-            throw new BuildException(e);
-        }
-        catch (TemplateInspector.UnknownArgumentsException e)
-        {
-            throw new BuildException(e);
-        }
-        catch (InvokerTool.TemplateArgumentException e)
+        catch (JamonException e)
         {
             throw new BuildException(e);
         }
         catch (ParserErrors e)
         {
             e.printErrors(System.err); //FIXME - is this the right thing to do?
-            Iterator<ParserError> i = e.getErrors();
-            if (i.hasNext())
+            if (! e.getErrors().isEmpty())
             {
-                ParserError error = i.next();
+                ParserError error = e.getErrors().get(0);
                 throw new BuildException(
                     error.getMessage(), new JamonLocation(error.getLocation()));
             }

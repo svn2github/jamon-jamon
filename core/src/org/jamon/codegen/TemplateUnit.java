@@ -24,7 +24,6 @@ import java.security.MessageDigest;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -74,14 +73,12 @@ public class TemplateUnit
                                             p_parent.getFragmentInterfaces(),
                                             getErrors());
 
-        for (Iterator<AbstractArgument> i =
-                new SequentialIterator<AbstractArgument>(
-                        p_parent.getRequiredArgs().iterator(),
-                        p_parent.getOptionalArgs().iterator(),
-                        p_parent.getFragmentInterfaces().iterator());
-             i.hasNext(); )
+        for (AbstractArgument arg: new Concatenation<AbstractArgument>(
+                p_parent.getRequiredArgs(),
+                p_parent.getOptionalArgs(),
+                p_parent.getFragmentInterfaces()))
         {
-            addArgName(i.next());
+            addArgName(arg);
         }
 
         m_callNames.addAll(p_parent.getMethodUnits().keySet());
@@ -96,14 +93,7 @@ public class TemplateUnit
         m_inheritedArgs.addParentArg(p_arg);
     }
 
-    @Override
-    public Iterator<FragmentArgument> getFragmentArgs()
-    {
-        return m_fragmentArgs.iterator();
-    }
-
-    @Override
-    public List<FragmentArgument> getFragmentArgsList()
+    @Override public List<FragmentArgument> getFragmentArgs()
     {
         return m_fragmentArgs;
     }
@@ -115,9 +105,9 @@ public class TemplateUnit
         m_declaredFragmentArgs.add(p_arg);
     }
 
-    public Iterator<FragmentArgument> getDeclaredFragmentArgs()
+    public Collection<FragmentArgument> getDeclaredFragmentArgs()
     {
-        return m_declaredFragmentArgs.iterator();
+        return m_declaredFragmentArgs;
     }
 
     @Override
@@ -133,19 +123,19 @@ public class TemplateUnit
     }
 
     @Override
-    public Iterator<RequiredArgument> getSignatureRequiredArgs()
+    public List<RequiredArgument> getSignatureRequiredArgs()
     {
-        return new SequentialIterator<RequiredArgument>
-            (m_parentDescription.getRequiredArgs().iterator(),
-             m_declaredRequiredArgs.iterator());
+        return new SequentialList<RequiredArgument>
+            (m_parentDescription.getRequiredArgs(),
+             m_declaredRequiredArgs);
     }
 
     @Override
-    public Iterator<OptionalArgument> getSignatureOptionalArgs()
+    public Collection<OptionalArgument> getSignatureOptionalArgs()
     {
-        return new SequentialIterator<OptionalArgument>
-            (m_parentDescription.getOptionalArgs().iterator(),
-             m_declaredOptionalArgs.iterator());
+        return new Concatenation<OptionalArgument>
+            (m_parentDescription.getOptionalArgs(),
+             m_declaredOptionalArgs);
     }
 
     public String getOptionalArgDefault(OptionalArgument p_arg)
@@ -156,21 +146,21 @@ public class TemplateUnit
     }
 
     @Override
-    public Iterator<AbstractArgument> getVisibleArgs()
+    public Collection<AbstractArgument> getVisibleArgs()
     {
         return m_inheritedArgs == null
-            ? new SequentialIterator<AbstractArgument>(
+            ? new Concatenation<AbstractArgument>(
                     getDeclaredRenderArgs(),
                     getDeclaredOptionalArgs())
-            : new SequentialIterator<AbstractArgument>(
+            : new Concatenation<AbstractArgument>(
                     m_inheritedArgs.getVisibleArgs(),
                     getDeclaredRenderArgs(),
                     getDeclaredOptionalArgs());
     }
 
-    public Iterator<OptionalArgument> getDeclaredOptionalArgs()
+    public Collection<OptionalArgument> getDeclaredOptionalArgs()
     {
-        return m_declaredOptionalArgs.iterator();
+        return m_declaredOptionalArgs;
     }
 
     public Collection<String> getTemplateDependencies()
@@ -193,9 +183,9 @@ public class TemplateUnit
         m_defs.put(p_defName, new DefUnit(p_defName, this, getErrors(), p_location));
     }
 
-    public Iterator<DefUnit> getDefUnits()
+    public Collection<DefUnit> getDefUnits()
     {
-        return m_defs.values().iterator();
+        return m_defs.values();
     }
 
     public DefUnit getDefUnit(String p_name)
@@ -245,22 +235,20 @@ public class TemplateUnit
                : m_parentDescription.getMethodUnits().get(p_name));
     }
 
-    public Iterator<MethodUnit> getSignatureMethodUnits()
+    public Collection<MethodUnit> getSignatureMethodUnits()
     {
-        return new SequentialIterator<MethodUnit>
-            (getDeclaredMethodUnits(),
-             m_parentDescription.getMethodUnits().values().iterator());
+        return new Concatenation<MethodUnit>
+            (getDeclaredMethodUnits(), m_parentDescription.getMethodUnits().values());
     }
 
-    public Iterator<MethodUnit> getDeclaredMethodUnits()
+    public Collection<MethodUnit> getDeclaredMethodUnits()
     {
-        return m_methods.values().iterator();
+        return m_methods.values();
     }
 
-    public Iterator<MethodUnit> getImplementedMethodUnits()
+    public Collection<MethodUnit> getImplementedMethodUnits()
     {
-        return new SequentialIterator<MethodUnit>(getDeclaredMethodUnits(),
-                                                  m_overrides.iterator());
+        return new Concatenation<MethodUnit>(getDeclaredMethodUnits(), m_overrides);
     }
 
     public Collection<String> getAbstractMethodNames()
@@ -370,11 +358,11 @@ public class TemplateUnit
     private String m_jamonContextType;
     private final List<AnnotationNode> m_annotations = new LinkedList<AnnotationNode>();
 
-    public Iterator<RequiredArgument> getParentRenderArgs()
+    public Collection<RequiredArgument> getParentRenderArgs()
     {
-        return new SequentialIterator<RequiredArgument>
-            (m_parentDescription.getRequiredArgs().iterator(),
-             m_parentDescription.getFragmentInterfaces().iterator());
+        return new Concatenation<RequiredArgument>
+            (m_parentDescription.getRequiredArgs(),
+             m_parentDescription.getFragmentInterfaces());
     }
 
     public void printImports(CodeWriter p_writer)
@@ -402,18 +390,15 @@ public class TemplateUnit
         printArgsDecl(p_writer, getParentRenderArgs());
     }
 
-    public Iterator<RequiredArgument> getDeclaredRenderArgs()
+    public Collection<? extends RequiredArgument> getDeclaredRenderArgs()
     {
-        return new SequentialIterator<RequiredArgument>(
-            m_declaredRequiredArgs.iterator(),
-            m_declaredFragmentArgs.iterator());
+        return new Concatenation<RequiredArgument>(
+            m_declaredRequiredArgs, m_declaredFragmentArgs);
     }
 
-    public Iterator<AbstractArgument> getDeclaredArgs()
+    public Collection<AbstractArgument> getDeclaredArgs()
     {
-        return new SequentialIterator<AbstractArgument>(
-                getDeclaredRenderArgs(),
-                m_declaredOptionalArgs.iterator());
+        return new Concatenation<AbstractArgument>( getDeclaredRenderArgs(), m_declaredOptionalArgs);
     }
 
     public void printDeclaredRenderArgs(CodeWriter p_writer)
@@ -431,14 +416,12 @@ public class TemplateUnit
         if (m_interfaces.size() > 0)
         {
             p_writer.print("  implements ");
-            for (Iterator<String> i = m_interfaces.iterator(); i.hasNext(); )
+            p_writer.openList("", false);
+            for (String intrface: m_interfaces)
             {
-                p_writer.print(i.next());
-                if (i.hasNext())
-                {
-                    p_writer.print(", ");
-                }
+                p_writer.printListElement(intrface);
             }
+            p_writer.closeList("");
         }
     }
 
@@ -455,9 +438,8 @@ public class TemplateUnit
             p_buf.append(m_parentDescription.getSignature());
             p_buf.append("\n");
         }
-        for(Iterator<FragmentArgument> i = getFragmentArgs(); i.hasNext(); )
+        for(FragmentArgument arg: getFragmentArgs())
         {
-            FragmentArgument arg = i.next();
             p_buf.append("Fragment: ");
             p_buf.append(arg.getName());
             p_buf.append("\n");

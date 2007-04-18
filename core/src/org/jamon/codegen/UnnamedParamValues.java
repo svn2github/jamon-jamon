@@ -21,7 +21,6 @@
 package org.jamon.codegen;
 
 import java.util.List;
-import java.util.Iterator;
 
 import org.jamon.ParserError;
 import org.jamon.node.Location;
@@ -35,22 +34,15 @@ public class UnnamedParamValues implements ParamValues
     }
 
     public void generateRequiredArgs(
-        Iterator<RequiredArgument> p_args, CodeWriter p_writer)
+        List<RequiredArgument> p_args, CodeWriter p_writer)
         throws ParserError
     {
-        int numberOfRequiredArgs = 0;
-        while(p_args.hasNext())
-        {
-            numberOfRequiredArgs++;
-            p_args.next();
-        }
-
-        if (numberOfRequiredArgs != m_params.size())
+        if (p_args.size() != m_params.size())
         {
             throw new ParserError(
                 m_location,
                 "Call provides " + m_params.size() + " arguments when "
-                + numberOfRequiredArgs + " are expected");
+                + p_args.size() + " are expected");
         }
         for (String param : m_params)
         {
@@ -68,7 +60,7 @@ public class UnnamedParamValues implements ParamValues
         return false;
     }
 
-    public Iterator<String> getUnusedParams()
+    public Iterable<String> getUnusedParams()
     {
         throw new IllegalStateException();
     }

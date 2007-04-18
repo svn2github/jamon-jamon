@@ -21,7 +21,7 @@
 package org.jamon.integration;
 
 import java.io.File;
-import java.util.Iterator;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -72,9 +72,9 @@ public class TemplateDescriberTest
                                                null,
                                                null);
         NameType.checkArgs(
-            desc.getRequiredArgs().iterator(),
+            desc.getRequiredArgs(),
             new NameType("i", "int"), new NameType("j", "Integer"));
-        NameType.checkArgs(desc.getOptionalArgs().iterator(), new NameType("foo", "String"));
+        NameType.checkArgs(desc.getOptionalArgs(), new NameType("foo", "String"));
     }
 
 
@@ -113,10 +113,9 @@ public class TemplateDescriberTest
         NameType.checkArgs(method.getSignatureRequiredArgs(), new NameType("mi", "int"));
         NameType.checkArgs(method.getSignatureOptionalArgs(), new NameType("mj", "int"));
 
-        Iterator<FragmentArgument> fragments = method.getFragmentArgs();
-        assertTrue(fragments.hasNext());
-        FragmentArgument frag = fragments.next();
-        assertTrue(! fragments.hasNext());
+        Collection<FragmentArgument> fragments = method.getFragmentArgs();
+        assertEquals(1, fragments.size());
+        FragmentArgument frag = fragments.iterator().next();
         assertEquals("mf", frag.getName());
         NameType[] p_nameTypes = { new NameType("mk", "int") };
         NameType.checkArgs(frag.getFragmentUnit().getRequiredArgs(), p_nameTypes);

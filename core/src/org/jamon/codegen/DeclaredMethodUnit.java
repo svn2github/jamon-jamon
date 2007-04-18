@@ -20,7 +20,7 @@
 
 package org.jamon.codegen;
 
-import java.util.Iterator;
+import java.util.Collection;
 
 import org.jamon.ParserErrors;
 import org.jamon.node.Location;
@@ -64,7 +64,7 @@ public class DeclaredMethodUnit
 
     private final boolean m_isAbstract;
 
-    public Iterator<OptionalArgument> getOptionalArgsWithDefaults()
+    public Collection<OptionalArgument> getOptionalArgsWithDefaults()
     {
         return getSignatureOptionalArgs();
     }

@@ -19,8 +19,8 @@
  */
 package org.jamon.codegen;
 
+import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import org.jamon.ParserError;
@@ -40,13 +40,13 @@ import junit.framework.TestCase;
 public class PathAdapterTest extends TestCase
 {
     private static final String s_templateDir = "/templateDir";
-    private static final TemplateLocation s_templateLocation = 
+    private static final TemplateLocation s_templateLocation =
         new TemplateFileLocation("/foobar");
-    private static final Location s_location = 
+    private static final Location s_location =
         new Location(s_templateLocation, 1,1);
     private PathAdapter m_adapter;
     private ParserErrors m_errors;
-    
+
     @Override protected void setUp() throws Exception
     {
         Map<String, String> aliases = new HashMap<String, String>();
@@ -55,7 +55,7 @@ public class PathAdapterTest extends TestCase
         m_errors = new ParserErrors();
         m_adapter = new PathAdapter(s_templateDir + "/", aliases, m_errors);
     }
-    
+
     public void testAbsolutePath() throws Exception
     {
         new AbsolutePathNode(s_location)
@@ -63,7 +63,7 @@ public class PathAdapterTest extends TestCase
             .apply(m_adapter);
         assertEquals("/baz", m_adapter.getPath());
     }
-    
+
     public void testRelativePath() throws Exception
     {
         new RelativePathNode(s_location)
@@ -71,7 +71,7 @@ public class PathAdapterTest extends TestCase
             .apply(m_adapter);
         assertEquals("baz", m_adapter.getPath());
     }
-    
+
     public void testNamedAliasedPath() throws Exception
     {
         new NamedAliasPathNode(s_location, "foo")
@@ -79,7 +79,7 @@ public class PathAdapterTest extends TestCase
             .apply(m_adapter);
         assertEquals("/foo/dir/baz", m_adapter.getPath());
     }
-    
+
     public void testRootAliasPath() throws Exception
     {
         new RootAliasPathNode(s_location)
@@ -87,7 +87,7 @@ public class PathAdapterTest extends TestCase
             .apply(m_adapter);
         assertEquals("/root/dir/baz", m_adapter.getPath());
     }
-    
+
     public void testUpdirAtFrontPath() throws Exception
     {
         new RelativePathNode(s_location)
@@ -96,7 +96,7 @@ public class PathAdapterTest extends TestCase
             .apply(m_adapter);
         assertEquals("/baz", m_adapter.getPath());
     }
-    
+
     public void testUpdirOutOfRoot() throws Exception
     {
         Location location2 = new Location(s_templateLocation, 2,2);
@@ -104,15 +104,12 @@ public class PathAdapterTest extends TestCase
             .addPathElement(new UpdirNode(s_location))
             .addPathElement(new UpdirNode(location2))
             .apply(m_adapter);
-        Iterator<ParserError> errors = m_errors.getErrors();
-        assertTrue(errors.hasNext());
         assertEquals(
-            new ParserError(
-                location2, "Cannot reference templates above the root"),
-            errors.next());
-        assertFalse(errors.hasNext());
+            Arrays.asList(new ParserError(
+                location2, "Cannot reference templates above the root")),
+            m_errors.getErrors());
     }
-    
+
     public void testUpdirInMiddleOfPath() throws Exception
     {
         new RelativePathNode(s_location)
@@ -122,7 +119,7 @@ public class PathAdapterTest extends TestCase
             .apply(m_adapter);
         assertEquals(s_templateDir + "/bar", m_adapter.getPath());
     }
-    
+
     public PathAdapterTest(String p_name)
     {
         super(p_name);

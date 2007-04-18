@@ -20,12 +20,13 @@
 
 package org.jamon.codegen;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
 import java.util.Set;
+
+import junit.framework.TestCase;
 
 import org.jamon.TemplateFileLocation;
 import org.jamon.node.ArgNameNode;
@@ -35,8 +36,6 @@ import org.jamon.node.GenericsParamNode;
 import org.jamon.node.Location;
 import org.jamon.node.ParentArgNode;
 import org.jamon.node.ParentArgWithDefaultNode;
-
-import junit.framework.TestCase;
 
 public class TemplateUnitTest
     extends TestCase
@@ -227,30 +226,16 @@ public class TemplateUnitTest
     }
 
     private void checkArgList(AbstractArgument[] p_expected,
-                              Iterator<? extends AbstractArgument> p_actual)
+                              Collection<? extends AbstractArgument> p_actual)
     {
-        for(int i = 0; i < p_expected.length; i++)
-        {
-            assertEquals(p_expected[i].getName(),
-                         p_actual.next().getName());
-        }
-        assertTrue(! p_actual.hasNext());
+        assertEquals(Arrays.asList(p_expected), new ArrayList<AbstractArgument>(p_actual));
     }
 
     private void checkArgSet(AbstractArgument[] p_expected,
-                             Iterator<? extends AbstractArgument> p_actual)
+                             Collection<? extends AbstractArgument> p_actual)
     {
-        Map<String, AbstractArgument> actual =
-            new HashMap<String, AbstractArgument>();
-        while (p_actual.hasNext())
-        {
-            AbstractArgument arg = p_actual.next();
-            actual.put(arg.getName(), arg);
-        }
-        assertEquals(p_expected.length, actual.size());
-        for (int i = 0; i < p_expected.length; i++)
-        {
-            assertTrue(actual.remove(p_expected[i].getName()) != null);
-        }
+        assertEquals(
+            new HashSet<AbstractArgument>(Arrays.asList(p_expected)),
+            new HashSet<AbstractArgument>(p_actual));
     }
 }

@@ -21,7 +21,6 @@
 package org.jamon.util;
 
 import java.io.File;
-import java.util.Iterator;
 
 public class StringUtils
 {
@@ -190,15 +189,20 @@ public class StringUtils
         return "000".substring(0,pad) + s;
     }
 
-    public static void commaJoin(StringBuilder p_buf, Iterator<String> p_iter)
+    public static void commaJoin(StringBuilder p_buf, Iterable<String> p_iterable)
     {
-        while(p_iter.hasNext())
+        boolean seenElement = false;
+        for(String element: p_iterable)
         {
-            p_buf.append(p_iter.next());
-            if (p_iter.hasNext())
+            if (seenElement)
             {
                 p_buf.append(", ");
             }
+            else
+            {
+                seenElement = true;
+            }
+            p_buf.append(element);
         }
     }
 }

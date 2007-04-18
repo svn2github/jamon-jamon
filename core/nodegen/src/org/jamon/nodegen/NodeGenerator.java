@@ -247,10 +247,6 @@ public class NodeGenerator
             }
             p_writer.print(
                 "(p_buffer, \"" + member.getName() + "\", " + member.instanceName());
-            if (member.isList())
-            {
-                p_writer.print(".iterator()");
-            }
             p_writer.println(");");
 
         }

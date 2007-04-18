@@ -25,13 +25,13 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.jamon.annotations.Argument;
 import org.jamon.annotations.Template;
+import org.jamon.util.StringUtils;
 
 /**
  * An <code>TemplateInspector</code> manages the reflective rendering of a
@@ -258,14 +258,7 @@ public class TemplateInspector
         {
             StringBuilder msg =
                 new StringBuilder("Unknown arguments supplied: ");
-            for (Iterator<String> i = argNames.iterator(); i.hasNext(); )
-            {
-                msg.append(i.next());
-                if (i.hasNext())
-                {
-                    msg.append(",");
-                }
-            }
+            StringUtils.commaJoin(msg, argNames);
             throw new UnknownArgumentsException(msg.toString());
         }
     }

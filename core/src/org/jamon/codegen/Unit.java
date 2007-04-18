@@ -20,7 +20,7 @@
 
 package org.jamon.codegen;
 
-import java.util.Iterator;
+import java.util.Collection;
 import java.util.List;
 
 import org.jamon.ParserError;
@@ -28,10 +28,9 @@ import org.jamon.ParserError;
 public interface Unit extends StatementBlock
 {
     String getName();
-    Iterator<FragmentArgument> getFragmentArgs();
-    Iterator<RequiredArgument> getSignatureRequiredArgs();
-    Iterator<OptionalArgument> getSignatureOptionalArgs();
-    List<FragmentArgument> getFragmentArgsList();
+    List<FragmentArgument> getFragmentArgs();
+    List<RequiredArgument> getSignatureRequiredArgs();
+    Collection<OptionalArgument> getSignatureOptionalArgs();
 
     void printRenderArgsDecl(CodeWriter p_writer);
     void generateRenderBody(CodeWriter p_writer,

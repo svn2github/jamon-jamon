@@ -20,8 +20,8 @@
 
 package org.jamon.codegen;
 
+import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeMap;
@@ -61,14 +61,12 @@ public abstract class AbstractUnit
     }
 
     protected abstract void addFragmentArg(FragmentArgument p_arg);
-    public abstract Iterator<FragmentArgument> getFragmentArgs();
-    public abstract List<FragmentArgument> getFragmentArgsList();
+    public abstract List<FragmentArgument> getFragmentArgs();
 
     @Override public FragmentUnit getFragmentUnitIntf(String p_path)
     {
-        for (Iterator<FragmentArgument> i = getFragmentArgs(); i.hasNext(); )
+        for (FragmentArgument arg: getFragmentArgs())
         {
-            FragmentArgument arg = i.next();
             if (p_path.equals(arg.getName()))
             {
                 return arg.getFragmentUnit();
@@ -92,9 +90,9 @@ public abstract class AbstractUnit
 
     public abstract void addRequiredArg(RequiredArgument p_arg);
     public abstract void addOptionalArg(OptionalArgument p_arg);
-    public abstract Iterator<RequiredArgument> getSignatureRequiredArgs();
-    public abstract Iterator<OptionalArgument> getSignatureOptionalArgs();
-    public abstract Iterator<AbstractArgument> getVisibleArgs();
+    public abstract List<RequiredArgument> getSignatureRequiredArgs();
+    public abstract Collection<OptionalArgument> getSignatureOptionalArgs();
+    public abstract Collection<AbstractArgument> getVisibleArgs();
 
     private final String m_name;
     private final ParserErrors m_errors;
@@ -138,9 +136,9 @@ public abstract class AbstractUnit
         }
     }
 
-    public Iterator<AbstractArgument> getRenderArgs()
+    public List<AbstractArgument> getRenderArgs()
     {
-        return new SequentialIterator<AbstractArgument>(
+        return new SequentialList<AbstractArgument>(
                 getSignatureRequiredArgs(),
                 getFragmentArgs());
     }
@@ -156,31 +154,28 @@ public abstract class AbstractUnit
     }
 
     protected static void printArgsDecl(
-        CodeWriter p_writer, Iterator<? extends AbstractArgument> i)
+        CodeWriter p_writer, Iterable<? extends AbstractArgument> i)
     {
-        while (i.hasNext())
+        for (AbstractArgument arg: i)
         {
-            AbstractArgument arg = i.next();
             p_writer.printListElement("final " + arg.getType() + " " + arg.getName());
         }
     }
 
     protected static void printArgs(
-        CodeWriter p_writer, Iterator<? extends AbstractArgument> p_args)
+        CodeWriter p_writer, Iterable<? extends AbstractArgument> p_args)
     {
-        while (p_args.hasNext())
+        for (AbstractArgument arg: p_args)
         {
-            p_writer.printListElement(p_args.next().getName());
+            p_writer.printListElement(arg.getName());
         }
     }
 
     protected void generateInterfaceSummary(StringBuilder p_buf)
     {
         p_buf.append("Required\n");
-        for (Iterator<RequiredArgument> i = getSignatureRequiredArgs();
-             i.hasNext(); )
+        for (AbstractArgument arg: getSignatureRequiredArgs())
         {
-            AbstractArgument arg = i.next();
             p_buf.append(arg.getName());
             p_buf.append(":");
             p_buf.append(arg.getType());
@@ -189,10 +184,8 @@ public abstract class AbstractUnit
         p_buf.append("Optional\n");
         TreeMap<String, OptionalArgument> optArgs =
             new TreeMap<String, OptionalArgument>();
-        for (Iterator<OptionalArgument> i = getSignatureOptionalArgs();
-             i.hasNext(); )
+        for (OptionalArgument arg: getSignatureOptionalArgs())
         {
-            OptionalArgument arg = i.next();
             optArgs.put(arg.getName(), arg);
         }
         for (OptionalArgument arg : optArgs.values())

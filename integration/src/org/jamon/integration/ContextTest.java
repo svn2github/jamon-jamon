@@ -1,6 +1,6 @@
 package org.jamon.integration;
 
-import java.util.Iterator;
+import java.util.List;
 
 import org.jamon.JamonRuntimeException;
 import org.jamon.ParserError;
@@ -48,15 +48,13 @@ public class ContextTest extends TestBase
         {
             assertEquals(ParserErrors.class, e.getCause().getClass());
             ParserErrors cause = (ParserErrors) e.getCause();
-            Iterator<ParserError> errors = cause.getErrors();
-            assertTrue(errors.hasNext());
-            ParserError error = errors.next();
+            List<ParserError> errors = cause.getErrors();
+            assertEquals(1, errors.size());
             assertEquals(
                "Calling component does not have a jamonContext, but called" +
                " component /test/jamon/context/ContextCallee expects one of" +
                " type org.jamon.integration.TestJamonContext",
-               error.getMessage());
-            assertFalse(errors.hasNext());
+               errors.get(0).getMessage());
         }
     }
 }

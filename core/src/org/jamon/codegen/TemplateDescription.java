@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -68,20 +67,18 @@ public class TemplateDescription
     public TemplateDescription(TemplateUnit p_templateUnit)
     {
         m_requiredArgs = new LinkedList<RequiredArgument>();
-        addAll(m_requiredArgs, p_templateUnit.getSignatureRequiredArgs() );
+        m_requiredArgs.addAll(p_templateUnit.getSignatureRequiredArgs());
         m_optionalArgs = new HashSet<OptionalArgument>();
-        addAll(m_optionalArgs, p_templateUnit.getSignatureOptionalArgs() );
+        m_optionalArgs.addAll(p_templateUnit.getSignatureOptionalArgs());
         for (OptionalArgument arg : m_optionalArgs)
         {
             arg.setDefault(null);
         }
         m_signature = p_templateUnit.getSignature();
-        m_fragmentInterfaces = p_templateUnit.getFragmentArgsList();
+        m_fragmentInterfaces = p_templateUnit.getFragmentArgs();
         m_methodUnits = new HashMap<String, MethodUnit>();
-        for (Iterator<MethodUnit> i = p_templateUnit.getSignatureMethodUnits();
-             i.hasNext(); )
+        for (MethodUnit methodUnit: p_templateUnit.getSignatureMethodUnits())
         {
-            MethodUnit methodUnit = i.next();
             m_methodUnits.put(methodUnit.getName(), methodUnit);
         }
         m_inheritanceDepth = p_templateUnit.getInheritanceDepth();
@@ -229,14 +226,6 @@ public class TemplateDescription
     public String getJamonContextType()
     {
         return m_jamonContextType;
-    }
-
-    private static<T> void addAll(Collection<T> p_collection, Iterator<T> p_iter)
-    {
-        while (p_iter.hasNext())
-        {
-            p_collection.add(p_iter.next());
-        }
     }
 }
 

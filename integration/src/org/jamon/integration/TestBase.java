@@ -23,7 +23,8 @@ package org.jamon.integration;
 import java.io.File;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.util.Iterator;
+import java.util.ArrayList;
+import java.util.List;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;
@@ -162,16 +163,13 @@ public abstract class TestBase
         }
         catch(ParserErrors e)
         {
-            Iterator<ParserError> errors = e.getErrors();
+            List<ParserError> expected = new ArrayList<ParserError>(p_partialErrors.length);
             for (PartialError partialError: p_partialErrors)
             {
-                assertTrue(errors.hasNext());
-                assertEquals(partialError.makeError(path), errors.next());
+                expected.add(partialError.makeError(path));
             }
-            if (errors.hasNext())
-            {
-                fail("Extra errors: " + errors.next());
-            }
+
+            assertEquals(expected, e.getErrors());
         }
 
     }

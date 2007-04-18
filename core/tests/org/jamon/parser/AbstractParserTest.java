@@ -2,7 +2,7 @@ package org.jamon.parser;
 
 import java.io.IOException;
 import java.io.StringReader;
-import java.util.Iterator;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -71,24 +71,10 @@ public abstract class AbstractParserTest
         }
     }
 
-    private void assertParserError(Iterator<ParserError> p_errors,
-                                   int p_line, int p_column,
-                                   String p_message)
-        throws Exception
+    private ParserError makeParserError(int p_line, int p_column, String p_message)
     {
-        assertTrue(p_errors.hasNext());
-        assertEquals(
-            new ParserError(new Location(TEMPLATE_LOC, p_line, p_column),
-                            p_message),
-            p_errors.next());
-    }
-
-    private void assertNoMoreErrors(Iterator<ParserError> p_errors)
-    {
-        if (p_errors.hasNext())
-        {
-            fail("More errors still: " + p_errors.next());
-        }
+        return new ParserError(new Location(TEMPLATE_LOC, p_line, p_column),
+                        p_message);
     }
 
     protected void assertErrors(String p_body, PartialError... p_partialErrors) throws Exception
@@ -100,11 +86,7 @@ public abstract class AbstractParserTest
         }
         catch (ParserErrors e)
         {
-            List<ParserError> errors = new LinkedList<ParserError>();
-            for (Iterator<ParserError> i = e.getErrors(); i.hasNext(); )
-            {
-                errors.add(i.next());
-            }
+            List<ParserError> errors = new LinkedList<ParserError>(e.getErrors());
             List<ParserError> expected = new LinkedList<ParserError>();
             for (PartialError partialError: p_partialErrors)
             {
@@ -127,9 +109,8 @@ public abstract class AbstractParserTest
         }
         catch (ParserErrors e)
         {
-            Iterator<ParserError> iter = e.getErrors();
-            assertParserError(iter, p_line, p_column, p_message);
-            assertNoMoreErrors(iter);
+            assertEquals(
+                Arrays.asList(makeParserError(p_line, p_column, p_message)), e.getErrors());
         }
     }
 
@@ -146,10 +127,11 @@ public abstract class AbstractParserTest
         }
         catch (ParserErrors e)
         {
-            Iterator<ParserError> iter = e.getErrors();
-            assertParserError(iter, p_line1, p_column1, p_message1);
-            assertParserError(iter, p_line2, p_column2, p_message2);
-            assertNoMoreErrors(iter);
+            assertEquals(
+                Arrays.asList(
+                    makeParserError(p_line1, p_column1, p_message1),
+                    makeParserError(p_line2, p_column2, p_message2)),
+                e.getErrors());
         }
     }
 
@@ -167,11 +149,12 @@ public abstract class AbstractParserTest
         }
         catch (ParserErrors e)
         {
-            Iterator<ParserError> iter = e.getErrors();
-            assertParserError(iter, p_line1, p_column1, p_message1);
-            assertParserError(iter, p_line2, p_column2, p_message2);
-            assertParserError(iter, p_line3, p_column3, p_message3);
-            assertNoMoreErrors(iter);
+            assertEquals(
+                Arrays.asList(
+                    makeParserError(p_line1, p_column1, p_message1),
+                    makeParserError(p_line2, p_column2, p_message2),
+                    makeParserError(p_line3, p_column3, p_message3)),
+                e.getErrors());
         }
     }
 

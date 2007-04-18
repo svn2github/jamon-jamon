@@ -20,8 +20,9 @@
 
 package org.jamon.codegen;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -42,9 +43,9 @@ public abstract class AbstractInnerUnit extends AbstractUnit
         m_optionalArgs.add(p_arg);
     }
 
-    public Iterator<OptionalArgument> getOptionalArgs()
+    public Collection<OptionalArgument> getOptionalArgs()
     {
-        return m_optionalArgs.iterator();
+        return m_optionalArgs;
     }
 
     public boolean hasOptionalArgs()
@@ -57,29 +58,24 @@ public abstract class AbstractInnerUnit extends AbstractUnit
         m_requiredArgs.add(p_arg);
     }
 
-    public List<RequiredArgument> getRequiredArgsList()
-    {
-        return m_requiredArgs;
-    }
-
     public Set<OptionalArgument> getOptionalArgsSet()
     {
         return m_optionalArgs;
     }
 
-    public Iterator<RequiredArgument> getRequiredArgs()
+    public List<RequiredArgument> getRequiredArgs()
     {
-        return getRequiredArgsList().iterator();
+        return m_requiredArgs;
     }
 
-    public Iterator<RequiredArgument> getDeclaredRequiredArgs()
+    public List<RequiredArgument> getDeclaredRequiredArgs()
     {
-        return m_requiredArgs.iterator();
+        return m_requiredArgs;
     }
 
     public boolean hasRequiredArgs()
     {
-        return ! getRequiredArgsList().isEmpty();
+        return ! m_requiredArgs.isEmpty();
     }
 
     @Override protected void addFragmentArg(
@@ -88,35 +84,30 @@ public abstract class AbstractInnerUnit extends AbstractUnit
         m_fragmentArgs.add(p_arg);
     }
 
-    @Override public Iterator<FragmentArgument> getFragmentArgs()
-    {
-        return m_fragmentArgs.iterator();
-    }
-
-    @Override public List<FragmentArgument> getFragmentArgsList()
+    @Override public List<FragmentArgument> getFragmentArgs()
     {
         return m_fragmentArgs;
     }
 
-    @Override public Iterator<AbstractArgument> getRenderArgs()
+    @Override public List<AbstractArgument> getRenderArgs()
     {
-        return new SequentialIterator<AbstractArgument>(
+        return new SequentialList<AbstractArgument>(
                 getDeclaredRequiredArgs(),
-                getOptionalArgs(),
+                new ArrayList<AbstractArgument>(getOptionalArgs()),
                 getFragmentArgs());
     }
 
-    @Override public Iterator<AbstractArgument> getVisibleArgs()
+    @Override public Collection<AbstractArgument> getVisibleArgs()
     {
         return getRenderArgs();
     }
 
-    @Override public Iterator<RequiredArgument> getSignatureRequiredArgs()
+    @Override public List<RequiredArgument> getSignatureRequiredArgs()
     {
         return getRequiredArgs();
     }
 
-    @Override public Iterator<OptionalArgument> getSignatureOptionalArgs()
+    @Override public Collection<OptionalArgument> getSignatureOptionalArgs()
     {
         return getOptionalArgs();
     }

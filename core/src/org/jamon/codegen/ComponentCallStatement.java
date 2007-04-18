@@ -20,7 +20,6 @@
 
 package org.jamon.codegen;
 
-import java.util.Iterator;
 import java.util.List;
 
 import org.jamon.JamonRuntimeException;
@@ -105,10 +104,8 @@ public class ComponentCallStatement
             p_writer.println(instanceVar + ".setJamonContext(jamonContext);");
         }
 
-        for (Iterator<OptionalArgument> i = desc.getOptionalArgs().iterator();
-             i.hasNext(); )
+        for (OptionalArgument arg: desc.getOptionalArgs())
         {
-            OptionalArgument arg = i.next();
             String value = getParams().getOptionalArgValue(arg.getName());
             if (value != null)
             {
@@ -119,10 +116,8 @@ public class ComponentCallStatement
         p_writer.print(instanceVar + ".renderNoFlush");
         p_writer.openList();
         p_writer.printListElement(ArgNames.WRITER);
-        getParams().generateRequiredArgs(desc.getRequiredArgs().iterator(),
-                                         p_writer);
-        generateFragmentParams(p_writer,
-                               desc.getFragmentInterfaces().iterator());
+        getParams().generateRequiredArgs(desc.getRequiredArgs(), p_writer);
+        generateFragmentParams(p_writer, desc.getFragmentInterfaces());
         p_writer.closeList();
         p_writer.println(";");
         checkSuppliedParams();

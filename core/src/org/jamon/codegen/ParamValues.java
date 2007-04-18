@@ -20,19 +20,19 @@
 
 package org.jamon.codegen;
 
-import java.util.Iterator;
+import java.util.List;
 
 import org.jamon.ParserError;
 
 public interface ParamValues
 {
     void generateRequiredArgs(
-        Iterator<RequiredArgument> p_args, CodeWriter p_writer)
+        List<RequiredArgument> p_args, CodeWriter p_writer)
         throws ParserError;
 
     String getOptionalArgValue(String p_argName);
 
     boolean hasUnusedParams();
 
-    Iterator<String> getUnusedParams();
+    Iterable<String> getUnusedParams();
 }

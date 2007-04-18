@@ -3,7 +3,6 @@ package org.jamon;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.jamon.node.Location;
@@ -25,9 +24,9 @@ public final class ParserErrors extends IOException
         return ! m_errors.isEmpty();
     }
 
-    public Iterator<ParserError> getErrors()
+    public List<ParserError> getErrors()
     {
-        return m_errors.iterator();
+        return m_errors;
     }
 
     public void addError(ParserError p_error)
@@ -52,21 +51,19 @@ public final class ParserErrors extends IOException
     {
         StringBuilder buffer =
             new StringBuilder("Errors occured during parsing:");
-        for (Iterator<ParserError> i = getErrors(); i.hasNext(); )
+        for (ParserError error: getErrors())
         {
             buffer.append("\n   ");
-            buffer.append(i.next().toString());
+            buffer.append(error.toString());
         }
         return buffer.toString();
     }
 
     public void printErrors(PrintStream p_stream)
     {
-        for (Iterator<ParserError> i = getErrors(); i.hasNext(); )
+        for (ParserError error: getErrors())
         {
-            ParserError error = i.next();
             System.err.println(error);
-
         }
     }
 

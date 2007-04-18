@@ -3,7 +3,6 @@ package org.jamon.integration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -38,7 +37,7 @@ class NameType
     }
 
     public static void checkArgs(
-        Iterator<? extends AbstractArgument> p_args,
+        Iterable<? extends AbstractArgument> p_args,
         NameType... p_nameTypes)
     {
         assertEquals(Arrays.asList(p_nameTypes), argsToNameTypes(p_args));
@@ -64,12 +63,11 @@ class NameType
         assertEquals(new HashSet<NameType>(Arrays.asList(p_NameTypes)), arguments);
     }
 
-    private static List<NameType> argsToNameTypes(Iterator<? extends AbstractArgument> p_args)
+    private static List<NameType> argsToNameTypes(Iterable<? extends AbstractArgument> p_args)
     {
         List<NameType> nameTypes = new LinkedList<NameType>();
-        while (p_args.hasNext())
+        for (AbstractArgument argument: p_args)
         {
-            AbstractArgument argument = p_args.next();
             nameTypes.add(new NameType(argument.getName(), argument.getType()));
         }
         return nameTypes;
