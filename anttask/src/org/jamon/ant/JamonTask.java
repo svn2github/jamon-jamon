@@ -147,8 +147,7 @@ public class JamonTask
                 + " template" + (files.length == 1 ? "" : "s")
                 + " to " + m_destDir);
 
-            TemplateProcessor processor;
-            processor = new TemplateProcessor(
+            TemplateProcessor processor = new TemplateProcessor(
                 m_destDir, m_srcDir, m_classLoader);
 
             for (int i = 0; i < files.length; i++)
