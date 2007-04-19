@@ -42,7 +42,7 @@ public class AnnotationReflector
             }));
     }
 
-    private Object maybeProxyAnnotation(Class p_type, Object p_object) {
+    private Object maybeProxyAnnotation(Class<?> p_type, Object p_object) {
         if (p_object == null) {
             return null;
         }

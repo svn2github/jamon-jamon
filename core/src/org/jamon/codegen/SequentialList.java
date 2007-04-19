@@ -56,21 +56,22 @@ public class SequentialList<T> extends AbstractList<T>
     private final List<? extends T>[] m_lists;
     private final int m_size;
 
-    @Override public T get(int p_index)
+    @Override public T get(final int p_index)
     {
         if (p_index < 0)
         {
             throw new IndexOutOfBoundsException();
         }
+        int index = p_index;
         for (List<? extends T> list: m_lists)
         {
-            if (p_index >= list.size())
+            if (index >= list.size())
             {
-                p_index -= list.size();
+                index -= list.size();
             }
             else
             {
-                return list.get(p_index);
+                return list.get(index);
             }
         }
         throw new IndexOutOfBoundsException();

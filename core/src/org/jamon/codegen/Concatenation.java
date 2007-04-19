@@ -33,7 +33,7 @@ class Concatenation<T> extends AbstractCollection<T>
     {
         m_collections = p_collections;
         int size = 0;
-        for (Collection collection: p_collections)
+        for (Collection<?> collection: p_collections)
         {
             size += collection.size();
         }
@@ -73,7 +73,7 @@ class Concatenation<T> extends AbstractCollection<T>
 
     @Override public boolean contains(Object o)
     {
-        for (Collection collection: m_collections)
+        for (Collection<? extends T> collection: m_collections)
         {
             if (collection.contains(o))
             {
