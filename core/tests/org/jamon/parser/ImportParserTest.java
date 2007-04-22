@@ -21,8 +21,8 @@ package org.jamon.parser;
 
 import static org.junit.Assert.*;
 
-import org.jamon.ParserError;
-import org.jamon.ParserErrors;
+import org.jamon.ParserErrorImpl;
+import org.jamon.ParserErrorsImpl;
 import org.jamon.node.AbstractImportNode;
 import org.jamon.node.ImportNode;
 import org.jamon.node.StaticImportNode;
@@ -60,10 +60,10 @@ public class ImportParserTest extends AbstractParserTest
             parseImport("static.foo.bar");
             fail("exception expected");
         }
-        catch (ParserError e)
+        catch (ParserErrorImpl e)
         {
            assertEquals(
-               new ParserError(
+               new ParserErrorImpl(
                    START_LOC,
                    ImportParser.MISSING_WHITESPACE_AFTER_STATIC_DECLARATION),
                e);
@@ -73,7 +73,7 @@ public class ImportParserTest extends AbstractParserTest
     private AbstractImportNode parseImport(String p_content)
         throws Exception
     {
-        ParserErrors errors = new ParserErrors();
+        ParserErrorsImpl errors = new ParserErrorsImpl();
         AbstractImportNode node = new ImportParser(
             START_LOC, makeReader(p_content), errors).parse().getNode();
         if (errors.hasErrors())

@@ -224,7 +224,7 @@ public class TemplateProcessor
                 }
             }
         }
-        catch (ParserErrors e)
+        catch (ParserErrorsImpl e)
         {
             e.printErrors(System.err);
             System.exit(2);

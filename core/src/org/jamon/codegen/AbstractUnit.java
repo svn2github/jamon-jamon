@@ -26,11 +26,10 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeMap;
 
-import org.jamon.ParserError;
-import org.jamon.ParserErrors;
+import org.jamon.ParserErrorImpl;
+import org.jamon.ParserErrorsImpl;
 import org.jamon.node.ArgNode;
 import org.jamon.node.FragmentArgsNode;
-import org.jamon.node.Location;
 import org.jamon.node.OptionalArgNode;
 
 public abstract class AbstractUnit
@@ -38,7 +37,7 @@ public abstract class AbstractUnit
     implements Unit
 {
     public AbstractUnit(
-        String p_name, StatementBlock p_parent, ParserErrors p_errors, Location p_location)
+        String p_name, StatementBlock p_parent, ParserErrorsImpl p_errors, org.jamon.api.Location p_location)
     {
         super(p_parent, p_location);
         m_name = p_name;
@@ -55,7 +54,7 @@ public abstract class AbstractUnit
         return (Unit) getParent();
     }
 
-    protected final ParserErrors getErrors()
+    protected final ParserErrorsImpl getErrors()
     {
         return m_errors;
     }
@@ -76,7 +75,7 @@ public abstract class AbstractUnit
     }
 
     public void generateRenderBody(CodeWriter p_writer,
-                                   TemplateDescriber p_describer) throws ParserError
+                                   TemplateDescriber p_describer) throws ParserErrorImpl
     {
         p_writer.openBlock();
         printStatements(p_writer, p_describer);
@@ -95,7 +94,7 @@ public abstract class AbstractUnit
     public abstract Collection<AbstractArgument> getVisibleArgs();
 
     private final String m_name;
-    private final ParserErrors m_errors;
+    private final ParserErrorsImpl m_errors;
     private final Set<String> m_argNames = new HashSet<String>();
     @Override public FragmentUnit addFragment(
         FragmentArgsNode p_node, GenericParams p_genericParams)
@@ -126,7 +125,7 @@ public abstract class AbstractUnit
         m_argNames.add(p_arg.getName());
     }
 
-    private void checkArgName(String p_name, Location p_location)
+    private void checkArgName(String p_name, org.jamon.api.Location p_location)
     {
         if (! m_argNames.add(p_name))
         {

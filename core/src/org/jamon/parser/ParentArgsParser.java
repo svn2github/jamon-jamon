@@ -21,11 +21,10 @@ package org.jamon.parser;
 
 import java.io.IOException;
 
-import org.jamon.ParserError;
-import org.jamon.ParserErrors;
+import org.jamon.ParserErrorImpl;
+import org.jamon.ParserErrorsImpl;
 import org.jamon.node.ArgNameNode;
 import org.jamon.node.ArgValueNode;
-import org.jamon.node.Location;
 import org.jamon.node.ParentArgNode;
 import org.jamon.node.ParentArgWithDefaultNode;
 import org.jamon.node.ParentArgsNode;
@@ -37,8 +36,8 @@ public final class ParentArgsParser extends AbstractParser
     "Expecting parent arg declaration or '</%xargs>'";
     public ParentArgsParser(
         PositionalPushbackReader p_reader,
-        ParserErrors p_errors,
-        Location p_tagLocation) throws IOException
+        ParserErrorsImpl p_errors,
+        org.jamon.api.Location p_tagLocation) throws IOException
     {
         super(p_reader, p_errors);
         m_parentArgsNode = new ParentArgsNode(p_tagLocation);
@@ -49,7 +48,7 @@ public final class ParentArgsParser extends AbstractParser
                 soakWhitespace();
                 if (readChar('<'))
                 {
-                    Location location = m_reader.getLocation();
+                    org.jamon.api.Location location = m_reader.getLocation();
                     if (!checkToken("/%xargs>"))
                     {
                         addError(location, MALFORMED_PARENT_ARGS_CLOSE);
@@ -63,7 +62,7 @@ public final class ParentArgsParser extends AbstractParser
                     {
                         handleParentArg(m_parentArgsNode);
                     }
-                    catch (ParserError e)
+                    catch (ParserErrorImpl e)
                     {
                         addError(e);
                         return;
@@ -79,7 +78,7 @@ public final class ParentArgsParser extends AbstractParser
     }
 
     private void handleParentArg(ParentArgsNode parentArgsNode)
-        throws IOException, ParserError
+        throws IOException, ParserErrorImpl
     {
         ArgNameNode argName = new ArgNameNode(
             m_reader.getNextLocation(), readIdentifier(true));
@@ -93,7 +92,7 @@ public final class ParentArgsParser extends AbstractParser
         {
             readChar('>'); // support old-style syntax
             soakWhitespace();
-            Location valueLocation = m_reader.getNextLocation();
+            org.jamon.api.Location valueLocation = m_reader.getNextLocation();
             parentArgsNode.addArg(
                 new ParentArgWithDefaultNode(
                     argName.getLocation(),
@@ -105,7 +104,7 @@ public final class ParentArgsParser extends AbstractParser
         }
         else
         {
-            throw new ParserError(m_reader.getNextLocation(),
+            throw new ParserErrorImpl(m_reader.getNextLocation(),
                 OptionalValueTagEndDetector.NEED_SEMI_OR_ARROW);
         }
     }

@@ -22,12 +22,11 @@ package org.jamon.codegen;
 
 import java.util.List;
 
-import org.jamon.ParserError;
-import org.jamon.node.Location;
+import org.jamon.ParserErrorImpl;
 
 public class UnnamedParamValues implements ParamValues
 {
-    public UnnamedParamValues(List<String> p_params, Location p_location)
+    public UnnamedParamValues(List<String> p_params, org.jamon.api.Location p_location)
     {
         m_params = p_params;
         m_location = p_location;
@@ -35,11 +34,11 @@ public class UnnamedParamValues implements ParamValues
 
     public void generateRequiredArgs(
         List<RequiredArgument> p_args, CodeWriter p_writer)
-        throws ParserError
+        throws ParserErrorImpl
     {
         if (p_args.size() != m_params.size())
         {
-            throw new ParserError(
+            throw new ParserErrorImpl(
                 m_location,
                 "Call provides " + m_params.size() + " arguments when "
                 + p_args.size() + " are expected");
@@ -67,5 +66,5 @@ public class UnnamedParamValues implements ParamValues
 
 
     private final List<String> m_params;
-    private final Location m_location;
+    private final org.jamon.api.Location m_location;
 }

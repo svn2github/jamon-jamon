@@ -40,13 +40,13 @@ import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Environment;
 
 import org.jamon.JamonException;
-import org.jamon.ParserError;
-import org.jamon.ParserErrors;
+import org.jamon.ParserErrorsImpl;
 import org.jamon.TemplateInspector;
 import org.jamon.InvokerTool;
 import org.jamon.TemplateManager;
 import org.jamon.BasicTemplateManager;
 import org.jamon.RecompilingTemplateManager;
+import org.jamon.api.ParserError;
 
 /**
  * Ant task to reflectively invoke templates.
@@ -117,7 +117,7 @@ public class InvokerTask
         {
             throw new BuildException(e);
         }
-        catch (ParserErrors e)
+        catch (ParserErrorsImpl e)
         {
             e.printErrors(System.err); //FIXME - is this the right thing to do?
             if (! e.getErrors().isEmpty())

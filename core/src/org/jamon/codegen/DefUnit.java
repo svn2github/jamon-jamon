@@ -20,12 +20,11 @@
 
 package org.jamon.codegen;
 
-import org.jamon.ParserErrors;
-import org.jamon.node.Location;
+import org.jamon.ParserErrorsImpl;
 
 public class DefUnit extends AbstractInnerUnit
 {
-    public DefUnit(String p_name, Unit p_parent, ParserErrors p_errors, Location p_location)
+    public DefUnit(String p_name, Unit p_parent, ParserErrorsImpl p_errors, org.jamon.api.Location p_location)
     {
         super(p_name, p_parent, p_errors, p_location);
     }

@@ -34,9 +34,9 @@ import org.apache.tools.ant.util.SourceFileScanner;
 
 import org.apache.tools.ant.taskdefs.MatchingTask;
 
-import org.jamon.ParserError;
-import org.jamon.ParserErrors;
+import org.jamon.ParserErrorsImpl;
 import org.jamon.TemplateProcessor;
+import org.jamon.api.ParserError;
 
 /**
  * Ant task to convert Jamon templates into Java.
@@ -161,7 +161,7 @@ public class JamonTask
                 {
                     processor.generateSource(relativize(files[i]));
                 }
-                catch (ParserErrors e)
+                catch (ParserErrorsImpl e)
                 {
                     e.printErrors(System.err); //FIXME - is this the right thing to do?
                     if (! e.getErrors().isEmpty())

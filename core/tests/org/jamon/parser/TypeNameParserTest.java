@@ -24,9 +24,8 @@ import static org.junit.Assert.*;
 
 import java.io.IOException;
 
-import org.jamon.ParserError;
-import org.jamon.ParserErrors;
-import org.jamon.node.Location;
+import org.jamon.ParserErrorImpl;
+import org.jamon.ParserErrorsImpl;
 import org.junit.Test;
 
 public class TypeNameParserTest extends AbstractClassNameParserTest
@@ -43,9 +42,9 @@ public class TypeNameParserTest extends AbstractClassNameParserTest
     }
 
     @Override
-    protected ClassNameParser makeParser(Location p_location,
+    protected ClassNameParser makeParser(org.jamon.api.Location p_location,
         PositionalPushbackReader p_reader,
-        ParserErrors p_errors) throws IOException, ParserError
+        ParserErrorsImpl p_errors) throws IOException, ParserErrorImpl
     {
         return new TypeNameParser(p_location, p_reader, p_errors);
     }

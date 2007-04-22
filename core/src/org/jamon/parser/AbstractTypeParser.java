@@ -21,9 +21,8 @@ package org.jamon.parser;
 
 import java.io.IOException;
 
-import org.jamon.ParserError;
-import org.jamon.ParserErrors;
-import org.jamon.node.Location;
+import org.jamon.ParserErrorImpl;
+import org.jamon.ParserErrorsImpl;
 
 public class AbstractTypeParser extends AbstractParser
 {
@@ -31,9 +30,9 @@ public class AbstractTypeParser extends AbstractParser
         "Arrays not allowed in this context";
 
     public AbstractTypeParser(
-        Location p_location,
+        org.jamon.api.Location p_location,
         PositionalPushbackReader p_reader,
-        ParserErrors p_errors) throws IOException, ParserError
+        ParserErrorsImpl p_errors) throws IOException, ParserErrorImpl
     {
         super(p_reader, p_errors);
         try
@@ -47,13 +46,13 @@ public class AbstractTypeParser extends AbstractParser
         }
         catch (NotAnIdentifierException e)
         {
-            throw new ParserError(p_location, BAD_JAVA_TYPE_SPECIFIER);
+            throw new ParserErrorImpl(p_location, BAD_JAVA_TYPE_SPECIFIER);
         }
         checkForArrayBrackets();
     }
 
     private void parseComponent()
-        throws IOException, NotAnIdentifierException, ParserError
+        throws IOException, NotAnIdentifierException, ParserErrorImpl
     {
         m_type.append(readIdentifierOrThrow());
         soakWhitespace();
@@ -61,15 +60,15 @@ public class AbstractTypeParser extends AbstractParser
     }
 
     @SuppressWarnings("unused") protected void parseTypeElaborations()
-        throws IOException, NotAnIdentifierException, ParserError
+        throws IOException, NotAnIdentifierException, ParserErrorImpl
     {
     }
 
-    protected void checkForArrayBrackets() throws IOException, ParserError
+    protected void checkForArrayBrackets() throws IOException, ParserErrorImpl
     {
         if (readChar('['))
         {
-            throw new ParserError(m_reader.getLocation(), UNEXPECTED_ARRAY_ERROR);
+            throw new ParserErrorImpl(m_reader.getLocation(), UNEXPECTED_ARRAY_ERROR);
         }
     }
 

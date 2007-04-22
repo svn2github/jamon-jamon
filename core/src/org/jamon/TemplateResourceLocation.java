@@ -19,6 +19,8 @@
  */
 package org.jamon;
 
+import org.jamon.api.TemplateLocation;
+
 public class TemplateResourceLocation implements TemplateLocation
 {
     public TemplateResourceLocation(String p_location)

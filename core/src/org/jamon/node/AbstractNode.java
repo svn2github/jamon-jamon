@@ -20,6 +20,8 @@
 
 package org.jamon.node;
 
+import org.jamon.api.Location;
+
 public abstract class AbstractNode
 {
     /**

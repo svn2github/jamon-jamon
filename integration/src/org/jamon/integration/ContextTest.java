@@ -3,8 +3,9 @@ package org.jamon.integration;
 import java.util.List;
 
 import org.jamon.JamonRuntimeException;
-import org.jamon.ParserError;
 import org.jamon.ParserErrors;
+import org.jamon.ParserErrorsImpl;
+import org.jamon.api.ParserError;
 
 import test.jamon.context.Child;
 import test.jamon.context.ContextCaller;
@@ -46,7 +47,7 @@ public class ContextTest extends TestBase
         }
         catch (JamonRuntimeException e)
         {
-            assertEquals(ParserErrors.class, e.getCause().getClass());
+            assertEquals(ParserErrorsImpl.class, e.getCause().getClass());
             ParserErrors cause = (ParserErrors) e.getCause();
             List<ParserError> errors = cause.getErrors();
             assertEquals(1, errors.size());

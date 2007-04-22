@@ -2,12 +2,11 @@ package org.jamon.parser;
 
 import java.io.IOException;
 
-import org.jamon.ParserError;
-import org.jamon.ParserErrors;
+import org.jamon.ParserErrorImpl;
+import org.jamon.ParserErrorsImpl;
 import org.jamon.node.AbstractBodyNode;
 import org.jamon.node.ElseIfNode;
 import org.jamon.node.ElseNode;
-import org.jamon.node.Location;
 
 public class IfParser extends AbstractFlowControlBlockParser<AbstractBodyNode>
 {
@@ -16,12 +15,12 @@ public class IfParser extends AbstractFlowControlBlockParser<AbstractBodyNode>
 
     public IfParser(AbstractBodyNode p_node,
                     PositionalPushbackReader p_reader,
-                    ParserErrors p_errors)
+                    ParserErrorsImpl p_errors)
     {
         super(p_node, p_reader, p_errors);
     }
 
-    @Override protected void handleElseTag(Location p_tagLocation)
+    @Override protected void handleElseTag(org.jamon.api.Location p_tagLocation)
         throws IOException
     {
         if (processingElseNode())
@@ -41,7 +40,7 @@ public class IfParser extends AbstractFlowControlBlockParser<AbstractBodyNode>
         }
     }
 
-    @Override protected void handleElseIfTag(Location p_tagLocation)
+    @Override protected void handleElseIfTag(org.jamon.api.Location p_tagLocation)
         throws IOException
     {
         if (processingElseNode())
@@ -60,7 +59,7 @@ public class IfParser extends AbstractFlowControlBlockParser<AbstractBodyNode>
                     m_errors);
                 m_continuation.parse();
             }
-            catch (ParserError e)
+            catch (ParserErrorImpl e)
             {
                 addError(e);
             }

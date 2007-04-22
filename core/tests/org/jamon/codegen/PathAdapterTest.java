@@ -23,12 +23,12 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.jamon.ParserError;
-import org.jamon.ParserErrors;
+import org.jamon.ParserErrorImpl;
+import org.jamon.ParserErrorsImpl;
 import org.jamon.TemplateFileLocation;
-import org.jamon.TemplateLocation;
+import org.jamon.api.TemplateLocation;
 import org.jamon.node.AbsolutePathNode;
-import org.jamon.node.Location;
+import org.jamon.node.LocationImpl;
 import org.jamon.node.NamedAliasPathNode;
 import org.jamon.node.PathElementNode;
 import org.jamon.node.RelativePathNode;
@@ -42,17 +42,17 @@ public class PathAdapterTest extends TestCase
     private static final String s_templateDir = "/templateDir";
     private static final TemplateLocation s_templateLocation =
         new TemplateFileLocation("/foobar");
-    private static final Location s_location =
-        new Location(s_templateLocation, 1,1);
+    private static final org.jamon.api.Location s_location =
+        new LocationImpl(s_templateLocation, 1,1);
     private PathAdapter m_adapter;
-    private ParserErrors m_errors;
+    private ParserErrorsImpl m_errors;
 
     @Override protected void setUp() throws Exception
     {
         Map<String, String> aliases = new HashMap<String, String>();
         aliases.put("/", "/root/dir");
         aliases.put("foo", "/foo/dir");
-        m_errors = new ParserErrors();
+        m_errors = new ParserErrorsImpl();
         m_adapter = new PathAdapter(s_templateDir + "/", aliases, m_errors);
     }
 
@@ -99,13 +99,13 @@ public class PathAdapterTest extends TestCase
 
     public void testUpdirOutOfRoot() throws Exception
     {
-        Location location2 = new Location(s_templateLocation, 2,2);
+        org.jamon.api.Location location2 = new LocationImpl(s_templateLocation, 2,2);
         new RelativePathNode(s_location)
             .addPathElement(new UpdirNode(s_location))
             .addPathElement(new UpdirNode(location2))
             .apply(m_adapter);
         assertEquals(
-            Arrays.asList(new ParserError(
+            Arrays.asList(new ParserErrorImpl(
                 location2, "Cannot reference templates above the root")),
             m_errors.getErrors());
     }

@@ -21,7 +21,7 @@ package org.jamon.codegen;
 
 import java.util.Map;
 
-import org.jamon.ParserErrors;
+import org.jamon.ParserErrorsImpl;
 import org.jamon.node.AbsolutePathNode;
 import org.jamon.node.DepthFirstAnalysisAdapter;
 import org.jamon.node.NamedAliasPathNode;
@@ -34,7 +34,7 @@ class PathAdapter extends DepthFirstAnalysisAdapter
 {
     public PathAdapter(String p_templateDir,
                        final Map<String, String> p_aliases,
-                       ParserErrors p_errors)
+                       ParserErrorsImpl p_errors)
     {
         m_templateDir = p_templateDir;
         m_aliases = p_aliases;
@@ -43,7 +43,7 @@ class PathAdapter extends DepthFirstAnalysisAdapter
 
     private final String m_templateDir;
     private final Map<String, String> m_aliases;
-    private final ParserErrors m_errors;
+    private final ParserErrorsImpl m_errors;
     private final StringBuilder m_path = new StringBuilder();
     private boolean m_absolutePath = false;
 

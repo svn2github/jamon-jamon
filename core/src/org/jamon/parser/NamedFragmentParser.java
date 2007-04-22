@@ -1,7 +1,6 @@
 package org.jamon.parser;
 
-import org.jamon.ParserErrors;
-import org.jamon.node.Location;
+import org.jamon.ParserErrorsImpl;
 import org.jamon.node.NamedFragmentNode;
 
 public class NamedFragmentParser extends AbstractBodyParser<NamedFragmentNode>
@@ -12,7 +11,7 @@ public class NamedFragmentParser extends AbstractBodyParser<NamedFragmentNode>
     public NamedFragmentParser(
         NamedFragmentNode p_rootNode,
         PositionalPushbackReader p_reader,
-        ParserErrors p_errors)
+        ParserErrorsImpl p_errors)
     {
         super(p_rootNode, p_reader, p_errors);
     }
@@ -22,7 +21,7 @@ public class NamedFragmentParser extends AbstractBodyParser<NamedFragmentNode>
         addError(m_bodyStart, NAMED_FRAGMENT_CLOSE_EXPECTED);
     }
 
-    @Override protected boolean handleNamedFragmentClose(Location p_tagLocation)
+    @Override protected boolean handleNamedFragmentClose(org.jamon.api.Location p_tagLocation)
     {
         return true;
     }

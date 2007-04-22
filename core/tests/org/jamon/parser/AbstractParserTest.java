@@ -7,13 +7,14 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import org.jamon.ParserError;
-import org.jamon.ParserErrors;
+import org.jamon.ParserErrorImpl;
+import org.jamon.ParserErrorsImpl;
 import org.jamon.TemplateFileLocation;
-import org.jamon.TemplateLocation;
+import org.jamon.api.ParserError;
+import org.jamon.api.TemplateLocation;
 import org.jamon.node.AbstractNode;
 import org.jamon.node.AbstractPathNode;
-import org.jamon.node.Location;
+import org.jamon.node.LocationImpl;
 import org.jamon.node.PathElementNode;
 import org.jamon.node.TopNode;
 import org.jamon.node.UpdirNode;
@@ -26,8 +27,8 @@ public abstract class AbstractParserTest
 {
     protected final static TemplateLocation TEMPLATE_LOC =
         new TemplateFileLocation("x");
-    protected final static Location START_LOC =
-        new Location(TEMPLATE_LOC, 1, 1);
+    protected final static org.jamon.api.Location START_LOC =
+        new LocationImpl(TEMPLATE_LOC, 1, 1);
 
     public AbstractParserTest() {}
 
@@ -39,12 +40,12 @@ public abstract class AbstractParserTest
 
     protected static TopNode topNode()
     {
-        return new TopNode(new Location(TEMPLATE_LOC, 1, 1));
+        return new TopNode(new LocationImpl(TEMPLATE_LOC, 1, 1));
     }
 
-    protected static Location location(int p_line, int p_column)
+    protected static org.jamon.api.Location location(int p_line, int p_column)
     {
-        return new Location(TEMPLATE_LOC, p_line, p_column);
+        return new LocationImpl(TEMPLATE_LOC, p_line, p_column);
     }
 
     protected AbstractNode parse(String p_text) throws IOException
@@ -65,15 +66,15 @@ public abstract class AbstractParserTest
             m_column = p_column;
         }
 
-        public ParserError makeError()
+        public ParserErrorImpl makeError()
         {
-            return new ParserError(new Location(TEMPLATE_LOC, m_line, m_column), m_message);
+            return new ParserErrorImpl(new LocationImpl(TEMPLATE_LOC, m_line, m_column), m_message);
         }
     }
 
-    private ParserError makeParserError(int p_line, int p_column, String p_message)
+    private ParserErrorImpl makeParserErrorImpl(int p_line, int p_column, String p_message)
     {
-        return new ParserError(new Location(TEMPLATE_LOC, p_line, p_column),
+        return new ParserErrorImpl(new LocationImpl(TEMPLATE_LOC, p_line, p_column),
                         p_message);
     }
 
@@ -84,7 +85,7 @@ public abstract class AbstractParserTest
             parse(p_body);
             fail("No failure registered for '" + p_body + "'");
         }
-        catch (ParserErrors e)
+        catch (ParserErrorsImpl e)
         {
             List<ParserError> errors = new LinkedList<ParserError>(e.getErrors());
             List<ParserError> expected = new LinkedList<ParserError>();
@@ -107,10 +108,10 @@ public abstract class AbstractParserTest
             parse(p_body);
             fail("No failure registered for '" + p_body + "'");
         }
-        catch (ParserErrors e)
+        catch (ParserErrorsImpl e)
         {
             assertEquals(
-                Arrays.asList(makeParserError(p_line, p_column, p_message)), e.getErrors());
+                Arrays.asList(makeParserErrorImpl(p_line, p_column, p_message)), e.getErrors());
         }
     }
 
@@ -125,12 +126,12 @@ public abstract class AbstractParserTest
            parse(p_body);
            fail("No failure registered for '" + p_body + "'");
         }
-        catch (ParserErrors e)
+        catch (ParserErrorsImpl e)
         {
             assertEquals(
                 Arrays.asList(
-                    makeParserError(p_line1, p_column1, p_message1),
-                    makeParserError(p_line2, p_column2, p_message2)),
+                    makeParserErrorImpl(p_line1, p_column1, p_message1),
+                    makeParserErrorImpl(p_line2, p_column2, p_message2)),
                 e.getErrors());
         }
     }
@@ -147,20 +148,20 @@ public abstract class AbstractParserTest
            parse(p_body);
                 fail("No failure registered for '" + p_body + "'");
         }
-        catch (ParserErrors e)
+        catch (ParserErrorsImpl e)
         {
             assertEquals(
                 Arrays.asList(
-                    makeParserError(p_line1, p_column1, p_message1),
-                    makeParserError(p_line2, p_column2, p_message2),
-                    makeParserError(p_line3, p_column3, p_message3)),
+                    makeParserErrorImpl(p_line1, p_column1, p_message1),
+                    makeParserErrorImpl(p_line2, p_column2, p_message2),
+                    makeParserErrorImpl(p_line3, p_column3, p_message3)),
                 e.getErrors());
         }
     }
 
-    protected static AbstractPathNode buildPath(Location p_start, AbstractPathNode p_path, String p_elements)
+    protected static AbstractPathNode buildPath(org.jamon.api.Location p_start, AbstractPathNode p_path, String p_elements)
     {
-        Location loc = p_start;
+        org.jamon.api.Location loc = p_start;
         StringTokenizer tokenizer = new StringTokenizer(p_elements, "/");
         while (tokenizer.hasMoreTokens())
         {
@@ -174,7 +175,7 @@ public abstract class AbstractParserTest
                 p_path.addPathElement(new PathElementNode(loc, elt));
             }
             loc =
-                new Location(loc.getTemplateLocation(),
+                new LocationImpl(loc.getTemplateLocation(),
                              loc.getLine(),
                              loc.getColumn() + 1 + elt.length());
         }

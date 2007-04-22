@@ -21,16 +21,15 @@ package org.jamon.parser;
 
 import java.io.IOException;
 
-import org.jamon.ParserErrors;
+import org.jamon.ParserErrorsImpl;
 import org.jamon.node.AbstractBodyNode;
-import org.jamon.node.Location;
 
 public abstract class SubcomponentParser<Node extends AbstractBodyNode>
     extends AbstractBodyParser<Node>
 {
     protected SubcomponentParser(Node p_node,
                                  PositionalPushbackReader p_reader,
-                                 ParserErrors p_errors)
+                                 ParserErrorsImpl p_errors)
     {
         super(p_node, p_reader, p_errors);
     }
@@ -53,7 +52,7 @@ public abstract class SubcomponentParser<Node extends AbstractBodyNode>
     protected abstract String tagName();
 
     @Override
-    protected void handleTagClose(String p_tagName, Location p_tagLocation)
+    protected void handleTagClose(String p_tagName, org.jamon.api.Location p_tagLocation)
         throws IOException
     {
         if (!p_tagName.equals(tagName()))

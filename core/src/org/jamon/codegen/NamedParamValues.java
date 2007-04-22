@@ -24,12 +24,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import org.jamon.ParserError;
-import org.jamon.node.Location;
+import org.jamon.ParserErrorImpl;
 
 public class NamedParamValues implements ParamValues
 {
-    public NamedParamValues(Map<String, String> p_params, Location p_location)
+    public NamedParamValues(Map<String, String> p_params, org.jamon.api.Location p_location)
     {
         if (p_params == null)
         {
@@ -44,7 +43,7 @@ public class NamedParamValues implements ParamValues
 
     public void generateRequiredArgs(
         List<RequiredArgument> p_args, CodeWriter p_writer)
-        throws ParserError
+        throws ParserErrorImpl
     {
         boolean multipleArgsAreMissing= false;
         StringBuilder missingArgs = null;
@@ -69,7 +68,7 @@ public class NamedParamValues implements ParamValues
         if (missingArgs != null)
         {
             String plural = multipleArgsAreMissing ? "s" : "";
-            throw new ParserError(
+            throw new ParserErrorImpl(
                 m_location,
                 "No value" + plural + " supplied for required argument" + plural
                 + " " + missingArgs.toString());
@@ -94,5 +93,5 @@ public class NamedParamValues implements ParamValues
 
 
     private final Map<String, String> m_params;
-    private final Location m_location;
+    private final org.jamon.api.Location m_location;
 }

@@ -20,9 +20,8 @@
 
 package org.jamon.parser;
 
-import org.jamon.ParserErrors;
+import org.jamon.ParserErrorsImpl;
 import org.jamon.node.DefNode;
-import org.jamon.node.Location;
 
 public class DefParser extends SubcomponentParser<DefNode>
 {
@@ -32,9 +31,9 @@ public class DefParser extends SubcomponentParser<DefNode>
      */
     public DefParser(
         String p_name,
-        Location p_tagLocation,
+        org.jamon.api.Location p_tagLocation,
         PositionalPushbackReader p_reader,
-        ParserErrors p_errors)
+        ParserErrorsImpl p_errors)
     {
         super(new DefNode(p_tagLocation, p_name), p_reader, p_errors);
     }

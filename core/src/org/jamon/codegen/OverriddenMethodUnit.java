@@ -23,8 +23,7 @@ package org.jamon.codegen;
 import java.util.Collection;
 import java.util.List;
 
-import org.jamon.ParserErrors;
-import org.jamon.node.Location;
+import org.jamon.ParserErrorsImpl;
 import org.jamon.node.ParentArgNode;
 
 public class OverriddenMethodUnit
@@ -33,8 +32,8 @@ public class OverriddenMethodUnit
 {
     public OverriddenMethodUnit(DeclaredMethodUnit p_declaredMethodUnit,
                                 Unit p_parent,
-                                ParserErrors p_errors,
-                                Location p_location)
+                                ParserErrorsImpl p_errors,
+                                org.jamon.api.Location p_location)
     {
         super(p_declaredMethodUnit.getName(), p_parent, p_errors, p_location);
         m_declaredMethodUnit = p_declaredMethodUnit;

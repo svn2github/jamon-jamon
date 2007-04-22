@@ -2,10 +2,9 @@ package org.jamon.parser;
 
 import java.io.IOException;
 
-import org.jamon.ParserError;
-import org.jamon.ParserErrors;
+import org.jamon.ParserErrorImpl;
+import org.jamon.ParserErrorsImpl;
 import org.jamon.node.AbstractPathNode;
-import org.jamon.node.Location;
 
 /**
  * @author ian
@@ -23,7 +22,7 @@ public class AbstractParser
 
     public AbstractParser(
         PositionalPushbackReader p_reader,
-        ParserErrors p_errors)
+        ParserErrorsImpl p_errors)
     {
         m_reader = p_reader;
         m_errors = p_errors;
@@ -46,12 +45,12 @@ public class AbstractParser
         return whitespaceSeen;
     }
 
-    protected void addError(Location p_location, String p_message)
+    protected void addError(org.jamon.api.Location p_location, String p_message)
     {
-        m_errors.addError(new ParserError(p_location, p_message));
+        m_errors.addError(new ParserErrorImpl(p_location, p_message));
     }
 
-    protected void addError(ParserError p_error)
+    protected void addError(ParserErrorImpl p_error)
     {
         m_errors.addError(p_error);
     }
@@ -96,7 +95,7 @@ public class AbstractParser
     /**
      * Read in a java identifier.
      * @param p_addErrorIfNoneFound if true, and no identifier is found, then call
-     * {@link #addError(ParserError)}
+     * {@link #addError(ParserErrorImpl)}
      * @return the identifier read, or the empty string if no identifier was found.
      * @throws IOException
      */
@@ -117,7 +116,7 @@ public class AbstractParser
     }
 
     protected final PositionalPushbackReader m_reader;
-    protected final ParserErrors m_errors;
+    protected final ParserErrorsImpl m_errors;
     /**
          * Read a single character from the reader.  If it is the expected
          * character, return true; otherwise, unread it and return false
@@ -147,7 +146,7 @@ public class AbstractParser
      * @param passOverQuotes True if the material being read is java which
      *         might contain the ending token inside quotes
      **/
-    protected String readUntil(String p_end, Location p_startLocation)
+    protected String readUntil(String p_end, org.jamon.api.Location p_startLocation)
         throws IOException
     {
         StringBuilder buffer = new StringBuilder();
@@ -183,15 +182,15 @@ public class AbstractParser
     }
 
     protected String readJava(
-        Location p_startLocation,
+        org.jamon.api.Location p_startLocation,
         TagEndDetector p_tagEndDetector)
-        throws IOException, ParserError
+        throws IOException, ParserErrorImpl
     {
         StringBuilder buffer = new StringBuilder();
         int c = -1;
         boolean inString = false;
         boolean inChar = false;
-        Location quoteStart = null;
+        org.jamon.api.Location quoteStart = null;
         while ((c = m_reader.read()) >= 0)
         {
             switch (c)
@@ -245,7 +244,7 @@ public class AbstractParser
         }
         if (quoteStart != null)
         {
-            throw new ParserError(quoteStart, EOF_IN_JAVA_QUOTE_ERROR);
+            throw new ParserErrorImpl(quoteStart, EOF_IN_JAVA_QUOTE_ERROR);
         }
         else
         {
@@ -253,7 +252,7 @@ public class AbstractParser
         }
     }
 
-    protected boolean checkForTagClosure(Location p_tagLocation)
+    protected boolean checkForTagClosure(org.jamon.api.Location p_tagLocation)
         throws IOException
     {
         if (readChar('>'))
@@ -283,26 +282,26 @@ public class AbstractParser
         return true;
     }
 
-    protected String readType(final Location p_location) throws IOException
+    protected String readType(final org.jamon.api.Location p_location) throws IOException
     {
         try
         {
             return new TypeNameParser(p_location, m_reader, m_errors).getType();
         }
-        catch (ParserError e)
+        catch (ParserErrorImpl e)
         {
             addError(e);
             return "";
         }
     }
 
-    protected String readClassName(final Location p_location) throws IOException
+    protected String readClassName(final org.jamon.api.Location p_location) throws IOException
     {
         try
         {
             return new ClassNameParser(p_location, m_reader, m_errors).getType();
         }
-        catch (ParserError e)
+        catch (ParserErrorImpl e)
         {
             addError(e);
             return "";

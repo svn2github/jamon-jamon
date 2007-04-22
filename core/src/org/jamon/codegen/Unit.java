@@ -23,7 +23,7 @@ package org.jamon.codegen;
 import java.util.Collection;
 import java.util.List;
 
-import org.jamon.ParserError;
+import org.jamon.ParserErrorImpl;
 
 public interface Unit extends StatementBlock
 {
@@ -34,6 +34,6 @@ public interface Unit extends StatementBlock
 
     void printRenderArgsDecl(CodeWriter p_writer);
     void generateRenderBody(CodeWriter p_writer,
-                            TemplateDescriber p_describer) throws ParserError;
+                            TemplateDescriber p_describer) throws ParserErrorImpl;
     boolean canThrowIOException();
 }

@@ -3,15 +3,14 @@ package org.jamon.codegen;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.jamon.ParserError;
+import org.jamon.ParserErrorImpl;
 import org.jamon.node.ArgNode;
 import org.jamon.node.FragmentArgsNode;
-import org.jamon.node.Location;
 import org.jamon.node.OptionalArgNode;
 
 public abstract class AbstractStatementBlock implements StatementBlock
 {
-    public AbstractStatementBlock(StatementBlock p_parent, Location p_location)
+    public AbstractStatementBlock(StatementBlock p_parent, org.jamon.api.Location p_location)
     {
         m_parent = p_parent;
         m_location = p_location;
@@ -19,7 +18,7 @@ public abstract class AbstractStatementBlock implements StatementBlock
 
     protected void printStatements(
         CodeWriter p_writer, TemplateDescriber p_describer)
-        throws ParserError
+        throws ParserErrorImpl
     {
         for (Statement statement : getStatements())
         {
@@ -85,12 +84,12 @@ public abstract class AbstractStatementBlock implements StatementBlock
         return m_parent;
     }
 
-    public Location getLocation()
+    public org.jamon.api.Location getLocation()
     {
         return m_location;
     }
 
     private final List<Statement> m_statements = new LinkedList<Statement>();
     private final StatementBlock m_parent;
-    private final Location m_location;
+    private final org.jamon.api.Location m_location;
 }

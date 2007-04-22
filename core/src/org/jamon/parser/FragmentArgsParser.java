@@ -2,13 +2,12 @@ package org.jamon.parser;
 
 import java.io.IOException;
 
-import org.jamon.ParserError;
-import org.jamon.ParserErrors;
+import org.jamon.ParserErrorImpl;
+import org.jamon.ParserErrorsImpl;
 import org.jamon.node.AbstractArgsNode;
 import org.jamon.node.ArgNameNode;
 import org.jamon.node.ArgTypeNode;
 import org.jamon.node.FragmentArgsNode;
-import org.jamon.node.Location;
 
 public class FragmentArgsParser extends AbstractArgsParser
 {
@@ -22,12 +21,12 @@ public class FragmentArgsParser extends AbstractArgsParser
      * @param p_errors
      * @param p_tagLocation
      * @throws IOException
-     * @throws ParserError
+     * @throws ParserErrorImpl
      */
     public FragmentArgsParser(PositionalPushbackReader p_reader,
-                              ParserErrors p_errors,
-                              Location p_tagLocation)
-        throws IOException, ParserError
+                              ParserErrorsImpl p_errors,
+                              org.jamon.api.Location p_tagLocation)
+        throws IOException, ParserErrorImpl
     {
         super(p_reader, p_errors, p_tagLocation);
     }
@@ -57,13 +56,13 @@ public class FragmentArgsParser extends AbstractArgsParser
         return NEED_SEMI;
     }
 
-    @Override protected AbstractArgsNode makeArgsNode(Location p_tagLocation)
+    @Override protected AbstractArgsNode makeArgsNode(org.jamon.api.Location p_tagLocation)
     {
         return m_fragmentArgsNode =
             new FragmentArgsNode(p_tagLocation, m_fragmentName);
     }
 
-    @Override protected boolean finishOpenTag(Location p_tagLocation)
+    @Override protected boolean finishOpenTag(org.jamon.api.Location p_tagLocation)
         throws IOException
     {
         if(!soakWhitespace())

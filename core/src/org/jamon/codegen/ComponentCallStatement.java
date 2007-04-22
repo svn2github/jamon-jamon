@@ -23,16 +23,15 @@ package org.jamon.codegen;
 import java.util.List;
 
 import org.jamon.JamonRuntimeException;
-import org.jamon.ParserError;
+import org.jamon.ParserErrorImpl;
 import org.jamon.node.GenericCallParam;
-import org.jamon.node.Location;
 
 public class ComponentCallStatement
     extends AbstractCallStatement
 {
     ComponentCallStatement(String p_path,
                            ParamValues p_params,
-                           Location p_location,
+                           org.jamon.api.Location p_location,
                            String p_templateIdentifier,
                            List<GenericCallParam> p_genericParams,
                            String p_callingTemlpateJamonContextType)
@@ -51,7 +50,7 @@ public class ComponentCallStatement
     }
 
     public void generateSource(CodeWriter p_writer,
-                               TemplateDescriber p_describer) throws ParserError
+                               TemplateDescriber p_describer) throws ParserErrorImpl
     {
         generateSourceLine(p_writer);
         p_writer.openBlock();
@@ -70,7 +69,7 @@ public class ComponentCallStatement
         if (desc.getJamonContextType() != null
             && m_callingTemlpateJamonContextType == null)
         {
-            throw new ParserError(
+            throw new ParserErrorImpl(
                 getLocation(),
                 "Calling component does not have a jamonContext, but called " +
                 "component " + getPath() + " expects one of type " +
@@ -80,7 +79,7 @@ public class ComponentCallStatement
         {
             if (desc.getGenericParamsCount() != getGenericParamCount())
             {
-                throw new ParserError(
+                throw new ParserErrorImpl(
                     getLocation(),
                     "Call to component " + getPath() + " provides "
                     + getGenericParamCount() + " generic params, but "

@@ -29,12 +29,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.jamon.ParserErrors;
+import org.jamon.ParserErrorsImpl;
 import org.jamon.node.AnnotationNode;
 import org.jamon.node.ClassNode;
 import org.jamon.node.GenericsParamNode;
 import org.jamon.node.ImportNode;
-import org.jamon.node.Location;
 import org.jamon.node.ParentArgNode;
 import org.jamon.node.StaticImportNode;
 import org.jamon.util.StringUtils;
@@ -43,7 +42,7 @@ public class TemplateUnit
     extends AbstractUnit
     implements InheritedUnit
 {
-    public TemplateUnit(String p_path, ParserErrors p_errors)
+    public TemplateUnit(String p_path, ParserErrorsImpl p_errors)
     {
         super(p_path, null, p_errors, null);
     }
@@ -168,7 +167,7 @@ public class TemplateUnit
         return m_dependencies;
     }
 
-    private void checkCallName(String p_name, Location p_location)
+    private void checkCallName(String p_name, org.jamon.api.Location p_location)
     {
         if (! m_callNames.add(p_name))
         {
@@ -177,7 +176,7 @@ public class TemplateUnit
         }
     }
 
-    public void makeDefUnit(String p_defName, Location p_location)
+    public void makeDefUnit(String p_defName, org.jamon.api.Location p_location)
     {
         checkCallName(p_defName, p_location);
         m_defs.put(p_defName, new DefUnit(p_defName, this, getErrors(), p_location));
@@ -194,7 +193,7 @@ public class TemplateUnit
     }
 
     public void makeMethodUnit(
-            String p_methodName, Location p_location, boolean p_isAbstract)
+            String p_methodName, org.jamon.api.Location p_location, boolean p_isAbstract)
     {
         checkCallName(p_methodName, p_location);
         m_methods.put(p_methodName,
@@ -207,7 +206,7 @@ public class TemplateUnit
     }
 
     public OverriddenMethodUnit makeOverridenMethodUnit(
-            String p_name, Location p_location)
+            String p_name, org.jamon.api.Location p_location)
     {
         DeclaredMethodUnit methodUnit = (DeclaredMethodUnit)
             m_parentDescription.getMethodUnits().get(p_name);

@@ -1,13 +1,12 @@
 package org.jamon.codegen;
 
-import org.jamon.ParserError;
-import org.jamon.node.Location;
+import org.jamon.ParserErrorImpl;
 
 public class FlowControlBlock
     extends AbstractStatementBlock implements Statement
 {
     public FlowControlBlock(
-        StatementBlock p_parent, String p_header, Location p_location)
+        StatementBlock p_parent, String p_header, org.jamon.api.Location p_location)
     {
         super(p_parent, p_location);
         m_header = p_header;
@@ -21,7 +20,7 @@ public class FlowControlBlock
 
     public void generateSource(
         CodeWriter p_writer, TemplateDescriber p_describer)
-        throws ParserError
+        throws ParserErrorImpl
     {
         printOpening(p_writer);
         p_writer.openBlock();

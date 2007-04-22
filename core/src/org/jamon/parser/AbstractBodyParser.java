@@ -21,8 +21,8 @@ package org.jamon.parser;
 
 import java.io.IOException;
 
-import org.jamon.ParserError;
-import org.jamon.ParserErrors;
+import org.jamon.ParserErrorImpl;
+import org.jamon.ParserErrorsImpl;
 import org.jamon.node.AbstractBodyNode;
 import org.jamon.node.DefaultEscapeNode;
 import org.jamon.node.DocNode;
@@ -32,7 +32,6 @@ import org.jamon.node.ForNode;
 import org.jamon.node.IfNode;
 import org.jamon.node.JavaNode;
 import org.jamon.node.LiteralNode;
-import org.jamon.node.Location;
 import org.jamon.node.TextNode;
 import org.jamon.node.WhileNode;
 
@@ -81,7 +80,7 @@ public abstract class AbstractBodyParser<Node extends AbstractBodyNode>
     protected AbstractBodyParser(
         Node p_rootNode,
         PositionalPushbackReader p_reader,
-        ParserErrors p_errors)
+        ParserErrorsImpl p_errors)
     {
         super(p_reader, p_errors);
         m_root = p_rootNode;
@@ -111,7 +110,7 @@ public abstract class AbstractBodyParser<Node extends AbstractBodyNode>
         {
             if (c == '<')
             {
-                Location tagLocation = m_reader.getLocation();
+                org.jamon.api.Location tagLocation = m_reader.getLocation();
                 int c1 = m_reader.read();
                 switch (c1)
                 {
@@ -224,7 +223,7 @@ public abstract class AbstractBodyParser<Node extends AbstractBodyNode>
     /**
      * @param tagLocation Start of the emit.
      **/
-    private void handleEmit(Location p_tagLocation) throws IOException
+    private void handleEmit(org.jamon.api.Location p_tagLocation) throws IOException
     {
         try
         {
@@ -240,7 +239,7 @@ public abstract class AbstractBodyParser<Node extends AbstractBodyNode>
             }
             else
             {
-                Location escapingLocation = m_reader.getLocation();
+                org.jamon.api.Location escapingLocation = m_reader.getLocation();
                 int c = m_reader.read();
                 if (isLetter((char) c))
                 {
@@ -267,7 +266,7 @@ public abstract class AbstractBodyParser<Node extends AbstractBodyNode>
                 }
             }
         }
-        catch (ParserError e)
+        catch (ParserErrorImpl e)
         {
             addError(e);
         }
@@ -289,7 +288,7 @@ public abstract class AbstractBodyParser<Node extends AbstractBodyNode>
 
     protected void handleTag(
         final String p_tagName,
-        final Location p_tagLocation)
+        final org.jamon.api.Location p_tagLocation)
         throws IOException
     {
         if ("java".equals(p_tagName))
@@ -341,7 +340,7 @@ public abstract class AbstractBodyParser<Node extends AbstractBodyNode>
                     new ArgsParser(m_reader, m_errors, p_tagLocation)
                         .getArgsNode());
             }
-            catch (ParserError e)
+            catch (ParserErrorImpl e)
             {
                 addError(e);
             }
@@ -354,7 +353,7 @@ public abstract class AbstractBodyParser<Node extends AbstractBodyNode>
                     new FragmentArgsParser(m_reader, m_errors, p_tagLocation)
                         .getFragmentArgsNode());
             }
-            catch (ParserError e)
+            catch (ParserErrorImpl e)
             {
                 addError(e);
             }
@@ -424,7 +423,7 @@ public abstract class AbstractBodyParser<Node extends AbstractBodyNode>
      */
     @SuppressWarnings("unused") protected void handleTagClose(
         final String p_tagName,
-        final Location p_tagLocation)
+        final org.jamon.api.Location p_tagLocation)
         throws IOException
     {
         addError(p_tagLocation, "Unexpected tag close </%" + p_tagName + ">");
@@ -442,7 +441,7 @@ public abstract class AbstractBodyParser<Node extends AbstractBodyNode>
      * @throws IOException
      **/
     @SuppressWarnings("unused")
-    protected boolean handleNamedFragmentClose(Location p_tagLocation)
+    protected boolean handleNamedFragmentClose(org.jamon.api.Location p_tagLocation)
         throws IOException
     {
         addError(p_tagLocation, UNEXPECTED_NAMED_FRAGMENT_CLOSE_ERROR);
@@ -455,7 +454,7 @@ public abstract class AbstractBodyParser<Node extends AbstractBodyNode>
      * @throws IOException
      **/
     @SuppressWarnings("unused")
-    protected boolean handleFragmentsClose(Location p_tagLocation)
+    protected boolean handleFragmentsClose(org.jamon.api.Location p_tagLocation)
         throws IOException
     {
         addError(p_tagLocation, UNEXPECTED_FRAGMENTS_CLOSE_ERROR);
@@ -466,7 +465,7 @@ public abstract class AbstractBodyParser<Node extends AbstractBodyNode>
      * @param p_tagLocation location of the def tag
      */
     @SuppressWarnings("unused")
-    protected void handleMethodTag(Location p_tagLocation) throws IOException
+    protected void handleMethodTag(org.jamon.api.Location p_tagLocation) throws IOException
     {
         addError(
             p_tagLocation,
@@ -477,7 +476,7 @@ public abstract class AbstractBodyParser<Node extends AbstractBodyNode>
      * @param p_tagLocation location of the def tag
      */
     @SuppressWarnings("unused")
-    protected void handleOverrideTag(Location p_tagLocation) throws IOException
+    protected void handleOverrideTag(org.jamon.api.Location p_tagLocation) throws IOException
     {
         addError(
             p_tagLocation,
@@ -488,7 +487,7 @@ public abstract class AbstractBodyParser<Node extends AbstractBodyNode>
      * @param p_tagLocation location of the def tag
      */
     @SuppressWarnings("unused")
-    protected void handleDefTag(Location p_tagLocation) throws IOException
+    protected void handleDefTag(org.jamon.api.Location p_tagLocation) throws IOException
     {
         addError(
             p_tagLocation,
@@ -496,7 +495,7 @@ public abstract class AbstractBodyParser<Node extends AbstractBodyNode>
     }
 
     @SuppressWarnings("unused")
-    protected void handleAbsMethodTag(Location p_tagLocation) throws IOException
+    protected void handleAbsMethodTag(org.jamon.api.Location p_tagLocation) throws IOException
     {
         addError(
             p_tagLocation,
@@ -533,9 +532,9 @@ public abstract class AbstractBodyParser<Node extends AbstractBodyNode>
             }
         }
 
-        public ParserError getEofError(Location p_startLocation)
+        public ParserErrorImpl getEofError(org.jamon.api.Location p_startLocation)
         {
-            return new ParserError(
+            return new ParserErrorImpl(
                p_startLocation,
                "Reached end of file while reading " + m_tagName + " tag");
         }
@@ -549,7 +548,7 @@ public abstract class AbstractBodyParser<Node extends AbstractBodyNode>
     }
 
 
-    protected void handleWhileTag(Location p_tagLocation) throws IOException
+    protected void handleWhileTag(org.jamon.api.Location p_tagLocation) throws IOException
     {
         try
         {
@@ -561,13 +560,13 @@ public abstract class AbstractBodyParser<Node extends AbstractBodyNode>
                 .parse()
                 .getRootNode());
         }
-        catch (ParserError e)
+        catch (ParserErrorImpl e)
         {
             addError(e);
         }
     }
 
-    protected void handleForTag(Location p_tagLocation) throws IOException
+    protected void handleForTag(org.jamon.api.Location p_tagLocation) throws IOException
     {
         try
         {
@@ -578,13 +577,13 @@ public abstract class AbstractBodyParser<Node extends AbstractBodyNode>
                 .parse()
                 .getRootNode());
         }
-        catch (ParserError e)
+        catch (ParserErrorImpl e)
         {
             addError(e);
         }
     }
 
-    protected void handleIfTag(Location p_tagLocation) throws IOException
+    protected void handleIfTag(org.jamon.api.Location p_tagLocation) throws IOException
     {
         try
         {
@@ -599,18 +598,18 @@ public abstract class AbstractBodyParser<Node extends AbstractBodyNode>
                 m_root.addSubNode(parser.getRootNode());
             }
         }
-        catch (ParserError e)
+        catch (ParserErrorImpl e)
         {
             addError(e);
         }
     }
 
-    protected String readCondition(Location p_tagLocation, String p_tagName)
-        throws IOException, ParserError
+    protected String readCondition(org.jamon.api.Location p_tagLocation, String p_tagName)
+        throws IOException, ParserErrorImpl
     {
         if (!soakWhitespace())
         {
-            throw new ParserError(
+            throw new ParserErrorImpl(
                 p_tagLocation, "Malformed <%" + p_tagName + " ...%> tag");
         }
         else
@@ -622,50 +621,50 @@ public abstract class AbstractBodyParser<Node extends AbstractBodyNode>
     }
 
     @SuppressWarnings("unused")
-    protected void handleElseTag(Location p_tagLocation) throws IOException
+    protected void handleElseTag(org.jamon.api.Location p_tagLocation) throws IOException
     {
         addError(p_tagLocation, ENCOUNTERED_ELSE_TAG_WITHOUT_PRIOR_IF_TAG);
     }
 
     @SuppressWarnings("unused")
-    protected void handleElseIfTag(Location p_tagLocation) throws IOException
+    protected void handleElseIfTag(org.jamon.api.Location p_tagLocation) throws IOException
     {
         addError(p_tagLocation, ENCOUNTERED_ELSEIF_TAG_WITHOUT_PRIOR_IF_TAG);
     }
 
     @SuppressWarnings("unused")
-    protected void handleParentArgsNode(Location p_tagLocation)
+    protected void handleParentArgsNode(org.jamon.api.Location p_tagLocation)
         throws IOException
     {
         addError(p_tagLocation, PARENT_ARGS_TAG_IN_SUBCOMPONENT);
     }
 
     @SuppressWarnings("unused")
-    protected void handleParentMarkerTag(Location p_tagLocation)
+    protected void handleParentMarkerTag(org.jamon.api.Location p_tagLocation)
         throws IOException
     {
         addError(p_tagLocation, PARENT_MARKER_TAG_IN_SUBCOMPONENT);
     }
 
     @SuppressWarnings("unused")
-    protected void handleEscapeTag(Location p_tagLocation) throws IOException
+    protected void handleEscapeTag(org.jamon.api.Location p_tagLocation) throws IOException
     {
         addError(p_tagLocation, ESCAPE_TAG_IN_SUBCOMPONENT);
     }
 
     @SuppressWarnings("unused")
-    protected void handleGenericTag(Location p_tagLocation) throws IOException
+    protected void handleGenericTag(org.jamon.api.Location p_tagLocation) throws IOException
     {
         addError(p_tagLocation, GENERIC_TAG_IN_SUBCOMPONENT);
     }
 
     @SuppressWarnings("unused")
-    protected void handleAnnotationTag(Location p_tagLocation) throws IOException
+    protected void handleAnnotationTag(org.jamon.api.Location p_tagLocation) throws IOException
     {
         addError(p_tagLocation, ANNOTATE_TAG_IN_SUBCOMPONENT);
     }
 
-    private void handleJavaTag(final Location p_tagLocation)
+    private void handleJavaTag(final org.jamon.api.Location p_tagLocation)
         throws IOException
     {
         if (readChar('>'))
@@ -679,7 +678,7 @@ public abstract class AbstractBodyParser<Node extends AbstractBodyNode>
         }
     }
 
-    private void handleJavaCode(final Location p_tagLocation, TagEndDetector p_endTagDetector)
+    private void handleJavaCode(final org.jamon.api.Location p_tagLocation, TagEndDetector p_endTagDetector)
     throws IOException
     {
         try
@@ -690,7 +689,7 @@ public abstract class AbstractBodyParser<Node extends AbstractBodyNode>
                     readJava(p_tagLocation, p_endTagDetector)));
             soakWhitespace();
         }
-        catch (ParserError e)
+        catch (ParserErrorImpl e)
         {
             addError(e);
         }
@@ -714,7 +713,7 @@ public abstract class AbstractBodyParser<Node extends AbstractBodyNode>
 
     }
 
-    protected void handleLiteralTag(final Location p_tagLocation)
+    protected void handleLiteralTag(final org.jamon.api.Location p_tagLocation)
         throws IOException
     {
         if (checkForTagClosure(p_tagLocation))
@@ -727,37 +726,37 @@ public abstract class AbstractBodyParser<Node extends AbstractBodyNode>
     }
 
     @SuppressWarnings("unused")
-    protected void handleClassTag(Location p_tagLocation) throws IOException
+    protected void handleClassTag(org.jamon.api.Location p_tagLocation) throws IOException
     {
         addError(p_tagLocation, CLASS_TAG_IN_SUBCOMPONENT);
     }
 
     @SuppressWarnings("unused")
-    protected void handleExtendsTag(Location p_tagLocation) throws IOException
+    protected void handleExtendsTag(org.jamon.api.Location p_tagLocation) throws IOException
     {
         addError(p_tagLocation, EXTENDS_TAG_IN_SUBCOMPONENT);
     }
 
     @SuppressWarnings("unused")
-    protected void handleImplementsTag(Location p_tagLocation)
+    protected void handleImplementsTag(org.jamon.api.Location p_tagLocation)
         throws IOException
     {
         addError(p_tagLocation, IMPLEMENTS_TAG_IN_SUBCOMPONENT);
     }
 
     @SuppressWarnings("unused")
-    protected void handleImportTag(Location p_tagLocation) throws IOException
+    protected void handleImportTag(org.jamon.api.Location p_tagLocation) throws IOException
     {
         addError(p_tagLocation, IMPORT_TAG_IN_SUBCOMPONENT);
     }
 
     @SuppressWarnings("unused")
-    protected void handleAliasesTag(Location p_tagLocation) throws IOException
+    protected void handleAliasesTag(org.jamon.api.Location p_tagLocation) throws IOException
     {
         addError(p_tagLocation, ALIASES_TAG_IN_SUBCOMPONENT);
     }
 
-    private void handleDocTag(Location p_tagLocation) throws IOException
+    private void handleDocTag(org.jamon.api.Location p_tagLocation) throws IOException
     {
         if (checkForTagClosure(p_tagLocation))
         {
@@ -806,6 +805,6 @@ public abstract class AbstractBodyParser<Node extends AbstractBodyNode>
 
     protected StringBuilder m_text = new StringBuilder();
     protected final Node m_root;
-    protected final Location m_bodyStart;
+    protected final org.jamon.api.Location m_bodyStart;
     private boolean m_doneParsing;
 }

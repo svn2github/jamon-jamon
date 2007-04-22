@@ -21,22 +21,21 @@ package org.jamon.parser;
 
 import java.io.IOException;
 
-import org.jamon.ParserError;
-import org.jamon.ParserErrors;
-import org.jamon.node.Location;
+import org.jamon.ParserErrorImpl;
+import org.jamon.ParserErrorsImpl;
 
 public class ClassNameParser extends AbstractTypeParser
 {
     public ClassNameParser(
-        Location p_location,
+        org.jamon.api.Location p_location,
         PositionalPushbackReader p_reader,
-        ParserErrors p_errors) throws IOException, ParserError
+        ParserErrorsImpl p_errors) throws IOException, ParserErrorImpl
     {
         super(p_location, p_reader, p_errors);
     }
 
     private void readGenericsParameter() 
-        throws IOException, NotAnIdentifierException, ParserError
+        throws IOException, NotAnIdentifierException, ParserErrorImpl
     {
         boolean boundsAllowed;
         if (readAndAppendChar('?', m_type))
@@ -59,7 +58,7 @@ public class ClassNameParser extends AbstractTypeParser
     
     @Override
     protected void parseTypeElaborations()
-        throws IOException, NotAnIdentifierException, ParserError
+        throws IOException, NotAnIdentifierException, ParserErrorImpl
     {
         int c = m_reader.read();
         if (c != '<')
@@ -95,7 +94,7 @@ public class ClassNameParser extends AbstractTypeParser
     }
 
     protected void readBoundingType()
-        throws IOException, NotAnIdentifierException, ParserError
+        throws IOException, NotAnIdentifierException, ParserErrorImpl
     {
         boolean needBoundingType = false;
         if (readChar('e'))

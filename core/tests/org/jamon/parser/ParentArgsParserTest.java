@@ -4,11 +4,10 @@ import static org.junit.Assert.*;
 
 import java.io.IOException;
 
-import org.jamon.ParserErrors;
+import org.jamon.ParserErrorsImpl;
 import org.jamon.node.AbstractNode;
 import org.jamon.node.ArgNameNode;
 import org.jamon.node.ArgValueNode;
-import org.jamon.node.Location;
 import org.jamon.node.ParentArgNode;
 import org.jamon.node.ParentArgWithDefaultNode;
 import org.jamon.node.ParentArgsNode;
@@ -22,7 +21,7 @@ public class ParentArgsParserTest extends AbstractParserTest
     @Override protected AbstractNode parse(String p_text) throws IOException
     {
         final PositionalPushbackReader reader = makeReader(p_text);
-        ParserErrors errors = new ParserErrors();
+        ParserErrorsImpl errors = new ParserErrorsImpl();
         ParentArgsNode result = new ParentArgsParser(reader, errors, START_LOC).getParentArgsNode();
         if (errors.hasErrors())
         {
@@ -41,14 +40,14 @@ public class ParentArgsParserTest extends AbstractParserTest
     }
 
     private static ParentArgNode parentArgNode(int p_line, int p_column, String p_name) {
-        Location location = location(p_line, p_column);
+        org.jamon.api.Location location = location(p_line, p_column);
         return new ParentArgNode(location, new ArgNameNode(location, p_name));
     }
 
     private static ParentArgNode parentArgWithDefaultNode(
         int p_nameLine, int p_nameColumn, String p_name,
         int p_valueLine, int p_valueColumn, String p_value) {
-        Location location = location(p_nameLine, p_nameColumn);
+        org.jamon.api.Location location = location(p_nameLine, p_nameColumn);
         return new ParentArgWithDefaultNode(
             location,
             new ArgNameNode(location, p_name),

@@ -1,7 +1,6 @@
 package org.jamon.parser;
 
-import org.jamon.ParserErrors;
-import org.jamon.node.Location;
+import org.jamon.ParserErrorsImpl;
 import org.jamon.node.UnnamedFragmentNode;
 
 public class UnnamedFragmentParser
@@ -13,12 +12,12 @@ public class UnnamedFragmentParser
     public UnnamedFragmentParser(
         UnnamedFragmentNode p_rootNode,
         PositionalPushbackReader p_reader,
-        ParserErrors p_errors)
+        ParserErrorsImpl p_errors)
     {
         super(p_rootNode, p_reader, p_errors);
     }
 
-    @Override protected boolean handleFragmentsClose(Location p_tagLocation)
+    @Override protected boolean handleFragmentsClose(org.jamon.api.Location p_tagLocation)
     {
         return true;
     }

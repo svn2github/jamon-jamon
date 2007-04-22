@@ -20,7 +20,6 @@
 
 package org.jamon.codegen;
 
-import org.jamon.node.Location;
 import org.jamon.util.StringUtils;
 
 public class LiteralStatement
@@ -28,7 +27,7 @@ public class LiteralStatement
     implements Statement
 {
     LiteralStatement(
-        String p_text, Location p_token, String p_templateIdentifier)
+        String p_text, org.jamon.api.Location p_token, String p_templateIdentifier)
     {
         super(p_token, p_templateIdentifier);
         m_text = new StringBuilder(p_text);

@@ -20,11 +20,11 @@
 
 package org.jamon.codegen;
 
-import org.jamon.ParserErrors;
+import org.jamon.ParserErrorsImpl;
 
 
 public interface CallStatement
     extends Statement
 {
-    void addFragmentImpl(FragmentUnit p_unit, ParserErrors p_errors);
+    void addFragmentImpl(FragmentUnit p_unit, ParserErrorsImpl p_errors);
 }

@@ -26,8 +26,8 @@ import java.io.StringReader;
 import junit.framework.TestCase;
 
 import org.jamon.TemplateFileLocation;
-import org.jamon.TemplateLocation;
-import org.jamon.node.Location;
+import org.jamon.api.TemplateLocation;
+import org.jamon.node.LocationImpl;
 
 public class PositionalPushbackReaderTest extends TestCase
 {
@@ -39,9 +39,9 @@ public class PositionalPushbackReaderTest extends TestCase
     private static TemplateLocation TEMPLATE_LOC =
         new TemplateFileLocation("x");
 
-    private static Location location(int p_line, int p_column)
+    private static org.jamon.api.Location location(int p_line, int p_column)
     {
-        return new Location(TEMPLATE_LOC, p_line, p_column);
+        return new LocationImpl(TEMPLATE_LOC, p_line, p_column);
     }
 
     public void testUnixLinefeeds() throws Exception
@@ -64,7 +64,7 @@ public class PositionalPushbackReaderTest extends TestCase
         throws IOException
     {
         assertTrue(p_locations.length % 2 == 0);
-        Location[] locations = new Location[p_locations.length /2];
+        org.jamon.api.Location[] locations = new org.jamon.api.Location[p_locations.length /2];
         for (int i = 0; i < locations.length; i++)
         {
             locations[i] = location(p_locations[i * 2], p_locations[i * 2 + 1]);
@@ -74,7 +74,7 @@ public class PositionalPushbackReaderTest extends TestCase
         checkIsLineStart(p_text);
     }
 
-    private void checkRead(final String p_text, final Location[] p_locations)
+    private void checkRead(final String p_text, final org.jamon.api.Location[] p_locations)
         throws IOException
     {
         PositionalPushbackReader reader = makeReader(p_text);
@@ -86,7 +86,7 @@ public class PositionalPushbackReaderTest extends TestCase
         }
     }
 
-    private void checkUnread(final String p_text, final Location[] p_locations)
+    private void checkUnread(final String p_text, final org.jamon.api.Location[] p_locations)
         throws IOException
     {
         for (int pushbackSize = 1; pushbackSize <= 3; pushbackSize++)

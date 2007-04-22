@@ -30,11 +30,11 @@ import java.util.Properties;
 
 import junit.framework.TestCase;
 
-import org.jamon.TemplateLocation;
 import org.jamon.TemplateResourceLocation;
 import org.jamon.TemplateSource;
+import org.jamon.api.TemplateLocation;
 import org.jamon.node.AnnotationNode;
-import org.jamon.node.Location;
+import org.jamon.node.LocationImpl;
 
 public class AnalyzerTest extends TestCase
 {
@@ -167,13 +167,13 @@ public class AnalyzerTest extends TestCase
         assertEquals(
             Arrays.asList(
                 new AnnotationNode(
-                    new Location(new TemplateResourceLocation(PATH), 1, 2),
+                    new LocationImpl(new TemplateResourceLocation(PATH), 1, 2),
                     "@Foo ", AnnotationType.IMPL),
                 new AnnotationNode(
-                    new Location(new TemplateResourceLocation(PATH), 2, 1),
+                    new LocationImpl(new TemplateResourceLocation(PATH), 2, 1),
                     "@Bar", AnnotationType.PROXY),
                 new AnnotationNode(
-                    new Location(new TemplateResourceLocation(PATH), 3, 1),
+                    new LocationImpl(new TemplateResourceLocation(PATH), 3, 1),
                     "@Baz", AnnotationType.BOTH)),
             templateUnit.getAnnotations());
     }

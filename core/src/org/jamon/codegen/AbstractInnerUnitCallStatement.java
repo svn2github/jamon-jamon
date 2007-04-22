@@ -20,8 +20,7 @@
 
 package org.jamon.codegen;
 
-import org.jamon.ParserError;
-import org.jamon.node.Location;
+import org.jamon.ParserErrorImpl;
 
 public abstract class AbstractInnerUnitCallStatement
     extends AbstractCallStatement
@@ -29,7 +28,7 @@ public abstract class AbstractInnerUnitCallStatement
     AbstractInnerUnitCallStatement(String p_path,
                                    ParamValues p_params,
                                    Unit p_unit,
-                                   Location p_location,
+                                   org.jamon.api.Location p_location,
                                    String p_templateIdentifier)
     {
         super(p_path, p_params, p_location, p_templateIdentifier);
@@ -50,7 +49,7 @@ public abstract class AbstractInnerUnitCallStatement
     }
 
     public void generateSource(CodeWriter p_writer,
-                               TemplateDescriber p_describer) throws ParserError
+                               TemplateDescriber p_describer) throws ParserErrorImpl
     {
         generateSourceLine(p_writer);
         p_writer.openBlock();

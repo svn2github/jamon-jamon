@@ -24,7 +24,7 @@ import org.apache.tools.ant.Location;
 
 public class JamonLocation extends Location
 {
-    public JamonLocation(org.jamon.node.Location p_location)
+    public JamonLocation(org.jamon.api.Location p_location)
     {
         super(p_location.getTemplateLocation().toString(),
               p_location.getLine(),

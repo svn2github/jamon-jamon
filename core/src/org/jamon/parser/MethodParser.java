@@ -20,9 +20,8 @@
 
 package org.jamon.parser;
 
-import org.jamon.ParserErrors;
+import org.jamon.ParserErrorsImpl;
 import org.jamon.node.MethodNode;
-import org.jamon.node.Location;
 
 public class MethodParser extends SubcomponentParser<MethodNode>
 {
@@ -32,9 +31,9 @@ public class MethodParser extends SubcomponentParser<MethodNode>
      */
     public MethodParser(
         String p_name,
-        Location p_tagLocation,
+        org.jamon.api.Location p_tagLocation,
         PositionalPushbackReader p_reader,
-        ParserErrors p_errors)
+        ParserErrorsImpl p_errors)
     {
         super(new MethodNode(p_tagLocation, p_name), p_reader, p_errors);
     }

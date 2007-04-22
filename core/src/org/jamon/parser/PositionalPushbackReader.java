@@ -23,8 +23,8 @@ package org.jamon.parser;
 import java.io.IOException;
 import java.io.Reader;
 
-import org.jamon.TemplateLocation;
-import org.jamon.node.Location;
+import org.jamon.api.TemplateLocation;
+import org.jamon.node.LocationImpl;
 
 /**
  * A "pushback reader" which also tracks the current position in the file.
@@ -54,9 +54,9 @@ public class PositionalPushbackReader
             m_column = 1;
         }
 
-        public Location location(TemplateLocation p_templateLocation)
+        public org.jamon.api.Location location(TemplateLocation p_templateLocation)
         {
-            return new Location(p_templateLocation, m_row, m_column);
+            return new LocationImpl(p_templateLocation, m_row, m_column);
         }
 
         public boolean isLineStart()
@@ -139,7 +139,7 @@ public class PositionalPushbackReader
      * Get the location of the character just read.
      * @return The current location (line and column numbers starting at 1)
      */
-    public Location getLocation()
+    public org.jamon.api.Location getLocation()
     {
         return m_positions[1].location(m_templateLocation);
     }
@@ -148,7 +148,7 @@ public class PositionalPushbackReader
      * Get the location of the next character to be read (if there is one).
      * @return The location of the next character
      */
-    public Location getNextLocation()
+    public org.jamon.api.Location getNextLocation()
     {
         return m_positions[0].location(m_templateLocation);
     }
@@ -183,7 +183,7 @@ public class PositionalPushbackReader
      *
      * @return The location of the current node
      */
-    public Location getCurrentNodeLocation()
+    public org.jamon.api.Location getCurrentNodeLocation()
     {
         return m_currentNodePosition.location(m_templateLocation);
     }

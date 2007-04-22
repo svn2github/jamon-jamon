@@ -4,7 +4,7 @@ import static org.junit.Assert.*;
 
 import java.io.IOException;
 
-import org.jamon.ParserErrors;
+import org.jamon.ParserErrorsImpl;
 import org.jamon.node.AbsolutePathNode;
 import org.jamon.node.AbstractCallNode;
 import org.jamon.node.AbstractNode;
@@ -36,7 +36,7 @@ public class CallParserTest extends AbstractParserTest
         final PositionalPushbackReader reader = makeReader(p_text);
         assertEquals('<', (char) reader.read());
         assertEquals('&', (char) reader.read());
-        ParserErrors errors = new ParserErrors();
+        ParserErrorsImpl errors = new ParserErrorsImpl();
         AbstractCallNode result =
             new CallParser(reader, errors, START_LOC).getCallNode();
         if (errors.hasErrors())

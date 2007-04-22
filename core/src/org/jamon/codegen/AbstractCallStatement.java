@@ -24,11 +24,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 
-import org.jamon.ParserError;
-import org.jamon.ParserErrors;
+import org.jamon.ParserErrorImpl;
+import org.jamon.ParserErrorsImpl;
 import org.jamon.util.StringUtils;
 
-import org.jamon.node.Location;
 
 public abstract class AbstractCallStatement
     extends AbstractStatement
@@ -36,7 +35,7 @@ public abstract class AbstractCallStatement
 {
     AbstractCallStatement(String p_path,
                           ParamValues p_params,
-                          Location p_location,
+                          org.jamon.api.Location p_location,
                           String p_templateIdentifier)
     {
         super(p_location, p_templateIdentifier);
@@ -44,7 +43,7 @@ public abstract class AbstractCallStatement
         m_params = p_params;
     }
 
-    public void addFragmentImpl(FragmentUnit p_unit, ParserErrors p_errors)
+    public void addFragmentImpl(FragmentUnit p_unit, ParserErrorsImpl p_errors)
     {
         m_fragParams.put(p_unit.getName(), p_unit);
     }
@@ -76,13 +75,13 @@ public abstract class AbstractCallStatement
 
     private void makeFragmentImplClass(FragmentUnit p_fragmentUnitIntf,
                                        CodeWriter p_writer,
-                                       TemplateDescriber p_describer) throws ParserError
+                                       TemplateDescriber p_describer) throws ParserErrorImpl
     {
         final FragmentUnit fragmentUnitImpl =
             m_fragParams.remove(p_fragmentUnitIntf.getName());
         if (fragmentUnitImpl == null)
         {
-            throw new ParserError(
+            throw new ParserErrorImpl(
                 getLocation(),
                 "Call is missing fragment " + p_fragmentUnitIntf.getName());
         }
@@ -135,20 +134,20 @@ public abstract class AbstractCallStatement
     protected void makeFragmentImplClasses(
         List<FragmentArgument> p_fragmentInterfaces,
         CodeWriter p_writer,
-        TemplateDescriber p_describer) throws ParserError
+        TemplateDescriber p_describer) throws ParserErrorImpl
     {
         if (m_fragParams.size() == 1
             && m_fragParams.keySet().iterator().next() == null)
         {
             if(p_fragmentInterfaces.size() == 0)
             {
-                throw new ParserError(
+                throw new ParserErrorImpl(
                     getLocation(),
                     "Call provides a fragment, but none are expected");
             }
             else if (p_fragmentInterfaces.size() > 1)
             {
-                throw new ParserError(getLocation(),
+                throw new ParserErrorImpl(getLocation(),
                                       "Call must provide multiple fragments");
             }
             else
@@ -180,7 +179,7 @@ public abstract class AbstractCallStatement
     }
 
     protected void checkSuppliedParams()
-        throws ParserError
+        throws ParserErrorImpl
     {
         if (getParams().hasUnusedParams())
         {
@@ -194,14 +193,14 @@ public abstract class AbstractCallStatement
         }
     }
 
-    ParserError constructExtraParamsException(String p_paramType,
+    ParserErrorImpl constructExtraParamsException(String p_paramType,
                                               Iterable<String> p_extraParams)
     {
         StringBuilder message = new StringBuilder("Call provides unused ");
         message.append(p_paramType);
         message.append(" ");
         StringUtils.commaJoin(message, p_extraParams);
-        return new ParserError(getLocation(), message.toString());
+        return new ParserErrorImpl(getLocation(), message.toString());
     }
 
     protected final String getPath()

@@ -33,7 +33,7 @@ import org.jamon.node.ArgNameNode;
 import org.jamon.node.ArgValueNode;
 import org.jamon.node.GenericsBoundNode;
 import org.jamon.node.GenericsParamNode;
-import org.jamon.node.Location;
+import org.jamon.node.LocationImpl;
 import org.jamon.node.ParentArgNode;
 import org.jamon.node.ParentArgWithDefaultNode;
 
@@ -76,7 +76,7 @@ public class TemplateUnitTest
         child.setParentPath(parent.getName());
         child.setParentDescription(new TemplateDescription(parent));
 
-        Location loc = new Location(new TemplateFileLocation("x"), 1,1);
+        org.jamon.api.Location loc = new LocationImpl(new TemplateFileLocation("x"), 1,1);
         child.addParentArg(new ParentArgNode(loc, new ArgNameNode(loc, "pr2")));
         child.addParentArg(new ParentArgWithDefaultNode(
             loc, new ArgNameNode(loc, "po2"), new ArgValueNode(loc, "oc2")));
@@ -156,7 +156,7 @@ public class TemplateUnitTest
         checkSigIsUnique(unit, sigs);
         unit.addFragmentArg(new FragmentArgument(g, null));
 
-        Location loc = new Location(null, 1, 1);
+        org.jamon.api.Location loc = new LocationImpl(null, 1, 1);
         GenericsParamNode genericsParamNode = new GenericsParamNode(loc, "d");
         unit.addGenericsParamNode(genericsParamNode);
         checkSigIsUnique(unit, sigs);

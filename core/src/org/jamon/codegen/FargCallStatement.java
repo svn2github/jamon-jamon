@@ -20,9 +20,8 @@
 
 package org.jamon.codegen;
 
-import org.jamon.ParserError;
-import org.jamon.ParserErrors;
-import org.jamon.node.Location;
+import org.jamon.ParserErrorImpl;
+import org.jamon.ParserErrorsImpl;
 
 public class FargCallStatement
     extends AbstractCallStatement
@@ -30,7 +29,7 @@ public class FargCallStatement
     FargCallStatement(String p_path,
                       ParamValues p_params,
                       FragmentUnit p_fragmentUnit,
-                      Location p_location,
+                      org.jamon.api.Location p_location,
                       String p_templateIdentifier)
     {
         super(p_path, p_params, p_location, p_templateIdentifier);
@@ -40,7 +39,7 @@ public class FargCallStatement
     private final FragmentUnit m_fragmentUnit;
 
     @Override
-    public void addFragmentImpl(FragmentUnit p_unit, ParserErrors p_errors)
+    public void addFragmentImpl(FragmentUnit p_unit, ParserErrorsImpl p_errors)
     {
         p_errors.addError("Fragment args for fragments not implemented",
                           getLocation());
@@ -53,7 +52,7 @@ public class FargCallStatement
     }
 
     public void generateSource(CodeWriter p_writer,
-                               TemplateDescriber p_describer) throws ParserError
+                               TemplateDescriber p_describer) throws ParserErrorImpl
     {
         generateSourceLine(p_writer);
         String tn = getPath();

@@ -22,11 +22,10 @@ package org.jamon.codegen;
 
 import org.jamon.util.StringUtils;
 import org.jamon.node.ArgNode;
-import org.jamon.node.Location;
 
 public abstract class AbstractArgument
 {
-    public AbstractArgument(String p_name, String p_type, Location p_location)
+    public AbstractArgument(String p_name, String p_type, org.jamon.api.Location p_location)
     {
         m_name = p_name;
         m_type = p_type;
@@ -50,7 +49,7 @@ public abstract class AbstractArgument
         return m_type;
     }
 
-    public Location getLocation()
+    public org.jamon.api.Location getLocation()
     {
         return m_location;
     }
@@ -89,5 +88,5 @@ public abstract class AbstractArgument
 
     private final String m_name;
     private final String m_type;
-    private final Location m_location;
+    private final org.jamon.api.Location m_location;
 }

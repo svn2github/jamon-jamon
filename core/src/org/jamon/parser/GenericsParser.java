@@ -21,11 +21,10 @@ package org.jamon.parser;
 
 import java.io.IOException;
 
-import org.jamon.ParserErrors;
+import org.jamon.ParserErrorsImpl;
 import org.jamon.node.GenericsParamNode;
 import org.jamon.node.GenericsBoundNode;
 import org.jamon.node.GenericsNode;
-import org.jamon.node.Location;
 
 public class GenericsParser extends AbstractParser
 {
@@ -36,8 +35,8 @@ public class GenericsParser extends AbstractParser
     final static String EXPECTING_GENERIC_ERROR = "expecting '</%generic>'";
 
     public GenericsParser(PositionalPushbackReader p_reader,
-                          ParserErrors p_errors,
-                          Location p_tagLocation) throws IOException
+                          ParserErrorsImpl p_errors,
+                          org.jamon.api.Location p_tagLocation) throws IOException
     {
         super(p_reader, p_errors);
         m_genericsNode = new GenericsNode(p_tagLocation);

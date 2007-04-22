@@ -26,6 +26,8 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.Properties;
 
+import org.jamon.api.TemplateLocation;
+
 /**
  * An implementation of {@link TemplateSource} which retrieves
  * templates from Java resources.

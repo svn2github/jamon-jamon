@@ -28,7 +28,6 @@ import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.util.LinkedList;
 
-import org.jamon.node.Location;
 
 public class CodeWriter
 {
@@ -66,7 +65,7 @@ public class CodeWriter
         "                                        "; // 40 spaces
 
 
-    public void printLocation(Location p_location)
+    public void printLocation(org.jamon.api.Location p_location)
     {
         // In some cases, (such as children of class-only templates), we have
         // no location.

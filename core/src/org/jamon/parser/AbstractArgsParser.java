@@ -2,20 +2,19 @@ package org.jamon.parser;
 
 import java.io.IOException;
 
-import org.jamon.ParserError;
-import org.jamon.ParserErrors;
+import org.jamon.ParserErrorImpl;
+import org.jamon.ParserErrorsImpl;
 import org.jamon.node.AbstractArgsNode;
 import org.jamon.node.ArgNameNode;
 import org.jamon.node.ArgNode;
 import org.jamon.node.ArgTypeNode;
-import org.jamon.node.Location;
 
 public abstract class AbstractArgsParser extends AbstractParser
 {
     public AbstractArgsParser(PositionalPushbackReader p_reader,
-                              ParserErrors p_errors,
-                              Location p_tagLocation)
-        throws IOException, ParserError
+                              ParserErrorsImpl p_errors,
+                              org.jamon.api.Location p_tagLocation)
+        throws IOException, ParserErrorImpl
     {
         super(p_reader, p_errors);
 
@@ -47,7 +46,7 @@ public abstract class AbstractArgsParser extends AbstractParser
                 }
                 else if (!handleDefaultValue(argsNode, argType, argName))
                 {
-                    throw new ParserError(
+                    throw new ParserErrorImpl(
                         m_reader.getNextLocation(), postArgNameTokenError());
                 }
             }
@@ -56,7 +55,7 @@ public abstract class AbstractArgsParser extends AbstractParser
 
     private ArgTypeNode readArgType() throws IOException
     {
-        final Location location = m_reader.getNextLocation();
+        final org.jamon.api.Location location = m_reader.getNextLocation();
         return new ArgTypeNode(location, readType(location));
     }
 
@@ -64,7 +63,7 @@ public abstract class AbstractArgsParser extends AbstractParser
      * Finish processing the opening tag.
      * @return true if there is more to process
      */
-    protected abstract boolean finishOpenTag(Location p_tagLocation) throws IOException;
+    protected abstract boolean finishOpenTag(org.jamon.api.Location p_tagLocation) throws IOException;
 
     /**
      * Handle a default value for an arg; returns true if there is one. 
@@ -73,15 +72,15 @@ public abstract class AbstractArgsParser extends AbstractParser
      * @param argName The argument name
      * @return true if there was a default value
      * @throws IOException
-     * @throws ParserError
+     * @throws ParserErrorImpl
      */
     protected abstract boolean handleDefaultValue(AbstractArgsNode argsNode,
                                                   ArgTypeNode argType,
                                                   ArgNameNode argName)
-        throws IOException, ParserError;
+        throws IOException, ParserErrorImpl;
 
     protected abstract void checkArgsTagEnd() throws IOException;
 
     protected abstract String postArgNameTokenError();
 
-    protected abstract AbstractArgsNode makeArgsNode(Location p_tagLocation);}
+    protected abstract AbstractArgsNode makeArgsNode(org.jamon.api.Location p_tagLocation);}

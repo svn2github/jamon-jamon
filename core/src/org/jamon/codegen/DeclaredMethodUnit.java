@@ -22,8 +22,7 @@ package org.jamon.codegen;
 
 import java.util.Collection;
 
-import org.jamon.ParserErrors;
-import org.jamon.node.Location;
+import org.jamon.ParserErrorsImpl;
 
 public class DeclaredMethodUnit
     extends AbstractInnerUnit
@@ -31,8 +30,8 @@ public class DeclaredMethodUnit
 {
     public DeclaredMethodUnit(String p_name,
                               TemplateUnit p_parent,
-                              ParserErrors p_errors,
-                              Location p_location,
+                              ParserErrorsImpl p_errors,
+                              org.jamon.api.Location p_location,
                               boolean p_isAbstract)
     {
         super(p_name, p_parent, p_errors, p_location);
@@ -40,7 +39,7 @@ public class DeclaredMethodUnit
     }
 
     public DeclaredMethodUnit(
-        String p_name, TemplateUnit p_parent, ParserErrors p_errors, Location p_location)
+        String p_name, TemplateUnit p_parent, ParserErrorsImpl p_errors, org.jamon.api.Location p_location)
     {
         this(p_name, p_parent, p_errors, p_location, false);
     }

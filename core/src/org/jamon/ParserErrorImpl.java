@@ -1,13 +1,13 @@
 package org.jamon;
 
-import org.jamon.node.Location;
+import org.jamon.api.ParserError;
 
 /**
  * @author ian
  **/
-public class ParserError extends Exception
+public class ParserErrorImpl extends Exception implements ParserError
 {
-    public ParserError(Location p_location, String p_message)
+    public ParserErrorImpl(org.jamon.api.Location p_location, String p_message)
     {
         if ((m_location = p_location) == null
             || (m_message = p_message) == null)
@@ -19,7 +19,7 @@ public class ParserError extends Exception
     /**
      * @return The location of the error
      */
-    public Location getLocation()
+    public org.jamon.api.Location getLocation()
     {
         return m_location;
     }
@@ -32,15 +32,15 @@ public class ParserError extends Exception
         return m_message;
     }
 
-    private final Location m_location;
+    private final org.jamon.api.Location m_location;
     private final String m_message;
 
     @Override public boolean equals(Object p_obj)
     {
         return p_obj != null
-            && p_obj instanceof ParserError
-            && m_location.equals(((ParserError) p_obj).m_location)
-            && m_message.equals(((ParserError) p_obj).m_message);
+            && p_obj instanceof ParserErrorImpl
+            && m_location.equals(((ParserErrorImpl) p_obj).m_location)
+            && m_message.equals(((ParserErrorImpl) p_obj).m_message);
     }
 
     @Override public int hashCode()

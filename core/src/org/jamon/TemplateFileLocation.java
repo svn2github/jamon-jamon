@@ -19,6 +19,8 @@
  */
 package org.jamon;
 
+import org.jamon.api.TemplateLocation;
+
 /**
  * Location of a template stored on the file system.
  */

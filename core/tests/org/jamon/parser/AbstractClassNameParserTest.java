@@ -21,10 +21,9 @@ package org.jamon.parser;
 
 import java.io.IOException;
 
-import org.jamon.ParserError;
-import org.jamon.ParserErrors;
+import org.jamon.ParserErrorImpl;
+import org.jamon.ParserErrorsImpl;
 import org.jamon.node.AbstractNode;
-import org.jamon.node.Location;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -88,13 +87,13 @@ public abstract class AbstractClassNameParserTest extends AbstractParserTest
     }
 
     protected abstract ClassNameParser makeParser(
-        Location p_location,
+        org.jamon.api.Location p_location,
         PositionalPushbackReader p_reader,
-        ParserErrors p_errors) throws IOException, ParserError;
+        ParserErrorsImpl p_errors) throws IOException, ParserErrorImpl;
 
     protected String parseTypeName(String p_content) throws IOException
     {
-        ParserErrors errors = new ParserErrors();
+        ParserErrorsImpl errors = new ParserErrorsImpl();
         String result = null;
         try
         {
@@ -102,7 +101,7 @@ public abstract class AbstractClassNameParserTest extends AbstractParserTest
                 makeParser(START_LOC, makeReader(p_content), errors);
             result = parser.getType();
         }
-        catch (ParserError e)
+        catch (ParserErrorImpl e)
         {
             errors.addError(e);
         }

@@ -3,8 +3,7 @@
  */
 package org.jamon.parser;
 
-import org.jamon.ParserError;
-import org.jamon.node.Location;
+import org.jamon.ParserErrorImpl;
 
 class AbstractTagEndDetector implements TagEndDetector
 {
@@ -33,9 +32,9 @@ class AbstractTagEndDetector implements TagEndDetector
         return 0;
     }
 
-    public ParserError getEofError(Location p_startLocation)
+    public ParserErrorImpl getEofError(org.jamon.api.Location p_startLocation)
     {
-        return new ParserError(
+        return new ParserErrorImpl(
             p_startLocation,
             "Reached end of file while looking for '" + m_endTag + "'");
     }

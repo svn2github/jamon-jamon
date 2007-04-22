@@ -26,7 +26,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.jamon.ParserErrors;
+import org.jamon.ParserErrorsImpl;
 import org.jamon.node.ArgValueNode;
 import org.jamon.node.ParentArgNode;
 import org.jamon.node.ParentArgWithDefaultNode;
@@ -38,7 +38,7 @@ public class InheritedArgs
                          Collection<RequiredArgument> p_requiredArgs,
                          Collection<OptionalArgument> p_optionalArgs,
                          Collection<FragmentArgument> p_fragmentArgs,
-                         ParserErrors p_errors)
+                         ParserErrorsImpl p_errors)
     {
         m_parentName = p_parentName;
         m_errors = p_errors;
@@ -48,7 +48,7 @@ public class InheritedArgs
     }
 
     private final String m_parentName;
-    private final ParserErrors m_errors;
+    private final ParserErrorsImpl m_errors;
     private final Set<AbstractArgument> m_visibleArgs =
         new HashSet<AbstractArgument>();
     private final Collection<RequiredArgument> m_requiredArgs;

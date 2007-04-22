@@ -22,13 +22,13 @@ package org.jamon.codegen;
 
 import java.util.List;
 
-import org.jamon.ParserError;
+import org.jamon.ParserErrorImpl;
 
 public interface ParamValues
 {
     void generateRequiredArgs(
         List<RequiredArgument> p_args, CodeWriter p_writer)
-        throws ParserError;
+        throws ParserErrorImpl;
 
     String getOptionalArgValue(String p_argName);
 

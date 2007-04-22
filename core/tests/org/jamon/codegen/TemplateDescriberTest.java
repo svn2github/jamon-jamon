@@ -5,8 +5,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-import org.jamon.TemplateLocation;
 import org.jamon.TemplateSource;
+import org.jamon.api.TemplateLocation;
 import org.jamon.emit.EmitMode;
 
 import junit.framework.TestCase;

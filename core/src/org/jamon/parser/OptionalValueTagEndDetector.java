@@ -19,8 +19,7 @@
  */
 package org.jamon.parser;
 
-import org.jamon.ParserError;
-import org.jamon.node.Location;
+import org.jamon.ParserErrorImpl;
 
 
 class OptionalValueTagEndDetector implements TagEndDetector
@@ -31,9 +30,9 @@ class OptionalValueTagEndDetector implements TagEndDetector
     public int checkEnd(char p_char)
        { return p_char == ';' ? 1 : 0; }
 
-    public ParserError getEofError(Location p_startLocation)
+    public ParserErrorImpl getEofError(org.jamon.api.Location p_startLocation)
     {
-        return new ParserError(p_startLocation, ArgsParser.EOF_LOOKING_FOR_SEMI);
+        return new ParserErrorImpl(p_startLocation, ArgsParser.EOF_LOOKING_FOR_SEMI);
     }
 
     public void resetEndMatch() {}

@@ -17,7 +17,7 @@
  *
  * Contributor(s):
  */
-package org.jamon;
+package org.jamon.api;
 
 /**
  * Interface for classes whose instances hold the location of a template.

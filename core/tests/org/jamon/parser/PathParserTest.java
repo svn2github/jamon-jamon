@@ -4,11 +4,10 @@ import static org.junit.Assert.*;
 
 import java.io.IOException;
 
-import org.jamon.ParserErrors;
+import org.jamon.ParserErrorsImpl;
 import org.jamon.node.AbsolutePathNode;
 import org.jamon.node.AbstractNode;
 import org.jamon.node.AbstractPathNode;
-import org.jamon.node.Location;
 import org.jamon.node.NamedAliasPathNode;
 import org.jamon.node.RelativePathNode;
 import org.jamon.node.RootAliasPathNode;
@@ -20,10 +19,10 @@ import org.junit.Test;
 public class PathParserTest extends AbstractParserTest
 {
     @Override protected AbstractNode parse(String p_text)
-        throws IOException, ParserErrors
+        throws IOException, ParserErrorsImpl
     {
         m_reader = makeReader(p_text);
-        ParserErrors errors = new ParserErrors();
+        ParserErrorsImpl errors = new ParserErrorsImpl();
         AbstractNode node = new PathParser(m_reader, errors).getPathNode();
         if (errors.hasErrors())
         {
@@ -98,7 +97,7 @@ public class PathParserTest extends AbstractParserTest
     @Test public void testAbsolutePath() throws Exception
     {
 
-        Location relStart = location(1, 2);
+        org.jamon.api.Location relStart = location(1, 2);
         checkPath(
             buildPath(relStart, new AbsolutePathNode(START_LOC), "foo"),
             "/foo",

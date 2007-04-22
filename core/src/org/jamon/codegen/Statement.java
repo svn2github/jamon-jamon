@@ -20,7 +20,7 @@
 
 package org.jamon.codegen;
 
-import org.jamon.ParserError;
+import org.jamon.ParserErrorImpl;
 
 /**
  * A <code>Statement</code> represents a generatable java statement
@@ -34,9 +34,9 @@ public interface Statement
      *
      * @param p_writer where to emit the java source
      * @param p_describer the <code>TemplateDescriber</code> to use
-     * @throws ParserError
+     * @throws ParserErrorImpl
      */
     void generateSource(CodeWriter p_writer, TemplateDescriber p_describer)
-        throws ParserError;
+        throws ParserErrorImpl;
     //FIXME - determine parser errors before trying to generate source.
 }

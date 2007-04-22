@@ -21,14 +21,13 @@
 package org.jamon.codegen;
 
 import org.jamon.emit.EmitMode;
-import org.jamon.node.Location;
 
 public class WriteStatement
     extends AbstractStatement
 {
     WriteStatement(String p_expr,
                    EscapingDirective p_escapingDirective,
-                   Location p_location,
+                   org.jamon.api.Location p_location,
                    String p_templateIdentifier,
                    EmitMode p_emitMode)
     {

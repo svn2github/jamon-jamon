@@ -30,11 +30,11 @@ import java.util.Set;
 import java.util.StringTokenizer;
 
 import org.jamon.JamonRuntimeException;
-import org.jamon.ParserError;
-import org.jamon.ParserErrors;
+import org.jamon.ParserErrorImpl;
+import org.jamon.ParserErrorsImpl;
 import org.jamon.TemplateSource;
 import org.jamon.emit.EmitMode;
-import org.jamon.node.Location;
+import org.jamon.node.LocationImpl;
 import org.jamon.node.TopNode;
 import org.jamon.parser.TopLevelParser;
 import org.jamon.util.StringUtils;
@@ -57,8 +57,8 @@ public class TemplateDescriber
     private final ClassLoader m_classLoader;
 
     public TemplateDescription getTemplateDescription(
-        String p_path, Location p_location, String p_templateIdentifier)
-        throws IOException, ParserError
+        String p_path, org.jamon.api.Location p_location, String p_templateIdentifier)
+        throws IOException, ParserErrorImpl
     {
         return getTemplateDescription(p_path,
                                       p_location,
@@ -68,10 +68,10 @@ public class TemplateDescriber
 
     public TemplateDescription getTemplateDescription(
         final String p_path,
-        final Location p_location,
+        final org.jamon.api.Location p_location,
         final String p_templateIdentifier,
         final Set<String> p_children)
-         throws IOException, ParserError
+         throws IOException, ParserErrorImpl
     {
         if (m_descriptionCache.containsKey(p_path))
         {
@@ -88,10 +88,10 @@ public class TemplateDescriber
 
     private TemplateDescription computeTemplateDescription(
         final String p_path,
-        final Location p_location,
+        final org.jamon.api.Location p_location,
         final String p_templateIdentifier,
         final Set<String> p_children)
-        throws IOException, ParserError
+        throws IOException, ParserErrorImpl
      {
          if (m_templateSource.available(p_path))
          {
@@ -108,13 +108,13 @@ public class TemplateDescriber
              }
              catch(ClassNotFoundException e)
              {
-                 throw new ParserError(
+                 throw new ParserErrorImpl(
                      p_location,
                      "Unable to find template or class for " + p_path);
              }
              catch (NoSuchFieldException e)
              {
-                 throw new ParserError(p_location,
+                 throw new ParserErrorImpl(p_location,
                                        "Malformed class for " + p_path);
              }
          }
@@ -135,15 +135,15 @@ public class TemplateDescriber
         }
         catch (EncodingReader.Exception e)
         {
-            throw new ParserErrors(
-                new ParserError(
-                    new Location(
+            throw new ParserErrorsImpl(
+                new ParserErrorImpl(
+                    new LocationImpl(
                         m_templateSource.getTemplateLocation(p_path),
                         1,
                         e.getPos()),
                     e.getMessage()));
         }
-        catch (ParserErrors e)
+        catch (ParserErrorsImpl e)
         {
             throw e;
         }

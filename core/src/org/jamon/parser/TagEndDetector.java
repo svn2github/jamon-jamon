@@ -1,7 +1,6 @@
 package org.jamon.parser;
 
-import org.jamon.ParserError;
-import org.jamon.node.Location;
+import org.jamon.ParserErrorImpl;
 
 /**
  * A class to detect when we are done reading a tag.
@@ -24,7 +23,7 @@ public interface TagEndDetector
      * (used to report errors)
      * @return A ParserError detailing the problem
      **/
-    ParserError getEofError(Location p_startLocation);
+    ParserErrorImpl getEofError(org.jamon.api.Location p_startLocation);
 
     /**
      * Called after parsing a section which cannot be part of a tag 

@@ -1,7 +1,6 @@
 package org.jamon.parser;
 
-import org.jamon.ParserError;
-import org.jamon.node.Location;
+import org.jamon.ParserErrorImpl;
 
 /**
  * A {@code TagEndDetector} which will end either on a "%>" sequence or a hash sign ("#").
@@ -35,9 +34,9 @@ public class HashEndDetector implements TagEndDetector
         }
     }
 
-    public ParserError getEofError(Location p_startLocation)
+    public ParserErrorImpl getEofError(org.jamon.api.Location p_startLocation)
     {
-        return new ParserError(p_startLocation, AbstractBodyParser.PERCENT_GREATER_THAN_EOF_ERROR);
+        return new ParserErrorImpl(p_startLocation, AbstractBodyParser.PERCENT_GREATER_THAN_EOF_ERROR);
     }
 
     public void resetEndMatch() {}

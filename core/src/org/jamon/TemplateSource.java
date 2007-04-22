@@ -24,6 +24,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+import org.jamon.api.TemplateLocation;
+
 /**
  * An interface representing a "repository" of template sources. One
  * obvious implementation would be a file-system based implementation

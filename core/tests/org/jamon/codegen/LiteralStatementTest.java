@@ -2,7 +2,7 @@ package org.jamon.codegen;
 
 import java.io.ByteArrayOutputStream;
 
-import org.jamon.node.Location;
+import org.jamon.node.LocationImpl;
 
 import junit.framework.TestCase;
 
@@ -24,7 +24,7 @@ public class LiteralStatementTest extends TestCase
     public void testEscaping() throws Exception
     {
         LiteralStatement statement = new LiteralStatement(
-            "\n \r \t \" \\ \u1234", new Location(null, 1, 1), null);
+            "\n \r \t \" \\ \u1234", new LocationImpl(null, 1, 1), null);
         ByteArrayOutputStream bos= new ByteArrayOutputStream();
         CodeWriter codeWriter = new CodeWriter(bos);
         statement.generateSource(codeWriter, null);

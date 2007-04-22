@@ -24,8 +24,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jamon.ParserError;
-import org.jamon.ParserErrors;
+import org.jamon.ParserErrorImpl;
+import org.jamon.ParserErrorsImpl;
 import org.jamon.node.AbsolutePathNode;
 import org.jamon.node.AbstractCallNode;
 import org.jamon.node.AbstractComponentCallNode;
@@ -34,7 +34,6 @@ import org.jamon.node.AbstractPathNode;
 import org.jamon.node.ChildCallNode;
 import org.jamon.node.FragmentCallNode;
 import org.jamon.node.GenericCallParam;
-import org.jamon.node.Location;
 import org.jamon.node.MultiFragmentCallNode;
 import org.jamon.node.NamedFragmentNode;
 import org.jamon.node.NamedParamNode;
@@ -64,8 +63,8 @@ public class CallParser extends AbstractParser
 
     public CallParser(
         PositionalPushbackReader p_reader,
-        ParserErrors p_errors,
-        Location p_callStartLocation)
+        ParserErrorsImpl p_errors,
+        org.jamon.api.Location p_callStartLocation)
         throws IOException
     {
         super(p_reader, p_errors);
@@ -100,7 +99,7 @@ public class CallParser extends AbstractParser
                 }
             }
         }
-        catch (ParserError e)
+        catch (ParserErrorImpl e)
         {
             addError(e);
             m_callNode =
@@ -111,45 +110,45 @@ public class CallParser extends AbstractParser
         }
     }
 
-    private void parseChildCall(Location p_callStartLocation)
-        throws IOException, ParserError
+    private void parseChildCall(org.jamon.api.Location p_callStartLocation)
+        throws IOException, ParserErrorImpl
     {
-        Location callTargetLocation = m_reader.getLocation();
+        org.jamon.api.Location callTargetLocation = m_reader.getLocation();
         if (checkToken("CHILD"))
         {
             soakWhitespace();
-            Location endLocation = m_reader.getNextLocation();
+            org.jamon.api.Location endLocation = m_reader.getNextLocation();
             if (checkToken("&>"))
             {
                 m_callNode = new ChildCallNode(p_callStartLocation);
             }
             else
             {
-                throw new ParserError(
+                throw new ParserErrorImpl(
                     endLocation, MISSING_CALL_CLOSE_ERROR);
             }
         }
         else
         {
-            throw new ParserError(
+            throw new ParserErrorImpl(
                 callTargetLocation, INVALID_CALL_TARGET_ERROR);
         }
     }
 
     private AbstractComponentCallNode parseNamedFragmentCall(
-        Location p_callStartLocation)
-        throws IOException, ParserError
+        org.jamon.api.Location p_callStartLocation)
+        throws IOException, ParserErrorImpl
     {
         soakWhitespace();
         AbstractPathNode path = parsePath();
         parseGenericParams();
         MultiFragmentCallNode callNode =
             new MultiFragmentCallNode(p_callStartLocation, path, parseParams());
-        Location fragmentsStart = m_reader.getNextLocation();
+        org.jamon.api.Location fragmentsStart = m_reader.getNextLocation();
         while (true)
         {
             soakWhitespace();
-            Location fragmentStart = m_reader.getNextLocation();
+            org.jamon.api.Location fragmentStart = m_reader.getNextLocation();
             int c = m_reader.read();
             if (c == '<')
             {
@@ -170,7 +169,7 @@ public class CallParser extends AbstractParser
                         }
                         else
                         {
-                            throw new ParserError(
+                            throw new ParserErrorImpl(
                                 m_reader.getLocation(),
                                 UNEXPECTED_IN_MULTI_FRAG_ERROR);
                         }
@@ -182,31 +181,31 @@ public class CallParser extends AbstractParser
                         }
                         else
                         {
-                            throw new ParserError(
+                            throw new ParserErrorImpl(
                                 m_reader.getLocation(),
                                 UNEXPECTED_IN_MULTI_FRAG_ERROR);
                         }
                     default :
-                        throw new ParserError(
+                        throw new ParserErrorImpl(
                             m_reader.getLocation(),
                             UNEXPECTED_IN_MULTI_FRAG_ERROR);
                 }
             }
             else if (c >= 0)
             {
-                throw new ParserError(
+                throw new ParserErrorImpl(
                     m_reader.getLocation(),
                     UNEXPECTED_IN_MULTI_FRAG_ERROR);
             }
             else
             {
-                throw new ParserError(fragmentsStart, FRAGMENTS_EOF_ERROR);
+                throw new ParserErrorImpl(fragmentsStart, FRAGMENTS_EOF_ERROR);
             }
         }
     }
 
-    private FragmentCallNode parseUnnamedFragmentCall(Location p_callStartLocation)
-        throws IOException, ParserError
+    private FragmentCallNode parseUnnamedFragmentCall(org.jamon.api.Location p_callStartLocation)
+        throws IOException, ParserErrorImpl
     {
         soakWhitespace();
         AbstractPathNode path = parsePath();
@@ -224,7 +223,7 @@ public class CallParser extends AbstractParser
             .getRootNode());
     }
 
-    private AbstractParamsNode parseParams() throws IOException, ParserError
+    private AbstractParamsNode parseParams() throws IOException, ParserErrorImpl
     {
         soakWhitespace();
         m_reader.markNodeEnd();
@@ -238,7 +237,7 @@ public class CallParser extends AbstractParser
                 }
                 else
                 {
-                    throw new ParserError(
+                    throw new ParserErrorImpl(
                         m_reader.getLocation(),
                         GENERIC_ERROR);
                 }
@@ -247,7 +246,7 @@ public class CallParser extends AbstractParser
             case ':' :
                 return parseUnnamedParams();
             default :
-                throw new ParserError(m_reader.getLocation(), GENERIC_ERROR);
+                throw new ParserErrorImpl(m_reader.getLocation(), GENERIC_ERROR);
         }
     }
 
@@ -281,9 +280,9 @@ public class CallParser extends AbstractParser
             }
         }
 
-        public ParserError getEofError(Location p_startLocation)
+        public ParserErrorImpl getEofError(org.jamon.api.Location p_startLocation)
         {
-            return new ParserError(p_startLocation, PARAM_VALUE_EOF_ERROR);
+            return new ParserErrorImpl(p_startLocation, PARAM_VALUE_EOF_ERROR);
         }
 
         public void resetEndMatch()
@@ -295,7 +294,7 @@ public class CallParser extends AbstractParser
         private boolean m_seenAmpersand = false;
     }
 
-    private NamedParamsNode parseNamedParams() throws ParserError, IOException
+    private NamedParamsNode parseNamedParams() throws ParserErrorImpl, IOException
     {
         NamedParamsNode params = new NamedParamsNode(m_reader.getLocation());
         ParamValueEndDetector endDetector = new ParamValueEndDetector();
@@ -310,15 +309,15 @@ public class CallParser extends AbstractParser
                 }
                 else
                 {
-                    throw new ParserError(
+                    throw new ParserErrorImpl(
                         m_reader.getCurrentNodeLocation(),
                         GENERIC_ERROR);
                 }
             }
-            Location nameLoc = m_reader.getNextLocation();
+            org.jamon.api.Location nameLoc = m_reader.getNextLocation();
             String name = readIdentifier(true);
             readArrow();
-            Location javaLoc = m_reader.getNextLocation();
+            org.jamon.api.Location javaLoc = m_reader.getNextLocation();
             params.addParam(
                 new NamedParamNode(
                     nameLoc,
@@ -334,7 +333,7 @@ public class CallParser extends AbstractParser
     }
 
     private UnnamedParamsNode parseUnnamedParams()
-        throws ParserError, IOException
+        throws ParserErrorImpl, IOException
     {
         UnnamedParamsNode params =
             new UnnamedParamsNode(m_reader.getLocation());
@@ -350,12 +349,12 @@ public class CallParser extends AbstractParser
                 }
                 else
                 {
-                    throw new ParserError(
+                    throw new ParserErrorImpl(
                         m_reader.getCurrentNodeLocation(),
                         GENERIC_ERROR);
                 }
             }
-            Location javaLoc = m_reader.getNextLocation();
+            org.jamon.api.Location javaLoc = m_reader.getNextLocation();
             params.addValue(
                 new ParamValueNode(javaLoc, readJava(javaLoc, endDetector)));
             if (endDetector.noMoreParams())
@@ -365,7 +364,7 @@ public class CallParser extends AbstractParser
         }
     }
 
-    private void parseGenericParams() throws ParserError, IOException
+    private void parseGenericParams() throws ParserErrorImpl, IOException
     {
         m_genericParams = new ArrayList<GenericCallParam>();
         if (readChar('<'))
@@ -373,7 +372,7 @@ public class CallParser extends AbstractParser
             do
             {
                soakWhitespace();
-               Location location = m_reader.getNextLocation();
+               org.jamon.api.Location location = m_reader.getNextLocation();
                m_genericParams.add(
                    new GenericCallParam(
                        location,
@@ -384,7 +383,7 @@ public class CallParser extends AbstractParser
             while(readChar(','));
             if (!readChar('>'))
             {
-                throw new ParserError(m_reader.getNextLocation(),
+                throw new ParserErrorImpl(m_reader.getNextLocation(),
                                       MISSING_GENERIC_PARAM_CLOSE_ERROR);
             }
         }
@@ -400,12 +399,12 @@ public class CallParser extends AbstractParser
         }
     }
 
-    private void readArrow() throws ParserError, IOException
+    private void readArrow() throws ParserErrorImpl, IOException
     {
         soakWhitespace();
         if (!readChar('='))
         {
-            throw new ParserError(
+            throw new ParserErrorImpl(
                 m_reader.getNextLocation(),
                 MISSING_ARG_ARROW_ERROR);
         }

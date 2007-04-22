@@ -26,6 +26,7 @@ import static org.junit.Assert.*;
 import java.io.IOException;
 import java.io.StringReader;
 
+import org.jamon.api.Location;
 import org.jamon.codegen.AnnotationType;
 import org.jamon.node.*;
 import org.junit.Test;

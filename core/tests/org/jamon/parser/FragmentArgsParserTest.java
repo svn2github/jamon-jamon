@@ -4,8 +4,8 @@ import static org.junit.Assert.*;
 
 import java.io.IOException;
 
-import org.jamon.ParserError;
-import org.jamon.ParserErrors;
+import org.jamon.ParserErrorImpl;
+import org.jamon.ParserErrorsImpl;
 import org.jamon.node.AbstractNode;
 import org.jamon.node.ArgNameNode;
 import org.jamon.node.ArgNode;
@@ -20,7 +20,7 @@ public class FragmentArgsParserTest extends AbstractParserTest
     @Override protected AbstractNode parse(String p_text) throws IOException
     {
         final PositionalPushbackReader reader = makeReader(p_text);
-        ParserErrors errors = new ParserErrors();
+        ParserErrorsImpl errors = new ParserErrorsImpl();
         try
         {
             FragmentArgsNode result = new FragmentArgsParser(
@@ -34,7 +34,7 @@ public class FragmentArgsParserTest extends AbstractParserTest
                 return result;
             }
         }
-        catch (ParserError e)
+        catch (ParserErrorImpl e)
         {
             errors.addError(e);
             throw errors;

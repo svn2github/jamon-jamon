@@ -23,9 +23,9 @@ package org.jamon.parser;
 import java.io.IOException;
 import java.io.Reader;
 
-import org.jamon.ParserError;
-import org.jamon.ParserErrors;
-import org.jamon.TemplateLocation;
+import org.jamon.ParserErrorImpl;
+import org.jamon.ParserErrorsImpl;
+import org.jamon.api.TemplateLocation;
 import org.jamon.codegen.AnnotationType;
 import org.jamon.node.AbsMethodNode;
 import org.jamon.node.AbstractPathNode;
@@ -38,7 +38,7 @@ import org.jamon.node.ExtendsNode;
 import org.jamon.node.ImplementNode;
 import org.jamon.node.ImplementsNode;
 import org.jamon.node.ImportsNode;
-import org.jamon.node.Location;
+import org.jamon.node.LocationImpl;
 import org.jamon.node.ParentMarkerNode;
 import org.jamon.node.TopNode;
 
@@ -65,9 +65,9 @@ public class TopLevelParser extends AbstractBodyParser<TopNode>
 
     public TopLevelParser(TemplateLocation p_location, Reader p_reader)
     {
-        super(new TopNode(new Location(p_location, 1, 1)),
+        super(new TopNode(new LocationImpl(p_location, 1, 1)),
               new PositionalPushbackReader(p_location, p_reader, 2),
-              new ParserErrors());
+              new ParserErrorsImpl());
     }
 
     @Override public AbstractBodyParser<TopNode> parse() throws IOException
@@ -81,7 +81,7 @@ public class TopLevelParser extends AbstractBodyParser<TopNode>
     }
 
     @Override
-    protected void handleMethodTag(Location p_tagLocation) throws IOException
+    protected void handleMethodTag(org.jamon.api.Location p_tagLocation) throws IOException
     {
         if (soakWhitespace())
         {
@@ -101,7 +101,7 @@ public class TopLevelParser extends AbstractBodyParser<TopNode>
     }
 
     @Override
-    protected void handleOverrideTag(Location p_tagLocation) throws IOException
+    protected void handleOverrideTag(org.jamon.api.Location p_tagLocation) throws IOException
     {
         if (soakWhitespace())
         {
@@ -121,7 +121,7 @@ public class TopLevelParser extends AbstractBodyParser<TopNode>
     }
 
     @Override
-    protected void handleDefTag(Location p_tagLocation) throws IOException
+    protected void handleDefTag(org.jamon.api.Location p_tagLocation) throws IOException
     {
         if (soakWhitespace())
         {
@@ -140,7 +140,7 @@ public class TopLevelParser extends AbstractBodyParser<TopNode>
         }
     }
 
-    @Override protected void handleClassTag(Location p_tagLocation)
+    @Override protected void handleClassTag(org.jamon.api.Location p_tagLocation)
         throws IOException
     {
         if (checkForTagClosure(p_tagLocation))
@@ -153,7 +153,7 @@ public class TopLevelParser extends AbstractBodyParser<TopNode>
         }
     }
 
-    @Override protected void handleExtendsTag(Location p_tagLocation)
+    @Override protected void handleExtendsTag(org.jamon.api.Location p_tagLocation)
         throws IOException
     {
         if(soakWhitespace())
@@ -170,7 +170,7 @@ public class TopLevelParser extends AbstractBodyParser<TopNode>
         }
     }
 
-    @Override protected void handleImplementsTag(Location p_tagLocation)
+    @Override protected void handleImplementsTag(org.jamon.api.Location p_tagLocation)
         throws IOException
     {
         if (checkForTagClosure(p_tagLocation))
@@ -180,7 +180,7 @@ public class TopLevelParser extends AbstractBodyParser<TopNode>
             while(true)
             {
                 soakWhitespace();
-                Location location = m_reader.getNextLocation();
+                org.jamon.api.Location location = m_reader.getNextLocation();
                 if (readChar('<'))
                 {
                     if (!checkToken("/%implements>"))
@@ -207,7 +207,7 @@ public class TopLevelParser extends AbstractBodyParser<TopNode>
         }
     }
 
-    @Override protected void handleImportTag(Location p_tagLocation)
+    @Override protected void handleImportTag(org.jamon.api.Location p_tagLocation)
         throws IOException
     {
         if (checkForTagClosure(p_tagLocation))
@@ -217,7 +217,7 @@ public class TopLevelParser extends AbstractBodyParser<TopNode>
             while(true)
             {
                 soakWhitespace();
-                Location location = m_reader.getNextLocation();
+                org.jamon.api.Location location = m_reader.getNextLocation();
                 if (readChar('<'))
                 {
                     if (!checkToken("/%import>"))
@@ -232,7 +232,7 @@ public class TopLevelParser extends AbstractBodyParser<TopNode>
                     importsNode.addImport(
                         new ImportParser(m_reader, m_errors).parse().getNode());
                 }
-                catch (ParserError e)
+                catch (ParserErrorImpl e)
                 {
                     addError(e);
                     addError(m_reader.getLocation(), EXPECTING_IMPORTS_CLOSE);
@@ -249,7 +249,7 @@ public class TopLevelParser extends AbstractBodyParser<TopNode>
     }
 
 
-    @Override protected void handleAliasesTag(Location p_tagLocation)
+    @Override protected void handleAliasesTag(org.jamon.api.Location p_tagLocation)
         throws IOException
     {
         checkForTagClosure(p_tagLocation);
@@ -302,7 +302,7 @@ public class TopLevelParser extends AbstractBodyParser<TopNode>
     }
 
 
-    @Override protected void handleAbsMethodTag(Location p_tagLocation)
+    @Override protected void handleAbsMethodTag(org.jamon.api.Location p_tagLocation)
         throws IOException
     {
         if (soakWhitespace())
@@ -331,7 +331,7 @@ public class TopLevelParser extends AbstractBodyParser<TopNode>
                                         m_reader.getCurrentNodeLocation())
                                         .getArgsNode());
                             }
-                            catch (ParserError e)
+                            catch (ParserErrorImpl e)
                             {
                                 addError(e);
                             }
@@ -346,7 +346,7 @@ public class TopLevelParser extends AbstractBodyParser<TopNode>
                                         m_reader.getCurrentNodeLocation())
                                         .getFragmentArgsNode());
                             }
-                            catch (ParserError e)
+                            catch (ParserErrorImpl e)
                             {
                                 addError(e);
                             }
@@ -385,7 +385,7 @@ public class TopLevelParser extends AbstractBodyParser<TopNode>
 
 
 
-    @Override protected void handleParentArgsNode(Location p_tagLocation)
+    @Override protected void handleParentArgsNode(org.jamon.api.Location p_tagLocation)
             throws IOException
     {
         m_root.addSubNode(
@@ -395,7 +395,7 @@ public class TopLevelParser extends AbstractBodyParser<TopNode>
 
 
 
-    @Override protected void handleParentMarkerTag(Location p_tagLocation)
+    @Override protected void handleParentMarkerTag(org.jamon.api.Location p_tagLocation)
         throws IOException
     {
         if (checkForTagClosure(p_tagLocation))
@@ -410,7 +410,7 @@ public class TopLevelParser extends AbstractBodyParser<TopNode>
         // end of file is a fine thing at the top level
     }
 
-    @Override protected void handleEscapeTag(Location p_tagLocation)
+    @Override protected void handleEscapeTag(org.jamon.api.Location p_tagLocation)
         throws IOException
     {
         soakWhitespace();
@@ -438,14 +438,14 @@ public class TopLevelParser extends AbstractBodyParser<TopNode>
         soakWhitespace();
     }
 
-    @Override protected void handleGenericTag(Location p_tagLocation)
+    @Override protected void handleGenericTag(org.jamon.api.Location p_tagLocation)
         throws IOException
     {
         m_root.addSubNode(new GenericsParser(m_reader, m_errors, p_tagLocation)
             .getGenericsNode());
     }
 
-    @Override protected void handleAnnotationTag(Location p_tagLocation) throws IOException
+    @Override protected void handleAnnotationTag(org.jamon.api.Location p_tagLocation) throws IOException
     {
         if(soakWhitespace())
         {
@@ -460,7 +460,7 @@ public class TopLevelParser extends AbstractBodyParser<TopNode>
                     soakWhitespace();
                     if (!(readChar('%') && readChar('>')))
                     {
-                        throw new ParserError(p_tagLocation, MALFORMED_ANNOTATE_TAG_ERROR);
+                        throw new ParserErrorImpl(p_tagLocation, MALFORMED_ANNOTATE_TAG_ERROR);
                     }
                 }
                 else
@@ -470,7 +470,7 @@ public class TopLevelParser extends AbstractBodyParser<TopNode>
                 m_root.addSubNode(new AnnotationNode(p_tagLocation, annotations, annotationType));
 
             }
-            catch (ParserError e)
+            catch (ParserErrorImpl e)
             {
                 addError(e);
             }
@@ -482,9 +482,9 @@ public class TopLevelParser extends AbstractBodyParser<TopNode>
         }
     }
 
-    private AnnotationType readAnnotationType() throws IOException, ParserError
+    private AnnotationType readAnnotationType() throws IOException, ParserErrorImpl
     {
-        Location location = m_reader.getLocation();
+        org.jamon.api.Location location = m_reader.getLocation();
         if (readChar('p'))
         {
             if (checkToken("roxy"))
@@ -499,7 +499,7 @@ public class TopLevelParser extends AbstractBodyParser<TopNode>
                 return AnnotationType.IMPL;
             }
         }
-        throw new ParserError(location, UNRECOGNIZED_ANNOTATION_TYPE_ERROR);
+        throw new ParserErrorImpl(location, UNRECOGNIZED_ANNOTATION_TYPE_ERROR);
     }
 
     @Override protected boolean isTopLevel()

@@ -28,8 +28,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.jamon.ParserError;
-import org.jamon.ParserErrors;
+import org.jamon.ParserErrorImpl;
+import org.jamon.ParserErrorsImpl;
+import org.jamon.api.Location;
 import org.jamon.emit.EmitMode;
 import org.jamon.node.*;
 import org.jamon.util.StringUtils;
@@ -76,7 +77,7 @@ public class Analyzer
 
     private void addError(String p_message, Location p_location)
     {
-        m_errors.addError(new ParserError(p_location, p_message));
+        m_errors.addError(new ParserErrorImpl(p_location, p_message));
     }
 
     private void preAnalyze(TopNode p_top)
@@ -206,7 +207,7 @@ public class Analyzer
     private final String m_templateDir;
     private final String m_templateIdentifier;
     private final EmitMode m_emitMode;
-    private ParserErrors m_errors = new ParserErrors();
+    private ParserErrorsImpl m_errors = new ParserErrorsImpl();
 
     private String getAbsolutePath(String p_path)
     {
@@ -297,11 +298,11 @@ public class Analyzer
                             m_templateIdentifier,
                             m_children));
                 }
-                catch (ParserError e)
+                catch (ParserErrorImpl e)
                 {
                     m_errors.addError(e);
                 }
-                catch (ParserErrors e)
+                catch (ParserErrorsImpl e)
                 {
                     m_errors.addErrors(e);
                 }

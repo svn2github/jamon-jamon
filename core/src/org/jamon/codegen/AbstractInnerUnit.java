@@ -27,13 +27,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import org.jamon.ParserErrors;
-import org.jamon.node.Location;
+import org.jamon.ParserErrorsImpl;
 
 public abstract class AbstractInnerUnit extends AbstractUnit
 {
     public AbstractInnerUnit(
-        String p_name, StatementBlock p_parent, ParserErrors p_errors, Location p_location)
+        String p_name, StatementBlock p_parent, ParserErrorsImpl p_errors, org.jamon.api.Location p_location)
     {
         super(p_name, p_parent, p_errors, p_location);
     }

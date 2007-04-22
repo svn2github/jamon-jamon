@@ -21,8 +21,8 @@
 package org.jamon.codegen;
 
 import java.io.OutputStream;
-import org.jamon.ParserError;
-import org.jamon.ParserErrors;
+import org.jamon.ParserErrorImpl;
+import org.jamon.ParserErrorsImpl;
 
 public class ImplGenerator extends AbstractSourceGenerator
 {
@@ -50,9 +50,9 @@ public class ImplGenerator extends AbstractSourceGenerator
             generateEpilogue();
             m_writer.finish();
         }
-        catch (ParserError e)
+        catch (ParserErrorImpl e)
         {
-            throw new ParserErrors(e);
+            throw new ParserErrorsImpl(e);
         }
     }
 
@@ -184,7 +184,7 @@ public class ImplGenerator extends AbstractSourceGenerator
     }
 
 
-    private void generateDefs() throws ParserError
+    private void generateDefs() throws ParserErrorImpl
     {
         for (DefUnit defUnit: m_templateUnit.getDefUnits())
         {
@@ -211,7 +211,7 @@ public class ImplGenerator extends AbstractSourceGenerator
         }
     }
 
-    private void generateMethods() throws ParserError
+    private void generateMethods() throws ParserErrorImpl
     {
         for (MethodUnit methodUnit: m_templateUnit.getDeclaredMethodUnits())
         {
@@ -233,7 +233,7 @@ public class ImplGenerator extends AbstractSourceGenerator
 
     }
 
-    private void generateMethodImpl(MethodUnit p_methodUnit) throws ParserError
+    private void generateMethodImpl(MethodUnit p_methodUnit) throws ParserErrorImpl
     {
         //FIXME - cut'n'pasted from generateDefs
         m_writer.println();
@@ -280,7 +280,7 @@ public class ImplGenerator extends AbstractSourceGenerator
         }
     }
 
-    private void generateRender() throws ParserError
+    private void generateRender() throws ParserErrorImpl
     {
         if (m_templateUnit.hasParentPath())
         {

@@ -29,13 +29,13 @@ import java.util.List;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
-import org.jamon.ParserError;
-import org.jamon.ParserErrors;
+import org.jamon.ParserErrorImpl;
+import org.jamon.ParserErrorsImpl;
 import org.jamon.RecompilingTemplateManager;
 import org.jamon.TemplateFileLocation;
 import org.jamon.TemplateManager;
 import org.jamon.TemplateProcessor;
-import org.jamon.node.Location;
+import org.jamon.node.LocationImpl;
 
 public abstract class TestBase
     extends TestCase
@@ -143,10 +143,10 @@ public abstract class TestBase
             m_column = p_column;
         }
 
-        public ParserError makeError(String p_path)
+        public ParserErrorImpl makeError(String p_path)
         {
-            return new ParserError(
-                new Location(
+            return new ParserErrorImpl(
+                new LocationImpl(
                     new TemplateFileLocation(getTemplateFilePath(p_path)), m_line, m_column),
                 m_message);
         }
@@ -161,9 +161,9 @@ public abstract class TestBase
             generateSource(path);
             fail();
         }
-        catch(ParserErrors e)
+        catch(ParserErrorsImpl e)
         {
-            List<ParserError> expected = new ArrayList<ParserError>(p_partialErrors.length);
+            List<ParserErrorImpl> expected = new ArrayList<ParserErrorImpl>(p_partialErrors.length);
             for (PartialError partialError: p_partialErrors)
             {
                 expected.add(partialError.makeError(path));

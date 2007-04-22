@@ -21,7 +21,6 @@
 package org.jamon.codegen;
 
 import java.util.Collection;
-import org.jamon.node.Location;
 
 public interface MethodUnit extends Unit
 {
@@ -30,5 +29,5 @@ public interface MethodUnit extends Unit
     String getDefaultForArg(OptionalArgument p_arg);
     boolean isAbstract();
     boolean isOverride();
-    Location getLocation();
+    org.jamon.api.Location getLocation();
 }

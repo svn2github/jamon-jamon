@@ -2,10 +2,9 @@ package org.jamon.parser;
 
 import java.io.IOException;
 
-import org.jamon.ParserErrors;
+import org.jamon.ParserErrorsImpl;
 import org.jamon.node.AbsolutePathNode;
 import org.jamon.node.AbstractPathNode;
-import org.jamon.node.Location;
 import org.jamon.node.NamedAliasPathNode;
 import org.jamon.node.PathElementNode;
 import org.jamon.node.RelativePathNode;
@@ -19,7 +18,7 @@ public class PathParser extends AbstractParser
 {
     public static final String GENERIC_PATH_ERROR = "Malformed path";
 
-    public PathParser(PositionalPushbackReader p_reader, ParserErrors p_errors)
+    public PathParser(PositionalPushbackReader p_reader, ParserErrorsImpl p_errors)
         throws IOException
     {
         super(p_reader, p_errors);
@@ -34,7 +33,7 @@ public class PathParser extends AbstractParser
     private AbstractPathNode parse() throws IOException
     {
         AbstractPathNode path;
-        Location location = m_reader.getNextLocation();
+        org.jamon.api.Location location = m_reader.getNextLocation();
         int c = m_reader.read();
         switch (c)
         {
@@ -96,7 +95,7 @@ public class PathParser extends AbstractParser
         StringBuilder identifier = new StringBuilder();
         boolean identStart = true;
         boolean updirsAllowed = p_updirsAllowed;
-        Location location = m_reader.getNextLocation();
+        org.jamon.api.Location location = m_reader.getNextLocation();
         while ((c = m_reader.read()) >= 0)
         {
             if (c == '/')

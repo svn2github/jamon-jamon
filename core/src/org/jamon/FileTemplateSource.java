@@ -27,6 +27,8 @@ import java.io.File;
 import java.util.Properties;
 import java.util.StringTokenizer;
 
+import org.jamon.api.TemplateLocation;
+
 /**
  * The standard implementation of {@link TemplateSource} which
  * retrieves templates from the filesystem location under a specified

@@ -57,6 +57,7 @@ public class NodeGenerator
             p_writer.println("import java.util.List;");
             p_writer.println();
         }
+        p_writer.println("import org.jamon.api.Location;");
     }
 
     private static void writeConstructor(
