@@ -65,8 +65,7 @@ public class TemplateUnit
         //FIXME - join them later.
         m_fragmentArgs.addAll(p_parent.getFragmentInterfaces());
 
-        m_inheritedArgs = new InheritedArgs(getName(),
-                                            getParentPath(),
+        m_inheritedArgs = new InheritedArgs(getParentPath(),
                                             p_parent.getRequiredArgs(),
                                             p_parent.getOptionalArgs(),
                                             p_parent.getFragmentInterfaces(),

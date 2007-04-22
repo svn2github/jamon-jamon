@@ -39,7 +39,6 @@ public class OverriddenMethodUnit
         m_declaredMethodUnit = p_declaredMethodUnit;
         m_inheritedArgs =
             new InheritedArgs(getName(),
-                              getName(),
                               p_declaredMethodUnit.getRequiredArgs(),
                               p_declaredMethodUnit.getOptionalArgsSet(),
                               p_declaredMethodUnit.getFragmentArgs(),

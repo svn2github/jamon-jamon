@@ -33,8 +33,7 @@ import org.jamon.node.ParentArgWithDefaultNode;
 
 public class InheritedArgs
 {
-    public InheritedArgs(String p_unitName,
-                         String p_parentName,
+    public InheritedArgs(String p_parentName,
                          Collection<RequiredArgument> p_requiredArgs,
                          Collection<OptionalArgument> p_optionalArgs,
                          Collection<FragmentArgument> p_fragmentArgs,
