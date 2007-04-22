@@ -63,7 +63,7 @@ public final class ParserErrors extends IOException
     {
         for (ParserError error: getErrors())
         {
-            System.err.println(error);
+            p_stream.println(error);
         }
     }
 
