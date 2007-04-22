@@ -5,7 +5,7 @@ import java.io.PrintWriter;
 public class AnalysisGenerator
 {
     private AnalysisGenerator() {}
-    
+
     public static void generateAnalysisInterface(
         PrintWriter p_writer, Iterable<NodeDescriptor> p_nodes)
     {
@@ -48,9 +48,11 @@ public class AnalysisGenerator
         {
             String name = node.getName();
             p_writer.println(
-                "  public void in" + name + "(" + name + " p_node) {}");
+                "  public void in" + name
+                + "(@SuppressWarnings(\"unused\") " + name + " p_node) {}");
             p_writer.println(
-                "  public void out" + name + "(" + name + " p_node) {}");
+                "  public void out" + name
+                + "(@SuppressWarnings(\"unused\") " + name + " p_node) {}");
             p_writer.println(
                 "  public void case" + name + "(" + name + " p_node)");
             p_writer.println("  {");
@@ -62,7 +64,7 @@ public class AnalysisGenerator
                     if (member.isList())
                     {
                         p_writer.println(
-                            "    for (AbstractNode node : p_node." 
+                            "    for (AbstractNode node : p_node."
                             + member.getGetter() + ")");
                         p_writer.println("    {");
                         p_writer.println("      node.apply(this);");
