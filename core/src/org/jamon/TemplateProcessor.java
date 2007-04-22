@@ -47,34 +47,20 @@ public class TemplateProcessor
     public void generateSource(String p_filename)
         throws IOException
     {
+        // strip suffix, if any
         int pPos = p_filename.indexOf('.');
         String templateName =
             pPos < 0 ? p_filename : p_filename.substring(0,pPos);
-        String pkg = "";
-        int fsPos = templateName.lastIndexOf(File.separator);
-        String className = templateName;
-        if (fsPos == 0)
-        {
-            throw new IOException("Can only use relative paths");
-        }
-        else if (fsPos > 0)
-        {
-            pkg = StringUtils.filePathToClassName
-                (templateName.substring(0,fsPos));
-            className =
-                templateName.substring(fsPos+File.separator.length());
-        }
 
-        File pkgDir = new File(m_destDir,
-                               StringUtils.classNameToFilePath(pkg));
+        File pkgDir = new File(m_destDir, templateName).getParentFile();
 
         ParsedTemplate parsedTemplate =
             m_parser.parseTemplate("/" + StringUtils.filePathToTemplatePath(templateName));
         pkgDir.mkdirs();
         generateSource(
-            new File(pkgDir, className + ".java"), parsedTemplate.getProxyGenerator());
+            new File(m_destDir, templateName + ".java"), parsedTemplate.getProxyGenerator());
         generateSource(
-            new File(pkgDir, className + "Impl.java"), parsedTemplate.getImplGenerator());
+            new File(m_destDir, templateName + "Impl.java"), parsedTemplate.getImplGenerator());
     }
 
     private void generateSource(File javaFile, SourceGenerator sourceGenerator)
