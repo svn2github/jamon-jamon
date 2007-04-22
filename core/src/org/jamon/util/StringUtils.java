@@ -111,18 +111,12 @@ public class StringUtils
 
     public static String filePathToTemplatePath(String p_path)
     {
-        StringBuilder sb = new StringBuilder(p_path);
-        final int len = File.separator.length();
-        int j = len;
-        for (int i = 0; i < sb.length() - len; ++i)
-        {
-            if (sb.substring(i,j).equals(File.separator))
-            {
-                sb.replace(i,j,"/");
-            }
-            j++;
-        }
-        return sb.toString();
+        return filePathToTemplatePath(p_path, File.separator);
+    }
+
+    public static String filePathToTemplatePath(String p_path, String p_separator)
+    {
+        return p_path.replaceAll(p_separator, "/");
     }
 
     public static String classNameToFilePath(String p_className)

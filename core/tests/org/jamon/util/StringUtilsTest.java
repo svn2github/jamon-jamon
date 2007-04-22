@@ -161,4 +161,9 @@ public class StringUtilsTest
         assertTrue(! StringUtils.isGeneratedClassFilename("abc",
                                                           "abc1$123$4.class"));
     }
+
+    public void testFilePathToTemplatePath() throws Exception
+    {
+        assertEquals("/a/b/c.jamon", StringUtils.filePathToTemplatePath("--a--b--c.jamon", "--"));
+    }
 }
