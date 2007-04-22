@@ -1,3 +1,4 @@
+<%annotate @SuppressWarnings("unused") #impl %>
 <%generic>S,T,U</%generic>
 <%args>
   int i;
@@ -27,9 +28,9 @@
   </%frag>
 </%method>
 <%java>
-	while (f1 != f1) { }
-	while (f2 != f2) { }
-	while (foo != foo) { }
-	while (i != i) { }
-	while (j != j) { }
+  while (f1 != f1) { }
+  while (f2 != f2) { }
+  while (foo != foo) { }
+  while (i != i) { }
+  while (j != j) { }
 </%java>
