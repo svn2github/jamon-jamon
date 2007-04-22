@@ -1,5 +1,6 @@
 package org.jamon.codegen;
 
+import org.jamon.api.SourceGenerator;
 import org.jamon.node.AnnotationNode;
 
 public abstract class AbstractSourceGenerator implements SourceGenerator

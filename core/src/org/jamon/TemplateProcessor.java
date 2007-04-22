@@ -21,17 +21,15 @@
 package org.jamon;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.io.FileOutputStream;
+import java.io.FilenameFilter;
 import java.io.IOException;
 
+import org.jamon.api.ParsedTemplate;
+import org.jamon.api.SourceGenerator;
+import org.jamon.api.TemplateParser;
+import org.jamon.codegen.TemplateParserImpl;
 import org.jamon.util.StringUtils;
-import org.jamon.codegen.SourceGenerator;
-import org.jamon.codegen.TemplateDescriber;
-import org.jamon.codegen.Analyzer;
-import org.jamon.codegen.ImplGenerator;
-import org.jamon.codegen.ProxyGenerator;
-import org.jamon.codegen.TemplateUnit;
 
 public class TemplateProcessor
 {
@@ -40,13 +38,11 @@ public class TemplateProcessor
                              ClassLoader p_classLoader)
     {
         m_destDir = p_destDir;
-        m_describer =
-            new TemplateDescriber(new FileTemplateSource(p_sourceDir),
-                                  p_classLoader);
+        m_parser = new TemplateParserImpl(new FileTemplateSource(p_sourceDir), p_classLoader);
     }
 
     private final File m_destDir;
-    private final TemplateDescriber m_describer;
+    private final TemplateParser m_parser;
 
     public void generateSource(String p_filename)
         throws IOException
@@ -72,16 +68,13 @@ public class TemplateProcessor
         File pkgDir = new File(m_destDir,
                                StringUtils.classNameToFilePath(pkg));
 
-        TemplateUnit templateUnit = new Analyzer
-            ("/" + StringUtils.filePathToTemplatePath(templateName),
-             m_describer)
-            .analyze();
+        ParsedTemplate parsedTemplate =
+            m_parser.parseTemplate("/" + StringUtils.filePathToTemplatePath(templateName));
         pkgDir.mkdirs();
-        generateSource(new File(pkgDir, className + ".java"),
-                       new ProxyGenerator(m_describer, templateUnit));
-
-        generateSource(new File(pkgDir, className + "Impl.java"),
-                       new ImplGenerator(m_describer, templateUnit));
+        generateSource(
+            new File(pkgDir, className + ".java"), parsedTemplate.getProxyGenerator());
+        generateSource(
+            new File(pkgDir, className + "Impl.java"), parsedTemplate.getImplGenerator());
     }
 
     private void generateSource(File javaFile, SourceGenerator sourceGenerator)

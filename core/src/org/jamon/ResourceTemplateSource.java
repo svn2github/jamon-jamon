@@ -27,6 +27,7 @@ import java.net.URLConnection;
 import java.util.Properties;
 
 import org.jamon.api.TemplateLocation;
+import org.jamon.api.TemplateSource;
 
 /**
  * An implementation of {@link TemplateSource} which retrieves

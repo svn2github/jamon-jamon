@@ -18,13 +18,13 @@
  * Contributor(s):
  */
 
-package org.jamon;
+package org.jamon.api;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-import org.jamon.api.TemplateLocation;
+import org.jamon.FileTemplateSource;
 
 /**
  * An interface representing a "repository" of template sources. One

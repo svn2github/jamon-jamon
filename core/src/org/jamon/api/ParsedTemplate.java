@@ -20,23 +20,25 @@
 
 package org.jamon.api;
 
+import java.util.Collection;
+
 /**
- * A location in a Jamon template.
+ * A parsed version of a template which is capable of creating proxy and impl files.
  */
-public interface Location
+public interface ParsedTemplate
 {
     /**
-     * @return the location of the template.
+     * @return the paths of templates which this template depends on.
      */
-    TemplateLocation getTemplateLocation();
+    Collection<String> getTemplateDependencies();
 
     /**
-     * @return the column of the location (1-based).
+     * @return a generator for the proxy.
      */
-    int getColumn();
+    SourceGenerator getProxyGenerator();
 
     /**
-     * @return the row of the location (1-based).
+     * @return a generator for the impl.
      */
-    int getLine();
+    SourceGenerator getImplGenerator();
 }

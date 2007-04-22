@@ -20,23 +20,9 @@
 
 package org.jamon.api;
 
-/**
- * A location in a Jamon template.
- */
-public interface Location
+import java.io.OutputStream;
+
+public interface SourceGenerator
 {
-    /**
-     * @return the location of the template.
-     */
-    TemplateLocation getTemplateLocation();
-
-    /**
-     * @return the column of the location (1-based).
-     */
-    int getColumn();
-
-    /**
-     * @return the row of the location (1-based).
-     */
-    int getLine();
+    void generateSource(OutputStream p_out) throws java.io.IOException;
 }

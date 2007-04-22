@@ -28,6 +28,7 @@ import java.util.Properties;
 import java.util.StringTokenizer;
 
 import org.jamon.api.TemplateLocation;
+import org.jamon.api.TemplateSource;
 
 /**
  * The standard implementation of {@link TemplateSource} which

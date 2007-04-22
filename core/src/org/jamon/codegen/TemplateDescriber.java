@@ -32,7 +32,7 @@ import java.util.StringTokenizer;
 import org.jamon.JamonRuntimeException;
 import org.jamon.ParserErrorImpl;
 import org.jamon.ParserErrorsImpl;
-import org.jamon.TemplateSource;
+import org.jamon.api.TemplateSource;
 import org.jamon.emit.EmitMode;
 import org.jamon.node.LocationImpl;
 import org.jamon.node.TopNode;

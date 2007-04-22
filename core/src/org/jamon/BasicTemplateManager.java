@@ -20,6 +20,7 @@
 
 package org.jamon;
 
+import org.jamon.api.TemplateSource;
 import org.jamon.util.StringUtils;
 
 /**
