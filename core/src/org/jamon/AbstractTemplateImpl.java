@@ -28,8 +28,9 @@ public abstract class AbstractTemplateImpl
         m_templateManager = p_templateManager;
     }
 
-    protected AbstractTemplateImpl(TemplateManager p_templateManager,
-                                   AbstractTemplateProxy.ImplData p_implData)
+    protected AbstractTemplateImpl(
+        TemplateManager p_templateManager,
+        @SuppressWarnings("unused") AbstractTemplateProxy.ImplData p_implData)
     {
         this(p_templateManager);
     }
