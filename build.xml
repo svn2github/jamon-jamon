@@ -15,6 +15,7 @@
 
   <import file="build.version.xml"/>
   <property name="jarfile.core" value="jamon-${jamon.version}.jar" />
+  <property name="jarfile.api" value="jamon-api-${jamon.api.version}.jar" />
   <property name="jarfile.anttask" value="jamon-anttask-${jamon.anttask.version}.jar" />
   <property name="core.classes.dir" value="core/build/classes" />
   <property name="stage.dir" value="site" />
@@ -40,6 +41,9 @@
     </copy>
     <jar jarfile="${jarfile.core}" manifest="manifest.mf" >
       <fileset dir="core/build/classes" />
+    </jar>
+    <jar jarfile="${jarfile.api}">
+      <fileset dir="core/build/classes" includes="org/jamon/api/*.class"/>
     </jar>
     <copy overwrite="true" file="manifest-anttask" tofile="manifest-anttask.mf">
       <filterset>
