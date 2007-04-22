@@ -3,9 +3,9 @@ package org.jamon.integration;
 import java.util.List;
 
 import org.jamon.JamonRuntimeException;
-import org.jamon.ParserErrors;
 import org.jamon.ParserErrorsImpl;
 import org.jamon.api.ParserError;
+import org.jamon.api.ParserErrors;
 
 import test.jamon.context.Child;
 import test.jamon.context.ContextCaller;

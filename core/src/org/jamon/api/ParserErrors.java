@@ -1,8 +1,7 @@
-package org.jamon;
+package org.jamon.api;
 
 import java.util.List;
 
-import org.jamon.api.ParserError;
 
 public interface ParserErrors
 {

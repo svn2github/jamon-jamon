@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jamon.api.ParserError;
+import org.jamon.api.ParserErrors;
 
 /**
  * @author ian
