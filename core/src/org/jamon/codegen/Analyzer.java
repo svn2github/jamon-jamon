@@ -295,7 +295,6 @@ public class Analyzer
                         m_describer.getTemplateDescription(
                             parentPath,
                             p_extends.getLocation(),
-                            m_templateIdentifier,
                             m_children));
                 }
                 catch (ParserErrorImpl e)

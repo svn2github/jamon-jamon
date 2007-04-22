@@ -51,7 +51,6 @@ public class TemplateDescriberTest
     public void testJamonContext() throws Exception {
         TemplateDescription desc =
             m_describer.getTemplateDescription("/test/jamon/context/ContextCallee",
-                                               null,
                                                null);
         assertEquals("org.jamon.integration.TestJamonContext", desc.getJamonContextType());
     }
@@ -59,7 +58,6 @@ public class TemplateDescriberTest
     public void testNoJamonContext() throws Exception {
         TemplateDescription desc =
             m_describer.getTemplateDescription("/test/jamon/ClassOnly",
-                                               null,
                                                null);
         assertNull("", desc.getJamonContextType());
     }
@@ -69,7 +67,6 @@ public class TemplateDescriberTest
     {
         TemplateDescription desc =
             m_describer.getTemplateDescription("/test/jamon/ClassOnly",
-                                               null,
                                                null);
         NameType.checkArgs(
             desc.getRequiredArgs(),
@@ -83,7 +80,7 @@ public class TemplateDescriberTest
     {
         List<FragmentArgument> fragmentUnitIntfs =
             m_describer.getTemplateDescription(
-                "/test/jamon/ClassOnly", null, null)
+                "/test/jamon/ClassOnly", null)
             .getFragmentInterfaces();
 
         assertEquals(2, fragmentUnitIntfs.size());
@@ -103,7 +100,7 @@ public class TemplateDescriberTest
         throws Exception
     {
         Map<String, MethodUnit> methods = m_describer
-            .getTemplateDescription("/test/jamon/ClassOnly", null, null)
+            .getTemplateDescription("/test/jamon/ClassOnly", null)
             .getMethodUnits();
         assertEquals(1, methods.size());
         MethodUnit method = methods.get("m");
@@ -126,7 +123,7 @@ public class TemplateDescriberTest
         assertEquals(
             3,
             m_describer.getTemplateDescription(
-                "test/jamon/ClassOnly", null, null).getGenericParamsCount());
+                "test/jamon/ClassOnly", null).getGenericParamsCount());
     }
 
 }

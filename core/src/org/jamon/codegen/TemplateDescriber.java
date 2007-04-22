@@ -57,19 +57,17 @@ public class TemplateDescriber
     private final ClassLoader m_classLoader;
 
     public TemplateDescription getTemplateDescription(
-        String p_path, org.jamon.api.Location p_location, String p_templateIdentifier)
+        String p_path, org.jamon.api.Location p_location)
         throws IOException, ParserErrorImpl
     {
         return getTemplateDescription(p_path,
                                       p_location,
-                                      p_templateIdentifier,
                                       new HashSet<String>());
     }
 
     public TemplateDescription getTemplateDescription(
         final String p_path,
         final org.jamon.api.Location p_location,
-        final String p_templateIdentifier,
         final Set<String> p_children)
          throws IOException, ParserErrorImpl
     {
@@ -80,7 +78,7 @@ public class TemplateDescriber
         else
         {
             TemplateDescription desc = computeTemplateDescription(
-                p_path, p_location, p_templateIdentifier, p_children);
+                p_path, p_location, p_children);
             m_descriptionCache.put(p_path, desc);
             return desc;
         }
@@ -89,7 +87,6 @@ public class TemplateDescriber
     private TemplateDescription computeTemplateDescription(
         final String p_path,
         final org.jamon.api.Location p_location,
-        final String p_templateIdentifier,
         final Set<String> p_children)
         throws IOException, ParserErrorImpl
      {

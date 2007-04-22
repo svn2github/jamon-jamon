@@ -58,8 +58,7 @@ public class ComponentCallStatement
         try
         {
             desc = p_describer.getTemplateDescription(getPath(),
-                                                      getLocation(),
-                                                      getTemplateIdentifier());
+                                                      getLocation());
         }
         catch (java.io.IOException e)
         {
