@@ -1,6 +1,9 @@
 package org.jamon.api;
 
 
+/**
+ * An error encountered during the parsing of a Jamon template.
+ */
 public interface ParserError
 {
 
