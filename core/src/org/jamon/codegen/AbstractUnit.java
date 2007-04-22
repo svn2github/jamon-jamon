@@ -84,7 +84,7 @@ public abstract class AbstractUnit
         p_writer.closeBlock();
     }
 
-    protected void printRenderBodyEnd(CodeWriter p_writer)
+    protected void printRenderBodyEnd(@SuppressWarnings("unused") CodeWriter p_writer)
     {
     }
 
