@@ -67,23 +67,20 @@ public class TemplateProcessor
         throws IOException
     {
         FileOutputStream out = new FileOutputStream(javaFile);
+        boolean success = false;
         try
         {
             sourceGenerator.generateSource(out);
+            success = true;
         }
-        catch (RuntimeException e)
+        finally
         {
             out.close();
-            javaFile.delete();
-            throw e;
+            if (!success)
+            {
+                javaFile.delete();
+            }
         }
-        catch (IOException e)
-        {
-            out.close();
-            javaFile.delete();
-            throw e;
-        }
-        out.close();
     }
 
     private static void showHelp()
