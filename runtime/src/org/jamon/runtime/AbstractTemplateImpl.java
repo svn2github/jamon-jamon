@@ -15,34 +15,30 @@
  * created by Jay Sachs are Copyright (C) 2003 Jay Sachs.  All Rights
  * Reserved.
  *
- * Contributor(s):
+ * Contributor(s): Luis O'Shea, Ian Robertson
  */
 
-package org.jamon;
+package org.jamon.runtime;
 
-import java.io.Writer;
-import java.io.IOException;
-
-/**
- * A simple interface describing that which knows how to render.
- */
-public interface Renderer
+public abstract class AbstractTemplateImpl
+    implements AbstractTemplateProxy.Intf
 {
-    /**
-     * Render to the given writer.
-     *
-     * @param p_writer the Writer to which to render
-     *
-     * @exception IOException if writing to the Writer throws an IOException
-     */
-    void renderTo(Writer p_writer)
-        throws IOException;
+    protected AbstractTemplateImpl(TemplateManager p_templateManager)
+    {
+        m_templateManager = p_templateManager;
+    }
 
-    /**
-     * Render this Renderer into a String.
-     *
-     * @return a String that is the result of rendering this Renderer
-     */
-    String asString();
+    protected AbstractTemplateImpl(
+        TemplateManager p_templateManager,
+        @SuppressWarnings("unused") AbstractTemplateProxy.ImplData p_implData)
+    {
+        this(p_templateManager);
+    }
 
+    protected TemplateManager getTemplateManager()
+    {
+        return m_templateManager;
+    }
+
+    private final TemplateManager m_templateManager;
 }

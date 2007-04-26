@@ -31,6 +31,9 @@ import java.util.Set;
 
 import org.jamon.annotations.Argument;
 import org.jamon.annotations.Template;
+import org.jamon.runtime.AbstractTemplateProxy;
+import org.jamon.runtime.TemplateManager;
+import org.jamon.runtime.TemplateManagerSource;
 import org.jamon.util.StringUtils;
 
 /**
@@ -45,7 +48,7 @@ import org.jamon.util.StringUtils;
 public class TemplateInspector
 {
     public static class InvalidTemplateException
-        extends JamonException
+        extends Exception
     {
         public InvalidTemplateException(String p_templateName)
         {

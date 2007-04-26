@@ -24,12 +24,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-import org.jamon.FileTemplateSource;
-
 /**
  * An interface representing a "repository" of template sources. One
  * obvious implementation would be a file-system based implementation
- * (e.g. {@link FileTemplateSource}), but others might include storing
+ * (e.g. {@link org.jamon.FileTemplateSource}), but others might include storing
  * templates in a database, or retrieving them remotely via HTTP.
  */
 

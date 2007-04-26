@@ -18,7 +18,7 @@
  * Contributor(s):
  */
 
-package org.jamon;
+package org.jamon.runtime;
 
 /**
  *  The source for obtaining a default {@link TemplateManager}.  This

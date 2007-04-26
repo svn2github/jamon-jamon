@@ -20,17 +20,20 @@
 
 package org.jamon;
 
-import org.jamon.annotations.Argument;
-import org.jamon.annotations.Template;
-import org.jamon.util.StringUtils;
-
-import java.util.HashMap;
-import java.util.Map;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.util.HashMap;
+import java.util.Map;
 
 import junit.framework.Assert;
+
+import org.jamon.annotations.Argument;
+import org.jamon.annotations.Template;
+import org.jamon.runtime.AbstractTemplateImpl;
+import org.jamon.runtime.AbstractTemplateProxy;
+import org.jamon.runtime.TemplateManager;
+import org.jamon.util.StringUtils;
 
 /**
  * A <code>TemplateManager</code> implementation suitable for use in
@@ -139,11 +142,11 @@ public class JUnitTemplateManager
             }
             catch (ClassNotFoundException e)
             {
-                throw new JamonRuntimeException
+                throw new RuntimeException
                     ("couldn't find class for template " + path);
             }
             catch (ClassCastException e) {
-                throw new JamonRuntimeException(
+                throw new RuntimeException(
                     "Impl class for template " + path
                     + " does not extend " + AbstractTemplateImpl.class.getName());
             }
@@ -161,7 +164,7 @@ public class JUnitTemplateManager
         }
         else
         {
-            throw new JamonRuntimeException
+            throw new RuntimeException
                 ("No template registered for " + path);
         }
     }
@@ -181,7 +184,7 @@ public class JUnitTemplateManager
         }
         catch (Exception e)
         {
-            throw new JamonRuntimeException(e);
+            throw new RuntimeException(e);
         }
     }
 

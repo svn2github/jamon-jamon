@@ -2,7 +2,6 @@ package org.jamon.integration;
 
 import java.util.List;
 
-import org.jamon.JamonRuntimeException;
 import org.jamon.ParserErrorsImpl;
 import org.jamon.api.ParserError;
 import org.jamon.api.ParserErrors;
@@ -45,7 +44,7 @@ public class ContextTest extends TestBase
                 .constructProxy("/test/jamon/broken/CallContextFromContextless");
             fail();
         }
-        catch (JamonRuntimeException e)
+        catch (RuntimeException e)
         {
             assertEquals(ParserErrorsImpl.class, e.getCause().getClass());
             ParserErrors cause = (ParserErrors) e.getCause();

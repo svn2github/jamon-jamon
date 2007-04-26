@@ -18,10 +18,8 @@
  * Contributor(s): Ian Robertson
  */
 
-package org.jamon;
+package org.jamon.runtime;
 
-import org.jamon.api.TemplateSource;
-import org.jamon.util.StringUtils;
 
 /**
  * A standard implementation of the {@link TemplateManager} interface.
@@ -32,7 +30,7 @@ import org.jamon.util.StringUtils;
  * <code>BasicTemplateManager</code> instances are thread-safe.  In
  * your applications, you generally want exactly one instance of a
  * BasicTemplateManager (i.e. a singleton), so consider using {@link
- * TemplateSource}
+ * TemplateManagerSource}
  **/
 
 public class BasicTemplateManager
@@ -84,7 +82,7 @@ public class BasicTemplateManager
         }
         catch (ClassNotFoundException e)
         {
-            throw new UnknownTemplateException(p_path);
+            throw new RuntimeException("The template at path " + p_path + " could not be found");
         }
         catch (RuntimeException e)
         {
@@ -92,15 +90,19 @@ public class BasicTemplateManager
         }
         catch (Exception e)
         {
-            throw new JamonRuntimeException(e);
+            throw new RuntimeException(e);
         }
     }
 
     private Class<? extends AbstractTemplateProxy> getProxyClass(String p_path)
         throws ClassNotFoundException
     {
+        String path = p_path;
+        while (path.startsWith("/")) {
+            path = path.substring(1);
+        }
         return m_classLoader
-            .loadClass(StringUtils.templatePathToClassName(p_path))
+            .loadClass(path.replace('/', '.'))
             .asSubclass(AbstractTemplateProxy.class);
     }
 

@@ -20,8 +20,9 @@
 
 package org.jamon;
 
+
 public class TemplateCompilationException
-    extends JamonRuntimeException
+    extends RuntimeException
 {
     public TemplateCompilationException(String p_msg)
     {

@@ -11,73 +11,26 @@
   <property file="${user.home}/.ant.properties"/>
 
   <property name="build.dir" value="build"/>
-  <property name="build.src.dir" value="${build.dir}/src"/>
   <property name="classes.dir" value="${build.dir}/classes"/>
   <property name="tests.classes.dir" value="${build.dir}/testclasses"/>
-  <property name="tests.src.dir" value="tests"/>
+  <property name="tests.src.dir" value="test"/>
   <property name="java.lib.junit" value="../lib/junit4.jar" />
-  <property name="jamon.runtime" value="../runtime/build/classes"/>
-  
+
   <property name="junit.timeout" value="1000" />
   <property name="junit.printsummary" value="off" />
   <property name="junit.formatter" value="org.apache.tools.ant.taskdefs.optional.junit.BriefJUnitResultFormatter" />
 
-  <property name="nodeGen.dir" value="nodegen"/>
-  <property name="nodeGen.src.dir" value="${nodeGen.dir}/src"/>
-  <property name="nodeGen.build.dir" value="${nodeGen.dir}/build"/>
-  <property name="nodeGen.classes.dir" location="${nodeGen.build.dir}/classes"/>
-
-  <property name="nodes.file" value="${nodeGen.dir}/nodes"/>
-
   <property name="src.dir" value="src" />
-
-  <target name="check-parser">
-    <uptodate property="parser.uptodate"
-              targetfile="${build.src.dir}/org/jamon/node/Node.java">
-      <srcfiles dir="src" includes="jamon.grammar"/>
-    </uptodate>
-  </target>
-
-  <target name="buildNodeGenerator" description="Build the node generator">
-  <dependset>
-    <srcfileset dir="${nodeGen.src.dir}" includes="**/*.java"/>
-    <targetfileset dir="${nodeGen.build.dir}"/>
-  </dependset>
-  <mkdir dir="${nodeGen.build.dir}"/>
-  <javac srcdir = "${nodeGen.src.dir}" destdir="${nodeGen.build.dir}"/>
-  </target>
-
-  <target name="check-nodes">
-    <uptodate property="nodes.uptodate"
-              srcfile="${nodes.file}"
-              targetfile="${nodes.src.dir}/org/jamon/node/JavaNode.java"/>
-  </target>
-
-  <target name="generateNodes"
-          description="Generate parser node source files"
-          depends="buildNodeGenerator,check-nodes"
-          unless="nodes.uptodate">
-    <echo message="rebuilding node source files"/>
-    <java classname="org.jamon.nodegen.NodesGenerator"
-          classpath="${nodeGen.build.dir}"
-          fork="true">
-      <arg value="${nodes.file}"/>
-      <arg value="${build.src.dir}"/>
-    </java>
-  </target>
 
   <path id="compile.class.path">
     <pathelement location="${java.lib.junit}"/>
-    <pathelement location="${jamon.runtime}"/>
   </path>
 
   <target name="compile"
-          depends="generateNodes"
           description="Compiles all the Java files">
       <mkdir dir="${classes.dir}"/>
       <dependset>
         <srcfileset dir="${src.dir}" includes="**/*.java" />
-        <srcfileset dir="${build.src.dir}" includes="**/*.java" />
         <targetfileset dir="${classes.dir}" includes="**/*.class" />
         <targetfileset dir="${tests.classes.dir}" includes="**/*.class" />
       </dependset>
@@ -85,7 +38,6 @@
              debug="true"
              deprecation="true">
         <src path="${src.dir}"/>
-        <src path="${build.src.dir}"/>
         <classpath refid="compile.class.path"/>
       </javac>
   </target>
@@ -93,22 +45,12 @@
   <target name="clean">
     <delete dir="${classes.dir}"/>
     <delete dir="${tests.classes.dir}"/>
-    <delete dir="${nodes.src.dir}"/>
-  </target>
-
-  <target name="cvsignores">
-    <echo file=".cvsignore">
-      .cvsignore
-      ${build.dir}
-      build.properties
-</echo>
   </target>
 
   <target name="testclasses" depends="compile">
     <mkdir dir="${tests.classes.dir}" />
     <dependset>
       <srcfileset dir="${src.dir}" includes="**/*.java" />
-      <srcfileset dir="${build.src.dir}" includes="**/*.java" />
       <srcfileset dir="${tests.src.dir}" includes="**/*.java" />
       <targetfileset dir="${tests.classes.dir}" includes="**/*.class" />
     </dependset>
@@ -136,7 +78,6 @@
       <classpath>
         <pathelement location="${tests.classes.dir}"/>
         <pathelement location="${classes.dir}"/>
-        <pathelement location="${jamon.runtime}"/>
         <pathelement location="${java.lib.junit}"/>
       </classpath>
       <batchtest>
@@ -151,7 +92,7 @@
 
 
   <property name="javadoc.dir" value="${build.dir}/javadoc" />
-  <property name="javadoc.zip.file" value="jamon-api.zip" />
+  <property name="javadoc.zip.file" value="jamon-runtime.zip" />
   <property name="javadoc.zip" value="${javadoc.zip.file}" />
 
   <target name="javadoc.check" depends="compile">
@@ -165,7 +106,7 @@
           depends="javadoc.check"
           unless="javadoc.build.notrequired" >
     <mkdir dir="${javadoc.dir}" />
-    <javadoc packagenames="org.jamon,org.jamon.escaping"
+    <javadoc packagenames="org.jamon.emit,org.jamon.escaping,org.jamon.annotations"
              sourcepath="${src.dir}"
              classpath="${classes.dir}"
              defaultexcludes="yes"
@@ -175,7 +116,7 @@
              failonerror="true"
              use="true"
              windowtitle="Jamon API Specification">
-      <doctitle><![CDATA[<h1>Jamon API</h1>]]></doctitle>
+      <doctitle><![CDATA[<h1>Jamon Runtime API</h1>]]></doctitle>
       <link  href="http://java.sun.com/j2se/1.5.0/docs/api/"/>
     </javadoc>
   </target>

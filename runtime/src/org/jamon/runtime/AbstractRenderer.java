@@ -18,11 +18,11 @@
  * Contributor(s):
  */
 
-package org.jamon;
+package org.jamon.runtime;
 
-import java.io.Writer;
-import java.io.StringWriter;
 import java.io.IOException;
+import java.io.StringWriter;
+import java.io.Writer;
 
 /**
  * A simple abstract class which lacks only a Writer to which to render.
@@ -56,7 +56,7 @@ public abstract class AbstractRenderer
         catch (IOException e)
         {
             // It's a StringWriter, so we shouldn't ever get here
-            throw new JamonRuntimeException(e);
+            throw new RuntimeException(e);
         }
         return writer.toString();
     }

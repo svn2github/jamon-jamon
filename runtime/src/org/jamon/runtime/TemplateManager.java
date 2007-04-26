@@ -18,15 +18,30 @@
  * Contributor(s):
  */
 
-package org.jamon;
+package org.jamon.runtime;
 
-public class UnknownTemplateException
-    extends JamonRuntimeException
+/**
+ * A <code>TemplateManager</code> is the entry point to obtaining
+ * instances of template objects.
+ */
+public interface TemplateManager
 {
-    private static final long serialVersionUID = 2006091701L;
+    /**
+     * Given a proxy, return an instance of the executable code for
+     * that proxy's template.
+     *
+     * @param p_proxy a proxy for the template
+     *
+     * @return a <code>Template</code> instance
+     **/
+    AbstractTemplateProxy.Intf constructImpl(AbstractTemplateProxy p_proxy);
 
-    public UnknownTemplateException(String p_path)
-    {
-        super("The template at path " + p_path + " could not be found");
-    }
+    /**
+     * Given a template path, return a proxy for that template.
+     *
+     * @param p_path the path to the template
+     *
+     * @return a <code>Template</code> instance
+     */
+    AbstractTemplateProxy constructProxy(String p_path);
 }

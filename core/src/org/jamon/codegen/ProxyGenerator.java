@@ -269,7 +269,7 @@ public class ProxyGenerator extends AbstractSourceGenerator
         m_writer.println();
         m_writer.println("@Override");
         m_writer.print(
-            "protected " + ClassNames.BASE_TEMPLATE + " constructImpl"
+            "public " + ClassNames.BASE_TEMPLATE + " constructImpl"
             + "(Class<? extends " + ClassNames.BASE_TEMPLATE + "> p_class)");
         m_writer.openBlock();
         m_writer.println("try");
@@ -289,9 +289,7 @@ public class ProxyGenerator extends AbstractSourceGenerator
         m_writer.closeBlock();
         m_writer.println("catch (Exception e)");
         m_writer.openBlock();
-        m_writer.println("throw new "
-                         + ClassNames.JAMON_RUNTIME_EXCEPTION
-                         + "(e);");
+        m_writer.println("throw new RuntimeException(e);");
         m_writer.closeBlock();
         m_writer.closeBlock();
 
@@ -396,7 +394,7 @@ public class ProxyGenerator extends AbstractSourceGenerator
         m_templateUnit.getGenericParams()
             .suppressGenericHidingWarnings(m_writer);
         m_writer.println(
-            "protected static class ImplData"
+            "public static class ImplData"
             + m_templateUnit.getGenericParams().generateGenericsDeclaration());
         m_writer.print("  extends ");
         if(m_templateUnit.hasParentPath())
@@ -451,7 +449,7 @@ public class ProxyGenerator extends AbstractSourceGenerator
         }
 
         m_writer.println(
-            "@Override @SuppressWarnings(\"unchecked\") protected ImplData"
+            "@Override @SuppressWarnings(\"unchecked\") public ImplData"
             + m_templateUnit.getGenericParams().generateGenericParamsList()
             + " getImplData()");
         m_writer.openBlock();

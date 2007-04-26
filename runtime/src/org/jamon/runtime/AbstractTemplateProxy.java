@@ -18,7 +18,7 @@
  * Contributor(s): Ian Robertson
  */
 
-package org.jamon;
+package org.jamon.runtime;
 
 public abstract class AbstractTemplateProxy
 {
@@ -26,7 +26,7 @@ public abstract class AbstractTemplateProxy
     {
     }
 
-    protected static class ImplData
+    public static class ImplData
     {
     }
 
@@ -48,7 +48,7 @@ public abstract class AbstractTemplateProxy
     private final TemplateManager m_templateManager;
     private ImplData m_implData = makeImplData();
 
-    protected abstract AbstractTemplateImpl constructImpl(
+    public abstract AbstractTemplateImpl constructImpl(
         Class<? extends AbstractTemplateImpl> p_class);
 
     protected abstract AbstractTemplateImpl constructImpl();
@@ -60,7 +60,7 @@ public abstract class AbstractTemplateProxy
         m_implData = null;
     }
 
-    protected ImplData getImplData()
+    public ImplData getImplData()
     {
         if (m_implData == null)
         {

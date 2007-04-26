@@ -20,12 +20,10 @@
 
 package org.jamon.util;
 
-import org.jamon.JamonRuntimeException;
-
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
-import java.lang.reflect.Method;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 public class InternalJavaCompiler
     implements JavaCompiler
@@ -76,20 +74,20 @@ public class InternalJavaCompiler
         {
             // this should never happen, since we checked for this
             //   in the constructor
-            throw new JamonRuntimeException(e);
+            throw new RuntimeException(e);
         }
         catch (InstantiationException e)
         {
             // this should never happen, since we checked for this
             //   in the constructor
-            throw new JamonRuntimeException(e);
+            throw new RuntimeException(e);
         }
         catch (InvocationTargetException e)
         {
             // internal compiler error, so the compiler object
             //   is not usable
             m_compiler = null;
-            throw new JamonRuntimeException(e.getTargetException());
+            throw new RuntimeException(e.getTargetException());
         }
         finally
         {

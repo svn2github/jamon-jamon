@@ -30,13 +30,13 @@
   <target name="jamon-libs-use-jar" if="org.jamon.integration.usejar">
     <dirname property="jamon.top.dir" file="."/>
     <property name="java.lib.jamon"
-              value="${jamon.top.dir}/jamon-${jamon.version}.jar:${jamon.top.dir}/jamon-anttask-${jamon.anttask.version}.jar"/>
+              value="${jamon.top.dir}/jamon-${jamon.version}.jar:${jamon.top.dir}/jamon-runtime-${jamon.version}.jar:${jamon.top.dir}/jamon-api-${jamon.version}.jar:${jamon.top.dir}/jamon-anttask-${jamon.anttask.version}.jar"/>
   </target>
 
   <target name="jamon-libs-use-work" unless="org.jamon.integration.usejar">
     <dirname property="jamon.top.dir" file="."/>
     <property name="java.lib.jamon"
-              value="${jamon.top.dir}/core/build/classes:${jamon.top.dir}/anttask/build/classes"/>
+      value="${jamon.top.dir}/core/build/classes:${jamon.top.dir}/runtime/build/classes:${jamon.top.dir}/anttask/build/classes"/>
   </target>
 
   <target name="init" depends="jamon-libs-use-jar,jamon-libs-use-work"/>

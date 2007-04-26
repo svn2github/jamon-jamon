@@ -26,25 +26,28 @@ import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Collection;
-import java.util.List;
-import java.util.LinkedList;
-import java.util.Map;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
-import org.jamon.util.JavaCompiler;
-import org.jamon.util.ExternalJavaCompiler;
-import org.jamon.util.InternalJavaCompiler;
-import org.jamon.util.StringUtils;
-import org.jamon.util.WorkDirClassLoader;
 import org.jamon.annotations.Template;
 import org.jamon.api.SourceGenerator;
 import org.jamon.api.TemplateSource;
-import org.jamon.codegen.TemplateDescriber;
 import org.jamon.codegen.Analyzer;
 import org.jamon.codegen.ImplGenerator;
 import org.jamon.codegen.ProxyGenerator;
+import org.jamon.codegen.TemplateDescriber;
 import org.jamon.codegen.TemplateUnit;
+import org.jamon.runtime.AbstractTemplateImpl;
+import org.jamon.runtime.AbstractTemplateProxy;
+import org.jamon.runtime.TemplateManager;
+import org.jamon.util.ExternalJavaCompiler;
+import org.jamon.util.InternalJavaCompiler;
+import org.jamon.util.JavaCompiler;
+import org.jamon.util.StringUtils;
+import org.jamon.util.WorkDirClassLoader;
 
 /**
  * An implementation of the {@link TemplateManager} interface which
@@ -241,7 +244,7 @@ public class RecompilingTemplateManager
         }
         catch (Exception e)
         {
-            throw new JamonRuntimeException(e);
+            throw new RuntimeException(e);
         }
     }
 
@@ -259,7 +262,7 @@ public class RecompilingTemplateManager
                      + ".tmp");
         if (! workDir.mkdirs())
         {
-            throw new JamonRuntimeException
+            throw new RuntimeException
                 ("Unable to create default work directory " + workDir);
         }
         workDir.deleteOnExit();
@@ -368,17 +371,17 @@ public class RecompilingTemplateManager
             {
                 if (! m_templateSource.available(p_path))
                 {
-                    throw new UnknownTemplateException(p_path);
+                    throw new RuntimeException("The template at path " + p_path + " could not be found");
                 }
                 else
                 {
-                    throw new JamonRuntimeException(e);
+                    throw new RuntimeException(e);
                 }
             }
         }
         catch (IOException e)
         {
-            throw new JamonRuntimeException(e);
+            throw new RuntimeException(e);
         }
     }
 

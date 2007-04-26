@@ -14,6 +14,7 @@
   <property file="${user.home}/.ant.properties"/>
 
   <import file="build.version.xml"/>
+  <property name="jarfile.runtime" value="jamon-runtime-${jamon.version}.jar" />
   <property name="jarfile.core" value="jamon-${jamon.version}.jar" />
   <property name="jarfile.api" value="jamon-api-${jamon.api.version}.jar" />
   <property name="jarfile.anttask" value="jamon-anttask-${jamon.anttask.version}.jar" />
@@ -39,6 +40,9 @@
         <filterset refid="svn.version"/>
       </filterset>
     </copy>
+    <jar jarfile="${jarfile.runtime}">
+      <fileset dir="runtime/build/classes" />
+    </jar>
     <jar jarfile="${jarfile.core}" manifest="manifest.mf" >
       <fileset dir="core/build/classes" />
     </jar>
@@ -57,6 +61,7 @@
   </target>
 
   <target name="base" description="Build and test subprojects">
+    <ant dir="runtime" target="test"/>
     <ant dir="core" target="test"/>
     <ant dir="anttask" target="test"/>
   </target>
@@ -64,6 +69,7 @@
   <target name="spotless"
           depends="localclean"
           description="Scrub the workspace">
+    <ant dir="runtime" target="spotless"/>
     <ant dir="core" target="spotless"/>
     <ant dir="integration" target="spotless"/>
     <ant dir="anttask" target="spotless"/>
@@ -81,6 +87,7 @@
   <target name="clean"
           depends="localclean"
           description="Remove build artifacts">
+    <ant dir="runtime" target="clean"/>
     <ant dir="core" target="clean"/>
     <ant dir="integration" target="clean"/>
     <ant dir="anttask" target="clean"/>
@@ -89,6 +96,7 @@
   </target>
 
   <target name="javadoc" description="Build the javadoc">
+    <ant dir="runtime" target="javadoc"/>
     <ant dir="core" target="javadoc"/>
   </target>
 

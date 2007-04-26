@@ -11,7 +11,7 @@
   <property name="work.dir" value="${build.dir}/work" />
   <property name="test.src.dir" value="${build.dir}/src" />
   <property name="classpath"
-            value="../build/classes:../../core/build/classes" />
+            value="../build/classes:../../core/build/classes:../../runtime/build/classes" />
 
   <target name="test" depends="init,test-invoker,test-jamon" />
 

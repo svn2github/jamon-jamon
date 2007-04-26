@@ -27,8 +27,6 @@ import java.io.PushbackInputStream;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 
-import org.jamon.JamonRuntimeException;
-
 public class EncodingReader
     extends Reader
 {
@@ -219,7 +217,7 @@ public class EncodingReader
         catch (UnsupportedEncodingException e)
         {
             e.printStackTrace();
-            throw new JamonRuntimeException(e);
+            throw new RuntimeException(e);
         }
     }
 }

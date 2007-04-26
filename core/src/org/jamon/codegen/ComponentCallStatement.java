@@ -22,7 +22,6 @@ package org.jamon.codegen;
 
 import java.util.List;
 
-import org.jamon.JamonRuntimeException;
 import org.jamon.ParserErrorImpl;
 import org.jamon.node.GenericCallParam;
 
@@ -62,7 +61,7 @@ public class ComponentCallStatement
         }
         catch (java.io.IOException e)
         {
-            throw new JamonRuntimeException(e);
+            throw new RuntimeException(e);
         }
 
         if (desc.getJamonContextType() != null

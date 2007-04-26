@@ -18,7 +18,11 @@
  * Contributor(s): Ian Robertson
  */
 
-package org.jamon;
+package org.jamon.runtime;
+
+import org.jamon.runtime.AbstractTemplateProxy;
+import org.jamon.runtime.TemplateManager;
+import org.jamon.runtime.TemplateManagerSource;
 
 import junit.framework.TestCase;
 

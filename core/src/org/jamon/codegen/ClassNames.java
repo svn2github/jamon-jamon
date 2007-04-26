@@ -24,20 +24,18 @@ public interface ClassNames
 {
     public final static String IOEXCEPTION =
         java.io.IOException.class.getName();
-    public final static String JAMON_RUNTIME_EXCEPTION =
-        org.jamon.JamonRuntimeException.class.getName();
     public final static String WRITER = java.io.Writer.class.getName();
-    public final static String RENDERER = org.jamon.Renderer.class.getName();
+    public final static String RENDERER = org.jamon.runtime.Renderer.class.getName();
     public final static String ABSTRACT_RENDERER =
-        org.jamon.AbstractRenderer.class.getName();
+        org.jamon.runtime.AbstractRenderer.class.getName();
     public final static String TEMPLATE =
-        org.jamon.AbstractTemplateProxy.class.getName();
+        org.jamon.runtime.AbstractTemplateProxy.class.getName();
     public final static String TEMPLATE_INTF = TEMPLATE + ".Intf";
     public final static String IMPL_DATA = TEMPLATE + ".ImplData";
     public final static String TEMPLATE_MANAGER =
-        org.jamon.TemplateManager.class.getName();
+        org.jamon.runtime.TemplateManager.class.getName();
     public static final String BASE_TEMPLATE =
-        org.jamon.AbstractTemplateImpl.class.getName();
+        org.jamon.runtime.AbstractTemplateImpl.class.getName();
     public static final String ARGUMENT_ANNOTATION =
         org.jamon.annotations.Argument.class.getName();
     public static final String FRAGMENT_ANNOTATION =

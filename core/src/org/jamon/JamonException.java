@@ -25,45 +25,17 @@ public abstract class JamonException
 {
     public JamonException(String p_msg)
     {
-        this(p_msg,null);
+        super(p_msg);
     }
 
     public JamonException(String p_msg, Throwable p_rootCause)
     {
-        super(p_msg);
-        m_rootCause = p_rootCause;
+        super(p_msg, p_rootCause);
     }
 
     public JamonException(Throwable p_rootCause)
     {
-        this(p_rootCause.getMessage(),p_rootCause);
+        super(p_rootCause);
     }
 
-    private final Throwable m_rootCause;
-
-    @Override public Throwable getCause()
-    {
-        return m_rootCause;
-    }
-
-    @Override public void printStackTrace(java.io.PrintWriter p_writer)
-    {
-        if (getCause() != null)
-        {
-            getCause().printStackTrace(p_writer);
-            p_writer.print("wrapped by ");
-        }
-        super.printStackTrace(p_writer);
-        p_writer.flush();
-    }
-
-    @Override public void printStackTrace(java.io.PrintStream p_stream)
-    {
-        printStackTrace(new java.io.PrintWriter(p_stream));
-    }
-
-    @Override public void printStackTrace()
-    {
-        printStackTrace(System.err);
-    }
 }

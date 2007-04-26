@@ -13,18 +13,19 @@
   <property name="classes.dir" value="${build.dir}/classes"/>
   <property name="src.dir" value="src"/>
 
-  <property name="java.lib.jamon" value="../core/build/classes"/>
-
+  <property name="java.lib.jamon.core" value="../core/build/classes"/>
+  <property name="java.lib.jamon.runtime" value="../runtime/build/classes"/>
+  
   <target name="compile"
           description="Compiles Java files">
     <dependset>
-      <srcfileset dir="${java.lib.jamon}"/>
+      <srcfileset dir="${src.dir}"/>
       <targetfileset dir="${classes.dir}"/>
     </dependset>
     <mkdir dir="${classes.dir}"/>
     <javac destdir="${classes.dir}"
            debug="true"
-           classpath="${java.lib.jamon}"
+           classpath="${java.lib.jamon.core}:${java.lib.jamon.runtime}"
            deprecation="true">
       <src path="${src.dir}"/>
     </javac>
@@ -34,15 +35,6 @@
           depends="compile"
           description="Tests the anttask">
     <ant dir="test"/>
-  </target>
-
-  <target name="cvsignores">
-    <echo file=".cvsignore">
-      .cvsignore
-      ${build.dir}
-      build.properties
-    </echo>
-    <ant dir="test" target="cvsignores"/>
   </target>
 
   <target name="clean"
@@ -55,7 +47,6 @@
           description="Restores work area to its state after checking out">
     <delete dir="${build.dir}"/>
     <ant dir="test" target="spotless"/>
-    <delete file=".cvsignore" />
   </target>
 
 </project>

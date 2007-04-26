@@ -29,7 +29,6 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.StringTokenizer;
 
-import org.jamon.JamonRuntimeException;
 import org.jamon.ParserErrorImpl;
 import org.jamon.ParserErrorsImpl;
 import org.jamon.api.TemplateSource;
@@ -211,7 +210,7 @@ public class TemplateDescriber
             EmitMode emitMode = EmitMode.fromString(emitModeName);
             if (emitMode == null)
             {
-                throw new JamonRuntimeException(
+                throw new RuntimeException(
                     "Unknown emit mode: " + emitModeName);
             }
             return emitMode;

@@ -33,9 +33,9 @@ import org.jamon.ParserErrorImpl;
 import org.jamon.ParserErrorsImpl;
 import org.jamon.RecompilingTemplateManager;
 import org.jamon.TemplateFileLocation;
-import org.jamon.TemplateManager;
 import org.jamon.TemplateProcessor;
 import org.jamon.node.LocationImpl;
+import org.jamon.runtime.TemplateManager;
 
 public abstract class TestBase
     extends TestCase
