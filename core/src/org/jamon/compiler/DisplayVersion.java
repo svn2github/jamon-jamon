@@ -18,7 +18,7 @@
  * Contributor(s):
  */
 
-package org.jamon;
+package org.jamon.compiler;
 
 public class DisplayVersion
 {

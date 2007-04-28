@@ -18,7 +18,7 @@
  * Contributor(s): Ian Robertson
  */
 
-package org.jamon;
+package org.jamon.compiler;
 
 import java.io.File;
 import java.io.FileOutputStream;

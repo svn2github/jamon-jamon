@@ -3,7 +3,7 @@
  */
 package org.jamon.parser;
 
-import org.jamon.ParserErrorImpl;
+import org.jamon.compiler.ParserErrorImpl;
 
 class AbstractTagEndDetector implements TagEndDetector
 {

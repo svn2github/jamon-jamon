@@ -7,11 +7,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import org.jamon.ParserErrorImpl;
-import org.jamon.ParserErrorsImpl;
-import org.jamon.TemplateFileLocation;
 import org.jamon.api.ParserError;
 import org.jamon.api.TemplateLocation;
+import org.jamon.compiler.ParserErrorImpl;
+import org.jamon.compiler.ParserErrorsImpl;
+import org.jamon.compiler.TemplateFileLocation;
 import org.jamon.node.AbstractNode;
 import org.jamon.node.AbstractPathNode;
 import org.jamon.node.LocationImpl;

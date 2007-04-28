@@ -19,7 +19,7 @@
  */
 package org.jamon.parser;
 
-import org.jamon.ParserErrorImpl;
+import org.jamon.compiler.ParserErrorImpl;
 
 
 class OptionalValueTagEndDetector implements TagEndDetector

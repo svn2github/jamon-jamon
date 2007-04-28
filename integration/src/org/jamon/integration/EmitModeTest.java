@@ -20,7 +20,7 @@
 
 package org.jamon.integration;
 
-import org.jamon.TemplateCompilationException;
+import org.jamon.compiler.TemplateCompilationException;
 
 public class EmitModeTest
     extends TestBase

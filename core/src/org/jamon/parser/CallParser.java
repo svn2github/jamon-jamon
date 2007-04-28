@@ -24,8 +24,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jamon.ParserErrorImpl;
-import org.jamon.ParserErrorsImpl;
+import org.jamon.compiler.ParserErrorImpl;
+import org.jamon.compiler.ParserErrorsImpl;
 import org.jamon.node.AbsolutePathNode;
 import org.jamon.node.AbstractCallNode;
 import org.jamon.node.AbstractComponentCallNode;

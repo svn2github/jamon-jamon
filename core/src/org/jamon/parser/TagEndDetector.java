@@ -1,6 +1,6 @@
 package org.jamon.parser;
 
-import org.jamon.ParserErrorImpl;
+import org.jamon.compiler.ParserErrorImpl;
 
 /**
  * A class to detect when we are done reading a tag.

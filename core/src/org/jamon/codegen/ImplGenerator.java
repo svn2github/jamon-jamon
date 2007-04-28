@@ -21,8 +21,9 @@
 package org.jamon.codegen;
 
 import java.io.OutputStream;
-import org.jamon.ParserErrorImpl;
-import org.jamon.ParserErrorsImpl;
+
+import org.jamon.compiler.ParserErrorImpl;
+import org.jamon.compiler.ParserErrorsImpl;
 
 public class ImplGenerator extends AbstractSourceGenerator
 {

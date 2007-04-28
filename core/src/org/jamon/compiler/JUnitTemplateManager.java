@@ -18,7 +18,7 @@
  * Contributor(s):
  */
 
-package org.jamon;
+package org.jamon.compiler;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -28,6 +28,9 @@ import java.util.Map;
 
 import junit.framework.Assert;
 
+import org.jamon.AbstractTemplateImpl;
+import org.jamon.AbstractTemplateProxy;
+import org.jamon.TemplateManager;
 import org.jamon.annotations.Argument;
 import org.jamon.annotations.Template;
 import org.jamon.util.StringUtils;

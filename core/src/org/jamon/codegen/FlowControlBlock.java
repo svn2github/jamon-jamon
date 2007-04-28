@@ -1,6 +1,6 @@
 package org.jamon.codegen;
 
-import org.jamon.ParserErrorImpl;
+import org.jamon.compiler.ParserErrorImpl;
 
 public class FlowControlBlock
     extends AbstractStatementBlock implements Statement

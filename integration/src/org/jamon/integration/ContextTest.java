@@ -2,9 +2,9 @@ package org.jamon.integration;
 
 import java.util.List;
 
-import org.jamon.ParserErrorsImpl;
 import org.jamon.api.ParserError;
 import org.jamon.api.ParserErrors;
+import org.jamon.compiler.ParserErrorsImpl;
 
 import test.jamon.context.Child;
 import test.jamon.context.ContextCaller;

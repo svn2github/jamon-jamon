@@ -22,8 +22,8 @@ package org.jamon.integration;
 
 import java.lang.reflect.Modifier;
 
-import org.jamon.TemplateCompilationException;
 import org.jamon.annotations.Template;
+import org.jamon.compiler.TemplateCompilationException;
 
 import test.jamon.Child;
 import test.jamon.Child1;

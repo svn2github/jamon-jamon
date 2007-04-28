@@ -22,7 +22,7 @@ package org.jamon.codegen;
 
 import java.util.List;
 
-import org.jamon.ParserErrorImpl;
+import org.jamon.compiler.ParserErrorImpl;
 import org.jamon.node.GenericCallParam;
 
 public class ComponentCallStatement

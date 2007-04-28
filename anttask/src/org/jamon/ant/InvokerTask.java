@@ -39,14 +39,14 @@ import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Environment;
 import org.apache.tools.ant.types.Path;
 import org.jamon.BasicTemplateManager;
-import org.jamon.InvokerTool;
-import org.jamon.JamonException;
-import org.jamon.ParserErrorsImpl;
-import org.jamon.RecompilingTemplateManager;
-import org.jamon.TemplateInspector;
 import org.jamon.TemplateManager;
-import org.jamon.TemplateInspector.InvalidTemplateException;
 import org.jamon.api.ParserError;
+import org.jamon.compiler.InvokerTool;
+import org.jamon.compiler.JamonException;
+import org.jamon.compiler.ParserErrorsImpl;
+import org.jamon.compiler.RecompilingTemplateManager;
+import org.jamon.compiler.TemplateInspector;
+import org.jamon.compiler.TemplateInspector.InvalidTemplateException;
 
 /**
  * Ant task to reflectively invoke templates.

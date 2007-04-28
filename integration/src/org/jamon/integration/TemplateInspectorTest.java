@@ -20,7 +20,8 @@
 
 package org.jamon.integration;
 
-import org.jamon.TemplateInspector;
+import org.jamon.compiler.TemplateInspector;
+
 import java.util.List;
 
 public class TemplateInspectorTest

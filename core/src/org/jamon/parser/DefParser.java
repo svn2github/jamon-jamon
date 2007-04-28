@@ -20,7 +20,7 @@
 
 package org.jamon.parser;
 
-import org.jamon.ParserErrorsImpl;
+import org.jamon.compiler.ParserErrorsImpl;
 import org.jamon.node.DefNode;
 
 public class DefParser extends SubcomponentParser<DefNode>

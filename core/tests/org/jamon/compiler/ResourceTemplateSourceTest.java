@@ -18,7 +18,7 @@
  * Contributor(s): Ian Robertson
  */
 
-package org.jamon;
+package org.jamon.compiler;
 
 import junit.framework.TestCase;
 import java.io.File;
@@ -26,6 +26,8 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.net.URLClassLoader;
 import java.net.URL;
+
+import org.jamon.compiler.ResourceTemplateSource;
 
 public class ResourceTemplateSourceTest
     extends TestCase

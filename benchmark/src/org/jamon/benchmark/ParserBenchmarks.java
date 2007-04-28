@@ -7,10 +7,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-import org.jamon.FileTemplateSource;
 import org.jamon.api.TemplateLocation;
 import org.jamon.api.TemplateSource;
 import org.jamon.codegen.TemplateDescriber;
+import org.jamon.compiler.FileTemplateSource;
 import org.jamon.node.AbstractNode;
 import org.jamon.node.Analysis;
 import org.jamon.node.AnalysisAdapter;

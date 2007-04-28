@@ -3,7 +3,7 @@ package org.jamon.codegen;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.jamon.ParserErrorImpl;
+import org.jamon.compiler.ParserErrorImpl;
 import org.jamon.node.ArgNode;
 import org.jamon.node.FragmentArgsNode;
 import org.jamon.node.OptionalArgNode;

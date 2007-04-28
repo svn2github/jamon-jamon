@@ -2,7 +2,7 @@ package org.jamon.parser;
 
 import java.io.IOException;
 
-import org.jamon.ParserErrorsImpl;
+import org.jamon.compiler.ParserErrorsImpl;
 import org.jamon.node.AbsolutePathNode;
 import org.jamon.node.AbstractPathNode;
 import org.jamon.node.NamedAliasPathNode;

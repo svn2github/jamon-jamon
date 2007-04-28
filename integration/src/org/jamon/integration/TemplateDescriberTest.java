@@ -27,11 +27,11 @@ import java.util.Map;
 
 import junit.framework.TestCase;
 
-import org.jamon.FileTemplateSource;
 import org.jamon.codegen.FragmentArgument;
 import org.jamon.codegen.MethodUnit;
 import org.jamon.codegen.TemplateDescriber;
 import org.jamon.codegen.TemplateDescription;
+import org.jamon.compiler.FileTemplateSource;
 
 public class TemplateDescriberTest
     extends TestCase

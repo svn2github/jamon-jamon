@@ -26,8 +26,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeMap;
 
-import org.jamon.ParserErrorImpl;
-import org.jamon.ParserErrorsImpl;
+import org.jamon.compiler.ParserErrorImpl;
+import org.jamon.compiler.ParserErrorsImpl;
 import org.jamon.node.ArgNode;
 import org.jamon.node.FragmentArgsNode;
 import org.jamon.node.OptionalArgNode;

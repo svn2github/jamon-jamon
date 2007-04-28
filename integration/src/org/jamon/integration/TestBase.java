@@ -29,12 +29,12 @@ import java.util.List;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
-import org.jamon.ParserErrorImpl;
-import org.jamon.ParserErrorsImpl;
-import org.jamon.RecompilingTemplateManager;
-import org.jamon.TemplateFileLocation;
 import org.jamon.TemplateManager;
-import org.jamon.TemplateProcessor;
+import org.jamon.compiler.ParserErrorImpl;
+import org.jamon.compiler.ParserErrorsImpl;
+import org.jamon.compiler.RecompilingTemplateManager;
+import org.jamon.compiler.TemplateFileLocation;
+import org.jamon.compiler.TemplateProcessor;
 import org.jamon.node.LocationImpl;
 
 public abstract class TestBase

@@ -20,7 +20,7 @@
 
 package org.jamon.codegen;
 
-import org.jamon.ParserErrorsImpl;
+import org.jamon.compiler.ParserErrorsImpl;
 import org.jamon.node.OptionalArgNode;
 
 public class FragmentUnit extends AbstractInnerUnit

@@ -22,7 +22,7 @@ package org.jamon.codegen;
 
 import java.util.Collection;
 
-import org.jamon.ParserErrorsImpl;
+import org.jamon.compiler.ParserErrorsImpl;
 
 public class DeclaredMethodUnit
     extends AbstractInnerUnit

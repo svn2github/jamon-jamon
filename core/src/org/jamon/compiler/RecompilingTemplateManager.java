@@ -18,7 +18,7 @@
  * Contributor(s): Ian Robertson
  */
 
-package org.jamon;
+package org.jamon.compiler;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -32,6 +32,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.jamon.AbstractTemplateImpl;
+import org.jamon.AbstractTemplateProxy;
+import org.jamon.TemplateManager;
 import org.jamon.annotations.Template;
 import org.jamon.api.SourceGenerator;
 import org.jamon.api.TemplateSource;

@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.jamon.ParserErrorsImpl;
+import org.jamon.compiler.ParserErrorsImpl;
 import org.jamon.node.AnnotationNode;
 import org.jamon.node.ClassNode;
 import org.jamon.node.GenericsParamNode;

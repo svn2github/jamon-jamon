@@ -2,8 +2,8 @@ package org.jamon.parser;
 
 import java.io.IOException;
 
-import org.jamon.ParserErrorImpl;
-import org.jamon.ParserErrorsImpl;
+import org.jamon.compiler.ParserErrorImpl;
+import org.jamon.compiler.ParserErrorsImpl;
 import org.jamon.node.AbstractPathNode;
 
 /**

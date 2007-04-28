@@ -29,9 +29,9 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.StringTokenizer;
 
-import org.jamon.ParserErrorImpl;
-import org.jamon.ParserErrorsImpl;
 import org.jamon.api.TemplateSource;
+import org.jamon.compiler.ParserErrorImpl;
+import org.jamon.compiler.ParserErrorsImpl;
 import org.jamon.emit.EmitMode;
 import org.jamon.node.LocationImpl;
 import org.jamon.node.TopNode;

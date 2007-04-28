@@ -34,9 +34,9 @@ import org.apache.tools.ant.util.SourceFileScanner;
 
 import org.apache.tools.ant.taskdefs.MatchingTask;
 
-import org.jamon.ParserErrorsImpl;
-import org.jamon.TemplateProcessor;
 import org.jamon.api.ParserError;
+import org.jamon.compiler.ParserErrorsImpl;
+import org.jamon.compiler.TemplateProcessor;
 
 /**
  * Ant task to convert Jamon templates into Java.

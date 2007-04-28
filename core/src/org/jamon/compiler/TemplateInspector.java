@@ -18,7 +18,7 @@
  * Contributor(s):
  */
 
-package org.jamon;
+package org.jamon.compiler;
 
 import java.io.Writer;
 import java.lang.reflect.InvocationTargetException;
@@ -29,6 +29,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.jamon.AbstractTemplateProxy;
+import org.jamon.TemplateManager;
+import org.jamon.TemplateManagerSource;
 import org.jamon.annotations.Argument;
 import org.jamon.annotations.Template;
 import org.jamon.util.StringUtils;

@@ -23,7 +23,7 @@ package org.jamon.codegen;
 import java.util.Collection;
 import java.util.List;
 
-import org.jamon.ParserErrorsImpl;
+import org.jamon.compiler.ParserErrorsImpl;
 import org.jamon.node.ParentArgNode;
 
 public class OverriddenMethodUnit

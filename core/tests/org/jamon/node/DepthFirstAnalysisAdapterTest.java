@@ -1,7 +1,7 @@
 package org.jamon.node;
 
-import org.jamon.TemplateFileLocation;
 import org.jamon.api.Location;
+import org.jamon.compiler.TemplateFileLocation;
 
 import junit.framework.TestCase;
 

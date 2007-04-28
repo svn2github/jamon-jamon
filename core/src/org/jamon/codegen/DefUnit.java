@@ -20,7 +20,7 @@
 
 package org.jamon.codegen;
 
-import org.jamon.ParserErrorsImpl;
+import org.jamon.compiler.ParserErrorsImpl;
 
 public class DefUnit extends AbstractInnerUnit
 {

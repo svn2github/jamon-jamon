@@ -28,9 +28,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.jamon.ParserErrorImpl;
-import org.jamon.ParserErrorsImpl;
 import org.jamon.api.Location;
+import org.jamon.compiler.ParserErrorImpl;
+import org.jamon.compiler.ParserErrorsImpl;
 import org.jamon.emit.EmitMode;
 import org.jamon.node.*;
 import org.jamon.util.StringUtils;

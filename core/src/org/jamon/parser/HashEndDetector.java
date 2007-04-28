@@ -1,6 +1,6 @@
 package org.jamon.parser;
 
-import org.jamon.ParserErrorImpl;
+import org.jamon.compiler.ParserErrorImpl;
 
 /**
  * A {@code TagEndDetector} which will end either on a "%>" sequence or a hash sign ("#").

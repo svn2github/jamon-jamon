@@ -20,7 +20,7 @@
 
 package org.jamon.codegen;
 
-import org.jamon.ParserErrorImpl;
+import org.jamon.compiler.ParserErrorImpl;
 
 public abstract class AbstractInnerUnitCallStatement
     extends AbstractCallStatement

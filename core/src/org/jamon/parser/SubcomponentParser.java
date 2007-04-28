@@ -21,7 +21,7 @@ package org.jamon.parser;
 
 import java.io.IOException;
 
-import org.jamon.ParserErrorsImpl;
+import org.jamon.compiler.ParserErrorsImpl;
 import org.jamon.node.AbstractBodyNode;
 
 public abstract class SubcomponentParser<Node extends AbstractBodyNode>

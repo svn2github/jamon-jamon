@@ -28,7 +28,7 @@ import java.util.Set;
 
 import junit.framework.TestCase;
 
-import org.jamon.TemplateFileLocation;
+import org.jamon.compiler.TemplateFileLocation;
 import org.jamon.node.ArgNameNode;
 import org.jamon.node.ArgValueNode;
 import org.jamon.node.GenericsBoundNode;

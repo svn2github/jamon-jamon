@@ -24,8 +24,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 
-import org.jamon.ParserErrorImpl;
-import org.jamon.ParserErrorsImpl;
+import org.jamon.compiler.ParserErrorImpl;
+import org.jamon.compiler.ParserErrorsImpl;
 import org.jamon.util.StringUtils;
 
 

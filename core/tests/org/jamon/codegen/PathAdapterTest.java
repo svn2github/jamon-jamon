@@ -23,10 +23,10 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.jamon.ParserErrorImpl;
-import org.jamon.ParserErrorsImpl;
-import org.jamon.TemplateFileLocation;
 import org.jamon.api.TemplateLocation;
+import org.jamon.compiler.ParserErrorImpl;
+import org.jamon.compiler.ParserErrorsImpl;
+import org.jamon.compiler.TemplateFileLocation;
 import org.jamon.node.AbsolutePathNode;
 import org.jamon.node.LocationImpl;
 import org.jamon.node.NamedAliasPathNode;

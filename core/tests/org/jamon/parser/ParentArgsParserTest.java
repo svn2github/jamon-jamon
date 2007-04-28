@@ -4,7 +4,7 @@ import static org.junit.Assert.*;
 
 import java.io.IOException;
 
-import org.jamon.ParserErrorsImpl;
+import org.jamon.compiler.ParserErrorsImpl;
 import org.jamon.node.AbstractNode;
 import org.jamon.node.ArgNameNode;
 import org.jamon.node.ArgValueNode;

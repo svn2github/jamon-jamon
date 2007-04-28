@@ -21,8 +21,8 @@ package org.jamon.parser;
 
 import static org.junit.Assert.*;
 
-import org.jamon.ParserErrorImpl;
-import org.jamon.ParserErrorsImpl;
+import org.jamon.compiler.ParserErrorImpl;
+import org.jamon.compiler.ParserErrorsImpl;
 import org.jamon.node.AbstractImportNode;
 import org.jamon.node.ImportNode;
 import org.jamon.node.StaticImportNode;

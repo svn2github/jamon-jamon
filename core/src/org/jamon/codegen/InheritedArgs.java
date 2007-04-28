@@ -26,7 +26,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.jamon.ParserErrorsImpl;
+import org.jamon.compiler.ParserErrorsImpl;
 import org.jamon.node.ArgValueNode;
 import org.jamon.node.ParentArgNode;
 import org.jamon.node.ParentArgWithDefaultNode;

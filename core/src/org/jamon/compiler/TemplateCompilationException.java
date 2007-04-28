@@ -18,24 +18,16 @@
  * Contributor(s):
  */
 
-package org.jamon;
+package org.jamon.compiler;
 
-public abstract class JamonException
-    extends Exception
+
+public class TemplateCompilationException
+    extends RuntimeException
 {
-    public JamonException(String p_msg)
+    public TemplateCompilationException(String p_msg)
     {
         super(p_msg);
     }
 
-    public JamonException(String p_msg, Throwable p_rootCause)
-    {
-        super(p_msg, p_rootCause);
-    }
-
-    public JamonException(Throwable p_rootCause)
-    {
-        super(p_rootCause);
-    }
-
+    private static final long serialVersionUID = 2006091701L;
 }

@@ -18,7 +18,7 @@
  * Contributor(s):
  */
 
-package org.jamon;
+package org.jamon.compiler;
 
 import java.io.IOException;
 import java.io.InputStream;

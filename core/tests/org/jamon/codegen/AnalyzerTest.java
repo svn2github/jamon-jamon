@@ -30,9 +30,9 @@ import java.util.Properties;
 
 import junit.framework.TestCase;
 
-import org.jamon.TemplateResourceLocation;
 import org.jamon.api.TemplateLocation;
 import org.jamon.api.TemplateSource;
+import org.jamon.compiler.TemplateResourceLocation;
 import org.jamon.node.AnnotationNode;
 import org.jamon.node.LocationImpl;
 

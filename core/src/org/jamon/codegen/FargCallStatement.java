@@ -20,8 +20,8 @@
 
 package org.jamon.codegen;
 
-import org.jamon.ParserErrorImpl;
-import org.jamon.ParserErrorsImpl;
+import org.jamon.compiler.ParserErrorImpl;
+import org.jamon.compiler.ParserErrorsImpl;
 
 public class FargCallStatement
     extends AbstractCallStatement

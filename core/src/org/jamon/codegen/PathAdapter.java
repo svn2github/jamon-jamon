@@ -21,7 +21,7 @@ package org.jamon.codegen;
 
 import java.util.Map;
 
-import org.jamon.ParserErrorsImpl;
+import org.jamon.compiler.ParserErrorsImpl;
 import org.jamon.node.AbsolutePathNode;
 import org.jamon.node.DepthFirstAnalysisAdapter;
 import org.jamon.node.NamedAliasPathNode;

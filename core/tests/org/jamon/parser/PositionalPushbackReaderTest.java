@@ -25,8 +25,8 @@ import java.io.StringReader;
 
 import junit.framework.TestCase;
 
-import org.jamon.TemplateFileLocation;
 import org.jamon.api.TemplateLocation;
+import org.jamon.compiler.TemplateFileLocation;
 import org.jamon.node.LocationImpl;
 
 public class PositionalPushbackReaderTest extends TestCase
