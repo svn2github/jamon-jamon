@@ -30,9 +30,6 @@ import junit.framework.Assert;
 
 import org.jamon.annotations.Argument;
 import org.jamon.annotations.Template;
-import org.jamon.runtime.AbstractTemplateImpl;
-import org.jamon.runtime.AbstractTemplateProxy;
-import org.jamon.runtime.TemplateManager;
 import org.jamon.util.StringUtils;
 
 /**

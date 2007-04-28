@@ -18,31 +18,30 @@
  * Contributor(s):
  */
 
-package org.jamon.runtime;
-
-import java.io.Writer;
-import java.io.IOException;
+package org.jamon;
 
 /**
- * A simple interface describing that which knows how to render.
+ * A <code>TemplateManager</code> is the entry point to obtaining
+ * instances of template objects.
  */
-public interface Renderer
+public interface TemplateManager
 {
     /**
-     * Render to the given writer.
+     * Given a proxy, return an instance of the executable code for
+     * that proxy's template.
      *
-     * @param p_writer the Writer to which to render
+     * @param p_proxy a proxy for the template
      *
-     * @exception IOException if writing to the Writer throws an IOException
-     */
-    void renderTo(Writer p_writer)
-        throws IOException;
+     * @return a <code>Template</code> instance
+     **/
+    AbstractTemplateProxy.Intf constructImpl(AbstractTemplateProxy p_proxy);
 
     /**
-     * Render this Renderer into a String.
+     * Given a template path, return a proxy for that template.
      *
-     * @return a String that is the result of rendering this Renderer
+     * @param p_path the path to the template
+     *
+     * @return a <code>Template</code> instance
      */
-    String asString();
-
+    AbstractTemplateProxy constructProxy(String p_path);
 }

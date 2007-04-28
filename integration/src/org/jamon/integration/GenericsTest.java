@@ -2,7 +2,7 @@ package org.jamon.integration;
 
 import java.io.Writer;
 
-import org.jamon.runtime.AbstractTemplateProxy;
+import org.jamon.AbstractTemplateProxy;
 
 import test.jamon.GenericsCall;
 import test.jamon.NonParameterizedGenericsCall;

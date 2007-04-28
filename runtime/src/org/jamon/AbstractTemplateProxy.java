@@ -18,7 +18,7 @@
  * Contributor(s): Ian Robertson
  */
 
-package org.jamon.runtime;
+package org.jamon;
 
 public abstract class AbstractTemplateProxy
 {

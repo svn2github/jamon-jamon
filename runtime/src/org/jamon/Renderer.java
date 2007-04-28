@@ -18,17 +18,15 @@
  * Contributor(s):
  */
 
-package org.jamon.runtime;
+package org.jamon;
 
-import java.io.IOException;
-import java.io.StringWriter;
 import java.io.Writer;
+import java.io.IOException;
 
 /**
- * A simple abstract class which lacks only a Writer to which to render.
+ * A simple interface describing that which knows how to render.
  */
-public abstract class AbstractRenderer
-    implements Renderer
+public interface Renderer
 {
     /**
      * Render to the given writer.
@@ -37,27 +35,14 @@ public abstract class AbstractRenderer
      *
      * @exception IOException if writing to the Writer throws an IOException
      */
-    public abstract void renderTo(Writer p_writer)
+    void renderTo(Writer p_writer)
         throws IOException;
-
 
     /**
      * Render this Renderer into a String.
      *
      * @return a String that is the result of rendering this Renderer
      */
-    public final String asString()
-    {
-        StringWriter writer = new StringWriter();
-        try
-        {
-            renderTo(writer);
-        }
-        catch (IOException e)
-        {
-            // It's a StringWriter, so we shouldn't ever get here
-            throw new RuntimeException(e);
-        }
-        return writer.toString();
-    }
+    String asString();
+
 }

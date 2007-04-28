@@ -18,7 +18,7 @@
  * Contributor(s): Luis O'Shea, Ian Robertson
  */
 
-package org.jamon.runtime;
+package org.jamon;
 
 public abstract class AbstractTemplateImpl
     implements AbstractTemplateProxy.Intf
