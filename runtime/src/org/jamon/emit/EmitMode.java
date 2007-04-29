@@ -20,6 +20,8 @@
 
 package org.jamon.emit;
 
+import java.util.Locale;
+
 public enum EmitMode
 {
     STANDARD(StandardEmitter.class),
@@ -28,7 +30,7 @@ public enum EmitMode
 
     public static EmitMode fromString(String p_string)
     {
-        return valueOf(p_string.toUpperCase());
+        return valueOf(p_string.toUpperCase(Locale.US));
     }
 
     public String getEmitterClassName()
