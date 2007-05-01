@@ -1,88 +1,100 @@
 package org.jamon.nodegen;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.PrintWriter;
 
 public class AnalysisGenerator
 {
-    private AnalysisGenerator() {}
-
-    public static void generateAnalysisInterface(
-        PrintWriter p_writer, Iterable<NodeDescriptor> p_nodes)
+    private final String m_packageName;
+    private final File m_targetDir;
+    private final Iterable<NodeDescriptor> m_nodes;
+    
+    public AnalysisGenerator(String p_packageName, File p_targetDir, Iterable<NodeDescriptor> p_nodes) 
     {
-        p_writer.println("package org.jamon.node;");
-        p_writer.println("public interface Analysis");
-        p_writer.println("{");
-        for (NodeDescriptor node : p_nodes)
-        {
-            String name = node.getName();
-            p_writer.println("    void case" + name + "(" + name + " p_node);");
-        }
-        p_writer.println("}");
-        p_writer.close();
+        m_packageName = p_packageName;
+        m_targetDir = p_targetDir;
+        m_nodes = p_nodes;
     }
 
-    public static void generateAnalysisAdapterClass(
-        PrintWriter p_writer, Iterable<NodeDescriptor> p_nodes)
+    public void generateAnalysisInterface() throws IOException
     {
-        p_writer.println("package org.jamon.node;");
-        p_writer.println("public class AnalysisAdapter implements Analysis");
-        p_writer.println("{");
-        for (NodeDescriptor node : p_nodes)
+        final PrintWriter writer = new PrintWriter(new FileWriter(new File(m_targetDir, "Analysis.java")));
+        writer.println("package " + m_packageName + ";");
+        writer.println("public interface Analysis");
+        writer.println("{");
+        for (NodeDescriptor node : m_nodes)
         {
             String name = node.getName();
-            p_writer.println(
+            writer.println("    void case" + name + "(" + name + " p_node);");
+        }
+        writer.println("}");
+        writer.close();
+    }
+
+    public void generateAnalysisAdapterClass() throws IOException
+    {
+        final PrintWriter writer = new PrintWriter(new FileWriter(new File(m_targetDir, "AnalysisAdapter.java")));
+        writer.println("package " + m_packageName + ";");
+        writer.println("public class AnalysisAdapter implements Analysis");
+        writer.println("{");
+        for (NodeDescriptor node : m_nodes)
+        {
+            String name = node.getName();
+            writer.println(
                 "  public void case" + name + "(" + name + " p_node) {}");
         }
-        p_writer.println("}");
-        p_writer.close();
+        writer.println("}");
+        writer.close();
     }
 
-    public static void generateDepthFirstAdapterClass(
-        PrintWriter p_writer, Iterable<NodeDescriptor> p_nodes)
+    public void generateDepthFirstAdapterClass() throws IOException
     {
-        p_writer.println("package org.jamon.node;");
-        p_writer.println(
+        final PrintWriter writer = new PrintWriter(new FileWriter(new File(m_targetDir, "DepthFirstAnalysisAdapter.java")));
+        writer.println("package " + m_packageName + ";");
+        writer.println(
             "public class DepthFirstAnalysisAdapter implements Analysis");
-        p_writer.println("{");
-        for (NodeDescriptor node : p_nodes)
+        writer.println("{");
+        for (NodeDescriptor node : m_nodes)
         {
             String name = node.getName();
-            p_writer.println(
+            writer.println(
                 "  public void in" + name
                 + "(@SuppressWarnings(\"unused\") " + name + " p_node) {}");
-            p_writer.println(
+            writer.println(
                 "  public void out" + name
                 + "(@SuppressWarnings(\"unused\") " + name + " p_node) {}");
-            p_writer.println(
+            writer.println(
                 "  public void case" + name + "(" + name + " p_node)");
-            p_writer.println("  {");
-            p_writer.println("    in" + name + "(p_node);");
+            writer.println("  {");
+            writer.println("    in" + name + "(p_node);");
             for (NodeMember member : node.getAllMembers())
             {
                 if (member.isNode())
                 {
                     if (member.isList())
                     {
-                        p_writer.println(
+                        writer.println(
                             "    for (AbstractNode node : p_node."
                             + member.getGetter() + ")");
-                        p_writer.println("    {");
-                        p_writer.println("      node.apply(this);");
-                        p_writer.println("    }");
+                        writer.println("    {");
+                        writer.println("      node.apply(this);");
+                        writer.println("    }");
                     }
                     else
                     {
-                        p_writer.println("    p_node." + member.getGetter()
+                        writer.println("    p_node." + member.getGetter()
                                          + ".apply(this);");
                     }
                 }
             }
-            p_writer.println("    out" + name + "(p_node);");
-            p_writer.println("  }");
-            p_writer.println();
+            writer.println("    out" + name + "(p_node);");
+            writer.println("  }");
+            writer.println();
         }
-        p_writer.println("}");
-        p_writer.close();
+        writer.println("}");
+        writer.close();
     }
 
 }

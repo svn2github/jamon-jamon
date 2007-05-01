@@ -8,9 +8,14 @@ import java.util.List;
 
 public class NodeGenerator
 {
-    private NodeGenerator()
-    {}
-    private static boolean containsLists(List<NodeMember> p_members)
+    private final String m_packageName;
+    
+    public NodeGenerator(String p_packageName)
+    {
+        m_packageName = p_packageName;
+    }
+    
+    private boolean containsLists(List<NodeMember> p_members)
     {
         for (NodeMember member : p_members)
         {
@@ -22,7 +27,7 @@ public class NodeGenerator
         return false;
     }
 
-    private static void writeSource(File p_file, NodeDescriptor p_node)
+    private void writeSource(File p_file, NodeDescriptor p_node)
         throws IOException
     {
         PrintWriter writer = new PrintWriter(new FileWriter(p_file));
@@ -37,7 +42,7 @@ public class NodeGenerator
         writer.close();
     }
 
-    private static void writeApply(PrintWriter p_writer, NodeDescriptor p_node)
+    private void writeApply(PrintWriter p_writer, NodeDescriptor p_node)
     {
         p_writer.println("  @Override public void apply(Analysis p_analysis)");
         p_writer.println("  {");
@@ -46,10 +51,10 @@ public class NodeGenerator
         p_writer.println();
     }
 
-    private static void writeHeader(
+    private void writeHeader(
         PrintWriter p_writer, List<NodeMember> p_members)
     {
-        p_writer.println("package org.jamon.node;");
+        p_writer.println("package " + m_packageName + ";");
         p_writer.println();
         if (containsLists(p_members))
         {
@@ -60,7 +65,7 @@ public class NodeGenerator
         p_writer.println("import org.jamon.api.Location;");
     }
 
-    private static void writeConstructor(
+    private void writeConstructor(
         PrintWriter p_writer, NodeDescriptor p_node)
     {
         p_writer.println(
@@ -124,7 +129,7 @@ public class NodeGenerator
         p_writer.println();
     }
 
-    private static void writeMembers(
+    private void writeMembers(
         PrintWriter p_writer,
         String p_nodeName,
         List<NodeMember> p_members)
@@ -183,7 +188,7 @@ public class NodeGenerator
         }
     }
 
-    private static void writeEquals(
+    private void writeEquals(
         PrintWriter p_writer,
         String p_nodeName,
         List<NodeMember> p_members)
@@ -217,7 +222,7 @@ public class NodeGenerator
         p_writer.println();
     }
 
-    private static void writeHashCode(
+    private void writeHashCode(
         PrintWriter p_writer, List<NodeMember> p_members)
     {
         p_writer.println("  @Override public int hashCode()");
@@ -232,7 +237,7 @@ public class NodeGenerator
         p_writer.println();
     }
 
-    private static void writeToString(
+    private void writeToString(
         PrintWriter p_writer, List<NodeMember> p_members)
     {
         p_writer.println(
@@ -262,7 +267,7 @@ public class NodeGenerator
      * @param p_sourceDir The directory to place generated files in.
      * @throws IOException
      **/
-    public static void generateSources(
+    public void generateSources(
         Iterable<NodeDescriptor> p_nodes, File p_sourceDir)
         throws IOException
     {
