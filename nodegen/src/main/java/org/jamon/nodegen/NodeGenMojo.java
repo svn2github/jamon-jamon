@@ -22,8 +22,8 @@ public class NodeGenMojo extends AbstractMojo
             getLog().info("Parsing node description file");
             Iterable<NodeDescriptor> nodes =
                 NodesParser.parseNodes(new FileReader(nodeDescriptionFile));
-            getLog().info("Initializing destination directory");
             File target = new File(destinationDirectory, destinationPackage.replace('.', File.separatorChar));
+            getLog().info("Initializing destination directory " + target );
             initializeTargetDir(target);
             getLog().info("Generating node classes");
             new NodeGenerator(destinationPackage).generateSources(nodes, target);
@@ -42,7 +42,7 @@ public class NodeGenMojo extends AbstractMojo
 
     private void initializeTargetDir(File targetDir)
     {
-        destinationDirectory.mkdirs();
+        targetDir.mkdirs();
         File[] files = targetDir.listFiles();
         for (int i = 0; i < files.length; i++)
         {
@@ -63,7 +63,7 @@ public class NodeGenMojo extends AbstractMojo
     private File destinationDirectory;
     
     /**
-     * @parameter default-value="org.jamon.nodes"
+     * @parameter default-value="org.jamon.node"
      */
     private String destinationPackage;
 }
