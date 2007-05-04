@@ -131,12 +131,4 @@
             </plugin>
         </plugins>
     </reporting>
-    <modules>
-        <module>../jamon-nodegen-plugin</module>
-        <module>../jamon-core</module>
-        <module>../jamon-runtime</module>
-        <module>../jamon-api</module>
-        <module>../jamon-junit</module>
-    </modules>
-
 </project>
