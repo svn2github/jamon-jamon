@@ -18,7 +18,7 @@
  * Contributor(s):
  */
 
-package org.jamon.compiler;
+package org.jamon;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
