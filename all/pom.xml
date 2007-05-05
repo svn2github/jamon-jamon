@@ -5,7 +5,7 @@
         <groupId>org.jamon</groupId>
         <artifactId>maven-base</artifactId>
         <version>SNAPSHOT</version>
-        <relativePath>./maven-base</relativePath>
+        <relativePath>../maven-base</relativePath>
     </parent>
     <groupId>org.jamon</groupId>
     <artifactId>jamon-master</artifactId>
@@ -17,10 +17,10 @@
         <developerConnection>scm:svn:https://jamon.svn.sourceforge.net/svnroot/jamon/trunk/jamon/runtime</developerConnection>
     </scm>
     <modules>
-        <module>runtime</module>
-        <module>api</module>
-        <module>nodegen</module>
-        <module>core</module>
-        <module>junit</module>
+        <module>../runtime</module>
+        <module>../api</module>
+        <module>../nodegen</module>
+        <module>../core</module>
+        <module>../junit</module>
     </modules>
 </project>
