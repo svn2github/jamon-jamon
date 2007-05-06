@@ -27,7 +27,7 @@ import java.util.HashMap;
 import junit.framework.TestCase;
 import junit.framework.AssertionFailedError;
 
-import org.jamon.compiler.JUnitTemplateManager;
+import org.jamon.JUnitTemplateManager;
 
 import test.jamon.JUnitTemplate;
 

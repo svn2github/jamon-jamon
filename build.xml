@@ -2,213 +2,199 @@
 
 <project name="meta" default="jar">
 
-  <description>
-    Meta build script for Jamon.  From this script one can
-    compile the Jamon engine (project 'core') and exercise it (project
-    'integration').
-  </description>
+    <description> Meta build script for Jamon. From this script one can compile the Jamon engine (project 'core') and exercise it (project 'integration'). </description>
 
-  <property file="version.properties"/>
+    <property file="version.properties"/>
 
-  <property file="build.properties"/>
-  <property file="${user.home}/.ant.properties"/>
+    <property file="build.properties"/>
+    <property file="${user.home}/.ant.properties"/>
 
-  <import file="build.version.xml"/>
-  <property name="jarfile.runtime" value="jamon-runtime-${jamon.version}.jar" />
-  <property name="jarfile.core" value="jamon-${jamon.version}.jar" />
-  <property name="jarfile.api" value="jamon-api-${jamon.api.version}.jar" />
-  <property name="jarfile.anttask" value="jamon-anttask-${jamon.anttask.version}.jar" />
-  <property name="core.classes.dir" value="core/build/classes" />
-  <property name="stage.dir" value="site" />
-  <property name="dist.dir" value="${stage.dir}/dist" />
-  <property name="site.dir" value="" />
+    <import file="build.version.xml"/>
+    <property name="jarfile.runtime" value="jamon-runtime-${jamon.version}.jar"/>
+    <property name="jarfile.core" value="jamon-${jamon.version}.jar"/>
+    <property name="jarfile.api" value="jamon-api-${jamon.api.version}.jar"/>
+    <property name="jarfile.anttask" value="jamon-anttask-${jamon.anttask.version}.jar"/>
+    <property name="jarfile.junit" value="jamon-junit-${jamon.version}.jar"/>
+    <property name="core.classes.dir" value="jamon-core/build/classes"/>
+    <property name="stage.dir" value="site"/>
+    <property name="dist.dir" value="${stage.dir}/dist"/>
+    <property name="site.dir" value=""/>
 
-  <target name="test"
-          depends="jar"
-          description="Run tests">
-    <ant dir="integration" target="test">
-      <property name="org.jamon.integration.usejar" value="true" />
-    </ant>
-  </target>
+    <target name="test" depends="jar" description="Run tests">
+        <ant dir="integration" target="test">
+            <property name="org.jamon.integration.usejar" value="true"/>
+        </ant>
+    </target>
 
-  <target name="jar"
-          description="Creates uber JARs"
-          depends="svn-versioning,base">
-    <copy overwrite="true" file="manifest" tofile="manifest.mf">
-      <filterset>
-        <filter token="VERSION" value="${jamon.version}"/>
-        <filterset refid="svn.version"/>
-      </filterset>
-    </copy>
-    <jar jarfile="${jarfile.runtime}">
-      <fileset dir="runtime/build/classes" />
-    </jar>
-    <jar jarfile="${jarfile.core}" manifest="manifest.mf" >
-      <fileset dir="core/build/classes" />
-    </jar>
-    <jar jarfile="${jarfile.api}">
-      <fileset dir="core/build/classes" includes="org/jamon/api/*.class"/>
-    </jar>
-    <copy overwrite="true" file="manifest-anttask" tofile="manifest-anttask.mf">
-      <filterset>
-        <filter token="VERSION" value="${jamon.antask.version}"/>
-        <filterset refid="svn.version"/>
-      </filterset>
-    </copy>
-    <jar jarfile="${jarfile.anttask}" manifest="manifest-anttask.mf" >
-      <fileset dir="anttask/build/classes" />
-    </jar>
-  </target>
+    <target name="jar" description="Creates uber JARs" depends="svn-versioning,base">
+        <copy overwrite="true" file="manifest" tofile="manifest.mf">
+            <filterset>
+                <filter token="VERSION" value="${jamon.version}"/>
+                <filterset refid="svn.version"/>
+            </filterset>
+        </copy>
+        <jar jarfile="${jarfile.runtime}">
+            <fileset dir="jamon-runtime/build/classes"/>
+        </jar>
+        <jar jarfile="${jarfile.core}" manifest="manifest.mf">
+            <fileset dir="jamon-core/build/classes"/>
+        </jar>
+        <jar jarfile="${jarfile.api}">
+            <fileset dir="jamon-core/build/classes" includes="org/jamon/api/*.class"/>
+        </jar>
+        <jar jarfile="${jarfile.junit}">
+            <fileset dir="jamon-junit/build/classes" includes="org/jamon/*.class"/>
+        </jar>
+        <copy overwrite="true" file="manifest-anttask" tofile="manifest-anttask.mf">
+            <filterset>
+                <filter token="VERSION" value="${jamon.antask.version}"/>
+                <filterset refid="svn.version"/>
+            </filterset>
+        </copy>
+        <jar jarfile="${jarfile.anttask}" manifest="manifest-anttask.mf">
+            <fileset dir="jamon-anttask/build/classes"/>
+        </jar>
+    </target>
 
-  <target name="base" description="Build and test subprojects">
-    <ant dir="runtime" target="test"/>
-    <ant dir="core" target="test"/>
-    <ant dir="anttask" target="test"/>
-  </target>
+    <target name="base" description="Build and test subprojects">
+        <ant dir="jamon-runtime" target="test"/>
+        <ant dir="jamon-core" target="test"/>
+        <ant dir="jamon-anttask" target="test"/>
+        <ant dir="jamon-junit" target="test"/>
+    </target>
 
-  <target name="spotless"
-          depends="localclean"
-          description="Scrub the workspace">
-    <ant dir="runtime" target="spotless"/>
-    <ant dir="core" target="spotless"/>
-    <ant dir="integration" target="spotless"/>
-    <ant dir="anttask" target="spotless"/>
-    <delete file="${jarfile.core}" />
-    <delete file="${jarfile.anttask}" />
-    <delete file=".cvsignore" />
-  </target>
+    <target name="spotless" depends="localclean" description="Scrub the workspace">
+        <ant dir="jamon-runtime" target="spotless"/>
+        <ant dir="jamon-core" target="spotless"/>
+        <ant dir="jamon-junit" target="spotless"/>
+        <ant dir="integration" target="spotless"/>
+        <ant dir="jamon-anttask" target="spotless"/>
+        <delete file="${jarfile.core}"/>
+        <delete file="${jarfile.anttask}"/>
+        <delete file="${jarfile.junit}"/>
+        <delete file=".cvsignore"/>
+    </target>
 
-  <target name="localclean">
-    <delete file="*.zip" />
-    <delete file="*.tgz" />
-    <delete dir="${stage.dir}" />
-  </target>
+    <target name="localclean">
+        <delete file="*.zip"/>
+        <delete file="*.tgz"/>
+        <delete dir="${stage.dir}"/>
+    </target>
 
-  <target name="clean"
-          depends="localclean"
-          description="Remove build artifacts">
-    <ant dir="runtime" target="clean"/>
-    <ant dir="core" target="clean"/>
-    <ant dir="integration" target="clean"/>
-    <ant dir="anttask" target="clean"/>
-    <delete file="manifest.mf"></delete>
-    <delete file="manifest-anttask.mf"></delete>
-  </target>
+    <target name="clean" depends="localclean" description="Remove build artifacts">
+        <ant dir="jamon-runtime" target="clean"/>
+        <ant dir="jamon-core" target="clean"/>
+        <ant dir="jamon-junit" target="clean"/>
+        <ant dir="integration" target="clean"/>
+        <ant dir="jamon-anttask" target="clean"/>
+        <delete file="manifest.mf"/>
+        <delete file="manifest-anttask.mf"/>
+    </target>
 
-  <target name="javadoc" description="Build the javadoc">
-    <ant dir="runtime" target="javadoc"/>
-    <ant dir="core" target="javadoc"/>
-  </target>
+    <target name="javadoc" description="Build the javadoc">
+        <ant dir="jamon-runtime" target="javadoc"/>
+        <ant dir="jamon-api" target="javadoc"/>
+        <ant dir="jamon-junit" target="javadoc"/>
+        <ant dir="jamon-core" target="javadoc"/>
+    </target>
 
-  <target name="prepdist" depends="test">
-    <property name="archive.base" value="jamon-${jamon.version}"/>
-    <property name="tarball.src" value="${archive.base}-src.tgz"/>
-    <property name="tarball.bin" value="${archive.base}.tgz"/>
-    <property name="zip.src" value="${archive.base}-src.zip"/>
-    <property name="zip.bin" value="${archive.base}.zip"/>
-  </target>
+    <target name="prepdist" depends="test">
+        <property name="archive.base" value="jamon-${jamon.version}"/>
+        <property name="tarball.src" value="${archive.base}-src.tgz"/>
+        <property name="tarball.bin" value="${archive.base}.tgz"/>
+        <property name="zip.src" value="${archive.base}-src.zip"/>
+        <property name="zip.bin" value="${archive.base}.zip"/>
+    </target>
 
-  <target name="bindist" depends="javadoc, prepdist">
-    <tar tarfile="${tarball.bin}" compression="gzip" >
-      <tarfileset dir="."
-                  prefix="${archive.base}"
-                  includes="${jarfile.core},${jarfile.anttask},LICENSE,README" />
-      <tarfileset dir="../doc/build/www"
-                  prefix="${archive.base}/doc"
-                  includes="**" />
-      <tarfileset dir="core/build"
-                  prefix="${archive.base}"
-                  includes="javadoc/**" />
-    </tar>
-    <zip zipfile="${zip.bin}" >
-      <zipfileset dir="."
-                  prefix="${archive.base}"
-                  includes="${jarfile.core},${jarfile.anttask},LICENSE,README" />
-      <zipfileset dir="../doc/build/www"
-                  prefix="${archive.base}/doc"
-                  includes="**" />
-      <zipfileset dir="core/build"
-                  prefix="${archive.base}"
-                  includes="javadoc/**" />
-    </zip>
-  </target>
+    <target name="bindist" depends="javadoc, prepdist">
+        <tar tarfile="${tarball.bin}" compression="gzip">
+            <tarfileset dir="." prefix="${archive.base}" includes="${jarfile.core},${jarfile.anttask},${jarfile.junit},LICENSE,README"/>
+            <tarfileset dir="../doc/build/www" prefix="${archive.base}/doc" includes="**"/>
+            <tarfileset dir="jamon-core/build" prefix="${archive.base}" includes="javadoc/**"/>
+        </tar>
+        <zip zipfile="${zip.bin}">
+            <zipfileset dir="." prefix="${archive.base}" includes="${jarfile.core},${jarfile.anttask},${jarfile.junit},LICENSE,README"/>
+            <zipfileset dir="../doc/build/www" prefix="${archive.base}/doc" includes="**"/>
+            <zipfileset dir="jamon-core/build" prefix="${archive.base}" includes="javadoc/**"/>
+        </zip>
+    </target>
 
-  <target name="srcdist" depends="prepdist">
-    <tar tarfile="${tarball.src}" compression="gzip" >
-      <tarfileset dir="." prefix="${archive.base}" >
-        <exclude name="${jarfile.core}" />
-        <exclude name="${jarfile.anttask}" />
-        <exclude name="${stage.dir}" />
-        <exclude name="${stage.dir}/**" />
-        <exclude name="*.tgz" />
-        <exclude name="*.jar" />
-        <exclude name="*.zip" />
-        <exclude name="**/build.properties" />
-        <exclude name="**/build" />
-        <exclude name="**/build/**" />
-        <exclude name="**/work/**" />
-      </tarfileset>
-    </tar>
-    <zip destfile="${zip.src}" >
-      <zipfileset dir="." prefix="${archive.base}" >
-        <exclude name="${jarfile.core}" />
-        <exclude name="${jarfile.anttask}" />
-        <exclude name="${stage.dir}" />
-        <exclude name="${stage.dir}/**" />
-        <exclude name="*.tgz" />
-        <exclude name="*.jar" />
-        <exclude name="*.zip" />
-        <exclude name="**/build.properties" />
-        <exclude name="**/build" />
-        <exclude name="**/build/**" />
-        <exclude name="**/work/**" />
-      </zipfileset>
-    </zip>
-  </target>
+    <target name="srcdist" depends="prepdist">
+        <tar tarfile="${tarball.src}" compression="gzip">
+            <tarfileset dir="." prefix="${archive.base}">
+                <exclude name="${jarfile.core}"/>
+                <exclude name="${jarfile.anttask}"/>
+                <exclude name="${jarfile.junit}"/>
+                <exclude name="${stage.dir}"/>
+                <exclude name="${stage.dir}/**"/>
+                <exclude name="*.tgz"/>
+                <exclude name="*.jar"/>
+                <exclude name="*.zip"/>
+                <exclude name="**/build.properties"/>
+                <exclude name="**/build"/>
+                <exclude name="**/build/**"/>
+                <exclude name="**/work/**"/>
+            </tarfileset>
+        </tar>
+        <zip destfile="${zip.src}">
+            <zipfileset dir="." prefix="${archive.base}">
+                <exclude name="${jarfile.core}"/>
+                <exclude name="${jarfile.anttask}"/>
+                <exclude name="${jarfile.junit}"/>
+                <exclude name="${stage.dir}"/>
+                <exclude name="${stage.dir}/**"/>
+                <exclude name="*.tgz"/>
+                <exclude name="*.jar"/>
+                <exclude name="*.zip"/>
+                <exclude name="**/build.properties"/>
+                <exclude name="**/build"/>
+                <exclude name="**/build/**"/>
+                <exclude name="**/work/**"/>
+            </zipfileset>
+        </zip>
+    </target>
 
 
-  <target name="dist" depends="srcdist,bindist"/>
+    <target name="dist" depends="srcdist,bindist"/>
 
-  <target name="localstage" depends="dist" >
-    <mkdir dir="${stage.dir}" />
-    <copy todir="${stage.dir}" >
-      <fileset dir="../doc/build/www" />
-      <fileset dir="core/build" includes="javadoc/**" />
-    </copy>
-    <copy todir="${dist.dir}" >
-      <fileset dir="." includes="${tarball.bin}" />
-      <fileset dir="." includes="${tarball.src}" />
-      <fileset dir="." includes="${zip.bin}" />
-      <fileset dir="." includes="${zip.src}" />
-    </copy>
-  </target>
+    <target name="localstage" depends="dist">
+        <mkdir dir="${stage.dir}"/>
+        <copy todir="${stage.dir}">
+            <fileset dir="../doc/build/www"/>
+            <fileset dir="jamon-core/build" includes="javadoc/**"/>
+        </copy>
+        <copy todir="${dist.dir}">
+            <fileset dir="." includes="${tarball.bin}"/>
+            <fileset dir="." includes="${tarball.src}"/>
+            <fileset dir="." includes="${zip.bin}"/>
+            <fileset dir="." includes="${zip.src}"/>
+        </copy>
+    </target>
 
-  <target name="push"
-          depends="localstage"
-          description="Push the current workspace live">
-    <exec dir="${stage.dir}" executable="rsync">
-      <arg value="--rsh=ssh" />
-      <arg value="--verbose" />
-      <arg value="--recursive" />
-      <arg value="--relative" />
-      <arg value="--cvs-exclude" />
-      <arg value="--delete" />
-      <arg value="--compress" />
-      <arg value="--exclude" />
-      <arg value="dist" />
-      <arg value="." />
-      <arg value="jamon@www.jamon.org:/home/jamon/www${site.dir}" />
-    </exec>
-    <exec dir="${dist.dir}" executable="rsync">
-      <arg value="--rsh=ssh" />
-      <arg value="--verbose" />
-      <arg value="--recursive" />
-      <arg value="--relative" />
-      <arg value="--cvs-exclude" />
-      <arg value="--compress" />
-      <arg value="." />
-      <arg value="jamon@www.jamon.org:/home/jamon/www${site.dir}/dist" />
-    </exec>
-  </target>
+    <target name="push" depends="localstage" description="Push the current workspace live">
+        <exec dir="${stage.dir}" executable="rsync">
+            <arg value="--rsh=ssh"/>
+            <arg value="--verbose"/>
+            <arg value="--recursive"/>
+            <arg value="--relative"/>
+            <arg value="--cvs-exclude"/>
+            <arg value="--delete"/>
+            <arg value="--compress"/>
+            <arg value="--exclude"/>
+            <arg value="dist"/>
+            <arg value="."/>
+            <arg value="jamon@www.jamon.org:/home/jamon/www${site.dir}"/>
+        </exec>
+        <exec dir="${dist.dir}" executable="rsync">
+            <arg value="--rsh=ssh"/>
+            <arg value="--verbose"/>
+            <arg value="--recursive"/>
+            <arg value="--relative"/>
+            <arg value="--cvs-exclude"/>
+            <arg value="--compress"/>
+            <arg value="."/>
+            <arg value="jamon@www.jamon.org:/home/jamon/www${site.dir}/dist"/>
+        </exec>
+    </target>
 
 </project>

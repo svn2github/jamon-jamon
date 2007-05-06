@@ -9,7 +9,7 @@
     </parent>
     <groupId>org.jamon</groupId>
     <artifactId>jamon-nodegen-plugin</artifactId>
-    <name>nodegen</name>
+    <name>jamon-nodegen</name>
     <version>SNAPSHOT</version>
     <packaging>maven-plugin</packaging>
     <description>Jamon compiler AST node generation tool</description>

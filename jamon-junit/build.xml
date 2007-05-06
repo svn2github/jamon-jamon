@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+
+<project name="JamonJunit" default="compile">
+
+    <description>Ant task for Jamon</description>
+
+    <property file="build.properties"/>
+    <property file="../build.properties"/>
+    <property file="${user.home}/.ant.properties"/>
+
+    <property name="build.dir" value="build"/>
+    <property name="build.src.dir" value="${build.dir}/src"/>
+    <property name="classes.dir" value="${build.dir}/classes"/>
+    <property name="src.dir" value="src"/>
+
+    <property name="java.lib.jamon.core" value="../jamon-core/build/classes"/>
+    <property name="java.lib.jamon.runtime" value="../jamon-runtime/build/classes"/>
+
+    <target name="compile" description="Compiles Java files">
+        <dependset>
+            <srcfileset dir="${src.dir}"/>
+            <targetfileset dir="${classes.dir}"/>
+        </dependset>
+        <mkdir dir="${classes.dir}"/>
+        <javac destdir="${classes.dir}" debug="true" classpath="${java.lib.jamon.core}:${java.lib.jamon.runtime}" deprecation="true">
+            <src path="${src.dir}"/>
+        </javac>
+    </target>
+
+
+    <target name="clean">
+        <delete dir="${classes.dir}"/>
+        <delete dir="${tests.classes.dir}"/>
+    </target>
+
+
+    <target name="spotless" description="Restores work area to its state after checking out">
+        <delete dir="${build.dir}"/>
+    </target>
+
+    <target name="test" depends="compile">
+        
+    </target>
+
+</project>

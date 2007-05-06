@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+
+<project name="TestTask" default="test">
+
+    <description>Test the Ant task for Jamon</description>
+
+    <property file="build.properties"/>
+    <property file="${user.home}/.ant.properties"/>
+
+    <property name="build.dir" value="build"/>
+    <property name="work.dir" value="${build.dir}/work"/>
+    <property name="test.src.dir" value="${build.dir}/src"/>
+    <property name="classpath" value="../build/classes:../../jamon-core/build/classes:../../jamon-runtime/build/classes:../../jamon-api/build/classes"/>
+
+    <target name="test" depends="init,test-invoker,test-jamon"/>
+
+    <target name="init">
+        <delete dir="${build.dir}"/>
+        <mkdir dir="${build.dir}"/>
+    </target>
+
+    <target name="test-jamon">
+        <taskdef name="jamon" classname="org.jamon.ant.JamonTask" classpath="${classpath}"/>
+        <mkdir dir="${test.src.dir}"/>
+        <jamon destdir="${test.src.dir}" srcdir="templates"/>
+    </target>
+
+    <target name="test-invoker">
+        <taskdef name="invoker" classname="org.jamon.ant.InvokerTask" classpath="${classpath}"/>
+        <!-- we only need to specify classpath here because we're bootstrapping
+         Jamon; in "normal" invocations, all Jamon classes are available -->
+        <tempfile property="temp.file" destdir="${build.dir}"/>
+        <property name="org.jamon.invoker.compiler" value="javac"/>
+        <condition property="org.jamon.invoker.compiler" value="javac">
+            <equals arg1="${build.compiler}" arg2="extJavac"/>
+        </condition>
+        <condition property="org.jamon.invoker.compiler" value="">
+            <not>
+                <isset property="org.jamon.invoker.compiler"/>
+            </not>
+        </condition>
+        <invoker classpath="${classpath}" sourceDir="templates" workDir="${work.dir}" compiler="${org.jamon.invoker.compiler}" template="/bar/Bar" output="${temp.file}"/>
+        <invoker classpath="${classpath}" sourceDir="templates" workDir="${work.dir}" compiler="${org.jamon.invoker.compiler}" template="/Foo" output="${temp.file}">
+            <arg name="i" value="3"/>
+            <arg name="b" value="true"/>
+        </invoker>
+        <property name="test.output" value=""/>
+        <invoker classpath="${classpath}" sourceDir="templates" workDir="${work.dir}" compiler="${org.jamon.invoker.compiler}" template="/Foo" property="test.output">
+            <arg name="i" value="3"/>
+            <arg name="b" value="true"/>
+        </invoker>
+        <condition property="test.ok">
+            <equals arg1="${test.output}" arg2="Bla3true"/>
+        </condition>
+        <fail unless="test.ok" message="output was ${test.output}"/>
+    </target>
+
+    <target name="clean">
+        <delete dir="${test.src.dir}"/>
+    </target>
+
+    <target name="spotless">
+        <delete dir="${build.dir}"/>
+        <delete file=".cvsignore"/>
+    </target>
+
+</project>

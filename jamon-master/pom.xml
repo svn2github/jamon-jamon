@@ -17,10 +17,10 @@
         <developerConnection>scm:svn:https://jamon.svn.sourceforge.net/svnroot/jamon/trunk/jamon/runtime</developerConnection>
     </scm>
     <modules>
-        <module>../runtime</module>
-        <module>../api</module>
-        <module>../nodegen</module>
-        <module>../core</module>
-        <module>../junit</module>
+        <module>../jamon-runtime</module>
+        <module>../jamon-api</module>
+        <module>../jamon-nodegen</module>
+        <module>../jamon-core</module>
+        <module>../jamon-junit</module>
     </modules>
 </project>
