@@ -16,9 +16,6 @@
     <scm>
         <developerConnection>scm:svn:https://jamon.svn.sourceforge.net/svnroot/jamon/trunk/jamon/nodegen</developerConnection>
     </scm>
-    <build>
-        <sourceDirectory>src/main/java</sourceDirectory>
-    </build>
     <dependencies>
         <dependency>
             <groupId>org.apache.maven</groupId>

@@ -2,123 +2,98 @@
 
 <project name="Jamon" default="compile">
 
-  <description>
-    A compiler that turns typed templates into Java code.
-  </description>
+    <description> A compiler that turns typed templates into Java code. </description>
 
-  <property file="build.properties"/>
-  <property file="../build.properties"/>
-  <property file="${user.home}/.ant.properties"/>
+    <property file="build.properties"/>
+    <property file="../build.properties"/>
+    <property file="${user.home}/.ant.properties"/>
 
-  <property name="build.dir" value="build"/>
-  <property name="classes.dir" value="${build.dir}/classes"/>
-  <property name="tests.classes.dir" value="${build.dir}/testclasses"/>
-  <property name="tests.src.dir" value="test"/>
-  <property name="java.lib.junit" value="../lib/junit4.jar" />
+    <property name="build.dir" value="build"/>
+    <property name="classes.dir" value="${build.dir}/classes"/>
+    <property name="tests.classes.dir" value="${build.dir}/testclasses"/>
+    <property name="tests.src.dir" value="src/test/java"/>
+    <property name="java.lib.junit" value="../lib/junit4.jar"/>
 
-  <property name="junit.timeout" value="1000" />
-  <property name="junit.printsummary" value="off" />
-  <property name="junit.formatter" value="org.apache.tools.ant.taskdefs.optional.junit.BriefJUnitResultFormatter" />
+    <property name="junit.timeout" value="1000"/>
+    <property name="junit.printsummary" value="off"/>
+    <property name="junit.formatter" value="org.apache.tools.ant.taskdefs.optional.junit.BriefJUnitResultFormatter"/>
 
-  <property name="src.dir" value="src" />
+    <property name="src.dir" value="src/main/java"/>
 
-  <path id="compile.class.path">
-    <pathelement location="${java.lib.junit}"/>
-  </path>
-
-  <target name="compile"
-          description="Compiles all the Java files">
-      <mkdir dir="${classes.dir}"/>
-      <dependset>
-        <srcfileset dir="${src.dir}" includes="**/*.java" />
-        <targetfileset dir="${classes.dir}" includes="**/*.class" />
-        <targetfileset dir="${tests.classes.dir}" includes="**/*.class" />
-      </dependset>
-      <javac destdir="${classes.dir}"
-             debug="true"
-             deprecation="true">
-        <src path="${src.dir}"/>
-        <classpath refid="compile.class.path"/>
-      </javac>
-  </target>
-
-  <target name="clean">
-    <delete dir="${classes.dir}"/>
-    <delete dir="${tests.classes.dir}"/>
-  </target>
-
-  <target name="testclasses" depends="compile">
-    <mkdir dir="${tests.classes.dir}" />
-    <dependset>
-      <srcfileset dir="${src.dir}" includes="**/*.java" />
-      <srcfileset dir="${tests.src.dir}" includes="**/*.java" />
-      <targetfileset dir="${tests.classes.dir}" includes="**/*.class" />
-    </dependset>
-    <javac srcdir="${tests.src.dir}"
-           destdir="${tests.classes.dir}"
-           debug="on"
-           deprecation="on"
-           optimize="on" >
-      <include name="**/*.java"/>
-      <classpath>
-        <pathelement location="${classes.dir}"/>
-        <path refid="compile.class.path"/>
-      </classpath>
-    </javac>
-  </target>
-
-  <target name="test"
-          depends="testclasses"
-          description="Run the unit tests">
-    <property name="build.sysclasspath" value="last" />
-    <junit printsummary="${junit.printsummary}"
-           timeout="${junit.timeout}"
-           failureproperty="org.jamon.junit.failuresOccured">
-      <formatter classname="${junit.formatter}" usefile="no"/>
-      <classpath>
-        <pathelement location="${tests.classes.dir}"/>
-        <pathelement location="${classes.dir}"/>
+    <path id="compile.class.path">
         <pathelement location="${java.lib.junit}"/>
-      </classpath>
-      <batchtest>
-        <fileset dir="${tests.src.dir}">
-          <include name="**/*Test.java" />
-          <exclude name="**/Abstract*.java"/>
-        </fileset>
-      </batchtest>
-    </junit>
-    <fail message="tests failed" if="org.jamon.junit.failuresOccured" />
-  </target>
+    </path>
+
+    <target name="compile" description="Compiles all the Java files">
+        <mkdir dir="${classes.dir}"/>
+        <dependset>
+            <srcfileset dir="${src.dir}" includes="**/*.java"/>
+            <targetfileset dir="${classes.dir}" includes="**/*.class"/>
+            <targetfileset dir="${tests.classes.dir}" includes="**/*.class"/>
+        </dependset>
+        <javac destdir="${classes.dir}" debug="true" deprecation="true">
+            <src path="${src.dir}"/>
+            <classpath refid="compile.class.path"/>
+        </javac>
+    </target>
+
+    <target name="clean">
+        <delete dir="${classes.dir}"/>
+        <delete dir="${tests.classes.dir}"/>
+    </target>
+
+    <target name="testclasses" depends="compile">
+        <mkdir dir="${tests.classes.dir}"/>
+        <dependset>
+            <srcfileset dir="${src.dir}" includes="**/*.java"/>
+            <srcfileset dir="${tests.src.dir}" includes="**/*.java"/>
+            <targetfileset dir="${tests.classes.dir}" includes="**/*.class"/>
+        </dependset>
+        <javac srcdir="${tests.src.dir}" destdir="${tests.classes.dir}" debug="on" deprecation="on" optimize="on">
+            <include name="**/*.java"/>
+            <classpath>
+                <pathelement location="${classes.dir}"/>
+                <path refid="compile.class.path"/>
+            </classpath>
+        </javac>
+    </target>
+
+    <target name="test" depends="testclasses" description="Run the unit tests">
+        <property name="build.sysclasspath" value="last"/>
+        <junit printsummary="${junit.printsummary}" timeout="${junit.timeout}" failureproperty="org.jamon.junit.failuresOccured">
+            <formatter classname="${junit.formatter}" usefile="no"/>
+            <classpath>
+                <pathelement location="${tests.classes.dir}"/>
+                <pathelement location="${classes.dir}"/>
+                <pathelement location="${java.lib.junit}"/>
+            </classpath>
+            <batchtest>
+                <fileset dir="${tests.src.dir}">
+                    <include name="**/*Test.java"/>
+                    <exclude name="**/Abstract*.java"/>
+                </fileset>
+            </batchtest>
+        </junit>
+        <fail message="tests failed" if="org.jamon.junit.failuresOccured"/>
+    </target>
 
 
-  <property name="javadoc.dir" value="${build.dir}/javadoc" />
-  <property name="javadoc.zip.file" value="jamon-runtime.zip" />
-  <property name="javadoc.zip" value="${javadoc.zip.file}" />
+    <property name="javadoc.dir" value="${build.dir}/javadoc"/>
+    <property name="javadoc.zip.file" value="jamon-runtime.zip"/>
+    <property name="javadoc.zip" value="${javadoc.zip.file}"/>
 
-  <target name="javadoc.check" depends="compile">
-    <uptodate property="javadoc.build.notrequired"
-              targetfile="${javadoc.dir}/index.html" >
-      <srcfiles dir="${src.dir}" includes="**/*.java" />
-    </uptodate>
-  </target>
+    <target name="javadoc.check" depends="compile">
+        <uptodate property="javadoc.build.notrequired" targetfile="${javadoc.dir}/index.html">
+            <srcfiles dir="${src.dir}" includes="**/*.java"/>
+        </uptodate>
+    </target>
 
-  <target name="javadoc"
-          depends="javadoc.check"
-          unless="javadoc.build.notrequired" >
-    <mkdir dir="${javadoc.dir}" />
-    <javadoc packagenames="org.jamon.emit,org.jamon.escaping,org.jamon.annotations"
-             sourcepath="${src.dir}"
-             classpath="${classes.dir}"
-             defaultexcludes="yes"
-             destdir="${javadoc.dir}"
-             author="true"
-             version="true"
-             failonerror="true"
-             use="true"
-             windowtitle="Jamon API Specification">
-      <doctitle><![CDATA[<h1>Jamon Runtime API</h1>]]></doctitle>
-      <link  href="http://java.sun.com/j2se/1.5.0/docs/api/"/>
-    </javadoc>
-  </target>
+    <target name="javadoc" depends="javadoc.check" unless="javadoc.build.notrequired">
+        <mkdir dir="${javadoc.dir}"/>
+        <javadoc packagenames="org.jamon.emit,org.jamon.escaping,org.jamon.annotations" sourcepath="${src.dir}" classpath="${classes.dir}" defaultexcludes="yes" destdir="${javadoc.dir}" author="true" version="true" failonerror="true" use="true" windowtitle="Jamon API Specification">
+            <doctitle><![CDATA[<h1>Jamon Runtime API</h1>]]></doctitle>
+            <link href="http://java.sun.com/j2se/1.5.0/docs/api/"/>
+        </javadoc>
+    </target>
 
 </project>
