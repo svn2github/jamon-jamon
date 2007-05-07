@@ -7,7 +7,6 @@
         <version>SNAPSHOT</version>
         <relativePath>../maven-base</relativePath>
     </parent>
-    <groupId>org.jamon</groupId>
     <artifactId>jamon-master</artifactId>
     <name>jamon-master</name>
     <version>SNAPSHOT</version>

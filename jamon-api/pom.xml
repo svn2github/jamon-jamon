@@ -7,9 +7,8 @@
         <version>SNAPSHOT</version>
         <relativePath>../maven-base</relativePath>
     </parent>
-    <groupId>org.jamon</groupId>
     <artifactId>jamon-api</artifactId>
-    <name>Jamon API</name>
+    <name>jamon-api</name>
     <version>SNAPSHOT</version>
     <packaging>jar</packaging>
     <description>Jamon compiler API</description>
