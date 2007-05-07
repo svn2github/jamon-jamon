@@ -46,35 +46,35 @@ public interface Escaping
      * An escaping mechanism which escapes suitable for inclusion in
      * HTML documents.
      **/
-    public static final Escaping HTML = new HtmlEscaping();
+    Escaping HTML = new HtmlEscaping();
 
     /**
      * An escaping mechanism which escapes suitable for inclusion
      * inside html attributes.
      **/
-    public static final Escaping STRICT_HTML = new StrictHtmlEscaping();
+    Escaping STRICT_HTML = new StrictHtmlEscaping();
 
     /**
      * An escaping mechanism which passes through strings without change.
      **/
-    public static final Escaping NONE = new NoneEscaping();
+    Escaping NONE = new NoneEscaping();
 
 
     /**
      * An escaping mechanism which escapes suitable for inclusion in
      * URLs.
      **/
-    public static final Escaping URL = new UrlEscaping();
+    Escaping URL = new UrlEscaping();
 
     /**
      * An escaping mechanism which escapes suitable for inclusion in
      * XML documents.
      **/
-    public static final Escaping XML = new XmlEscaping();
+    Escaping XML = new XmlEscaping();
 
     /**
      * An escaping mechanism which escapes suitable for inclusion in
      * in Javascript.  Note that it does not do any HTML escaping.
      **/
-    public static final Escaping JAVASCRIPT = new JavascriptEscaping();
+    Escaping JAVASCRIPT = new JavascriptEscaping();
 }
