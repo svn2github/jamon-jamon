@@ -98,7 +98,8 @@ public class BasicTemplateManager
         throws ClassNotFoundException
     {
         String path = p_path;
-        while (path.startsWith("/")) {
+        while (path.startsWith("/"))
+        {
             path = path.substring(1);
         }
         return m_classLoader
