@@ -3,7 +3,7 @@
     <modelVersion>4.0.0.</modelVersion>
     <groupId>org.jamon</groupId>
     <artifactId>maven-base</artifactId>
-    <name>base</name>
+    <name>maven-base</name>
     <version>SNAPSHOT</version>
     <packaging>pom</packaging>
     <description>Jamon base pom</description>
@@ -108,6 +108,9 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
+                <configuration>
+                    <configLocation>../checkstyle.xml</configLocation>
+                </configuration>
             </plugin>
             <!--
             <plugin>
