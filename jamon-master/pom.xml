@@ -21,5 +21,6 @@
         <module>../jamon-nodegen</module>
         <module>../jamon-core</module>
         <module>../jamon-junit</module>
+        <module>../jamon-anttask</module>
     </modules>
 </project>
