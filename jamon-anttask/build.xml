@@ -9,9 +9,8 @@
     <property file="${user.home}/.ant.properties"/>
 
     <property name="build.dir" value="build"/>
-    <property name="build.src.dir" value="${build.dir}/src"/>
     <property name="classes.dir" value="${build.dir}/classes"/>
-    <property name="src.dir" value="src"/>
+    <property name="src.dir" value="src/main/java"/>
 
     <property name="java.lib.jamon.core" value="../jamon-core/build/classes"/>
     <property name="java.lib.jamon.runtime" value="../jamon-runtime/build/classes"/>
@@ -28,17 +27,13 @@
     </target>
 
     <target name="test" depends="compile" description="Tests the anttask">
-        <ant dir="test"/>
+        <ant antfile="build-test.xml" target="test"/>
     </target>
 
     <target name="clean" description="Removes all the class files">
-        <delete dir="${classes.dir}"/>
-        <ant dir="test" target="clean"/>
+        <delete dir="${build.dir}"/>
     </target>
 
-    <target name="spotless" description="Restores work area to its state after checking out">
-        <delete dir="${build.dir}"/>
-        <ant dir="test" target="spotless"/>
-    </target>
+    <target name="spotless" description="Restores work area to its state after checking out" depends="clean"/>
 
 </project>

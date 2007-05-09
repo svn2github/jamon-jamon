@@ -8,21 +8,20 @@
     <property file="${user.home}/.ant.properties"/>
 
     <property name="build.dir" value="build"/>
-    <property name="work.dir" value="${build.dir}/work"/>
-    <property name="test.src.dir" value="${build.dir}/src"/>
-    <property name="classpath" value="../build/classes:../../jamon-core/build/classes:../../jamon-runtime/build/classes:../../jamon-api/build/classes"/>
-
+    <property name="work.dir" value="${build.dir}/test-work"/>
+    <property name="test.src.dir" value="${build.dir}/test-src"/>
+    <property name="classpath" value="./build/classes:../jamon-core/build/classes:../jamon-runtime/build/classes:../jamon-api/build/classes"/>
+	<property name="templates.dir" value="src/test/templates"/>
     <target name="test" depends="init,test-invoker,test-jamon"/>
 
     <target name="init">
-        <delete dir="${build.dir}"/>
-        <mkdir dir="${build.dir}"/>
+        <mkdir dir="${work.dir}"/>
+        <mkdir dir="${test.src.dir}"/>
     </target>
 
     <target name="test-jamon">
         <taskdef name="jamon" classname="org.jamon.ant.JamonTask" classpath="${classpath}"/>
-        <mkdir dir="${test.src.dir}"/>
-        <jamon destdir="${test.src.dir}" srcdir="templates"/>
+        <jamon destdir="${test.src.dir}" srcdir="${templates.dir}"/>
     </target>
 
     <target name="test-invoker">
@@ -39,13 +38,13 @@
                 <isset property="org.jamon.invoker.compiler"/>
             </not>
         </condition>
-        <invoker classpath="${classpath}" sourceDir="templates" workDir="${work.dir}" compiler="${org.jamon.invoker.compiler}" template="/bar/Bar" output="${temp.file}"/>
-        <invoker classpath="${classpath}" sourceDir="templates" workDir="${work.dir}" compiler="${org.jamon.invoker.compiler}" template="/Foo" output="${temp.file}">
+        <invoker classpath="${classpath}" sourceDir="${templates.dir}" workDir="${work.dir}" compiler="${org.jamon.invoker.compiler}" template="/bar/Bar" output="${temp.file}"/>
+        <invoker classpath="${classpath}" sourceDir="${templates.dir}" workDir="${work.dir}" compiler="${org.jamon.invoker.compiler}" template="/Foo" output="${temp.file}">
             <arg name="i" value="3"/>
             <arg name="b" value="true"/>
         </invoker>
         <property name="test.output" value=""/>
-        <invoker classpath="${classpath}" sourceDir="templates" workDir="${work.dir}" compiler="${org.jamon.invoker.compiler}" template="/Foo" property="test.output">
+        <invoker classpath="${classpath}" sourceDir="${templates.dir}" workDir="${work.dir}" compiler="${org.jamon.invoker.compiler}" template="/Foo" property="test.output">
             <arg name="i" value="3"/>
             <arg name="b" value="true"/>
         </invoker>
@@ -57,11 +56,9 @@
 
     <target name="clean">
         <delete dir="${test.src.dir}"/>
+        <delete dir="${work.dir}"/>
     </target>
 
-    <target name="spotless">
-        <delete dir="${build.dir}"/>
-        <delete file=".cvsignore"/>
-    </target>
+    <target name="spotless" depends="clean"/>
 
 </project>
