@@ -1,3 +1,4 @@
+*) Update version.properties to reflect new version number
 *) Update docs to reflect release.
 *) Run svn up to get latest version number set
 *) In jamon, run "ant test javadoc"
@@ -5,8 +6,9 @@
 *) In doc, run "ant doc" (since docs go in the dists)
 *) In jamon, run "ant dist"
 *) If necessary, run "ant dist" in jamonStdLib
-*) svn copy svn copy https://jamon.svn.sourceforge.net/svnroot/jamon/trunk \
+*) svn copy https://jamon.svn.sourceforge.net/svnroot/jamon/trunk \
      https://jamon.svn.sourceforge.net/svnroot/jamon/tags/JAMON-X_Y_Z-RELEASE
+  (note - if releasing off of a branch, copy from there!)
 *) Upload dist files to sourceforge:
 **) Ftp jamon-X.Y.Z{,-src}.{tgz,zip} and jamon-anttask-X.Y.Z.jar
     to upload.sf.net, in the incoming directory
@@ -18,10 +20,14 @@
 **) Each file needs to be edited and submitted separately (sigh)
 **) Click on the send release notice
 *) Copy jamon-X.Y.Z.jar to corePlugin
+*) Update version numbers for corePlugin, uiPlugin and jamonFeature
 *) Build the plugin in eclipse by opening site.xml in updateSite and clicking on "Build All"
 *) In updateSite, run "ant push"
 *) In update site, run "ant localSite".  Upload the resulting jamon-updateSite-X.Y.Z.Q.zip file
    to SourceForge under the jamon-eclipse-plugin package, as described above.
+*) svn copy https://jamon.svn.sourceforge.net/svnroot/jamon/trunk/eclipse \
+     https://jamon.svn.sourceforge.net/svnroot/jamon/tags/JAMON-ECLIPSE-X_Y_Z_0-RELEASE
+  (note - if releasing off of a branch, copy from there!)
 *) Build and release maven code
 **) Get jamon-x.y.z.jar and jamon-anttask-x.y.z.jar from SF
 **) Deploy both to maven.jamon.org via
