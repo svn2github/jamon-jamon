@@ -42,4 +42,6 @@ public class JamonLocation extends Location
     }
 
     private final int m_columnNumber;
+    
+    private static final long serialVersionUID = 2007052301L;
 }
