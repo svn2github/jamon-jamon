@@ -1,0 +1,4 @@
+<%alias>
+  foo = /test;
+  foo = /bar;
+</%alias>

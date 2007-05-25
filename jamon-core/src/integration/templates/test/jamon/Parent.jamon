@@ -1,0 +1,12 @@
+<%abstract>\
+<%args>
+  int i;
+  Integer j;
+  String opt1 = "o1p";
+  String opt2 = "o2p";
+  String opt3 = "o3p";
+  String opt4 = "o4p";
+  String opt5 = "o5p";
+  String opt6 = "o6p";
+</%args><% i %> <% j %> <& *CHILD &> <& *CHILD &>\
+ <% opt1 %> <% opt2 %> <% opt3 %> <% opt4 %> <% opt5 %> <% opt6 %>

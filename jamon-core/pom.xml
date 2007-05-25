@@ -29,7 +29,7 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>3.8.1</version>
+            <version>4.3.1</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -44,7 +44,6 @@
         </pluginRepository>
     </pluginRepositories>
     <build>
-        <sourceDirectory>${basedir}/src</sourceDirectory>
         <plugins>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -84,6 +83,73 @@
                 </executions>
 
             </plugin>
+
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>pre-integration-test</phase>
+                        <id>pre-integration</id>
+                        <configuration>
+                            <tasks>
+                                <ant dir="src/integration" inheritRefs="true">
+                                    <property name="foodir" value="${basedir}"/>
+                                    <target name="compile"/>
+                                </ant>
+                            </tasks>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>test</phase>
+                        <id>unit-test</id>
+                        <configuration>
+                            <testSourceDirectory>src/test/java</testSourceDirectory>
+                            <excludes>
+                                <exclude>**/integration/*.java</exclude >
+                                <!--
+                                <exclude>org/jamon/integration/*.java</exclude>
+                                <exclude>/org/jamon/integration/*.java</exclude>
+                                <exclude>org.jamon.integration.*</exclude>
+                                -->
+                            </excludes>
+                            <!-- <baseDir>/Users/jay/jamon/jamon/jamon-core</baseDir> -->
+                        </configuration>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <phase>integration-test</phase>
+                        <id>integration</id>
+                        <configuration>
+                            <testSourceDirectory>src/integration/java</testSourceDirectory>
+                            <systemProperties>
+                                <property>
+                                    <name>org.jamon.integration.basedir</name>
+                                    <value>${basedir}/src/integration</value>
+                                </property>
+                            </systemProperties>
+                            <baseDir>target/integration</baseDir>
+                            <includes>
+                                <include>**/integration/*Test.java</include>
+                            </includes>
+                        </configuration>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
         </plugins>
     </build>
 </project>

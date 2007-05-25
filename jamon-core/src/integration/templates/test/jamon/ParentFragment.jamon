@@ -1,0 +1,8 @@
+<%abstract>\
+<%args>
+  String s;
+</%args>\
+<%frag f>
+  int i;
+</%frag>\
+<% s %><& f; i = 0 &><& *CHILD &><& f; i = 2 &>

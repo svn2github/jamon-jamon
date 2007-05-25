@@ -1,0 +1,9 @@
+<%annotate @SuppressWarnings("unused") #proxy %>
+<%doc>If this compiles, the test passes</%doc>
+<%import>java.math.BigDecimal;</%import>
+% java.util.List<BigDecimal> list = new java.util.ArrayList<BigDecimal>();
+% list.add(new BigDecimal(10));
+<&| GenericsWithBounds<BigDecimal>: list &>\
+<%args>BigDecimal s;</%args>\
+% s.movePointLeft(2);
+</&>

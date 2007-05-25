@@ -1,0 +1,6 @@
+<%LITERAL><%args>xxx</%args></%def><%def>
+<%import><%java>\
+</%java></%import>
+</%LITERAL
+% x = 5;
+</%LITERAL>

@@ -1,0 +1,3 @@
+Some single quotes in emits: <% 'a' %><% '\n' %>
+Higher order char: <% '\u0061' %>
+<% '"' %><% '%' %><% '\'' %><% "'" %><% "'\'\"'" %>

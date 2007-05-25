@@ -1,0 +1,6 @@
+<%def foo>
+  <%args>
+    int x;
+  </%args>
+</%def>
+<& foo &>

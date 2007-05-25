@@ -1,0 +1,8 @@
+<%args>
+  int x;
+</%args>
+<%frag frag></%frag>
+Above the content
+<& frag &>
+Below the content
+% while (x != x) { }

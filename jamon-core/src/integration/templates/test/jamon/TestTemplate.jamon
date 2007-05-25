@@ -1,0 +1,158 @@
+<%annotate @SuppressWarnings("unused") #proxy %>
+<%doc>here
+is some starting doc.
+    </%doc>The very top!
+<%import>
+  java.math.BigDecimal;
+</%import>
+
+<%args>
+  BigDecimal amount;
+  int x = 3;
+  int y = 7;
+</%args>
+
+Here is a template. It has two arguments:
+
+<%doc></%doc>
+<%doc>here
+is some doc.
+    </%doc>
+<%doc>  asdfasdf  </%doc>
+x, which is <% x %>,
+and amount, which is <% amount %>.
+%  for (int i = 0; i < y; ++i)
+% {
+i is <% i %>.
+<%java> } </%java>
+
+Some funky emits:
+<% "\"quoted string\"" %>
+<% "<% this is an \"emit\" %>" #n %>
+
+Some escaping stuff:
+
+HTML Escaped: <% "&" %> <% ">" %> <% "<" %> <% "'" %> <% "\"" %>
+
+XML escaped: <% "&"   #x  %> <% ">" #x%> <% "<"   #x %> <% "'" #x%> <% "\"" #x %>
+
+URL escaped: <% "&"   #u  %> <% ">" #u%> <% "<"   #u %> <% "'" #u%> <% "\"" #u %>
+
+Not escaped: <% "&"   #n  %> <% ">" #n%> <% "<"   #n %> <% "'" #n%> <% "\"" #n %>
+
+This \
+Should \
+be \
+all \
+on \
+one \
+line.
+
+No lines should be between here
+\
+\
+and here.
+
+This is a call: <& /test/jamon/SubTemplate; z = 3; y = "yes" &>
+So is this: <& SubTemplate; z = 12; y = "no"; x = 1 &>
+
+A call to a def: <& foo; qq = "yes" &>.
+% for (int q = 0; q < 10; q++) {
+<& foo; qq = "loop"; rr = q &>
+% }
+
+Another call to foo: <& foo; qq = "&>"; rr = 5 &>
+And another: <& foo; qq = ";"; rr = 6 &>
+One more: <& foo; qq = "\""; rr = 8 &>
+
+<%def foo>
+  <%args>
+    String qq;
+    int rr = 7;
+  </%args>
+<% qq %>  in def foo. <% rr %></%def>
+
+A call with a template fragment: \
+% final int i = 3;
+<&| Sub2; x = 5 &>This is the body <% i %>
+<& foo; qq="yes"; rr = i+1 &>
+<& SubTemplate; z = 77; y = "icky" &>
+</&>
+
+<%import>
+  java.util.LinkedList;
+</%import>
+3 more fragment calls:\
+% final LinkedList<Integer> list = new LinkedList<Integer>();
+<&| Sub2; x = 5 &>This is the body <% list.size() %>
+% list.add(new Integer(x));
+</&>
+<&| Sub2; x = 5 &>This is the body <% list.size() %>
+% list.add(new Integer(x));
+</&>
+<&| Sub2; x = 5 &>This is the body <% list.size() %>
+% list.add(new Integer(x));
+</&>
+
+Call to a template with args declared before frags:
+<&| Sub3; x = 5 &>Body</&>
+
+And now some def frag calls:
+  <&| sub1 &><% i %>
+body
+</&>
+  <&| sub1; y2 = 3 &>
+body3
+</&>
+
+<%def sub1>
+  <%frag f1>
+  </%frag>
+  <%args>
+    int y2 = 5;
+  </%args>
+  A def component (<% y2+1 %>) with frag param: <& f1 &>.\
+</%def>
+
+
+Nested frag param calls:
+
+<&| sub1 &><&| Sub2; x = 7 &>in sub2body</&>in sub1</&>
+
+And frag calling frag:
+<%def sub3> \
+<%frag frag></%frag> \
+A <& frag &> B <& frag &> C \
+</%def> \
+% class Counter { int i = 0; public int bump() { return i++; } }
+% final Counter c = new Counter();
+<%def sub4> \
+<%frag f2></%frag> \
+front<&| sub3 &>before<& f2 &>middle<&f2&>after</&>back</%def> \
+<&| sub4 &> <% c.bump() %> </&>
+
+
+<%def subX>
+  <%frag f>
+    int i;
+    String s;
+  </%frag>
+  <& f; i = 3; s = "yes" &>
+  <& f; i = 7; s = "no" &>
+</%def>
+
+<&| subX &>
+  <%args>
+    int i2;
+    String s;
+  </%args>
+  i is <% i2 %> and s is <% s %>.
+</&>
+
+<&| SubZ &>
+  <%args>
+    int i3;
+    String s;
+  </%args>
+  i is <% i3 %> and s is <% s %>.
+</&>

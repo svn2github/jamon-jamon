@@ -1,0 +1,8 @@
+<%abstract>\
+<%absmeth foo>
+  <%args>
+    int i;
+  </%args>
+  <%frag f/>
+</%absmeth>\
+<&| foo; i = 3 &>some content</&>

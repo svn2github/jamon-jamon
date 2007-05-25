@@ -1,0 +1,4 @@
+<%extends /test/jamon/Parent>
+<%xargs>
+  nosucharg;
+</%xargs>

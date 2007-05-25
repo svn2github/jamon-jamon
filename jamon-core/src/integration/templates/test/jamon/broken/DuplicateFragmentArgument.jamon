@@ -1,0 +1,4 @@
+<%extends /test/jamon/ParentFragment>
+<%args>
+  int f;
+</%args>

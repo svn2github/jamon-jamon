@@ -1,0 +1,2 @@
+<%extends /test/jamon/Parent>
+<% opt1 %>

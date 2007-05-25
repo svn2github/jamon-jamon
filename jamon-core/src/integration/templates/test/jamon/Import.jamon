@@ -1,0 +1,13 @@
+<%annotate @SuppressWarnings("unused") #proxy %>
+<%import>
+  java.util.*;
+  java.math.BigDecimal;
+  java.lang.annotation.ElementType;
+  static java.lang.annotation.ElementType.*;
+</%import>
+<%java>
+  List<BigDecimal> list = new ArrayList<BigDecimal>();
+  list.add(new BigDecimal(1));
+  ElementType type = CONSTRUCTOR;
+</%java>\
+<%if type==CONSTRUCTOR %><% list.get(0) %></%if>

@@ -12,7 +12,7 @@
     <property name="build.src.dir" value="${build.dir}/src"/>
     <property name="classes.dir" value="${build.dir}/classes"/>
     <property name="tests.classes.dir" value="${build.dir}/testclasses"/>
-    <property name="tests.src.dir" value="tests"/>
+    <property name="tests.src.dir" value="src/test/java"/>
     <property name="java.lib.junit" value="../lib/junit4.jar"/>
     <property name="jamon.runtime" value="../jamon-runtime/build/classes"/>
 
@@ -27,13 +27,7 @@
 
     <property name="nodes.file" value="${nodeGen.dir}/nodes"/>
 
-    <property name="src.dir" value="src"/>
-
-    <target name="check-parser">
-        <uptodate property="parser.uptodate" targetfile="${build.src.dir}/org/jamon/node/Node.java">
-            <srcfiles dir="src" includes="jamon.grammar"/>
-        </uptodate>
-    </target>
+    <property name="src.dir" value="src/main/java"/>
 
     <target name="buildNodeGenerator" description="Build the node generator">
         <dependset>
@@ -80,10 +74,6 @@
         <delete dir="${classes.dir}"/>
         <delete dir="${tests.classes.dir}"/>
         <delete dir="${nodes.src.dir}"/>
-    </target>
-
-    <target name="cvsignores">
-        <echo file=".cvsignore"> .cvsignore ${build.dir} build.properties </echo>
     </target>
 
     <target name="testclasses" depends="compile">
