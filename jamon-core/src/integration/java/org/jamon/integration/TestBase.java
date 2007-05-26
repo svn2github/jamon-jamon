@@ -51,7 +51,8 @@ public abstract class TestBase
     protected static final String SOURCE_DIR =
         BASEDIR + File.separator + "templates";
     protected static final String WORK_DIR =
-        BASEDIR + File.separator + "build/work";
+        System.getProperty("org.jamon.integration.workdir",
+                           BASEDIR + File.separator + "build/work");
 
     protected void resetWriter()
     {
@@ -126,8 +127,8 @@ public abstract class TestBase
     {
         String integrationDir =
             System.getProperty("org.jamon.integration.basedir");
-        new TemplateProcessor(new File(integrationDir + "/build/src"),
-                              new File(integrationDir + "/templates"),
+        new TemplateProcessor(new File(WORK_DIR + File.separator + "src"),
+                              new File(integrationDir + File.separator + "templates"),
                               getClass().getClassLoader())
             .generateSource(p_path);
     }

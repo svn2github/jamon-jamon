@@ -9,17 +9,11 @@
     <property name="classes.dir" value="${basedir}/../../target/integration-classes"/>
     <property name="src.dir" value="java"/>
 
-    <property name="sample.template1" value="test/jamon/TestTemplate"/>
-    <property name="sample.template2" value="test/jamon/Arguments"/>
-
     <property name="junit.timeout" value="15000"/>
     <property name="junit.printsummary" value="off"/>
     <property name="junit.formatter" value="org.apache.tools.ant.taskdefs.optional.junit.BriefJUnitResultFormatter"/>
 
-    <property name="tests.compiler" value="${build.compiler}"/>
     <property name="tests" value="*Test"/>
-
-    <property name="java.lib.jamon" value="${maven.runtime.classpath}"/>
 
     <target name="template-src">
         <echo file="templates/test/jamon/Recompilation.jamon" append="false">This is the template</echo>
@@ -56,7 +50,7 @@
             <srcfileset dir="${build.src.dir}" includes="**/*.java"/>
             <targetfileset dir="${classes.dir}" includes="**/*.class"/>
         </dependset>
-        <delete dir="${build.dir}/src/test/jamon/broken"/>
+        <delete dir="${build.src.dir}/test/jamon/broken"/>
         <mkdir dir="${classes.dir}"/>
         <javac destdir="${classes.dir}" debug="true" deprecation="true">
             <classpath refid="maven.test.classpath"/>
@@ -66,25 +60,19 @@
     </target>
 
     <target name="test" depends="compile" description="Run the integration tests">
-        <delete dir="${build.dir}/work"/>
         <dirname property="template.src.dir" file="${ant.file}"/>
         <property name="build.sysclasspath" value="last"/>
         <path id="org.jamon.integration.classpath">
-            <pathelement path="${java.lib.jamon}"/>
-            <pathelement location="${template.src.dir}/${classes.dir}"/>
+            <path refid="maven.test.classpath"/>
+            <pathelement location="${classes.dir}"/>
         </path>
         <property name="org.jamon.integration.classpath" refid="org.jamon.integration.classpath"/>
-        <condition property="org.jamon.integration.compiler" value="javac">
-            <not>
-                <equals arg1="${tests.compiler}" arg2="jikes"/>
-            </not>
-        </condition>
         <taskdef name="junit" classpathref="maven.test.classpath" classname="org.apache.tools.ant.taskdefs.optional.junit.JUnitTask"/>
         <junit printsummary="${junit.printsummary}" timeout="${junit.timeout}" failureproperty="org.jamon.junit.failuresOccured">
             <sysproperty key="org.jamon.integration.basedir" value="${template.src.dir}"/>
-            <!--
-            <sysproperty key="org.jamon.integration.compiler" value="${org.jamon.integration.compiler}"/>
+            <sysproperty key="org.jamon.integration.workdir" value="${build.src.dir}/../integration-work"/>
             <sysproperty key="org.jamon.integration.classpath" value="${org.jamon.integration.classpath}"/>
+            <!--
             <sysproperty key="org.jamon.integration.verbose" value="${org.jamon.integration.verbose}"/>
             -->
             <formatter classname="${junit.formatter}" usefile="no"/>

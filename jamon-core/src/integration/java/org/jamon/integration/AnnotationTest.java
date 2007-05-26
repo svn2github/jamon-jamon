@@ -2,13 +2,14 @@ package org.jamon.integration;
 
 import static org.junit.Assert.*;
 
+import junit.framework.TestCase;
 import org.junit.Test;
 
 import test.jamon.Annotated;
 import test.jamon.AnnotatedImpl;
 
 
-public class AnnotationTest
+public class AnnotationTest extends TestCase
 {
     @Test public void testAnnotationOnProxy() {
         assertEquals("proxy", Annotated.class.getAnnotation(TestAnnotation.class).value());
