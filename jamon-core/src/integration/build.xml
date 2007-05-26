@@ -5,14 +5,12 @@
 
     <property name="org.jamon.integration.verbose" value="false"/>
 
-    <property name="build.dir" value="../../target/integration"/>
-    <property name="build.src.dir" value="${build.dir}/src"/>
-    <property name="classes.dir" value="${build.dir}/../test-classes"/>
+    <property name="build.src.dir" value="${basedir}/../../target/integration-src"/>
+    <property name="classes.dir" value="${basedir}/../../target/integration-classes"/>
     <property name="src.dir" value="java"/>
 
     <property name="sample.template1" value="test/jamon/TestTemplate"/>
     <property name="sample.template2" value="test/jamon/Arguments"/>
-    <property name="java.lib.junit" value="../lib/junit4.jar"/>
 
     <property name="junit.timeout" value="15000"/>
     <property name="junit.printsummary" value="off"/>
@@ -31,9 +29,12 @@
     <target name="templates" depends="template-src">
         <mkdir dir="${build.src.dir}"/>
         <java failonerror="true" classname="org.jamon.compiler.TemplateProcessor">
-            <classpath refid="maven.runtime.classpath"/>
-            <arg value="--destDir=${foodir}/target/integration/src"/>
-            <arg value="--srcDir=${foodir}/src/integration/templates"/>
+            <classpath>
+                <path  refid="maven.runtime.classpath"/>
+                <path location="${classes.dir}"/>
+            </classpath>
+            <arg value="--destDir=${build.src.dir}"/>
+            <arg value="--srcDir=${basedir}/templates"/>
             <arg value="--directories"/>
             <arg value="/test/jamon"/>
             <arg value="/test/jamon/aliasProperties"/>
@@ -42,8 +43,8 @@
         </java>
         <java failonerror="true" classname="org.jamon.compiler.TemplateProcessor" classpath="${maven.runtime.classpath}">
             <classpath refid="maven.runtime.classpath"/>
-            <arg value="--destDir=${foodir}/target/integration/src"/>
-            <arg value="--srcDir=${foodir}/src/integration/libTemplates"/>
+            <arg value="--destDir=${build.src.dir}"/>
+            <arg value="--srcDir=${basedir}/libTemplates"/>
             <arg value="--directories"/>
             <arg value="/test/jamon"/>
         </java>
@@ -64,7 +65,7 @@
         </javac>
     </target>
 
-    <target name="test" depends="compile" description="Run the unit tests">
+    <target name="test" depends="compile" description="Run the integration tests">
         <delete dir="${build.dir}/work"/>
         <dirname property="template.src.dir" file="${ant.file}"/>
         <property name="build.sysclasspath" value="last"/>
@@ -78,16 +79,18 @@
                 <equals arg1="${tests.compiler}" arg2="jikes"/>
             </not>
         </condition>
+        <taskdef name="junit" classpathref="maven.test.classpath" classname="org.apache.tools.ant.taskdefs.optional.junit.JUnitTask"/>
         <junit printsummary="${junit.printsummary}" timeout="${junit.timeout}" failureproperty="org.jamon.junit.failuresOccured">
-            <sysproperty key="org.jamon.integration.compiler" value="${org.jamon.integration.compiler}"/>
             <sysproperty key="org.jamon.integration.basedir" value="${template.src.dir}"/>
+            <!--
+            <sysproperty key="org.jamon.integration.compiler" value="${org.jamon.integration.compiler}"/>
             <sysproperty key="org.jamon.integration.classpath" value="${org.jamon.integration.classpath}"/>
             <sysproperty key="org.jamon.integration.verbose" value="${org.jamon.integration.verbose}"/>
+            -->
             <formatter classname="${junit.formatter}" usefile="no"/>
             <classpath>
+                <path refid="maven.test.classpath"/>
                 <pathelement location="${classes.dir}"/>
-                <pathelement location="${java.lib.junit}"/>
-                <pathelement path="${java.lib.jamon}"/>
             </classpath>
             <batchtest>
                 <fileset dir="${src.dir}">

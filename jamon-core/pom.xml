@@ -32,6 +32,12 @@
             <version>4.3.1</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>ant</groupId>
+            <artifactId>ant-junit</artifactId>
+            <version>1.6.5</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
     <pluginRepositories>
         <pluginRepository>
@@ -93,7 +99,7 @@
                         <configuration>
                             <tasks>
                                 <ant dir="src/integration" inheritRefs="true">
-                                    <property name="foodir" value="${basedir}"/>
+                                    <property name="basedir" value="${basedir}"/>
                                     <target name="compile"/>
                                 </ant>
                             </tasks>
@@ -102,49 +108,19 @@
                             <goal>run</goal>
                         </goals>
                     </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <phase>test</phase>
-                        <id>unit-test</id>
-                        <configuration>
-                            <testSourceDirectory>src/test/java</testSourceDirectory>
-                            <excludes>
-                                <exclude>**/integration/*.java</exclude >
-                                <!--
-                                <exclude>org/jamon/integration/*.java</exclude>
-                                <exclude>/org/jamon/integration/*.java</exclude>
-                                <exclude>org.jamon.integration.*</exclude>
-                                -->
-                            </excludes>
-                            <!-- <baseDir>/Users/jay/jamon/jamon/jamon-core</baseDir> -->
-                        </configuration>
-                        <goals>
-                            <goal>test</goal>
-                        </goals>
-                    </execution>
                     <execution>
                         <phase>integration-test</phase>
                         <id>integration</id>
                         <configuration>
-                            <testSourceDirectory>src/integration/java</testSourceDirectory>
-                            <systemProperties>
-                                <property>
-                                    <name>org.jamon.integration.basedir</name>
-                                    <value>${basedir}/src/integration</value>
-                                </property>
-                            </systemProperties>
-                            <baseDir>target/integration</baseDir>
-                            <includes>
-                                <include>**/integration/*Test.java</include>
-                            </includes>
+                            <tasks>
+                                <ant dir="src/integration" inheritRefs="true">
+                                    <property name="basedir" value="${basedir}"/>
+                                    <target name="test"/>
+                                </ant>
+                            </tasks>
                         </configuration>
                         <goals>
-                            <goal>test</goal>
+                            <goal>run</goal>
                         </goals>
                     </execution>
                 </executions>
