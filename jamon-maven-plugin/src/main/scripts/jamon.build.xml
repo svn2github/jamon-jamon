@@ -1,0 +1,25 @@
+<project>
+
+    <target name="jamon:generate" depends="jamon:prepare">
+        <jamon destdir="${jamon.template.output}" srcdir="${jamon.template.src}"/>
+    </target>
+
+    <target name="jamon:prepare">
+        <mkdir dir="${jamon.template.output}"/>
+        <taskdef name="jamon" classname="org.jamon.ant.JamonTask"/>
+    </target>
+
+    <target name="jamon:clean">
+        <delete dir="${jamon.template.output}"/>
+    </target>
+
+    <target name="jamon:eclipse">
+        <mkdir dir=".settings"/>
+        <echo file=".settings/org.jamon.prefs"># now 
+eclipse.preferences.version=1
+templateSourceDir=${jamon.template.src}
+templateOutputDir=${jamon.template.output}
+</echo>
+    </target>
+
+</project>

@@ -1,0 +1,88 @@
+<project>
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.jamon</groupId>
+    <artifactId>jamon-maven-plugin</artifactId>
+    <version>SNAPSHOT</version>
+    <packaging>maven-plugin</packaging>
+    <organization>
+        <name>Jamon developers</name>
+        <url>http://www.jamon.org/</url>
+    </organization>
+    <developers>
+        <developer>
+            <id>jay</id>
+            <name>Jay Sachs</name>
+            <email>jay@jamon.org</email>
+            <roles>
+                <role>architect</role>
+                <role>developer</role>
+            </roles>
+            <timezone>-5</timezone>
+        </developer>
+    </developers>
+    <contributors>
+        <contributor>
+            <name>Sahib Dhinsda</name>
+            <email>sahibd27@gmail.com</email>
+            <roles>
+                <role>developer</role>
+            </roles>
+            <timezone>-5</timezone>
+        </contributor>
+    </contributors>
+    <scm>
+        <connection>scm:svn:https://svn.sourceforge.net/svnroot/jamon/mvn2-plugin/</connection>
+        <developerConnection>scm:svn:svn+ssh://svn.sourceforge.net/svnroot/jamon/mvn2-plugin/</developerConnection>
+        <url>https://svn.sourceforge.net/svnroot/jamon/mvn2-plugin/</url>
+    </scm>
+    <repositories>
+        <repository>
+            <id>jamon</id>
+            <name>Jamon</name>
+            <url>http://maven.jamon.org/</url>
+        </repository>
+    </repositories>
+
+    <distributionManagement>
+        <repository>
+            <id>jamon</id>
+            <name>Jamon</name>
+            <url>scpexe://jamon@maven.jamon.org/home/jamon/maven2</url>
+            <uniqueVersion>false</uniqueVersion>
+        </repository>
+        <site>
+            <id>jamon</id>
+            <name>Jamon</name>
+            <url>scpexe://jamon@maven.jamon.org/home/jamon/maven2-site/</url>
+        </site>
+    </distributionManagement>
+
+    <name>Jamon Maven2 Plugin</name>
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-script-ant</artifactId>
+            <version>2.0.5</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jamon</groupId>
+            <artifactId>jamon-anttask</artifactId>
+            <version>SNAPSHOT</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-plugin-plugin</artifactId>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.apache.maven</groupId>
+                        <artifactId>maven-plugin-tools-ant</artifactId>
+                        <version>2.0.5</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+        </plugins>
+    </build>
+</project>
