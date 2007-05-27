@@ -2,8 +2,8 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 file:/Users/jay/local/xml/xsd/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.jamon</groupId>
-    <artifactId>maven-base</artifactId>
-    <name>maven-base</name>
+    <artifactId>jamon-project</artifactId>
+    <name>jamon-project</name>
     <version>SNAPSHOT</version>
     <packaging>pom</packaging>
     <description>Jamon base pom</description>
@@ -24,7 +24,14 @@
             <url>scpexe://jamon@maven.jamon.org/home/jamon/maven2-site/</url>
         </site>
     </distributionManagement>
-
+    <repositories>
+        <repository>
+            <id>jamon</id>
+            <name>Jamon</name>
+            <url>http://maven.jamon.org/</url>
+        </repository>
+    </repositories>
+    
     <inceptionYear>2003</inceptionYear>
 
     <developers>
@@ -40,6 +47,17 @@
         </developer>
     </developers>
 
+    <pluginRepositories>
+        <pluginRepository>
+            <id>jamon</id>
+            <layout>default</layout>
+            <name>Jamon</name>
+            <releases/>
+            <snapshots/>
+            <url>http://maven.jamon.org/</url>
+        </pluginRepository>
+    </pluginRepositories>
+    
     <build>
         <plugins>
             <plugin>

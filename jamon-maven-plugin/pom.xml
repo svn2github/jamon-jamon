@@ -1,25 +1,16 @@
 <project>
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.jamon</groupId>
+    <parent>
+        <groupId>org.jamon</groupId>
+        <artifactId>jamon-project</artifactId>
+        <version>SNAPSHOT</version>
+        <relativePath>../jamon-project</relativePath>
+    </parent>
     <artifactId>jamon-maven-plugin</artifactId>
+    <name>Jamon Maven Plugin</name>
     <version>SNAPSHOT</version>
     <packaging>maven-plugin</packaging>
-    <organization>
-        <name>Jamon developers</name>
-        <url>http://www.jamon.org/</url>
-    </organization>
-    <developers>
-        <developer>
-            <id>jay</id>
-            <name>Jay Sachs</name>
-            <email>jay@jamon.org</email>
-            <roles>
-                <role>architect</role>
-                <role>developer</role>
-            </roles>
-            <timezone>-5</timezone>
-        </developer>
-    </developers>
+    <description>Jamon Maven plugin</description>
     <contributors>
         <contributor>
             <name>Sahib Dhinsda</name>
@@ -35,29 +26,6 @@
         <developerConnection>scm:svn:svn+ssh://svn.sourceforge.net/svnroot/jamon/mvn2-plugin/</developerConnection>
         <url>https://svn.sourceforge.net/svnroot/jamon/mvn2-plugin/</url>
     </scm>
-    <repositories>
-        <repository>
-            <id>jamon</id>
-            <name>Jamon</name>
-            <url>http://maven.jamon.org/</url>
-        </repository>
-    </repositories>
-
-    <distributionManagement>
-        <repository>
-            <id>jamon</id>
-            <name>Jamon</name>
-            <url>scpexe://jamon@maven.jamon.org/home/jamon/maven2</url>
-            <uniqueVersion>false</uniqueVersion>
-        </repository>
-        <site>
-            <id>jamon</id>
-            <name>Jamon</name>
-            <url>scpexe://jamon@maven.jamon.org/home/jamon/maven2-site/</url>
-        </site>
-    </distributionManagement>
-
-    <name>Jamon Maven2 Plugin</name>
     <dependencies>
         <dependency>
             <groupId>org.apache.maven</groupId>

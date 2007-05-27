@@ -3,9 +3,9 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.jamon</groupId>
-        <artifactId>maven-base</artifactId>
+        <artifactId>jamon-project</artifactId>
         <version>SNAPSHOT</version>
-        <relativePath>../maven-base</relativePath>
+        <relativePath>../jamon-project</relativePath>
     </parent>
     <artifactId>jamon-core</artifactId>
     <name>jamon-core</name>
@@ -39,16 +39,6 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-    <pluginRepositories>
-        <pluginRepository>
-            <id>jamon</id>
-            <layout>default</layout>
-            <name>Jamon</name>
-            <releases/>
-            <snapshots/>
-            <url>http://maven.jamon.org/</url>
-        </pluginRepository>
-    </pluginRepositories>
     <build>
         <plugins>
             <plugin>
