@@ -33,7 +33,6 @@ import org.jamon.AbstractTemplateProxy;
 import org.jamon.TemplateManager;
 import org.jamon.annotations.Argument;
 import org.jamon.annotations.Template;
-import org.jamon.util.StringUtils;
 
 /**
  * A <code>TemplateManager</code> implementation suitable for use in
@@ -99,7 +98,7 @@ public class JUnitTemplateManager
                                 Map<String, Object> p_optionalArgs,
                                 Object[] p_requiredArgs)
     {
-        this(StringUtils.classToTemplatePath(p_class),
+        this(classToTemplatePath(p_class),
              p_optionalArgs,
              p_requiredArgs);
     }
@@ -128,11 +127,11 @@ public class JUnitTemplateManager
         AbstractTemplateProxy p_proxy)
     {
         Assert.assertTrue( m_impl == null );
-        String path = StringUtils.classToTemplatePath(p_proxy.getClass());
+        String path = classToTemplatePath(p_proxy.getClass());
         if (path.equals(m_path))
         {
 
-            String className = StringUtils.templatePathToClassName(path)
+            String className = templatePathToClassName(path)
                 + "$Intf";
             Class<? extends AbstractTemplateProxy.Intf> intfClass;
             try
@@ -174,7 +173,7 @@ public class JUnitTemplateManager
         try
         {
             return (AbstractTemplateProxy)
-                Class.forName(StringUtils.templatePathToClassName(p_path))
+                Class.forName(templatePathToClassName(p_path))
                 .getConstructor(new Class[] { TemplateManager.class })
                 .newInstance(new Object[] { this });
         }
@@ -267,7 +266,7 @@ public class JUnitTemplateManager
     {
         return m_implData.getClass()
             .getMethod("get"
-                       + StringUtils.capitalize(p_name)
+                       + capitalize(p_name)
                        + "__IsNotDefault",new Class[0])
             .invoke(m_implData,new Object[0]);
     }
@@ -277,7 +276,7 @@ public class JUnitTemplateManager
     {
         return m_implData.getClass()
             .getMethod("get"
-                       + StringUtils.capitalize(p_name),
+                       + capitalize(p_name),
                        new Class[0])
             .invoke(m_implData, new Object[0]);
     }
@@ -289,4 +288,39 @@ public class JUnitTemplateManager
         }
         return names;
     }
+
+    private static String capitalize(String p_string)
+    {
+        if (p_string == null)
+        {
+            return null;
+        }
+        else
+        {
+            char [] chars = p_string.toCharArray();
+            if (chars.length == 0)
+            {
+                return p_string;
+            }
+            else
+            {
+                chars[0] = Character.toUpperCase(chars[0]);
+                return new String(chars);
+            }
+        }
+    }
+
+	private static String templatePathToClassName(String p_string)
+	{
+		while (p_string.length() > 0 && p_string.charAt(0) == '/')
+		{
+			p_string = p_string.substring(1);
+		}
+		return p_string.replace('/','.');
+	}
+
+	private static String classToTemplatePath(Class<?> p_class)
+	{
+		return p_class.getName().replace('.','/');
+	}
 }

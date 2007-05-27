@@ -22,66 +22,56 @@
             <version>SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>org.jamon</groupId>
-            <artifactId>jamon-api</artifactId>
-            <version>SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.jamon</groupId>
-            <artifactId>jamon-core</artifactId>
-            <version>SNAPSHOT</version>
-        </dependency>
-        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>3.8.1</version>
         </dependency>
     </dependencies>
 
-  <build>
-      <plugins>
-    <plugin>
-        <groupId>org.jamon</groupId>
-        <artifactId>jamon-maven-plugin</artifactId>
-        <version>SNAPSHOT</version>
-        <executions>
-            <execution>
-                <id>jamon-generate-sources</id>
-                <phase>generate-test-sources</phase>
-                <goals>
-                    <goal>jamon:generate</goal>
-                </goals>
-                <configuration>
-                    <jamon.template.src>src/test/templates</jamon.template.src>
-                    <jamon.template.output>target/tsrc</jamon.template.output>
-                </configuration>
-            </execution>
-        </executions>
-        
-    </plugin>          
-          
-          <plugin>
-              <groupId>org.codehaus.mojo</groupId>
-              <artifactId>build-helper-maven-plugin</artifactId>
-              <version>1.0</version>
-              <executions>
-                  <execution>
-                      <id>add-source</id>
-                      <phase>generate-sources</phase>
-                      <goals>
-                          <goal>add-test-source</goal>
-                      </goals>
-                      <configuration>
-                          <sources>
-                              <source>target/tsrc</source>
-                          </sources>
-                      </configuration>
-                  </execution>
-              </executions>
-          </plugin>
-          
-      </plugins>
-      
-  </build>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.jamon</groupId>
+                <artifactId>jamon-maven-plugin</artifactId>
+                <version>SNAPSHOT</version>
+                <executions>
+                    <execution>
+                        <id>jamon-generate-sources</id>
+                        <phase>generate-test-sources</phase>
+                        <goals>
+                            <goal>jamon:generate</goal>
+                        </goals>
+                        <configuration>
+                            <jamon.template.src>src/test/templates</jamon.template.src>
+                            <jamon.template.output>target/tsrc</jamon.template.output>
+                        </configuration>
+                    </execution>
+                </executions>
+
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>1.0</version>
+                <executions>
+                    <execution>
+                        <id>add-source</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>add-test-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>target/tsrc</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+        </plugins>
+
+    </build>
 
 </project>
