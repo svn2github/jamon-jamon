@@ -18,16 +18,6 @@
     <dependencies>
         <dependency>
             <groupId>org.jamon</groupId>
-            <artifactId>jamon-runtime</artifactId>
-            <version>SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.jamon</groupId>
-            <artifactId>jamon-api</artifactId>
-            <version>SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.jamon</groupId>
             <artifactId>jamon-core</artifactId>
             <version>SNAPSHOT</version>
         </dependency>
@@ -37,24 +27,24 @@
             <version>1.6.5</version>
         </dependency>
     </dependencies>
- <build>
-    <plugins>
-      <plugin>
-        <artifactId>maven-antrun-plugin</artifactId>
-        <executions>
-          <execution>
-            <phase>test</phase>
-            <configuration>
-              <tasks>
-				<ant antfile="build-test.xml" target="test"/>
-              </tasks>
-            </configuration>
-            <goals>
-              <goal>run</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-    </plugins>
-  </build>
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>test</phase>
+                        <configuration>
+                            <tasks>
+                                <ant antfile="build-test.xml" target="test"/>
+                            </tasks>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>
