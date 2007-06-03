@@ -22,6 +22,9 @@ package org.jamon.node;
 
 import org.jamon.api.Location;
 
+/**
+ * The base class for nodes in the syntax tree of a parsed Jamon document.
+ */
 public abstract class AbstractNode
 {
     /**
@@ -34,10 +37,7 @@ public abstract class AbstractNode
             throw new NullPointerException();
     }
 
-    public final Location getLocation()
-    {
-        return m_location;
-    }
+    public final Location getLocation() { return m_location; }
 
     private final Location m_location;
 

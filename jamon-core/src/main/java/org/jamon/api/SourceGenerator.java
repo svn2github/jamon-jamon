@@ -22,6 +22,9 @@ package org.jamon.api;
 
 import java.io.OutputStream;
 
+/**
+ * A generator of java source files.
+ */
 public interface SourceGenerator
 {
     void generateSource(OutputStream p_out) throws java.io.IOException;

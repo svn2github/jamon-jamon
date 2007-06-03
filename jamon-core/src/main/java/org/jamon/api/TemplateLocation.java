@@ -24,5 +24,8 @@ package org.jamon.api;
  */
 public interface TemplateLocation
 {
+    /**
+     * @return a user-friendly string representation of the location.
+     */
     String toString();
 }

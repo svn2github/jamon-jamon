@@ -61,8 +61,7 @@ public class StringUtils
         return sb.toString();
     }
 
-    public static boolean isGeneratedClassFilename(String p_className,
-                                                   String p_fileName)
+    public static boolean isGeneratedClassFilename(String p_className, String p_fileName)
     {
         if (p_fileName.endsWith(".class"))
         {
@@ -133,24 +132,28 @@ public class StringUtils
         return sb.toString();
     }
 
+
+    /**
+     * Capitalize the first letter of a string.  If the string is empty, just return an empty
+     * string; if it is null, return a null string.
+     * string.
+     * @param p_string the string
+     * @return {@code p_string} with the first letter capitalized.
+     */
     public static String capitalize(String p_string)
     {
         if (p_string == null)
         {
             return null;
         }
+        else if (p_string.length() == 0) {
+            return p_string;
+        }
         else
         {
             char [] chars = p_string.toCharArray();
-            if (chars.length == 0)
-            {
-                return p_string;
-            }
-            else
-            {
-                chars[0] = Character.toUpperCase(chars[0]);
-                return new String(chars);
-            }
+            chars[0] = Character.toUpperCase(chars[0]);
+            return new String(chars);
         }
     }
 
@@ -159,10 +162,16 @@ public class StringUtils
         '0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'
     };
 
+
+    /**
+     * Convert a byte array into a hexidecimal representation.
+     * @param bytes the byte array.
+     * @return a hexidecimal representation.
+     */
     public static String byteArrayToHexString(final byte[] bytes)
     {
-    StringBuilder buffer = new StringBuilder(bytes.length * 2);
-    for (int i = 0; i < bytes.length; i++)
+        StringBuilder buffer = new StringBuilder(bytes.length * 2);
+        for (int i = 0; i < bytes.length; i++)
         {
             buffer.append(HEXCHARS[(bytes[i] & 0xF0) >>  4]);
             buffer.append(HEXCHARS[bytes[i] & 0x0F]);
@@ -170,6 +179,12 @@ public class StringUtils
     return buffer.toString();
     }
 
+    /**
+     * Compute the 4-digit hexidecimal represenation of an integer between {@code 0} and
+     * {@code 0xFFFF}.
+     * @param p_int the integer.
+     * @return the 4-digit hexidecimal represenation.
+     */
     public static String hexify4(int p_int)
     {
         int i = p_int;
@@ -183,20 +198,26 @@ public class StringUtils
         return "000".substring(0,pad) + s;
     }
 
-    public static void commaJoin(StringBuilder p_buf, Iterable<String> p_iterable)
+    /**
+     * Concatenate a list of strings into a single {@code StringBuilder}, with commas between
+     * successive elements.
+     * @param p_builder the builder.
+     * @param p_iterable the list of strings.
+     */
+    public static void commaJoin(StringBuilder p_builder, Iterable<String> p_iterable)
     {
         boolean seenElement = false;
         for(String element: p_iterable)
         {
             if (seenElement)
             {
-                p_buf.append(", ");
+                p_builder.append(", ");
             }
             else
             {
                 seenElement = true;
             }
-            p_buf.append(element);
+            p_builder.append(element);
         }
     }
 }
