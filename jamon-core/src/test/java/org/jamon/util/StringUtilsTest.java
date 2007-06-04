@@ -164,6 +164,9 @@ public class StringUtilsTest
 
     public void testFilePathToTemplatePath() throws Exception
     {
-        assertEquals("/a/b/c.jamon", StringUtils.filePathToTemplatePath("--a--b--c.jamon", "--"));
+        assertEquals(
+            "/a/b/c.jamon",
+            StringUtils.filePathToTemplatePath(
+                File.separator + "a" + File.separator + "b" + File.separator + "c.jamon"));
     }
 }
