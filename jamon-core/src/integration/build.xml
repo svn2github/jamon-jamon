@@ -24,7 +24,7 @@
         <mkdir dir="${build.src.dir}"/>
         <java failonerror="true" classname="org.jamon.compiler.TemplateProcessor">
             <classpath>
-                <path  refid="maven.runtime.classpath"/>
+                <path refid="maven.runtime.classpath"/>
                 <path location="${classes.dir}"/>
             </classpath>
             <arg value="--destDir=${build.src.dir}"/>
