@@ -47,7 +47,6 @@
                             <jamon.template.output>target/tsrc</jamon.template.output>
                         </configuration>
                     </execution>
-                    <!--
                     <execution>
                         <id>jamon-generate-test-sources</id>
                         <phase>generate-test-sources</phase>
@@ -59,7 +58,6 @@
                             <jamon.template.output>target/test-tsrc</jamon.template.output>
                         </configuration>
                     </execution>
-                    -->
                 </executions>
 
             </plugin>
@@ -81,7 +79,6 @@
                             </sources>
                         </configuration>
                     </execution>
-                    <!--
                     <execution>
                         <id>add-test-source</id>
                         <phase>generate-test-sources</phase>
@@ -94,7 +91,6 @@
                             </sources>
                         </configuration>
                     </execution>
-                    -->
                 </executions>
             </plugin>
 
