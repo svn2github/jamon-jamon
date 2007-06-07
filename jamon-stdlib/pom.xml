@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 file:/Users/jay/local/xml/xsd/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.jamon</groupId>
+        <artifactId>jamon-project</artifactId>
+        <version>SNAPSHOT</version>
+        <relativePath>../jamon-project</relativePath>
+    </parent>
+    <artifactId>jamon-stdlib</artifactId>
+    <name>jamon-stdlib</name>
+    <version>SNAPSHOT</version>
+    <packaging>jar</packaging>
+    <description>Jamon standard library</description>
+    <scm>
+        <developerConnection>scm:svn:https://jamon.svn.sourceforge.net/svnroot/jamon/trunk/jamon/jamon-stdlib</developerConnection>
+    </scm>
+    <dependencies>
+        <dependency>
+            <groupId>org.jamon</groupId>
+            <artifactId>jamon-runtime</artifactId>
+            <version>SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>3.8.1</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <sourceDirectory>src</sourceDirectory>
+        <testSourceDirectory>tests</testSourceDirectory>
+        <plugins>
+            <plugin>
+                <groupId>org.jamon</groupId>
+                <artifactId>jamon-maven-plugin</artifactId>
+                <version>SNAPSHOT</version>
+                <executions>
+                    <execution>
+                        <id>jamon-generate-sources</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>jamon:generate</goal>
+                        </goals>
+                        <configuration>
+                            <jamon.template.src>templates</jamon.template.src>
+                            <jamon.template.output>target/tsrc</jamon.template.output>
+                        </configuration>
+                    </execution>
+                    <!--
+                    <execution>
+                        <id>jamon-generate-test-sources</id>
+                        <phase>generate-test-sources</phase>
+                        <goals>
+                            <goal>jamon:generate</goal>
+                        </goals>
+                        <configuration>
+                            <jamon.template.src>tests/templates</jamon.template.src>
+                            <jamon.template.output>target/test-tsrc</jamon.template.output>
+                        </configuration>
+                    </execution>
+                    -->
+                </executions>
+
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>1.0</version>
+                <executions>
+                    <execution>
+                        <id>add-source</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>target/tsrc</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                    <!--
+                    <execution>
+                        <id>add-test-source</id>
+                        <phase>generate-test-sources</phase>
+                        <goals>
+                            <goal>add-test-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>target/test-tsrc</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                    -->
+                </executions>
+            </plugin>
+
+        </plugins>
+
+    </build>
+
+</project>

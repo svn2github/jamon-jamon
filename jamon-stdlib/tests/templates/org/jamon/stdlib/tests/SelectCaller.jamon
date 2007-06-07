@@ -1,0 +1,27 @@
+<%import>
+  org.jamon.render.html.SingleSelect;
+</%import>\
+<%class>
+  private static class TestItem extends SingleSelect.Item<String>
+  {
+    private String m_x;
+    public TestItem(String p_x) { m_x = p_x; }
+
+    public String getRenderable()
+    {
+      return m_x;
+    }
+
+    public String getValue()
+    {
+      return "_" + m_x;
+    }
+  }
+
+  SingleSelect<String> select = new SingleSelect<String>(
+    "name", "_1", new TestItem[] { new TestItem("1"), new TestItem("2") });
+</%class>\
+\
+<&| /org/jamon/html/Select<String>: select &><%args>String s;</%args>\
+<% s %>\
+</&>

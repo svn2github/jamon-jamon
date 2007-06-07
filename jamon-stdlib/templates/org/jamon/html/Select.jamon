@@ -1,0 +1,47 @@
+<%doc>
+  The contents of this file are subject to the Mozilla Public
+  License Version 1.1 (the "License"); you may not use this file
+  except in compliance with the License. You may obtain a copy of
+  the License at http://www.mozilla.org/MPL/
+
+  Software distributed under the License is distributed on an "AS
+  IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
+  implied. See the License for the specific language governing
+  rights and limitations under the License.
+
+  The Original Code is Jamon code, released February, 2003.
+
+  The Initial Developer of the Original Code is Jay Sachs.  Portions
+  created by Jay Sachs are Copyright (C) 2003 Jay Sachs.  All Rights
+  Reserved.
+
+  Contributor(s): Ian Robertson
+</%doc>
+<%annotate @Deprecated @SuppressWarnings("deprecation")%>
+
+<%generic>Renderable</%generic>
+
+<%frag renderOption>
+  Renderable renderable;
+</%frag>
+
+<%args>
+  org.jamon.render.html.Select<Renderable> input;
+  boolean multiple = false;
+</%args>
+
+<select name="<% input.getName() #H %>" \
+% if (multiple) {
+    multiple \
+% }
+>
+% org.jamon.render.html.Select.Item<? extends Renderable>[] items
+%   = input.getItems();
+% for (int i = 0; i < items.length; ++i ) {
+    <option value="<% items[i].getValue() #H %>"\
+% if (items[i].isSelected()) {
+ selected\
+% }
+><& renderOption; renderable = items[i].getRenderable() &></option>
+% }
+</select>
