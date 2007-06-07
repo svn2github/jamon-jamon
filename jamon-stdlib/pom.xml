@@ -30,8 +30,6 @@
     </dependencies>
 
     <build>
-        <sourceDirectory>src</sourceDirectory>
-        <testSourceDirectory>tests</testSourceDirectory>
         <plugins>
             <plugin>
                 <groupId>org.jamon</groupId>
@@ -45,7 +43,7 @@
                             <goal>jamon:generate</goal>
                         </goals>
                         <configuration>
-                            <jamon.template.src>templates</jamon.template.src>
+                            <jamon.template.src>src/main/templates</jamon.template.src>
                             <jamon.template.output>target/tsrc</jamon.template.output>
                         </configuration>
                     </execution>
@@ -57,7 +55,7 @@
                             <goal>jamon:generate</goal>
                         </goals>
                         <configuration>
-                            <jamon.template.src>tests/templates</jamon.template.src>
+                            <jamon.template.src>src/test/templates</jamon.template.src>
                             <jamon.template.output>target/test-tsrc</jamon.template.output>
                         </configuration>
                     </execution>
