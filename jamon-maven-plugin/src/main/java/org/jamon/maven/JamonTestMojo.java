@@ -7,21 +7,21 @@ import org.apache.maven.plugin.MojoExecutionException;
 /**
  * Goal which translates
  *
- * @goal translate
- * @phase generate-sources
-     * @execute phase="generate-sources" lifecycle="jamon"
- * @requiresDependencyResolution runtime
+ * @goal translate-tests
+ * @phase generate-test-sources
+     * @execute phase="generate-test-sources" lifecycle="jamon"
+ * @requiresDependencyResolution test
  */
-public class JamonMojo
+public class JamonTestMojo
     extends AbstractJamonMojo
 {
     /**
-     * @parameter expression="${project.basedir}/src/main/templates"
+     * @parameter expression="${project.basedir}/src/test/templates"
      */
     private File templateSourceDir;
 
     /**
-     * @parameter expression="${project.build.directory}/tsrc"
+     * @parameter expression="${project.build.directory}/test-tsrc"
      */
     private File templateOutputDir;
 
@@ -41,6 +41,6 @@ public class JamonMojo
         throws MojoExecutionException
     {
       doExecute();
-      getProject().addCompileSourceRoot(templateOutputDir.getAbsolutePath());
+      getProject().addTestCompileSourceRoot(templateOutputDir.getAbsolutePath());
     }
 }
