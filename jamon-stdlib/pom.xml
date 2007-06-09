@@ -48,47 +48,12 @@
                         <id>jamon-generate-test-sources</id>
                         <phase>generate-test-sources</phase>
                         <goals>
-                            <goal>translate</goal>
+                            <goal>translate-tests</goal>
                         </goals>
-                        <configuration>
-                            <templateSourceDir>src/test/templates</templateSourceDir>
-                            <templateOutputDir>target/test-tsrc</templateOutputDir>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>
 
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>build-helper-maven-plugin</artifactId>
-                <version>1.0</version>
-                <executions>
-                    <execution>
-                        <id>add-source</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>add-source</goal>
-                        </goals>
-                        <configuration>
-                            <sources>
-                                <source>target/tsrc</source>
-                            </sources>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>add-test-source</id>
-                        <phase>generate-test-sources</phase>
-                        <goals>
-                            <goal>add-test-source</goal>
-                        </goals>
-                        <configuration>
-                            <sources>
-                                <source>target/test-tsrc</source>
-                            </sources>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
         </plugins>
 
     </build>
