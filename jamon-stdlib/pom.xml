@@ -18,7 +18,7 @@
     <dependencies>
         <dependency>
             <groupId>org.jamon</groupId>
-            <artifactId>jamon-runtime</artifactId>
+            <artifactId>jamon-core</artifactId>
             <version>SNAPSHOT</version>
         </dependency>
         <dependency>
@@ -40,26 +40,22 @@
                         <id>jamon-generate-sources</id>
                         <phase>generate-sources</phase>
                         <goals>
-                            <goal>jamon:generate</goal>
+                            <goal>translate</goal>
                         </goals>
-                        <configuration>
-                            <jamon.template.src>src/main/templates</jamon.template.src>
-                            <jamon.template.output>target/tsrc</jamon.template.output>
-                        </configuration>
                     </execution>
+
                     <execution>
                         <id>jamon-generate-test-sources</id>
                         <phase>generate-test-sources</phase>
                         <goals>
-                            <goal>jamon:generate</goal>
+                            <goal>translate</goal>
                         </goals>
                         <configuration>
-                            <jamon.template.src>src/test/templates</jamon.template.src>
-                            <jamon.template.output>target/test-tsrc</jamon.template.output>
+                            <templateSourceDir>src/test/templates</templateSourceDir>
+                            <templateOutputDir>target/test-tsrc</templateOutputDir>
                         </configuration>
                     </execution>
                 </executions>
-
             </plugin>
 
             <plugin>
@@ -93,7 +89,6 @@
                     </execution>
                 </executions>
             </plugin>
-
         </plugins>
 
     </build>
