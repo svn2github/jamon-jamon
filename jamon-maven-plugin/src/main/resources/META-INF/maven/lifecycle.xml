@@ -1,0 +1,17 @@
+<lifecycles>
+  <lifecycle>
+    <id>jamon</id>
+    <phases>
+      <phase>
+        <id>generate-sources</id>
+        <executions>
+          <execution>
+              <goals>
+                <goal>translate</goal>
+              </goals>
+          </execution>
+        </executions>
+      </phase>
+    </phases>
+  </lifecycle>
+</lifecycles>
