@@ -16,11 +16,14 @@
         <developerConnection>scm:svn:https://jamon.svn.sourceforge.net/svnroot/jamon/trunk/jamon/runtime</developerConnection>
     </scm>
     <modules>
+        <module>../jamon-project</module>
         <module>../jamon-runtime</module>
         <module>../jamon-api</module>
         <module>../jamon-nodegen</module>
         <module>../jamon-core</module>
         <module>../jamon-junit</module>
+        <module>../jamon-maven-plugin</module>
         <module>../jamon-anttask</module>
+        <module>../jamon-stdlib</module>
     </modules>
 </project>
