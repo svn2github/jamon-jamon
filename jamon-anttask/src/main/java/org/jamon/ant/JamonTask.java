@@ -66,7 +66,7 @@ public class JamonTask
             urls[i] = new URL("file",null, paths[i]);
         }
         m_classLoader = new URLClassLoader(urls,
-                                           getClass().getClassLoader());
+                                           ClassLoader.getSystemClassLoader());
     }
 
     public void setListFiles(boolean p_listFiles)
