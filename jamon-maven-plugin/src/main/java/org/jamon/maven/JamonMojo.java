@@ -9,7 +9,7 @@ import org.apache.maven.plugin.MojoExecutionException;
  *
  * @goal translate
  * @phase generate-sources
-     * @execute phase="generate-sources" lifecycle="jamon"
+     * @execute phase="generate-sources"
  * @requiresDependencyResolution runtime
  */
 public class JamonMojo
