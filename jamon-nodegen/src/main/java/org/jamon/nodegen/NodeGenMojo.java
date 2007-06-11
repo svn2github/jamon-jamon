@@ -6,6 +6,7 @@ import java.io.IOException;
 
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.project.MavenProject;
 
 /**
  * Generate AST nodes.
@@ -38,6 +39,7 @@ public class NodeGenMojo extends AbstractMojo
             getLog().error(e);
             throw new MojoExecutionException(e.getMessage());
         }
+		project.addCompileSourceRoot(destinationDirectory.getAbsolutePath());
     }
 
     private void initializeTargetDir(File targetDir)
@@ -50,6 +52,11 @@ public class NodeGenMojo extends AbstractMojo
         }
     }
     
+    /**
+    * @parameter expression="${project}"
+    */
+    private MavenProject project;
+
     /**
      * @parameter
      * @required
