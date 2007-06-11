@@ -36,7 +36,7 @@
                         <phase>test</phase>
                         <configuration>
                             <tasks>
-                                <ant antfile="build-test.xml" target="test"/>
+                                <ant inheritRefs="true" antfile="build-test.xml" target="test"/>
                             </tasks>
                         </configuration>
                         <goals>

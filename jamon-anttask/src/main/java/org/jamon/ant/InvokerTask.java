@@ -38,6 +38,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Environment;
 import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.Reference;
 import org.jamon.BasicTemplateManager;
 import org.jamon.TemplateManager;
 import org.jamon.api.ParserError;
@@ -176,7 +177,26 @@ public class InvokerTask
         }
     }
 
+    public void addConfiguredClasspath(Path p_classpath)
+        throws IOException
+    {
+		doSetClasspath(p_classpath);
+    }
+
+	public void setClasspathref(Reference p_classpathid)
+		throws IOException
+	{
+		Path path = (Path) p_classpathid.getReferencedObject();
+		doSetClasspath(path);
+	}
+
     public void setClasspath(Path p_classpath)
+        throws IOException
+	{
+		doSetClasspath(p_classpath);
+	}
+
+    private void doSetClasspath(Path p_classpath)
         throws IOException
     {
         String[] paths = p_classpath.list();

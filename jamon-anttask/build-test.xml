@@ -4,13 +4,9 @@
 
     <description>Test the Ant task for Jamon</description>
 
-    <property file="build.properties"/>
-    <property file="${user.home}/.ant.properties"/>
-
-    <property name="build.dir" value="build"/>
+    <property name="build.dir" value="target"/>
     <property name="work.dir" value="${build.dir}/test-work"/>
     <property name="test.src.dir" value="${build.dir}/test-src"/>
-    <property name="classpath" value="./build/classes:../jamon-core/build/classes:../jamon-runtime/build/classes:../jamon-api/build/classes"/>
 	<property name="templates.dir" value="src/test/templates"/>
     <target name="test" depends="init,test-invoker,test-jamon"/>
 
@@ -20,14 +16,12 @@
     </target>
 
     <target name="test-jamon">
-        <taskdef name="jamon" classname="org.jamon.ant.JamonTask" classpath="${classpath}"/>
+        <taskdef name="jamon" classname="org.jamon.ant.JamonTask" classpathref="maven.runtime.classpath"/>
         <jamon destdir="${test.src.dir}" srcdir="${templates.dir}"/>
     </target>
 
     <target name="test-invoker">
-        <taskdef name="invoker" classname="org.jamon.ant.InvokerTask" classpath="${classpath}"/>
-        <!-- we only need to specify classpath here because we're bootstrapping
-         Jamon; in "normal" invocations, all Jamon classes are available -->
+        <taskdef name="invoker" classname="org.jamon.ant.InvokerTask" classpathref="maven.runtime.classpath"/>
         <tempfile property="temp.file" destdir="${build.dir}"/>
         <property name="org.jamon.invoker.compiler" value="javac"/>
         <condition property="org.jamon.invoker.compiler" value="javac">
@@ -38,12 +32,14 @@
                 <isset property="org.jamon.invoker.compiler"/>
             </not>
         </condition>
-        <invoker classpath="${classpath}" sourceDir="${templates.dir}" workDir="${work.dir}" compiler="${org.jamon.invoker.compiler}" template="/bar/Bar" output="${temp.file}"/>
-        <invoker classpath="${classpath}" sourceDir="${templates.dir}" workDir="${work.dir}" compiler="${org.jamon.invoker.compiler}" template="/Foo" output="${temp.file}">
+        <invoker classpathref="maven.test.classpath" sourceDir="${templates.dir}" workDir="${work.dir}" compiler="${org.jamon.invoker.compiler}" template="/bar/Bar" output="${temp.file}"/>
+        <invoker sourceDir="${templates.dir}" workDir="${work.dir}" compiler="${org.jamon.invoker.compiler}" template="/Foo" output="${temp.file}">
+			<classpath refid="maven.test.classpath"/>
             <arg name="i" value="3"/>
             <arg name="b" value="true"/>
         </invoker>
         <property name="test.output" value=""/>
+		<pathconvert refid="maven.test.classpath" property="classpath"/>
         <invoker classpath="${classpath}" sourceDir="${templates.dir}" workDir="${work.dir}" compiler="${org.jamon.invoker.compiler}" template="/Foo" property="test.output">
             <arg name="i" value="3"/>
             <arg name="b" value="true"/>
@@ -51,6 +47,7 @@
         <condition property="test.ok">
             <equals arg1="${test.output}" arg2="Bla3true"/>
         </condition>
+		<delete file="${temp.file}"/>
         <fail unless="test.ok" message="output was ${test.output}"/>
     </target>
 
