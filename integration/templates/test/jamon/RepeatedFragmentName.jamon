@@ -1,4 +1,0 @@
-<%def d1><%frag content />d1:<& content &></%def>\
-<%def d2><%frag content />d2:<& content &></%def>\
-<%def d3><%frag content>int i;</%frag>d3:<& content; i = 7 &></%def>\
-<&| d1 &>d1</&>,<&| d2 &>d2</&>,<&| d3 &><%args>int j;</%args>d3 - <% j %></&>

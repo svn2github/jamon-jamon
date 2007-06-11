@@ -1,8 +1,0 @@
-<%args>
-  String y;
-  int z;
-  int x = 
-       3 +
-       2 * 3;
-</%args>
-SubTemplate: <% z %>, <% x %>, <% y %>

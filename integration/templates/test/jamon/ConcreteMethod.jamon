@@ -1,5 +1,0 @@
-<%extends AbstractMethod>\
-<%override foo>\
-<%xargs> i; f; </%xargs>\
-<% i %> <& f &>\
-</%override>

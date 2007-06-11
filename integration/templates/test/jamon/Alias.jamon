@@ -1,6 +1,0 @@
-<%alias>
-  jamon = /test/jamon;
-  / = /test;
-  j2 = //jamon;
-</%alias>\
-<& jamon//Simple &> <& //jamon/Simple &> <& j2//Simple &>

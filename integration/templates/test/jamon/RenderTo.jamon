@@ -1,9 +1,0 @@
-<%def passthru>
-  <%frag body/>
-a<& body &>b</%def>
-
-<%def stringify>
-  <%frag content />
-1<% content.makeRenderer().asString() %>2</%def>
-
-x<&| stringify &>A<&| passthru &>X</&>B</&>

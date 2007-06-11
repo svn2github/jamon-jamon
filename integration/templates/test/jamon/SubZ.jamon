@@ -1,8 +1,0 @@
-  <%frag f>
-    int integer;
-    String string;
-  </%frag>
-An external template with a parameterized fragment parameter (farg)
-
-  <& f; integer = 3; string = "yes" &>
-  <& f; integer = 7; string = "no" &>

@@ -1,4 +1,0 @@
-<%alias>
-  foo = bar//test;
-  bar = foo//jamon;
-</%alias>

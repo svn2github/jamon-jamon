@@ -1,8 +1,0 @@
-<%args>
-  int x = 0;
-  String s;
-</%args>\
-<%implements>
-  org.jamon.integration.SomeInterface;
-</%implements>\
-<% x %><% s %>

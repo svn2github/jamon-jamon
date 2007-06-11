@@ -1,5 +1,0 @@
-<%extends ParentWithTwoChildren>
-<%xargs>
-  i2 = 1;
-</%xargs>
-% while (i2 != i2) { }

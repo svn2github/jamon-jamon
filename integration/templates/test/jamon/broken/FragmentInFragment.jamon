@@ -1,6 +1,0 @@
-<%def foo>
-  <%frag bar/>
-</%def>
-<&| foo &>
-  <%frag bar/>
-</&>

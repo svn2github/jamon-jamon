@@ -1,7 +1,0 @@
-<%def foo>\
-<%frag content></%frag>\
-<%args> int x; </%args>\
-<% x %><& content &><% x %>\
-</%def>\
-<%args> int x2; </%args>\
-<&| foo; x = x2 &>(<% x2 + 1 %>)</&>

@@ -1,9 +1,0 @@
-<%def foo>
-
-<%frag content/>
-
-% String s = content.makeRenderer().asString();
-<% s #n %><% s %>\
-</%def>
-
-<&| foo &><% "<" #n %></&>

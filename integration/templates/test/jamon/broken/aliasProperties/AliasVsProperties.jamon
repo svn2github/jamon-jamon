@@ -1,5 +1,0 @@
-<%alias>
-  jamon = /test/jamon;
-  / = /test;
-  j2 = //jamon;
-</%alias>

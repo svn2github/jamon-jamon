@@ -1,8 +1,0 @@
-<%import>
-  org.jamon.integration.TestAnnotation;
-  org.jamon.integration.TestAnnotation2;
-</%import>
-
-<%annotate @TestAnnotation("proxy") #proxy %>
-<%annotate @TestAnnotation("Impl") #impl%>
-<%annotate @TestAnnotation2("both") %>

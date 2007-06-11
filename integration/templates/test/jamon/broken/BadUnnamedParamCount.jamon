@@ -1,8 +1,0 @@
-<%def d>
-  <%args>
-     String s;
-     int j;
-  </%args>
-</%def>
-
-<& d: 3; &>
