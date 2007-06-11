@@ -36,42 +36,14 @@
                 <version>SNAPSHOT</version>
                 <executions>
                     <execution>
-                        <id>jamon-generate-sources</id>
                         <phase>generate-test-sources</phase>
                         <goals>
-                            <goal>jamon:generate</goal>
+                            <goal>translate-tests</goal>
                         </goals>
-                        <configuration>
-                            <jamon.template.src>src/test/templates</jamon.template.src>
-                            <jamon.template.output>target/tsrc</jamon.template.output>
-                        </configuration>
-                    </execution>
-                </executions>
-
-            </plugin>
-
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>build-helper-maven-plugin</artifactId>
-                <version>1.0</version>
-                <executions>
-                    <execution>
-                        <id>add-source</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>add-test-source</goal>
-                        </goals>
-                        <configuration>
-                            <sources>
-                                <source>target/tsrc</source>
-                            </sources>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>
-
         </plugins>
-
     </build>
 
 </project>
