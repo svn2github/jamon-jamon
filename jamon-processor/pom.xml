@@ -7,13 +7,13 @@
         <version>SNAPSHOT</version>
         <relativePath>../jamon-project</relativePath>
     </parent>
-    <artifactId>jamon-core</artifactId>
-    <name>jamon-core</name>
+    <artifactId>jamon-processor</artifactId>
+    <name>jamon-processor</name>
     <version>SNAPSHOT</version>
     <packaging>jar</packaging>
-    <description>Jamon runtime support classes</description>
+    <description>Jamon template to java processor</description>
     <scm>
-        <developerConnection>scm:svn:https://jamon.svn.sourceforge.net/svnroot/jamon/trunk/jamon/runtime</developerConnection>
+        <developerConnection>scm:svn:https://jamon.svn.sourceforge.net/svnroot/jamon/trunk/jamon/jamon-processor</developerConnection>
     </scm>
     <dependencies>
         <dependency>
@@ -105,7 +105,7 @@
                 </os>
             </activation>
             <properties>
-              <toolsJarPath>${java.home}/../lib/tools.jar</toolsJarPath>
+                <toolsJarPath>${java.home}/../lib/tools.jar</toolsJarPath>
             </properties>
         </profile>
         <profile>
@@ -116,9 +116,9 @@
                 </os>
             </activation>
             <properties>
-              <!-- We know that java.home will exist; the fact that it's of no value to ant is
+                <!-- We know that java.home will exist; the fact that it's of no value to ant is
                    immaterial, since tools.jar is already incuded in the standard path on a mac. -->
-              <toolsJarPath>${java.home}</toolsJarPath>
+                <toolsJarPath>${java.home}</toolsJarPath>
             </properties>
         </profile>
     </profiles>

@@ -18,7 +18,7 @@
     <dependencies>
         <dependency>
             <groupId>org.jamon</groupId>
-            <artifactId>jamon-core</artifactId>
+            <artifactId>jamon-processor</artifactId>
             <version>SNAPSHOT</version>
         </dependency>
         <dependency>

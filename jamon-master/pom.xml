@@ -20,7 +20,7 @@
         <module>../jamon-runtime</module>
         <module>../jamon-api</module>
         <module>../jamon-nodegen</module>
-        <module>../jamon-core</module>
+        <module>../jamon-processor</module>
         <module>../jamon-junit</module>
         <module>../jamon-maven-plugin</module>
         <module>../jamon-anttask</module>
