@@ -31,7 +31,7 @@
             <url>http://maven.jamon.org/</url>
         </repository>
     </repositories>
-    
+
     <inceptionYear>2003</inceptionYear>
 
     <developers>
@@ -57,7 +57,7 @@
             <url>http://maven.jamon.org/</url>
         </pluginRepository>
     </pluginRepositories>
-    
+
     <build>
         <plugins>
             <plugin>
@@ -80,6 +80,18 @@
                     <showWarnings>true</showWarnings>
                     <showDeprecations>true</showDeprecations>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
