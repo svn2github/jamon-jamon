@@ -163,12 +163,14 @@ public class JamonTask
                 }
                 catch (ParserErrorsImpl e)
                 {
-                    e.printErrors(System.err); //FIXME - is this the right thing to do?
+                    //FIXME - is this the right thing to do?
+                    e.printErrors(System.err);
                     if (! e.getErrors().isEmpty())
                     {
                         ParserError error = e.getErrors().get(0);
                         throw new BuildException(
-                            error.getMessage(), new JamonLocation(error.getLocation()));
+                            error.getMessage(),
+                            new JamonLocation(error.getLocation()));
                     }
                     else
                     {

@@ -114,7 +114,8 @@ public class InvokerTask
                                          writer.toString());
             }
         }
-        catch (InvalidTemplateException e) {
+        catch (InvalidTemplateException e) 
+        {
             throw new BuildException(e);
         }
         catch (JamonException e)
@@ -160,11 +161,14 @@ public class InvokerTask
         }
     }
 
+    private static final String SINGLE_OUTPUT_ERROR_MESSAGE =
+        "Can't specify both output file and output property name";
+
     public void setProperty(String p_outputPropertyName)
     {
         if (m_output != null)
         {
-            throw new BuildException("Can't specify both output file and output property name");
+            throw new BuildException(SINGLE_OUTPUT_ERROR_MESSAGE);
         }
         m_outputPropertyName = p_outputPropertyName;
     }
@@ -228,7 +232,7 @@ public class InvokerTask
     {
         if (m_outputPropertyName != null)
         {
-            throw new BuildException("Can't specify both output file and output property name");
+            throw new BuildException(SINGLE_OUTPUT_ERROR_MESSAGE);
         }
         m_output = p_output;
     }
