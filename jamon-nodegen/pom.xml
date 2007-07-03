@@ -13,7 +13,9 @@
     <packaging>maven-plugin</packaging>
     <description>Jamon compiler AST node generation tool</description>
     <scm>
-        <developerConnection>scm:svn:https://jamon.svn.sourceforge.net/svnroot/jamon/trunk/jamon/nodegen</developerConnection>
+        <url>http://jamon.svn.sourceforge.net/viewvc/jamon/trunk/jamon/jamon-nodegen-plugin/</url>
+        <connection>scm:svn:https://jamon.svn.sourceforge.net/svnroot/jamon/trunk/jamon/jamon-nodegen-plugin/</connection>
+        <developerConnection>scm:svn:https://jamon.svn.sourceforge.net/svnroot/jamon/trunk/jamon/jamon-nodegen-plugin/</developerConnection>
     </scm>
     <dependencies>
         <dependency>

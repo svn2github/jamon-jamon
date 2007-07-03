@@ -22,9 +22,9 @@
         </contributor>
     </contributors>
     <scm>
-        <connection>scm:svn:https://svn.sourceforge.net/svnroot/jamon/jamon-maven-plugin/</connection>
-        <developerConnection>scm:svn:svn+ssh://svn.sourceforge.net/svnroot/jamon/jamon-maven-plugin/</developerConnection>
-        <url>https://svn.sourceforge.net/svnroot/jamon/jamon-maven-plugin/</url>
+        <connection>scm:svn:https://svn.sourceforge.net/svnroot/jamon/trunk/jamon/jamon-maven-plugin/</connection>
+        <developerConnection>scm:svn:https://svn.sourceforge.net/svnroot/jamon/trunk/jamon/jamon-maven-plugin/</developerConnection>
+        <url>https://svn.sourceforge.net/svnroot/jamon/jamon-maven-plugin/trunk/jamon/jamon-maven-plugin/</url>
     </scm>
     <dependencies>
         <dependency>

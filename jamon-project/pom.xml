@@ -7,6 +7,49 @@
     <version>SNAPSHOT</version>
     <packaging>pom</packaging>
     <description>Jamon base pom</description>
+    <url>http://www.jamon.org/</url>
+    <issueManagement>
+        <url>http://sourceforge.net/tracker/?group_id=138569</url>
+        <system>SourceForge Tracker</system>
+    </issueManagement>
+    <inceptionYear>2003</inceptionYear>
+    <prerequisites>
+        <maven>2.0.6</maven>
+    </prerequisites>
+    <licenses>
+        <license>
+            <url>http://www.mozilla.org/MPL/MPL-1.1.txt</url>
+            <name>Mozilla Public License Version 1.1</name>
+        </license>
+    </licenses>
+    <mailingLists>
+        <mailingList>
+            <archive>http://sourceforge.net/mailarchive/forum.php?forum_name=jamon-announce</archive>
+            <name>jamon-announce</name>
+            <post>jamon-announce@lists.sourceforge.net</post>
+            <subscribe>http://lists.sourceforge.net/mailman/listinfo/jamon-announce</subscribe>
+            <unsubscribe>http://lists.sourceforge.net/mailman/listinfo/jamon-announce</unsubscribe>
+        </mailingList>
+        <mailingList>
+            <archive>http://sourceforge.net/mailarchive/forum.php?forum_name=jamon-users</archive>
+            <name>jamon-users</name>
+            <post>jamon-users@lists.sourceforge.net</post>
+            <subscribe>http://lists.sourceforge.net/mailman/listinfo/jamon-users</subscribe>
+            <unsubscribe>http://lists.sourceforge.net/mailman/listinfo/jamon-users</unsubscribe>
+        </mailingList>
+        <mailingList>
+            <archive>http://sourceforge.net/mailarchive/forum.php?forum_name=jamon-hackers</archive>
+            <name>jamon-hackers</name>
+            <post>jamon-hackers@lists.sourceforge.net</post>
+            <subscribe>http://lists.sourceforge.net/mailman/listinfo/jamon-hackers</subscribe>
+            <unsubscribe>http://lists.sourceforge.net/mailman/listinfo/jamon-hackers</unsubscribe>
+        </mailingList>
+    </mailingLists>
+    <scm>
+        <url>http://jamon.svn.sourceforge.net/viewvc/jamon/jamon/jamon-project/</url>
+        <connection>scm:svn:https://jamon.svn.sourceforge.net/svnroot/jamon/jamon/jamon-project/</connection>
+        <developerConnection>scm:svn:https://jamon.svn.sourceforge.net/svnroot/jamon/jamon/jamon-project/</developerConnection>
+    </scm>
     <organization>
         <name>Jamon developers</name>
         <url>http://www.jamon.org/</url>
@@ -31,8 +74,6 @@
             <url>http://maven.jamon.org/</url>
         </repository>
     </repositories>
-
-    <inceptionYear>2003</inceptionYear>
 
     <developers>
         <developer>
