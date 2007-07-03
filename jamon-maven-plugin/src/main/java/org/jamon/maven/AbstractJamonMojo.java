@@ -26,11 +26,13 @@ public abstract class AbstractJamonMojo
     protected abstract File templateSourceDir();
     protected abstract File templateOutputDir();
 
-    private ClassLoader classLoader() throws MojoExecutionException {
+    private ClassLoader classLoader() throws MojoExecutionException 
+    {
       List<URL> urls = new ArrayList<URL>();
       try
       {
-        for (Object o : project.getTestClasspathElements()) {
+        for (Object o : project.getTestClasspathElements()) 
+        {
           String s = (String) o;
           File f = new File(s);
           try
@@ -46,24 +48,34 @@ public abstract class AbstractJamonMojo
           }
           catch (MalformedURLException e)
           {
-            throw new MojoExecutionException("Unable to turn classpath element " + "" + " to URL", e);
+            throw new MojoExecutionException("Unable to turn element"
+                                             + s + " to URL", e);
           }
         }
       }
       catch (DependencyResolutionRequiredException e)
       {
-        throw new MojoExecutionException("test dependencies not resolved!", e);
+        throw new MojoExecutionException("test dependencies not resolved", e);
       }
       getLog().debug("URLs are: " + urls);
-      return new URLClassLoader(urls.toArray(new URL[urls.size()]), ClassLoader.getSystemClassLoader());
+      return new URLClassLoader(urls.toArray(new URL[urls.size()]),
+                                ClassLoader.getSystemClassLoader());
     }
     
     protected void doExecute()
         throws MojoExecutionException
     {
       List<File> jamonSources = collectSources();
-      getLog().info("Translating " + jamonSources.size() + " templates from " + templateSourceDir().getPath() + " to " + templateOutputDir().getPath());
-      TemplateProcessor processor = new TemplateProcessor(templateOutputDir(), templateSourceDir(), classLoader());
+      getLog().info("Translating "
+                    + jamonSources.size() 
+                    + " templates from "
+                    + templateSourceDir().getPath() 
+                    + " to " 
+                    + templateOutputDir().getPath());
+      TemplateProcessor processor =
+           new TemplateProcessor(templateOutputDir(),
+                                 templateSourceDir(),
+                                 classLoader());
       for (File f : jamonSources)
       {
         try
@@ -94,7 +106,8 @@ public abstract class AbstractJamonMojo
         else if (f.getName().toLowerCase(Locale.US).endsWith(".jamon"))
         {
           String filePath = f.getPath();
-          String basePath = templateSourceDir().getAbsoluteFile().toString(); // FIXME !?
+           // FIXME !?
+          String basePath = templateSourceDir().getAbsoluteFile().toString();
           result.add(new File(filePath.substring(basePath.length() + 1)));
         }
       }

@@ -9,7 +9,7 @@ import org.apache.maven.plugin.MojoExecutionException;
  *
  * @goal translate-tests
  * @phase generate-test-sources
-     * @execute phase="generate-test-sources"
+ * @execute phase="generate-test-sources"
  * @requiresDependencyResolution test
  */
 public class JamonTestMojo
@@ -41,6 +41,7 @@ public class JamonTestMojo
         throws MojoExecutionException
     {
       doExecute();
-      getProject().addTestCompileSourceRoot(templateOutputDir.getAbsolutePath());
+      getProject()
+          .addTestCompileSourceRoot(templateOutputDir.getAbsolutePath());
     }
 }
