@@ -28,9 +28,6 @@ import java.util.Map;
 
 import junit.framework.Assert;
 
-import org.jamon.AbstractTemplateImpl;
-import org.jamon.AbstractTemplateProxy;
-import org.jamon.TemplateManager;
 import org.jamon.annotations.Argument;
 import org.jamon.annotations.Template;
 
@@ -84,7 +81,8 @@ public class JUnitTemplateManager
     {
         m_path = p_path;
         m_optionalArgs = new HashMap<String, Object>(p_optionalArgs);
-        m_requiredArgs = p_requiredArgs;
+        m_requiredArgs = 
+            p_requiredArgs == null ? null : p_requiredArgs.clone();
     }
 
     /**
@@ -144,14 +142,19 @@ public class JUnitTemplateManager
                 throw new RuntimeException
                     ("couldn't find class for template " + path);
             }
-            catch (ClassCastException e) {
+            catch (ClassCastException e)
+            {
                 throw new RuntimeException(
                     "Impl class for template " + path
-                    + " does not extend " + AbstractTemplateImpl.class.getName());
+                    + " does not extend " 
+                    + AbstractTemplateImpl.class.getName());
             }
-            Template templateAnnotation = p_proxy.getClass().getAnnotation(Template.class);
-            m_requiredArgNames = getArgNames(templateAnnotation.requiredArguments());
-            m_optionalArgNames = getArgNames(templateAnnotation.optionalArguments());
+            Template templateAnnotation =
+                p_proxy.getClass().getAnnotation(Template.class);
+            m_requiredArgNames =
+                getArgNames(templateAnnotation.requiredArguments());
+            m_optionalArgNames =
+                getArgNames(templateAnnotation.optionalArguments());
 
             m_implData = p_proxy.getImplData();
             m_impl = (AbstractTemplateProxy.Intf)
@@ -251,7 +254,7 @@ public class JUnitTemplateManager
         Assert.assertTrue("optional argument " + p_name
                           + (p_defaultNotExpected ? " not" : "")
                           + " set",
-                          new Boolean(p_defaultNotExpected)
+                          Boolean.valueOf(p_defaultNotExpected)
                               .equals(getIsNotDefault(p_name)));
         if(p_defaultNotExpected)
         {
@@ -281,9 +284,11 @@ public class JUnitTemplateManager
             .invoke(m_implData, new Object[0]);
     }
 
-    private static String[] getArgNames(Argument[] p_arguments) {
+    private static String[] getArgNames(Argument[] p_arguments)
+    {
         String[] names = new String[p_arguments.length];
-        for (int i = 0; i < p_arguments.length; i++) {
+        for (int i = 0; i < p_arguments.length; i++)
+        {
             names[i] = p_arguments[i].name();
         }
         return names;
