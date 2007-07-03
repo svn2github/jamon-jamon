@@ -18,7 +18,7 @@
  * Contributor(s):
  */
 
-package org.jamon;
+package org.jamon.junit;
 
 import java.io.StringWriter;
 import java.util.Collections;
