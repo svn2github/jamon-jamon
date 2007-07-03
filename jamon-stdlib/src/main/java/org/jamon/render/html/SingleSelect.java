@@ -27,12 +27,13 @@ import java.util.Iterator;
 {
     @SuppressWarnings({"hiding", "deprecation"})
     @Deprecated
-    public static abstract class Item<Renderable>
+    public abstract static class Item<Renderable>
         extends AbstractSelect.Item<Renderable>
     {
         public final boolean isSelected()
         {
-            return getValue().equals(((SingleSelect) getSelect()).m_selectedValue);
+            return getValue()
+               .equals(((SingleSelect) getSelect()).m_selectedValue);
         }
     }
 

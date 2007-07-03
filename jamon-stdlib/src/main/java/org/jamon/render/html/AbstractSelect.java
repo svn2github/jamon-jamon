@@ -31,7 +31,7 @@ import java.util.List;
 {
 
     @SuppressWarnings({ "hiding", "deprecation", "unchecked" })
-    public static abstract class Item<Renderable>
+    public abstract static class Item<Renderable>
         implements Select.Item<Renderable>
     {
         public final String getName()
@@ -51,7 +51,7 @@ import java.util.List;
 
     public Item<? extends Renderable>[] getItems()
     {
-        return m_items;
+        return m_items.clone();
     }
 
 
@@ -59,7 +59,7 @@ import java.util.List;
     @Deprecated
     public interface ItemMaker<DataType, Renderable>
     {
-        Select.Item<Renderable> makeItem(DataType data);
+        Select.Item<Renderable> makeItem(DataType p_data);
     }
 
     protected <DataType> AbstractSelect(
@@ -99,7 +99,7 @@ import java.util.List;
         {
             items.add(p_maker.makeItem( p_data.next()));
         }
-        return items.toArray(new Item[0]);
+        return items.toArray(new Item[items.size()]);
     }
 
     private final Item<? extends Renderable>[] m_items;

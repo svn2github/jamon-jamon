@@ -33,7 +33,7 @@ import java.util.List;
 
     public Input[] getInputs()
     {
-        return m_inputs.toArray( new Input[0] );
+        return m_inputs.toArray( new Input[m_inputs.size()] );
     }
 
     private final List<Input> m_inputs = new ArrayList<Input>();
