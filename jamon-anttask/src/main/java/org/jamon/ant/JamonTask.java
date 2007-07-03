@@ -24,6 +24,10 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
+
+import java.security.AccessController;
+import java.security.PrivilegedAction;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Location;
 
@@ -65,8 +69,22 @@ public class JamonTask
         {
             urls[i] = new URL("file",null, paths[i]);
         }
-        m_classLoader = new URLClassLoader(urls,
-                                           ClassLoader.getSystemClassLoader());
+        m_classLoader = (ClassLoader) 
+             AccessController.doPrivileged(new ClassLoaderCreator(urls));
+    }
+
+    private static class ClassLoaderCreator implements PrivilegedAction
+    {
+        private final URL[] m_urls;
+        ClassLoaderCreator(URL[] p_urls)
+        {
+             m_urls = p_urls;
+        }
+        public Object run() 
+        {
+            return new URLClassLoader(m_urls, 
+                                      ClassLoader.getSystemClassLoader());
+        }
     }
 
     public void setListFiles(boolean p_listFiles)
@@ -117,29 +135,12 @@ public class JamonTask
                                      + "\" does not exist!", getLocation());
         }
 
-        FileNameMapper m = new FileNameMapper()
-            {
-                public void setFrom(String p_from) {}
-                public void setTo(String p_to) {}
-                public String[] mapFileName(String p_sourceName)
-                {
-                    String targetFileName = p_sourceName;
-                    int i = targetFileName.lastIndexOf('.');
-                    if (i > 0 && "jamon".equals(targetFileName.substring(i+1)))
-                    {
-                        targetFileName = targetFileName.substring(0,i);
-                        return new String[] { targetFileName + ".java",
-                                targetFileName + "Impl.java" };
-                    }
-                    return null;
-                }
-            };
         SourceFileScanner sfs = new SourceFileScanner(this);
         File[] files = sfs.restrictAsFiles
             (getDirectoryScanner(m_srcDir).getIncludedFiles(),
              m_srcDir,
              m_destDir,
-             m);
+             new JamonFileNameMapper());
 
         if (files.length > 0)
         {
@@ -187,6 +188,24 @@ public class JamonTask
         }
     }
 
+    private static class JamonFileNameMapper implements FileNameMapper 
+    {
+        public void setFrom(String p_from) {}
+        public void setTo(String p_to) {}
+        public String[] mapFileName(String p_sourceName)
+        {
+            String targetFileName = p_sourceName;
+            int i = targetFileName.lastIndexOf('.');
+            if (i > 0 && "jamon".equals(targetFileName.substring(i+1)))
+            {
+                targetFileName = targetFileName.substring(0,i);
+                return new String[] { targetFileName + ".java",
+                                      targetFileName + "Impl.java" };
+            }
+            return new String[0];
+        }
+    }
+
     private String relativize(File p_file)
     {
         if (!p_file.isAbsolute())
@@ -208,8 +227,8 @@ public class JamonTask
         }
     }
 
-    private File m_destDir;
-    private File m_srcDir;
-    private boolean m_listFiles;
+    private File m_destDir = null;
+    private File m_srcDir = null;
+    private boolean m_listFiles = false;
     private ClassLoader m_classLoader = JamonTask.class.getClassLoader();
 }
