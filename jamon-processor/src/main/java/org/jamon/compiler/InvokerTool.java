@@ -122,13 +122,13 @@ public class InvokerTool
         private static final long serialVersionUID = 2006091701L;
     }
 
-    public class UsageException
+    public static class UsageException
         extends Exception
     {
         @Override public String toString()
         {
             return "java "
-                + InvokerTool.this.getClass().getName()
+                + InvokerTool.class.getName()
                 + " [-o outputfile] "
                 + " [-s templatesourcedir]"
                 + " [-w workdir]"

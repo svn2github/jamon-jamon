@@ -324,7 +324,7 @@ public class TemplateUnit
         m_dependencies.add(p_callPath);
     }
 
-    private InheritedArgs m_inheritedArgs;
+    private InheritedArgs m_inheritedArgs = null;
     private TemplateDescription m_parentDescription =
         TemplateDescription.EMPTY;
     private final List<RequiredArgument> m_declaredRequiredArgs =
@@ -491,5 +491,8 @@ public class TemplateUnit
         m_annotations.add(p_node);
     }
 
-    public Iterable<AnnotationNode> getAnnotations() { return m_annotations; }
+    public Iterable<AnnotationNode> getAnnotations()
+    {
+        return m_annotations; 
+    }
 }

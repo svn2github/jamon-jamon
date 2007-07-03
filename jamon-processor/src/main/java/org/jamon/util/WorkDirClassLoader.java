@@ -20,11 +20,13 @@
 
 package org.jamon.util;
 
-import java.util.Map;
-import java.util.HashMap;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
+import java.util.Map;
+import java.util.HashMap;
 
 public class WorkDirClassLoader
     extends ClassLoader
@@ -138,7 +140,13 @@ public class WorkDirClassLoader
         {
             if (m_loader == null)
             {
-                m_loader = new Loader();
+                AccessController.doPrivileged(new PrivilegedAction() {
+                    public Object run()
+                    {
+                        m_loader = new Loader();
+                        return null;
+                    }
+                });
             }
             return m_loader.loadClass(p_name, p_resolve);
         }

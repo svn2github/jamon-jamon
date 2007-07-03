@@ -152,7 +152,7 @@ public class CallParser extends AbstractParser
             int c = m_reader.read();
             if (c == '<')
             {
-                switch (c = m_reader.read())
+                switch (m_reader.read())
                 {
                     case '|' :
                         String name = readIdentifier(true);
@@ -231,7 +231,7 @@ public class CallParser extends AbstractParser
         switch (c)
         {
             case '&' :
-                if ((c = m_reader.read()) == '>')
+                if (m_reader.read() == '>')
                 {
                     return new NoParamsNode(m_reader.getCurrentNodeLocation());
                 }

@@ -119,7 +119,7 @@ public class PathParser extends AbstractParser
             {
                 if (updirsAllowed)
                 {
-                    if ((c = m_reader.read()) == '.')
+                    if (m_reader.read() == '.')
                     {
                         p_path.addPathElement(new UpdirNode(location));
                         identifier = new StringBuilder();

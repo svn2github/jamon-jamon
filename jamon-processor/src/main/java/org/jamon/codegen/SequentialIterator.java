@@ -28,7 +28,7 @@ public class SequentialIterator<T>
 {
     public SequentialIterator(Iterator<? extends T>[] p_iters)
     {
-        m_iters = p_iters;
+        m_iters = p_iters.clone();
     }
 
     @SuppressWarnings("unchecked")

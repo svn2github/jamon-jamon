@@ -502,7 +502,7 @@ public abstract class AbstractBodyParser<Node extends AbstractBodyNode>
             "<%absmeth> sections only allowed at the top level of a document");
     }
 
-    private class ConditionEndDetector implements TagEndDetector
+    private static class ConditionEndDetector implements TagEndDetector
     {
         public ConditionEndDetector(String p_tagName)
         {

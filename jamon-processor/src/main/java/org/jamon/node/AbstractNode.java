@@ -43,7 +43,7 @@ public abstract class AbstractNode
 
     @Override public boolean equals(Object p_obj)
     {
-        return p_obj != null
+        return p_obj instanceof AbstractNode
             && getClass().isInstance(p_obj)
             && m_location.equals(((AbstractNode) p_obj).m_location);
     }

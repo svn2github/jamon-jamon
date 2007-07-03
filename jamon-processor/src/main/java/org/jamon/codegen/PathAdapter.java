@@ -103,7 +103,7 @@ class PathAdapter extends DepthFirstAnalysisAdapter
         String alias = m_aliases.get("/");
         if (alias == null)
         {
-            m_errors.addError("Unknown alias " + alias, p_node.getLocation());
+            m_errors.addError("No root alias", p_node.getLocation());
         }
         else
         {

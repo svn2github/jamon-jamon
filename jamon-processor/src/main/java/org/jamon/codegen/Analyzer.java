@@ -740,7 +740,7 @@ public class Analyzer
         }
     }
 
-    private class ParamsAdapter extends DepthFirstAnalysisAdapter
+    private static class ParamsAdapter extends DepthFirstAnalysisAdapter
     {
         public ParamValues getParamValues(AbstractParamsNode p_node)
         {

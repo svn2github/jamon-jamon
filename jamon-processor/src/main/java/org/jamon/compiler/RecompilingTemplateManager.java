@@ -25,6 +25,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -213,7 +215,13 @@ public class RecompilingTemplateManager
                                        : p_data.sourceDir);
         }
 
-        m_loader = new WorkDirClassLoader(m_classLoader, m_workDir);
+        m_loader = (WorkDirClassLoader)
+            AccessController.doPrivileged(new PrivilegedAction() {
+                public Object run()
+                {
+                    return new WorkDirClassLoader(m_classLoader, m_workDir);
+                }
+            });
     }
 
     public AbstractTemplateProxy.Intf constructImpl
@@ -634,7 +642,7 @@ public class RecompilingTemplateManager
         {
             trace(buf.toString());
         }
-        return m_javaCompiler.compile(p_sourceFiles.toArray(new String [0]));
+        return m_javaCompiler.compile(p_sourceFiles.toArray(new String [p_sourceFiles.size()]));
     }
 
     private Collection<String> computeDependencies(
