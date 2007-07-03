@@ -195,7 +195,8 @@ public class NodeGenerator
     {
         p_writer.println("  @Override public boolean equals(Object p_obj)");
         p_writer.println("  {");
-        p_writer.println("    return super.equals(p_obj)");
+        p_writer.println("    return p_obj != null");
+        p_writer.println("        && super.equals(p_obj)");
         for (NodeMember member : p_members)
         {
             p_writer.print("      && " + member.instanceName());

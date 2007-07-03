@@ -27,8 +27,9 @@ import java.util.Properties;
 /**
  * An interface representing a "repository" of template sources. One
  * obvious implementation would be a file-system based implementation
- * (e.g. {@link org.jamon.compiler.FileTemplateSource}), but others might include storing
- * templates in a database, or retrieving them remotely via HTTP.
+ * (e.g. {@link org.jamon.compiler.FileTemplateSource}), but others 
+ * might include storing templates in a database, or retrieving them
+ * remotely via HTTP.
  */
 
 public interface TemplateSource

@@ -4,7 +4,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Method {
+public @interface Method 
+{
     String name();
     Argument[] requiredArguments() default {};
     Argument[] optionalArguments() default {};

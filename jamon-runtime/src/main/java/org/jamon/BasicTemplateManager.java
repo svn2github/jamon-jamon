@@ -82,7 +82,9 @@ public class BasicTemplateManager
         }
         catch (ClassNotFoundException e)
         {
-            throw new RuntimeException("The template at path " + p_path + " could not be found");
+            throw new RuntimeException("The template at path " 
+                                       + p_path 
+                                       + " could not be found");
         }
         catch (RuntimeException e)
         {

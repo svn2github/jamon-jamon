@@ -23,7 +23,8 @@ package org.jamon.api;
 import java.util.Collection;
 
 /**
- * A parsed version of a template which is capable of creating proxy and impl files.
+ * A parsed version of a template which is capable of creating proxy 
+ * and impl files.
  */
 public interface ParsedTemplate
 {

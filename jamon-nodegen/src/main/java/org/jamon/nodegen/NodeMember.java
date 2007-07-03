@@ -2,6 +2,7 @@ package org.jamon.nodegen;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
 
 
@@ -45,7 +46,7 @@ class NodeMember
 
     public String getCapitalizedName()
     {
-        return m_name.substring(0, 1).toUpperCase() + m_name.substring(1);
+        return m_name.substring(0, 1).toUpperCase(Locale.US) + m_name.substring(1);
     }
 
     public String hashCodeExpr()

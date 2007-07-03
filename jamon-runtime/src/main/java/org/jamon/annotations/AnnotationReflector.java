@@ -10,12 +10,15 @@ import java.util.Map;
 
 public class AnnotationReflector
 {
-    private Map<String, Annotation> m_annotations = new HashMap<String, Annotation>();
+    private Map<String, Annotation> m_annotations = 
+        new HashMap<String, Annotation>();
+
     public AnnotationReflector(Class<?> p_class)
     {
         for (Annotation annotation: p_class.getAnnotations())
         {
-            m_annotations.put(annotation.annotationType().getName(), annotation);
+            m_annotations.put(annotation.annotationType().getName(), 
+                              annotation);
         }
     }
 
@@ -32,18 +35,24 @@ public class AnnotationReflector
             new Class<?>[] {p_class},
             new InvocationHandler()
             {
-                public Object invoke(Object proxy, Method method, Object[] args) throws Throwable
+                public Object invoke(Object p_proxy,
+                                     Method p_method,
+                                     Object[] p_args) throws Throwable
                 {
                     Object result =
-                        p_annotation.getClass().getMethod(method.getName()).invoke(p_annotation);
-                    return maybeProxyAnnotation(method.getReturnType(), result);
+                        p_annotation.getClass().getMethod(p_method.getName())
+                            .invoke(p_annotation);
+                    return maybeProxyAnnotation(p_method.getReturnType(),
+                                                result);
                 }
 
             }));
     }
 
-    private Object maybeProxyAnnotation(Class<?> p_type, Object p_object) {
-        if (p_object == null) {
+    private Object maybeProxyAnnotation(Class<?> p_type, Object p_object) 
+    {
+        if (p_object == null)
+        {
             return null;
         }
 
@@ -54,11 +63,14 @@ public class AnnotationReflector
         if (p_type.isArray() && p_type.getComponentType().isAnnotation())
         {
             int arrayLength = Array.getLength(p_object);
-            Object array = Array.newInstance(p_type.getComponentType(), arrayLength);
+            Object array = 
+                Array.newInstance(p_type.getComponentType(), arrayLength);
             for (int i = 0; i < arrayLength; i++)
             {
-                Array.set(
-                    array, i, proxyAnnotation(p_type.getComponentType(), Array.get(p_object, i)));
+                Array.set(array,
+                          i,
+                          proxyAnnotation(p_type.getComponentType(), 
+                                          Array.get(p_object, i)));
             }
             return array;
         }

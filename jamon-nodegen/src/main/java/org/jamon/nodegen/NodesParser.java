@@ -20,7 +20,7 @@ public class NodesParser
 
         while ((line = reader.readLine()) != null)
         {
-            line.trim();
+            line = line.trim();
             if (!line.startsWith("#") && line.length() > 0)
             {
                 NodeDescriptor node = new NodeDescriptor(line, nodes); 
