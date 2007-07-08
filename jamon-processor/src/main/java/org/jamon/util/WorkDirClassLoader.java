@@ -140,8 +140,8 @@ public class WorkDirClassLoader
         {
             if (m_loader == null)
             {
-                AccessController.doPrivileged(new PrivilegedAction() {
-                    public Object run()
+                AccessController.doPrivileged(new PrivilegedAction<Void>() {
+                    public Void run()
                     {
                         m_loader = new Loader();
                         return null;

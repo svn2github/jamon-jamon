@@ -69,20 +69,19 @@ public class JamonTask
         {
             urls[i] = new URL("file",null, paths[i]);
         }
-        m_classLoader = (ClassLoader) 
-             AccessController.doPrivileged(new ClassLoaderCreator(urls));
+        m_classLoader = AccessController.doPrivileged(new ClassLoaderCreator(urls));
     }
 
-    private static class ClassLoaderCreator implements PrivilegedAction
+    private static class ClassLoaderCreator implements PrivilegedAction<ClassLoader>
     {
         private final URL[] m_urls;
         ClassLoaderCreator(URL[] p_urls)
         {
              m_urls = p_urls;
         }
-        public Object run() 
+        public ClassLoader run()
         {
-            return new URLClassLoader(m_urls, 
+            return new URLClassLoader(m_urls,
                                       ClassLoader.getSystemClassLoader());
         }
     }
@@ -188,7 +187,7 @@ public class JamonTask
         }
     }
 
-    private static class JamonFileNameMapper implements FileNameMapper 
+    private static class JamonFileNameMapper implements FileNameMapper
     {
         public void setFrom(String p_from) {}
         public void setTo(String p_to) {}

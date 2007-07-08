@@ -215,13 +215,12 @@ public class RecompilingTemplateManager
                                        : p_data.sourceDir);
         }
 
-        m_loader = (WorkDirClassLoader)
-            AccessController.doPrivileged(new PrivilegedAction() {
-                public Object run()
-                {
-                    return new WorkDirClassLoader(m_classLoader, m_workDir);
-                }
-            });
+        m_loader = AccessController.doPrivileged(new PrivilegedAction<WorkDirClassLoader>() {
+            public WorkDirClassLoader run()
+            {
+                return new WorkDirClassLoader(m_classLoader, m_workDir);
+            }
+        });
     }
 
     public AbstractTemplateProxy.Intf constructImpl
