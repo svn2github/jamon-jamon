@@ -64,7 +64,7 @@
         <site>
             <id>jamon</id>
             <name>Jamon</name>
-            <url>scpexe://jamon@maven.jamon.org/home/jamon/maven2-site/</url>
+            <url>scpexe://jamon@maven.jamon.org/home/jamon/maven2-projects</url>
         </site>
     </distributionManagement>
     <repositories>
