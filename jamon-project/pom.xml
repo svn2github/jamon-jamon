@@ -183,12 +183,10 @@
                     <configLocation>../checkstyle.xml</configLocation>
                 </configuration>
             </plugin>
-            <!--
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>changes-maven-plugin</artifactId>
             </plugin>
-            -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>taglist-maven-plugin</artifactId>
