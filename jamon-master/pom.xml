@@ -19,7 +19,7 @@
         <module>../jamon-project</module>
         <module>../jamon-runtime</module>
         <module>../jamon-api</module>
-        <module>../jamon-nodegen</module>
+        <module>../jamon-nodegen-plugin</module>
         <module>../jamon-processor</module>
         <module>../jamon-junit</module>
         <module>../jamon-maven-plugin</module>
