@@ -21,7 +21,7 @@
         <site>
             <id>jamon</id>
             <name>Jamon</name>
-            <url>scpexe://jamon@maven.jamon.org/home/jamon/maven2-projects/${artifactId}</url>
+            <url>scpexe://jamon@maven.jamon.org/home/jamon/maven2-projects/${artifactId}/${version}</url>
         </site>
     </distributionManagement>
     <modules>
