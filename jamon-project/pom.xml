@@ -45,15 +45,15 @@
             <unsubscribe>http://lists.sourceforge.net/mailman/listinfo/jamon-hackers</unsubscribe>
         </mailingList>
     </mailingLists>
-    <scm>
-        <url>http://jamon.svn.sourceforge.net/viewvc/jamon/jamon/jamon-project/</url>
-        <connection>scm:svn:https://jamon.svn.sourceforge.net/svnroot/jamon/jamon/jamon-project/</connection>
-        <developerConnection>scm:svn:https://jamon.svn.sourceforge.net/svnroot/jamon/jamon/jamon-project/</developerConnection>
-    </scm>
     <organization>
         <name>Jamon developers</name>
         <url>http://www.jamon.org/</url>
     </organization>
+    <scm>
+        <url>http://jamon.svn.sourceforge.net/viewvc/jamon/trunk/jamon/${artifactId}/</url>
+        <connection>scm:svn:https://jamon.svn.sourceforge.net/svnroot/jamon/trunk/jamon/${artifactId}/</connection>
+        <developerConnection>scm:svn:https://jamon.svn.sourceforge.net/svnroot/jamon/trunk/jamon/${artifactId}/</developerConnection>
+    </scm>
     <distributionManagement>
         <repository>
             <id>jamon</id>
@@ -64,7 +64,7 @@
         <site>
             <id>jamon</id>
             <name>Jamon</name>
-            <url>scpexe://jamon@maven.jamon.org/home/jamon/maven2-projects</url>
+            <url>scpexe://jamon@maven.jamon.org/home/jamon/maven2-projects/${artifactId}</url>
         </site>
     </distributionManagement>
     <repositories>

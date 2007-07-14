@@ -13,10 +13,17 @@
     <packaging>jar</packaging>
     <description>Jamon unit test support classes</description>
     <scm>
-        <url>http://jamon.svn.sourceforge.net/viewvc/jamon/trunk/jamon/jamon-junit/</url>
-        <connection>scm:svn:https://jamon.svn.sourceforge.net/svnroot/jamon/trunk/jamon/jamon-junit/</connection>
-        <developerConnection>scm:svn:https://jamon.svn.sourceforge.net/svnroot/jamon/trunk/jamon/jamon-junit/</developerConnection>
+        <url>http://jamon.svn.sourceforge.net/viewvc/jamon/trunk/jamon/${artifactId}/</url>
+        <connection>scm:svn:https://jamon.svn.sourceforge.net/svnroot/jamon/trunk/jamon/${artifactId}/</connection>
+        <developerConnection>scm:svn:https://jamon.svn.sourceforge.net/svnroot/jamon/trunk/jamon/${artifactId}/</developerConnection>
     </scm>
+    <distributionManagement>
+        <site>
+            <id>jamon</id>
+            <name>Jamon</name>
+            <url>scpexe://jamon@maven.jamon.org/home/jamon/maven2-projects/${artifactId}</url>
+        </site>
+    </distributionManagement>
     <dependencies>
         <dependency>
             <groupId>org.jamon</groupId>

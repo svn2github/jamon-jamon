@@ -13,8 +13,17 @@
     <packaging>pom</packaging>
     <description>Jamon core aggregation</description>
     <scm>
-        <developerConnection>scm:svn:https://jamon.svn.sourceforge.net/svnroot/jamon/trunk/jamon/runtime</developerConnection>
+        <url>http://jamon.svn.sourceforge.net/viewvc/jamon/trunk/jamon/${artifactId}/</url>
+        <connection>scm:svn:https://jamon.svn.sourceforge.net/svnroot/jamon/trunk/jamon/${artifactId}/</connection>
+        <developerConnection>scm:svn:https://jamon.svn.sourceforge.net/svnroot/jamon/trunk/jamon/${artifactId}/</developerConnection>
     </scm>
+    <distributionManagement>
+        <site>
+            <id>jamon</id>
+            <name>Jamon</name>
+            <url>scpexe://jamon@maven.jamon.org/home/jamon/maven2-projects/${artifactId}</url>
+        </site>
+    </distributionManagement>
     <modules>
         <module>../jamon-project</module>
         <module>../jamon-runtime</module>

@@ -13,8 +13,15 @@
     <packaging>jar</packaging>
     <description>Jamon compiler API</description>
     <scm>
-        <url>http://jamon.svn.sourceforge.net/viewvc/jamon/trunk/jamon/jamon-api/</url>
-        <connection>scm:svn:https://jamon.svn.sourceforge.net/svnroot/jamon/trunk/jamon/jamon-api/</connection>
-        <developerConnection>scm:svn:https://jamon.svn.sourceforge.net/svnroot/jamon/trunk/jamon/jamon-api/</developerConnection>
+        <url>http://jamon.svn.sourceforge.net/viewvc/jamon/trunk/jamon/${artifactId}/</url>
+        <connection>scm:svn:https://jamon.svn.sourceforge.net/svnroot/jamon/trunk/jamon/${artifactId}/</connection>
+        <developerConnection>scm:svn:https://jamon.svn.sourceforge.net/svnroot/jamon/trunk/jamon/${artifactId}/</developerConnection>
     </scm>
+    <distributionManagement>
+        <site>
+            <id>jamon</id>
+            <name>Jamon</name>
+            <url>scpexe://jamon@maven.jamon.org/home/jamon/maven2-projects/${artifactId}</url>
+        </site>
+    </distributionManagement>
 </project>

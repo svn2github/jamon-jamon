@@ -8,15 +8,22 @@
         <relativePath>../jamon-project</relativePath>
     </parent>
     <artifactId>jamon-nodegen-plugin</artifactId>
-    <name>jamon-nodegen</name>
+    <name>jamon-nodegen-plugin</name>
     <version>SNAPSHOT</version>
     <packaging>maven-plugin</packaging>
     <description>Jamon compiler AST node generation tool</description>
     <scm>
-        <url>http://jamon.svn.sourceforge.net/viewvc/jamon/trunk/jamon/jamon-nodegen-plugin/</url>
-        <connection>scm:svn:https://jamon.svn.sourceforge.net/svnroot/jamon/trunk/jamon/jamon-nodegen-plugin/</connection>
-        <developerConnection>scm:svn:https://jamon.svn.sourceforge.net/svnroot/jamon/trunk/jamon/jamon-nodegen-plugin/</developerConnection>
+        <url>http://jamon.svn.sourceforge.net/viewvc/jamon/trunk/jamon/${artifactId}/</url>
+        <connection>scm:svn:https://jamon.svn.sourceforge.net/svnroot/jamon/trunk/jamon/${artifactId}/</connection>
+        <developerConnection>scm:svn:https://jamon.svn.sourceforge.net/svnroot/jamon/trunk/jamon/${artifactId}/</developerConnection>
     </scm>
+    <distributionManagement>
+        <site>
+            <id>jamon</id>
+            <name>Jamon</name>
+            <url>scpexe://jamon@maven.jamon.org/home/jamon/maven2-projects/${artifactId}</url>
+        </site>
+    </distributionManagement>
     <dependencies>
         <dependency>
             <groupId>org.apache.maven</groupId>
