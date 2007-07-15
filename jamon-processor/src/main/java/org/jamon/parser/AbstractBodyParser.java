@@ -203,7 +203,7 @@ public abstract class AbstractBodyParser<Node extends AbstractBodyNode>
                 if (c1 == '\r')
                 {
                     c1 = m_reader.read();
-                    toPushBack.add(c1);
+                    toPushBack.add(0, c1);
                 }
                 if (c1 != '\n')
                 {

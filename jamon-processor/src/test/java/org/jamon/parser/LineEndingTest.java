@@ -25,6 +25,22 @@ public class LineEndingTest extends AbstractParserTest
             parse("text\\\nmore"));
     }
 
+    @Test public void testNonNewlineBackslash() throws Exception
+    {
+        assertEquals(
+            topNode()
+                .addSubNode(new TextNode(location(1,1), "text\\\rmore")),
+            parse("text\\\rmore"));
+        assertEquals(
+            topNode()
+                .addSubNode(new TextNode(location(1,1), "text\\more")),
+            parse("text\\more"));
+        assertEquals(
+            topNode()
+                .addSubNode(new TextNode(location(1,1), "text\\")),
+            parse("text\\"));
+    }
+
     @Test public void testBackslashForWindows() throws Exception
     {
         assertEquals(
