@@ -4,6 +4,14 @@
     <author email="jamon-hackers@lists.sourceforge.net">Jamon Hackers</author>
   </properties>
   <body>
+    <release version="1.0.1" date="2007-07-15" description="Patch release">
+      <action dev="jaysachs" type="add">
+         Enable changelog report.
+      </action>
+      <action dev="jaysachs" type="fix">
+         Checkstyle config file defaults to stable URL, overridable by property.
+      </action>
+    </release>
     <release version="1.0.0" date="2007-07-14" description="Initial release">
     </release>
   </body>
