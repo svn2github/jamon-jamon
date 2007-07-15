@@ -207,6 +207,6 @@
         </plugins>
     </reporting>
     <properties>
-        <jamonCheckstyle>../checkstyle.xml</jamonCheckstyle>
+        <jamonCheckstyle>https://jamon.svn.sourceforge.net/svnroot/jamon/releases/checkstyle/1.0.0/checkstyle.xml</jamonCheckstyle>
     </properties>
 </project>
