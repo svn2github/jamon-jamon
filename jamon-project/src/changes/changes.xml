@@ -1,0 +1,10 @@
+<document>
+  <properties>
+    <title>Jamon Project Changes</title>
+    <author email="jamon-hackers@lists.sourceforge.net">Jamon Hackers</author>
+  </properties>
+  <body>
+    <release version="1.0.0" date="2007-07-14" description="Initial release">
+    </release>
+  </body>
+</document>
