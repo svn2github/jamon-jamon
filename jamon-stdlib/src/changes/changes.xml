@@ -1,8 +1,10 @@
 <document>
   <properties>
-    <title></title>
+    <title>Jamon Standard Library Changes</title>
     <author email="jamon-hackers@lists.sourceforge.net">Jamon Hackers</author>
   </properties>
   <body>
+    <release version="2.3.0" date="2007-07-15" description="Initial release">
+    </release>
   </body>
 </document>
