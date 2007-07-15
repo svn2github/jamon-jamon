@@ -20,6 +20,8 @@
 package org.jamon.parser;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.jamon.compiler.ParserErrorImpl;
 import org.jamon.compiler.ParserErrorsImpl;
@@ -195,11 +197,21 @@ public abstract class AbstractBodyParser<Node extends AbstractBodyNode>
             }
             else if (c == '\\')
             {
+                List<Integer> toPushBack = new ArrayList<Integer>();
                 int c1 = m_reader.read();
+                toPushBack.add(c1);
+                if (c1 == '\r')
+                {
+                    c1 = m_reader.read();
+                    toPushBack.add(c1);
+                }
                 if (c1 != '\n')
                 {
                     m_text.append((char) c);
-                    m_reader.unread(c1);
+                    for (int c2 : toPushBack)
+                    {
+                        m_reader.unread(c2);
+                    }
                 }
             }
             else
