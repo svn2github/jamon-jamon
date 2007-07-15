@@ -17,6 +17,14 @@ public class LineEndingTest extends AbstractParserTest
             parse("% java\ntext"));
     }
 
+    @Test public void testBackslashForUnix() throws Exception
+    {
+        assertEquals(
+            topNode()
+                .addSubNode(new TextNode(location(1,1), "textmore")),
+            parse("text\\\nmore"));
+    }
+
     @Test public void testJavaLineForWindows() throws Exception
     {
         assertEquals(
