@@ -11,7 +11,7 @@
     <name>jamon-api</name>
     <version>SNAPSHOT</version>
     <packaging>jar</packaging>
-    <description>Jamon compiler API</description>
+    <description>Jamon processor API</description>
     <scm>
         <url>http://jamon.svn.sourceforge.net/viewvc/jamon/trunk/jamon/${artifactId}/</url>
         <connection>scm:svn:https://jamon.svn.sourceforge.net/svnroot/jamon/trunk/jamon/${artifactId}/</connection>
