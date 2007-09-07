@@ -21,6 +21,7 @@
 package org.jamon.util;
 
 import java.io.File;
+import java.util.regex.Pattern;
 
 public class StringUtils
 {
@@ -126,7 +127,8 @@ public class StringUtils
      */
     public static String filePathToTemplatePath(String p_path)
     {
-        return p_path.replaceAll(File.separator, TEMPLATE_PATH_SEPARATOR);
+        return p_path.replaceAll(Pattern.quote(File.separator), 
+                                 TEMPLATE_PATH_SEPARATOR);
     }
 
     /**
