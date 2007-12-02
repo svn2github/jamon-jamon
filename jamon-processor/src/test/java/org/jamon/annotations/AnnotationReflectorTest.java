@@ -3,7 +3,6 @@ package org.jamon.annotations;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotSame;
 
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 
@@ -37,25 +36,11 @@ public class AnnotationReflectorTest
         assertEquals("n", method.requiredArguments()[0].name());
     }
 
-    private ClassLoader makeAlternateClassLoader() throws MalformedURLException
+    private ClassLoader makeAlternateClassLoader()
     {
         ClassLoader exampleClassLoader = Example.class.getClassLoader();
         URL[] urls = null;
-//        if (exampleClassLoader instanceof AntClassLoader)
-//        {
-//            String classPath = ((AntClassLoader) exampleClassLoader).getClasspath();
-//            List<URL> urlList = new ArrayList<URL>();
-//            for (StringTokenizer tokenizer = new StringTokenizer(classPath, ":");
-//                 tokenizer.hasMoreTokens(); )
-//            {
-//                String pathElement = tokenizer.nextToken();
-//                urlList.add(new URL(
-//                    "file:" + pathElement + (pathElement.endsWith(".jar") ? "" : "/")));
-//            }
-//            urls = urlList.toArray(new URL[0]);
-//        }
-//        else 
-          if (exampleClassLoader instanceof URLClassLoader)
+        if (exampleClassLoader instanceof URLClassLoader)
         {
             urls = ((URLClassLoader) exampleClassLoader).getURLs();
         }
