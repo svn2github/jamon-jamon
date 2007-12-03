@@ -42,6 +42,7 @@ public class TemplateDescriber
 {
     private static final String JAMON_CONTEXT_TYPE_KEY = "org.jamon.contextType";
     private static final String EMIT_MODE_KEY = "org.jamon.emitMode";
+    private static final String ESCAPING_KEY = "org.jamon.escape";
 
     public TemplateDescriber(TemplateSource p_templateSource,
                              ClassLoader p_classLoader)
@@ -219,5 +220,18 @@ public class TemplateDescriber
         {
             return EmitMode.STANDARD;
         }
+    }
+
+    /**
+     * Get The {@code EscapingDirective} specified by jamon.properties for a path.  Returns null
+     * if no directive is specified.
+     *
+     * @param p_path the path
+     * @return the {@code EscapingDirective} specified by jamon.properties.
+     * @throws IOException
+     */
+    public EscapingDirective getEscaping(String p_path) throws IOException
+    {
+        return EscapingDirective.get(getProperties(p_path).getProperty(ESCAPING_KEY));
     }
 }

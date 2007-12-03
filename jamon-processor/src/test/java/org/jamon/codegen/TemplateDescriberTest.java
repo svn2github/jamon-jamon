@@ -121,4 +121,17 @@ public class TemplateDescriberTest extends TestCase
         assertEquals(
             EmitMode.STRICT, m_templateDescriber.getEmitMode("/foo"));
     }
+
+    public void testGetEscaping() throws Exception
+    {
+        assertNull(m_templateDescriber.getEscaping("/foo/bar"));
+        Properties properties = new Properties();
+        properties.put("org.jamon.escape", "H");
+        m_mockTemplateSource.setProperties("/", properties);
+        assertEquals(EscapingDirective.get("H"), m_templateDescriber.getEscaping("/foo/bar"));
+        Properties subProperties = new Properties();
+        subProperties.put("org.jamon.escape", "x");
+        m_mockTemplateSource.setProperties("/foo/", subProperties);
+        assertEquals(EscapingDirective.get("x"), m_templateDescriber.getEscaping("/foo/bar"));
+    }
 }

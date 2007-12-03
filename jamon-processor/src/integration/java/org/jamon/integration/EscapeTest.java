@@ -34,4 +34,9 @@ public class EscapeTest
         checkOutput("This is how to escape a newline in Java: \\n\nThis is how to escape a newline in Java: \\\"\nAnd this mess \\\" \\n \\\\ is on one line.\\");
     }
 
+    public void testEscapeProperty() throws Exception
+    {
+        new test.jamon.escapeProperties.PropertyEscaped().render(getWriter());
+        checkOutput("a+b");
+    }
 }

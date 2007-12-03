@@ -32,6 +32,7 @@
             <arg value="--directories"/>
             <arg value="/test/jamon"/>
             <arg value="/test/jamon/aliasProperties"/>
+            <arg value="/test/jamon/escapeProperties"/>
             <arg value="/test/jamon/context"/>
             <arg value="/test/jamon/subdir"/>
         </java>

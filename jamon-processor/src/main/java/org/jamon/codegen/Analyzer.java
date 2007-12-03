@@ -80,13 +80,17 @@ public class Analyzer
         m_errors.addError(new ParserErrorImpl(p_location, p_message));
     }
 
-    private void preAnalyze(TopNode p_top)
+    private void preAnalyze(TopNode p_top) throws IOException
     {
         topLevelAnalyze(p_top, new AliasAdapter());
         topLevelAnalyze(p_top, new PreliminaryAdapter());
         if (m_defaultEscaping == null)
         {
-            m_defaultEscaping = EscapingDirective.DEFAULT_ESCAPE_CODE;
+            m_defaultEscaping = m_describer.getEscaping(m_templateUnit.getName());
+        }
+        if (m_defaultEscaping == null)
+        {
+            m_defaultEscaping = EscapingDirective.get(EscapingDirective.DEFAULT_ESCAPE_CODE);
         }
     }
 
@@ -260,10 +264,10 @@ public class Analyzer
                     ("a template cannot specify multiple default escapings",
                      p_escape.getLocation());
             }
-            m_defaultEscaping = p_escape.getEscapeCode();
-            if (EscapingDirective.get(m_defaultEscaping) == null)
+            m_defaultEscaping = EscapingDirective.get(p_escape.getEscapeCode());
+            if (m_defaultEscaping == null)
             {
-                addError("Unknown escaping directive '" + m_defaultEscaping + "'",
+                addError("Unknown escaping directive '" + p_escape.getEscapeCode() + "'",
                          p_escape.getLocation());
             }
         }
@@ -664,11 +668,11 @@ public class Analyzer
         }
     }
 
-    private String m_defaultEscaping;
+    private EscapingDirective m_defaultEscaping;
 
     private EscapingDirective getDefaultEscaping()
     {
-        return EscapingDirective.get(m_defaultEscaping);
+        return m_defaultEscaping;
     }
 
     private CallStatement makeCallStatement(AbstractComponentCallNode p_node)

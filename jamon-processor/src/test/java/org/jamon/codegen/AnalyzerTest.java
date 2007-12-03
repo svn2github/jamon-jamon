@@ -23,6 +23,7 @@ package org.jamon.codegen;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -74,6 +75,7 @@ public class AnalyzerTest extends TestCase
         {
             p_properties.put("org.jamon.alias.foo", "/x/y");
             p_properties.put("org.jamon.alias.bar", "/z/q");
+            p_properties.put("org.jamon.escape", "j");
         }
 
         private final byte[] m_bytes;
@@ -134,6 +136,28 @@ public class AnalyzerTest extends TestCase
         assertEquals(2, deps.size());
         assertTrue(deps.contains("/x/y/baz"));
         assertTrue(deps.contains("/z/q/hit/me"));
+    }
+
+    public void testEscapingDirective() throws Exception
+    {
+        TemplateUnit unit = analyzeText("<%escape #x><% i %>");
+        WriteStatement statement = (WriteStatement) unit.getStatements().get(0);
+        assertEquals(EscapingDirective.get("x"), getDefaultEscaping(statement));
+    }
+
+    public void testEscapingProperty() throws Exception
+    {
+        TemplateUnit unit = analyzeText("<% i %>");
+        WriteStatement statement = (WriteStatement) unit.getStatements().get(0);
+        assertEquals(EscapingDirective.get("j"), getDefaultEscaping(statement));
+    }
+
+    private Object getDefaultEscaping(WriteStatement statement) throws NoSuchFieldException, IllegalAccessException
+    {
+        Field field = WriteStatement.class.getDeclaredField("m_escapingDirective");
+        field.setAccessible(true);
+        Object object = field.get(statement);
+        return object;
     }
 
     public void testForBlock() throws Exception
