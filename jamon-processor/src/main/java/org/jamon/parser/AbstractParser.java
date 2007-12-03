@@ -141,12 +141,10 @@ public class AbstractParser
     /**
      * Read from the reader until encountering an end marker
      * @param p_end The end marker for the string
-     * @param p_startLocation The location marking the start of the block 
+     * @param p_startLocation The location marking the start of the block
      *         being read - only used for construcing error messages.
-     * @param p_passOverQuotes True if the material being read is java which
-     *         might contain the ending token inside quotes
      **/
-    protected String readUntil(String p_end, 
+    protected String readUntil(String p_end,
                                org.jamon.api.Location p_startLocation)
         throws IOException
     {
