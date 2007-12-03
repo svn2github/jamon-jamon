@@ -113,13 +113,6 @@ public class EncodingReader
                                    boolean p_twoBytes)
         throws IOException
     {
-        final int SPACE = ' ';
-        final int TAB = '\t';
-        final int CLOSE = '>';
-
-        final int INNAME = 1;
-        final int WAITFORCLOSE = 2;
-        final int CLOSED = 3;
 
         StringBuilder encoding = new StringBuilder();
         boolean lowByte = true;
@@ -220,4 +213,12 @@ public class EncodingReader
             throw new RuntimeException(e);
         }
     }
+
+    private final static int SPACE = ' ';
+    private final static int TAB = '\t';
+    private final static int CLOSE = '>';
+
+    private final static int INNAME = 1;
+    private final static int WAITFORCLOSE = 2;
+    private final static int CLOSED = 3;
 }
