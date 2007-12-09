@@ -72,46 +72,6 @@ public final class StandardEmitter
         return String.valueOf(p_byte);
     }
 
-    public static String valueOf(Integer p_value)
-    {
-        return String.valueOf(p_value);
-    }
-
-    public static String valueOf(Double p_value)
-    {
-        return String.valueOf(p_value);
-    }
-
-    public static String valueOf(Character p_value)
-    {
-        return String.valueOf(p_value);
-    }
-
-    public static String valueOf(Boolean p_value)
-    {
-        return String.valueOf(p_value);
-    }
-
-    public static String valueOf(Float p_value)
-    {
-        return String.valueOf(p_value);
-    }
-
-    public static String valueOf(Short p_value)
-    {
-        return String.valueOf(p_value);
-    }
-
-    public static String valueOf(Long p_value)
-    {
-        return String.valueOf(p_value);
-    }
-
-    public static String valueOf(Byte p_value)
-    {
-        return String.valueOf(p_value);
-    }
-
     public static String valueOf(String p_string)
     {
         return StrictEmitter.valueOf(p_string);
