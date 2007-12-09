@@ -21,6 +21,7 @@
 package org.jamon.integration;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.ArrayList;
@@ -29,6 +30,7 @@ import java.util.List;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
+import org.jamon.Renderer;
 import org.jamon.TemplateManager;
 import org.jamon.compiler.ParserErrorImpl;
 import org.jamon.compiler.ParserErrorsImpl;
@@ -72,6 +74,12 @@ public abstract class TestBase
 
     protected void checkOutput(String p_expected)
     {
+        assertEquals(p_expected, getOutput());
+    }
+
+    protected void checkOutput(Renderer p_renderer, String p_expected) throws IOException
+    {
+        p_renderer.renderTo(getWriter());
         assertEquals(p_expected, getOutput());
     }
 

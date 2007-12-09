@@ -22,6 +22,11 @@ package org.jamon.integration;
 
 import org.jamon.compiler.TemplateCompilationException;
 
+import test.jamon.NullStandardEmits;
+import test.jamon.PrimativeWrapperStandardEmits;
+import test.jamon.limitedEmit.NullLimitedEmits;
+import test.jamon.limitedEmit.PrimativeWrapperLimitedEmits;
+
 public class EmitModeTest
     extends TestBase
 {
@@ -53,5 +58,31 @@ public class EmitModeTest
         {
             // ok
         }
+    }
+
+    public void testNullStandardEmits() throws Exception
+    {
+        checkOutput(
+            new NullStandardEmits().makeRenderer(),
+            "bool \nb \nc \ns \ni \nl \nf \nd \nstring ");
+    }
+
+    public void testNullLimittedEmits() throws Exception
+    {
+        checkOutput(
+            new NullLimitedEmits().makeRenderer(),
+            "bool \nb \nc \ns \ni \nl \nf \nd \nstring ");
+    }
+
+    public void testPrimatveWrapperStandardEmits() throws Exception
+    {
+        checkOutput(new PrimativeWrapperStandardEmits().makeRenderer(),
+                    "bool true\nb 3\nc c\ns 3\ni 3\nl 3\nf 3.0\nd 3.0\nstring test");
+    }
+
+    public void testPrimatveWrapperLimitedEmits() throws Exception
+    {
+        checkOutput(new PrimativeWrapperLimitedEmits().makeRenderer(),
+        "bool true\nb 3\nc c\ns 3\ni 3\nl 3\nf 3.0\nd 3.0\nstring test");
     }
 }
