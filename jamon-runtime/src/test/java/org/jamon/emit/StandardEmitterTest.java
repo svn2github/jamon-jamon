@@ -10,6 +10,7 @@ public class StandardEmitterTest {
     assertEquals("true", StandardEmitter.valueOf(true));
     assertEquals("false", StandardEmitter.valueOf(false));
     assertEquals("x", StandardEmitter.valueOf('x'));
+    assertEquals("0", StandardEmitter.valueOf((byte) 0));
     assertEquals("0", StandardEmitter.valueOf((short) 0));
     assertEquals("0", StandardEmitter.valueOf(0));
     assertEquals("0", StandardEmitter.valueOf(0L));
@@ -21,6 +22,7 @@ public class StandardEmitterTest {
     assertEquals("true", StandardEmitter.valueOf(Boolean.TRUE));
     assertEquals("false", StandardEmitter.valueOf(Boolean.FALSE));
     assertEquals("x", StandardEmitter.valueOf(Character.valueOf('x')));
+    assertEquals("0", StandardEmitter.valueOf(Byte.valueOf((byte) 0)));
     assertEquals("0", StandardEmitter.valueOf(Short.valueOf((short) 0)));
     assertEquals("0", StandardEmitter.valueOf(Integer.valueOf(0)));
     assertEquals("0", StandardEmitter.valueOf(Long.valueOf(0L)));
@@ -30,6 +32,7 @@ public class StandardEmitterTest {
 
   @Test public void testNullWrapperEmits() {
     assertEquals("", StandardEmitter.valueOf((Boolean) null));
+    assertEquals("", StandardEmitter.valueOf((Byte) null));
     assertEquals("", StandardEmitter.valueOf((Short) null));
     assertEquals("", StandardEmitter.valueOf((Character) null));
     assertEquals("", StandardEmitter.valueOf((Integer) null));
