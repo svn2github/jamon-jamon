@@ -4,7 +4,12 @@
     <author email="jamon-hackers@lists.sourceforge.net">Jamon Hackers</author>
   </properties>
   <body>
-    <release version="2.3.0" date="2007-07-15" description="Initial release">
+    <release version="2.3.0" date="2007-07-15" description="Initial release"/>
+    <release version="2.3.1" date="2007-07-15" description="Bug fix release">
+      <action dev="iroberts" type="fix" issue="1843662">
+        Get StandardEmitter to again emit empty strings instead of "null"
+        for null primative wrappers.
+      </action>
     </release>
   </body>
 </document>
