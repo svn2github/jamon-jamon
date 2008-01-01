@@ -4,6 +4,17 @@
     <author email="jamon-hackers@lists.sourceforge.net">Jamon Hackers</author>
   </properties>
   <body>
+    <release version="1.0.2" date="2008-01-01" description="Patch release">
+      <action dev="jaysachs" type="add">
+         Add a link to sourceforge tracker system.
+      </action>
+      <action dev="iroberts" type="update">
+         Pull surefire up to the parent pom.
+      </action>
+      <action dev="iroberts" type="update">
+         Upgrade from changes-maven-plugin to maven-changes-plugin.
+      </action>
+    </release>
     <release version="1.0.1" date="2007-07-15" description="Patch release">
       <action dev="jaysachs" type="add">
          Enable changelog report.
