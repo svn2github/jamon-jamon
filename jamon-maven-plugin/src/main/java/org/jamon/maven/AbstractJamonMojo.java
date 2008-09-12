@@ -96,7 +96,11 @@ public abstract class AbstractJamonMojo
 
     private List<File> accumulateSources(File p_templateSourceDir)
     {
-      List<File> result = new ArrayList<File>();
+      final List<File> result = new ArrayList<File>();
+      if (p_templateSourceDir == null)
+      {
+        return result;
+      }
       for (File f : p_templateSourceDir.listFiles())
       {
         if (f.isDirectory())
