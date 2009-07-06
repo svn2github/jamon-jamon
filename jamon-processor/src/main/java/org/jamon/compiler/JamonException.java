@@ -23,6 +23,9 @@ package org.jamon.compiler;
 public abstract class JamonException
     extends Exception
 {
+    
+    private static final long serialVersionUID = 20090706L;
+
     public JamonException(String p_msg)
     {
         super(p_msg);

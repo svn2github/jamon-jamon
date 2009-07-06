@@ -345,7 +345,6 @@ public class RecompilingTemplateManager
         }
     }
 
-    @SuppressWarnings("unchecked")
     private Class<? extends AbstractTemplateImpl> getImplClass(
         Class<? extends AbstractTemplateProxy> p_proxyClass)
     {
@@ -354,7 +353,6 @@ public class RecompilingTemplateManager
                                     .asSubclass(AbstractTemplateImpl.class);
     }
 
-    @SuppressWarnings("unchecked")
     private Class<? extends AbstractTemplateProxy> getProxyClass(String p_path)
     {
         return getTemplateClass(

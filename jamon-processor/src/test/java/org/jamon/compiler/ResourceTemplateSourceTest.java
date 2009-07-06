@@ -76,7 +76,7 @@ public class ResourceTemplateSourceTest
     public void testResources()
         throws Exception
     {
-        ResourceTemplateSource source = new ResourceTemplateSource(new URLClassLoader(new URL[] { m_tmpDir.toURL() }), PREFIX);
+        ResourceTemplateSource source = new ResourceTemplateSource(new URLClassLoader(new URL[] { m_tmpDir.toURI().toURL() }), PREFIX);
         final String pkg = "pkg";
         File pkgDir = new File(m_subDir, pkg);
         pkgDir.mkdirs();
