@@ -320,11 +320,12 @@ public class JUnitTemplateManager
 
 	private static String templatePathToClassName(String p_string)
 	{
-		while (p_string.length() > 0 && p_string.charAt(0) == '/')
+	  int i = 0;
+		while (i < p_string.length() && p_string.charAt(i) == '/')
 		{
-			p_string = p_string.substring(1);
+			i++;
 		}
-		return p_string.replace('/','.');
+		return p_string.substring(i).replace('/','.');
 	}
 
 	private static String classToTemplatePath(Class<?> p_class)

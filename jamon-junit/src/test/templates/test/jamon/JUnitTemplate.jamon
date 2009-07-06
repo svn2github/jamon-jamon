@@ -4,6 +4,6 @@
   int i = 7;
 </%args>\
 % junit.framework.Assert.fail("i'm a failure");
-% while (b != b) { }
-% while (s != s) { }
-% while (i != i) { }
+% while (b && ! b) { }
+% while (s != null && s == null) { }
+% while (i == 0 && i > 0) { }
