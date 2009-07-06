@@ -53,20 +53,19 @@ public abstract class AbstractCallStatement
     private final Map<String, FragmentUnit> m_fragParams =
         new HashMap<String, FragmentUnit>();
     private final static String FRAGMENT_IMPL_PREFIX = "__jamon__instanceOf__";
-    private static int s_fragmentImplCounter = 0;
     private final Map<FragmentUnit, String> m_fragmentImplNames =
         new HashMap<FragmentUnit, String>();
 
     protected abstract String getFragmentIntfName(
         FragmentUnit p_fragmentUnitIntf);
 
-    private String getFragmentImplName(FragmentUnit p_fragmentUnitIntf)
+    private String getFragmentImplName(CodeWriter p_writer, FragmentUnit p_fragmentUnitIntf)
     {
         if(! m_fragmentImplNames.containsKey(p_fragmentUnitIntf))
         {
             m_fragmentImplNames
                 .put(p_fragmentUnitIntf,
-                     FRAGMENT_IMPL_PREFIX + (s_fragmentImplCounter++) + "__"
+                     FRAGMENT_IMPL_PREFIX + p_writer.nextFragmentImplCounter() + "__"
                      + p_fragmentUnitIntf.getFragmentInterfaceName(false)
                      );
         }
@@ -87,12 +86,12 @@ public abstract class AbstractCallStatement
         }
 
         p_writer.println(
-            "class " + getFragmentImplName(p_fragmentUnitIntf));
+            "class " + getFragmentImplName(p_writer, p_fragmentUnitIntf));
         p_writer.println("  extends " + ClassNames.BASE_TEMPLATE);
         p_writer.println("  implements " + getFragmentIntfName(p_fragmentUnitIntf));
         p_writer.openBlock();
         p_writer.println(
-            "public " + getFragmentImplName(p_fragmentUnitIntf)
+            "public " + getFragmentImplName(p_writer, p_fragmentUnitIntf)
             + "(" + ClassNames.TEMPLATE_MANAGER + " p_manager)");
         p_writer.openBlock();
         p_writer.println("super(p_manager);");
@@ -173,7 +172,7 @@ public abstract class AbstractCallStatement
         {
             p_writer.printListElement(
                 "new "
-                + getFragmentImplName(fragmentArgument.getFragmentUnit())
+                + getFragmentImplName(p_writer, fragmentArgument.getFragmentUnit())
                 + "(this.getTemplateManager())");
         }
     }

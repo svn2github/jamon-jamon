@@ -59,12 +59,18 @@ public class CodeWriter
     private int m_indentation = 0;
     private LinkedList<Boolean> m_argAlreadyPrintedStack = new LinkedList<Boolean>();
     private LinkedList<Boolean> m_itemPerLineStack = new LinkedList<Boolean>();
+    private int nextFragmentImplCounter = 0;
     private boolean beginingOfLine = true;
     private static final int BASIC_OFFSET = 2;
     private static final String SPACES =
         "                                        "; // 40 spaces
 
 
+    public int nextFragmentImplCounter()
+    {
+        return nextFragmentImplCounter++;
+    }
+    
     public void printLocation(org.jamon.api.Location p_location)
     {
         // In some cases, (such as children of class-only templates), we have

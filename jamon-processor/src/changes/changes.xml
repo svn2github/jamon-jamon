@@ -4,6 +4,9 @@
     <author email="jamon-hackers@lists.sourceforge.net">Jamon Hackers</author>
   </properties>
   <body>
+    <release version="2.3.3" date="in SVN" description="Feature release">
+      <action dev="jaysachs" type="add" issue="2150423">Make fragment class names more deterministic.</action>
+    </release>
     <release version="2.3.2" date="2008-01-01" description="Feature release">
       <action dev="iroberts" type="add">Allow default escaping to be set via jamon.properties</action>
     </release>
