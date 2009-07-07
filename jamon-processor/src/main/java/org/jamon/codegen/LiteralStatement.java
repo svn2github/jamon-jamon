@@ -24,7 +24,6 @@ import org.jamon.util.StringUtils;
 
 public class LiteralStatement
     extends AbstractStatement
-    implements Statement
 {
     LiteralStatement(
         String p_text, org.jamon.api.Location p_token, String p_templateIdentifier)
