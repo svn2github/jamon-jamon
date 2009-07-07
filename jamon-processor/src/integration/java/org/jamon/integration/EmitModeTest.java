@@ -64,14 +64,14 @@ public class EmitModeTest
     {
         checkOutput(
             new NullStandardEmits().makeRenderer(),
-            "bool null\nb null\nc null\ns null\ni null\nl null\nf null\nd null\nstring ");
+            "bool \nb \nc \ns \ni \nl \nf \nd \nstring ");
     }
 
     public void testNullLimittedEmits() throws Exception
     {
         checkOutput(
             new NullLimitedEmits().makeRenderer(),
-            "bool null\nb null\nc null\ns null\ni null\nl null\nf null\nd null\nstring ");
+            "bool \nb \nc \ns \ni \nl \nf \nd \nstring ");
     }
 
     public void testPrimatveWrapperStandardEmits() throws Exception
