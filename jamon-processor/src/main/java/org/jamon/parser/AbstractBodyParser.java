@@ -433,7 +433,7 @@ public abstract class AbstractBodyParser<Node extends AbstractBodyNode>
      * @param p_tagLocation The tag location
      * @throws IOException
      */
-    @SuppressWarnings("unused") protected void handleTagClose(
+    protected void handleTagClose(
         final String p_tagName,
         final org.jamon.api.Location p_tagLocation)
         throws IOException
@@ -452,7 +452,6 @@ public abstract class AbstractBodyParser<Node extends AbstractBodyNode>
      * @return <code>true</code> if this parser is done
      * @throws IOException
      **/
-    @SuppressWarnings("unused")
     protected boolean handleNamedFragmentClose(org.jamon.api.Location p_tagLocation)
         throws IOException
     {
@@ -465,7 +464,6 @@ public abstract class AbstractBodyParser<Node extends AbstractBodyNode>
      * @return <code>true</code> if this parser is done
      * @throws IOException
      **/
-    @SuppressWarnings("unused")
     protected boolean handleFragmentsClose(org.jamon.api.Location p_tagLocation)
         throws IOException
     {
@@ -474,9 +472,9 @@ public abstract class AbstractBodyParser<Node extends AbstractBodyNode>
     }
 
     /**
-     * @param p_tagLocation location of the def tag
+     * @param p_tagLocation location of the {@code def} tag
+     * @throws IOException
      */
-    @SuppressWarnings("unused")
     protected void handleMethodTag(org.jamon.api.Location p_tagLocation) throws IOException
     {
         addError(
@@ -486,8 +484,8 @@ public abstract class AbstractBodyParser<Node extends AbstractBodyNode>
 
     /**
      * @param p_tagLocation location of the def tag
+     * @throws IOException
      */
-    @SuppressWarnings("unused")
     protected void handleOverrideTag(org.jamon.api.Location p_tagLocation) throws IOException
     {
         addError(
@@ -497,8 +495,8 @@ public abstract class AbstractBodyParser<Node extends AbstractBodyNode>
 
     /**
      * @param p_tagLocation location of the def tag
+     * @throws IOException
      */
-    @SuppressWarnings("unused")
     protected void handleDefTag(org.jamon.api.Location p_tagLocation) throws IOException
     {
         addError(
@@ -506,7 +504,10 @@ public abstract class AbstractBodyParser<Node extends AbstractBodyNode>
             "<%def> sections only allowed at the top level of a document");
     }
 
-    @SuppressWarnings("unused")
+    /**
+     * @param p_tagLocation location of the absmeth tag
+     * @throws IOException
+     */
     protected void handleAbsMethodTag(org.jamon.api.Location p_tagLocation) throws IOException
     {
         addError(
@@ -632,45 +633,66 @@ public abstract class AbstractBodyParser<Node extends AbstractBodyNode>
         }
     }
 
-    @SuppressWarnings("unused")
+    /**
+     * @param p_tagLocation location of the else tag
+     * @throws IOException
+     */
     protected void handleElseTag(org.jamon.api.Location p_tagLocation) throws IOException
     {
         addError(p_tagLocation, ENCOUNTERED_ELSE_TAG_WITHOUT_PRIOR_IF_TAG);
     }
 
-    @SuppressWarnings("unused")
+    /**
+     * @param p_tagLocation location of the {@code elseif} tag
+     * @throws IOException
+     */
     protected void handleElseIfTag(org.jamon.api.Location p_tagLocation) throws IOException
     {
         addError(p_tagLocation, ENCOUNTERED_ELSEIF_TAG_WITHOUT_PRIOR_IF_TAG);
     }
 
-    @SuppressWarnings("unused")
+    /**
+     * @param p_tagLocation location of the {@code xargs} node
+     * @throws IOException
+     */
     protected void handleParentArgsNode(org.jamon.api.Location p_tagLocation)
         throws IOException
     {
         addError(p_tagLocation, PARENT_ARGS_TAG_IN_SUBCOMPONENT);
     }
 
-    @SuppressWarnings("unused")
+    /**
+     * @param p_tagLocation location of the {@code abstract} tag
+     * @throws IOException
+     */
     protected void handleParentMarkerTag(org.jamon.api.Location p_tagLocation)
         throws IOException
     {
         addError(p_tagLocation, PARENT_MARKER_TAG_IN_SUBCOMPONENT);
     }
 
-    @SuppressWarnings("unused")
+    /**
+     * @param p_tagLocation location of the {@code escape} tag
+     * @throws IOException
+     */
     protected void handleEscapeTag(org.jamon.api.Location p_tagLocation) throws IOException
     {
         addError(p_tagLocation, ESCAPE_TAG_IN_SUBCOMPONENT);
     }
 
-    @SuppressWarnings("unused")
+    /**
+     * @param p_tagLocation location of the {@code generic} tag
+     * @throws IOException
+     */
     protected void handleGenericTag(org.jamon.api.Location p_tagLocation) throws IOException
     {
         addError(p_tagLocation, GENERIC_TAG_IN_SUBCOMPONENT);
     }
 
-    @SuppressWarnings("unused")
+    /**
+     * @param p_tagLocation location of the {@code annotate} tag
+     * @throws IOException
+     */
     protected void handleAnnotationTag(org.jamon.api.Location p_tagLocation) throws IOException
     {
         addError(p_tagLocation, ANNOTATE_TAG_IN_SUBCOMPONENT);
@@ -737,32 +759,47 @@ public abstract class AbstractBodyParser<Node extends AbstractBodyNode>
         }
     }
 
-    @SuppressWarnings("unused")
+    /**
+     * @param p_tagLocation location of the {@code class} tag.
+     * @throws IOException
+     */
     protected void handleClassTag(org.jamon.api.Location p_tagLocation) throws IOException
     {
         addError(p_tagLocation, CLASS_TAG_IN_SUBCOMPONENT);
     }
 
-    @SuppressWarnings("unused")
+    /**
+     * @param p_tagLocation location of the {@code extends} tag
+     * @throws IOException
+     */
     protected void handleExtendsTag(org.jamon.api.Location p_tagLocation) throws IOException
     {
         addError(p_tagLocation, EXTENDS_TAG_IN_SUBCOMPONENT);
     }
 
-    @SuppressWarnings("unused")
+    /**
+     * @param p_tagLocation location of the {@code implements} tag
+     * @throws IOException
+     */
     protected void handleImplementsTag(org.jamon.api.Location p_tagLocation)
         throws IOException
     {
         addError(p_tagLocation, IMPLEMENTS_TAG_IN_SUBCOMPONENT);
     }
 
-    @SuppressWarnings("unused")
+    /**
+     * @param p_tagLocation location of the {@code import} tag
+     * @throws IOException
+     */
     protected void handleImportTag(org.jamon.api.Location p_tagLocation) throws IOException
     {
         addError(p_tagLocation, IMPORT_TAG_IN_SUBCOMPONENT);
     }
 
-    @SuppressWarnings("unused")
+    /**
+     * @param p_tagLocation location of the {@code alias} tag
+     * @throws IOException
+     */
     protected void handleAliasesTag(org.jamon.api.Location p_tagLocation) throws IOException
     {
         addError(p_tagLocation, ALIASES_TAG_IN_SUBCOMPONENT);
