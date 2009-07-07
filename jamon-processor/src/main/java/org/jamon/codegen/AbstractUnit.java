@@ -79,12 +79,7 @@ public abstract class AbstractUnit
     {
         p_writer.openBlock();
         printStatements(p_writer, p_describer);
-        printRenderBodyEnd(p_writer);
         p_writer.closeBlock();
-    }
-
-    protected void printRenderBodyEnd(@SuppressWarnings("unused") CodeWriter p_writer)
-    {
     }
 
     public abstract void addRequiredArg(RequiredArgument p_arg);
