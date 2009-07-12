@@ -3,6 +3,8 @@
 <project name="Jamon Integration Tests" default="compile">
     <description>Integration Tests for the Jamon template engine</description>
 
+    <property name="build.compiler" value="extJavac"/>
+
     <property name="org.jamon.integration.verbose" value="false"/>
 
     <property name="build.src.dir" value="${basedir}/../../target/integration-src"/>
