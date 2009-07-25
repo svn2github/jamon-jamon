@@ -4,8 +4,8 @@
     <author email="jamon-hackers@lists.sourceforge.net">Jamon Hackers</author>
   </properties>
   <body>
-    <release version="2.3.2" date="in SVN" description="Patch release">
-      <action dev="jsachs" type="fix" issue="1757027" due-to="joebfisher"></action>
+    <release version="2.3.2" date="2009-07-25" description="Patch release">
+      <action dev="jsachs" type="fix" issue="1757027" due-to="joebfisher">Avoid NPE if template dir nonexistent.</action>
     </release>
     <release version="2.3.1" date="2007-09-07" description="Patch release">
       <action dev="jsachs" type="fix">Update jamon-processor dependency</action>
