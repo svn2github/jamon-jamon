@@ -41,6 +41,13 @@ public class EncodingsTest
         checkOutput("Onc\u00e9\u00f2\u00e1\n\u00e9\u00c1\u00f3\u00e9\n");
     }
 
+    public void testParentDefaultEncoding()
+        throws Exception
+    {
+        new test.jamon.Latin1Child().render(getWriter());
+        checkOutput("Parent\nOnc\u00e9\u00f2\u00e1\n\u00e9\u00c1\u00f3\u00e9\n");
+    }
+
     public void testMalformedEncoding1()
         throws Exception
     {
