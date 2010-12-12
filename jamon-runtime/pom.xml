@@ -32,7 +32,6 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-    <project>
     <reporting>
         <plugins>
             <plugin>
@@ -42,6 +41,4 @@
             </plugin>
         </plugins>
     </reporting>
-</project>
-
 </project>
