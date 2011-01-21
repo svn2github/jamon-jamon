@@ -89,6 +89,17 @@
                         </goals>
                     </execution>
                 </executions>
+                <dependencies>
+                    <!-- JCR-661: Plugin dependencies are inherited -->
+                    <dependency>
+                        <groupId>sun</groupId>
+                        <artifactId>tools</artifactId>
+                        <version>1.0</version>
+                        <scope>system</scope>
+                        <systemPath>${toolsJarPath}</systemPath>
+                    </dependency>
+                </dependencies>
+
             </plugin>
 
         </plugins>
@@ -102,4 +113,31 @@
             </plugin>
         </plugins>
     </reporting>
+    <profiles>
+        <!-- The antrun tools.jar dependency is not needed on macs -->
+        <profile>
+            <id>non-mac</id>
+            <activation>
+                <os>
+                    <family>!mac</family>
+                </os>
+            </activation>
+            <properties>
+                <toolsJarPath>${java.home}/../lib/tools.jar</toolsJarPath>
+            </properties>
+        </profile>
+        <profile>
+            <id>mac</id>
+            <activation>
+                <os>
+                    <family>mac</family>
+                </os>
+            </activation>
+            <properties>
+                <!-- We know that java.home will exist; the fact that it's of no value to ant is
+                   immaterial, since tools.jar is already incuded in the standard path on a mac. -->
+                <toolsJarPath>${java.home}</toolsJarPath>
+            </properties>
+        </profile>
+    </profiles>
 </project>
