@@ -51,7 +51,6 @@ public abstract class TestBase
 
     private static final File TEMPLATE_SOURCE_DIR = getTemplateSourceFile();
     protected static final String SOURCE_DIR = TEMPLATE_SOURCE_DIR.getAbsolutePath();
-        //BASEDIR + File.separator + "templates";
     protected static final String WORK_DIR =
       TEMPLATE_SOURCE_DIR.getParentFile().getParent() + "/workdir";
 
