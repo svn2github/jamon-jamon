@@ -1,0 +1,11 @@
+<%generic>S, T</%generic>\
+<%args>Iterable<T> list;</%args>\
+<%frag f>T element;</%frag>\
+% for(T t : list) {
+<&| d: t &><%args>T t2;</%args><& f: t2 &></&>\
+%}
+<%def d>
+<%args>T t;</%args>
+<%frag g>T element;</%frag>\
+<& g: t &>\
+</%def>

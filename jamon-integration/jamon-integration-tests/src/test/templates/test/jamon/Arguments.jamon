@@ -1,0 +1,5 @@
+<%args>
+  int i;
+  boolean b;
+  String s;
+</%args><% i %><% b %><% s %>

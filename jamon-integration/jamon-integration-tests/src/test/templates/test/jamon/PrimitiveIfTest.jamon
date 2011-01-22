@@ -1,0 +1,4 @@
+<%args>int i;</%args>
+<%if i==0%>i is 0</%if>
+<%if i==0%>i is 0<%else>i is not 0</%if>
+<%if i==0%>i is 0<%elseif i > 0%>i is positive<%else>i is negative</%if>

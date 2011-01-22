@@ -1,0 +1,5 @@
+<%extends /test/jamon/LibParentFragment><%xargs>f;</%xargs>\
+{<& f; i = 1 &>}
+<%override m>
+  <%xargs> content; </%xargs><& content &>
+</%override>

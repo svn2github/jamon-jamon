@@ -1,0 +1,11 @@
+<%def foo>\
+<%frag content1/>\
+<%frag content2/>\
+<%args> int x; </%args>\
+<% x %><& content1 &><% x %><& content2 &><% x %>\
+</%def>\
+<%args> int x; </%args>\
+<&|| foo; x = x &>
+  <|content1>(<% x + 1 %>)</|>
+  <|content2>(<% x + 7 %>)</|>
+</&>

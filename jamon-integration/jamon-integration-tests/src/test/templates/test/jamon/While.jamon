@@ -1,0 +1,9 @@
+% int i = 1;
+<%while i <= 3 %>\
+% int j = 4;
+<%while j <= 6 %>\
+<% i %><% j %>\
+% j++;
+</%while>
+% i++;
+</%while>

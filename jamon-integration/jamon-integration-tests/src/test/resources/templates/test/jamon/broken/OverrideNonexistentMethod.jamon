@@ -1,0 +1,3 @@
+<%extends /test/jamon/Parent>
+<%override noSuchMethod>
+</%override>

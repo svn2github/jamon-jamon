@@ -1,0 +1,8 @@
+<%def foo>
+
+  <%frag content/>
+
+<% content.makeRenderer().asString() #n %>\
+</%def>
+
+<&| foo &><% "<" #n %></&>

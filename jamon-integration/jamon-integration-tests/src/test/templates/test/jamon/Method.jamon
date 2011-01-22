@@ -1,0 +1,8 @@
+<%method foo>\
+<%args>String req1; String opt1 = "po1";</%args>\
+foo: <% req1 %>, <% opt1 %></%method>\
+<%method bar>\
+<%frag content> int i; </%frag>\
+bar: <& content; i = 1 &></%method>\
+{<& foo; req1 = "req1" &>} {<& foo; req1 = "req1"; opt1 = "po2" &>} \
+{<&| bar &><%args> int j; </%args>passed <% j %></&>}

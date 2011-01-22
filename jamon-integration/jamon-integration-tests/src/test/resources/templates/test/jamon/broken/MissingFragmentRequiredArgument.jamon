@@ -1,0 +1,5 @@
+<%frag f>
+  int x;
+</%frag>
+
+<& f &>

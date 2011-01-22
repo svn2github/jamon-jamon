@@ -1,0 +1,5 @@
+<%args>
+  int i = 0;
+</%args>
+This one has some <% "good tag" %>
+and a <%bad> one.

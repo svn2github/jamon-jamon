@@ -1,0 +1,4 @@
+Caller: <% jamonContext.getData() %>
+<&| ContextCallee &><% jamonContext.getData() %></&>
+<& d &>
+<%def d>Def: <% jamonContext.getData() %></%def>
