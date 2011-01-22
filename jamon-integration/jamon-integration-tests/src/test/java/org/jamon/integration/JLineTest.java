@@ -20,6 +20,8 @@
 
 package org.jamon.integration;
 
+import test.jamon.JLine;
+
 /**
  * Test Jamon's one-line java code "blocks".
  **/
@@ -30,7 +32,7 @@ public class JLineTest
     public void testExercise()
         throws Exception
     {
-        new test.jamon.JLineTest().render(getWriter(),3);
+        new JLine().render(getWriter(),3);
         checkOutput(" % j is 3");
     }
 
