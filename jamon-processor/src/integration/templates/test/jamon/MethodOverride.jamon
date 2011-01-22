@@ -1,8 +1,0 @@
-<%extends MethodParent>\
-<%override foo><%xargs>req1; opt1 = "co3";</%xargs>\
-fooOverride: <% req1 %>, <% opt1 %></%override>\
-<%override bar><%xargs>content;</%xargs>\
-barOverride: <& content; i = 2 &></%override>\
-{ child: \
-{<& foo; req1 = "req1" &>} {<& foo; req1 = "req1"; opt1 = "po2" &>} \
-{<&| bar &><%args> int j; </%args>passed <% j %></&>} }

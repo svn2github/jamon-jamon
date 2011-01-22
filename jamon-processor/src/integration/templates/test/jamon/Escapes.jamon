@@ -1,6 +1,0 @@
-This is how to escape a newline in Java: \n
-\
-% int i = 0; while (i != i) { }
-This is how to escape a newline in Java: \"
-And this mess \" \n \\ \
-is on one line.\

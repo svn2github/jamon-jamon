@@ -1,6 +1,0 @@
-default: <% "<'" %>
-none: <% "<'" #n %>
-html: <% "<'" #h %>
-strictHtml: <% "<'" #H %>
-url: <% "<'" #u %>
-xml: <% "<'" #x %>

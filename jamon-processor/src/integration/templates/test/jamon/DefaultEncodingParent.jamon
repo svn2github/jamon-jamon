@@ -1,3 +1,0 @@
-<%abstract>\
-Parent
-<& *CHILD &>

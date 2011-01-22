@@ -34,5 +34,6 @@
         <module>../jamon-maven-plugin</module>
         <module>../jamon-anttask</module>
         <module>../jamon-stdlib</module>
+        <module>../jamon-integration</module>
     </modules>
 </project>

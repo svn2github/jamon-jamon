@@ -1,4 +1,0 @@
-<%alias>
-  bar = /test/jamon;
-</%alias>\
-<& foo//Simple &>

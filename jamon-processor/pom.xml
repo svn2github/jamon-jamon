@@ -41,12 +41,6 @@
             <version>4.3.1</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>ant</groupId>
-            <artifactId>ant-junit</artifactId>
-            <version>1.6.5</version>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
     <build>
         <plugins>
@@ -68,40 +62,6 @@
                     </execution>
                 </executions>
             </plugin>
-
-            <plugin>
-                <inherited>true</inherited>
-                <artifactId>maven-antrun-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <phase>integration-test</phase>
-                        <id>integration</id>
-                        <configuration>
-                            <tasks>
-                                <ant dir="src/integration" inheritRefs="true">
-                                    <property name="basedir" value="${basedir}"/>
-                                    <target name="test"/>
-                                </ant>
-                            </tasks>
-                        </configuration>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <dependencies>
-                    <!-- JCR-661: Plugin dependencies are inherited -->
-                    <dependency>
-                        <groupId>sun</groupId>
-                        <artifactId>tools</artifactId>
-                        <version>1.0</version>
-                        <scope>system</scope>
-                        <systemPath>${toolsJarPath}</systemPath>
-                    </dependency>
-                </dependencies>
-
-            </plugin>
-
         </plugins>
     </build>
     <reporting>
@@ -113,31 +73,4 @@
             </plugin>
         </plugins>
     </reporting>
-    <profiles>
-        <!-- The antrun tools.jar dependency is not needed on macs -->
-        <profile>
-            <id>non-mac</id>
-            <activation>
-                <os>
-                    <family>!mac</family>
-                </os>
-            </activation>
-            <properties>
-                <toolsJarPath>${java.home}/../lib/tools.jar</toolsJarPath>
-            </properties>
-        </profile>
-        <profile>
-            <id>mac</id>
-            <activation>
-                <os>
-                    <family>mac</family>
-                </os>
-            </activation>
-            <properties>
-                <!-- We know that java.home will exist; the fact that it's of no value to ant is
-                   immaterial, since tools.jar is already incuded in the standard path on a mac. -->
-                <toolsJarPath>${java.home}</toolsJarPath>
-            </properties>
-        </profile>
-    </profiles>
 </project>

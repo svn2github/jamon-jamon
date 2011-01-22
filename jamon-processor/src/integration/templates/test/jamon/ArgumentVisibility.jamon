@@ -1,8 +1,0 @@
-<%args>
-  int i = 5;
-</%args>\
-<%method m><% i %></%method>\
-<%def d><% i %></%def>\
-<%method mOverride><%args>int i = 7;</%args><% i %></%method>\
-<%def dOverride><%args>int i = 8;</%args><% i %></%def>\
-<% i %> <& d &> <& m &> <& mOverride &> <& dOverride &>

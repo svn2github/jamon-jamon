@@ -1,4 +1,0 @@
-<%extends ContextCalleeParent>
-<%frag f/>
-Callee: <% jamonContext.getData() %>
-CalleeFragment: <& f &>
