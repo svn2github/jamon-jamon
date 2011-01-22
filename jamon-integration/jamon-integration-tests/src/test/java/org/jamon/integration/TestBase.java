@@ -24,6 +24,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,13 +49,21 @@ public abstract class TestBase
         resetWriter();
     }
 
-    private static final String BASEDIR =
-        System.getProperty("org.jamon.integration.basedir");
-    protected static final String SOURCE_DIR =
-        BASEDIR + File.separator + "templates";
+    private static final File TEMPLATE_SOURCE_DIR = getTemplateSourceFile();
+    protected static final String SOURCE_DIR = TEMPLATE_SOURCE_DIR.getAbsolutePath();
+        //BASEDIR + File.separator + "templates";
     protected static final String WORK_DIR =
-        System.getProperty("org.jamon.integration.workdir",
-                           BASEDIR + File.separator + "build/work");
+      TEMPLATE_SOURCE_DIR.getParentFile().getParent() + "/workdir";
+
+    private static File getTemplateSourceFile() {
+      try {
+        return new File(new File(
+          TestBase.class.getProtectionDomain().getCodeSource().getLocation().toURI()), "templates");
+      }
+      catch (URISyntaxException e) {
+        throw new RuntimeException(e);
+      }
+    }
 
     protected void resetWriter()
     {
@@ -130,13 +139,17 @@ public abstract class TestBase
         return removeCrs(m_writer.getBuffer());
     }
 
+    /**
+     * Run the processor on a template file present in the classpath; this is typically used for
+     * processing templates which are expected to have an error in them.
+     * @param p_path
+     * @throws Exception
+     */
     protected void generateSource(String p_path)
         throws Exception
     {
-        String integrationDir =
-            System.getProperty("org.jamon.integration.basedir");
         new TemplateProcessor(new File(WORK_DIR + File.separator + "src"),
-                              new File(integrationDir + File.separator + "templates"),
+                              TEMPLATE_SOURCE_DIR,
                               getClass().getClassLoader())
             .generateSource(p_path);
     }
@@ -192,8 +205,7 @@ public abstract class TestBase
 
     private static String getTemplateFilePath(String p_path)
     {
-        return System.getProperty("org.jamon.integration.basedir")
-            + "/templates/" + p_path + ".jamon";
+      return TEMPLATE_SOURCE_DIR.getAbsolutePath() + "/" + p_path + ".jamon";
     }
 
     public static void assertEquals(String p_first, String p_second)
