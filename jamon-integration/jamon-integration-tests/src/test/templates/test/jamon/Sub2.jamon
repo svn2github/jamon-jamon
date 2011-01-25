@@ -1,3 +1,4 @@
+<%annotate @SuppressWarnings("all") #impl %>
 <%frag frag>
 </%frag>
 <%args>
