@@ -1,4 +1,4 @@
-<%annotate @SuppressWarnings("unused") #impl %>
+<%annotate @SuppressWarnings("all") #impl %>
 <%generic>S,T,U</%generic>
 <%args>
   int i;
