@@ -111,10 +111,6 @@ public abstract class TestBase
         return new RecompilingTemplateManager(
             new RecompilingTemplateManager.Data()
                 .setSourceDir(SOURCE_DIR)
-                .setJavaCompiler(System.getProperty
-                                 ("org.jamon.integration.compiler"))
-                .setClasspath(System.getProperty
-                              ("org.jamon.integration.classpath"))
                 .setWorkDir(WORK_DIR));
     }
 
