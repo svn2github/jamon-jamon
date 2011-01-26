@@ -15,7 +15,7 @@
  * created by Jay Sachs are Copyright (C) 2003 Jay Sachs.  All Rights
  * Reserved.
  *
- * Contributor(s): Ian Robertson
+ * Contributor(s): Ian Robertson, Matt Raible
  */
 
 package org.jamon.compiler;
@@ -23,8 +23,6 @@ package org.jamon.compiler;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.Collection;
@@ -45,9 +43,8 @@ import org.jamon.codegen.ImplGenerator;
 import org.jamon.codegen.ProxyGenerator;
 import org.jamon.codegen.TemplateDescriber;
 import org.jamon.codegen.TemplateUnit;
-import org.jamon.util.ExternalJavaCompiler;
-import org.jamon.util.InternalJavaCompiler;
 import org.jamon.util.JavaCompiler;
+import org.jamon.util.JavaCompilerFactory;
 import org.jamon.util.StringUtils;
 import org.jamon.util.WorkDirClassLoader;
 
@@ -79,8 +76,8 @@ import org.jamon.util.WorkDirClassLoader;
 
  *   <li><b>setJavaCompiler</b> - determines what program to execute
  *   to compile the generated Java source files. Default is
- *   <tt>bin/javac</tt> under the directory specified by the system
- *   property <tt>java.home</tt>.
+ *   <tt>bin/javac</tt> (<tt>Commands/javac</tt> on MacOS) under the directory
+ *   specified by the system property <tt>java.home</tt>.
 
  *   <li><b>setClasspath</b> - used to specify additional components
  *   to prepend to the classpath when compiling generated Java source
@@ -103,12 +100,20 @@ public class RecompilingTemplateManager
             sourceDir = p_sourceDir;
             return this;
         }
+        public String getSourceDir()
+        {
+            return sourceDir;
+        }
         private String sourceDir;
 
         public Data setTemplateSource(TemplateSource p_templateSource)
         {
             templateSource = p_templateSource;
             return this;
+        }
+        public TemplateSource getTemplateSource()
+        {
+            return templateSource;
         }
         private TemplateSource templateSource;
 
@@ -117,12 +122,20 @@ public class RecompilingTemplateManager
             workDir = p_workDir;
             return this;
         }
+        public String getWorkDir()
+        {
+            return workDir;
+        }
         private String workDir;
 
         public Data setJavaCompiler(String p_javaCompiler)
         {
             javaCompiler = p_javaCompiler;
             return this;
+        }
+        public String getJavaCompiler()
+        {
+            return javaCompiler;
         }
         private String javaCompiler;
 
@@ -131,6 +144,10 @@ public class RecompilingTemplateManager
             classpath = p_classpath;
             return this;
         }
+        public String getClasspath()
+        {
+            return classpath;
+        }
         private String classpath;
 
         public Data setClassLoader(ClassLoader p_classLoader)
@@ -138,59 +155,16 @@ public class RecompilingTemplateManager
             classLoader = p_classLoader;
             return this;
         }
-        private ClassLoader classLoader = getClass().getClassLoader();
+        public ClassLoader getClassLoader()
+        {
+            return classLoader;
+        }
+        private ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
     }
 
     public RecompilingTemplateManager()
     {
         this(new Data());
-    }
-
-    private static String getDefaultJavac()
-    {
-        // FIXME: does this work on windows?
-        // FIXME: should we just use the javac in the default path?
-        String bindir;
-        if( "Mac OS X".equals( System.getProperty( "os.name" ) ) )
-        {
-            bindir = "Commands";
-        }
-        else
-        {
-            bindir = "bin";
-        }
-        return new File(new File(System.getProperty("java.home")).getParent(),
-                        bindir)
-            + File.separator
-            + "javac";
-    }
-
-    private static JavaCompiler getInternalJavaCompiler(String p_classpath)
-        throws Exception
-    {
-        return new InternalJavaCompiler(p_classpath);
-    }
-
-    private static JavaCompiler makeCompiler(Data p_data,
-                                             String p_workDir,
-                                             ClassLoader p_classLoader)
-    {
-        String javac = p_data.javaCompiler;
-        if (javac == null)
-        {
-            try
-            {
-                return getInternalJavaCompiler(getClasspath(
-                    p_workDir, p_data.classpath, p_classLoader));
-            }
-            catch (Exception e)
-            {
-                // well, we tried
-                javac = getDefaultJavac();
-            }
-        }
-        return new ExternalJavaCompiler
-            (javac, getClasspath(p_workDir, p_data.classpath, p_classLoader));
     }
 
     public RecompilingTemplateManager(Data p_data)
@@ -202,7 +176,10 @@ public class RecompilingTemplateManager
         m_workDir = p_data.workDir == null
             ? getDefaultWorkDir()
             : p_data.workDir;
-        m_javaCompiler = makeCompiler(p_data, m_workDir, m_classLoader);
+        m_javaCompiler = JavaCompilerFactory.makeCompiler(p_data, m_workDir, m_classLoader);
+        if (TRACE) {
+            trace("Java Compiler: " + m_javaCompiler.getClass().getSimpleName());
+        }
         if (p_data.templateSource != null)
         {
             m_templateSource = p_data.templateSource;
@@ -255,7 +232,7 @@ public class RecompilingTemplateManager
         }
     }
 
-    private static void trace(String p_message)
+    public static void trace(String p_message)
     {
         System.err.println(p_message);
     }
@@ -276,74 +253,6 @@ public class RecompilingTemplateManager
         return workDir.toString();
     }
 
-
-    private static void extractClasspath(ClassLoader p_classLoader,
-                                         StringBuilder p_classpath)
-    {
-        if (p_classLoader instanceof URLClassLoader)
-        {
-            URL[] urls = ((URLClassLoader)p_classLoader).getURLs();
-            for (int i = 0; i < urls.length; ++i)
-            {
-                String url = urls[i].toExternalForm();
-                if (url.startsWith("file:"))
-                {
-                    p_classpath.append(File.pathSeparator);
-                    p_classpath.append(url.substring(5));
-                }
-            }
-        }
-        if (p_classLoader.getParent() != null)
-        {
-            extractClasspath(p_classLoader.getParent(), p_classpath);
-        }
-    }
-
-    private static String getClasspath(String p_start,
-                                       String p_classpath,
-                                       ClassLoader p_classLoader)
-    {
-        StringBuilder cp = new StringBuilder(p_start);
-        if (p_classpath != null)
-        {
-            cp.append(File.pathSeparator);
-            cp.append(p_classpath);
-        }
-
-        extractClasspath(p_classLoader, cp);
-        cp.append(File.pathSeparator);
-        cp.append(System.getProperty("sun.boot.class.path"));
-        cp.append(File.pathSeparator);
-        cp.append(System.getProperty("java.class.path"));
-
-        pruneJniLibs(cp);
-
-        if (TRACE)
-        {
-            trace("Jamon compilation CLASSPATH is " + cp);
-        }
-
-        return cp.toString();
-    }
-
-    private static void pruneJniLibs(StringBuilder cp)
-    {
-        String[] components = cp.toString().split(File.pathSeparator);
-        cp.delete(0, cp.length());
-        boolean first = true;
-        for (String c : components)
-        {
-            if (! c.endsWith(".jnilib") && ! c.endsWith(".dylib"))
-            {
-                if (!first)
-                {
-                    cp.append(File.pathSeparator);
-                }
-                first = false;
-                cp.append(c);
-            }
-        }
-    }
 
     private Class<? extends AbstractTemplateImpl> getImplClass(
         Class<? extends AbstractTemplateProxy> p_proxyClass)
@@ -682,7 +591,8 @@ public class RecompilingTemplateManager
         }
     }
 
-    private static final boolean TRACE =
+    //FIXME - use JavaLogging.
+    public static final boolean TRACE =
         Boolean.valueOf(System.getProperty
                         (RecompilingTemplateManager.class.getName()
                          + ".trace" )).booleanValue();

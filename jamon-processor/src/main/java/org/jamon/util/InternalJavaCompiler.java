@@ -24,33 +24,33 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.List;
 
 public class InternalJavaCompiler
     implements JavaCompiler
 {
-    private final String m_classPath;
+    private final List<String> m_compilerArgs;
     private final Method m_compile;
     private final Class<? extends Object> m_compilerClass;
     private Object m_compiler;
 
-    public InternalJavaCompiler(String p_classPath)
+    public InternalJavaCompiler(List<String> p_compilerArgs)
         throws Exception
     {
-        m_classPath = p_classPath;
-        m_compilerClass = Class.forName("com.sun.tools.javac.Main");
+        m_compilerArgs = p_compilerArgs;
+        m_compilerClass = getClass().getClassLoader().loadClass("com.sun.tools.javac.Main");
         m_compiler = m_compilerClass.newInstance();
-        m_compile = m_compilerClass.getMethod("compile", 
+        m_compile = m_compilerClass.getMethod("compile",
                                               (new String [0]).getClass());
         // check if we can invoke the compile method
-        m_compile.invoke(m_compiler);
+        m_compile.invoke(m_compiler, new Object[] { new String[] { "-version" } });
     }
 
     public String compile(String [] p_javaFiles)
     {
-        String [] cmdline = new String[p_javaFiles.length + 2];
-        System.arraycopy(p_javaFiles,0,cmdline,2,p_javaFiles.length);
-        cmdline[0] = "-classpath";
-        cmdline[1] = m_classPath;
+        String [] cmdline = new String[p_javaFiles.length + m_compilerArgs.size()];
+        m_compilerArgs.toArray(cmdline);
+        System.arraycopy(p_javaFiles, 0, cmdline, m_compilerArgs.size(), p_javaFiles.length);
 
         ByteArrayOutputStream err = new ByteArrayOutputStream();
         PrintStream pErr = new PrintStream(err);

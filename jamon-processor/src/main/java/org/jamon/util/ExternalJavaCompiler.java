@@ -22,26 +22,26 @@ package org.jamon.util;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ExternalJavaCompiler
     implements JavaCompiler
 {
-    private final String m_javac;
-    private final String m_classPath;
+    private final List<String> m_compilerCommand;
 
-    public ExternalJavaCompiler(String p_javac, String p_classPath)
+    public ExternalJavaCompiler(String p_javac, List<String> p_compilerArgs)
     {
-        m_javac = p_javac;
-        m_classPath = p_classPath;
+        m_compilerCommand = new ArrayList<String>(p_compilerArgs.size() + 1);
+        m_compilerCommand.add(p_javac);
+        m_compilerCommand.addAll(p_compilerArgs);
     }
 
     public String compile(String [] p_javaFiles)
     {
-        String [] cmdline = new String[p_javaFiles.length + 3];
-        System.arraycopy(p_javaFiles,0,cmdline,3,p_javaFiles.length);
-        cmdline[0] = m_javac;
-        cmdline[1] = "-classpath";
-        cmdline[2] = m_classPath;
+        String [] cmdline = new String[p_javaFiles.length + m_compilerCommand.size()];
+        m_compilerCommand.toArray(cmdline);
+        System.arraycopy(p_javaFiles,0,cmdline, m_compilerCommand.size(), p_javaFiles.length);
 
         Process p;
         try
