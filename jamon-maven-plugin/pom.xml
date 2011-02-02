@@ -55,6 +55,13 @@
         <plugin>
           <artifactId>maven-invoker-plugin</artifactId>
           <version>1.5</version>
+          <dependencies>
+            <dependency>
+              <groupId>org.codehaus.groovy</groupId>
+              <artifactId>groovy</artifactId>
+              <version>1.7.6</version>
+            </dependency>
+          </dependencies>
           <configuration>
             <settingsFile>src/it/settings.xml</settingsFile>
             <cloneProjectsTo>${project.build.directory}/it</cloneProjectsTo>
@@ -62,6 +69,7 @@
             <pomIncludes>
               <pomInclude>**/pom.xml</pomInclude>
             </pomIncludes>
+            <addTestClassPath>true</addTestClassPath>
             <preBuildHookScript>setup.groovy</preBuildHookScript>
             <postBuildHookScript>validate.groovy</postBuildHookScript>
           </configuration>
