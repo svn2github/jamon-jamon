@@ -1,4 +1,5 @@
-import org.jamon.test.TemplateBundle;
+import static org.jamon.test.ReprocessingTestConstants.*
+import static org.jamon.test.TemplateBundle.Type.*
 
 def createJavaFile = { file ->
   className = file.getName().replaceAll(".java","");
@@ -9,21 +10,19 @@ def createJavaFile = { file ->
 """);
 }
 
-def createJavaFiles = { bundle, timestampDelta->
-  timeStamp = bundle.templateFile.lastModified() + timestampDelta
+def createJavaFiles = { bundle, types, timestampDelta->
+  timeStamp = bundle.templateTimestamp() + timestampDelta
 
-  [bundle.proxyFile, bundle.implFile].each {
-    createJavaFile(it)
-    it.setLastModified(timeStamp)
+  types.each {
+    file = bundle.get(it)
+    createJavaFile(file)
+    file.setLastModified(timeStamp)
   }
 }
 
-def alreadyProcessed = new TemplateBundle(basedir, 'org/jamon/AlreadyProcessed')
-def reprocess = new TemplateBundle(basedir, 'org/jamon/Reprocess')
-
-def hour = 1000L * 60 * 60;
-
-createJavaFiles(alreadyProcessed, hour)
-createJavaFiles(reprocess, -hour)
+createJavaFiles(alreadyProcessed(basedir), [PROXY, IMPL], HOUR)
+createJavaFiles(reprocess(basedir), [PROXY, IMPL], -HOUR)
+createJavaFiles(onlyImplProcessed(basedir), [IMPL], HOUR)
+createJavaFiles(onlyProxyProcessed(basedir), [PROXY], HOUR)
 
 return true;

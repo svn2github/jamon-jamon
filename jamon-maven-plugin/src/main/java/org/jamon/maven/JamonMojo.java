@@ -9,7 +9,8 @@ import org.apache.maven.plugin.MojoExecutionException;
  *
  * @goal translate
  * @phase generate-sources
-     * @execute phase="generate-sources"
+ * @execute phase="generate-sources"
+ * @threadSafe
  * @requiresDependencyResolution runtime
  */
 public class JamonMojo
@@ -30,13 +31,13 @@ public class JamonMojo
     {
       return templateOutputDir;
     }
-    
+
     @Override
     protected File templateSourceDir()
     {
       return templateSourceDir;
     }
-    
+
     public void execute()
         throws MojoExecutionException
     {

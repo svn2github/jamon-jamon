@@ -30,18 +30,17 @@ public class JamonTestMojo
     {
       return templateOutputDir;
     }
-    
+
     @Override
     protected File templateSourceDir()
     {
       return templateSourceDir;
     }
-    
+
     public void execute()
         throws MojoExecutionException
     {
       doExecute();
-      getProject()
-          .addTestCompileSourceRoot(templateOutputDir.getAbsolutePath());
+      getProject().addTestCompileSourceRoot(templateOutputDir.getAbsolutePath());
     }
 }
