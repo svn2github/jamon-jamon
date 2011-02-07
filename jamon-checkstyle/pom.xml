@@ -7,11 +7,11 @@
         <version>SNAPSHOT</version>
         <relativePath>../jamon-project</relativePath>
     </parent>
-    <artifactId>jamon-master</artifactId>
-    <name>jamon-master</name>
+    <artifactId>jamon-checkstyle</artifactId>
+    <name>jamon-checkstyle</name>
+    <description>Jamon checkstyle rules.</description>
     <version>SNAPSHOT</version>
-    <packaging>pom</packaging>
-    <description>Jamon core aggregation</description>
+    <packaging>jar</packaging>
     <scm>
         <url>http://jamon.svn.sourceforge.net/viewvc/jamon/trunk/jamon/${artifactId}/</url>
         <connection>scm:svn:https://jamon.svn.sourceforge.net/svnroot/jamon/trunk/jamon/${artifactId}/</connection>
@@ -24,17 +24,4 @@
             <url>scpexe://jamon@maven.jamon.org/home/jamon/maven2-projects/${artifactId}/${version}</url>
         </site>
     </distributionManagement>
-    <modules>
-        <module>../jamon-checkstyle</module>
-        <module>../jamon-project</module>
-        <module>../jamon-runtime</module>
-        <module>../jamon-api</module>
-        <module>../jamon-nodegen-plugin</module>
-        <module>../jamon-processor</module>
-        <module>../jamon-junit</module>
-        <module>../jamon-maven-plugin</module>
-        <module>../jamon-anttask</module>
-        <module>../jamon-stdlib</module>
-        <module>../jamon-integration</module>
-    </modules>
 </project>
