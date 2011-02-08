@@ -169,9 +169,11 @@ public abstract class AbstractJamonMojo
      * @param files
      * @return a list of File objects which are relative to {@link #templateSourceDir()}.
      */
-    private List<File> relativizeFiles(final Set<File> files) {
+    private List<File> relativizeFiles(final Set<File> files)
+    {
       final List<File> result = new ArrayList<File>();
-      for (File file : files) {
+      for (File file : files)
+      {
         URI templateSourceUri = templateSourceDir().toURI();
         result.add(new File(templateSourceUri.relativize(file.toURI()).getPath()));
       }
@@ -183,7 +185,8 @@ public abstract class AbstractJamonMojo
       return project;
     }
 
-    private SourceInclusionScanner getSourceInclusionScanner(int staleMillis) {
+    private SourceInclusionScanner getSourceInclusionScanner(int staleMillis)
+    {
       return new StaleSourceScanner(
         staleMillis,
         includes.isEmpty()
