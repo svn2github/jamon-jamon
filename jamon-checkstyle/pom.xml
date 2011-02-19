@@ -3,9 +3,8 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.jamon</groupId>
-        <artifactId>jamon-project</artifactId>
+        <artifactId>jamon-parent</artifactId>
         <version>SNAPSHOT</version>
-        <relativePath>../jamon-project</relativePath>
     </parent>
     <artifactId>jamon-checkstyle</artifactId>
     <name>jamon-checkstyle</name>
