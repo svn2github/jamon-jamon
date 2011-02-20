@@ -21,7 +21,7 @@ public class JamonTestMojo
     private File templateSourceDir;
 
     /**
-     * @parameter expression="${project.build.directory}/test-tsrc"
+     * @parameter expression="${project.build.directory}/generated-test-sources/jamon"
      */
     private File templateOutputDir;
 

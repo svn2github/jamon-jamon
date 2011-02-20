@@ -31,10 +31,10 @@ Jamon Maven Plugin
   * {{{./translate-mojo.html}translate:translate}} translates files to
     be compiled during maven's compile phase.  By default, it reads
     Jamon templates from <<<project.basedir>>>/src/main/templates and writes
-    Java files to <<<project.build.directory>>>/tsrc.
+    Java files to <<<project.build.directory>>>/generated-sources/jamon.
 
   * {{{./translate-tests-mojo.html}translate-tests:translate-tests}}
     translates files to be compiled during maven's test-compile phase.
     By default, it reads Jamon templates from
     <<<project.basedir>>>/src/test/templates and writes Java files to
-    <<<project.build.directory>>>/test-tsrc.
+    <<<project.build.directory>>>/generated-test-sources/jamon.

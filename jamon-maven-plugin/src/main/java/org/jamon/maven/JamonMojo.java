@@ -22,7 +22,7 @@ public class JamonMojo
     private File templateSourceDir;
 
     /**
-     * @parameter expression="${project.build.directory}/tsrc"
+     * @parameter expression="${project.build.directory}/generated-sources/jamon"
      */
     private File templateOutputDir;
 

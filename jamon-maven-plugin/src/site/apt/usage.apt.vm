@@ -54,9 +54,10 @@ Specifying alternate locations for templates or processed Java files
 
   Both the location of the Jamon template files and their destination
   can be configured.  For example, to look for templates along side
-  Java files, and to put the processed Java files into tsrc, use the
-  following in your pom, adjusting the contents of the
-  <<<\<configuration\>>>> section as appropriate.
+  Java files, and to put the processed Java files into
+  <<<target/tsrc>>>, use the following in your pom,
+  adjusting the contents of the <<<\<configuration\>>>> section as
+  appropriate.
 
 +-----
 <project>
@@ -69,7 +70,7 @@ Specifying alternate locations for templates or processed Java files
         <version>${project.version}</version>
         <configuration>
           <templateSourceDir>src/main/java</templateSourceDir>
-          <templateOutputDir>tsrc</templateOutputDir>
+          <templateOutputDir>\${project.build.directory}/tsrc</templateOutputDir>
         </configuration>
         <executions>
           <execution>
