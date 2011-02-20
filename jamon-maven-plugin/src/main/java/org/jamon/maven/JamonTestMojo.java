@@ -5,7 +5,7 @@ import java.io.File;
 import org.apache.maven.plugin.MojoExecutionException;
 
 /**
- * Goal which translates
+ * Translates Jamon test templates into Java files.
  *
  * @goal translate-tests
  * @phase generate-test-sources

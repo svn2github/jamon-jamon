@@ -5,7 +5,7 @@ import java.io.File;
 import org.apache.maven.plugin.MojoExecutionException;
 
 /**
- * Goal which translates
+ * Translates Jamon templates into Java files.
  *
  * @goal translate
  * @phase generate-sources

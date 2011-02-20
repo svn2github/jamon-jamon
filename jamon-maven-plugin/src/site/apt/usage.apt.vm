@@ -1,0 +1,88 @@
+ ------
+ Usage
+ ------
+ ------
+ ------
+
+~~ The contents of this file are subject to the Mozilla Public
+~~ License Version 1.1 (the "License"); you may not use this file
+~~ except in compliance with the License. You may obtain a copy of
+~~ the License at http://www.mozilla.org/MPL/
+~~
+~~ Software distributed under the License is distributed on an "AS
+~~ IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
+~~ implied. See the License for the specific language governing
+~~ rights and limitations under the License.
+~~
+~~ The Original Code is Jamon code, released February, 2003.
+~~
+~~ The Initial Developer of the Original Code is Ian Robertson.  Portions
+~~ created by Ian Robertson are Copyright (C) 2011 Ian Robertson.  All Rights
+~~ Reserved.
+
+Usage
+
+  The Jamon Maven Plugin is used to translate .jamon files into .java files.
+  Generally, this plugin is used by adding the following to your pom file:
+
++-----
+<project>
+  [...]
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.jamon</groupId>
+        <artifactId>jamon-maven-plugin</artifactId>
+        <version>${project.version}</version>
+        <executions>
+          <execution>
+            <id>jamon-generate-sources</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>translate</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+  [...]
+</project>
++-----
+
+Specifying alternate locations for templates or processed Java files
+
+  Both the location of the Jamon template files and their destination
+  can be configured.  For example, to look for templates along side
+  Java files, and to put the processed Java files into tsrc, use the
+  following in your pom, adjusting the contents of the
+  <<<\<configuration\>>>> section as appropriate.
+
++-----
+<project>
+  [...]
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.jamon</groupId>
+        <artifactId>jamon-maven-plugin</artifactId>
+        <version>${project.version}</version>
+        <configuration>
+          <templateSourceDir>src/main/java</templateSourceDir>
+          <templateOutputDir>tsrc</templateOutputDir>
+        </configuration>
+        <executions>
+          <execution>
+            <id>jamon-generate-sources</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>translate</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+  [...]
+</project>
++-----

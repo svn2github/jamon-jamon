@@ -1,0 +1,40 @@
+ ------
+ Introduction
+ ------
+ ------
+ ------
+
+~~ The contents of this file are subject to the Mozilla Public
+~~ License Version 1.1 (the "License"); you may not use this file
+~~ except in compliance with the License. You may obtain a copy of
+~~ the License at http://www.mozilla.org/MPL/
+~~
+~~ Software distributed under the License is distributed on an "AS
+~~ IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
+~~ implied. See the License for the specific language governing
+~~ rights and limitations under the License.
+~~
+~~ The Original Code is Jamon code, released February, 2003.
+~~
+~~ The Initial Developer of the Original Code is Ian Robertson.  Portions
+~~ created by Ian Robertson are Copyright (C) 2011 Ian Robertson.  All Rights
+~~ Reserved.
+
+Jamon Maven Plugin
+
+  The Jamon Maven Plugin is used to translate .jamon files into .java files.
+
+* Goals Overview
+
+  The Jamon Maven Plugin has two goals.
+
+  * {{{./translate-mojo.html}translate:translate}} translates files to
+    be compiled during maven's compile phase.  By default, it reads
+    Jamon templates from <<<project.basedir>>>/src/main/templates and writes
+    Java files to <<<project.build.directory>>>/tsrc.
+
+  * {{{./translate-tests-mojo.html}translate-tests:translate-tests}}
+    translates files to be compiled during maven's test-compile phase.
+    By default, it reads Jamon templates from
+    <<<project.basedir>>>/src/test/templates and writes Java files to
+    <<<project.build.directory>>>/test-tsrc.
