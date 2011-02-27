@@ -7,11 +7,11 @@
         <version>SNAPSHOT</version>
         <relativePath>../jamon-parent</relativePath>
     </parent>
-    <artifactId>jamon-runtime</artifactId>
-    <name>jamon-runtime</name>
+    <artifactId>jamon-master</artifactId>
+    <name>jamon-master</name>
     <version>SNAPSHOT</version>
-    <packaging>jar</packaging>
-    <description>Jamon runtime support classes</description>
+    <packaging>pom</packaging>
+    <description>Jamon core aggregation</description>
     <scm>
         <url>http://jamon.svn.sourceforge.net/viewvc/jamon/trunk/jamon/${artifactId}/</url>
         <connection>scm:svn:https://jamon.svn.sourceforge.net/svnroot/jamon/trunk/jamon/${artifactId}/</connection>
@@ -24,21 +24,17 @@
             <url>scpexe://jamon@maven.jamon.org/home/jamon/maven2-projects/${artifactId}/${version}</url>
         </site>
     </distributionManagement>
-    <dependencies>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.4</version>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
-    <reporting>
-        <plugins>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>cobertura-maven-plugin</artifactId>
-                <version>2.0</version>
-            </plugin>
-        </plugins>
-    </reporting>
+    <modules>
+        <module>../jamon-checkstyle</module>
+        <module>../jamon-parent</module>
+        <module>../jamon-runtime</module>
+        <module>../jamon-api</module>
+        <module>../jamon-nodegen-plugin</module>
+        <module>../jamon-processor</module>
+        <module>../jamon-junit</module>
+        <module>../jamon-maven-plugin</module>
+        <module>../jamon-anttask</module>
+        <module>../jamon-stdlib</module>
+        <module>../jamon-integration</module>
+    </modules>
 </project>

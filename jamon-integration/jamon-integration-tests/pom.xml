@@ -5,7 +5,7 @@
         <groupId>org.jamon</groupId>
         <artifactId>jamon-parent</artifactId>
         <version>SNAPSHOT</version>
-        <relativePath>../../pom.xml</relativePath>
+        <relativePath>../../jamon-parent</relativePath>
     </parent>
     <artifactId>jamon-integration-tests</artifactId>
     <name>jamon-integration-tests</name>

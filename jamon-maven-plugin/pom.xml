@@ -4,6 +4,7 @@
         <groupId>org.jamon</groupId>
         <artifactId>jamon-parent</artifactId>
         <version>SNAPSHOT</version>
+        <relativePath>../jamon-parent</relativePath>
     </parent>
     <artifactId>jamon-maven-plugin</artifactId>
     <name>Jamon Maven Plugin</name>

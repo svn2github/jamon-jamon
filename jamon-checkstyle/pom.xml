@@ -5,6 +5,7 @@
         <groupId>org.jamon</groupId>
         <artifactId>jamon-parent</artifactId>
         <version>SNAPSHOT</version>
+        <relativePath>../jamon-parent</relativePath>
     </parent>
     <artifactId>jamon-checkstyle</artifactId>
     <name>jamon-checkstyle</name>
