@@ -1,14 +1,15 @@
-*) Update version.properties to reflect new version number
 *) Update docs to reflect release.
 *) Run svn up to get latest version number set
-*) In jamon, run "ant test javadoc"
-*) In jamonStdLib, run "ant jar" (needed for docs)
-*) In doc, run "ant doc" (since docs go in the dists)
-*) In jamon, run "ant dist"
-*) If necessary, run "ant dist" in jamonStdLib
-*) svn copy https://jamon.svn.sourceforge.net/svnroot/jamon/trunk \
-     https://jamon.svn.sourceforge.net/svnroot/jamon/tags/JAMON-X_Y_Z-RELEASE
-  (note - if releasing off of a branch, copy from there!)
+*) For each maven module being released:
+**) Update all SNAPSHOT versions to the latest released version.
+**) Run mvn release:prepare
+**) Run mvn release:perform
+*) If necessary, build jamonStdLib
+*) generate new site docs
+**) Update version of docs pom to current date.
+**) mvn install
+**) mvn deploy:site
+*) Update versions in jamon-dist, run jamon-package.
 *) Upload dist files to sourceforge:
 **) Ftp jamon-X.Y.Z{,-src}.{tgz,zip} and jamon-anttask-X.Y.Z.jar
     to upload.sf.net, in the incoming directory
@@ -19,6 +20,9 @@
 **) Select uploaded files
 **) Each file needs to be edited and submitted separately (sigh)
 **) Click on the send release notice
+
+TODO: Tycho
+
 *) Copy jamon-X.Y.Z.jar to corePlugin
 *) Update version numbers for corePlugin, uiPlugin and jamonFeature
 *) Build the plugin in eclipse by opening site.xml in updateSite and clicking on "Build All"
@@ -42,5 +46,5 @@
 **) Edit mvn2-plugin/pom.xml updating the dependency versions and the pom version
 **) Commit to the tag branch (this yuckiness goes away with repo restructuring)
 **) Commit a similar pom.xml change to trunk, just adding '-SNAPSHOT' to pom version
-*) In docs, run "ant push"
+*) Push docs to site (FIXME - HOW?  maybe mvn deploy?)
 *) Email release mailing list.
