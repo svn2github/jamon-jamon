@@ -4,7 +4,7 @@
     <groupId>org.jamon</groupId>
     <artifactId>jamon-parent</artifactId>
     <name>jamon-parent</name>
-    <version>2.3</version>
+    <version>SNAPSHOT</version>
     <packaging>pom</packaging>
     <description>Jamon base pom</description>
     <url>http://www.jamon.org/</url>
@@ -50,9 +50,9 @@
         <url>http://www.jamon.org/</url>
     </organization>
     <scm>
-        <url>http://jamon.svn.sourceforge.net/viewvc/jamon/releases/jamon-parent/jamon-parent-2.3</url>
-        <connection>scm:svn:https://jamon.svn.sourceforge.net/svnroot/jamon/releases/jamon-parent/jamon-parent-2.3</connection>
-        <developerConnection>scm:svn:https://jamon.svn.sourceforge.net/svnroot/jamon/releases/jamon-parent/jamon-parent-2.3</developerConnection>
+        <url>http://jamon.svn.sourceforge.net/viewvc/jamon/trunk/jamon/jamon-parent/</url>
+        <connection>scm:svn:https://jamon.svn.sourceforge.net/svnroot/jamon/trunk/jamon/jamon-parent/</connection>
+        <developerConnection>scm:svn:https://jamon.svn.sourceforge.net/svnroot/jamon/trunk/jamon/jamon-parent/</developerConnection>
     </scm>
     <distributionManagement>
         <repository>
