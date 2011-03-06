@@ -1,41 +1,41 @@
-*) Update docs to reflect release.
-*) Run svn up to get latest version number set
-*) For each maven module being released:
-**) Update all SNAPSHOT versions to the latest released version.
-**) Run (in zsh):
+* Update docs to reflect release.
+* Run svn up to get latest version number set
+* For each maven module being released:
+** Update all SNAPSHOT versions to the latest released version.
+** Run (in zsh):
   read -s password; mvn -Dusername=yourSourceForgeUserNameHere -Dpassword=$password release:prepare; unset password
-**) Run mvn -Dmaven.repo.jamon.username=jamon release:perform
-*) If necessary, build jamonStdLib
-*) generate new site docs
-**) Update version of docs pom to current date.
-**) mvn install
-**) mvn deploy:site
-*) Update versions in jamon-dist, run jamon-package.
-*) Upload dist files to sourceforge:
-**) Ftp jamon-X.Y.Z{,-src}.{tgz,zip} and jamon-anttask-X.Y.Z.jar
+** Run mvn -Dmaven.repo.jamon.username=jamon release:perform
+* If necessary, build jamonStdLib
+* generate new site docs
+** Update version of docs pom to current date.
+** mvn install
+** mvn deploy:site
+* Update versions in jamon-dist, run jamon-package.
+* Upload dist files to sourceforge:
+** Ftp jamon-X.Y.Z{,-src}.{tgz,zip} and jamon-anttask-X.Y.Z.jar
     to upload.sf.net, in the incoming directory
-**) From the project home page, go to Admin->File Releases
-**) Click on "Add release" next to package jamon
-**) Create release jamon-X.Y.Z
-**) Copy notes from Changes.html in docs
-**) Select uploaded files
-**) Each file needs to be edited and submitted separately (sigh)
-**) Click on the send release notice
+** From the project home page, go to Admin->File Releases
+** Click on "Add release" next to package jamon
+** Create release jamon-X.Y.Z
+** Copy notes from Changes.html in docs
+** Select uploaded files
+** Each file needs to be edited and submitted separately (sigh)
+** Click on the send release notice
 
 TODO: Tycho
 
-*) Copy jamon-X.Y.Z.jar to corePlugin
-*) Update version numbers for corePlugin, uiPlugin and jamonFeature
-*) Build the plugin in eclipse by opening site.xml in updateSite and clicking on "Build All"
-*) In updateSite, run "ant push"
-*) In update site, run "ant localSite".  Upload the resulting jamon-updateSite-X.Y.Z.Q.zip file
+* Copy jamon-X.Y.Z.jar to corePlugin
+* Update version numbers for corePlugin, uiPlugin and jamonFeature
+* Build the plugin in eclipse by opening site.xml in updateSite and clicking on "Build All"
+* In updateSite, run "ant push"
+* In update site, run "ant localSite".  Upload the resulting jamon-updateSite-X.Y.Z.Q.zip file
    to SourceForge under the jamon-eclipse-plugin package, as described above.
-*) svn copy https://jamon.svn.sourceforge.net/svnroot/jamon/trunk/eclipse \
+* svn copy https://jamon.svn.sourceforge.net/svnroot/jamon/trunk/eclipse \
      https://jamon.svn.sourceforge.net/svnroot/jamon/tags/JAMON-ECLIPSE-X_Y_Z_0-RELEASE
   (note - if releasing off of a branch, copy from there!)
-*) Build and release maven code
-**) Get jamon-x.y.z.jar and jamon-anttask-x.y.z.jar from SF
-**) Deploy both to maven.jamon.org via
+* Build and release maven code
+** Get jamon-x.y.z.jar and jamon-anttask-x.y.z.jar from SF
+** Deploy both to maven.jamon.org via
     mvn -s ~/.m2jamon/settings.xml -DgroupId=org.jamon -DartifactId=jamon \
      -Dversion=2.2.1 -Dfile=jamon-2.2.1.jar -Dpackaging=jar -DrepositoryId=jamon \
      -Durl=scpexe://jamon@maven.jamon.org/home/jamon/maven2 deploy:deploy-file
@@ -44,8 +44,8 @@ TODO: Tycho
      -Durl=scpexe://jamon@maven.jamon.org/home/jamon/maven2 deploy:deploy-file
   (the '-s ~/.m2jamon/settings.xml indicates an alternate local maven repo
    which is useful for hygiene)
-**) Edit mvn2-plugin/pom.xml updating the dependency versions and the pom version
-**) Commit to the tag branch (this yuckiness goes away with repo restructuring)
-**) Commit a similar pom.xml change to trunk, just adding '-SNAPSHOT' to pom version
-*) Push docs to site (FIXME - HOW?  maybe mvn deploy?)
-*) Email release mailing list.
+** Edit mvn2-plugin/pom.xml updating the dependency versions and the pom version
+** Commit to the tag branch (this yuckiness goes away with repo restructuring)
+** Commit a similar pom.xml change to trunk, just adding '-SNAPSHOT' to pom version
+* Push docs to site (FIXME - HOW?  maybe mvn deploy?)
+* Email release mailing list.
