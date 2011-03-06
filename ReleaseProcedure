@@ -2,8 +2,9 @@
 *) Run svn up to get latest version number set
 *) For each maven module being released:
 **) Update all SNAPSHOT versions to the latest released version.
-**) Run mvn release:prepare
-**) Run mvn release:perform
+**) Run (in zsh):
+  read -s password; mvn -Dusername=yourSourceForgeUserNameHere -Dpassword=$password release:prepare; unset password
+**) Run mvn -Dmaven.repo.jamon.username=jamon release:perform
 *) If necessary, build jamonStdLib
 *) generate new site docs
 **) Update version of docs pom to current date.
