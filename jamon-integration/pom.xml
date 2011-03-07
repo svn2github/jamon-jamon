@@ -3,9 +3,9 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.jamon</groupId>
-        <artifactId>jamon-parent</artifactId>
+        <artifactId>jamon-java-parent</artifactId>
         <version>SNAPSHOT</version>
-        <relativePath>../jamon-parent</relativePath>
+        <relativePath>../jamon-java-parent</relativePath>
     </parent>
     <artifactId>jamon-integration</artifactId>
     <name>jamon-integration</name>

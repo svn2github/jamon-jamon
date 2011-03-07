@@ -40,6 +40,7 @@
     <modules>
         <module>jamon-parent</module>
         <module>jamon-checkstyle</module>
+        <module>jamon-java-parent</module>
         <module>jamon-runtime</module>
         <module>jamon-api</module>
         <module>jamon-nodegen-plugin</module>
