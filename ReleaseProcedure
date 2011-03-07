@@ -4,7 +4,10 @@
 ** Update all SNAPSHOT versions to the latest released version.
 ** Run (in zsh):
   read -s password; mvn -Dusername=yourSourceForgeUserNameHere -Dpassword=$password release:prepare; unset password
-** Run mvn -Dmaven.repo.jamon.username=jamon release:perform
+** Since maven fails to understand usernames in scpexe urls, ensure ~/.ssh/config contains:
+  Host maven.jamon.org
+  User jamon
+** Run mvn release:perform
 * If necessary, build jamonStdLib
 * generate new site docs
 ** Update version of docs pom to current date.
