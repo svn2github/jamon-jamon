@@ -8,6 +8,7 @@
   Host maven.jamon.org
   User jamon
 ** Run mvn release:perform
+** Run svn revert pom.xml
 * If necessary, build jamonStdLib
 * generate new site docs
 ** Update version of docs pom to current date.

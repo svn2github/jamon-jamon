@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 file:/Users/jay/local/xml/xsd/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.jamon</groupId>
     <artifactId>jamon-parent</artifactId>
@@ -50,9 +50,9 @@
         <url>http://www.jamon.org/</url>
     </organization>
     <scm>
-        <url>http://jamon.svn.sourceforge.net/viewvc/jamon/trunk/jamon/jamon-parent/</url>
-        <connection>scm:svn:https://jamon.svn.sourceforge.net/svnroot/jamon/trunk/jamon/jamon-parent/</connection>
-        <developerConnection>scm:svn:https://jamon.svn.sourceforge.net/svnroot/jamon/trunk/jamon/jamon-parent/</developerConnection>
+        <url>http://jamon.svn.sourceforge.net/viewvc/jamon/trunk/jamon/${artifactId}/</url>
+        <connection>scm:svn:https://jamon.svn.sourceforge.net/svnroot/jamon/trunk/jamon/${artifactId}/</connection>
+        <developerConnection>scm:svn:https://jamon.svn.sourceforge.net/svnroot/jamon/trunk/jamon/${artifactId}/</developerConnection>
     </scm>
     <distributionManagement>
         <repository>
@@ -108,6 +108,13 @@
               <version>2.1</version>
               <configuration>
                 <tagBase>https://jamon.svn.sourceforge.net/svnroot/jamon/releases/${artifactId}</tagBase>
+                <!-- don't have maven replace our DRY svn urls with
+                     hard-coded ones.  Requires running svn revert
+                     pom.xml after a release, but otherwise is good. -->
+                <remoteTagging>false</remoteTagging>
+                <suppressCommitBeforeTag>true</suppressCommitBeforeTag>
+                <updateWorkingCopyVersions>false</updateWorkingCopyVersions>
+                <developmentVersion>SNAPSHOT</developmentVersion>
               </configuration>
             </plugin>
             <plugin>
