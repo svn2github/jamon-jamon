@@ -12,6 +12,11 @@
     <version>SNAPSHOT</version>
     <packaging>pom</packaging>
     <description>Jamon base pom for Java projects</description>
+    <scm>
+        <url>http://jamon.svn.sourceforge.net/viewvc/jamon/trunk/jamon/${artifactId}/</url>
+        <connection>scm:svn:https://jamon.svn.sourceforge.net/svnroot/jamon/trunk/jamon/${artifactId}/</connection>
+        <developerConnection>scm:svn:https://jamon.svn.sourceforge.net/svnroot/jamon/trunk/jamon/${artifactId}/</developerConnection>
+    </scm>
     <build>
         <plugins>
             <plugin>
