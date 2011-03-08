@@ -3,9 +3,8 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.jamon</groupId>
-        <artifactId>jamon-java-parent</artifactId>
+        <artifactId>jamon-integration</artifactId>
         <version>SNAPSHOT</version>
-        <relativePath>../../jamon-java-parent</relativePath>
     </parent>
     <artifactId>jamon-integration-lib</artifactId>
     <name>jamon-integration-lib</name>

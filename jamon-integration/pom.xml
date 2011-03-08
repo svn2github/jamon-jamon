@@ -13,9 +13,9 @@
     <packaging>pom</packaging>
     <description>Jamon integration aggregation</description>
     <scm>
-        <url>http://jamon.svn.sourceforge.net/viewvc/jamon/trunk/jamon/${artifactId}/</url>
-        <connection>scm:svn:https://jamon.svn.sourceforge.net/svnroot/jamon/trunk/jamon/${artifactId}/</connection>
-        <developerConnection>scm:svn:https://jamon.svn.sourceforge.net/svnroot/jamon/trunk/jamon/${artifactId}/</developerConnection>
+        <url>http://jamon.svn.sourceforge.net/viewvc/jamon/trunk/jamon/jamon-integration/</url>
+        <connection>scm:svn:https://jamon.svn.sourceforge.net/svnroot/jamon/trunk/jamon/jamon-integration/</connection>
+        <developerConnection>scm:svn:https://jamon.svn.sourceforge.net/svnroot/jamon/trunk/jamon/jamon-integration/</developerConnection>
     </scm>
     <modules>
         <module>jamon-integration-lib</module>
