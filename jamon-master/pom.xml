@@ -4,12 +4,12 @@
     <parent>
         <groupId>org.jamon</groupId>
         <artifactId>jamon-parent</artifactId>
-        <version>SNAPSHOT</version>
+        <version>trunk-SNAPSHOT</version>
         <relativePath>../jamon-parent</relativePath>
     </parent>
     <artifactId>jamon-master</artifactId>
     <name>jamon-master</name>
-    <version>SNAPSHOT</version>
+    <version>trunk-SNAPSHOT</version>
     <packaging>pom</packaging>
     <description>Jamon core aggregation</description>
     <scm>

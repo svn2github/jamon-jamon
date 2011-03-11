@@ -18,7 +18,7 @@
       <plugin>
         <groupId>org.jamon</groupId>
         <artifactId>jamon-maven-plugin</artifactId>
-        <version>SNAPSHOT</version>
+        <version>trunk-SNAPSHOT</version>
         <configuration>
            <templateSourceDir>src/main/java</templateSourceDir>
            <templateOutputDir>target/generated-sources/jamon</templateOutputDir>
@@ -38,7 +38,7 @@
     <dependency>
       <groupId>org.jamon</groupId>
       <artifactId>jamon-processor</artifactId>
-      <version>SNAPSHOT</version>
+      <version>trunk-SNAPSHOT</version>
       <scope>compile</scope>
     </dependency>
     <dependency>

@@ -4,11 +4,11 @@
     <parent>
         <groupId>org.jamon</groupId>
         <artifactId>jamon-integration</artifactId>
-        <version>SNAPSHOT</version>
+        <version>trunk-SNAPSHOT</version>
     </parent>
     <artifactId>jamon-integration-lib</artifactId>
     <name>jamon-integration-lib</name>
-    <version>SNAPSHOT</version>
+    <version>trunk-SNAPSHOT</version>
     <packaging>jar</packaging>
     <description>Integration tests for Jamon</description>
     <scm>
@@ -20,12 +20,12 @@
         <dependency>
             <groupId>org.jamon</groupId>
             <artifactId>jamon-runtime</artifactId>
-            <version>SNAPSHOT</version>
+            <version>trunk-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.jamon</groupId>
             <artifactId>jamon-api</artifactId>
-            <version>SNAPSHOT</version>
+            <version>trunk-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -39,7 +39,7 @@
             <plugin>
                 <groupId>org.jamon</groupId>
                 <artifactId>jamon-maven-plugin</artifactId>
-                <version>SNAPSHOT</version>
+                <version>trunk-SNAPSHOT</version>
                 <executions>
                     <execution>
                         <id>jamon-generate-sources</id>

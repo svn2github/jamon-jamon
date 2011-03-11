@@ -3,12 +3,12 @@
     <parent>
         <groupId>org.jamon</groupId>
         <artifactId>jamon-java-parent</artifactId>
-        <version>SNAPSHOT</version>
+        <version>trunk-SNAPSHOT</version>
         <relativePath>../jamon-java-parent</relativePath>
     </parent>
     <artifactId>jamon-maven-plugin</artifactId>
     <name>Jamon Maven Plugin</name>
-    <version>SNAPSHOT</version>
+    <version>trunk-SNAPSHOT</version>
     <packaging>maven-plugin</packaging>
     <description>Jamon Maven plugin</description>
     <contributors>
@@ -37,7 +37,7 @@
         <dependency>
             <groupId>org.jamon</groupId>
             <artifactId>jamon-processor</artifactId>
-            <version>SNAPSHOT</version>
+            <version>trunk-SNAPSHOT</version>
         </dependency>
         <dependency>
           <groupId>org.codehaus.plexus</groupId>

@@ -4,12 +4,12 @@
     <parent>
         <groupId>org.jamon</groupId>
         <artifactId>jamon-java-parent</artifactId>
-        <version>SNAPSHOT</version>
+        <version>trunk-SNAPSHOT</version>
         <relativePath>../jamon-java-parent</relativePath>
     </parent>
     <artifactId>jamon-anttask</artifactId>
     <name>jamon-anttask</name>
-    <version>SNAPSHOT</version>
+    <version>trunk-SNAPSHOT</version>
     <packaging>jar</packaging>
     <description>Jamon Ant task</description>
     <scm>
@@ -28,7 +28,7 @@
         <dependency>
             <groupId>org.jamon</groupId>
             <artifactId>jamon-processor</artifactId>
-            <version>SNAPSHOT</version>
+            <version>trunk-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>ant</groupId>

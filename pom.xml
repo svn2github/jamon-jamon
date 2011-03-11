@@ -4,7 +4,7 @@
     <groupId>org.jamon</groupId>
     <artifactId>jamon-aggregator</artifactId>
     <name>Jamon Parent</name>
-    <version>SNAPSHOT</version>
+    <version>trunk-SNAPSHOT</version>
     <packaging>pom</packaging>
     <description>Jamon aggregator pom - used only to aid in development</description>
     <url>http://www.jamon.org/</url>

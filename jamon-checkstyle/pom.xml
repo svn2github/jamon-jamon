@@ -4,13 +4,13 @@
     <parent>
         <groupId>org.jamon</groupId>
         <artifactId>jamon-parent</artifactId>
-        <version>SNAPSHOT</version>
+        <version>trunk-SNAPSHOT</version>
         <relativePath>../jamon-parent</relativePath>
     </parent>
     <artifactId>jamon-checkstyle</artifactId>
     <name>jamon-checkstyle</name>
     <description>Jamon checkstyle rules.</description>
-    <version>SNAPSHOT</version>
+    <version>trunk-SNAPSHOT</version>
     <packaging>jar</packaging>
     <scm>
         <url>http://jamon.svn.sourceforge.net/viewvc/jamon/trunk/jamon/${artifactId}/</url>

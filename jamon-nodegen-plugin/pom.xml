@@ -4,12 +4,12 @@
     <parent>
         <groupId>org.jamon</groupId>
         <artifactId>jamon-java-parent</artifactId>
-        <version>SNAPSHOT</version>
+        <version>trunk-SNAPSHOT</version>
         <relativePath>../jamon-java-parent</relativePath>
     </parent>
     <artifactId>jamon-nodegen-plugin</artifactId>
     <name>jamon-nodegen-plugin</name>
-    <version>SNAPSHOT</version>
+    <version>trunk-SNAPSHOT</version>
     <packaging>maven-plugin</packaging>
     <description>Jamon compiler AST node generation tool</description>
     <scm>
