@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<document
+    xmlns="http://maven.apache.org/XDOC/2.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+  <properties><title>Changes in Jamon Processor</title></properties>
+  <body>
+    <section name="Changes in Jamon Processor">
+      <subsection name="Release 2.3.4 (2011-03-13)">
+        <ul>
+          <li>
+            Add support for using the Java 6 Compiler API in the
+            RecompilingTemplateManager. Fixes
+            <a href="http://sourceforge.net/support/tracker.php?aid=3158365">3158365</a>.
+          </li>
+        </ul>
+      </subsection>
+      <subsection name="Release 2.3.3 (2009-07-25)">
+        <ul>
+          <li>
+            Make fragment class names more deterministic. Fixes
+            <a href="http://sourceforge.net/support/tracker.php?aid=2150423">2150423</a>.
+          </li>
+        </ul>
+      </subsection>
+      <subsection name="Release 2.3.2 (2008-01-01)">
+        <ul>
+          <li>
+            Allow default escaping to be set via jamon.properties.
+          </li>
+        </ul>
+      </subsection>
+      <subsection name="Release 2.3.1 (2007-09-07)">
+        <ul>
+          <li>
+            Fix Windows problem in file/template path translation
+          </li>
+        </ul>
+      </subsection>
+      <subsection name="Release 2.3.0 (2007-07-15)">
+        <ul>
+          <li>
+            Initial release.
+          </li>
+        </ul>
+      </subsection>
+    </section>
+  </body>
+</document>
