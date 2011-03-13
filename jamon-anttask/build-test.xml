@@ -16,12 +16,12 @@
     </target>
 
     <target name="test-jamon">
-        <taskdef name="jamon" classname="org.jamon.ant.JamonTask" classpathref="maven.runtime.classpath"/>
+        <taskdef name="jamon" classname="org.jamon.ant.JamonTask" classpathref="maven.test.classpath"/>
         <jamon destdir="${test.src.dir}" srcdir="${templates.dir}"/>
     </target>
 
     <target name="test-invoker">
-        <taskdef name="invoker" classname="org.jamon.ant.InvokerTask" classpathref="maven.runtime.classpath"/>
+        <taskdef name="invoker" classname="org.jamon.ant.InvokerTask" classpathref="maven.test.classpath"/>
         <tempfile property="temp.file" destdir="${build.dir}"/>
         <property name="org.jamon.invoker.compiler" value="javac"/>
         <condition property="org.jamon.invoker.compiler" value="javac">
