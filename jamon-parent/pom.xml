@@ -10,7 +10,7 @@
     <url>http://www.jamon.org/</url>
     <issueManagement>
         <url>http://sourceforge.net/tracker/?group_id=138569</url>
-        <system>SourceForge Tracker</system>
+        <system>SourceForge</system>
     </issueManagement>
     <inceptionYear>2003</inceptionYear>
     <prerequisites>
@@ -114,7 +114,7 @@
                 <remoteTagging>false</remoteTagging>
                 <suppressCommitBeforeTag>true</suppressCommitBeforeTag>
                 <updateWorkingCopyVersions>false</updateWorkingCopyVersions>
-                <developmentVersion>SNAPSHOT</developmentVersion>
+                <developmentVersion>trunk-SNAPSHOT</developmentVersion>
               </configuration>
             </plugin>
             <plugin>
