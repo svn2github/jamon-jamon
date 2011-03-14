@@ -24,6 +24,7 @@ Reserved.
       <item name="Introduction" href="index.html"/>
       <item name="Goals" href="plugin-info.html"/>
       <item name="Usage" href="usage.html"/>
+      <item name="Changes" href="changes.html"/>
     </menu>
     <menu ref="reports"/>
   </body>
