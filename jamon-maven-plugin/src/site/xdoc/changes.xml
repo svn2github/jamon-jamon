@@ -12,9 +12,6 @@
             The translate and translate-test goals no longer fork a parallel maven build.
             Fixes <a href="http://sourceforge.net/support/tracker.php?aid=3220885">3220885</a>.
           </li>
-          <li>
-            Update jamon-processor dependency to version 2.3.4.
-          </li>
         </ul>
       </subsection>
       <subsection name="Release 2.3.3 (2011-03-13)">
