@@ -9,7 +9,6 @@ import org.apache.maven.plugin.MojoExecutionException;
  *
  * @goal translate-tests
  * @phase generate-test-sources
- * @execute phase="generate-test-sources"
  * @requiresDependencyResolution test
  */
 public class JamonTestMojo

@@ -9,7 +9,6 @@ import org.apache.maven.plugin.MojoExecutionException;
  *
  * @goal translate
  * @phase generate-sources
- * @execute phase="generate-sources"
  * @threadSafe
  * @requiresDependencyResolution runtime
  */
