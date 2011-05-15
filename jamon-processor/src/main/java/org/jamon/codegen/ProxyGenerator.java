@@ -507,7 +507,7 @@ public class ProxyGenerator extends AbstractSourceGenerator
             m_writer.print(pkgName + ".");
         }
         m_writer.print(getClassName());
-        m_writer.print(m_templateUnit.getGenericParams().generateGenericsDeclaration());
+        m_writer.print(m_templateUnit.getGenericParams().generateGenericParamsList());
     }
 
     private void generateIntf()

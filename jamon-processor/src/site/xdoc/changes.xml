@@ -6,6 +6,14 @@
   <properties><title>Changes in Jamon Processor</title></properties>
   <body>
     <section name="Changes in Jamon Processor">
+      <subsection name="Release ??? (???)">
+        <ul>
+          <li>
+            Templates with constrained type parameters are now processed properly.
+            Fixes <a href="http://sourceforge.net/support/tracker.php?aid=3300744">3300744</a>.
+          </li>
+        </ul>
+      </subsection>
       <subsection name="Release 2.3.4 (2011-03-13)">
         <ul>
           <li>

@@ -37,7 +37,7 @@
         <dependency>
             <groupId>org.jamon</groupId>
             <artifactId>jamon-processor</artifactId>
-            <version>2.3.4</version>
+            <version>trunk-SNAPSHOT</version>
         </dependency>
         <dependency>
           <groupId>org.codehaus.plexus</groupId>
