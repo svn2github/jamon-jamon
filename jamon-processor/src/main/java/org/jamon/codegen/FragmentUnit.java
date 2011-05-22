@@ -20,13 +20,18 @@
 
 package org.jamon.codegen;
 
+import org.jamon.api.Location;
 import org.jamon.compiler.ParserErrorsImpl;
 import org.jamon.node.OptionalArgNode;
 
 public class FragmentUnit extends AbstractInnerUnit
 {
-    public FragmentUnit(String p_name, StatementBlock p_parent,
-                        GenericParams p_genericParams, ParserErrorsImpl p_errors, org.jamon.api.Location p_location)
+    public FragmentUnit(
+        String p_name,
+        StatementBlock p_parent,
+        GenericParams p_genericParams,
+        ParserErrorsImpl p_errors,
+        Location p_location)
     {
         super(p_name, p_parent, p_errors, p_location);
         m_genericParams = p_genericParams;
