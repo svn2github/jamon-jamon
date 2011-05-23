@@ -51,9 +51,11 @@ public class ProxyGenerator extends AbstractSourceGenerator
         generateFragmentInterfaces(false);
         if (! m_templateUnit.isParent())
         {
-            generateConstructImpl();
+            generateConstructImplReflective();
+            generateConstructImplDirect();
             generateMakeRenderer();
             generateRender();
+            generateRenderNoFlush();
         }
         if (m_templateUnit.isParent())
         {
@@ -264,7 +266,7 @@ public class ProxyGenerator extends AbstractSourceGenerator
         m_writer.openBlock();
     }
 
-    private void generateConstructImpl()
+    private void generateConstructImplReflective()
     {
         m_writer.println();
         m_writer.println("@Override");
@@ -292,7 +294,10 @@ public class ProxyGenerator extends AbstractSourceGenerator
         m_writer.println("throw new RuntimeException(e);");
         m_writer.closeBlock();
         m_writer.closeBlock();
+    }
 
+    private void generateConstructImplDirect()
+    {
         m_writer.println();
         m_writer.println("@Override");
         m_writer.print("protected " + ClassNames.BASE_TEMPLATE
@@ -326,7 +331,10 @@ public class ProxyGenerator extends AbstractSourceGenerator
         m_writer.println(";");
         m_writer.println(ArgNames.WRITER + ".flush();");
         m_writer.closeBlock();
+    }
 
+    private void generateRenderNoFlush()
+    {
         m_writer.print((m_templateUnit.isParent() ? "protected" : "public")
                        + " void renderNoFlush");
         m_writer.openList();
