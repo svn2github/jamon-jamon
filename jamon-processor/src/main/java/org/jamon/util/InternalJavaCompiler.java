@@ -22,6 +22,8 @@ package org.jamon.util;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
@@ -42,8 +44,19 @@ public class InternalJavaCompiler
         m_compiler = m_compilerClass.newInstance();
         m_compile = m_compilerClass.getMethod("compile",
                                               (new String [0]).getClass());
-        // check if we can invoke the compile method
-        m_compile.invoke(m_compiler, new Object[] { new String[] { "-version" } });
+        verifyCompiler();
+    }
+
+    private void verifyCompiler() throws NoSuchMethodException,
+            IllegalAccessException, InvocationTargetException
+    {
+        // check if we can invoke the compile method, but redirect output
+        Method compileWithWriter =
+            m_compilerClass.getMethod("compile", String[].class, PrintWriter.class);
+        compileWithWriter.invoke(
+            m_compiler,
+            new String[] { "-version" },
+            new PrintWriter(new StringWriter()));
     }
 
     public String compile(String [] p_javaFiles)
