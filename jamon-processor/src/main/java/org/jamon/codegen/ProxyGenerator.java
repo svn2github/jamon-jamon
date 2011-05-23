@@ -515,7 +515,7 @@ public class ProxyGenerator extends AbstractSourceGenerator
         m_templateUnit.getGenericParams()
             .suppressGenericHidingWarnings(m_writer);
         m_writer.println(
-            "protected interface Intf"
+            "public interface Intf"
             + m_templateUnit.getGenericParams().generateGenericsDeclaration());
         m_writer.print("  extends "
                        + (m_templateUnit.hasParentPath()

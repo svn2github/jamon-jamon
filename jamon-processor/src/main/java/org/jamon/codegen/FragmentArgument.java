@@ -39,8 +39,13 @@ public class FragmentArgument extends RequiredArgument
 
     private final FragmentUnit m_fragmentUnit;
 
-    @Override public String getType()
-    {
-        return super.getType();
+    @Override
+    public String getFullyQualifiedType() {
+        if (getFragmentUnit().getParent() instanceof TemplateUnit)
+        {
+            String templateName = ((TemplateUnit) getFragmentUnit().getParent()).getName();
+            return PathUtils.getFullyQualifiedIntfClassName(templateName) + ".Intf." + getType();
+        }
+        return getType();
     }
 }

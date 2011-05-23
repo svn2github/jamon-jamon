@@ -49,6 +49,15 @@ public abstract class AbstractArgument
         return m_type;
     }
 
+    /**
+     * Return the fully qualified type. This will always be the same as the result of
+     * {@link #getType()}, except for top-level fragement arguments.
+     * @return the type, or for a top-level fragment argument, the fully qualified type.
+     */
+    public String getFullyQualifiedType() {
+      return getType();
+    }
+
     public org.jamon.api.Location getLocation()
     {
         return m_location;
@@ -68,16 +77,16 @@ public abstract class AbstractArgument
     {
         p_writer.printLocation(getLocation());
         p_writer.println( "public void " + getSetterName()
-                          + "(" + getType() + " " + getName() + ")");
+                          + "(" + getFullyQualifiedType() + " " + getName() + ")");
         p_writer.openBlock();
         generateImplDataSetterCode(p_writer);
         p_writer.closeBlock();
 
-        p_writer.println("public " + getType() + " " + getGetterName() + "()");
+        p_writer.println("public " + getFullyQualifiedType() + " " + getGetterName() + "()");
         p_writer.openBlock();
         p_writer.println("return m_" + getName() + ";");
         p_writer.closeBlock();
-        p_writer.println("private " + getType() + " m_" + getName() + ";");
+        p_writer.println("private " + getFullyQualifiedType() + " m_" + getName() + ";");
     }
 
     protected void generateImplDataSetterCode(CodeWriter p_writer)

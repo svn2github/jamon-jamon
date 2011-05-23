@@ -100,8 +100,10 @@ public class TemplateDescription
 
         m_requiredArgs = getRequiredArgs(templateAnnotation.requiredArguments());
         m_optionalArgs = getOptionalArgs(templateAnnotation.optionalArguments());
+
         m_fragmentInterfaces = getFragmentArguments(
-            templateAnnotation.fragmentArguments(), new TemplateUnit(null, null));
+            templateAnnotation.fragmentArguments(),
+            new TemplateUnit(PathUtils.getPathForProxyClass(p_proxy), null));
         m_methodUnits = new HashMap<String, MethodUnit>();
         for (Method methodAnnotation: templateAnnotation.methods())
         {

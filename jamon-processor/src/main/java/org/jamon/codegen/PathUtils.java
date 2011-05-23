@@ -131,6 +131,15 @@ public class PathUtils
     }
 
     /**
+     * Given a proxy class, return the corresponding template path.
+     * @param p_class the proxy class
+     * @return the corresponding template path
+     */
+    public static String getPathForProxyClass(Class<?> p_class) {
+      return p_class.getName().replace(".", "/");
+    }
+
+    /**
      * Fully qualify a class name given a package name and class name.
      *
      * @param p_pkgName the name of the package
