@@ -20,5 +20,6 @@
     <modules>
         <module>jamon-integration-lib</module>
         <module>jamon-integration-tests</module>
+        <module>jamon-23-source-compatability</module>
     </modules>
 </project>

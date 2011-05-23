@@ -1,0 +1,5 @@
+<%doc>
+  Not needed for the test, but useful to verify that code generation has changed.
+</%doc>
+<%frag content />
+<& content &>

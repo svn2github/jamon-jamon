@@ -1,0 +1,6 @@
+<%annotate @Deprecated %>
+<&| /org/jamon/logic/Iterate<String>: java.util.Arrays.asList("a","b").iterator() &>\
+<%args>String value;</%args>\
+(<% value %>)\
+</&>
+<&| Frag &>test</&>
