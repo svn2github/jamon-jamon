@@ -444,6 +444,20 @@ public class ProxyGenerator extends AbstractSourceGenerator
             m_writer.closeBlock();
         }
 
+        // Only generate the getTypedImplData method if we're actually going to use it.
+        if (! m_templateUnit.isParent()
+            || ! m_templateUnit.getRenderArgs().isEmpty()
+            || ! m_templateUnit.getSignatureOptionalArgs().isEmpty()
+            || m_templateUnit.getJamonContextType() != null) {
+            generateGetTypedImplData();
+        }
+    }
+
+    /**
+     * Generate a method to cast getImplData() to the ImplData class defined in this Proxy file.
+     */
+    private void generateGetTypedImplData()
+    {
         m_writer.println(
             "@SuppressWarnings(\"unchecked\") private ImplData" + genericParamsList()
             + " getTypedImplData()");
