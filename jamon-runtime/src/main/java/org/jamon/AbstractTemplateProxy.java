@@ -30,6 +30,10 @@ public abstract class AbstractTemplateProxy
     {
     }
 
+    public static interface ImplDataCompatible<T extends ImplData> {
+      public void populateFrom(T implData);
+    }
+
     protected AbstractTemplateProxy(TemplateManager p_templateManager)
     {
         m_templateManager = p_templateManager;

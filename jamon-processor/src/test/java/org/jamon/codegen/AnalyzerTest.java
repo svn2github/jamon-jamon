@@ -27,23 +27,31 @@ import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import junit.framework.TestCase;
 
 import org.jamon.api.TemplateLocation;
 import org.jamon.api.TemplateSource;
+import org.jamon.compiler.ParserErrorImpl;
+import org.jamon.compiler.ParserErrorsImpl;
 import org.jamon.compiler.TemplateResourceLocation;
 import org.jamon.node.AnnotationNode;
 import org.jamon.node.LocationImpl;
+
+import com.google.common.base.Function;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Maps;
 
 public class AnalyzerTest extends TestCase
 {
     public static class MockTemplateSource implements TemplateSource
     {
-        public MockTemplateSource(String p_content)
+        public MockTemplateSource(Map<String, String> p_content)
         {
-            m_bytes = p_content.getBytes();
+            m_bytes = Maps.transformValues(p_content, new Function<String, byte[]>() {
+                @Override public byte[] apply(String p_input) { return p_input.getBytes(); }});
         }
 
         public long lastModified(String p_templatePath)
@@ -53,12 +61,12 @@ public class AnalyzerTest extends TestCase
 
         public boolean available(String p_templatePath)
         {
-            return false;
+            return m_bytes.containsKey(p_templatePath);
         }
 
         public InputStream getStreamFor(String p_templatePath)
         {
-            return new ByteArrayInputStream(m_bytes);
+            return new ByteArrayInputStream(m_bytes.get(p_templatePath));
         }
 
         public String getExternalIdentifier(String p_templatePath)
@@ -78,7 +86,7 @@ public class AnalyzerTest extends TestCase
             p_properties.put("org.jamon.escape", "j");
         }
 
-        private final byte[] m_bytes;
+        private final Map<String, byte[]> m_bytes;
     }
 
     private static String PATH = "/test";
@@ -102,7 +110,7 @@ public class AnalyzerTest extends TestCase
     {
         return new Analyzer(
             PATH,
-            new TemplateDescriber(new MockTemplateSource(p_templateText),
+            new TemplateDescriber(new MockTemplateSource(ImmutableMap.of(PATH, p_templateText)),
                                   getClass().getClassLoader()))
         .analyze();
     }
@@ -200,5 +208,37 @@ public class AnalyzerTest extends TestCase
                     new LocationImpl(new TemplateResourceLocation(PATH), 3, 1),
                     "@Baz", AnnotationType.BOTH)),
             templateUnit.getAnnotations());
+    }
+
+    public void testAbstractReplaces() throws Exception
+    {
+        TemplateUnit templateUnit = new Analyzer(
+            PATH,
+            new TemplateDescriber(
+                new MockTemplateSource(
+                    ImmutableMap.of(
+                        PATH, "<%replaces /foo>",
+                        "/foo", "")), // TemplateDescriber will need to see the source for /foo
+                getClass().getClassLoader()))
+        .analyze();
+        assertEquals("/foo", templateUnit.getReplacedTemplatePath());
+    }
+
+    public void testAbstractReplacesError() throws Exception
+    {
+        try
+        {
+            analyzeText("<%abstract><%replaces /foo>");
+            fail("Exception expected");
+        }
+        catch (ParserErrorsImpl e)
+        {
+            assertEquals(
+                Arrays.asList(
+                    new ParserErrorImpl(
+                        new LocationImpl(new TemplateResourceLocation(PATH), 1, 12),
+                    "an abstract template cannot replace another template")),
+                    e.getErrors());
+        }
     }
 }

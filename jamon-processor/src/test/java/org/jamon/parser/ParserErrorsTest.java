@@ -22,6 +22,14 @@ public class ParserErrorsTest extends AbstractParserTest
                     1, 15, AbstractParser.MALFORMED_TAG_ERROR);
     }
 
+    @Test public void testMalformedReplacesTag() throws Exception
+    {
+      assertError("<%replaces>",
+        1, 1, TopLevelParser.MALFORMED_REPLACES_TAG_ERROR);
+      assertError("<%replaces /foo f>",
+        1, 16, AbstractParser.MALFORMED_TAG_ERROR);
+    }
+
     @Test public void testMalformedAnnotateTag() throws Exception
     {
         assertError("<%annotate>",
@@ -212,6 +220,13 @@ public class ParserErrorsTest extends AbstractParserTest
         assertError(
             "<%def foo>\n<%implements></%def>",
             2, 1, AbstractBodyParser.IMPLEMENTS_TAG_IN_SUBCOMPONENT);
+    }
+
+    @Test public void testReplacesInSubcomponent() throws Exception
+    {
+      assertError(
+        "<%def foo>\n<%replaces /foo></%def>",
+        2, 1, AbstractBodyParser.REPLACES_TAG_IN_SUBCOMPONENT);
     }
 
     @Test public void testParentArgsInSubcomponent() throws Exception

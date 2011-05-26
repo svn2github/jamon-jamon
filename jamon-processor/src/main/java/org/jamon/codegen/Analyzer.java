@@ -21,6 +21,8 @@
 package org.jamon.codegen;
 
 import java.io.IOException;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -68,6 +70,7 @@ public class Analyzer
         preAnalyze(top);
         mainAnalyze(top);
         checkForConcreteness(top);
+        checkTemplateReplacement(top);
         if (m_errors.hasErrors())
         {
             throw m_errors;
@@ -108,7 +111,7 @@ public class Analyzer
         p_top.apply(new Adapter());
     }
 
-    public void checkForConcreteness(TopNode p_top)
+    private void checkForConcreteness(TopNode p_top)
     {
         if (! getTemplateUnit().isParent()
             && ! getTemplateUnit().getAbstractMethodNames().isEmpty())
@@ -126,6 +129,114 @@ public class Analyzer
                         addError(message.toString(), p_extends.getLocation());
                     }
                 });
+        }
+    }
+
+    /**
+     * If this template is a replacement template (via the <%replaces> tag), verify that:
+     * <ul>
+     *   <li>The replacing template is concrete</li>
+     *   <li>All required arguments have matching required arguments in the replaced template</li>
+     *   <li>All optional argument have matching required or optional arguments in the replaced
+     *       template</li>
+     *   <li>All fragment arguments have matching fragment arguments in the replaced template</li>
+     * </li>
+     * @param p_top the top node of the syntax tree.
+     */
+    private void checkTemplateReplacement(TopNode p_top) {
+        topLevelAnalyze(p_top, new AnalysisAdapter()
+            {
+                @Override
+                public void caseReplacesNode(ReplacesNode p_replaces)
+                {
+                    if(getTemplateUnit().isParent())
+                    {
+                        addError(
+                          "an abstract template cannot replace another template",
+                          p_replaces.getLocation());
+                    }
+                    else
+                    {
+                        String replacedTemplatePath =
+                            getAbsolutePath(computePath(p_replaces.getPath()));
+                        try
+                        {
+                            //FIXME: verify that the replaced template is not abstract.
+                            TemplateDescription replacedTemplateDescription =
+                                m_describer.getTemplateDescription(
+                                    replacedTemplatePath, p_replaces.getLocation());
+                            getTemplateUnit().setReplacedTemplatePath(
+                                replacedTemplatePath, replacedTemplateDescription);
+                            verifyRequiredArgsComeFromReplacedTemplate(
+                                p_replaces.getLocation(), replacedTemplateDescription);
+                            verifyFragmentArgsComeFromReplacedTemplate(
+                                p_replaces.getLocation(), replacedTemplateDescription);
+                            verifyOptionalArgsComeFromReplacedTemplate(
+                                p_replaces.getLocation(), replacedTemplateDescription);
+                        }
+                        catch (ParserErrorImpl e)
+                        {
+                            m_errors.addError(e);
+                        }
+                        catch (IOException e)
+                        {
+                            addError(e.getMessage(), p_replaces.getLocation());
+                        }
+                    }
+                }
+            });
+    }
+
+    private void verifyRequiredArgsComeFromReplacedTemplate(
+        Location p_location, TemplateDescription p_replacedTemplateDescription)
+    {
+        verifyArgsComeFromReplacedTemplate(
+            p_location,
+            p_replacedTemplateDescription.getRequiredArgs().iterator(),
+            getTemplateUnit().getSignatureRequiredArgs(),
+            "fragment");
+    }
+
+    private void verifyFragmentArgsComeFromReplacedTemplate(
+        Location p_location, TemplateDescription p_replacedTemplateDescription)
+    {
+        verifyArgsComeFromReplacedTemplate(
+            p_location,
+            p_replacedTemplateDescription.getFragmentInterfaces().iterator(),
+            getTemplateUnit().getFragmentArgs(),
+            "fragment");
+    }
+
+    private void verifyOptionalArgsComeFromReplacedTemplate(
+        Location p_location, TemplateDescription p_replacedTemplateDescription)
+    {
+        verifyArgsComeFromReplacedTemplate(
+            p_location,
+            new SequentialIterator<AbstractArgument>(
+                p_replacedTemplateDescription.getRequiredArgs().iterator(),
+                p_replacedTemplateDescription.getOptionalArgs().iterator()),
+            getTemplateUnit().getSignatureOptionalArgs(),
+            "required or optional");
+    }
+
+    private <T extends AbstractArgument> void verifyArgsComeFromReplacedTemplate(
+        Location p_location,
+        Iterator<T> replacedTemplateArgs,
+        Collection<? extends T> templateArgs,
+        String argumentKind)
+    {
+        Set<String> replacedTemplateArgNames = new HashSet<String>();
+        while (replacedTemplateArgs.hasNext()) {
+            replacedTemplateArgNames.add(replacedTemplateArgs.next().getName());
+        }
+
+        for (T arg: templateArgs) {
+            if (! replacedTemplateArgNames.contains(arg.getName())) {
+                addError(
+                    "Implemented template contains no " + argumentKind + " argument named "
+                    + arg.getName(),
+                    p_location);
+            }
         }
     }
 

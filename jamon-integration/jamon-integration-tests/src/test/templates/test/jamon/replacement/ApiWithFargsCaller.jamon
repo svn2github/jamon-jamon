@@ -1,0 +1,2 @@
+<&| ApiWithFargs: 3 &><%args>int z;</%args>
+Implementor got <% z %></&>

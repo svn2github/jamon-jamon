@@ -164,7 +164,6 @@ public class TemplateUnitTest
         checkSigIsUnique(unit, sigs);
     }
 
-
     public void testDependencies()
         throws Exception
     {
@@ -215,6 +214,25 @@ public class TemplateUnitTest
             makeUnitWithContext(
                 "/foo/bar", "jamonContext", new TemplateUnit("/foo/baz", null))
             .isOriginatingJamonContext());
+    }
+
+    public void testGetProxyParentClassOfSimpleTemplate()
+    {
+        assertEquals(ClassNames.TEMPLATE, new TemplateUnit("/foo", null).getProxyParentClass());
+    }
+
+    public void testGetProxyParentClassOfChildTemlpate()
+    {
+        TemplateUnit child = new TemplateUnit("/child", null);
+        child.setParentPath("/Parent");
+        assertEquals("Parent", child.getProxyParentClass());
+    }
+
+    public void testGetProxyParentClassOfImplementingTemplate()
+    {
+        TemplateUnit impl= new TemplateUnit("/impl", null);
+        impl.setReplacedTemplatePath("/api/foo", null);
+        assertEquals("api.foo", impl.getProxyParentClass());
     }
 
     private void checkSigIsUnique(TemplateUnit p_unit, Set<String> p_set)

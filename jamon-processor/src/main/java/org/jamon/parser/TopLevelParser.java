@@ -37,6 +37,7 @@ import org.jamon.node.EscapeDirectiveNode;
 import org.jamon.node.ExtendsNode;
 import org.jamon.node.ImplementNode;
 import org.jamon.node.ImplementsNode;
+import org.jamon.node.ReplacesNode;
 import org.jamon.node.ImportsNode;
 import org.jamon.node.LocationImpl;
 import org.jamon.node.ParentMarkerNode;
@@ -50,6 +51,8 @@ public class TopLevelParser extends AbstractBodyParser<TopNode>
     public static final String EXPECTING_ARROW = "Expecting '=' or '=>'";
     public static final String MALFORMED_EXTENDS_TAG_ERROR =
         "Malformed <%extends ...> tag";
+    public static final String MALFORMED_REPLACES_TAG_ERROR =
+        "Malformed <%replaces ...> tag";
     public static final String MALFORMED_ANNOTATE_TAG_ERROR =
         "Malformed <%annotate...> tag";
     public static final String UNRECOGNIZED_ANNOTATION_TYPE_ERROR =
@@ -168,6 +171,23 @@ public class TopLevelParser extends AbstractBodyParser<TopNode>
         {
             addError(p_tagLocation, MALFORMED_EXTENDS_TAG_ERROR);
         }
+    }
+
+    @Override protected void handleReplacesTag(org.jamon.api.Location p_tagLocation)
+    throws IOException
+    {
+      if(soakWhitespace())
+      {
+        m_root.addSubNode(
+          new ReplacesNode(p_tagLocation, parsePath()));
+        soakWhitespace();
+        checkForTagClosure(m_reader.getLocation());
+        soakWhitespace();
+      }
+      else
+      {
+        addError(p_tagLocation, MALFORMED_REPLACES_TAG_ERROR);
+      }
     }
 
     @Override protected void handleImplementsTag(org.jamon.api.Location p_tagLocation)

@@ -53,6 +53,7 @@
             <plugin>
                 <artifactId>jamon-nodegen-plugin</artifactId>
                 <groupId>org.jamon</groupId>
+                <version>trunk-SNAPSHOT</version>
                 <executions>
                     <execution>
                         <id>nodegen</id>

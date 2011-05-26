@@ -295,6 +295,55 @@ public class TemplateUnit
         return m_parentPath != null;
     }
 
+    /**
+     * Set the path of the template which this template replaces, along with the description of
+     * the replaced template.
+     * @param p_replacedTemplatePath the path of the template which this template replaced
+     * @param p_templateDescription the description of the replaced template
+     */
+    public void setReplacedTemplatePath(
+        String p_replacedTemplatePath, TemplateDescription p_templateDescription) {
+        m_replacedTemplatePath = p_replacedTemplatePath;
+        m_replacedTemplateDescription = p_templateDescription;
+        m_dependencies.add(p_replacedTemplatePath);
+    }
+
+    public String getReplacedTemplatePath()
+    {
+        return m_replacedTemplatePath;
+    }
+
+    public TemplateDescription getReplacedTemplateDescription() {
+        return m_replacedTemplateDescription;
+    }
+
+    /**
+     * Whether this template replaces another template. This is the case if the template has a
+     * {@code <%replacesTemplate ...>} tag.
+     * @return {@code true} if this template replaces another template.
+     */
+    public boolean isReplacing()
+    {
+        return m_replacedTemplatePath != null;
+    }
+
+    public String getProxyParentClass()
+    {
+        if (hasParentPath())
+        {
+            return PathUtils.getFullyQualifiedIntfClassName(getParentPath());
+        }
+        else if (isReplacing())
+        {
+            return PathUtils.getFullyQualifiedIntfClassName(m_replacedTemplatePath);
+
+        }
+        else
+        {
+            return ClassNames.TEMPLATE;
+        }
+    }
+
     public boolean isParent()
     {
         return m_isParent;
@@ -347,6 +396,8 @@ public class TemplateUnit
     private final List<String> m_interfaces = new LinkedList<String>();
     private String m_parentPath;
     private boolean m_isParent = false;
+    private String m_replacedTemplatePath;
+    private TemplateDescription m_replacedTemplateDescription;
     private final List<ClassNode> m_classContent = new LinkedList<ClassNode>();
     private final Set<String> m_dependencies = new HashSet<String>();
     private final Set<String> m_callNames = new HashSet<String>();
@@ -493,6 +544,6 @@ public class TemplateUnit
 
     public Iterable<AnnotationNode> getAnnotations()
     {
-        return m_annotations; 
+        return m_annotations;
     }
 }

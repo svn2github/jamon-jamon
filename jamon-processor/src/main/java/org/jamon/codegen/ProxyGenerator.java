@@ -22,6 +22,8 @@ package org.jamon.codegen;
 
 import java.io.OutputStream;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 public class ProxyGenerator extends AbstractSourceGenerator
 {
@@ -116,15 +118,16 @@ public class ProxyGenerator extends AbstractSourceGenerator
         m_writer.closeBlock();
 
         m_writer.println();
-        if (m_templateUnit.isParent())
-        {
-            m_writer.println("protected " + getClassName() + "(String p_path)");
-            m_writer.openBlock();
-            m_writer.println("super(p_path);");
-            m_writer.closeBlock();
-            m_writer.println();
-        }
-        else
+
+        // We require a pass-through constructor for child templates and for replacement templates,
+        // meaning that every proxy needs one.
+        m_writer.println("protected " + getClassName() + "(String p_path)");
+        m_writer.openBlock();
+        m_writer.println("super(p_path);");
+        m_writer.closeBlock();
+        m_writer.println();
+
+        if (! m_templateUnit.isParent())
         {
             m_writer.println("public " + getClassName() + "()");
             m_writer.openBlock();
@@ -257,11 +260,7 @@ public class ProxyGenerator extends AbstractSourceGenerator
             "class " + getClassName()
             + m_templateUnit.getGenericParams().generateGenericsDeclaration());
 
-        m_writer.println("  extends "
-                         + (m_templateUnit.hasParentPath()
-                            ? PathUtils.getFullyQualifiedIntfClassName(
-                                m_templateUnit.getParentPath())
-                            : ClassNames.TEMPLATE));
+        m_writer.println("  extends " + m_templateUnit.getProxyParentClass());
         m_templateUnit.printInterfaces(m_writer);
         m_writer.openBlock();
     }
@@ -282,7 +281,7 @@ public class ProxyGenerator extends AbstractSourceGenerator
                          + ClassNames.TEMPLATE_MANAGER + ".class"
                          + ", ImplData.class })");
         m_writer.println(
-            ".newInstance(new Object [] { getTemplateManager(), getImplData()});");
+            ".newInstance(new Object [] { getTemplateManager(), getTypedImplData()});");
         m_writer.outdent();
         m_writer.closeBlock();
         m_writer.println("catch (RuntimeException e)");
@@ -307,7 +306,7 @@ public class ProxyGenerator extends AbstractSourceGenerator
             "return new "
             + PathUtils.getImplClassName(m_templateUnit.getName())
             + m_templateUnit.getGenericParams().generateGenericParamsList()
-            + "(getTemplateManager(), getImplData());");
+            + "(getTemplateManager(), getTypedImplData());");
         m_writer.closeBlock();
     }
 
@@ -350,7 +349,7 @@ public class ProxyGenerator extends AbstractSourceGenerator
             m_writer.println(
                 "ImplData"
                 + m_templateUnit.getGenericParams().generateGenericParamsList()
-                + " implData = getImplData();");
+                + " implData = getTypedImplData();");
             for (AbstractArgument arg: m_templateUnit.getRenderArgs())
             {
                 m_writer.println("implData." + arg.getSetterName()
@@ -405,17 +404,16 @@ public class ProxyGenerator extends AbstractSourceGenerator
             "public static class ImplData"
             + m_templateUnit.getGenericParams().generateGenericsDeclaration());
         m_writer.print("  extends ");
-        if(m_templateUnit.hasParentPath())
-        {
-            m_writer.println(PathUtils.getFullyQualifiedIntfClassName(
-                m_templateUnit.getParentPath())
-                             + ".ImplData");
-        }
-        else
-        {
-            m_writer.println(ClassNames.IMPL_DATA);
+        m_writer.println(implDataAncestor());
+        if (m_templateUnit.isReplacing()) {
+            m_writer.print("  implements ");
+            m_writer.print(ClassNames.IMPL_DATA_COMPATIBLE);
+            m_writer.println("<" + getReplacedImplDataClassName() + ">");
         }
         m_writer.openBlock();
+        if (m_templateUnit.isReplacing()) {
+            generatePopulateFrom();
+        }
         if (m_templateUnit.isOriginatingJamonContext())
         {
             m_writer.println(
@@ -444,10 +442,7 @@ public class ProxyGenerator extends AbstractSourceGenerator
         if (! m_templateUnit.isParent())
         {
             m_writer.println("@Override");
-            m_writer.println(
-                "protected ImplData"
-                + m_templateUnit.getGenericParams().generateGenericParamsList()
-                + " makeImplData()");
+            m_writer.println("protected " + ClassNames.TEMPLATE + ".ImplData" + " makeImplData()");
             m_writer.openBlock();
             m_writer.println(
                 "return new ImplData"
@@ -457,15 +452,148 @@ public class ProxyGenerator extends AbstractSourceGenerator
         }
 
         m_writer.println(
-            "@Override @SuppressWarnings(\"unchecked\") public ImplData"
+            "@SuppressWarnings(\"unchecked\") private ImplData"
             + m_templateUnit.getGenericParams().generateGenericParamsList()
-            + " getImplData()");
+            + " getTypedImplData()");
         m_writer.openBlock();
         m_writer.println(
             "return (ImplData"
             + m_templateUnit.getGenericParams().generateGenericParamsList()
-            + ") super.getImplData();");
+            + ") getImplData();");
         m_writer.closeBlock();
+    }
+
+    private void generatePopulateFrom()
+    {
+        for (FragmentArgument farg: m_templateUnit.getFragmentArgs()) {
+            generateFragmentDelegator(farg);
+        }
+        m_writer.print(
+            "public void populateFrom(" + getReplacedImplDataClassName() + " implData) ");
+        m_writer.openBlock();
+        TemplateDescription replacedTemplateDescription =
+            m_templateUnit.getReplacedTemplateDescription();
+        for (RequiredArgument arg: m_templateUnit.getSignatureRequiredArgs()) {
+            m_writer.println(arg.getSetterName() + "(implData." + arg.getGetterName() + "());");
+        }
+        Set<String> replacedTemplateOptionalArgNames =
+            getOptionalArgNames(replacedTemplateDescription);
+        for (OptionalArgument arg: replacedTemplateDescription.getOptionalArgs()) {
+            if (replacedTemplateOptionalArgNames.contains(arg.getName())) {
+                m_writer.println("if(implData." + arg.getIsNotDefaultName() + ") {");
+                m_writer.println(
+                    "  " + arg.getSetterName() + "(implData." + arg.getGetterName() + "());");
+                m_writer.println("}");
+            }
+            else {
+                m_writer.println(
+                    arg.getSetterName() + "(implData." + arg.getGetterName() + "());");
+            }
+        }
+        for (FragmentArgument farg: m_templateUnit.getFragmentArgs()) {
+            m_writer.println(
+                farg.getSetterName() + "(new " + getFragmentDelegatorName(farg)
+                + "(implData." + farg.getGetterName() + "()));");
+        }
+        m_writer.closeBlock();
+    }
+
+    /**
+     * Create a class to delegate from a fragment satisfying the interface for
+     * the replaced template to a fragment satisfying the corresponding
+     * interface in this template.
+     * @param farg the fragment argument to create a delegator for.
+     */
+    private void generateFragmentDelegator(FragmentArgument farg)
+    {
+        String fragmentInterfaceName = "Intf.Fragment_" + farg.getName();
+        String replacedFragmentInterfaceName =
+            getReplacedProxyClassName() + "." + fragmentInterfaceName;
+        FragmentUnit fragmentUnit = farg.getFragmentUnit();
+        // name the fragment being converted "_frag_" to avoid name clashes with the parameters
+        // passed to the fragment.
+        m_writer.print(
+            "private static class " + getFragmentDelegatorName(farg)
+            + " implements " + fragmentInterfaceName);
+        m_writer.openBlock();
+        m_writer.println("private final " + replacedFragmentInterfaceName + " frag;");
+        m_writer.println();
+
+        m_writer.print(
+            "public " + getFragmentDelegatorName(farg)
+            + "(" + replacedFragmentInterfaceName + " frag)");
+        m_writer.openBlock();
+        m_writer.println("this.frag = frag;");
+        m_writer.closeBlock();
+        m_writer.println();
+        m_writer.print("public void renderNoFlush");
+        m_writer.openList();
+        m_writer.printListElement(ArgNames.WRITER_DECL);
+        fragmentUnit.printRenderArgsDecl(m_writer);
+        m_writer.closeList();
+        m_writer.println();
+        m_writer.println("  throws java.io.IOException");
+        m_writer.openBlock();
+        m_writer.print("this.frag.renderNoFlush");
+        m_writer.openList();
+        m_writer.printListElement(ArgNames.WRITER);
+        fragmentUnit.printRenderArgs(m_writer);
+        m_writer.closeList();
+        m_writer.println(";");
+        m_writer.closeBlock();
+
+        m_writer.print("public " + ClassNames.RENDERER + " makeRenderer");
+        m_writer.openList();
+        fragmentUnit.printRenderArgsDecl(m_writer);
+        m_writer.closeList();
+        m_writer.openBlock();
+        m_writer.print("return this.frag.makeRenderer");
+        m_writer.openList();
+        fragmentUnit.printRenderArgs(m_writer);
+        m_writer.closeList();
+        m_writer.println(";");
+        m_writer.closeBlock();
+
+        m_writer.closeBlock();
+        m_writer.println();
+    }
+
+    private String getFragmentDelegatorName(FragmentArgument farg) {
+        return "Fragment_" + farg.getName() + "_Delegator";
+    }
+
+    private String getReplacedImplDataClassName()
+    {
+        return getReplacedProxyClassName() + ".ImplData";
+    }
+
+    private String getReplacedIntfClassName()
+    {
+        return getReplacedProxyClassName() + ".Intf";
+    }
+
+    private String getReplacedProxyClassName()
+    {
+        return PathUtils.getFullyQualifiedIntfClassName(
+            m_templateUnit.getReplacedTemplatePath());
+    }
+
+    private static Set<String> getOptionalArgNames(
+        TemplateDescription p_replacedTemplateDescription)
+    {
+        Set<String> replacedTemplateOptionalArgNames = new HashSet<String>();
+        for (OptionalArgument arg: p_replacedTemplateDescription.getOptionalArgs()) {
+            replacedTemplateOptionalArgNames.add(arg.getName());
+        }
+        return replacedTemplateOptionalArgNames;
+    }
+
+    private String implDataAncestor()
+    {
+        return m_templateUnit.hasParentPath() ?
+            PathUtils.getFullyQualifiedIntfClassName(
+                m_templateUnit.getParentPath()) + ".ImplData"
+            : ClassNames.IMPL_DATA;
     }
 
     private void generateJamonContextSetter()
@@ -481,7 +609,7 @@ public class ProxyGenerator extends AbstractSourceGenerator
             " setJamonContext(" + m_templateUnit.getJamonContextType()
             + " p_jamonContext)");
         m_writer.openBlock();
-        m_writer.println("getImplData().setJamonContext(p_jamonContext);");
+        m_writer.println("getTypedImplData().setJamonContext(p_jamonContext);");
         m_writer.println("return this;");
         m_writer.closeBlock();
     }
@@ -500,7 +628,7 @@ public class ProxyGenerator extends AbstractSourceGenerator
                 + "(" + arg.getType() +" p_" + arg.getName() + ")");
             m_writer.openBlock();
             m_writer.println(
-                "(" + "getImplData()" + ")."
+                "(" + "getTypedImplData()" + ")."
                 + arg.getSetterName() + "(p_" + arg.getName() + ");");
             m_writer.println("return this;");
             m_writer.closeBlock();
@@ -530,6 +658,10 @@ public class ProxyGenerator extends AbstractSourceGenerator
                           ? PathUtils.getFullyQualifiedIntfClassName(
                               m_templateUnit.getParentPath()) + ".Intf"
                           : ClassNames.TEMPLATE_INTF));
+        if (m_templateUnit.isReplacing()) {
+            m_writer.print(", " + getReplacedIntfClassName());
+        }
+        m_writer.println();
         m_writer.openBlock();
 
         generateFragmentInterfaces(true);

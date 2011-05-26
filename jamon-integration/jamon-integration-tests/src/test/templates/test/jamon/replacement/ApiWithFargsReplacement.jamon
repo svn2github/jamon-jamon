@@ -1,0 +1,4 @@
+<%replaces ApiWithFargs>
+<%args>int x;</%args>
+<%frag f>int y;</%frag>
+<& f: x &>

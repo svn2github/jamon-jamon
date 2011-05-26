@@ -1,0 +1,5 @@
+<%replaces Api>
+<%args>
+  int i;
+</%args>
+Implementor: <% i %>
