@@ -229,22 +229,6 @@ public class TemplateUnitTest
         assertEquals("Parent", child.getProxyParentClass());
     }
 
-    public void testGetProxyParentClassOfReplacingTemplate()
-    {
-        TemplateUnit replacement = new TemplateUnit("/impl", null);
-        replacement.setReplacedTemplatePath("/api/foo", null);
-        assertEquals("api.foo", replacement.getProxyParentClass());
-    }
-
-    public void testGetProxyParentClassOfTemplateReplacingGenericTemplate()
-    {
-        TemplateUnit replacement = new TemplateUnit("/impl", null);
-        replacement.addGenericsParamNode(new GenericsParamNode(LOCATION, "T"));
-
-        replacement.setReplacedTemplatePath("/api/foo", null);
-        assertEquals("api.foo<T>", replacement.getProxyParentClass());
-    }
-
     private void checkSigIsUnique(TemplateUnit p_unit, Set<String> p_set)
         throws Exception
     {

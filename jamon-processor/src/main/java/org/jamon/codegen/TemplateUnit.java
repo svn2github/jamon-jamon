@@ -329,20 +329,9 @@ public class TemplateUnit
 
     public String getProxyParentClass()
     {
-        if (hasParentPath())
-        {
-            return PathUtils.getFullyQualifiedIntfClassName(getParentPath());
-        }
-        else if (isReplacing())
-        {
-            return PathUtils.getFullyQualifiedIntfClassName(m_replacedTemplatePath)
-                + getGenericParams().generateGenericParamsList();
-
-        }
-        else
-        {
-            return ClassNames.TEMPLATE;
-        }
+        return  hasParentPath()
+             ? PathUtils.getFullyQualifiedIntfClassName(getParentPath())
+             :ClassNames.TEMPLATE;
     }
 
     public boolean isParent()
