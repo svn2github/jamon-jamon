@@ -446,7 +446,6 @@ public class ProxyGenerator extends AbstractSourceGenerator
 
         // Only generate the getTypedImplData method if we're actually going to use it.
         if (! m_templateUnit.isParent()
-            || ! m_templateUnit.getRenderArgs().isEmpty()
             || ! m_templateUnit.getSignatureOptionalArgs().isEmpty()
             || m_templateUnit.getJamonContextType() != null) {
             generateGetTypedImplData();
