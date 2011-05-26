@@ -159,12 +159,10 @@ public class Analyzer
                     {
                         String replacedTemplatePath =
                             getAbsolutePath(computePath(p_replaces.getPath()));
-                        try
-                        {
-                            //FIXME: verify that the replaced template is not abstract.
-                            TemplateDescription replacedTemplateDescription =
-                                m_describer.getTemplateDescription(
-                                    replacedTemplatePath, p_replaces.getLocation());
+                        //FIXME: verify that the replaced template is not abstract.
+                        TemplateDescription replacedTemplateDescription =
+                            getTemplateDescription(replacedTemplatePath, p_replaces.getLocation());
+                        if (replacedTemplateDescription != null) {
                             getTemplateUnit().setReplacedTemplatePath(
                                 replacedTemplatePath, replacedTemplateDescription);
                             verifyRequiredArgsComeFromReplacedTemplate(
@@ -173,14 +171,6 @@ public class Analyzer
                                 p_replaces.getLocation(), replacedTemplateDescription);
                             verifyOptionalArgsComeFromReplacedTemplate(
                                 p_replaces.getLocation(), replacedTemplateDescription);
-                        }
-                        catch (ParserErrorImpl e)
-                        {
-                            m_errors.addError(e);
-                        }
-                        catch (IOException e)
-                        {
-                            addError(e.getMessage(), p_replaces.getLocation());
                         }
                     }
                 }
@@ -395,35 +385,10 @@ public class Analyzer
             String parentPath =
                 getAbsolutePath(computePath(p_extends.getPath()));
             getTemplateUnit().setParentPath(parentPath);
-            if (m_children.contains(parentPath))
-            {
-                addError(
-                    "cyclic inheritance involving " + parentPath,
-                    p_extends.getLocation());
-            }
-            else
-            {
-                m_children.add(parentPath);
-                try
-                {
-                    getTemplateUnit().setParentDescription(
-                        m_describer.getTemplateDescription(
-                            parentPath,
-                            p_extends.getLocation(),
-                            m_children));
-                }
-                catch (ParserErrorImpl e)
-                {
-                    m_errors.addError(e);
-                }
-                catch (ParserErrorsImpl e)
-                {
-                    m_errors.addErrors(e);
-                }
-                catch (IOException e)
-                {
-                    addError(e.getMessage(), p_extends.getLocation());
-                }
+            TemplateDescription parentDescription =
+                getTemplateDescription(parentPath, p_extends.getLocation());
+            if (parentDescription != null) {
+                getTemplateUnit().setParentDescription(parentDescription);
             }
         }
 
@@ -908,5 +873,39 @@ public class Analyzer
     private void addStatement(Statement p_statement)
     {
         getCurrentStatementBlock().addStatement(p_statement);
+    }
+
+    private TemplateDescription getTemplateDescription(String p_path, Location p_location)
+    {
+        if (m_children.contains(p_path))
+        {
+            addError(
+                "cyclic inheritance or replacement involving " + p_path, p_location);
+            return null;
+        }
+        else
+        {
+            m_children.add(p_path);
+            try
+            {
+                return m_describer.getTemplateDescription(
+                        p_path,
+                        p_location,
+                        m_children);
+            }
+            catch (ParserErrorImpl e)
+            {
+                m_errors.addError(e);
+            }
+            catch (ParserErrorsImpl e)
+            {
+                m_errors.addErrors(e);
+            }
+            catch (IOException e)
+            {
+                addError(e.getMessage(), p_location);
+            }
+            return null;
+        }
     }
 }

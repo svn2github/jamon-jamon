@@ -195,13 +195,13 @@ public class AnalyzerTest extends TestCase
         assertEquals(
             Arrays.asList(
                 new AnnotationNode(
-                    new LocationImpl(new TemplateResourceLocation(PATH), 1, 2),
+                    location(1, 2),
                     "@Foo ", AnnotationType.IMPL),
                 new AnnotationNode(
-                    new LocationImpl(new TemplateResourceLocation(PATH), 2, 1),
+                    location(2, 1),
                     "@Bar", AnnotationType.PROXY),
                 new AnnotationNode(
-                    new LocationImpl(new TemplateResourceLocation(PATH), 3, 1),
+                    location(3, 1),
                     "@Baz", AnnotationType.BOTH)),
             templateUnit.getAnnotations());
     }
@@ -219,7 +219,7 @@ public class AnalyzerTest extends TestCase
         analyzeExpectingErrors(
             ImmutableMap.of(PATH, "<%abstract><%replaces /foo>"),
             new ParserErrorImpl(
-                new LocationImpl(new TemplateResourceLocation(PATH), 1, 12),
+                location(1, 12),
                 "an abstract template cannot replace another template"));
     }
 
@@ -230,10 +230,10 @@ public class AnalyzerTest extends TestCase
                 PATH, "<%replaces /foo><%args>int i; int j;</%args>",
                 "/foo", ""),
             new ParserErrorImpl(
-                new LocationImpl(new TemplateResourceLocation(PATH), 1, 1),
+                location(1, 1),
                 "Replaced template contains no required argument named i"),
             new ParserErrorImpl(
-                new LocationImpl(new TemplateResourceLocation(PATH), 1, 1),
+                location(1, 1),
                 "Replaced template contains no required argument named j"));
     }
 
@@ -244,8 +244,8 @@ public class AnalyzerTest extends TestCase
                 PATH, "<%replaces /foo><%frag f/>",
                 "/foo", ""),
                 new ParserErrorImpl(
-                    new LocationImpl(new TemplateResourceLocation(PATH), 1, 1),
-                "Replaced template contains no fragment argument named f"));
+                    location(1,1),
+                    "Replaced template contains no fragment argument named f"));
     }
 
     public void testMissingOptionalArgsInReplacement() throws Exception
@@ -255,10 +255,23 @@ public class AnalyzerTest extends TestCase
                 PATH, "<%replaces /foo><%args>int i = 1; int j = 2; int k = 3;</%args>",
                 "/foo", "<%args>int j = 2; int k;</%args>"),
                 new ParserErrorImpl(
-                    new LocationImpl(new TemplateResourceLocation(PATH), 1, 1),
-                "Replaced template contains no required or optional argument named i"));
+                    location(1, 1),
+                    "Replaced template contains no required or optional argument named i"));
     }
 
+    public void testCircularInheritance() throws Exception
+    {
+        analyzeExpectingErrors(
+            ImmutableMap.of(PATH, "<%extends " + PATH + ">"),
+            new ParserErrorImpl(location(1, 1), "cyclic inheritance or replacement involving " + PATH));
+    }
+
+    public void testCircularReplacement() throws Exception
+    {
+        analyzeExpectingErrors(
+            ImmutableMap.of(PATH, "<%replaces " + PATH + ">"),
+            new ParserErrorImpl(location(1, 1), "cyclic inheritance or replacement involving " + PATH));
+    }
 
     private void analyzeExpectingErrors(
         Map<String, String> p_contents, ParserErrorImpl... p_errors) throws IOException
@@ -276,5 +289,9 @@ public class AnalyzerTest extends TestCase
     private TemplateUnit analyze(Map<String, String> p_contents) throws IOException {
         return new Analyzer(PATH, new TemplateDescriber(
             new MockTemplateSource(p_contents), getClass().getClassLoader())).analyze();
+    }
+
+    private LocationImpl location(int p_line, int p_column) {
+        return new LocationImpl(new TemplateResourceLocation(PATH), p_line, p_column);
     }
 }
