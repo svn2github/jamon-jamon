@@ -1,0 +1,7 @@
+<%annotate @SuppressWarnings("unused") #impl %>
+<%abstract>
+<%args>
+  String s1;
+  int i1 = 3;
+</%args>
+<%frag f/>

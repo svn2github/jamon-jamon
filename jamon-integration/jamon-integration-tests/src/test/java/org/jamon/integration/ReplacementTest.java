@@ -8,6 +8,7 @@ import org.jamon.TemplateManager;
 import org.junit.Test;
 
 import test.jamon.replacement.Api;
+import test.jamon.replacement.ApiChildReplacementCaller;
 import test.jamon.replacement.ApiWithFargsCaller;
 import test.jamon.replacement.GenericApiCaller;
 
@@ -33,7 +34,7 @@ public class ReplacementTest
     @Test
     public void testSimpleReplacement() throws Exception
     {
-        assertEquals("Implementor: 3", new Api(TEMPLATE_MANAGER).makeRenderer(3).asString());
+        assertEquals("Implementor: 3 4", new Api(TEMPLATE_MANAGER).makeRenderer(3, 4).asString());
     }
 
     @Test
@@ -50,5 +51,12 @@ public class ReplacementTest
         assertEquals(
             "|x||y|",
             new GenericApiCaller(TEMPLATE_MANAGER).makeRenderer().asString());
+    }
+
+    @Test
+    public void testReplacementOfChildTemplate() throws Exception {
+        assertEquals(
+            "s1: hello\ns2: t\ni1: 1\ni2: 5\nfragment f\nfragment g",
+            new ApiChildReplacementCaller(TEMPLATE_MANAGER).makeRenderer().asString());
     }
 }

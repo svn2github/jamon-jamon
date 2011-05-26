@@ -1,5 +1,6 @@
 <%replaces Api>
 <%args>
   int i;
+  int j;
 </%args>
-Implementor: <% i %>
+Implementor: <% i %> <% j %>

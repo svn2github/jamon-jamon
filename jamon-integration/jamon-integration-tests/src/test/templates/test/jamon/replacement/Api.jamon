@@ -1,4 +1,5 @@
 <%annotate @SuppressWarnings("unused") #impl %>
 <%args>
   int i;
+  int j;
 </%args>

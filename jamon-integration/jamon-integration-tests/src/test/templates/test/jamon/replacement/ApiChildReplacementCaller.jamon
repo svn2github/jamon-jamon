@@ -1,0 +1,4 @@
+<&|| ApiChild; s1 = "hello"; i2 = 5; &>
+<|f>fragment f</|>
+<|g>fragment g</|>
+</&>

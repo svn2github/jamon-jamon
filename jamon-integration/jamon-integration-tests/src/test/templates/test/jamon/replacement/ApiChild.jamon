@@ -1,0 +1,7 @@
+<%annotate @SuppressWarnings("unused") #impl %>
+<%extends ApiParent>
+<%args>
+ String s2 = "t";
+ int i2;
+</%args>
+<%frag g/>

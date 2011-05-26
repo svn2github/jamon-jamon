@@ -1,0 +1,15 @@
+<%replaces ApiChild>
+<%args>
+ String s1;
+ String s2 = "t";
+ int i1 = 1;
+ int i2;
+</%args>
+<%frag f/>
+<%frag g/>
+s1: <% s1 %>
+s2: <% s2 %>
+i1: <% i1 %>
+i2: <% i2 %>
+<& f &>
+<& g &>
