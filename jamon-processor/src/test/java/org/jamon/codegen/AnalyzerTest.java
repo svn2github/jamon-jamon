@@ -108,11 +108,7 @@ public class AnalyzerTest extends TestCase
 
     private TemplateUnit analyzeText(String p_templateText) throws IOException
     {
-        return new Analyzer(
-            PATH,
-            new TemplateDescriber(new MockTemplateSource(ImmutableMap.of(PATH, p_templateText)),
-                                  getClass().getClassLoader()))
-        .analyze();
+        return analyze(ImmutableMap.of(PATH, p_templateText));
     }
 
     private void checkLoopBlock(
@@ -212,33 +208,73 @@ public class AnalyzerTest extends TestCase
 
     public void testAbstractReplaces() throws Exception
     {
-        TemplateUnit templateUnit = new Analyzer(
-            PATH,
-            new TemplateDescriber(
-                new MockTemplateSource(
-                    ImmutableMap.of(
-                        PATH, "<%replaces /foo>",
-                        "/foo", "")), // TemplateDescriber will need to see the source for /foo
-                getClass().getClassLoader()))
-        .analyze();
+        TemplateUnit templateUnit = analyze(ImmutableMap.of(
+            PATH, "<%replaces /foo>",
+            "/foo", "")); // TemplateDescriber will need to see the source for /foo
         assertEquals("/foo", templateUnit.getReplacedTemplatePath());
     }
 
     public void testAbstractReplacesError() throws Exception
     {
-        try
-        {
-            analyzeText("<%abstract><%replaces /foo>");
+        analyzeExpectingErrors(
+            ImmutableMap.of(PATH, "<%abstract><%replaces /foo>"),
+            new ParserErrorImpl(
+                new LocationImpl(new TemplateResourceLocation(PATH), 1, 12),
+                "an abstract template cannot replace another template"));
+    }
+
+    public void testMissingRequiredArgsInReplacement() throws Exception
+    {
+        analyzeExpectingErrors(
+            ImmutableMap.of(
+                PATH, "<%replaces /foo><%args>int i; int j;</%args>",
+                "/foo", ""),
+            new ParserErrorImpl(
+                new LocationImpl(new TemplateResourceLocation(PATH), 1, 1),
+                "Replaced template contains no required argument named i"),
+            new ParserErrorImpl(
+                new LocationImpl(new TemplateResourceLocation(PATH), 1, 1),
+                "Replaced template contains no required argument named j"));
+    }
+
+    public void testMissingFragsInReplacement() throws Exception
+    {
+        analyzeExpectingErrors(
+            ImmutableMap.of(
+                PATH, "<%replaces /foo><%frag f/>",
+                "/foo", ""),
+                new ParserErrorImpl(
+                    new LocationImpl(new TemplateResourceLocation(PATH), 1, 1),
+                "Replaced template contains no fragment argument named f"));
+    }
+
+    public void testMissingOptionalArgsInReplacement() throws Exception
+    {
+        analyzeExpectingErrors(
+            ImmutableMap.of(
+                PATH, "<%replaces /foo><%args>int i = 1; int j = 2; int k = 3;</%args>",
+                "/foo", "<%args>int j = 2; int k;</%args>"),
+                new ParserErrorImpl(
+                    new LocationImpl(new TemplateResourceLocation(PATH), 1, 1),
+                "Replaced template contains no required or optional argument named i"));
+    }
+
+
+    private void analyzeExpectingErrors(
+        Map<String, String> p_contents, ParserErrorImpl... p_errors) throws IOException
+    {
+        try {
+            analyze(p_contents);
             fail("Exception expected");
         }
         catch (ParserErrorsImpl e)
         {
-            assertEquals(
-                Arrays.asList(
-                    new ParserErrorImpl(
-                        new LocationImpl(new TemplateResourceLocation(PATH), 1, 12),
-                    "an abstract template cannot replace another template")),
-                    e.getErrors());
+            assertEquals(Arrays.asList(p_errors), e.getErrors());
         }
+    }
+
+    private TemplateUnit analyze(Map<String, String> p_contents) throws IOException {
+        return new Analyzer(PATH, new TemplateDescriber(
+            new MockTemplateSource(p_contents), getClass().getClassLoader())).analyze();
     }
 }

@@ -194,7 +194,7 @@ public class Analyzer
             p_location,
             p_replacedTemplateDescription.getRequiredArgs().iterator(),
             getTemplateUnit().getSignatureRequiredArgs(),
-            "fragment");
+            "required");
     }
 
     private void verifyFragmentArgsComeFromReplacedTemplate(
@@ -233,7 +233,7 @@ public class Analyzer
         for (T arg: templateArgs) {
             if (! replacedTemplateArgNames.contains(arg.getName())) {
                 addError(
-                    "Implemented template contains no " + argumentKind + " argument named "
+                    "Replaced template contains no " + argumentKind + " argument named "
                     + arg.getName(),
                     p_location);
             }
