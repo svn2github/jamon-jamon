@@ -1,0 +1,5 @@
+<%abstract>
+<%args>
+  int i;
+</%args>
+Parent: <% i %> <& *CHILD &>

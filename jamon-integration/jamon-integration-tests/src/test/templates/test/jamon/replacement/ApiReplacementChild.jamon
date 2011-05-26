@@ -1,0 +1,6 @@
+<%replaces Api>
+<%extends ApiReplacementParent>
+<%args>
+  int j;
+</%args>
+Child: <% j %>
