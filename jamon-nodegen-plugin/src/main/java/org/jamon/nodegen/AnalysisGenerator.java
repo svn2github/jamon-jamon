@@ -10,8 +10,8 @@ public class AnalysisGenerator
     private final String m_packageName;
     private final File m_targetDir;
     private final Iterable<NodeDescriptor> m_nodes;
-    
-    public AnalysisGenerator(String p_packageName, File p_targetDir, Iterable<NodeDescriptor> p_nodes) 
+
+    public AnalysisGenerator(String p_packageName, File p_targetDir, Iterable<NodeDescriptor> p_nodes)
     {
         m_packageName = p_packageName;
         m_targetDir = p_targetDir;
@@ -53,6 +53,7 @@ public class AnalysisGenerator
     {
         final PrintWriter writer = new PrintWriter(new FileWriter(new File(m_targetDir, "DepthFirstAnalysisAdapter.java")));
         writer.println("package " + m_packageName + ";");
+        writer.println("@SuppressWarnings(\"unused\")");
         writer.println(
             "public class DepthFirstAnalysisAdapter implements Analysis");
         writer.println("{");
@@ -61,10 +62,10 @@ public class AnalysisGenerator
             String name = node.getName();
             writer.println(
                 "  public void in" + name
-                + "(@SuppressWarnings(\"unused\") " + name + " p_node) {}");
+                + "(" + name + " p_node) {}");
             writer.println(
                 "  public void out" + name
-                + "(@SuppressWarnings(\"unused\") " + name + " p_node) {}");
+                + "(" + name + " p_node) {}");
             writer.println(
                 "  public void case" + name + "(" + name + " p_node)");
             writer.println("  {");
