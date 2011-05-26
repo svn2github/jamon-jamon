@@ -486,7 +486,7 @@ public class ProxyGenerator extends AbstractSourceGenerator
             getOptionalArgNames(replacedTemplateDescription);
         for (OptionalArgument arg: replacedTemplateDescription.getOptionalArgs()) {
             if (replacedTemplateOptionalArgNames.contains(arg.getName())) {
-                m_writer.println("if(implData." + arg.getIsNotDefaultName() + ") {");
+                m_writer.println("if(implData." + arg.getIsNotDefaultName() + "()) {");
                 m_writer.println(
                     "  " + arg.getSetterName() + "(implData." + arg.getGetterName() + "());");
                 m_writer.println("}");
