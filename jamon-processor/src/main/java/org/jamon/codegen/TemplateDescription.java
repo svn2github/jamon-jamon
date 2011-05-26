@@ -195,6 +195,11 @@ public class TemplateDescription
         return m_optionalArgs;
     }
 
+    /**
+     * Get the signature hash for the described template. The signature is a
+     * hash which will change in the event that the template's API has changed.
+     * @return the signature hash for this template
+     */
     public String getSignature()
     {
         return m_signature;

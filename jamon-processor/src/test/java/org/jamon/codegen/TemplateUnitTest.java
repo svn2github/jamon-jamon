@@ -28,6 +28,7 @@ import java.util.Set;
 
 import junit.framework.TestCase;
 
+import org.jamon.api.Location;
 import org.jamon.compiler.TemplateFileLocation;
 import org.jamon.node.ArgNameNode;
 import org.jamon.node.ArgValueNode;
@@ -40,6 +41,7 @@ import org.jamon.node.ParentArgWithDefaultNode;
 public class TemplateUnitTest
     extends TestCase
 {
+    private static final Location LOCATION = new LocationImpl(null, 1, 1);
 
     public void testInheritanceDepth() throws Exception
     {
@@ -76,7 +78,7 @@ public class TemplateUnitTest
         child.setParentPath(parent.getName());
         child.setParentDescription(new TemplateDescription(parent));
 
-        org.jamon.api.Location loc = new LocationImpl(new TemplateFileLocation("x"), 1,1);
+        Location loc = new LocationImpl(new TemplateFileLocation("x"), 1,1);
         child.addParentArg(new ParentArgNode(loc, new ArgNameNode(loc, "pr2")));
         child.addParentArg(new ParentArgWithDefaultNode(
             loc, new ArgNameNode(loc, "po2"), new ArgValueNode(loc, "oc2")));
@@ -156,11 +158,10 @@ public class TemplateUnitTest
         checkSigIsUnique(unit, sigs);
         unit.addFragmentArg(new FragmentArgument(g, null));
 
-        org.jamon.api.Location loc = new LocationImpl(null, 1, 1);
-        GenericsParamNode genericsParamNode = new GenericsParamNode(loc, "d");
+        GenericsParamNode genericsParamNode = new GenericsParamNode(LOCATION, "d");
         unit.addGenericsParamNode(genericsParamNode);
         checkSigIsUnique(unit, sigs);
-        genericsParamNode.addBound(new GenericsBoundNode(loc, "String"));
+        genericsParamNode.addBound(new GenericsBoundNode(LOCATION, "String"));
         checkSigIsUnique(unit, sigs);
     }
 
@@ -228,11 +229,20 @@ public class TemplateUnitTest
         assertEquals("Parent", child.getProxyParentClass());
     }
 
-    public void testGetProxyParentClassOfImplementingTemplate()
+    public void testGetProxyParentClassOfReplacingTemplate()
     {
-        TemplateUnit impl= new TemplateUnit("/impl", null);
-        impl.setReplacedTemplatePath("/api/foo", null);
-        assertEquals("api.foo", impl.getProxyParentClass());
+        TemplateUnit replacement = new TemplateUnit("/impl", null);
+        replacement.setReplacedTemplatePath("/api/foo", null);
+        assertEquals("api.foo", replacement.getProxyParentClass());
+    }
+
+    public void testGetProxyParentClassOfTemplateReplacingGenericTemplate()
+    {
+        TemplateUnit replacement = new TemplateUnit("/impl", null);
+        replacement.addGenericsParamNode(new GenericsParamNode(LOCATION, "T"));
+
+        replacement.setReplacedTemplatePath("/api/foo", null);
+        assertEquals("api.foo<T>", replacement.getProxyParentClass());
     }
 
     private void checkSigIsUnique(TemplateUnit p_unit, Set<String> p_set)

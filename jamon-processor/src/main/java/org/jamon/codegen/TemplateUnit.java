@@ -335,7 +335,8 @@ public class TemplateUnit
         }
         else if (isReplacing())
         {
-            return PathUtils.getFullyQualifiedIntfClassName(m_replacedTemplatePath);
+            return PathUtils.getFullyQualifiedIntfClassName(m_replacedTemplatePath)
+                + getGenericParams().generateGenericParamsList();
 
         }
         else
@@ -496,6 +497,11 @@ public class TemplateUnit
         }
     }
 
+    /**
+     * Get the signature hash for this template. The signature is a hash which will change in the
+     * event that the template's API has changed.
+     * @return the signature hash for this template
+     */
     public String getSignature()
     {
         try

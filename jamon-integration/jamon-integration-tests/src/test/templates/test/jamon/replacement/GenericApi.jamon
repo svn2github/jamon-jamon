@@ -1,0 +1,5 @@
+<%import>java.util.List;</%import>
+<%generic>T</%generic>
+<%args>List<T> list;</%args>
+<%frag f>T t;</%frag>
+not replaced

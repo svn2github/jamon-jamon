@@ -1,0 +1,6 @@
+<%replaces GenericApi>
+<%import>java.util.List;</%import>
+<%generic>T</%generic>
+<%args>List<T> list;</%args>
+<%frag f>T t;</%frag>
+<%for T e: list %><& f: e &></%for>

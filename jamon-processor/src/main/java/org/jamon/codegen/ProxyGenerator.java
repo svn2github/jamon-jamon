@@ -304,8 +304,7 @@ public class ProxyGenerator extends AbstractSourceGenerator
         m_writer.openBlock();
         m_writer.println(
             "return new "
-            + PathUtils.getImplClassName(m_templateUnit.getName())
-            + m_templateUnit.getGenericParams().generateGenericParamsList()
+            + PathUtils.getImplClassName(m_templateUnit.getName()) + genericParamsList()
             + "(getTemplateManager(), getTypedImplData());");
         m_writer.closeBlock();
     }
@@ -346,10 +345,7 @@ public class ProxyGenerator extends AbstractSourceGenerator
         m_writer.openBlock();
         if (! m_templateUnit.getRenderArgs().isEmpty())
         {
-            m_writer.println(
-                "ImplData"
-                + m_templateUnit.getGenericParams().generateGenericParamsList()
-                + " implData = getTypedImplData();");
+            m_writer.println("ImplData" + genericParamsList() + " implData = getTypedImplData();");
             for (AbstractArgument arg: m_templateUnit.getRenderArgs())
             {
                 m_writer.println("implData." + arg.getSetterName()
@@ -444,25 +440,22 @@ public class ProxyGenerator extends AbstractSourceGenerator
             m_writer.println("@Override");
             m_writer.println("protected " + ClassNames.TEMPLATE + ".ImplData" + " makeImplData()");
             m_writer.openBlock();
-            m_writer.println(
-                "return new ImplData"
-                + m_templateUnit.getGenericParams().generateGenericParamsList()
-                             + "();");
+            m_writer.println("return new ImplData" + genericParamsList() + "();");
             m_writer.closeBlock();
         }
 
         m_writer.println(
-            "@SuppressWarnings(\"unchecked\") private ImplData"
-            + m_templateUnit.getGenericParams().generateGenericParamsList()
+            "@SuppressWarnings(\"unchecked\") private ImplData" + genericParamsList()
             + " getTypedImplData()");
         m_writer.openBlock();
-        m_writer.println(
-            "return (ImplData"
-            + m_templateUnit.getGenericParams().generateGenericParamsList()
-            + ") getImplData();");
+        m_writer.println("return (ImplData" + genericParamsList() + ") getImplData();");
         m_writer.closeBlock();
     }
 
+    /**
+     * Generate the populateFrom method, which is used in replacement templates to populate
+     * the template's ImplData instance with an instance of ImplData for the replaced template.
+     */
     private void generatePopulateFrom()
     {
         for (FragmentArgument farg: m_templateUnit.getFragmentArgs()) {
@@ -492,7 +485,8 @@ public class ProxyGenerator extends AbstractSourceGenerator
         }
         for (FragmentArgument farg: m_templateUnit.getFragmentArgs()) {
             m_writer.println(
-                farg.getSetterName() + "(new " + getFragmentDelegatorName(farg)
+                farg.getSetterName()
+                + "(new " + getFragmentDelegatorName(farg) + genericParamsList()
                 + "(implData." + farg.getGetterName() + "()));");
         }
         m_writer.closeBlock();
@@ -506,7 +500,7 @@ public class ProxyGenerator extends AbstractSourceGenerator
      */
     private void generateFragmentDelegator(FragmentArgument farg)
     {
-        String fragmentInterfaceName = "Intf.Fragment_" + farg.getName();
+        String fragmentInterfaceName = "Intf.Fragment_" + farg.getName() + genericParamsList();
         String replacedFragmentInterfaceName =
             getReplacedProxyClassName() + "." + fragmentInterfaceName;
         FragmentUnit fragmentUnit = farg.getFragmentUnit();
@@ -514,6 +508,7 @@ public class ProxyGenerator extends AbstractSourceGenerator
         // passed to the fragment.
         m_writer.print(
             "private static class " + getFragmentDelegatorName(farg)
+            + m_templateUnit.getGenericParams().generateGenericsDeclaration()
             + " implements " + fragmentInterfaceName);
         m_writer.openBlock();
         m_writer.println("private final " + replacedFragmentInterfaceName + " frag;");
@@ -564,12 +559,12 @@ public class ProxyGenerator extends AbstractSourceGenerator
 
     private String getReplacedImplDataClassName()
     {
-        return getReplacedProxyClassName() + ".ImplData";
+        return getReplacedProxyClassName() + ".ImplData" + genericParamsList();
     }
 
     private String getReplacedIntfClassName()
     {
-        return getReplacedProxyClassName() + ".Intf";
+        return getReplacedProxyClassName() + ".Intf" + genericParamsList();
     }
 
     private String getReplacedProxyClassName()
@@ -643,7 +638,7 @@ public class ProxyGenerator extends AbstractSourceGenerator
             m_writer.print(pkgName + ".");
         }
         m_writer.print(getClassName());
-        m_writer.print(m_templateUnit.getGenericParams().generateGenericParamsList());
+        m_writer.print(genericParamsList());
     }
 
     private void generateIntf()
@@ -807,5 +802,10 @@ public class ProxyGenerator extends AbstractSourceGenerator
     {
         m_writer.println();
         m_writer.closeBlock();
+    }
+
+    private String genericParamsList()
+    {
+        return m_templateUnit.getGenericParams().generateGenericParamsList();
     }
 }
