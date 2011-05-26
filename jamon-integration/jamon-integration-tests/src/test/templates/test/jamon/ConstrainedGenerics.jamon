@@ -1,3 +1,4 @@
+<%annotate @SuppressWarnings("unused") #impl %>
 <%doc>
  Test for bug 3300744: Constrained type parameters can cause compilation errors
  There is no code executing this template; the tests consists of the generated java code compiling

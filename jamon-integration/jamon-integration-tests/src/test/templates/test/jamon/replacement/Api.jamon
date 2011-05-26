@@ -1,3 +1,4 @@
+<%annotate @SuppressWarnings("unused") #impl %>
 <%args>
   int i;
 </%args>

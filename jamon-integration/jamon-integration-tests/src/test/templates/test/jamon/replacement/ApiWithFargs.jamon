@@ -1,2 +1,3 @@
+<%annotate @SuppressWarnings("unused") #impl %>
 <%args>int x;</%args>
 <%frag f>int y;</%frag>
