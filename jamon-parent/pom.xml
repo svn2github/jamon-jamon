@@ -50,9 +50,9 @@
         <url>http://www.jamon.org/</url>
     </organization>
     <scm>
-        <url>http://jamon.svn.sourceforge.net/viewvc/jamon/trunk/jamon/${artifactId}/</url>
-        <connection>scm:svn:https://jamon.svn.sourceforge.net/svnroot/jamon/trunk/jamon/${artifactId}/</connection>
-        <developerConnection>scm:svn:https://jamon.svn.sourceforge.net/svnroot/jamon/trunk/jamon/${artifactId}/</developerConnection>
+        <url>http://jamon.svn.sourceforge.net/viewvc/jamon/trunk/jamon/${project.artifactId}/</url>
+        <connection>scm:svn:https://jamon.svn.sourceforge.net/svnroot/jamon/trunk/jamon/${project.artifactId}/</connection>
+        <developerConnection>scm:svn:https://jamon.svn.sourceforge.net/svnroot/jamon/trunk/jamon/${project.artifactId}/</developerConnection>
     </scm>
     <distributionManagement>
         <repository>
@@ -64,7 +64,7 @@
         <site>
             <id>jamon</id>
             <name>Jamon</name>
-            <url>scpexe://jamon@maven.jamon.org/home/jamon/maven2-projects/${artifactId}/${version}</url>
+            <url>scpexe://jamon@maven.jamon.org/home/jamon/maven2-projects/${project.artifactId}/${project.version}</url>
         </site>
     </distributionManagement>
     <repositories>
@@ -107,7 +107,7 @@
               <artifactId>maven-release-plugin</artifactId>
               <version>2.1</version>
               <configuration>
-                <tagBase>https://jamon.svn.sourceforge.net/svnroot/jamon/releases/${artifactId}</tagBase>
+                <tagBase>https://jamon.svn.sourceforge.net/svnroot/jamon/releases/${project.artifactId}</tagBase>
                 <!-- don't have maven replace our DRY svn urls with
                      hard-coded ones.  Requires running svn revert
                      pom.xml after a release, but otherwise is good. -->
@@ -136,6 +136,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-project-info-reports-plugin</artifactId>
+                <version>2.4</version>
                 <reportSets>
                     <reportSet>
                         <reports>
@@ -153,6 +154,7 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <version>2.2</version>
                 <artifactId>maven-changelog-plugin</artifactId>
                 <configuration>
                   <type>range</type>
