@@ -301,18 +301,30 @@ public class TemplateUnit
      * @param p_replacedTemplatePath the path of the template which this template replaced
      * @param p_templateDescription the description of the replaced template
      */
-    public void setReplacedTemplatePath(
+    public void setReplacedTemplatePathAndDescription(
         String p_replacedTemplatePath, TemplateDescription p_templateDescription) {
         m_replacedTemplatePath = p_replacedTemplatePath;
         m_replacedTemplateDescription = p_templateDescription;
         m_dependencies.add(p_replacedTemplatePath);
     }
 
+    /**
+     * Get the path of the template which this template replaces, or null if it is not
+     * replacing a template.
+     * @return the path of the template which this template replaces, or null if it is not
+     * replacing a template.
+     */
     public String getReplacedTemplatePath()
     {
         return m_replacedTemplatePath;
     }
 
+    /**
+     * Get the description of the template this template is replacing, or null if it is not
+     * replacing a template
+     * @return the description of the template this template is replacing, or null if it is not
+     * replacing a template
+     */
     public TemplateDescription getReplacedTemplateDescription() {
         return m_replacedTemplateDescription;
     }

@@ -163,7 +163,7 @@ public class Analyzer
                         TemplateDescription replacedTemplateDescription =
                             getTemplateDescription(replacedTemplatePath, p_replaces.getLocation());
                         if (replacedTemplateDescription != null) {
-                            getTemplateUnit().setReplacedTemplatePath(
+                            getTemplateUnit().setReplacedTemplatePathAndDescription(
                                 replacedTemplatePath, replacedTemplateDescription);
                             verifyRequiredArgsComeFromReplacedTemplate(
                                 p_replaces.getLocation(), replacedTemplateDescription);
