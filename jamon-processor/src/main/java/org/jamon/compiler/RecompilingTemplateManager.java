@@ -33,8 +33,11 @@ import java.util.List;
 import java.util.Map;
 
 import org.jamon.AbstractTemplateImpl;
+import org.jamon.AbstractTemplateManager;
 import org.jamon.AbstractTemplateProxy;
+import org.jamon.IdentityTemplateReplacer;
 import org.jamon.TemplateManager;
+import org.jamon.TemplateReplacer;
 import org.jamon.annotations.Template;
 import org.jamon.api.SourceGenerator;
 import org.jamon.api.TemplateSource;
@@ -90,8 +93,7 @@ import org.jamon.util.WorkDirClassLoader;
  * </ul>
  */
 
-public class RecompilingTemplateManager
-    implements TemplateManager
+public class RecompilingTemplateManager extends AbstractTemplateManager
 {
     public static class Data
     {
@@ -160,6 +162,17 @@ public class RecompilingTemplateManager
             return classLoader;
         }
         private ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+
+
+        public void setTemplateReplacer(TemplateReplacer p_templateReplacer)
+        {
+            templateReplacer = p_templateReplacer;
+        }
+        public TemplateReplacer getTemplateReplacer()
+        {
+            return templateReplacer;
+        }
+        private TemplateReplacer templateReplacer;
     }
 
     public RecompilingTemplateManager()
@@ -169,6 +182,10 @@ public class RecompilingTemplateManager
 
     public RecompilingTemplateManager(Data p_data)
     {
+        super(p_data.getTemplateReplacer() == null
+            ? IdentityTemplateReplacer.INSTANCE
+            : p_data.getTemplateReplacer());
+
         m_classLoader = p_data.classLoader == null
             ? getClass().getClassLoader()
             : p_data.classLoader;
@@ -200,10 +217,11 @@ public class RecompilingTemplateManager
         });
     }
 
-    public AbstractTemplateProxy.Intf constructImpl
-        (AbstractTemplateProxy p_proxy)
+    public AbstractTemplateProxy.Intf constructImpl(
+      AbstractTemplateProxy p_proxy, Object p_jamonContext)
     {
-        return p_proxy.constructImpl(getImplClass(p_proxy.getClass()));
+        return getTemplateReplacer().getReplacement(p_proxy, p_jamonContext).constructImpl(
+          getImplClass(p_proxy.getClass()));
     }
 
     /**

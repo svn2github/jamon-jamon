@@ -15,7 +15,7 @@
  * created by Jay Sachs are Copyright (C) 2003 Jay Sachs.  All Rights
  * Reserved.
  *
- * Contributor(s):
+ * Contributor(s): Ian Robertson
  */
 
 package org.jamon;
@@ -28,13 +28,24 @@ public interface TemplateManager
 {
     /**
      * Given a proxy, return an instance of the executable code for
-     * that proxy's template.
+     * that proxy's template or a suitable replacement.
      *
      * @param p_proxy a proxy for the template
      *
      * @return a <code>Template</code> instance
      **/
     AbstractTemplateProxy.Intf constructImpl(AbstractTemplateProxy p_proxy);
+
+    /**
+     * Given a proxy and a jamonContext, return an instance of the executable code for
+     * that proxy's template or a suitable replacement, possibly based on the jamonContext.
+     *
+     * @param p_proxy a proxy for the template
+     * @param p_jamonContext the current jamonContext (can be {@code null})
+     *
+     * @return a <code>Template</code> instance
+     **/
+    AbstractTemplateProxy.Intf constructImpl(AbstractTemplateProxy p_proxy, Object p_jamonContext);
 
     /**
      * Given a template path, return a proxy for that template.

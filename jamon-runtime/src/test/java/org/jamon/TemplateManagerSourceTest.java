@@ -51,11 +51,10 @@ public class TemplateManagerSourceTest
         assertSame(tm, TemplateManagerSource.getTemplateManagerFor(""));
     }
 
-    private static class TestTemplateManager
-        implements TemplateManager
+    private static class TestTemplateManager extends AbstractTemplateManager
     {
         public AbstractTemplateProxy.Intf constructImpl
-            (AbstractTemplateProxy p_proxy)
+            (AbstractTemplateProxy p_proxy, Object p_jamonContext)
         {
             return null;
         }

@@ -33,8 +33,7 @@ package org.jamon;
  * TemplateManagerSource}
  **/
 
-public class BasicTemplateManager
-    implements TemplateManager
+public class BasicTemplateManager extends AbstractTemplateManager
 {
     /**
      * Creates a new <code>BasicTemplateManager</code> using a default
@@ -54,15 +53,29 @@ public class BasicTemplateManager
      **/
     public BasicTemplateManager(ClassLoader p_classLoader)
     {
+        this(p_classLoader, IdentityTemplateReplacer.INSTANCE);
+    }
+
+    /**
+     * Creates a new <code>BasicTemplateManager</code> from a
+     * specified <code>ClassLoader</code>.
+     *
+     * @param p_classLoader the <code>ClassLoader</code> to use to
+     * load templates.
+     * @param p_templateReplacer the {@code TemplateReplacer} to use for replacing templates.
+     **/
+    public BasicTemplateManager(ClassLoader p_classLoader, TemplateReplacer p_templateReplacer)
+    {
+        super(p_templateReplacer);
         m_classLoader = p_classLoader == null
             ? getClass().getClassLoader()
             : p_classLoader;
     }
 
-    public AbstractTemplateProxy.Intf constructImpl
-        (AbstractTemplateProxy p_proxy)
+    public AbstractTemplateProxy.Intf constructImpl(
+        AbstractTemplateProxy p_proxy, Object p_jamonContext)
     {
-        return p_proxy.constructImpl();
+        return getTemplateReplacer().getReplacement(p_proxy, p_jamonContext).constructImpl();
     }
 
     /**
@@ -82,8 +95,8 @@ public class BasicTemplateManager
         }
         catch (ClassNotFoundException e)
         {
-            throw new RuntimeException("The template at path " 
-                                       + p_path 
+            throw new RuntimeException("The template at path "
+                                       + p_path
                                        + " could not be found");
         }
         catch (RuntimeException e)

@@ -29,6 +29,7 @@ import java.util.Map;
 import junit.framework.Assert;
 
 import org.jamon.AbstractTemplateImpl;
+import org.jamon.AbstractTemplateManager;
 import org.jamon.AbstractTemplateProxy;
 import org.jamon.TemplateManager;
 import org.jamon.annotations.Argument;
@@ -67,9 +68,8 @@ import org.jamon.annotations.Template;
  * </pre>
  */
 
-public class JUnitTemplateManager
-    implements TemplateManager,
-               InvocationHandler
+public class JUnitTemplateManager extends AbstractTemplateManager
+  implements InvocationHandler
 {
     /**
      * Construct a <code>JUnitTemplateManager</code>.
@@ -84,7 +84,7 @@ public class JUnitTemplateManager
     {
         m_path = p_path;
         m_optionalArgs = new HashMap<String, Object>(p_optionalArgs);
-        m_requiredArgs = 
+        m_requiredArgs =
             p_requiredArgs == null ? null : p_requiredArgs.clone();
     }
 
@@ -125,7 +125,7 @@ public class JUnitTemplateManager
     private String[] m_optionalArgNames;
 
     public AbstractTemplateProxy.Intf constructImpl(
-        AbstractTemplateProxy p_proxy)
+        AbstractTemplateProxy p_proxy, Object p_jamonContext)
     {
         Assert.assertTrue( m_impl == null );
         String path = classToTemplatePath(p_proxy.getClass());
@@ -149,7 +149,7 @@ public class JUnitTemplateManager
             {
                 throw new RuntimeException(
                     "Impl class for template " + path
-                    + " does not extend " 
+                    + " does not extend "
                     + AbstractTemplateImpl.class.getName());
             }
             Template templateAnnotation =
@@ -318,18 +318,18 @@ public class JUnitTemplateManager
         }
     }
 
-	private static String templatePathToClassName(String p_string)
-	{
-	  int i = 0;
-		while (i < p_string.length() && p_string.charAt(i) == '/')
-		{
-			i++;
-		}
-		return p_string.substring(i).replace('/','.');
-	}
+    private static String templatePathToClassName(String p_string)
+    {
+        int i = 0;
+        while (i < p_string.length() && p_string.charAt(i) == '/')
+        {
+            i++;
+        }
+        return p_string.substring(i).replace('/','.');
+    }
 
-	private static String classToTemplatePath(Class<?> p_class)
-	{
-		return p_class.getName().replace('.','/');
-	}
+    private static String classToTemplatePath(Class<?> p_class)
+    {
+        return p_class.getName().replace('.','/');
+    }
 }
