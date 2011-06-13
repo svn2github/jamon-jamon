@@ -13,6 +13,7 @@ import org.apache.maven.project.MavenProject;
  *
  * @goal generate-ast-nodes
  * @phase generate-source
+ * @threadSafe
  */
 public class NodeGenMojo extends AbstractMojo
 {
@@ -39,7 +40,7 @@ public class NodeGenMojo extends AbstractMojo
             getLog().error(e);
             throw new MojoExecutionException(e.getMessage());
         }
-		project.addCompileSourceRoot(destinationDirectory.getAbsolutePath());
+    project.addCompileSourceRoot(destinationDirectory.getAbsolutePath());
     }
 
     private void initializeTargetDir(File targetDir)
@@ -51,7 +52,7 @@ public class NodeGenMojo extends AbstractMojo
             files[i].delete();
         }
     }
-    
+
     /**
     * @parameter expression="${project}"
     */
@@ -62,13 +63,13 @@ public class NodeGenMojo extends AbstractMojo
      * @required
      */
     private File nodeDescriptionFile;
-    
+
     /**
      * @parameter
      * @required
      */
     private File destinationDirectory;
-    
+
     /**
      * @parameter default-value="org.jamon.node"
      */

@@ -1,6 +1,7 @@
 package org.jamon.nodegen;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
@@ -85,6 +86,6 @@ class NodeMember
     private final String m_name;
     private final boolean m_isList;
 
-    private final static Set<String> NON_NODE_TYPES = new HashSet<String>(
-            Arrays.asList("String", "org.jamon.codegen.AnnotationType"));
+    private final static Set<String> NON_NODE_TYPES = Collections.unmodifiableSet(
+      new HashSet<String>(Arrays.asList("String", "org.jamon.codegen.AnnotationType")));
 }
