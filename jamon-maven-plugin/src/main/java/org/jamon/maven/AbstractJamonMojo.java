@@ -129,9 +129,13 @@ public abstract class AbstractJamonMojo
 
     private List<File> accumulateSources(File p_templateSourceDir) throws MojoExecutionException
     {
-      if (p_templateSourceDir == null)
-      {
-        return Collections.emptyList();
+      if (! p_templateSourceDir.exists()) {
+        throw new MojoExecutionException(
+          "templateSourceDir " + p_templateSourceDir + " does not exist");
+      }
+      if (! p_templateSourceDir.isDirectory()) {
+        throw new MojoExecutionException(
+          "templateSourceDir " + p_templateSourceDir + " is not a directory");
       }
       SourceInclusionScanner scanner = getSourceInclusionScanner( staleMillis );
       scanner.addSourceMapping(new SuffixMapping(".jamon", ".java"));
