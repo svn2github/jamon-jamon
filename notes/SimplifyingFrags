@@ -1,0 +1,40 @@
+Simplifying frags:
+
+Right now, Intf is a protected class, meaning that we also expose the
+frag interfaces as direct inner interfaces of the proxy
+class. Consequently, it is these direct inner interfaces which are
+taken as args to makeRenderer and friends. If we make Intf public and
+directly reference it, then newly compiled templates calling old
+class-only templates will fail, and visa-versa.
+
+We could first (V1) change the render methods to take the Intf classes
+(actually, add a second sig to keep binary compatability), but still
+have callers supply the direct interfaces. Next release(V2), change
+callers to supply the Intf, which will cause them to call the new
+render methods.  Next release(V3), drop the old render methods and the
+direct interfaces.
+
+V0 calling V1: no problems (old render methods still there)
+V1 calling V0: no problems (no change in call)
+
+V1 calling V2: no problems (old render methods stil there)
+V2 calling V1: no problems (new render methods are available)
+
+V2 calling V3: no problems (new render method being called)
+V3 calling V2: no problems (no change in call)
+
+The pain point is in the double declaration of the render
+methods. This should be done only if there are frags, and when there
+are, the method needs to cast them up to avoid recursion.
+
+In general, it seems worthwhile to have the goal that new code could
+call old code; the reverse seems less important.  In that case, we
+could simply leave the direct interfaces in place and call using
+those, but change the render methods. Binary compatability would not
+be preserved, but source-code compatability would. 
+
+So: V1: make Intf public, change render methods to take those. V2:
+change calls to use the Intf methods and drop the old methods.
+
+V1 calling V0: still using the old call syntax; no problem
+V2 calling V1: V1 already has the new sigs.

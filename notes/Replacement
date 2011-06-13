@@ -1,0 +1,97 @@
+Value in having the implementor's parent honored:
+* Allows for code reuse.
+
+Value in having the interface's parent honored:
+* Allows for parameter reuse.
+
+Parameter reuse is primarily for java code's benefit; there, we don't
+need template inheritance as much. So honor the implementor's parent.
+
+Simplest: don't allow implementation and inheritance to mix.
+
+Another option: require parent template structure of the
+implementation to mirror that of the interface.
+
+Another option: convert from the ImplData class of the api to that of
+the implementation. The implementor's ImplData could have a
+constructor taking an instance of the api's ImplData. This allows for
+arbitrary hierarchies on both sides, although the value of hierarchy
+on the api side is unclear, and the potential for confusion is
+significant. A drawback is performance: the ImplData constructor
+involves pointer slinging. However, a good hotspot compiler might
+discover the impl data is a temp data structure and eliminate it
+entirely.
+
+So Implementor.java will look normal, with the additon of:
+
+public static class ImplData ...
+implements ImplDataCompatible<Api.ImplData>
+{
+  public populateFrom(Api.ImplData apiImplData) {
+    setA(apiImplData.getA());
+    if (apiImplData.getOpt__IsNotDefault()) {
+      setOpt(apiImplData.getA())
+    }
+    ...
+  }
+}
+
+ImplementorImpl.java will be completely normal, other than also
+implementing Api.Intf. Or better: Implementor.Intf extends Api.Intf,
+with any Framgment interfaces extending Api's fragment interfaces.
+
+The templateManager will instantiate the appropriate Implementor
+class, call it's getImplData method, cast it to
+AbstractTemplateProxy.ImplDataCompatible<Api.ImplData>, call
+populateFrom(apiImplData), and then call it's constructImpl method,
+returning the result.
+
+But now the problem is that the makeImplData in Implementor cannot
+override makeImplData in Api, because these are incompatible
+types. Not overriding the type on makeImplData can fix this, but then
+the problem shifts to the getImplData method. This needs to have the
+right type so that it can be used internally. Solution: make the
+method called getTypedImplData, and make it private.
+
+Next problem: need to have the frag interfaces declared in
+Implementor.Intf extend those declared in Api.Intf. Alternatively,
+provide converters for these frags. The benefit here is that the frag
+interfaces could come from parents of Implementor.
+
+Things to test:
+ optional arguments
+ signatures
+ replacing an abstract template
+
+Things to do:
+ <%replaceable> tag
+ @Replaceable() and @Replaces(ReplacedTemplate.class, ReplacementConstructor.class)
+ locations on the lines of populateFrom
+
+ReplacingTemplateManager design:
+
+Currently, AbstractReplacingTemplateManager has two flaws. The first
+is that it extends BasicTemplateManager, rather than mixing into it,
+meaning that RecompilingTemplateManager cannot benefit from it. The
+second is that it relies on reflection.
+
+To fix the mixin issue, we want a TemplateReplacer - something which
+given a proxy and an optional jamonContext, will provide a possibly
+alternate proxy object with populated implData. The default replacer
+will simply return the original.
+
+To fix the reflection issue, create a ReplacementConstructor interface with
+a makeReplacement() method. Proxy classes which are replacing can include
+a static inner class implementing this which returns a new proxy
+instance. Alternatively, the Proxy class could itself implement
+ProxyConstructor, but this would be somewhat wasteful, since an
+ImplData and TemplateManager instance would be attached to each
+one. The benefit of having the proxy class directly do this is that
+the TemplateReplacer wouldn't need to generate a static inner class
+instance from the Proxy class. Solution to this: annotate the static
+inner class, not the Proxy class.
+
+Then BasicTemplateManager will simply call
+m_templateReplacer.getReplacement().constructImpl();
+RecompilingTemplateManager will call
+m_templateReplacer.getReplacement().constructImpl(getImplClass(p_proxy.getClass()));
