@@ -31,6 +31,7 @@ import java.util.List;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
+import org.apache.commons.io.FileUtils;
 import org.jamon.Renderer;
 import org.jamon.TemplateManager;
 import org.jamon.compiler.ParserErrorImpl;
@@ -43,7 +44,7 @@ import org.jamon.node.LocationImpl;
 public abstract class TestBase
     extends TestCase
 {
-    @Override public void setUp()
+    @Override public void setUp() throws Exception
     {
         m_recompilingTemplateManager = null;
         resetWriter();
@@ -112,6 +113,10 @@ public abstract class TestBase
             new RecompilingTemplateManager.Data()
                 .setSourceDir(SOURCE_DIR)
                 .setWorkDir(WORK_DIR));
+    }
+
+    protected void clearWorkDir() throws IOException {
+      FileUtils.cleanDirectory(new File(WORK_DIR));
     }
 
     private String removeCrs(CharSequence p_string)

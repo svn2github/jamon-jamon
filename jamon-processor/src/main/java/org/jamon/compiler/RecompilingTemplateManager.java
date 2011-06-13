@@ -164,9 +164,10 @@ public class RecompilingTemplateManager extends AbstractTemplateManager
         private ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 
 
-        public void setTemplateReplacer(TemplateReplacer p_templateReplacer)
+        public Data setTemplateReplacer(TemplateReplacer p_templateReplacer)
         {
             templateReplacer = p_templateReplacer;
+            return this;
         }
         public TemplateReplacer getTemplateReplacer()
         {
@@ -220,8 +221,9 @@ public class RecompilingTemplateManager extends AbstractTemplateManager
     public AbstractTemplateProxy.Intf constructImpl(
       AbstractTemplateProxy p_proxy, Object p_jamonContext)
     {
-        return getTemplateReplacer().getReplacement(p_proxy, p_jamonContext).constructImpl(
-          getImplClass(p_proxy.getClass()));
+        AbstractTemplateProxy replacement =
+          getTemplateReplacer().getReplacement(p_proxy, p_jamonContext);
+        return replacement.constructImpl(getImplClass(replacement.getClass()));
     }
 
     /**
