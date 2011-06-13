@@ -28,7 +28,7 @@ public class InheritanceLoopTest
     {
         expectParserError(
             "ParentLoop2",
-            "cyclic inheritance involving /test/jamon/broken/ParentLoop1",
+            "cyclic inheritance or replacement involving /test/jamon/broken/ParentLoop1",
             1, 1);
     }
 }
