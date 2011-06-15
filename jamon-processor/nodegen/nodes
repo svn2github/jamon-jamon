@@ -26,6 +26,7 @@ ExtendsNode AbstractPathNode:path
 ImplementNode String:name
 ImplementsNode ImplementNode:implement*
 ReplacesNode AbstractPathNode:path
+ReplaceableNode
 AbstractImportNode String:name
 ImportNode:AbstractImportNode
 StaticImportNode:AbstractImportNode

@@ -67,6 +67,7 @@ public class TemplateUnit
     private boolean m_isParent = false;
     private String m_replacedTemplatePath;
     private TemplateDescription m_replacedTemplateDescription;
+    private boolean m_replaceable = false;
     private final List<ClassNode> m_classContent = new LinkedList<ClassNode>();
     private final Set<String> m_dependencies = new HashSet<String>();
     private final Set<String> m_callNames = new HashSet<String>();
@@ -371,6 +372,25 @@ public class TemplateUnit
     public boolean isReplacing()
     {
         return m_replacedTemplatePath != null;
+    }
+
+
+    /**
+     * Set whether this template can be replaced by another one.
+     * @param p_replaceable whether this template can be replaced by another one.
+     */
+    public void setReplaceable(boolean p_replaceable)
+    {
+        m_replaceable = p_replaceable;
+    }
+
+    /**
+     * Get whether this template can be replaced by another one.
+     * @return whether this template can be replaced by another one.
+     */
+    public boolean isReplaceable()
+    {
+        return m_replaceable;
     }
 
     public String getProxyParentClass()
