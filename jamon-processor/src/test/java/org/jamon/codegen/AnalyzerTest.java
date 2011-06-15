@@ -51,7 +51,7 @@ public class AnalyzerTest extends TestCase
         public MockTemplateSource(Map<String, String> p_content)
         {
             m_bytes = Maps.transformValues(p_content, new Function<String, byte[]>() {
-                @Override public byte[] apply(String p_input) { return p_input.getBytes(); }});
+                public byte[] apply(String p_input) { return p_input.getBytes(); }});
         }
 
         public long lastModified(String p_templatePath)
