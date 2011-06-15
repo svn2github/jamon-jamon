@@ -26,7 +26,8 @@ import java.util.List;
 
 public class SequentialList<T> extends AbstractList<T>
 {
-    @SuppressWarnings("unchecked") private SequentialList(List[] p_lists)
+    @SuppressWarnings("unchecked")
+    private SequentialList(@SuppressWarnings("rawtypes") List[] p_lists)
     {
         m_lists = p_lists;
         int size = 0;
