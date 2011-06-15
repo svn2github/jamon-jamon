@@ -42,6 +42,40 @@ public class TemplateUnit
     extends AbstractUnit
     implements InheritedUnit
 {
+    private InheritedArgs m_inheritedArgs = null;
+    private TemplateDescription m_parentDescription =
+        TemplateDescription.EMPTY;
+    private final List<RequiredArgument> m_declaredRequiredArgs =
+        new LinkedList<RequiredArgument>();
+    private final List<FragmentArgument> m_fragmentArgs =
+        new LinkedList<FragmentArgument>();
+    private final Set<OptionalArgument> m_declaredOptionalArgs =
+        new HashSet<OptionalArgument>();
+    private final Set<FragmentArgument> m_declaredFragmentArgs =
+        new HashSet<FragmentArgument>();
+
+    private final Map<String, DefUnit> m_defs = new HashMap<String, DefUnit>();
+    private final Map<String, MethodUnit> m_methods =
+        new HashMap<String, MethodUnit>();
+    private final List<OverriddenMethodUnit> m_overrides =
+        new LinkedList<OverriddenMethodUnit>();
+    private final List<ImportNode> m_imports = new LinkedList<ImportNode>();
+    private final List<StaticImportNode> m_staticImports =
+        new LinkedList<StaticImportNode>();
+    private final List<String> m_interfaces = new LinkedList<String>();
+    private String m_parentPath;
+    private boolean m_isParent = false;
+    private String m_replacedTemplatePath;
+    private TemplateDescription m_replacedTemplateDescription;
+    private final List<ClassNode> m_classContent = new LinkedList<ClassNode>();
+    private final Set<String> m_dependencies = new HashSet<String>();
+    private final Set<String> m_callNames = new HashSet<String>();
+    private final Collection<String> m_abstractMethodNames =
+        new HashSet<String>();
+    private final GenericParams m_genericParams = new GenericParams();
+    private String m_jamonContextType;
+    private final List<AnnotationNode> m_annotations = new LinkedList<AnnotationNode>();
+
     public TemplateUnit(String p_path, ParserErrorsImpl p_errors)
     {
         super(p_path, null, p_errors, null);
@@ -374,40 +408,6 @@ public class TemplateUnit
     {
         m_dependencies.add(p_callPath);
     }
-
-    private InheritedArgs m_inheritedArgs = null;
-    private TemplateDescription m_parentDescription =
-        TemplateDescription.EMPTY;
-    private final List<RequiredArgument> m_declaredRequiredArgs =
-        new LinkedList<RequiredArgument>();
-    private final List<FragmentArgument> m_fragmentArgs =
-        new LinkedList<FragmentArgument>();
-    private final Set<OptionalArgument> m_declaredOptionalArgs =
-        new HashSet<OptionalArgument>();
-    private final Set<FragmentArgument> m_declaredFragmentArgs =
-        new HashSet<FragmentArgument>();
-
-    private final Map<String, DefUnit> m_defs = new HashMap<String, DefUnit>();
-    private final Map<String, MethodUnit> m_methods =
-        new HashMap<String, MethodUnit>();
-    private final List<OverriddenMethodUnit> m_overrides =
-        new LinkedList<OverriddenMethodUnit>();
-    private final List<ImportNode> m_imports = new LinkedList<ImportNode>();
-    private final List<StaticImportNode> m_staticImports =
-        new LinkedList<StaticImportNode>();
-    private final List<String> m_interfaces = new LinkedList<String>();
-    private String m_parentPath;
-    private boolean m_isParent = false;
-    private String m_replacedTemplatePath;
-    private TemplateDescription m_replacedTemplateDescription;
-    private final List<ClassNode> m_classContent = new LinkedList<ClassNode>();
-    private final Set<String> m_dependencies = new HashSet<String>();
-    private final Set<String> m_callNames = new HashSet<String>();
-    private final Collection<String> m_abstractMethodNames =
-        new HashSet<String>();
-    private final GenericParams m_genericParams = new GenericParams();
-    private String m_jamonContextType;
-    private final List<AnnotationNode> m_annotations = new LinkedList<AnnotationNode>();
 
     public Collection<RequiredArgument> getParentRenderArgs()
     {
