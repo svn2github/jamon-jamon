@@ -45,4 +45,7 @@ public interface ClassNames
         org.jamon.annotations.Method.class.getName();
     public static final String TEMPLATE_ANNOTATION =
         org.jamon.annotations.Template.class.getName();
+    public static final String REPLACEABLE = org.jamon.annotations.Replaceable.class.getName();
+    public static final String REPLACES = org.jamon.annotations.Replaces.class.getName();
+    public static final String REPLACEMENT_CONSTRUCTOR = TEMPLATE + ".ReplacementConstructor";
 }

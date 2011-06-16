@@ -24,9 +24,9 @@ import test.jamon.Recompilation;
 import test.jamon.replacement.Api;
 import test.jamon.replacement.ApiReplacement;
 
-import org.jamon.AbstractTemplateProxy;
 import org.jamon.AbstractTemplateReplacer;
 import org.jamon.TemplateManager;
+import org.jamon.AbstractTemplateProxy.ReplacementConstructor;
 import org.jamon.compiler.RecompilingTemplateManager;
 import org.jamon.util.StringUtils;
 import java.io.FileWriter;
@@ -72,12 +72,12 @@ public class RecompilationTest
                 .setWorkDir(WORK_DIR)
                 .setTemplateReplacer(new AbstractTemplateReplacer() {
                     @Override
-                    protected Class<? extends AbstractTemplateProxy> findReplacement(
+                    protected ReplacementConstructor findReplacement(
                         Class<?> p_proxyClass, Object p_jamonContext)
                     {
                         if (Api.class.equals(p_proxyClass))
                         {
-                            return ApiReplacement.class;
+                            return new ApiReplacement.ReplacementConstructor();
                         }
                         else
                         {

@@ -26,6 +26,15 @@ public abstract class AbstractTemplateProxy
     {
     }
 
+    /**
+     * A constructor for a proxy class for a replacing template. This is used to avoid
+     * reflection after startup.
+     */
+    public interface ReplacementConstructor
+    {
+        AbstractTemplateProxy makeReplacement();
+    }
+
     public static class ImplData
     {
     }

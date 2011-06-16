@@ -20,7 +20,7 @@
 
 package org.jamon.integration;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 import java.util.Locale;
 import java.util.Map;
@@ -30,12 +30,17 @@ import org.jamon.AbstractTemplateReplacer;
 import org.jamon.BasicTemplateManager;
 import org.jamon.TemplateManager;
 import org.jamon.TemplateReplacer;
+import org.jamon.AbstractTemplateProxy.ReplacementConstructor;
+import org.jamon.annotations.Replaceable;
+import org.jamon.annotations.Replaces;
 import org.junit.Test;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Maps;
 
 import test.jamon.replacement.Api;
 import test.jamon.replacement.ApiChildReplacementCaller;
+import test.jamon.replacement.ApiReplacement;
 import test.jamon.replacement.ApiReplacementChild;
 import test.jamon.replacement.ApiWithFargsCaller;
 import test.jamon.replacement.GenericApiCaller;
@@ -46,17 +51,20 @@ public class ReplacementTest
     private final static TemplateReplacer TEMPLATE_REPLACER =
         new AbstractTemplateReplacer() {
         @Override
-        protected Class<? extends AbstractTemplateProxy> findReplacement(
+        protected ReplacementConstructor findReplacement(
             Class<?> p_proxyClass, Object p_jamonContext)
         {
             try
             {
                 return p_proxyClass.getClassLoader().loadClass(p_proxyClass.getName() + "Replacement")
-                .asSubclass(AbstractTemplateProxy.class);
+                .getAnnotation(Replaces.class).replacementConstructor().newInstance();
             }
             catch (ClassNotFoundException e)
             {
                 return null;
+            }
+            catch (Exception e) {
+                throw new RuntimeException(e);
             }
         }
     };
@@ -65,7 +73,7 @@ public class ReplacementTest
     private final static TemplateReplacer I18N_TEMPLATE_REPLACER = new AbstractTemplateReplacer()
     {
         @Override
-        protected Class<? extends AbstractTemplateProxy> findReplacement(
+        protected ReplacementConstructor findReplacement(
             Class<?> p_proxyClass, Object p_jamonContext)
         {
             if (! (p_jamonContext instanceof Locale))
@@ -77,7 +85,7 @@ public class ReplacementTest
                 String lang = ((Locale) p_jamonContext).getLanguage();
                 try {
                     return Class.forName(p_proxyClass.getName()+ "_" + lang)
-                        .asSubclass(AbstractTemplateProxy.class);
+                    .getAnnotation(Replaces.class).replacementConstructor().newInstance();
                 }
                 catch (Exception e) {
                     return null;
@@ -88,24 +96,33 @@ public class ReplacementTest
 
     private final static class SimpleTemplateReplacer extends AbstractTemplateReplacer
     {
-        private final Map<Class<? extends AbstractTemplateProxy>, Class<? extends AbstractTemplateProxy>> m_replacements;
+        private final Map<Class<? extends AbstractTemplateProxy>, ReplacementConstructor> m_replacements;
 
         public SimpleTemplateReplacer(
             Class<? extends AbstractTemplateProxy> p_replaced,
-            Class<? extends AbstractTemplateProxy> p_replacement) {
+            Class<? extends AbstractTemplateProxy> p_replacement) throws Exception {
             this(ImmutableMap.<Class<? extends AbstractTemplateProxy>,
                                Class<? extends AbstractTemplateProxy>>of(
                                    p_replaced, p_replacement));
         }
 
         private SimpleTemplateReplacer(
-            Map<Class<? extends AbstractTemplateProxy>, Class<? extends AbstractTemplateProxy>> p_replacements)
+            Map<Class<? extends AbstractTemplateProxy>,
+            Class<? extends AbstractTemplateProxy>> p_replacements) throws Exception
         {
-            m_replacements = p_replacements;
+            m_replacements = Maps.newHashMap();
+            for (Map.Entry<
+                    Class<? extends AbstractTemplateProxy>,
+                    Class<? extends AbstractTemplateProxy>> entry: p_replacements.entrySet()) {
+                m_replacements.put(
+                    entry.getKey(),
+                    entry.getValue().getAnnotation(Replaces.class)
+                        .replacementConstructor().newInstance());
+            }
         }
 
         @Override
-        protected Class<? extends AbstractTemplateProxy> findReplacement(Class<?> p_proxyClass, Object p_jamonContext)
+        protected ReplacementConstructor findReplacement(Class<?> p_proxyClass, Object p_jamonContext)
         {
             return m_replacements.get(p_proxyClass);
         }
@@ -162,6 +179,17 @@ public class ReplacementTest
         assertEquals(
             "Guten Tag, Jamon tester",
             new GreetingCaller(manager(I18N_TEMPLATE_REPLACER)).setJamonContext(Locale.GERMAN).makeRenderer().asString());
+    }
+
+    @Test
+    public void testAnnotations() throws Exception
+    {
+        assertTrue(Api.class.isAnnotationPresent(Replaceable.class));
+        Replaces replaces = ApiReplacement.class.getAnnotation(Replaces.class);
+        assertNotNull(replaces);
+        assertEquals(Api.class, replaces.replacedProxy());
+        assertEquals(
+            ApiReplacement.ReplacementConstructor.class, replaces.replacementConstructor());
     }
 
     private TemplateManager manager(TemplateReplacer p_templateReplacer)

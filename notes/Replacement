@@ -64,8 +64,6 @@ Things to test:
  replacing an abstract template
 
 Things to do:
- <%replaceable> tag
- @Replaceable() and @Replaces(ReplacedTemplate.class, ReplacementConstructor.class)
  locations on the lines of populateFrom
 
 ReplacingTemplateManager design:

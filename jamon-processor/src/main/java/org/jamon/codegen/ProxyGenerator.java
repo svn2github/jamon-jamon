@@ -51,6 +51,10 @@ public class ProxyGenerator extends AbstractSourceGenerator
         }
         generateOptionalArgs();
         generateFragmentInterfaces(false);
+        if (m_templateUnit.isReplacing())
+        {
+            generateReplacementConstructor();
+        }
         if (! m_templateUnit.isParent())
         {
             generateConstructImplReflective();
@@ -147,8 +151,37 @@ public class ProxyGenerator extends AbstractSourceGenerator
         m_writer.println();
     }
 
+    private void generateReplacementConstructor()
+    {
+        m_writer.println();
+        m_writer.print(
+            "public static class ReplacementConstructor implements "
+            + ClassNames.REPLACEMENT_CONSTRUCTOR + " ");
+        m_writer.openBlock();
+        if (m_templateUnit.getGenericParams().getCount() > 0) {
+            m_writer.print("@SuppressWarnings(\"unchecked\") ");
+        }
+        m_writer.print("public " + ClassNames.TEMPLATE +  " makeReplacement() ");
+        m_writer.openBlock();
+        m_writer.println("return new " + getClassName() + "();");
+        m_writer.closeBlock();
+        m_writer.closeBlock();
+    }
+
     private void generateAnnotations()
     {
+        if (m_templateUnit.isReplaceable()) {
+            m_writer.println("@" + ClassNames.REPLACEABLE);
+        }
+        if (m_templateUnit.isReplacing()) {
+            m_writer.print("@" + ClassNames.REPLACES);
+            m_writer.openList("(", true);
+            m_writer.printListElement("replacedProxy = " + getReplacedProxyClassName() + ".class");
+            m_writer.printListElement(
+                "replacementConstructor = " + getClassName() + ".ReplacementConstructor.class");
+            m_writer.closeList();
+            m_writer.println();
+        }
         m_writer.print("@" + ClassNames.TEMPLATE_ANNOTATION);
         m_writer.openList("(", true);
         m_writer.printListElement("signature = \"" + m_templateUnit.getSignature() + "\"");
