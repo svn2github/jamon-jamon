@@ -1,3 +1,4 @@
+<%replaceable>
 <%annotate @SuppressWarnings("unused") #impl %>
 <%import>java.util.List;</%import>
 <%generic>T</%generic>

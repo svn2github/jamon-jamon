@@ -644,6 +644,12 @@ public class ParserTest extends AbstractParserTest
             parse("<%annotate " + SAMPLE_ANNOTATION + "#impl%>\na"));
     }
 
+    @Test public void testReplaceable() throws Exception
+    {
+        assertEquals(
+            topNode().addSubNode(new ReplaceableNode(location(1,1))), parse("<%replaceable>  "));
+    }
+
     public static junit.framework.Test suite()
     {
         return new junit.framework.JUnit4TestAdapter(ParserTest.class);

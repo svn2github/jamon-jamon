@@ -229,6 +229,13 @@ public class ParserErrorsTest extends AbstractParserTest
         2, 1, AbstractBodyParser.REPLACES_TAG_IN_SUBCOMPONENT);
     }
 
+    @Test public void testReplaceableInSubcomponent() throws Exception
+    {
+        assertError(
+            "<%def foo>\n<%replaceable></%def>",
+            2, 1, AbstractBodyParser.REPLACEABLE_TAG_IN_SUBCOMPONENT);
+    }
+
     @Test public void testParentArgsInSubcomponent() throws Exception
     {
         assertError(

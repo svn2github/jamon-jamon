@@ -48,6 +48,7 @@ public class TemplateDescription
     private final Collection<String> m_abstractMethodNames;
     private final int m_genericParamsCount;
     private final String m_jamonContextType;
+    private final boolean m_replaceable;
 
     public final static TemplateDescription EMPTY = new TemplateDescription();
 
@@ -62,6 +63,7 @@ public class TemplateDescription
         m_abstractMethodNames = Collections.emptyList();
         m_genericParamsCount = 0;
         m_jamonContextType = null;
+        m_replaceable = false;
     }
 
     public TemplateDescription(TemplateUnit p_templateUnit)
@@ -85,6 +87,7 @@ public class TemplateDescription
         m_abstractMethodNames = p_templateUnit.getAbstractMethodNames();
         m_genericParamsCount = p_templateUnit.getGenericParams().getCount();
         m_jamonContextType = p_templateUnit.getJamonContextType();
+        m_replaceable = p_templateUnit.isReplaceable();
     }
 
     public TemplateDescription(Class<?> p_proxy) throws NoSuchFieldException
@@ -128,6 +131,7 @@ public class TemplateDescription
         m_inheritanceDepth = templateAnnotation.inheritanceDepth();
         m_genericParamsCount = templateAnnotation.genericsCount();
         m_jamonContextType = nullToEmptyString(templateAnnotation.jamonContextType());
+        m_replaceable = templateAnnotation.replaceable();
     }
 
     private String nullToEmptyString(String jamonContextType)
@@ -233,6 +237,11 @@ public class TemplateDescription
     public String getJamonContextType()
     {
         return m_jamonContextType;
+    }
+
+    public boolean isReplaceable()
+    {
+        return m_replaceable;
     }
 }
 

@@ -75,6 +75,8 @@ public abstract class AbstractBodyParser<Node extends AbstractBodyNode>
         "<%implements> sections only allowed at the top level of a document";
     public static final String REPLACES_TAG_IN_SUBCOMPONENT =
       "<%replaces ...> tag only allowed at the top level of a document";
+    public static final String REPLACEABLE_TAG_IN_SUBCOMPONENT =
+        "<%replaceable ...> tag only allowed at the top level of a document";
     private static final String IMPORT_TAG_IN_SUBCOMPONENT =
         "<%import> sections only allowed at the top level of a document";
     public static final String PARENT_ARGS_TAG_IN_SUBCOMPONENT =
@@ -399,6 +401,9 @@ public abstract class AbstractBodyParser<Node extends AbstractBodyNode>
         }
         else if ("replaces".equals(p_tagName)) {
             handleReplacesTag(p_tagLocation);
+        }
+        else if ("replaceable".equals(p_tagName)) {
+            handleReplaceableTag(p_tagLocation);
         }
         else if ("import".equals(p_tagName))
         {
@@ -801,6 +806,16 @@ public abstract class AbstractBodyParser<Node extends AbstractBodyNode>
         throws IOException
     {
       addError(p_tagLocation, REPLACES_TAG_IN_SUBCOMPONENT);
+    }
+
+    /**
+     * @param p_tagLocation location of the {@code replaceable} tag
+     * @throws IOException
+     */
+    protected void handleReplaceableTag(Location p_tagLocation)
+    throws IOException
+    {
+        addError(p_tagLocation, REPLACEABLE_TAG_IN_SUBCOMPONENT);
     }
 
     /**

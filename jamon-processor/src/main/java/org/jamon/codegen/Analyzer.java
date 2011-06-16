@@ -39,6 +39,13 @@ import org.jamon.util.StringUtils;
 
 public class Analyzer
 {
+    static final String ABSTRACT_REPLACING_TEMPLATE_ERROR =
+        "An abstract template cannot replace another template";
+    static final String ABSTRACT_REPLACEABLE_TEMPLATE_ERROR =
+        "Abstract templates are not replaceable";
+    static final String REPLACING_NON_REPLACEABLE_TEMPLATE_ERROR =
+        "Replaced template is not marked as <%replaceable>";
+
     public Analyzer(String p_templatePath,
                     TemplateDescriber p_describer,
                     Set<String> p_children) throws IOException
@@ -147,22 +154,39 @@ public class Analyzer
         topLevelAnalyze(p_top, new AnalysisAdapter()
             {
                 @Override
+                public void caseReplaceableNode(ReplaceableNode p_replaceable)
+                {
+                    if (getTemplateUnit().isParent())
+                    {
+                        addError(ABSTRACT_REPLACEABLE_TEMPLATE_ERROR, p_replaceable.getLocation());
+                    }
+                    else
+                    {
+                        getTemplateUnit().setReplaceable(true);
+                    }
+                }
+
+                @Override
                 public void caseReplacesNode(ReplacesNode p_replaces)
                 {
                     if(getTemplateUnit().isParent())
                     {
-                        addError(
-                          "an abstract template cannot replace another template",
-                          p_replaces.getLocation());
+                        addError(ABSTRACT_REPLACING_TEMPLATE_ERROR, p_replaces.getLocation());
                     }
                     else
                     {
                         String replacedTemplatePath =
                             getAbsolutePath(computePath(p_replaces.getPath()));
-                        //FIXME: verify that the replaced template is not abstract.
                         TemplateDescription replacedTemplateDescription =
                             getTemplateDescription(replacedTemplatePath, p_replaces.getLocation());
-                        if (replacedTemplateDescription != null) {
+                        if (replacedTemplateDescription != null)
+                        {
+                            if (! replacedTemplateDescription.isReplaceable())
+                            {
+                                addError(
+                                    REPLACING_NON_REPLACEABLE_TEMPLATE_ERROR,
+                                    p_replaces.getLocation());
+                            }
                             getTemplateUnit().setReplacedTemplatePathAndDescription(
                                 replacedTemplatePath, replacedTemplateDescription);
                             verifyRequiredArgsComeFromReplacedTemplate(

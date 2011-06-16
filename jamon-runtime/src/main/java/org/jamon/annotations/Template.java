@@ -15,4 +15,5 @@ public @interface Template
     int genericsCount() default 0;
     int inheritanceDepth() default 0;
     String jamonContextType() default "";
+    boolean replaceable() default false;
 }

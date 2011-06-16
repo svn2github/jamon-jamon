@@ -206,11 +206,11 @@ public class AnalyzerTest extends TestCase
             templateUnit.getAnnotations());
     }
 
-    public void testAbstractReplaces() throws Exception
+    public void testReplacing() throws Exception
     {
         TemplateUnit templateUnit = analyze(ImmutableMap.of(
             PATH, "<%replaces /foo>",
-            "/foo", "")); // TemplateDescriber will need to see the source for /foo
+            "/foo", "<%replaceable>")); // TemplateDescriber will need to see the source for /foo
         assertEquals("/foo", templateUnit.getReplacedTemplatePath());
     }
 
@@ -220,7 +220,7 @@ public class AnalyzerTest extends TestCase
             ImmutableMap.of(PATH, "<%abstract><%replaces /foo>"),
             new ParserErrorImpl(
                 location(1, 12),
-                "an abstract template cannot replace another template"));
+                Analyzer.ABSTRACT_REPLACING_TEMPLATE_ERROR));
     }
 
     public void testMissingRequiredArgsInReplacement() throws Exception
@@ -228,7 +228,7 @@ public class AnalyzerTest extends TestCase
         analyzeExpectingErrors(
             ImmutableMap.of(
                 PATH, "<%replaces /foo><%args>int i; int j;</%args>",
-                "/foo", ""),
+                "/foo", "<%replaceable>"),
             new ParserErrorImpl(
                 location(1, 1),
                 "Replaced template contains no required argument named i"),
@@ -242,7 +242,7 @@ public class AnalyzerTest extends TestCase
         analyzeExpectingErrors(
             ImmutableMap.of(
                 PATH, "<%replaces /foo><%frag f/>",
-                "/foo", ""),
+                "/foo", "<%replaceable>"),
                 new ParserErrorImpl(
                     location(1,1),
                     "Replaced template contains no fragment argument named f"));
@@ -253,7 +253,7 @@ public class AnalyzerTest extends TestCase
         analyzeExpectingErrors(
             ImmutableMap.of(
                 PATH, "<%replaces /foo><%args>int i = 1; int j = 2; int k = 3;</%args>",
-                "/foo", "<%args>int j = 2; int k;</%args>"),
+                "/foo", "<%replaceable><%args>int j = 2; int k;</%args>"),
                 new ParserErrorImpl(
                     location(1, 1),
                     "Replaced template contains no required or optional argument named i"));
@@ -271,6 +271,27 @@ public class AnalyzerTest extends TestCase
         analyzeExpectingErrors(
             ImmutableMap.of(PATH, "<%replaces " + PATH + ">"),
             new ParserErrorImpl(location(1, 1), "cyclic inheritance or replacement involving " + PATH));
+    }
+
+    public void testAbstractReplacing() throws Exception
+    {
+        analyzeExpectingErrors(
+            ImmutableMap.of(PATH, "<%abstract>\n<%replaces /foo>", "/foo", "<%replaceable>"),
+            new ParserErrorImpl(location(2,1), Analyzer.ABSTRACT_REPLACING_TEMPLATE_ERROR));
+    }
+
+    public void testAbstractReplaceable() throws Exception
+    {
+        analyzeExpectingErrors(
+            ImmutableMap.of(PATH, "<%abstract>\n<%replaceable>"),
+            new ParserErrorImpl(location(2,1), Analyzer.ABSTRACT_REPLACEABLE_TEMPLATE_ERROR));
+    }
+
+    public void testReplacingNonReplaceable() throws Exception
+    {
+        analyzeExpectingErrors(
+            ImmutableMap.of(PATH, "<%replaces /foo>", "/foo", ""),
+            new ParserErrorImpl(location(1,1), Analyzer.REPLACING_NON_REPLACEABLE_TEMPLATE_ERROR));
     }
 
     private void analyzeExpectingErrors(

@@ -163,6 +163,9 @@ public class TemplateUnitTest
         checkSigIsUnique(unit, sigs);
         genericsParamNode.addBound(new GenericsBoundNode(LOCATION, "String"));
         checkSigIsUnique(unit, sigs);
+
+        unit.setReplaceable(true);
+        checkSigIsUnique(unit, sigs);
     }
 
     public void testDependencies()

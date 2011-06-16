@@ -163,6 +163,9 @@ public class ProxyGenerator extends AbstractSourceGenerator
             m_writer.printListElement(
                 "jamonContextType = \"" + m_templateUnit.getJamonContextType() + "\"");
         }
+        if (m_templateUnit.isReplaceable()) {
+            m_writer.printListElement("replaceable = true");
+        }
         generateArguments(m_templateUnit);
         generateMethodAnnotations();
         generateAbstractMethodAnnotations();

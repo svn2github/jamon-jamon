@@ -503,17 +503,14 @@ public class TemplateUnit
         p_buf.append("GenericParams:");
         p_buf.append(getGenericParams().generateGenericsDeclaration());
         p_buf.append("\n");
+        p_buf.append("replaceable:").append(isReplaceable()).append("\n");
         if(m_parentDescription != null)
         {
-            p_buf.append("Parent sig: ");
-            p_buf.append(m_parentDescription.getSignature());
-            p_buf.append("\n");
+            p_buf.append("Parent sig: ").append(m_parentDescription.getSignature()).append("\n");
         }
         for(FragmentArgument arg: getFragmentArgs())
         {
-            p_buf.append("Fragment: ");
-            p_buf.append(arg.getName());
-            p_buf.append("\n");
+            p_buf.append("Fragment: ").append(arg.getName()).append("\n");
             arg.getFragmentUnit().generateInterfaceSummary(p_buf);
         }
     }

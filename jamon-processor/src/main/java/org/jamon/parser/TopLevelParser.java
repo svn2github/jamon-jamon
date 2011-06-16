@@ -37,6 +37,7 @@ import org.jamon.node.EscapeDirectiveNode;
 import org.jamon.node.ExtendsNode;
 import org.jamon.node.ImplementNode;
 import org.jamon.node.ImplementsNode;
+import org.jamon.node.ReplaceableNode;
 import org.jamon.node.ReplacesNode;
 import org.jamon.node.ImportsNode;
 import org.jamon.node.LocationImpl;
@@ -188,6 +189,16 @@ public class TopLevelParser extends AbstractBodyParser<TopNode>
       {
         addError(p_tagLocation, MALFORMED_REPLACES_TAG_ERROR);
       }
+    }
+
+    @Override protected void handleReplaceableTag(org.jamon.api.Location p_tagLocation)
+            throws IOException
+    {
+        if (checkForTagClosure(p_tagLocation))
+        {
+            m_root.addSubNode(new ReplaceableNode(p_tagLocation));
+            soakWhitespace();
+        }
     }
 
     @Override protected void handleImplementsTag(org.jamon.api.Location p_tagLocation)
