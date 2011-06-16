@@ -10,7 +10,7 @@ import java.util.Map;
 
 /**
  * A reflection tool to convert annotations loaded under a different class loader into an annotation
- * implementing a specified annotaiton class. Because TemplateDescription is working with classes
+ * implementing a specified annotation class. Because TemplateDescription is working with classes
  * loaded from a client-defined ClassLoader, it is possible that said ClassLoader will contain it's
  * own copy of jamon.jar, meaning that annotations we load from classes it returns will not be class
  * compatible with our copies of the annotation classes.
