@@ -8,16 +8,23 @@ import java.lang.reflect.Proxy;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * A reflection tool to convert annotations loaded under a different class loader into an annotation
+ * implementing a specified annotaiton class. Because TemplateDescription is working with classes
+ * loaded from a client-defined ClassLoader, it is possible that said ClassLoader will contain it's
+ * own copy of jamon.jar, meaning that annotations we load from classes it returns will not be class
+ * compatible with our copies of the annotation classes.
+ */
 public class AnnotationReflector
 {
-    private Map<String, Annotation> m_annotations = 
+    private Map<String, Annotation> m_annotations =
         new HashMap<String, Annotation>();
 
     public AnnotationReflector(Class<?> p_class)
     {
         for (Annotation annotation: p_class.getAnnotations())
         {
-            m_annotations.put(annotation.annotationType().getName(), 
+            m_annotations.put(annotation.annotationType().getName(),
                               annotation);
         }
     }
@@ -49,7 +56,7 @@ public class AnnotationReflector
             }));
     }
 
-    private Object maybeProxyAnnotation(Class<?> p_type, Object p_object) 
+    private Object maybeProxyAnnotation(Class<?> p_type, Object p_object)
     {
         if (p_object == null)
         {
@@ -63,13 +70,13 @@ public class AnnotationReflector
         if (p_type.isArray() && p_type.getComponentType().isAnnotation())
         {
             int arrayLength = Array.getLength(p_object);
-            Object array = 
+            Object array =
                 Array.newInstance(p_type.getComponentType(), arrayLength);
             for (int i = 0; i < arrayLength; i++)
             {
                 Array.set(array,
                           i,
-                          proxyAnnotation(p_type.getComponentType(), 
+                          proxyAnnotation(p_type.getComponentType(),
                                           Array.get(p_object, i)));
             }
             return array;
