@@ -700,14 +700,19 @@ public class ProxyGenerator extends AbstractSourceGenerator
         m_writer.println(
             "public interface Intf"
             + m_templateUnit.getGenericParams().generateGenericsDeclaration());
-        m_writer.print("  extends "
-                       + (m_templateUnit.hasParentPath()
-                          ? PathUtils.getFullyQualifiedIntfClassName(
-                              m_templateUnit.getParentPath()) + ".Intf"
-                          : ClassNames.TEMPLATE_INTF));
-        if (m_templateUnit.isReplacing()) {
-            m_writer.print(", " + getReplacedIntfClassName());
+        m_writer.print("  extends ");
+        m_writer.openList("", false);
+        if (m_templateUnit.hasParentPath()) {
+            m_writer.printListElement(PathUtils.getFullyQualifiedIntfClassName(
+                              m_templateUnit.getParentPath()) + ".Intf");
         }
+        if (m_templateUnit.isReplacing()) {
+            m_writer.printListElement(getReplacedIntfClassName());
+        }
+        if (! m_templateUnit.hasParentPath() && ! m_templateUnit.isReplacing()) {
+            m_writer.printListElement(ClassNames.TEMPLATE_INTF);
+        }
+        m_writer.closeList("");
         m_writer.println();
         m_writer.openBlock();
 
