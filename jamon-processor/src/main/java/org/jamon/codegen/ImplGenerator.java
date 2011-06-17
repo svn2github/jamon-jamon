@@ -293,6 +293,9 @@ public class ImplGenerator extends AbstractSourceGenerator
         }
         else
         {
+            if (! m_templateUnit.isParent()) {
+                m_writer.print("@Override ");
+            }
             m_writer.println("public void renderNoFlush("
                              + ArgNames.ANNOTATED_WRITER_DECL + ")");
         }

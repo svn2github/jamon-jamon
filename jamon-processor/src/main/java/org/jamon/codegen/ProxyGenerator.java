@@ -162,7 +162,7 @@ public class ProxyGenerator extends AbstractSourceGenerator
         if (m_templateUnit.getGenericParams().getCount() > 0) {
             m_writer.print("@SuppressWarnings(\"unchecked\") ");
         }
-        m_writer.print("public " + ClassNames.TEMPLATE +  " makeReplacement() ");
+        m_writer.print("@Override public " + ClassNames.TEMPLATE +  " makeReplacement() ");
         m_writer.openBlock();
         m_writer.println("return new " + getClassName() + "();");
         m_writer.closeBlock();
@@ -514,7 +514,7 @@ public class ProxyGenerator extends AbstractSourceGenerator
             generateFragmentDelegator(farg);
         }
         m_writer.print(
-            "public void populateFrom(" + getReplacedImplDataClassName() + " implData) ");
+            "@Override public void populateFrom(" + getReplacedImplDataClassName() + " implData) ");
         m_writer.openBlock();
         TemplateDescription replacedTemplateDescription =
             m_templateUnit.getReplacedTemplateDescription();
@@ -573,7 +573,7 @@ public class ProxyGenerator extends AbstractSourceGenerator
         m_writer.println("this.frag = frag;");
         m_writer.closeBlock();
         m_writer.println();
-        m_writer.print("public void renderNoFlush");
+        m_writer.print("@Override public void renderNoFlush");
         m_writer.openList();
         m_writer.printListElement(ArgNames.WRITER_DECL);
         fragmentUnit.printRenderArgsDecl(m_writer);
@@ -589,7 +589,7 @@ public class ProxyGenerator extends AbstractSourceGenerator
         m_writer.println(";");
         m_writer.closeBlock();
 
-        m_writer.print("public " + ClassNames.RENDERER + " makeRenderer");
+        m_writer.print("@Override public " + ClassNames.RENDERER + " makeRenderer");
         m_writer.openList();
         fragmentUnit.printRenderArgsDecl(m_writer);
         m_writer.closeList();
@@ -715,6 +715,9 @@ public class ProxyGenerator extends AbstractSourceGenerator
 
         if(! m_templateUnit.isParent())
         {
+            if (m_templateUnit.isReplacing()) {
+                m_writer.print("@Override ");
+            }
             m_writer.println("void renderNoFlush(" + ArgNames.WRITER_DECL
                              + ") throws " + ClassNames.IOEXCEPTION + ";");
             m_writer.println();

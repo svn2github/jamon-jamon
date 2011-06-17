@@ -97,7 +97,7 @@ public abstract class AbstractCallStatement
         p_writer.openBlock();
         p_writer.println("super(p_manager);");
         p_writer.closeBlock();
-        p_writer.print("public " + ClassNames.RENDERER + " makeRenderer");
+        p_writer.print("@Override public " + ClassNames.RENDERER + " makeRenderer");
         p_writer.openList();
         fragmentUnitImpl.printRenderArgsDecl(p_writer);
         p_writer.closeList();
@@ -120,7 +120,7 @@ public abstract class AbstractCallStatement
         p_writer.closeBlock(";");
         p_writer.closeBlock();
 
-        p_writer.print("public void renderNoFlush");
+        p_writer.print("@Override public void renderNoFlush");
         p_writer.openList();
         p_writer.printListElement(ArgNames.ANNOTATED_WRITER_DECL);
         fragmentUnitImpl.printRenderArgsDecl(p_writer);
