@@ -51,6 +51,7 @@ public class FargCallStatement
         throw new UnsupportedOperationException();
     }
 
+    @Override
     public void generateSource(CodeWriter p_writer,
                                TemplateDescriber p_describer) throws ParserErrorImpl
     {

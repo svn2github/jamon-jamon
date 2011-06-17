@@ -183,6 +183,7 @@ public class TemplateProcessor
                         System.err.println(fullPath + " is not a directory");
                     }
                     File[] files = directory.listFiles(new FilenameFilter() {
+                        @Override
                         public boolean accept(File p_dir, String p_name)
                         {
                             return p_name.endsWith(".jamon");

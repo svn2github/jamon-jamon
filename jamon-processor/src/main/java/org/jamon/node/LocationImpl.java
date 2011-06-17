@@ -16,16 +16,19 @@ public final class LocationImpl implements Location
         m_column = p_column;
     }
 
+    @Override
     public TemplateLocation getTemplateLocation()
     {
         return m_templateLocation;
     }
 
+    @Override
     public int getColumn()
     {
         return m_column;
     }
 
+    @Override
     public int getLine()
     {
         return m_line;

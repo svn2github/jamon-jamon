@@ -141,6 +141,7 @@ public class WorkDirClassLoader
             if (m_loader == null)
             {
                 AccessController.doPrivileged(new PrivilegedAction<Void>() {
+                    @Override
                     public Void run()
                     {
                         m_loader = new Loader();

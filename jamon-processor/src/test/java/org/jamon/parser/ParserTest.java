@@ -217,6 +217,7 @@ public class ParserTest extends AbstractParserTest
         doSubcomponentTest(
             "<%def", "</%def>",
             new SubcomponentBuilder() {
+                @Override
                 public SubcomponentNode makeNode(Location p_location,
                                                  String p_name)
                 {
@@ -231,6 +232,7 @@ public class ParserTest extends AbstractParserTest
         doSubcomponentTest(
             "<%method", "</%method>",
             new SubcomponentBuilder() {
+                @Override
                 public SubcomponentNode makeNode(Location p_location,
                                                  String p_name)
                 {
@@ -262,6 +264,7 @@ public class ParserTest extends AbstractParserTest
         doSubcomponentTest(
             "<%override", "</%override>",
             new SubcomponentBuilder() {
+                @Override
                 public SubcomponentNode makeNode(Location p_location,
                                                  String p_name)
                 {

@@ -44,11 +44,13 @@ public class DeclaredMethodUnit
         this(p_name, p_parent, p_errors, p_location, false);
     }
 
+    @Override
     public String getOptionalArgDefaultMethod(OptionalArgument p_arg)
     {
         return "__jamon__get_Method_Opt_" + p_arg.getName() + "_default";
     }
 
+    @Override
     public boolean isAbstract()
     {
         return m_isAbstract;
@@ -63,16 +65,19 @@ public class DeclaredMethodUnit
 
     private final boolean m_isAbstract;
 
+    @Override
     public Collection<OptionalArgument> getOptionalArgsWithDefaults()
     {
         return getSignatureOptionalArgs();
     }
 
+    @Override
     public String getDefaultForArg(OptionalArgument p_arg)
     {
         return p_arg.getDefault();
     }
 
+    @Override
     public boolean isOverride()
     {
         return false;

@@ -16,6 +16,7 @@ class AbstractTagEndDetector implements TagEndDetector
         m_endTag = p_endTag;
         m_endTagLength = p_endTag.length();
     }
+    @Override
     public int checkEnd(final char p_char)
     {
         if (p_char == m_endTag.charAt(charsSeen))
@@ -32,6 +33,7 @@ class AbstractTagEndDetector implements TagEndDetector
         return 0;
     }
 
+    @Override
     public ParserErrorImpl getEofError(org.jamon.api.Location p_startLocation)
     {
         return new ParserErrorImpl(
@@ -39,6 +41,7 @@ class AbstractTagEndDetector implements TagEndDetector
             "Reached end of file while looking for '" + m_endTag + "'");
     }
 
+    @Override
     public void resetEndMatch()
     {
         charsSeen = 0;

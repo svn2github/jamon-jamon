@@ -20,11 +20,13 @@ public final class ParserErrorsImpl extends IOException implements ParserErrors
         m_errors.add(p_error);
     }
 
+    @Override
     public boolean hasErrors()
     {
         return ! m_errors.isEmpty();
     }
 
+    @Override
     public List<ParserError> getErrors()
     {
         return m_errors;

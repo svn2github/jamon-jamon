@@ -59,6 +59,7 @@ public class InternalJavaCompiler
             new PrintWriter(new StringWriter()));
     }
 
+    @Override
     public String compile(String [] p_javaFiles)
     {
         String [] cmdline = new String[p_javaFiles.length + m_compilerArgs.size()];

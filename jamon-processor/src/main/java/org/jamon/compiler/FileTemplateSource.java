@@ -77,22 +77,26 @@ public class FileTemplateSource
             : "." + p_extension;
     }
 
+    @Override
     public long lastModified(String p_templatePath)
     {
         return getTemplateFile(p_templatePath).lastModified();
     }
 
+    @Override
     public boolean available(String p_templatePath)
     {
         return getTemplateFile(p_templatePath).exists();
     }
 
+    @Override
     public InputStream getStreamFor(String p_templatePath)
         throws IOException
     {
         return new FileInputStream(getTemplateFile(p_templatePath));
     }
 
+    @Override
     public String getExternalIdentifier(String p_templatePath)
     {
         return getTemplateFile(p_templatePath).getAbsolutePath();
@@ -123,11 +127,13 @@ public class FileTemplateSource
         return path.toString();
     }
 
+    @Override
     public TemplateLocation getTemplateLocation(String p_templatePath)
     {
         return new TemplateFileLocation(getExternalIdentifier(p_templatePath));
     }
 
+    @Override
     public void loadProperties(String p_path, Properties p_properties)
         throws IOException
     {

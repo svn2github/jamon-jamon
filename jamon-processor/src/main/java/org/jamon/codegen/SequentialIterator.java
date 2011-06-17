@@ -58,6 +58,7 @@ public class SequentialIterator<T>
     private final Iterator<? extends T>[] m_iters;
     private int currentIter = 0;
 
+    @Override
     public boolean hasNext()
     {
         if(currentIter >= m_iters.length)
@@ -75,6 +76,7 @@ public class SequentialIterator<T>
         }
     }
 
+    @Override
     public T next()
         throws NoSuchElementException
     {
@@ -88,6 +90,7 @@ public class SequentialIterator<T>
         }
     }
 
+    @Override
     public void remove()
     {
         throw new UnsupportedOperationException();

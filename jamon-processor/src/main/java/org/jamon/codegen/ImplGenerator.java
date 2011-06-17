@@ -33,6 +33,7 @@ public class ImplGenerator extends AbstractSourceGenerator
         super(p_describer, p_templateUnit);
     }
 
+    @Override
     public void generateSource(OutputStream p_out)
         throws java.io.IOException
     {

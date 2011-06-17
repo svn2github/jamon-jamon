@@ -46,6 +46,7 @@ public class OverriddenMethodUnit
 
     }
 
+    @Override
     public void addParentArg(ParentArgNode p_node)
     {
         m_inheritedArgs.addParentArg(p_node);
@@ -74,6 +75,7 @@ public class OverriddenMethodUnit
         return m_declaredMethodUnit.getSignatureOptionalArgs();
     }
 
+    @Override
     public String getOptionalArgDefaultMethod(OptionalArgument p_arg)
     {
         return m_declaredMethodUnit.getOptionalArgDefaultMethod(p_arg);
@@ -90,6 +92,7 @@ public class OverriddenMethodUnit
         }
     }
 
+    @Override
     public boolean isAbstract()
     {
         return false;
@@ -111,16 +114,19 @@ public class OverriddenMethodUnit
         throw new UnsupportedOperationException();
     }
 
+    @Override
     public Collection<OptionalArgument> getOptionalArgsWithDefaults()
     {
         return m_inheritedArgs.getOptionalArgsWithNewDefaultValues();
     }
 
+    @Override
     public String getDefaultForArg(OptionalArgument p_arg)
     {
         return m_inheritedArgs.getDefaultValue(p_arg);
     }
 
+    @Override
     public boolean isOverride()
     {
         return true;

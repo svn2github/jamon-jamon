@@ -121,6 +121,7 @@ public class TemplateUnit
         }
     }
 
+    @Override
     public void addParentArg(ParentArgNode p_arg)
     {
         m_inheritedArgs.addParentArg(p_arg);

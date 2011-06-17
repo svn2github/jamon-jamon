@@ -27,13 +27,16 @@ class OptionalValueTagEndDetector implements TagEndDetector
     public static final String NEED_SEMI_OR_ARROW =
         "Expecting a ';', '=' or '=>'";
 
+    @Override
     public int checkEnd(char p_char)
        { return p_char == ';' ? 1 : 0; }
 
+    @Override
     public ParserErrorImpl getEofError(org.jamon.api.Location p_startLocation)
     {
         return new ParserErrorImpl(p_startLocation, ArgsParser.EOF_LOOKING_FOR_SEMI);
     }
 
+    @Override
     public void resetEndMatch() {}
 }

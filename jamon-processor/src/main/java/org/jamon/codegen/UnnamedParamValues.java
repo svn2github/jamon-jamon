@@ -32,6 +32,7 @@ public class UnnamedParamValues implements ParamValues
         m_location = p_location;
     }
 
+    @Override
     public void generateRequiredArgs(
         List<RequiredArgument> p_args, CodeWriter p_writer)
         throws ParserErrorImpl
@@ -49,16 +50,19 @@ public class UnnamedParamValues implements ParamValues
         }
     }
 
+    @Override
     public String getOptionalArgValue(String p_argName)
     {
         return null;
     }
 
+    @Override
     public boolean hasUnusedParams()
     {
         return false;
     }
 
+    @Override
     public Iterable<String> getUnusedParams()
     {
         throw new IllegalStateException();

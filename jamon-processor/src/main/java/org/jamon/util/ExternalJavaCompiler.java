@@ -37,6 +37,7 @@ public class ExternalJavaCompiler
         m_compilerCommand.addAll(p_compilerArgs);
     }
 
+    @Override
     public String compile(String [] p_javaFiles)
     {
         String [] cmdline = new String[p_javaFiles.length + m_compilerCommand.size()];
@@ -111,6 +112,7 @@ public class ExternalJavaCompiler
             return m_buffer.toString();
         }
 
+        @Override
         public void run()
         {
             final byte [] buf = new byte[1024];

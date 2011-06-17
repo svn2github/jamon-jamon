@@ -48,6 +48,7 @@ public abstract class AbstractInnerUnitCallStatement
         return p_fragmentUnitIntf.getFragmentInterfaceName(true);
     }
 
+    @Override
     public void generateSource(CodeWriter p_writer,
                                TemplateDescriber p_describer) throws ParserErrorImpl
     {

@@ -48,6 +48,7 @@ public class ComponentCallStatement
             + getGenericParams();
     }
 
+    @Override
     public void generateSource(CodeWriter p_writer,
                                TemplateDescriber p_describer) throws ParserErrorImpl
     {

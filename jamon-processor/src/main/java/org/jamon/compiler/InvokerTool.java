@@ -43,6 +43,7 @@ public class InvokerTool
     public static class DefaultObjectParser
         implements ObjectParser
     {
+        @Override
         public Object parseObject(Class<?> p_type, String p_string)
             throws TemplateArgumentException
         {

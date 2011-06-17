@@ -15,6 +15,7 @@ public class TemplateParserImpl implements TemplateParser
         m_templateDescriber = new TemplateDescriber(p_templateSource, p_classLoader);
     }
 
+    @Override
     public ParsedTemplate parseTemplate(String p_templatePath) throws IOException
     {
         return new ParsedTemplateImpl(

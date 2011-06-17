@@ -51,34 +51,41 @@ public class AnalyzerTest extends TestCase
         public MockTemplateSource(Map<String, String> p_content)
         {
             m_bytes = Maps.transformValues(p_content, new Function<String, byte[]>() {
+                @Override
                 public byte[] apply(String p_input) { return p_input.getBytes(); }});
         }
 
+        @Override
         public long lastModified(String p_templatePath)
         {
             return 0;
         }
 
+        @Override
         public boolean available(String p_templatePath)
         {
             return m_bytes.containsKey(p_templatePath);
         }
 
+        @Override
         public InputStream getStreamFor(String p_templatePath)
         {
             return new ByteArrayInputStream(m_bytes.get(p_templatePath));
         }
 
+        @Override
         public String getExternalIdentifier(String p_templatePath)
         {
             return p_templatePath;
         }
 
+        @Override
         public TemplateLocation getTemplateLocation(String p_templatePath)
         {
             return new TemplateResourceLocation(p_templatePath);
         }
 
+        @Override
         public void loadProperties(String p_path, Properties p_properties)
         {
             p_properties.put("org.jamon.alias.foo", "/x/y");

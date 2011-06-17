@@ -37,6 +37,7 @@ public class WriteStatement
         m_emitMode = p_emitMode;
     }
 
+    @Override
     public void generateSource(CodeWriter p_writer,
                                TemplateDescriber p_describer)
     {

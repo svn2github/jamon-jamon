@@ -26,11 +26,13 @@ public abstract class AbstractStatementBlock implements StatementBlock
         }
     }
 
+    @Override
     public FragmentUnit getFragmentUnitIntf(String p_path)
     {
         return getParentUnit().getFragmentUnitIntf(p_path);
     }
 
+    @Override
     public void addStatement(Statement p_statement)
     {
         if (p_statement instanceof LiteralStatement
@@ -57,21 +59,25 @@ public abstract class AbstractStatementBlock implements StatementBlock
         return ! m_statements.isEmpty();
     }
 
+    @Override
     public FragmentUnit addFragment(FragmentArgsNode p_node, GenericParams p_genericParams)
     {
         throw new UnsupportedOperationException();
     }
 
+    @Override
     public void addRequiredArg(ArgNode p_node)
     {
         throw new UnsupportedOperationException();
     }
 
+    @Override
     public void addOptionalArg(OptionalArgNode p_node)
     {
         throw new UnsupportedOperationException();
     }
 
+    @Override
     public Unit getParentUnit()
     {
         return m_parent instanceof Unit
@@ -79,6 +85,7 @@ public abstract class AbstractStatementBlock implements StatementBlock
             : m_parent.getParentUnit();
     }
 
+    @Override
     public StatementBlock getParent()
     {
         return m_parent;

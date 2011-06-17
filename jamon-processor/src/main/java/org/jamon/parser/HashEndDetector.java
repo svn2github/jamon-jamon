@@ -7,6 +7,7 @@ import org.jamon.compiler.ParserErrorImpl;
  */
 public class HashEndDetector implements TagEndDetector
 {
+    @Override
     public int checkEnd(char p_char)
     {
         switch (p_char)
@@ -34,11 +35,13 @@ public class HashEndDetector implements TagEndDetector
         }
     }
 
+    @Override
     public ParserErrorImpl getEofError(org.jamon.api.Location p_startLocation)
     {
         return new ParserErrorImpl(p_startLocation, AbstractBodyParser.PERCENT_GREATER_THAN_EOF_ERROR);
     }
 
+    @Override
     public void resetEndMatch() {}
 
     /**

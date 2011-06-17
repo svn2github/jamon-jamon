@@ -32,6 +32,7 @@ public class RawStatement
         m_code = p_code;
     }
 
+    @Override
     public void generateSource(CodeWriter p_writer,
                                TemplateDescriber p_describer)
     {

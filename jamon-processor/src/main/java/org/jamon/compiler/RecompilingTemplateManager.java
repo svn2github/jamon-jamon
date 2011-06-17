@@ -211,6 +211,7 @@ public class RecompilingTemplateManager extends AbstractTemplateManager
         }
 
         m_loader = AccessController.doPrivileged(new PrivilegedAction<WorkDirClassLoader>() {
+            @Override
             public WorkDirClassLoader run()
             {
                 return new WorkDirClassLoader(m_classLoader, m_workDir);
@@ -218,6 +219,7 @@ public class RecompilingTemplateManager extends AbstractTemplateManager
         });
     }
 
+    @Override
     public AbstractTemplateProxy.Intf constructImpl(
       AbstractTemplateProxy p_proxy, Object p_jamonContext)
     {
@@ -233,6 +235,7 @@ public class RecompilingTemplateManager extends AbstractTemplateManager
      *
      * @return a <code>Template</code> proxy instance
      **/
+    @Override
     public AbstractTemplateProxy constructProxy(String p_path)
     {
         try

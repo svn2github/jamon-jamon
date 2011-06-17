@@ -257,6 +257,7 @@ public class CallParser extends AbstractParser
             return m_noMoreParams;
         }
 
+        @Override
         public int checkEnd(final char p_char)
         {
             if (p_char == '&')
@@ -280,11 +281,13 @@ public class CallParser extends AbstractParser
             }
         }
 
+        @Override
         public ParserErrorImpl getEofError(org.jamon.api.Location p_startLocation)
         {
             return new ParserErrorImpl(p_startLocation, PARAM_VALUE_EOF_ERROR);
         }
 
+        @Override
         public void resetEndMatch()
         {
             m_seenAmpersand = false;

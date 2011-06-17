@@ -43,7 +43,7 @@ public class AnalysisGenerator
         {
             String name = node.getName();
             writer.println(
-                "  public void case" + name + "(" + name + " p_node) {}");
+                "  @Override public void case" + name + "(" + name + " p_node) {}");
         }
         writer.println("}");
         writer.close();
@@ -67,7 +67,7 @@ public class AnalysisGenerator
                 "  public void out" + name
                 + "(" + name + " p_node) {}");
             writer.println(
-                "  public void case" + name + "(" + name + " p_node)");
+                "  @Override public void case" + name + "(" + name + " p_node)");
             writer.println("  {");
             writer.println("    in" + name + "(p_node);");
             for (NodeMember member : node.getAllMembers())

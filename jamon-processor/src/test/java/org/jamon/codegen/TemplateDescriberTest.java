@@ -18,26 +18,31 @@ public class TemplateDescriberTest extends TestCase
 
     private static class MockTemplateSource implements TemplateSource
     {
+        @Override
         public long lastModified(String p_templatePath)
         {
             return 0;
         }
 
+        @Override
         public boolean available(String p_templatePath)
         {
             return false;
         }
 
+        @Override
         public InputStream getStreamFor(String p_templatePath)
         {
             return null;
         }
 
+        @Override
         public String getExternalIdentifier(String p_templatePath)
         {
             return null;
         }
 
+        @Override
         public TemplateLocation getTemplateLocation(String p_templatePath)
         {
             return null;
@@ -48,6 +53,7 @@ public class TemplateDescriberTest extends TestCase
             m_properties.put(p_path, p_properties);
         }
 
+        @Override
         public void loadProperties(String p_path, Properties p_properties)
         {
             Properties properties = m_properties.get(p_path);

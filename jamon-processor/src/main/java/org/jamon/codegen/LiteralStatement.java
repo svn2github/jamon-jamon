@@ -37,6 +37,7 @@ public class LiteralStatement
         m_text.append(p_text);
     }
 
+    @Override
     public void generateSource(CodeWriter p_writer,
                                TemplateDescriber p_describer)
     {

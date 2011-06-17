@@ -16,16 +16,19 @@ public class ParsedTemplateImpl implements ParsedTemplate
         m_templateUnit = p_templateUnit;
     }
 
+    @Override
     public SourceGenerator getImplGenerator()
     {
         return new ImplGenerator(m_templateDescriber, m_templateUnit);
     }
 
+    @Override
     public SourceGenerator getProxyGenerator()
     {
         return new ProxyGenerator(m_templateDescriber, m_templateUnit);
     }
 
+    @Override
     public Collection<String> getTemplateDependencies()
     {
         return m_templateUnit.getTemplateDependencies();

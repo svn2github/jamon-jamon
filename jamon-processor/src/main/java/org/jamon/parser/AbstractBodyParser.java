@@ -533,6 +533,7 @@ public abstract class AbstractBodyParser<Node extends AbstractBodyNode>
            m_tagName = p_tagName;
         }
 
+        @Override
         public int checkEnd(char p_char)
         {
             switch (p_char)
@@ -556,6 +557,7 @@ public abstract class AbstractBodyParser<Node extends AbstractBodyNode>
             }
         }
 
+        @Override
         public ParserErrorImpl getEofError(org.jamon.api.Location p_startLocation)
         {
             return new ParserErrorImpl(
@@ -563,6 +565,7 @@ public abstract class AbstractBodyParser<Node extends AbstractBodyNode>
                "Reached end of file while reading " + m_tagName + " tag");
         }
 
+        @Override
         public void resetEndMatch()
         {
         }

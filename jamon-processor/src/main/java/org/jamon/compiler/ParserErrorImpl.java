@@ -19,6 +19,7 @@ public class ParserErrorImpl extends Exception implements ParserError
     /**
      * @return The location of the error
      */
+    @Override
     public org.jamon.api.Location getLocation()
     {
         return m_location;

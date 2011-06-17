@@ -60,24 +60,28 @@ public class ResourceTemplateSource
             : "." + p_extension;
     }
 
+    @Override
     public long lastModified(String p_templatePath)
         throws IOException
     {
         return getTemplate(p_templatePath).getLastModified();
     }
 
+    @Override
     public boolean available(String p_templatePath)
     {
         // FIXME: is this the way to implement this?
         return getUrl(p_templatePath) != null;
     }
 
+    @Override
     public InputStream getStreamFor(String p_templatePath)
         throws IOException
     {
         return getTemplate(p_templatePath).getInputStream();
     }
 
+    @Override
     public String getExternalIdentifier(String p_templatePath)
     {
         // return getUrl(p_templatePath).toExternalForm();
@@ -104,11 +108,13 @@ public class ResourceTemplateSource
     private final String m_templateSourceDir;
     private final String m_extension;
 
+    @Override
     public TemplateLocation getTemplateLocation(String p_templatePath)
     {
         return new TemplateResourceLocation(resourceName(p_templatePath));
     }
 
+    @Override
     public void loadProperties(String p_dirPath, Properties p_properties)
         throws IOException
     {

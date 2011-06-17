@@ -44,6 +44,7 @@ public abstract class AbstractUnit
         m_errors = p_errors;
     }
 
+    @Override
     public final String getName()
     {
         return m_name;
@@ -60,6 +61,7 @@ public abstract class AbstractUnit
     }
 
     protected abstract void addFragmentArg(FragmentArgument p_arg);
+    @Override
     public abstract List<FragmentArgument> getFragmentArgs();
 
     @Override public FragmentUnit getFragmentUnitIntf(String p_path)
@@ -74,6 +76,7 @@ public abstract class AbstractUnit
         return null;
     }
 
+    @Override
     public void generateRenderBody(CodeWriter p_writer,
                                    TemplateDescriber p_describer) throws ParserErrorImpl
     {
@@ -84,7 +87,9 @@ public abstract class AbstractUnit
 
     public abstract void addRequiredArg(RequiredArgument p_arg);
     public abstract void addOptionalArg(OptionalArgument p_arg);
+    @Override
     public abstract List<RequiredArgument> getSignatureRequiredArgs();
+    @Override
     public abstract Collection<OptionalArgument> getSignatureOptionalArgs();
     public abstract Collection<AbstractArgument> getVisibleArgs();
 
@@ -137,6 +142,7 @@ public abstract class AbstractUnit
                 getFragmentArgs());
     }
 
+    @Override
     public void printRenderArgsDecl(CodeWriter p_writer)
     {
         printArgsDecl(p_writer, getRenderArgs());

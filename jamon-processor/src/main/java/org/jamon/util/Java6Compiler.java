@@ -50,6 +50,7 @@ public class Java6Compiler
         m_compilerArgs = p_compilerArgs;
     }
 
+    @Override
     public String compile(String [] p_javaFiles)
     {
         Iterable<? extends JavaFileObject> fileObjects =
