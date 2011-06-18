@@ -6,4 +6,5 @@
 <&| GenericsWithBounds<BigDecimal>: list &>\
 <%args>BigDecimal s;</%args>\
 % s.movePointLeft(2);
+<% s %>
 </&>
