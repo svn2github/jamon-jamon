@@ -392,7 +392,8 @@ public class ProxyGenerator extends AbstractSourceGenerator
         if (m_templateUnit.getGenericParams().getCount() > 0) {
             m_writer.print("@SuppressWarnings(\"unchecked\") ");
         }
-        m_writer.print("Intf instance = (Intf) getTemplateManager().constructImpl(this");
+        m_writer.print("Intf" + genericParamsList() +  " instance = (Intf" + genericParamsList()
+                + ") getTemplateManager().constructImpl(this");
         if (m_templateUnit.getJamonContextType() != null) {
             m_writer.print(", getTypedImplData().getJamonContext()");
         }
