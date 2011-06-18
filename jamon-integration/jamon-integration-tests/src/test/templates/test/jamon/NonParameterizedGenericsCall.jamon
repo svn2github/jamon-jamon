@@ -1,4 +1,4 @@
-<%annotate @SuppressWarnings("unchecked") #impl%>
+<%annotate @SuppressWarnings({"unchecked","rawtypes"}) #impl%>
 % java.util.List<String> list = new java.util.ArrayList<String>();
 % list.add("x");
 % list.add("y");
