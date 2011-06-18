@@ -1,7 +1,7 @@
 <%replaceable>
 <%annotate @SuppressWarnings("unused") #impl %>
 <%import>java.util.List;</%import>
-<%generic>T</%generic>
+<%generic>T extends Number</%generic>
 <%args>List<T> list;</%args>
 <%frag f>T t;</%frag>
 not replaced

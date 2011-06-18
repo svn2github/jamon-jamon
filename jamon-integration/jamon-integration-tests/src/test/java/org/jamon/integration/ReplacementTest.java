@@ -148,7 +148,7 @@ public class ReplacementTest
     public void testReplacementWithGenerics() throws Exception
     {
         assertEquals(
-            "|x||y|",
+            "|1||2|",
             new GenericApiCaller(manager(TEMPLATE_REPLACER)).makeRenderer().asString());
     }
 
