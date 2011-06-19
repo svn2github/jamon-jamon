@@ -160,7 +160,7 @@ public class ProxyGenerator extends AbstractSourceGenerator
             + ClassNames.REPLACEMENT_CONSTRUCTOR + " ");
         m_writer.openBlock();
         if (m_templateUnit.getGenericParams().getCount() > 0) {
-            m_writer.print("@SuppressWarnings(\"unchecked\") ");
+            m_writer.print("@SuppressWarnings(\"rawtypes\") ");
         }
         m_writer.print("@Override public " + ClassNames.TEMPLATE +  " makeReplacement() ");
         m_writer.openBlock();
