@@ -1,4 +1,6 @@
-<%abstract>\
+<%abstract>
+<%doc>Empty method to see how eclipse generates warnings</%doc>\
+<%method empty></%method>
 <%method foo>\
 <%args>String req1; String opt1 = "po1";</%args>\
 foo: <% req1 %>, <% opt1 %></%method>\
