@@ -70,7 +70,7 @@ public class CodeWriter
     {
         return nextFragmentImplCounter++;
     }
-
+    
     public void printLocation(org.jamon.api.Location p_location)
     {
         // In some cases, (such as children of class-only templates), we have
@@ -90,13 +90,6 @@ public class CodeWriter
     {
         maybeIndent();
         m_writer.println(p_obj);
-        for (StackTraceElement e: Thread.currentThread().getStackTrace()) {
-            if (e.getClassName() != getClass().getName() && e.getClassName().startsWith("org.jamon")) {
-                maybeIndent();
-                m_writer.println("// newline called from " + e.toString());
-                break;
-            }
-        }
         beginingOfLine = true;
     }
 
