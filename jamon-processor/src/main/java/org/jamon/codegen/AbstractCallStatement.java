@@ -73,9 +73,10 @@ public abstract class AbstractCallStatement
         return m_fragmentImplNames.get(p_fragmentUnitIntf);
     }
 
-    private void makeFragmentImplClass(FragmentUnit p_fragmentUnitIntf,
-                                       CodeWriter p_writer,
-                                       TemplateDescriber p_describer) throws ParserErrorImpl
+    private void makeFragmentImplClass(
+        FragmentUnit p_fragmentUnitIntf,
+        CodeWriter p_writer,
+        TemplateDescriber p_describer) throws ParserErrorImpl
     {
         final FragmentUnit fragmentUnitImpl =
             m_fragParams.remove(p_fragmentUnitIntf.getName());
@@ -107,7 +108,7 @@ public abstract class AbstractCallStatement
         p_writer.openBlock();
         p_writer.println("@Override");
         p_writer.println(
-            "public void renderTo(" + ArgNames.ANNOTATED_WRITER_DECL + ")");
+            "public void renderTo(" + ArgNames.WRITER_DECL + ")");
         p_writer.println("  throws " + ClassNames.IOEXCEPTION);
         p_writer.openBlock();
         p_writer.print("renderNoFlush");
@@ -122,7 +123,7 @@ public abstract class AbstractCallStatement
 
         p_writer.print("@Override public void renderNoFlush");
         p_writer.openList();
-        p_writer.printListElement(ArgNames.ANNOTATED_WRITER_DECL);
+        p_writer.printListElement(ArgNames.WRITER_DECL);
         fragmentUnitImpl.printRenderArgsDecl(p_writer);
         p_writer.closeList();
         p_writer.println(" throws "+ ClassNames.IOEXCEPTION);
@@ -158,10 +159,7 @@ public abstract class AbstractCallStatement
         }
         for (FragmentArgument arg : p_fragmentInterfaces)
         {
-            makeFragmentImplClass
-                (arg.getFragmentUnit(),
-                 p_writer,
-                 p_describer);
+            makeFragmentImplClass(arg.getFragmentUnit(), p_writer, p_describer);
         }
     }
 

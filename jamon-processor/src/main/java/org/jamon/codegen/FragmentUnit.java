@@ -84,7 +84,6 @@ public class FragmentUnit extends AbstractInnerUnit
                                String p_interfaceModifiers,
                                boolean p_isCopy)
     {
-        m_genericParams.suppressGenericHidingWarnings(p_writer);
         p_writer.println(p_interfaceModifiers + " static interface "
                          + getFragmentInterfaceName(true));
         if (p_isCopy)

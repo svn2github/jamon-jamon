@@ -56,10 +56,10 @@ public class DeclaredMethodUnit
         return m_isAbstract;
     }
 
-    @Override public boolean canThrowIOException()
+    @Override public boolean doesIO()
     {
         return m_isAbstract
-        || super.canThrowIOException()
+        || super.doesIO()
         || ((TemplateUnit) getParentUnit()).isParent();
     }
 

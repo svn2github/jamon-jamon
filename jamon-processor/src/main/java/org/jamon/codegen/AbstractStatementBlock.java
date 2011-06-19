@@ -54,7 +54,7 @@ public abstract class AbstractStatementBlock implements StatementBlock
         return m_statements;
     }
 
-    public boolean canThrowIOException()
+    public boolean doesIO()
     {
         return ! m_statements.isEmpty();
     }

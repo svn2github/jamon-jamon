@@ -434,8 +434,6 @@ public class ProxyGenerator extends AbstractSourceGenerator
 
     private void generateImplData()
     {
-        m_templateUnit.getGenericParams()
-            .suppressGenericHidingWarnings(m_writer);
         m_writer.println(
             "public static class ImplData"
             + m_templateUnit.getGenericParams().generateGenericsDeclaration());
@@ -497,8 +495,11 @@ public class ProxyGenerator extends AbstractSourceGenerator
      */
     private void generateGetTypedImplData()
     {
+        if (m_templateUnit.getGenericParams().getCount() > 0) {
+            m_writer.print("@SuppressWarnings(\"unchecked\") ");
+        }
         m_writer.println(
-            "@SuppressWarnings(\"unchecked\") private ImplData" + genericParamsList()
+            "private ImplData" + genericParamsList()
             + " getTypedImplData()");
         m_writer.openBlock();
         m_writer.println("return (ImplData" + genericParamsList() + ") getImplData();");
@@ -696,8 +697,6 @@ public class ProxyGenerator extends AbstractSourceGenerator
 
     private void generateIntf()
     {
-        m_templateUnit.getGenericParams()
-            .suppressGenericHidingWarnings(m_writer);
         m_writer.println(
             "public interface Intf"
             + m_templateUnit.getGenericParams().generateGenericsDeclaration());

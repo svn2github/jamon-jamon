@@ -35,5 +35,8 @@ public interface Unit extends StatementBlock
     void printRenderArgsDecl(CodeWriter p_writer);
     void generateRenderBody(CodeWriter p_writer,
                             TemplateDescriber p_describer) throws ParserErrorImpl;
-    boolean canThrowIOException();
+    /**
+     * @return {@code true} if this unit does IO, or an extension of this unit could do IO.
+     */
+    boolean doesIO();
 }

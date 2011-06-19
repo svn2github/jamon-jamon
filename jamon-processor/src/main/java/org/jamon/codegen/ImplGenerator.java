@@ -200,11 +200,11 @@ public class ImplGenerator extends AbstractSourceGenerator
             m_writer.print("private void __jamon_innerUnit__");
             m_writer.print(defUnit.getName());
             m_writer.openList();
-            m_writer.printListElement(ArgNames.ANNOTATED_WRITER_DECL);
+            m_writer.printListElement(ArgNames.WRITER_DECL);
             defUnit.printRenderArgsDecl(m_writer);
             m_writer.closeList();
             m_writer.println();
-            if (defUnit.canThrowIOException())
+            if (defUnit.doesIO())
             {
                 m_writer.println("  throws " + ClassNames.IOEXCEPTION);
             }
@@ -239,24 +239,26 @@ public class ImplGenerator extends AbstractSourceGenerator
     {
         //FIXME - cut'n'pasted from generateDefs
         m_writer.println();
+        generateJavadoc();
         m_writer.printLocation(p_methodUnit.getLocation());
         if (p_methodUnit.isOverride())
         {
            m_writer.print("@Override ");
         }
+
         m_writer.print("protected "
                        + (p_methodUnit.isAbstract() ? "abstract " : "")
                        + "void __jamon_innerUnit__");
         m_writer.print(p_methodUnit.getName());
         m_writer.openList();
-        m_writer.printListElement(ArgNames.ANNOTATED_WRITER_DECL);
+//        if (! p_methodUnit.doesIO()) {
+//            m_writer.print("@SuppressWarnings(\"unused\") ");
+//        }
+        m_writer.printListElement(ArgNames.WRITER_DECL);
         p_methodUnit.printRenderArgsDecl(m_writer);
         m_writer.closeList();
         m_writer.println();
-        if (p_methodUnit.canThrowIOException())
-        {
-            m_writer.println("  throws " + ClassNames.IOEXCEPTION);
-        }
+        m_writer.println("  throws " + ClassNames.IOEXCEPTION);
         if (p_methodUnit.isAbstract())
         {
             m_writer.println("  ;");
@@ -282,6 +284,16 @@ public class ImplGenerator extends AbstractSourceGenerator
         }
     }
 
+    /**
+     * Generate javadoc to avoid warnings about unused parameters or unthrown exceptions
+     */
+    private void generateJavadoc() {
+        m_writer.println("/**");
+        m_writer.println(" * @param jamonWriter");
+        m_writer.println(" * @throws " + ClassNames.IOEXCEPTION);
+        m_writer.println(" */");
+    }
+
     private void generateRender() throws ParserErrorImpl
     {
         if (m_templateUnit.hasParentPath())
@@ -289,7 +301,7 @@ public class ImplGenerator extends AbstractSourceGenerator
             m_writer.println(
                 "@Override protected void child_render_"
                 + m_templateUnit.getInheritanceDepth()
-                + "("  + ArgNames.ANNOTATED_WRITER_DECL + ")");
+                + "("  + ArgNames.WRITER_DECL + ")");
         }
         else
         {
@@ -297,9 +309,9 @@ public class ImplGenerator extends AbstractSourceGenerator
                 m_writer.print("@Override ");
             }
             m_writer.println("public void renderNoFlush("
-                             + ArgNames.ANNOTATED_WRITER_DECL + ")");
+                             + ArgNames.WRITER_DECL + ")");
         }
-        if (m_templateUnit.canThrowIOException())
+        if (m_templateUnit.doesIO())
         {
             m_writer.println("  throws " + ClassNames.IOEXCEPTION);
         }

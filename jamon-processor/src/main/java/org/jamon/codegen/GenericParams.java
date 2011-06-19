@@ -43,14 +43,6 @@ public class GenericParams
         return generateGenericsSpecifiers(false);
     }
 
-    public void suppressGenericHidingWarnings(CodeWriter p_writer)
-    {
-        if (!m_genericsParamNodes.isEmpty())
-        {
-            p_writer.println("@SuppressWarnings(\"hiding\")");
-        }
-    }
-
     public int getCount()
     {
         return m_genericsParamNodes.size();
