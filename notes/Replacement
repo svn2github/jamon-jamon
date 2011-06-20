@@ -62,9 +62,11 @@ Things to test:
  optional arguments
  signatures
  replacing an abstract template
+ replacement fargs coming from a parent.
 
 Things to do:
  locations on the lines of populateFrom
+ Eclipse plugin needs to know about new tags
 
 ReplacingTemplateManager design:
 
