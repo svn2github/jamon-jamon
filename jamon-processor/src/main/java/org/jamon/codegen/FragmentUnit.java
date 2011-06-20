@@ -110,5 +110,10 @@ public class FragmentUnit extends AbstractInnerUnit
         p_writer.println();
     }
 
+    public void generateThrowsIOExceptionIfNecessary(CodeWriter p_writer) {
+        if (doesIO()) {
+            p_writer.println(" throws "+ ClassNames.IOEXCEPTION);
+        }
+    }
     private final GenericParams m_genericParams;
 }

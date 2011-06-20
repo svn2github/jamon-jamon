@@ -1,0 +1,9 @@
+<%doc>
+  This template is here to see if warnings are generated.
+  TODO: Make an automated test for this.
+</%doc>
+<%def d>
+  <%frag f/>
+  <& f &>
+</%def>
+<&| d &></&>
