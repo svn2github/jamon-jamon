@@ -526,6 +526,7 @@ public class ProxyGenerator extends AbstractSourceGenerator
         Set<String> replacedTemplateOptionalArgNames =
             getOptionalArgNames(replacedTemplateDescription);
         for (OptionalArgument arg: replacedTemplateDescription.getOptionalArgs()) {
+            m_writer.printLocation(arg.getLocation());
             if (replacedTemplateOptionalArgNames.contains(arg.getName())) {
                 m_writer.println("if(implData." + arg.getIsNotDefaultName() + "()) {");
                 m_writer.println(
@@ -538,6 +539,7 @@ public class ProxyGenerator extends AbstractSourceGenerator
             }
         }
         for (FragmentArgument farg: m_templateUnit.getFragmentArgs()) {
+            m_writer.printLocation(farg.getLocation());
             m_writer.println(
                 farg.getSetterName()
                 + "(new " + getFragmentDelegatorName(farg) + genericParamsList()
