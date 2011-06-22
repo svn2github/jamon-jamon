@@ -58,10 +58,21 @@ Implementor.Intf extend those declared in Api.Intf. Alternatively,
 provide converters for these frags. The benefit here is that the frag
 interfaces could come from parents of Implementor.
 
+Interesting issue: if Implementor has a parent class defining a frag f, then
+saying Intf.Fragment_f in Implementor.java is ambiguous, since it could refer to either
+the definition of Fragment_f coming from ImplementorParent.Intf or Api.Intf. One option
+is to be more explicit - never refer to just Intf, but only to Api.Intf or ImplementorParent.Intf;
+this could get tricky to track, however, since we would need to know where in Implementor's
+inheritance hierarchy the definition of Fragment_f came from. An alternate approach is more radical:
+Implementor.Intf doesn't actually extends Api.Intf. For this to work, we would need to move the
+declaration of:
+  void renderNoFlush(final java.io.Writer jamonWriter) throws java.io.IOException;
+from the Intf class up to a new interface, AbstractTempalteProxy.ComponentIntf. (Cannot move it
+straight to AbstractTemplateProxy.Intf, since this is also implemented by fragments, which do not
+have this method).
+I think this is actually a win all the way around.
+
 Things to test:
- optional arguments
- signatures
- replacing an abstract template
  replacement fargs coming from a parent.
 
 Things to do:

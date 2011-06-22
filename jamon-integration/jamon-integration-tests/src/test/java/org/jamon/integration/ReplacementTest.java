@@ -42,7 +42,9 @@ import test.jamon.replacement.Api;
 import test.jamon.replacement.ApiChildReplacementCaller;
 import test.jamon.replacement.ApiReplacement;
 import test.jamon.replacement.ApiReplacementChild;
+import test.jamon.replacement.ApiWithFargs;
 import test.jamon.replacement.ApiWithFargsCaller;
+import test.jamon.replacement.ApiWithFargsReplacementChild;
 import test.jamon.replacement.GenericApiCaller;
 import test.jamon.replacement.i18n.GreetingCaller;
 
@@ -142,6 +144,30 @@ public class ReplacementTest
         assertEquals(
             "Implementor got 3",
             new ApiWithFargsCaller(manager(TEMPLATE_REPLACER)).makeRenderer().asString());
+    }
+
+    @Test
+    public void testReplacementWithFragsFromParent() throws Exception
+    {
+      TemplateReplacer templateReplacer = new AbstractTemplateReplacer() {
+        @Override
+        protected ReplacementConstructor findReplacement(
+            Class<?> p_proxyClass, Object p_jamonContext)
+        {
+          if (p_proxyClass == ApiWithFargs.class)
+          {
+            return new ApiWithFargsReplacementChild.ReplacementConstructor();
+          }
+          else
+          {
+            return null;
+          }
+        }
+      };
+
+      assertEquals(
+        "Implementor got 3",
+        new ApiWithFargsCaller(manager(templateReplacer)).makeRenderer().asString());
     }
 
     @Test

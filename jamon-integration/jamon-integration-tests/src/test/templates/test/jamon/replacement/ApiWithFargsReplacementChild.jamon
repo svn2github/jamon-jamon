@@ -1,0 +1,4 @@
+<%replaces ApiWithFargs>
+<%extends ApiWithFargsReplacementParent>
+<%xargs>x; f;</%xargs>
+<& f: x + 1 &>
