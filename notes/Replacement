@@ -63,14 +63,23 @@ saying Intf.Fragment_f in Implementor.java is ambiguous, since it could refer to
 the definition of Fragment_f coming from ImplementorParent.Intf or Api.Intf. One option
 is to be more explicit - never refer to just Intf, but only to Api.Intf or ImplementorParent.Intf;
 this could get tricky to track, however, since we would need to know where in Implementor's
-inheritance hierarchy the definition of Fragment_f came from. An alternate approach is more radical:
+inheritance hierarchy the definition of Fragment_f came from. TemplateDescription would need to be
+enriched to support this; relying on this would create a backwards incompatability, unless
+TemplateDescriber were to fall back to reflection on the class when annotations were not available.
+
+An alternate approach is more radical:
 Implementor.Intf doesn't actually extends Api.Intf. For this to work, we would need to move the
 declaration of:
   void renderNoFlush(final java.io.Writer jamonWriter) throws java.io.IOException;
 from the Intf class up to a new interface, AbstractTempalteProxy.ComponentIntf. (Cannot move it
 straight to AbstractTemplateProxy.Intf, since this is also implemented by fragments, which do not
-have this method).
-I think this is actually a win all the way around.
+have this method). I think this is actually a win all the way around. One catch is that legacy
+compiled templates will have been compiled to call the constructImpl method on TemplateManager which
+returns AbstractTemplateProxy.Intf. We should be able to use bridge-method-injector to solve this
+issue. Another catch is that since we are avoiding having child classes state that they implement
+AbstractTemplateProxy.ComponentIntf (to avoid warnings), classes extending legacy-compiled templates
+will not compile. To fix this, TemplateDescriber can track (by isAssignableFrom) whether the parent
+class implements ATP.CI.
 
 Things to test:
  replacement fargs coming from a parent.
