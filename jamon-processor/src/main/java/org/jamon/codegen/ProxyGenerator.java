@@ -556,7 +556,8 @@ public class ProxyGenerator extends AbstractSourceGenerator
      */
     private void generateFragmentDelegator(FragmentArgument farg)
     {
-        String fragmentInterfaceName = "Intf.Fragment_" + farg.getName() + genericParamsList();
+        String fragmentInterfaceName = "Fragment_" + farg.getName() + genericParamsList();
+        //FIXME - use farg.getFragmentUnit.getFullyQualifiedType
         String replacedFragmentInterfaceName =
             getReplacedProxyClassName() + "." + fragmentInterfaceName;
         FragmentUnit fragmentUnit = farg.getFragmentUnit();

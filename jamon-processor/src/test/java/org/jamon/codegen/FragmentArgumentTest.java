@@ -18,7 +18,7 @@ public class FragmentArgumentTest
                 null,
                 null),
             null);
-        assertEquals("foo.bar.Baz.Intf.Fragment_frag", fragmentArgument.getFullyQualifiedType());
+        assertEquals("foo.bar.Baz.Fragment_frag", fragmentArgument.getFullyQualifiedType());
     }
 
     @Test

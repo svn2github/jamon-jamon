@@ -44,7 +44,7 @@ public class FragmentArgument extends RequiredArgument
         if (getFragmentUnit().getParent() instanceof TemplateUnit)
         {
             String templateName = ((TemplateUnit) getFragmentUnit().getParent()).getName();
-            return PathUtils.getFullyQualifiedIntfClassName(templateName) + ".Intf." + getType();
+            return PathUtils.getFullyQualifiedIntfClassName(templateName) + "." + getType();
         }
         else {
             return getType();

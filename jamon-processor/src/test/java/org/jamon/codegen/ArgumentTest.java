@@ -18,7 +18,7 @@ public class ArgumentTest {
     FragmentUnit fragmentUnit = new FragmentUnit(
       "frag", TEMPLATE_UNIT, new GenericParams(), null, null);
     FragmentArgument fragmentArgument = new FragmentArgument(fragmentUnit, null);
-    assertEquals("org.jamon.Template.Intf.Fragment_frag", fragmentArgument.getFullyQualifiedType());
+    assertEquals("org.jamon.Template.Fragment_frag", fragmentArgument.getFullyQualifiedType());
   }
 
   @Test
