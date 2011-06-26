@@ -38,3 +38,19 @@ change calls to use the Intf methods and drop the old methods.
 
 V1 calling V0: still using the old call syntax; no problem
 V2 calling V1: V1 already has the new sigs.
+
+Inheritance backwards compatibility:
+If a legacy library parent template defines a fragment argument, then it's renderChild method
+needs to take Parent.Fragment_f, not Parent.Intf.Fragment_f. For single-level inheritance, this
+can be handled by checking the jamon version of the parent, but for multi-level inheritance, this
+will fail.
+
+Another possibility - switch the inheritance roles, so that
+Proxy.Intf.Fragment_f extends Proxy.Fragment_f. Existing callers provide a Proxy.Fragment_f
+(which no longer isa Proxy.Intf.Fragment_f), and would break, but we consider that acceptable.
+Extending a legacy parent would be fine, since the parent's renderChild method needs a
+Parent.Fragment_f, and Parent.Intf.Fragment_f isa Parent.Fragment_f. If new code calls a legacy
+component, it would match the contract, except that (sigh) Legacy.Intf.Fragment_f is not visible.
+
+
+
