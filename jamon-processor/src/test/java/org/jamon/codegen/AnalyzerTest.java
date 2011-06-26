@@ -301,6 +301,20 @@ public class AnalyzerTest extends TestCase
             new ParserErrorImpl(location(1,1), Analyzer.REPLACING_NON_REPLACEABLE_TEMPLATE_ERROR));
     }
 
+    public void testMissingParent() throws Exception {
+        analyzeExpectingErrors(
+            ImmutableMap.of(PATH, "<%extends /foo>"),
+            new ParserErrorImpl(location(1,1), "Unable to find template or class for /foo"));
+
+    }
+
+    public void testMissingParentWithXargs() throws Exception {
+        analyzeExpectingErrors(
+            ImmutableMap.of(PATH, "<%extends /foo>\n<%xargs>x;</%xargs>"),
+            new ParserErrorImpl(location(1,1), "Unable to find template or class for /foo"),
+            new ParserErrorImpl(location(2,1), Analyzer.XARGS_DECLARED_WITHOUT_PARENT_ERROR));
+    }
+
     private void analyzeExpectingErrors(
         Map<String, String> p_contents, ParserErrorImpl... p_errors) throws IOException
     {

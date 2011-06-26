@@ -45,6 +45,9 @@ public class Analyzer
         "Abstract templates are not replaceable";
     static final String REPLACING_NON_REPLACEABLE_TEMPLATE_ERROR =
         "Replaced template is not marked as <%replaceable>";
+    static final String XARGS_DECLARED_WITHOUT_PARENT_ERROR =
+        "xargs may not be declared without extending another template";
+
 
     public Analyzer(String p_templatePath,
                     TemplateDescriber p_describer,
@@ -406,12 +409,11 @@ public class Analyzer
                     ("a template cannot extend multiple templates",
                      p_extends.getLocation());
             }
-            String parentPath =
-                getAbsolutePath(computePath(p_extends.getPath()));
-            getTemplateUnit().setParentPath(parentPath);
+            String parentPath = getAbsolutePath(computePath(p_extends.getPath()));
             TemplateDescription parentDescription =
                 getTemplateDescription(parentPath, p_extends.getLocation());
             if (parentDescription != null) {
+                getTemplateUnit().setParentPath(parentPath);
                 getTemplateUnit().setParentDescription(parentDescription);
             }
         }
@@ -474,7 +476,7 @@ public class Analyzer
                 && ! ((TemplateUnit) getCurrentStatementBlock()).hasParentPath())
             {
                 addError(
-                    "xargs may not be declared without extending another template",
+                    XARGS_DECLARED_WITHOUT_PARENT_ERROR,
                     p_node.getLocation());
             }
             else
