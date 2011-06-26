@@ -1,2 +1,1 @@
-<%import>java.util.Arrays;</%import>
-<&| GenericApi<Integer>: Arrays.asList(1,2) &><%args>Integer i;</%args>|<% i %>|</&>
+<&| GenericApi<Integer>: java.util.Arrays.asList(1,2) &><%args>Integer i;</%args>|<% i %>|</&>
