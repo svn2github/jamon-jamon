@@ -1,0 +1,4 @@
+<%extends //LegacyParent>
+<%xargs>x;</%xargs>
+<%args>int y;</%args>
+<% x %>-<% y %>

@@ -33,6 +33,11 @@
             <version>trunk-SNAPSHOT</version>
         </dependency>
         <dependency>
+          <groupId>org.jamon</groupId>
+          <artifactId>jamon-23-legacy-test-lib</artifactId>
+          <version>trunk-SNAPSHOT</version>
+        </dependency>
+        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.3.1</version>

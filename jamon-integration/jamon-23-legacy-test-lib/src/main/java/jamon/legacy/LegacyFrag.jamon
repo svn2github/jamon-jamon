@@ -1,0 +1,2 @@
+<%frag f>int x;</%frag>
+Frag says <& f: 3 &>

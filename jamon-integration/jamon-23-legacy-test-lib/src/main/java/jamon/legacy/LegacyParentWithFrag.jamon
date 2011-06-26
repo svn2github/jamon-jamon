@@ -1,0 +1,4 @@
+<%abstract>
+<%frag f>int x;</%frag>
+Parent: <& f: 3 &>
+Child: <& *CHILD &>

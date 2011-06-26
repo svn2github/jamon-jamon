@@ -1,0 +1,3 @@
+<&| //LegacyFrag &>\
+<%args>int x;</%args>
+x is <% x %></&>

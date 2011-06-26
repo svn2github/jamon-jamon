@@ -19,7 +19,8 @@
     </scm>
     <modules>
         <module>jamon-integration-lib</module>
-        <module>jamon-integration-tests</module>
+        <module>jamon-23-legacy-test-lib</module>
         <module>jamon-23-source-compatability</module>
+        <module>jamon-integration-tests</module>
     </modules>
 </project>

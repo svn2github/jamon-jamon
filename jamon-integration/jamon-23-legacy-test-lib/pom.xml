@@ -1,0 +1,56 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <artifactId>jamon-integration</artifactId>
+    <groupId>org.jamon</groupId>
+    <version>trunk-SNAPSHOT</version>
+  </parent>
+  <groupId>org.jamon</groupId>
+  <artifactId>jamon-23-legacy-test-lib</artifactId>
+  <version>trunk-SNAPSHOT</version>
+  <name>Jamon 2.3 Legacy Test Lib</name>
+  <description>
+    Test template library compiled under jamon 2.3
+  </description>
+    <dependencies>
+        <dependency>
+            <groupId>org.jamon</groupId>
+            <artifactId>jamon-runtime</artifactId>
+            <version>2.3.1</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jamon</groupId>
+            <artifactId>jamon-api</artifactId>
+            <version>2.3.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jamon</groupId>
+            <artifactId>jamon-processor</artifactId>
+            <version>2.3.3</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.jamon</groupId>
+                <artifactId>jamon-maven-plugin</artifactId>
+                <version>2.3.3</version>
+                <executions>
+                    <execution>
+                        <configuration>
+                            <templateSourceDir>src/main/java</templateSourceDir>
+                        </configuration>
+                        <id>jamon-generate-sources</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>translate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

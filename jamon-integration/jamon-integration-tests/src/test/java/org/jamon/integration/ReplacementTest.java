@@ -166,7 +166,7 @@ public class ReplacementTest
       };
 
       assertEquals(
-        "Implementor got 3",
+        "Implementor got 3\nImplementor got 4",
         new ApiWithFargsCaller(manager(templateReplacer)).makeRenderer().asString());
     }
 

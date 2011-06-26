@@ -1,0 +1,2 @@
+<%args>int x;</%args>
+<% x %>

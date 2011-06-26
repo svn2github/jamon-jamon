@@ -1,0 +1,1 @@
+<&| ChildOfLegacyParentWithFrag &><%args>int x;</%args>[<% x %>]</&>
