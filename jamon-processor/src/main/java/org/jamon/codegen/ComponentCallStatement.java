@@ -33,11 +33,11 @@ public class ComponentCallStatement
                            org.jamon.api.Location p_location,
                            String p_templateIdentifier,
                            List<GenericCallParam> p_genericParams,
-                           String p_callingTemlpateJamonContextType)
+                           String p_callingTemplateJamonContextType)
     {
         super(p_path, p_params, p_location, p_templateIdentifier);
         m_genericParams = p_genericParams;
-        m_callingTemlpateJamonContextType = p_callingTemlpateJamonContextType;
+        m_callingTemplateJamonContextType = p_callingTemplateJamonContextType;
     }
 
     @Override
@@ -66,7 +66,7 @@ public class ComponentCallStatement
         }
 
         if (desc.getJamonContextType() != null
-            && m_callingTemlpateJamonContextType == null)
+            && m_callingTemplateJamonContextType == null)
         {
             throw new ParserErrorImpl(
                 getLocation(),
@@ -169,5 +169,5 @@ public class ComponentCallStatement
 
     private static int m_uniqueId = 0;
     private final List<GenericCallParam> m_genericParams;
-    private final String m_callingTemlpateJamonContextType;
+    private final String m_callingTemplateJamonContextType;
 }
