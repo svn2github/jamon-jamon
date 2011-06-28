@@ -37,7 +37,7 @@ public class ProxyGenerator extends AbstractSourceGenerator
     public void generateSource(OutputStream p_out)
         throws java.io.IOException
     {
-        m_writer = new CodeWriter(p_out);
+        m_writer = new CodeWriter(p_out, m_templateUnit.getEncoding());
         generateHeader();
         generatePrologue();
         generateImports();

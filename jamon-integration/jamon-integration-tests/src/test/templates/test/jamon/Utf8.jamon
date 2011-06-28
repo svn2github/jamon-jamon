@@ -1,3 +1,7 @@
-<%encoding utf-8>  
+<%encoding utf-8>
+<%args>String x = "Oncéòá";</%args>
+<%java String y = "éÁóé"; %>
 Oncéòá
 éÁóé
+<% x %> <% y %>
+<% "Oncéòá" %>

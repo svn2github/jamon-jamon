@@ -26,6 +26,7 @@ import java.io.InputStreamReader;
 import java.io.PushbackInputStream;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 
 public class EncodingReader
     extends Reader
@@ -55,19 +56,23 @@ public class EncodingReader
         PushbackInputStream stream = new PushbackInputStream(p_stream, 50);
         if (matches(ONEBYTESIG, stream))
         {
-            m_reader = new InputStreamReader(stream,
-                                             computeOneByteEncoding(stream));
+            m_encoding = computeOneByteEncoding(stream);
         }
         else if (matches(UTF16LESIG, stream)
                  || matches(UTF16BESIG, stream))
         {
-            m_reader = new InputStreamReader(stream,
-                                             computeUtf16Encoding(stream));
+            m_encoding = computeUtf16Encoding(stream);
         }
         else
         {
-            m_reader = new InputStreamReader(stream);
+            m_encoding = Charset.defaultCharset().name();
         }
+        m_reader = new InputStreamReader(stream, m_encoding);
+    }
+
+    public String getEncoding()
+    {
+        return m_encoding;
     }
 
     private boolean matches(byte[] match, PushbackInputStream p_stream)
@@ -194,6 +199,7 @@ public class EncodingReader
     }
 
     private final Reader m_reader;
+    private String m_encoding;
     private int m_bytesRead;
 
     private static final byte[] ONEBYTESIG;

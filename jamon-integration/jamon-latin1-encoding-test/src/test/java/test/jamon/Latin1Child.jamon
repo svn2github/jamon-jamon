@@ -1,0 +1,8 @@
+<%encoding latin1>
+<%extends /test/jamon/DefaultEncodingParent>
+<%args>String x = "Oncיעב";</%args>
+<%java String y = "יÁףי"; %>
+Oncיעב
+יÁףי
+<% x %> <% y %>
+<% "Oncיעב" %>

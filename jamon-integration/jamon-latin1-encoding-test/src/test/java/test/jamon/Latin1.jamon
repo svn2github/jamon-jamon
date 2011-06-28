@@ -1,0 +1,7 @@
+<%encoding latin1>
+<%args>String x = "Oncיעב";</%args>
+<%java String y = "יÁףי"; %>
+Oncיעב
+יÁףי
+<% x %> <% y %>
+<% "Oncיעב" %>

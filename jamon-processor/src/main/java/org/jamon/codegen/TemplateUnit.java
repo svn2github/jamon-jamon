@@ -76,6 +76,7 @@ public class TemplateUnit
     private final GenericParams m_genericParams = new GenericParams();
     private String m_jamonContextType;
     private final List<AnnotationNode> m_annotations = new LinkedList<AnnotationNode>();
+    private String m_encoding;
 
     public TemplateUnit(String p_path, ParserErrorsImpl p_errors)
     {
@@ -570,5 +571,15 @@ public class TemplateUnit
     public Iterable<AnnotationNode> getAnnotations()
     {
         return m_annotations;
+    }
+
+    public void setEncoding(String p_encoding)
+    {
+        m_encoding = p_encoding;
+    }
+
+    public String getEncoding()
+    {
+        return m_encoding;
     }
 }

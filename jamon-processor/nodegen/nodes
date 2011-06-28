@@ -3,7 +3,7 @@ SubcomponentNode:AbstractBodyNode String:name
 DefNode:SubcomponentNode
 MethodNode:SubcomponentNode
 OverrideNode:SubcomponentNode
-TopNode:AbstractBodyNode
+TopNode:AbstractBodyNode String:encoding
 EscapeDirectiveNode String:escapeCode
 AbstractParamsNode
 ParamNameNode String:name

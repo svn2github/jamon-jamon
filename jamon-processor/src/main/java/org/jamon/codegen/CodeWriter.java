@@ -31,13 +31,11 @@ import java.util.LinkedList;
 
 public class CodeWriter
 {
-    static final String JAVA_SOURCE_ENCODING = "US-ASCII";
-
-    public CodeWriter(OutputStream p_stream)
+    public CodeWriter(OutputStream p_stream, String p_encoding)
     {
         try
         {
-            m_writer = new PrintWriter(new OutputStreamWriter(p_stream, JAVA_SOURCE_ENCODING));
+            m_writer = new PrintWriter(new OutputStreamWriter(p_stream, p_encoding));
         }
         catch (UnsupportedEncodingException e)
         {
@@ -70,7 +68,7 @@ public class CodeWriter
     {
         return nextFragmentImplCounter++;
     }
-    
+
     public void printLocation(org.jamon.api.Location p_location)
     {
         // In some cases, (such as children of class-only templates), we have

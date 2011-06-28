@@ -77,6 +77,7 @@ public class Analyzer
         throws IOException
     {
         TopNode top = m_describer.parseTemplate(m_templateUnit.getName());
+        m_templateUnit.setEncoding(top.getEncoding());
         preAnalyze(top);
         mainAnalyze(top);
         checkForConcreteness(top);

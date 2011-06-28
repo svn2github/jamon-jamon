@@ -123,10 +123,10 @@ public class TemplateDescriber
         InputStream stream = m_templateSource.getStreamFor(p_path);
         try
         {
+            EncodingReader reader = new EncodingReader(stream);
             return
                 new TopLevelParser(
-                    m_templateSource.getTemplateLocation(p_path),
-                    new EncodingReader(stream))
+                    m_templateSource.getTemplateLocation(p_path), reader, reader.getEncoding())
                     .parse()
                     .getRootNode();
         }

@@ -34,7 +34,7 @@ public class CodeWriterTest
     @Override public void setUp() throws Exception
     {
         m_bytes = new ByteArrayOutputStream();
-        m_codeWriter = new CodeWriter(m_bytes);
+        m_codeWriter = new CodeWriter(m_bytes, "US-ASCII");
     }
 
     public void testIndentation() throws Exception
@@ -168,6 +168,6 @@ public class CodeWriterTest
         throws IOException
     {
         m_codeWriter.finish();
-        assertEquals(p_expected, new String(m_bytes.toByteArray(), CodeWriter.JAVA_SOURCE_ENCODING));
+        assertEquals(p_expected, new String(m_bytes.toByteArray(), "US-ASCII"));
     }
 }

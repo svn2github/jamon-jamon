@@ -49,7 +49,7 @@ public class DepthFirstAnalysisAdapterTest extends TestCase
     public void testAnalysis()
     {
         Location loc = new LocationImpl(new TemplateFileLocation("x"), 1,1);
-        TopNode top = (TopNode) new TopNode(loc)
+        TopNode top = (TopNode) new TopNode(loc, "US-ASCII")
             .addSubNode(new SimpleCallNode(
                 loc,
                 new AbsolutePathNode(loc).addPathElement(

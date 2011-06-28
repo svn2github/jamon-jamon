@@ -25,6 +25,7 @@ import java.io.BufferedReader;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.io.IOException;
+import java.nio.charset.Charset;
 
 import junit.framework.TestCase;
 
@@ -33,27 +34,26 @@ public class EncodingReaderTest
 {
     public void testEmptyStream() throws Exception
     {
-        assertEquals(
-            "",
-            readAll(new EncodingReader(new ByteArrayInputStream(new byte[0]))));
+        EncodingReader reader = makeReader(new byte[0]);
+        assertEquals("", readAll(reader));
+        assertEquals(Charset.defaultCharset().name(), reader.getEncoding());
     }
 
     public void testOneCharStream() throws Exception
     {
-        assertEquals(
-            "x",
-            readAll(new EncodingReader(
-                new ByteArrayInputStream(new byte[] {'x'}))));
+        EncodingReader reader = makeReader(new byte[] {'x'});
+        assertEquals("x", readAll(reader));
+        assertEquals(Charset.defaultCharset().name(), reader.getEncoding());
     }
 
 
     public void testNoEncodingTag() throws Exception
     {
         String stuff = "abcdefg12345!@#$%^~";
-        assertEquals(
-            stuff,
-            readAll(new EncodingReader(
-                new ByteArrayInputStream(stuff.getBytes("latin1")))));
+        EncodingReader reader = new EncodingReader(
+            new ByteArrayInputStream(stuff.getBytes("latin1")));
+        assertEquals(stuff, readAll(reader));
+        assertEquals(Charset.defaultCharset().name(), reader.getEncoding());
     }
 
     public void testLatin1()
@@ -85,10 +85,14 @@ public class EncodingReaderTest
         writer.write(p_encoding);
         writer.write("  >    \n\t  \n");
         writer.write(p_stuff);
-        EncodingReader reader =
-            new EncodingReader(new ByteArrayInputStream
-                               (writer.toString().getBytes(p_encoding)));
+        EncodingReader reader = makeReader(writer.toString().getBytes(p_encoding));
         assertEquals(p_stuff, readAll(reader));
+        assertEquals(p_encoding, reader.getEncoding());
+    }
+
+    private EncodingReader makeReader(byte[] p_bytes) throws IOException
+    {
+        return new EncodingReader(new ByteArrayInputStream(p_bytes));
     }
 
     private String readAll(Reader p_reader)

@@ -67,9 +67,9 @@ public class TopLevelParser extends AbstractBodyParser<TopNode>
     public static final String EXPECTING_IMPORTS_CLOSE =
         "Expecting import or </%import>";
 
-    public TopLevelParser(TemplateLocation p_location, Reader p_reader)
+    public TopLevelParser(TemplateLocation p_location, Reader p_reader, String p_encoding)
     {
-        super(new TopNode(new LocationImpl(p_location, 1, 1)),
+        super(new TopNode(new LocationImpl(p_location, 1, 1), p_encoding),
               new PositionalPushbackReader(p_location, p_reader, 2),
               new ParserErrorsImpl());
     }

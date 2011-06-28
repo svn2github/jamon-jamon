@@ -26,7 +26,7 @@ public class LiteralStatementTest extends TestCase
         LiteralStatement statement = new LiteralStatement(
             "\n \r \t \" \\ \u1234", new LocationImpl(null, 1, 1), null);
         ByteArrayOutputStream bos= new ByteArrayOutputStream();
-        CodeWriter codeWriter = new CodeWriter(bos);
+        CodeWriter codeWriter = new CodeWriter(bos, "US-ASCII");
         statement.generateSource(codeWriter, null);
         codeWriter.finish();
         assertEquals(

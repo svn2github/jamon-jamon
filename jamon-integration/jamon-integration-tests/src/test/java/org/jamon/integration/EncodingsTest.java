@@ -31,21 +31,9 @@ public class EncodingsTest
         throws Exception
     {
         new test.jamon.Utf8().render(getWriter());
-        checkOutput("Onc\u00e9\u00f2\u00e1\n\u00e9\u00c1\u00f3\u00e9\n");
-    }
-
-    public void testLatin1()
-        throws Exception
-    {
-        new test.jamon.Latin1().render(getWriter());
-        checkOutput("Onc\u00e9\u00f2\u00e1\n\u00e9\u00c1\u00f3\u00e9\n");
-    }
-
-    public void testParentDefaultEncoding()
-        throws Exception
-    {
-        new test.jamon.Latin1Child().render(getWriter());
-        checkOutput("Parent\nOnc\u00e9\u00f2\u00e1\n\u00e9\u00c1\u00f3\u00e9\n");
+        checkOutput("Onc\u00e9\u00f2\u00e1\n\u00e9\u00c1\u00f3\u00e9\n" +
+            "Onc\u00e9\u00f2\u00e1 \u00e9\u00c1\u00f3\u00e9\n" +
+            "Onc\u00e9\u00f2\u00e1");
     }
 
     public void testMalformedEncoding1()

@@ -40,7 +40,7 @@ public abstract class AbstractParserTest
 
     protected static TopNode topNode()
     {
-        return new TopNode(new LocationImpl(TEMPLATE_LOC, 1, 1));
+        return new TopNode(new LocationImpl(TEMPLATE_LOC, 1, 1), "US-ASCII");
     }
 
     protected static org.jamon.api.Location location(int p_line, int p_column)
@@ -50,7 +50,7 @@ public abstract class AbstractParserTest
 
     protected AbstractNode parse(String p_text) throws IOException
     {
-        return new TopLevelParser(TEMPLATE_LOC, new StringReader(p_text))
+        return new TopLevelParser(TEMPLATE_LOC, new StringReader(p_text), "US-ASCII")
             .parse()
             .getRootNode();
     }
