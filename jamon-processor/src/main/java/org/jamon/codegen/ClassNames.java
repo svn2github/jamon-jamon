@@ -20,6 +20,8 @@
 
 package org.jamon.codegen;
 
+import org.jamon.AbstractTemplateProxy;
+
 public interface ClassNames
 {
     public final static String IOEXCEPTION =
@@ -30,9 +32,12 @@ public interface ClassNames
         org.jamon.AbstractRenderer.class.getName();
     public final static String TEMPLATE =
         org.jamon.AbstractTemplateProxy.class.getName();
-    public final static String TEMPLATE_INTF = TEMPLATE + ".Intf";
-    public final static String IMPL_DATA = TEMPLATE + ".ImplData";
-    public final static String IMPL_DATA_COMPATIBLE = TEMPLATE + ".ImplDataCompatible";
+    public final static String TEMPLATE_INTF =
+        AbstractTemplateProxy.Intf.class.getCanonicalName();
+    public final static String IMPL_DATA =
+        AbstractTemplateProxy.ImplData.class.getCanonicalName();
+    public final static String IMPL_DATA_COMPATIBLE =
+        AbstractTemplateProxy.ImplDataCompatible.class.getCanonicalName();
     public final static String TEMPLATE_MANAGER =
         org.jamon.TemplateManager.class.getName();
     public static final String BASE_TEMPLATE =
@@ -47,5 +52,6 @@ public interface ClassNames
         org.jamon.annotations.Template.class.getName();
     public static final String REPLACEABLE = org.jamon.annotations.Replaceable.class.getName();
     public static final String REPLACES = org.jamon.annotations.Replaces.class.getName();
-    public static final String REPLACEMENT_CONSTRUCTOR = TEMPLATE + ".ReplacementConstructor";
+    public static final String REPLACEMENT_CONSTRUCTOR =
+        AbstractTemplateProxy.ReplacementConstructor.class.getCanonicalName();
 }
