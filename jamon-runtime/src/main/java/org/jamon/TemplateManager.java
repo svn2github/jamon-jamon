@@ -23,6 +23,8 @@ package org.jamon;
 /**
  * A <code>TemplateManager</code> is the entry point to obtaining
  * instances of template objects.
+ *
+ * @see TemplateManagerSource
  */
 public interface TemplateManager
 {
