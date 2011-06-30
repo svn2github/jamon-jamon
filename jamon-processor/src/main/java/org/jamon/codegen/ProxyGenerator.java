@@ -486,14 +486,14 @@ public class ProxyGenerator extends AbstractSourceGenerator
         if (! m_templateUnit.isParent()
             || ! m_templateUnit.getSignatureOptionalArgs().isEmpty()
             || m_templateUnit.getJamonContextType() != null) {
-            generateGetTypedImplData();
+            generateGetImplData();
         }
     }
 
     /**
      * Generate a method to cast getImplData() to the ImplData class defined in this Proxy file.
      */
-    private void generateGetTypedImplData()
+    private void generateGetImplData()
     {
         if (m_templateUnit.getGenericParams().getCount() > 0) {
             m_writer.print("@SuppressWarnings(\"unchecked\") ");
