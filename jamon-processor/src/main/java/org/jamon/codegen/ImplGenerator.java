@@ -107,7 +107,7 @@ public class ImplGenerator extends AbstractSourceGenerator
         for (AbstractArgument arg: m_templateUnit.getVisibleArgs())
         {
             m_writer.println(
-                "private final " + arg.getFullyQualifiedType() + " " + arg.getName() + ";");
+                "private final " + arg.getType() + " " + arg.getName() + ";");
         }
         m_templateUnit.printClassContent(m_writer);
     }
