@@ -22,7 +22,7 @@ involves pointer slinging. However, a good hotspot compiler might
 discover the impl data is a temp data structure and eliminate it
 entirely.
 
-So Implementor.java will look normal, with the additon of:
+So Implementor.java will look normal, with the addition of:
 
 public static class ImplData ...
 implements ImplDataCompatible<Api.ImplData>
@@ -38,7 +38,7 @@ implements ImplDataCompatible<Api.ImplData>
 
 ImplementorImpl.java will be completely normal, other than also
 implementing Api.Intf. Or better: Implementor.Intf extends Api.Intf,
-with any Framgment interfaces extending Api's fragment interfaces.
+with any Fragment interfaces extending Api's fragment interfaces.
 
 The templateManager will instantiate the appropriate Implementor
 class, call it's getImplData method, cast it to
@@ -52,6 +52,7 @@ types. Not overriding the type on makeImplData can fix this, but then
 the problem shifts to the getImplData method. This needs to have the
 right type so that it can be used internally. Solution: make the
 method called getTypedImplData, and make it private.
+<--- Update: since Implementor does not extend API, this is not an issue.
 
 Next problem: need to have the frag interfaces declared in
 Implementor.Intf extend those declared in Api.Intf. Alternatively,
@@ -85,7 +86,7 @@ Things to test:
  replacement fargs coming from a parent.
 
 Things to do:
- Eclipse plugin needs to know about new tags
+ Eclipse plugin needs to know about new tags. Or not - it doesn't know about <%extends> either.
 
 ReplacingTemplateManager design:
 

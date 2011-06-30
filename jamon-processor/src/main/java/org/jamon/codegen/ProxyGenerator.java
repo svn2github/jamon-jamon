@@ -318,7 +318,7 @@ public class ProxyGenerator extends AbstractSourceGenerator
                          + ClassNames.TEMPLATE_MANAGER + ".class"
                          + ", ImplData.class })");
         m_writer.println(
-            ".newInstance(new Object [] { getTemplateManager(), getTypedImplData()});");
+            ".newInstance(new Object [] { getTemplateManager(), getImplData()});");
         m_writer.outdent();
         m_writer.closeBlock();
         m_writer.println("catch (RuntimeException e)");
@@ -342,7 +342,7 @@ public class ProxyGenerator extends AbstractSourceGenerator
         m_writer.println(
             "return new "
             + PathUtils.getImplClassName(m_templateUnit.getName()) + genericParamsList()
-            + "(getTemplateManager(), getTypedImplData());");
+            + "(getTemplateManager(), getImplData());");
         m_writer.closeBlock();
     }
 
@@ -382,7 +382,7 @@ public class ProxyGenerator extends AbstractSourceGenerator
         m_writer.openBlock();
         if (! m_templateUnit.getRenderArgs().isEmpty())
         {
-            m_writer.println("ImplData" + genericParamsList() + " implData = getTypedImplData();");
+            m_writer.println("ImplData" + genericParamsList() + " implData = getImplData();");
             for (AbstractArgument arg: m_templateUnit.getRenderArgs())
             {
                 m_writer.println("implData." + arg.getSetterName()
@@ -395,7 +395,7 @@ public class ProxyGenerator extends AbstractSourceGenerator
         m_writer.print("Intf" + genericParamsList() +  " instance = (Intf" + genericParamsList()
                 + ") getTemplateManager().constructImpl(this");
         if (m_templateUnit.getJamonContextType() != null) {
-            m_writer.print(", getTypedImplData().getJamonContext()");
+            m_writer.print(", getImplData().getJamonContext()");
         }
         m_writer.println(");");
 
@@ -482,7 +482,7 @@ public class ProxyGenerator extends AbstractSourceGenerator
             m_writer.closeBlock();
         }
 
-        // Only generate the getTypedImplData method if we're actually going to use it.
+        // Only generate the getImplData method if we're actually going to use it.
         if (! m_templateUnit.isParent()
             || ! m_templateUnit.getSignatureOptionalArgs().isEmpty()
             || m_templateUnit.getJamonContextType() != null) {
@@ -499,10 +499,10 @@ public class ProxyGenerator extends AbstractSourceGenerator
             m_writer.print("@SuppressWarnings(\"unchecked\") ");
         }
         m_writer.println(
-            "private ImplData" + genericParamsList()
-            + " getTypedImplData()");
+            "@Override public ImplData" + genericParamsList()
+            + " getImplData()");
         m_writer.openBlock();
-        m_writer.println("return (ImplData" + genericParamsList() + ") getImplData();");
+        m_writer.println("return (ImplData" + genericParamsList() + ") super.getImplData();");
         m_writer.closeBlock();
     }
 
@@ -661,7 +661,7 @@ public class ProxyGenerator extends AbstractSourceGenerator
             " setJamonContext(" + m_templateUnit.getJamonContextType()
             + " p_jamonContext)");
         m_writer.openBlock();
-        m_writer.println("getTypedImplData().setJamonContext(p_jamonContext);");
+        m_writer.println("getImplData().setJamonContext(p_jamonContext);");
         m_writer.println("return this;");
         m_writer.closeBlock();
     }
@@ -680,7 +680,7 @@ public class ProxyGenerator extends AbstractSourceGenerator
                 + "(" + arg.getType() +" p_" + arg.getName() + ")");
             m_writer.openBlock();
             m_writer.println(
-                "(" + "getTypedImplData()" + ")."
+                "(" + "getImplData()" + ")."
                 + arg.getSetterName() + "(p_" + arg.getName() + ");");
             m_writer.println("return this;");
             m_writer.closeBlock();
