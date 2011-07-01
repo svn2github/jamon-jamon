@@ -24,11 +24,8 @@ import static org.junit.Assert.*;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.security.SecureClassLoader;
-import java.util.Set;
 
 import org.jamon.compiler.RecompilingTemplateManager;
 import org.junit.After;
@@ -36,7 +33,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.matchers.JUnitMatchers;
 
-import com.google.common.collect.ImmutableSet;
 import com.google.common.io.Files;
 import com.google.common.io.Resources;
 
@@ -50,44 +46,6 @@ public class JavaCompilerFactoryTest
     private File m_workDir;
     private ClassLoader m_workClassLoader;
     private JavaCompiler m_compiler;
-
-    private static class FilteredClassLoader extends SecureClassLoader
-    {
-        private final Set<String> m_classesToReload =
-            ImmutableSet.of(JavaCompilerFactory.class.getName(),
-                InternalJavaCompiler.class.getName());
-        public FilteredClassLoader(ClassLoader parentLoader)
-        {
-            super(parentLoader);
-        }
-
-        @Override
-        protected synchronized Class<?> loadClass(String name, boolean resolve)
-                throws ClassNotFoundException
-        {
-            if (name.equals("javax.tools.JavaCompiler")) {
-                throw new ClassNotFoundException();
-            }
-            if (m_classesToReload.contains(name)) {
-                String classFileName = name.replace('.', '/') + ".class";
-                URL resource = getResource(classFileName);
-                byte[] classContents = null;
-                try {
-                    classContents =  Files.toByteArray(new File(resource.toURI()));
-                }
-                catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-
-                Class<?> clazz = defineClass(name, classContents, 0, classContents.length);
-                resolveClass(clazz);
-                return clazz;
-            }
-            else {
-                return super.loadClass(name, resolve);
-            }
-        }
-    }
 
     @Before
     public void setUp() throws Exception
@@ -123,20 +81,6 @@ public class JavaCompilerFactoryTest
     }
 
     @Test
-    public void testJava5Compiler() throws Exception
-    {
-        initializeJava5Compiler();
-        compileAndVerifyDummyFile();
-    }
-
-    @Test
-    public void testJava5CompilerWithError() throws Exception
-    {
-        initializeJava5Compiler();
-        compileFileWithError();
-    }
-
-    @Test
     public void testExternalJavaCompiler() throws Exception
     {
         initializeExternalJavaCompiler();
@@ -155,35 +99,6 @@ public class JavaCompilerFactoryTest
         m_compiler =
             JavaCompilerFactory.makeCompiler(m_data, m_workDir.getAbsolutePath(), getClass().getClassLoader());
         assertEquals(Java6Compiler.class, m_compiler.getClass());
-    }
-
-    private void initializeJava5Compiler() throws Exception
-    {
-        ClassLoader loader = getClass().getClassLoader();
-        try {
-            Class.forName("com.sun.tools.javac.Main");
-        }
-        catch (ClassNotFoundException e) {
-            String resource = getClass().getClassLoader().getResource("java/lang/String.class").getFile();
-            if (resource.startsWith("file:")) {
-                String jarFile = resource.substring(5, resource.indexOf('!'));
-                File toolsJar = new File(
-                    new File(
-                        new File(jarFile).getParentFile().getParentFile().getParentFile(),
-                        "lib"),
-                    "tools.jar");
-                loader = new URLClassLoader(new URL[] {toolsJar.toURI().toURL()}, loader);
-            }
-        }
-        Class<?> factoryClass = new FilteredClassLoader(loader)
-            .loadClass(JavaCompilerFactory.class.getName());
-        Method makeCompilerMethod = factoryClass.getDeclaredMethod(
-            "makeCompiler",
-            RecompilingTemplateManager.Data.class, String.class, ClassLoader.class);
-        m_compiler = (JavaCompiler) makeCompilerMethod.invoke(
-            null, m_data, m_workDir.getAbsolutePath(), getClass().getClassLoader());
-        // due to different loaders, have to compare by name
-        assertEquals(InternalJavaCompiler.class.getName(), m_compiler.getClass().getName());
     }
 
     private void initializeExternalJavaCompiler()

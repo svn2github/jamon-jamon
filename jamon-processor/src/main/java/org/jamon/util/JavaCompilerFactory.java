@@ -42,21 +42,12 @@ public class JavaCompilerFactory
         {
             try
             {
-                Class.forName("javax.tools.JavaCompiler"); // this will fail
-                                                           // under Java5
                 return new Java6Compiler(compilerArgs);
             }
             catch (Exception e1)
             {
-                try
-                {
-                    return new InternalJavaCompiler(compilerArgs);
-                }
-                catch (Exception e2)
-                {
-                    // well, we tried
-                    javac = getDefaultJavac();
-                }
+                // well, we tried
+                javac = getDefaultJavac();
             }
         }
         return new ExternalJavaCompiler(javac, compilerArgs);
