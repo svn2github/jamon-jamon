@@ -9,20 +9,20 @@ public class ArgumentTest {
     new TemplateUnit("org/jamon/Template", null);
 
   @Test
-  public void testGetTypeForRequiredArg() {
-    assertEquals("bar", new RequiredArgument("foo", "bar", null).getType());
+  public void testGetFullyQualifiedTypeForRequiredArg() {
+    assertEquals("bar", new RequiredArgument("foo", "bar", null).getFullyQualifiedType());
   }
 
   @Test
-  public void testGetTypeForTopLevelFragmentArg() {
+  public void testGetFullyQualifiedTypeForTopLevelFragmentArg() {
     FragmentUnit fragmentUnit = new FragmentUnit(
       "frag", TEMPLATE_UNIT, new GenericParams(), null, null);
     FragmentArgument fragmentArgument = new FragmentArgument(fragmentUnit, null);
-    assertEquals("Fragment_frag", fragmentArgument.getType());
+    assertEquals("org.jamon.Template.Fragment_frag", fragmentArgument.getFullyQualifiedType());
   }
 
   @Test
-  public void testGetTypeForMethodFragmentArg() {
+  public void testGetFullyQualifiedTypeForMethodFragmentArg() {
     FragmentUnit fragmentUnit = new FragmentUnit(
       "frag",
       new DeclaredMethodUnit("method", TEMPLATE_UNIT, null, null),
@@ -30,11 +30,11 @@ public class ArgumentTest {
       null,
       null);
     FragmentArgument fragmentArgument = new FragmentArgument(fragmentUnit, null);
-    assertEquals("Fragment_method__jamon__frag", fragmentArgument.getType());
+    assertEquals("Fragment_method__jamon__frag", fragmentArgument.getFullyQualifiedType());
   }
 
   @Test
-  public void testGetTypeForDefFragmentArg() {
+  public void testGetFullyQualifiedTypeForDefFragmentArg() {
     FragmentUnit fragmentUnit = new FragmentUnit(
       "frag",
       new DefUnit("def", TEMPLATE_UNIT, null, null),
@@ -42,6 +42,6 @@ public class ArgumentTest {
       null,
       null);
     FragmentArgument fragmentArgument = new FragmentArgument(fragmentUnit, null);
-    assertEquals("Fragment_def__jamon__frag", fragmentArgument.getType());
+    assertEquals("Fragment_def__jamon__frag", fragmentArgument.getFullyQualifiedType());
   }
 }

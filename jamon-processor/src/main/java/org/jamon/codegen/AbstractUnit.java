@@ -158,7 +158,7 @@ public abstract class AbstractUnit
     {
         for (AbstractArgument arg: i)
         {
-            p_writer.printListElement("final " + arg.getType() + " " + arg.getName());
+            p_writer.printListElement("final " + arg.getFullyQualifiedType() + " " + arg.getName());
         }
     }
 

@@ -18,7 +18,7 @@ public class FragmentArgumentTest
                 null,
                 null),
             null);
-        assertEquals("Fragment_frag", fragmentArgument.getType());
+        assertEquals("foo.bar.Baz.Fragment_frag", fragmentArgument.getFullyQualifiedType());
     }
 
     @Test
@@ -32,7 +32,7 @@ public class FragmentArgumentTest
                 null,
                 null),
             null);
-        assertEquals("Fragment_meth__jamon__frag", fragmentArgument.getType());
+        assertEquals("Fragment_meth__jamon__frag", fragmentArgument.getFullyQualifiedType());
     }
 
 }
