@@ -24,6 +24,7 @@ import test.jamon.Recompilation;
 import test.jamon.replacement.Api;
 import test.jamon.replacement.ApiReplacement;
 
+import org.jamon.AbstractTemplateProxy;
 import org.jamon.AbstractTemplateReplacer;
 import org.jamon.TemplateManager;
 import org.jamon.AbstractTemplateProxy.ReplacementConstructor;
@@ -73,7 +74,7 @@ public class RecompilationTest
                 .setTemplateReplacer(new AbstractTemplateReplacer() {
                     @Override
                     protected ReplacementConstructor findReplacement(
-                        Class<?> p_proxyClass, Object p_jamonContext)
+                        Class<? extends AbstractTemplateProxy> p_proxyClass, Object p_jamonContext)
                     {
                         if (Api.class.equals(p_proxyClass))
                         {

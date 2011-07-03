@@ -54,7 +54,7 @@ public abstract class AbstractTemplateReplacer implements TemplateReplacer {
    *         or {@code null} if there is to be no replacement performed.
    */
   protected abstract ReplacementConstructor findReplacement(
-    Class<?> p_proxyClass,
+    Class<? extends AbstractTemplateProxy> p_proxyClass,
     Object p_jamonContext);
 
 }

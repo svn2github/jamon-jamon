@@ -22,12 +22,13 @@ package org.jamon.integration;
 
 import static org.junit.Assert.*;
 
+import java.util.Arrays;
 import java.util.Locale;
-import java.util.Map;
 
 import org.jamon.AbstractTemplateProxy;
 import org.jamon.AbstractTemplateReplacer;
 import org.jamon.BasicTemplateManager;
+import org.jamon.FixedTemplateReplacer;
 import org.jamon.TemplateManager;
 import org.jamon.TemplateReplacer;
 import org.jamon.AbstractTemplateProxy.ReplacementConstructor;
@@ -35,14 +36,10 @@ import org.jamon.annotations.Replaceable;
 import org.jamon.annotations.Replaces;
 import org.junit.Test;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Maps;
-
 import test.jamon.replacement.Api;
 import test.jamon.replacement.ApiChildReplacementCaller;
 import test.jamon.replacement.ApiReplacement;
 import test.jamon.replacement.ApiReplacementChild;
-import test.jamon.replacement.ApiWithFargs;
 import test.jamon.replacement.ApiWithFargsCaller;
 import test.jamon.replacement.ApiWithFargsReplacementChild;
 import test.jamon.replacement.GenericApiCaller;
@@ -54,7 +51,7 @@ public class ReplacementTest
         new AbstractTemplateReplacer() {
         @Override
         protected ReplacementConstructor findReplacement(
-            Class<?> p_proxyClass, Object p_jamonContext)
+            Class<? extends AbstractTemplateProxy> p_proxyClass, Object p_jamonContext)
         {
             try
             {
@@ -76,7 +73,7 @@ public class ReplacementTest
     {
         @Override
         protected ReplacementConstructor findReplacement(
-            Class<?> p_proxyClass, Object p_jamonContext)
+            Class<? extends AbstractTemplateProxy> p_proxyClass, Object p_jamonContext)
         {
             if (! (p_jamonContext instanceof Locale))
             {
@@ -96,40 +93,13 @@ public class ReplacementTest
         }
     };
 
-    private final static class SimpleTemplateReplacer extends AbstractTemplateReplacer
+    private final static class SimpleTemplateReplacer extends FixedTemplateReplacer
     {
-        private final Map<Class<? extends AbstractTemplateProxy>, ReplacementConstructor> m_replacements;
-
+        @SuppressWarnings("unchecked")
         public SimpleTemplateReplacer(
-            Class<? extends AbstractTemplateProxy> p_replaced,
-            Class<? extends AbstractTemplateProxy> p_replacement) throws Exception {
-            this(ImmutableMap.<Class<? extends AbstractTemplateProxy>,
-                               Class<? extends AbstractTemplateProxy>>of(
-                                   p_replaced, p_replacement));
+            Class<? extends AbstractTemplateProxy> p_replacement) {
+            super(Arrays.<Class<? extends AbstractTemplateProxy>>asList(p_replacement));
         }
-
-        private SimpleTemplateReplacer(
-            Map<Class<? extends AbstractTemplateProxy>,
-            Class<? extends AbstractTemplateProxy>> p_replacements) throws Exception
-        {
-            m_replacements = Maps.newHashMap();
-            for (Map.Entry<
-                    Class<? extends AbstractTemplateProxy>,
-                    Class<? extends AbstractTemplateProxy>> entry: p_replacements.entrySet()) {
-                m_replacements.put(
-                    entry.getKey(),
-                    entry.getValue().getAnnotation(Replaces.class)
-                        .replacementConstructor().newInstance());
-            }
-        }
-
-        @Override
-        protected ReplacementConstructor findReplacement(Class<?> p_proxyClass, Object p_jamonContext)
-        {
-            return m_replacements.get(p_proxyClass);
-        }
-
-
     }
 
     @Test
@@ -149,21 +119,8 @@ public class ReplacementTest
     @Test
     public void testReplacementWithFragsFromParent() throws Exception
     {
-      TemplateReplacer templateReplacer = new AbstractTemplateReplacer() {
-        @Override
-        protected ReplacementConstructor findReplacement(
-            Class<?> p_proxyClass, Object p_jamonContext)
-        {
-          if (p_proxyClass == ApiWithFargs.class)
-          {
-            return new ApiWithFargsReplacementChild.ReplacementConstructor();
-          }
-          else
-          {
-            return null;
-          }
-        }
-      };
+      TemplateReplacer templateReplacer = new SimpleTemplateReplacer(
+          ApiWithFargsReplacementChild.class);
 
       assertEquals(
         "Implementor got 3\nImplementor got 4",
@@ -189,7 +146,7 @@ public class ReplacementTest
     public void testReplacementOfTemplateWithChildTemplate() throws Exception {
         assertEquals(
             "Parent: 3 Child: 4",
-            new Api(manager(new SimpleTemplateReplacer(Api.class, ApiReplacementChild.class)))
+            new Api(manager(new SimpleTemplateReplacer(ApiReplacementChild.class)))
                 .makeRenderer(3, 4).asString());
     }
 
