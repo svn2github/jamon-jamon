@@ -7,3 +7,4 @@
 % while (b && ! b) { }
 % while (s != null && s == null) { }
 % while (i == 0 && i > 0) { }
+hello
