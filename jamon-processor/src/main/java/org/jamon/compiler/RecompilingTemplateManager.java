@@ -38,6 +38,7 @@ import org.jamon.AbstractTemplateProxy;
 import org.jamon.IdentityTemplateReplacer;
 import org.jamon.TemplateManager;
 import org.jamon.TemplateReplacer;
+import org.jamon.AbstractTemplateProxy.Intf;
 import org.jamon.annotations.Template;
 import org.jamon.api.SourceGenerator;
 import org.jamon.api.TemplateSource;
@@ -220,12 +221,9 @@ public class RecompilingTemplateManager extends AbstractTemplateManager
     }
 
     @Override
-    public AbstractTemplateProxy.Intf constructImpl(
-      AbstractTemplateProxy p_proxy, Object p_jamonContext)
+    protected Intf constructImplFromReplacedProxy(AbstractTemplateProxy p_replacedProxy)
     {
-        AbstractTemplateProxy replacement =
-          getTemplateReplacer().getReplacement(p_proxy, p_jamonContext);
-        return replacement.constructImpl(getImplClass(replacement.getClass()));
+        return p_replacedProxy.constructImpl(getImplClass(p_replacedProxy.getClass()));
     }
 
     /**

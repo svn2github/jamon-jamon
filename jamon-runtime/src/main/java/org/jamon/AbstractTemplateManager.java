@@ -43,8 +43,27 @@ public abstract class AbstractTemplateManager implements TemplateManager
      * This implementation simply calls
      * {@link #constructImpl(AbstractTemplateProxy, Object) constructImpl(p_proxy, null)}.
      **/
+    @Override
     public Intf constructImpl(AbstractTemplateProxy p_proxy)
     {
         return constructImpl(p_proxy, null);
     }
+
+    /**
+     * {@inheritDoc}
+     * This implementation simply calls
+     * <code>
+     * <pre>
+     *   constructImplFromReplacedProxy(
+     *     getTemplateReplacer().getReplacement(p_proxy, p_jamonContext))
+     * </pre>
+     **/
+    @Override
+    public Intf constructImpl(AbstractTemplateProxy p_proxy, Object p_jamonContext)
+    {
+        return constructImplFromReplacedProxy(
+            getTemplateReplacer().getReplacement(p_proxy, p_jamonContext));
+    }
+
+    protected abstract Intf constructImplFromReplacedProxy(AbstractTemplateProxy p_replacedProxy);
 }

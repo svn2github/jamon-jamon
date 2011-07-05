@@ -30,6 +30,7 @@ import org.jamon.AbstractTemplateProxy.ReplacementConstructor;
  */
 public abstract class AbstractTemplateReplacer implements TemplateReplacer {
 
+  @Override
   public AbstractTemplateProxy getReplacement(AbstractTemplateProxy p_proxy, Object p_jamonContext) {
     ReplacementConstructor constructor = findReplacement(p_proxy.getClass(), p_jamonContext);
     if (constructor != null) {

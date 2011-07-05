@@ -21,6 +21,7 @@
 package org.jamon;
 
 import org.jamon.AbstractTemplateProxy;
+import org.jamon.AbstractTemplateProxy.Intf;
 import org.jamon.TemplateManager;
 import org.jamon.TemplateManagerSource;
 
@@ -53,13 +54,15 @@ public class TemplateManagerSourceTest
 
     private static class TestTemplateManager extends AbstractTemplateManager
     {
-        public AbstractTemplateProxy.Intf constructImpl
-            (AbstractTemplateProxy p_proxy, Object p_jamonContext)
+
+        @Override
+        public AbstractTemplateProxy constructProxy(String p_path)
         {
             return null;
         }
 
-        public AbstractTemplateProxy constructProxy(String p_path)
+        @Override
+        protected Intf constructImplFromReplacedProxy(AbstractTemplateProxy p_replacedProxy)
         {
             return null;
         }

@@ -37,6 +37,7 @@ public abstract class AbstractRenderer
      *
      * @exception IOException if writing to the Writer throws an IOException
      */
+    @Override
     public abstract void renderTo(Writer p_writer)
         throws IOException;
 
@@ -46,6 +47,7 @@ public abstract class AbstractRenderer
      *
      * @return a String that is the result of rendering this Renderer
      */
+    @Override
     public final String asString()
     {
         StringWriter writer = new StringWriter();

@@ -32,6 +32,7 @@ public class NoneEscaping
         // package scope constructor
     }
 
+    @Override
     public void write(String p_string, Writer p_writer)
         throws IOException
     {

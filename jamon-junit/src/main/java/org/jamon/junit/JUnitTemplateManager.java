@@ -32,6 +32,7 @@ import org.jamon.AbstractTemplateImpl;
 import org.jamon.AbstractTemplateManager;
 import org.jamon.AbstractTemplateProxy;
 import org.jamon.TemplateManager;
+import org.jamon.AbstractTemplateProxy.Intf;
 import org.jamon.annotations.Argument;
 import org.jamon.annotations.Template;
 
@@ -124,6 +125,7 @@ public class JUnitTemplateManager extends AbstractTemplateManager
     private String[] m_requiredArgNames;
     private String[] m_optionalArgNames;
 
+    @Override
     public AbstractTemplateProxy.Intf constructImpl(
         AbstractTemplateProxy p_proxy, Object p_jamonContext)
     {
@@ -174,6 +176,14 @@ public class JUnitTemplateManager extends AbstractTemplateManager
         }
     }
 
+    @Override
+    protected Intf constructImplFromReplacedProxy(AbstractTemplateProxy p_replacedProxy)
+    {
+        // for now, let's not worry about template replacement.
+        throw new IllegalStateException();
+    }
+
+    @Override
     public AbstractTemplateProxy constructProxy(String p_path)
     {
         try
@@ -206,6 +216,7 @@ public class JUnitTemplateManager extends AbstractTemplateManager
 
     private static final Object[] EMPTY_ARGS = new Object[0];
 
+    @Override
     public Object invoke(Object p_proxy, Method p_method, Object[] p_args)
         throws Throwable
     {

@@ -30,6 +30,7 @@ public enum IdentityTemplateReplacer implements TemplateReplacer {
    * Simply return {@code p_proxy}.
    * @return {@code p_proxy}
    */
+  @Override
   public AbstractTemplateProxy getReplacement(
     AbstractTemplateProxy p_proxy, Object p_jamonContext) {
     return p_proxy;

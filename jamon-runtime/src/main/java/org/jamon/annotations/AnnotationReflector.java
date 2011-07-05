@@ -42,6 +42,7 @@ public class AnnotationReflector
             new Class<?>[] {p_class},
             new InvocationHandler()
             {
+                @Override
                 public Object invoke(Object p_proxy,
                                      Method p_method,
                                      Object[] p_args) throws Throwable

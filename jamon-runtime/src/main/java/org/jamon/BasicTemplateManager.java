@@ -20,6 +20,8 @@
 
 package org.jamon;
 
+import org.jamon.AbstractTemplateProxy.Intf;
+
 
 /**
  * A standard implementation of the {@link TemplateManager} interface.
@@ -72,10 +74,10 @@ public class BasicTemplateManager extends AbstractTemplateManager
             : p_classLoader;
     }
 
-    public AbstractTemplateProxy.Intf constructImpl(
-        AbstractTemplateProxy p_proxy, Object p_jamonContext)
+    @Override
+    protected Intf constructImplFromReplacedProxy(AbstractTemplateProxy p_replacedProxy)
     {
-        return getTemplateReplacer().getReplacement(p_proxy, p_jamonContext).constructImpl();
+        return p_replacedProxy.constructImpl();
     }
 
     /**
@@ -85,6 +87,7 @@ public class BasicTemplateManager extends AbstractTemplateManager
      *
      * @return a <code>Template</code> proxy instance
      **/
+    @Override
     public AbstractTemplateProxy constructProxy(String p_path)
     {
         try
