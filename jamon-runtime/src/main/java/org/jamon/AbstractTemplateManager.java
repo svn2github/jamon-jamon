@@ -22,6 +22,10 @@ package org.jamon;
 
 import org.jamon.AbstractTemplateProxy.Intf;
 
+/**
+ * An abstract implementation of {@code TemplateManager} which handles some of the common tasks
+ * surrounding template replacement.
+ */
 public abstract class AbstractTemplateManager implements TemplateManager
 {
     private final TemplateReplacer m_templateReplacer;
