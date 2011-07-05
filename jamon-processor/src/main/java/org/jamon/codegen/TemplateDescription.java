@@ -31,7 +31,7 @@ import java.util.Set;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.jamon.annotations.AnnotationReflector;
+import org.jamon.util.AnnotationReflector;
 import org.jamon.annotations.Argument;
 import org.jamon.annotations.Fragment;
 import org.jamon.annotations.Method;

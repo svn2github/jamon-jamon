@@ -1,7 +1,10 @@
-package org.jamon.annotations;
+package org.jamon.util;
 
 import static org.junit.Assert.*;
 
+import org.jamon.annotations.Argument;
+import org.jamon.annotations.Fragment;
+import org.jamon.annotations.Template;
 import org.junit.Test;
 
 

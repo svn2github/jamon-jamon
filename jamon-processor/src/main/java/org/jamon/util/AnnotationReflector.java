@@ -1,4 +1,4 @@
-package org.jamon.annotations;
+package org.jamon.util;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Array;
