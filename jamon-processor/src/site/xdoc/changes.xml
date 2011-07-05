@@ -6,11 +6,24 @@
   <properties><title>Changes in Jamon Processor</title></properties>
   <body>
     <section name="Changes in Jamon Processor">
-      <subsection name="Release ??? (???)">
+      <subsection name="Release 2.4.0 (2011-07-05)">
         <ul>
+          <li>
+            Support added for template replacement.
+          </li>
+          <li>
+            Generated java files are now written using the same encoding as the template source
+            file. Fixes <a href="http://sourceforge.net/support/tracker.php?aid=3307564">3307564</a>.
+          </li>
           <li>
             Templates with constrained type parameters are now processed properly.
             Fixes <a href="http://sourceforge.net/support/tracker.php?aid=3300744">3300744</a>.
+          </li>
+          <li>
+            Generated code presents less warnings in eclipse (version 3.6).
+          </li>
+          <li>
+            Java 6 is now required.
           </li>
         </ul>
       </subsection>
