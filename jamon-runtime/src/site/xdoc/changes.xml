@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<document
+    xmlns="http://maven.apache.org/XDOC/2.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+  <properties><title>Changes in Jamon Runtime</title></properties>
+  <body>
+    <section name="Changes in Jamon Runtime">
+      <subsection name="Release 2.3.1 (2008-01-01)">
+        <ul>
+          <li>
+            Get StandardEmitter to again emit empty strings instead of "null"
+            for null primative wrappers. Fixes
+            <a href="http://sourceforge.net/support/tracker.php?aid=1843662">1843662</a>.
+          </li>
+        </ul>
+      </subsection>
+      <subsection name="Release 2.3.0 (2007-07-15)">
+        <ul>
+          <li>
+            Initial release.
+          </li>
+        </ul>
+      </subsection>
+    </section>
+  </body>
+</document>
