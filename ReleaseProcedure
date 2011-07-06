@@ -1,12 +1,16 @@
+General points:
+* Since maven fails to understand usernames in scpexe urls, ensure ~/.ssh/config contains:
+  Host maven.jamon.org
+  User jamon
+* Since maven cannot ask for passwords during release:perform,
+  you'll need an ssh-agent set up that has credentials to reach jamon@maven.jamon.org.
+
 * Update docs to reflect release.
 * Run svn up to get latest version number set
 * For each maven module being released:
 ** Update all SNAPSHOT versions to the latest released version.
 ** Run (in zsh):
   read -s password; mvn -Dusername=yourSourceForgeUserNameHere -Dpassword=$password release:prepare; unset password
-** Since maven fails to understand usernames in scpexe urls, ensure ~/.ssh/config contains:
-  Host maven.jamon.org
-  User jamon
 ** Run mvn release:perform
 ** Run svn revert pom.xml
 * If necessary, build jamonStdLib
@@ -17,9 +21,6 @@
 *** Run (in zsh):
   read -s password; mvn -Dusername=yourSourceForgeUserNameHere -Dpassword=$password release:prepare; unset password
   -- use current date (YYYY.MM.DD) for the version.
-*** Since maven fails to understand usernames in scpexe urls, ensure ~/.ssh/config contains:
-  Host maven.jamon.org
-  User jamon
 *** Run mvn release:perform
 *** Run svn revert pom.xml
 
