@@ -33,7 +33,7 @@
    default download for Windows and Other, and the tar.gz file the
    default download for Linux, Solaris, FreeBSD and Mac.,
 
-TODO: Tycho
+OLD SCHOOL ECLIPSE RELEASE
 
 * Copy jamon-X.Y.Z.jar to corePlugin
 * Update version numbers for corePlugin, uiPlugin and jamonFeature
@@ -59,5 +59,32 @@ TODO: Tycho
 ** Commit to the tag branch (this yuckiness goes away with repo restructuring)
 ** Commit a similar pom.xml change to trunk, just adding '-SNAPSHOT' to pom version
 * Push docs to site (FIXME - HOW?  maybe mvn deploy?)
+
+TYCHO RELEASE
+
+* Because tycho is still in a half-baked state, the maven release plugin will not work.
+  Instead, do the following, where ${VERSION} is the release version and ${COMPONENT}
+  is the component (jamon-editor, jamon-processor or jamon-maven-configurator):
+
+  svn copy \
+    https://jamon.svn.sourceforge.net/svnroot/jamon/trunk/eclipse/${COMPONENT} \
+    https://jamon.svn.sourceforge.net/svnroot/jamon/releases/${COMPONENT}/${COMPONENT}-${VERSION} \
+    -m "tag for release ${VERSION}"
+
+  svn co https://jamon.svn.sourceforge.net/svnroot/jamon/releases/${COMPONENT}/${COMPONENT}-${VERSION} \
+
+  cd ${COMPONENT}-${VERSION}
+
+  mvn3 org.sonatype.tycho:tycho-versions-plugin:set-version -DnewVersion=${VERSION}
+
+  svn commit -m "prepare for release of version ${VERSION}"
+
+  mvn clean install
+
+  Then in a checked-out version of update-site, run
+
+  mvn clean package
+
+  Copy the updated files into updateSite/p2.
 
 * Email release mailing list.
