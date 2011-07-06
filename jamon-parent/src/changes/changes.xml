@@ -4,7 +4,7 @@
     <author email="jamon-hackers@lists.sourceforge.net">Jamon Hackers</author>
   </properties>
   <body>
-    <release version="2.3.1" date="2011-03-13" description="Initial release">
-    </release>
+    <release version="2.4.0" date="2011-07-06" description="version updates"/>
+    <release version="2.3.1" date="2011-03-13" description="Initial release"/>
   </body>
 </document>
