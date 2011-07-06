@@ -4,24 +4,32 @@ General points:
   User jamon
 * Since maven cannot ask for passwords during release:perform,
   you'll need an ssh-agent set up that has credentials to reach jamon@maven.jamon.org.
+* For hygene purposes, you should have a settings file in ~/.m2jamon/settings.xml:
+
+<?xml version="1.0" encoding="UTF-8"?>
+<settings>
+  <localRepository>${user.home}/.m2jamon/repository</localRepository>
+</settings>
+
+  Prior to any release, rm -rf ~/.m2jamon/repository
 
 * Update docs to reflect release.
 * Run svn up to get latest version number set
 * For each maven module being released:
 ** Update all SNAPSHOT versions to the latest released version.
 ** Run (in zsh):
-  read -s password; mvn -Dusername=yourSourceForgeUserNameHere -Dpassword=$password release:prepare; unset password
-** Run mvn release:perform
+  read -s password; mvn -s ~/.m2jamon/settings.xml -Dusername=yourSourceForgeUserNameHere -Dpassword=$password release:prepare; unset password
+** Run mvn -s ~/.m2jamon/settings.xml release:perform
 ** Run svn revert pom.xml
 * If necessary, build jamonStdLib
 * generate new site docs
-** Docs can be viewed via mvn package and looking in target/www.
-** Trial deploy: mvn site:deploy goes to www-stg.jamon.org.
+** Docs can be viewed via mvn -s ~/.m2jamon/settings.xml package and looking in target/www.
+** Trial deploy: mvn -s ~/.m2jamon/settings.xml site:deploy goes to www-stg.jamon.org.
 ** To release
 *** Run (in zsh):
-  read -s password; mvn -Dusername=yourSourceForgeUserNameHere -Dpassword=$password release:prepare; unset password
+  read -s password; mvn -s ~/.m2jamon/settings.xml -Dusername=yourSourceForgeUserNameHere -Dpassword=$password release:prepare; unset password
   -- use current date (YYYY.MM.DD) for the version.
-*** Run mvn release:perform
+*** Run mvn -s ~/.m2jamon/settings.xml release:perform
 *** Run svn revert pom.xml
 
 * Update versions in jamon-dist, run jamon-package.
@@ -54,8 +62,6 @@ OLD SCHOOL ECLIPSE RELEASE
     mvn -s ~/.m2jamon/settings.xml -DgroupId=org.jamon -DartifactId=jamon-anttask \
      -Dversion=2.2.1 -Dfile=jamon-anttask-2.2.1.jar -Dpackaging=jar -DrepositoryId=jamon \
      -Durl=scpexe://jamon@maven.jamon.org/home/jamon/maven2 deploy:deploy-file
-  (the '-s ~/.m2jamon/settings.xml indicates an alternate local maven repo
-   which is useful for hygiene)
 ** Edit mvn2-plugin/pom.xml updating the dependency versions and the pom version
 ** Commit to the tag branch (this yuckiness goes away with repo restructuring)
 ** Commit a similar pom.xml change to trunk, just adding '-SNAPSHOT' to pom version
@@ -76,15 +82,15 @@ TYCHO RELEASE
 
   cd ${COMPONENT}-${VERSION}
 
-  mvn3 org.sonatype.tycho:tycho-versions-plugin:set-version -DnewVersion=${VERSION}
+  mvn3 -s ~/.m2jamon/settings.xml org.sonatype.tycho:tycho-versions-plugin:set-version -DnewVersion=${VERSION}
 
   svn commit -m "prepare for release of version ${VERSION}"
 
-  mvn clean install
+  mvn -s ~/.m2jamon/settings.xml clean install
 
   Then in a checked-out version of update-site, run
 
-  mvn clean package
+  mvn -s ~/.m2jamon/settings.xml clean package
 
   Copy the updated files into updateSite/p2.
 
