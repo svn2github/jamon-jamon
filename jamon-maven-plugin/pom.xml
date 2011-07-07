@@ -8,7 +8,7 @@
     </parent>
     <artifactId>jamon-maven-plugin</artifactId>
     <name>Jamon Maven Plugin</name>
-    <version>trunk-SNAPSHOT</version>
+    <version>2.4.0</version>
     <packaging>maven-plugin</packaging>
     <description>Jamon Maven plugin</description>
     <contributors>
@@ -37,7 +37,7 @@
         <dependency>
             <groupId>org.jamon</groupId>
             <artifactId>jamon-processor</artifactId>
-            <version>trunk-SNAPSHOT</version>
+            <version>2.4.0</version>
         </dependency>
         <dependency>
           <groupId>org.codehaus.plexus</groupId>

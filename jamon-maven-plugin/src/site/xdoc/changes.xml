@@ -6,7 +6,7 @@
   <properties><title>Changes in Jamon Processor</title></properties>
   <body>
     <section name="Changes in Jamon Maven Plugin">
-      <subsection name="Release 2.4.0 (2011-07-05)">
+      <subsection name="Release 2.4.0 (2011-07-07)">
         <ul>
           <li>This plugin is now marked as thread safe.</li>
           <li>It is now considered an error if the template source directory is missing.</li>
