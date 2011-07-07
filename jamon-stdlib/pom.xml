@@ -4,7 +4,7 @@
     <parent>
         <groupId>org.jamon</groupId>
         <artifactId>jamon-java-parent</artifactId>
-        <version>trunk-SNAPSHOT</version>
+        <version>2.4.0</version>
         <relativePath>../jamon-java-parent</relativePath>
     </parent>
     <artifactId>jamon-stdlib</artifactId>
@@ -28,7 +28,7 @@
         <dependency>
             <groupId>org.jamon</groupId>
             <artifactId>jamon-runtime</artifactId>
-            <version>trunk-SNAPSHOT</version>
+            <version>2.4.0</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -43,7 +43,7 @@
             <plugin>
                 <groupId>org.jamon</groupId>
                 <artifactId>jamon-maven-plugin</artifactId>
-                <version>trunk-SNAPSHOT</version>
+                <version>2.4.0</version>
                 <executions>
                     <execution>
                         <id>jamon-generate-sources</id>
