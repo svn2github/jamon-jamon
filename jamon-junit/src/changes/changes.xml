@@ -4,6 +4,10 @@
     <author email="jamon-hackers@lists.sourceforge.net">Jamon Hackers</author>
   </properties>
   <body>
+    <release version="2.4.0" date="2011-07-07" description="Subsequent release">
+      <action dev="iroberts" type="update">Update to work with Jamon Runtime 2.4.0</action>
+      <action dev="iroberts" type="update">Now depends on Java6</action>
+    </release>
     <release version="2.3.0" date="2007-07-15" description="Initial release">
     </release>
   </body>

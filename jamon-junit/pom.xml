@@ -9,7 +9,7 @@
     </parent>
     <artifactId>jamon-junit</artifactId>
     <name>jamon-junit</name>
-    <version>trunk-SNAPSHOT</version>
+    <version>2.4.0</version>
     <packaging>jar</packaging>
     <description>Jamon unit test support classes</description>
     <scm>
@@ -28,7 +28,7 @@
         <dependency>
             <groupId>org.jamon</groupId>
             <artifactId>jamon-runtime</artifactId>
-            <version>trunk-SNAPSHOT</version>
+            <version>2.4.0</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -42,7 +42,7 @@
             <plugin>
                 <groupId>org.jamon</groupId>
                 <artifactId>jamon-maven-plugin</artifactId>
-                <version>trunk-SNAPSHOT</version>
+                <version>2.4.0</version>
                 <executions>
                     <execution>
                         <phase>generate-test-sources</phase>
