@@ -4,6 +4,9 @@
     <author email="jamon-hackers@lists.sourceforge.net">Jamon Hackers</author>
   </properties>
   <body>
+    <release version="2.4.0" date="2011-07-07" description="Subsequent release">
+      <action dev="iroberts" type="update">Update code to Java6 (add @Overrides annotations)</action>
+    </release>
     <release version="1.0.0" date="2007-07-15" description="Initial release">
     </release>
   </body>
