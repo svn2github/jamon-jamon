@@ -6,7 +6,7 @@
   <properties><title>Changes in Jamon Runtime</title></properties>
   <body>
     <section name="Changes in Jamon Runtime">
-      <subsection name="Release 2.4.0 (2011-07-05)">
+      <subsection name="Release 2.4.0 (2011-07-07)">
         <ul>
           <li>
             This release supports changes made in version 2.4.0 of Jamon Processor. Templates
