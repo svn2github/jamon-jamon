@@ -6,7 +6,7 @@
   <properties><title>Changes in Jamon Processor</title></properties>
   <body>
     <section name="Changes in Jamon Processor">
-      <subsection name="Release 2.4.0 (2011-07-05)">
+      <subsection name="Release 2.4.0 (2011-07-07)">
         <ul>
           <li>
             Support added for template replacement.
