@@ -45,8 +45,8 @@
         <module>jamon-api</module>
         <module>jamon-nodegen-plugin</module>
         <module>jamon-processor</module>
-        <module>jamon-junit</module>
         <module>jamon-maven-plugin</module>
+        <module>jamon-junit</module>
         <module>jamon-anttask</module>
         <module>jamon-stdlib</module>
         <module>jamon-integration</module>
