@@ -53,8 +53,8 @@ public abstract class AbstractJamonMojo
      */
     private Set<String> excludes = new HashSet<String>();
 
-    protected abstract File templateSourceDir();
-    protected abstract File templateOutputDir();
+    public abstract File getTemplateSourceDir();
+    public abstract File getTemplateOutputDir();
 
     private ClassLoader classLoader() throws MojoExecutionException
     {
@@ -101,12 +101,12 @@ public abstract class AbstractJamonMojo
         getLog().info("Translating "
                       + jamonSources.size()
                       + " templates from "
-                      + templateSourceDir().getPath()
+                      + getTemplateSourceDir().getPath()
                       + " to "
-                      + templateOutputDir().getPath());
+                      + getTemplateOutputDir().getPath());
         TemplateProcessor processor =
-             new TemplateProcessor(templateOutputDir(),
-                                   templateSourceDir(),
+             new TemplateProcessor(getTemplateOutputDir(),
+                                   getTemplateSourceDir(),
                                    classLoader());
         for (File f : jamonSources)
         {
@@ -124,7 +124,7 @@ public abstract class AbstractJamonMojo
 
     private List<File> collectSources() throws MojoExecutionException
     {
-      return accumulateSources(templateSourceDir());
+      return accumulateSources(getTemplateSourceDir());
     }
 
     private List<File> accumulateSources(File p_templateSourceDir) throws MojoExecutionException
@@ -153,7 +153,7 @@ public abstract class AbstractJamonMojo
         try
         {
           @SuppressWarnings("unchecked") Set<File> includedSources =
-            scanner.getIncludedSources(f.getParentFile(), templateOutputDir());
+            scanner.getIncludedSources(f.getParentFile(), getTemplateOutputDir());
           staleFiles.addAll(includedSources);
         }
         catch ( InclusionScanException e )
@@ -171,14 +171,14 @@ public abstract class AbstractJamonMojo
      * Trim the the root path from file paths.
      *
      * @param files
-     * @return a list of File objects which are relative to {@link #templateSourceDir()}.
+     * @return a list of File objects which are relative to {@link #getTemplateSourceDir()}.
      */
     private List<File> relativizeFiles(final Set<File> files)
     {
       final List<File> result = new ArrayList<File>();
       for (File file : files)
       {
-        URI templateSourceUri = templateSourceDir().toURI();
+        URI templateSourceUri = getTemplateSourceDir().toURI();
         result.add(new File(templateSourceUri.relativize(file.toURI()).getPath()));
       }
       return result;

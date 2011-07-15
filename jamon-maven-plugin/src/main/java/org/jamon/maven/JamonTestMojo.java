@@ -26,13 +26,13 @@ public class JamonTestMojo
     private File templateOutputDir;
 
     @Override
-    protected File templateOutputDir()
+    public File getTemplateOutputDir()
     {
       return templateOutputDir;
     }
 
     @Override
-    protected File templateSourceDir()
+    public File getTemplateSourceDir()
     {
       return templateSourceDir;
     }
