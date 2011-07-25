@@ -23,23 +23,21 @@ package org.jamon.api;
 import java.util.Collection;
 
 /**
- * A parsed version of a template which is capable of creating proxy 
- * and impl files.
+ * A parsed version of a template which is capable of creating proxy and impl files.
  */
-public interface ParsedTemplate
-{
-    /**
-     * @return the paths of templates which this template depends on.
-     */
-    Collection<String> getTemplateDependencies();
+public interface ParsedTemplate {
+  /**
+   * @return the paths of templates which this template depends on.
+   */
+  Collection<String> getTemplateDependencies();
 
-    /**
-     * @return a generator for the proxy.
-     */
-    SourceGenerator getProxyGenerator();
+  /**
+   * @return a generator for the proxy.
+   */
+  SourceGenerator getProxyGenerator();
 
-    /**
-     * @return a generator for the impl.
-     */
-    SourceGenerator getImplGenerator();
+  /**
+   * @return a generator for the impl.
+   */
+  SourceGenerator getImplGenerator();
 }

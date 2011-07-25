@@ -17,12 +17,12 @@
  *
  * Contributor(s):
  */
+
 package org.jamon.api;
 
 /**
  * Interface for classes whose instances hold the location of a template.
  */
-public interface TemplateLocation
-{
-    String toString();
+public interface TemplateLocation {
+  String toString();
 }

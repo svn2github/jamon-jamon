@@ -25,65 +25,53 @@ import java.io.InputStream;
 import java.util.Properties;
 
 /**
- * An interface representing a "repository" of template sources. One
- * obvious implementation would be a file-system based implementation
- * (e.g. {@link org.jamon.compiler.FileTemplateSource}), but others 
- * might include storing templates in a database, or retrieving them
- * remotely via HTTP.
+ * An interface representing a "repository" of template sources. One obvious implementation would be
+ * a file-system based implementation (e.g. {@link org.jamon.compiler.FileTemplateSource}), but
+ * others might include storing templates in a database, or retrieving them remotely via HTTP.
  */
 
-public interface TemplateSource
-{
-    /**
-     * Determines when the indicated template was last modified, in ms
-     * since the epoch.
-     *
-     * @param p_templatePath the path to the template
-     *
-     * @return the timestamp of when the template was last modified
-     */
-    long lastModified(String p_templatePath)
-        throws IOException;
+public interface TemplateSource {
+  /**
+   * Determines when the indicated template was last modified, in ms since the epoch.
+   * 
+   * @param templatePath the path to the template
+   * @return the timestamp of when the template was last modified
+   */
+  long lastModified(String templatePath) throws IOException;
 
-    /**
-     * Determines whether the indicated template source is available.
-     *
-     * @param p_templatePath the path to the template
-     *
-     * @return whether the template source is available
-     */
-    boolean available(String p_templatePath)
-        throws IOException;
+  /**
+   * Determines whether the indicated template source is available.
+   * 
+   * @param templatePath the path to the template
+   * @return whether the template source is available
+   */
+  boolean available(String templatePath) throws IOException;
 
-    /**
-     * Get a {@link InputStream} for the source of the specified template.
-     *
-     * @param p_templatePath the path to the template
-     *
-     * @return an InputStream for the data comprising the template
-     */
-    InputStream getStreamFor(String p_templatePath)
-        throws IOException;
+  /**
+   * Get a {@link InputStream} for the source of the specified template.
+   * 
+   * @param templatePath the path to the template
+   * @return an InputStream for the data comprising the template
+   */
+  InputStream getStreamFor(String templatePath) throws IOException;
 
-    /**
-     * Get an identifying string for the specified template.
-     *
-     * @param p_templatePath the path to the template
-     *
-     * @return an identifying string
-     */
-    String getExternalIdentifier(String p_templatePath);
+  /**
+   * Get an identifying string for the specified template.
+   * 
+   * @param templatePath the path to the template
+   * @return an identifying string
+   */
+  String getExternalIdentifier(String templatePath);
 
-    TemplateLocation getTemplateLocation(String p_templatePath);
+  TemplateLocation getTemplateLocation(String templatePath);
 
-    /**
-     * Load any properties that might be used to influence the processing of
-     * templates within the specified directory.
-     * @param p_path The directory to to look for
-     * @param p_properties The {@code Properties} instance to add any found
-     *        properties to.
-     * @throws IOException
-     */
-    void loadProperties(String p_path, Properties p_properties)
-        throws IOException;
+  /**
+   * Load any properties that might be used to influence the processing of templates within the
+   * specified directory.
+   * 
+   * @param path The directory to to look for
+   * @param properties The {@code Properties} instance to add any found properties to.
+   * @throws IOException
+   */
+  void loadProperties(String path, Properties properties) throws IOException;
 }

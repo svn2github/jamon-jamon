@@ -22,7 +22,6 @@ package org.jamon.api;
 
 import java.io.IOException;
 
-public interface TemplateParser
-{
-    ParsedTemplate parseTemplate(String p_templatePath) throws IOException;
+public interface TemplateParser {
+  ParsedTemplate parseTemplate(String p_templatePath) throws IOException;
 }
