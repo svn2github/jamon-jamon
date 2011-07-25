@@ -115,14 +115,18 @@ public class BasicTemplateManager extends AbstractTemplateManager
     private Class<? extends AbstractTemplateProxy> getProxyClass(String p_path)
         throws ClassNotFoundException
     {
-        String path = p_path;
-        while (path.startsWith("/"))
-        {
-            path = path.substring(1);
-        }
+        String strippedPath = stripLeadingSlashes(p_path);
         return m_classLoader
-            .loadClass(path.replace('/', '.'))
+            .loadClass(strippedPath.replace('/', '.'))
             .asSubclass(AbstractTemplateProxy.class);
+    }
+
+    private static String stripLeadingSlashes(String p_path) {
+      int firstNonSlash = 0;
+      while(p_path.indexOf('/', firstNonSlash) == firstNonSlash) {
+        firstNonSlash++;
+      }
+      return p_path.substring(firstNonSlash);
     }
 
     private final ClassLoader m_classLoader;
