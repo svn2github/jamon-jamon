@@ -23,28 +23,20 @@ package org.jamon.escaping;
 import java.io.Writer;
 import java.io.IOException;
 
-public class XmlEscaping
-    extends AbstractCharacterEscaping
-{
+public class XmlEscaping extends AbstractCharacterEscaping {
 
-    XmlEscaping()
-    {
-        // package scope constructor
+  XmlEscaping() {} // package scope constructor
+
+  @Override
+  protected void write(char p_char, Writer p_writer) throws IOException {
+    switch (p_char) {
+      case '<': p_writer.write("&lt;"); break;
+      case '>': p_writer.write("&gt;"); break;
+      case '&': p_writer.write("&amp;"); break;
+      case '"': p_writer.write("&quot;"); break;
+      case '\'': p_writer.write("&apos;"); break;
+        // FIXME: numerically escape other chars outside ASCII
+      default: p_writer.write(p_char);
     }
-
-    @Override protected void write(char p_char, Writer p_writer)
-        throws IOException
-    {
-        switch (p_char)
-        {
-          case '<': p_writer.write("&lt;"); break;
-          case '>': p_writer.write("&gt;"); break;
-          case '&': p_writer.write("&amp;"); break;
-          case '"': p_writer.write("&quot;"); break;
-          case '\'': p_writer.write("&apos;"); break;
-            // FIXME: numerically escape other chars outside ASCII
-          default: p_writer.write(p_char);
-        }
-    }
-
+  }
 }

@@ -20,25 +20,19 @@
 
 package org.jamon;
 
-public abstract class AbstractTemplateImpl
-    implements AbstractTemplateProxy.Intf
-{
-    protected AbstractTemplateImpl(TemplateManager p_templateManager)
-    {
-        m_templateManager = p_templateManager;
-    }
+public abstract class AbstractTemplateImpl implements AbstractTemplateProxy.Intf {
+  protected AbstractTemplateImpl(TemplateManager templateManager) {
+    this.templateManager = templateManager;
+  }
 
-    protected AbstractTemplateImpl(
-        TemplateManager p_templateManager,
-        @SuppressWarnings("unused") AbstractTemplateProxy.ImplData p_implData)
-    {
-        this(p_templateManager);
-    }
+  protected AbstractTemplateImpl(TemplateManager templateManager,
+      @SuppressWarnings("unused") AbstractTemplateProxy.ImplData implData) {
+    this(templateManager);
+  }
 
-    protected TemplateManager getTemplateManager()
-    {
-        return m_templateManager;
-    }
+  protected TemplateManager getTemplateManager() {
+    return templateManager;
+  }
 
-    private final TemplateManager m_templateManager;
+  private final TemplateManager templateManager;
 }

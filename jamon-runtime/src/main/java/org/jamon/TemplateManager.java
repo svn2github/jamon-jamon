@@ -21,40 +21,35 @@
 package org.jamon;
 
 /**
- * A <code>TemplateManager</code> is the entry point to obtaining
- * instances of template objects.
+ * A <code>TemplateManager</code> is the entry point to obtaining instances of template objects.
  *
  * @see TemplateManagerSource
  */
-public interface TemplateManager
-{
-    /**
-     * Given a proxy, return an instance of the executable code for
-     * that proxy's template or a suitable replacement.
-     *
-     * @param p_proxy a proxy for the template
-     *
-     * @return a <code>Template</code> instance
-     **/
-    AbstractTemplateProxy.Intf constructImpl(AbstractTemplateProxy p_proxy);
+public interface TemplateManager {
+  /**
+   * Given a proxy, return an instance of the executable code for that proxy's template or a
+   * suitable replacement.
+   *
+   * @param proxy a proxy for the template
+   * @return a <code>Template</code> instance
+   **/
+  AbstractTemplateProxy.Intf constructImpl(AbstractTemplateProxy proxy);
 
-    /**
-     * Given a proxy and a jamonContext, return an instance of the executable code for
-     * that proxy's template or a suitable replacement, possibly based on the jamonContext.
-     *
-     * @param p_proxy a proxy for the template
-     * @param p_jamonContext the current jamonContext (can be {@code null})
-     *
-     * @return a <code>Template</code> instance
-     **/
-    AbstractTemplateProxy.Intf constructImpl(AbstractTemplateProxy p_proxy, Object p_jamonContext);
+  /**
+   * Given a proxy and a jamonContext, return an instance of the executable code for that proxy's
+   * template or a suitable replacement, possibly based on the jamonContext.
+   *
+   * @param proxy a proxy for the template
+   * @param jamonContext the current jamonContext (can be {@code null})
+   * @return a <code>Template</code> instance
+   **/
+  AbstractTemplateProxy.Intf constructImpl(AbstractTemplateProxy proxy, Object jamonContext);
 
-    /**
-     * Given a template path, return a proxy for that template.
-     *
-     * @param p_path the path to the template
-     *
-     * @return a <code>Template</code> instance
-     */
-    AbstractTemplateProxy constructProxy(String p_path);
+  /**
+   * Given a template path, return a proxy for that template.
+   *
+   * @param path the path to the template
+   * @return a <code>Template</code> instance
+   */
+  AbstractTemplateProxy constructProxy(String path);
 }

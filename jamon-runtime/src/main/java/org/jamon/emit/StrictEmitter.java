@@ -20,15 +20,12 @@
 
 package org.jamon.emit;
 
-public class StrictEmitter
-{
-    StrictEmitter()
-    {
-        // non instantiable
-    }
+public class StrictEmitter {
+  StrictEmitter() {} // non instantiable
 
-    public static String valueOf(String p_string)
-    {
-        return p_string != null ? p_string : "";
-    }
+  public static String valueOf(String p_string) {
+    return p_string != null
+        ? p_string
+        : "";
+  }
 }

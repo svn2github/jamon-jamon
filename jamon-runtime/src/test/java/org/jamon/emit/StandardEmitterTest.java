@@ -6,7 +6,8 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class StandardEmitterTest {
-  @Test public void testPrimativeEmits() {
+  @Test
+  public void testPrimativeEmits() {
     assertEquals("true", StandardEmitter.valueOf(true));
     assertEquals("false", StandardEmitter.valueOf(false));
     assertEquals("x", StandardEmitter.valueOf('x'));
@@ -18,7 +19,8 @@ public class StandardEmitterTest {
     assertEquals("0.0", StandardEmitter.valueOf(0.0d));
   }
 
-  @Test public void testWrapperEmits() {
+  @Test
+  public void testWrapperEmits() {
     assertEquals("true", StandardEmitter.valueOf(Boolean.TRUE));
     assertEquals("false", StandardEmitter.valueOf(Boolean.FALSE));
     assertEquals("x", StandardEmitter.valueOf(Character.valueOf('x')));
@@ -30,7 +32,8 @@ public class StandardEmitterTest {
     assertEquals("0.0", StandardEmitter.valueOf(Double.valueOf(0.0d)));
   }
 
-  @Test public void testNullWrapperEmits() {
+  @Test
+  public void testNullWrapperEmits() {
     assertEquals("", StandardEmitter.valueOf((Boolean) null));
     assertEquals("", StandardEmitter.valueOf((Byte) null));
     assertEquals("", StandardEmitter.valueOf((Short) null));
@@ -41,13 +44,15 @@ public class StandardEmitterTest {
     assertEquals("", StandardEmitter.valueOf((Double) null));
   }
 
-  @Test public void testStringEmits() {
+  @Test
+  public void testStringEmits() {
     assertEquals("", StandardEmitter.valueOf((String) null));
     assertEquals("", StandardEmitter.valueOf(""));
     assertEquals("hello", StandardEmitter.valueOf("hello"));
   }
 
-  @Test public void testObjectEmits() {
+  @Test
+  public void testObjectEmits() {
     Date d = new Date();
     assertEquals(d.toString(), StandardEmitter.valueOf(d));
     assertEquals("", StandardEmitter.valueOf((Date) null));

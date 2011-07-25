@@ -23,31 +23,25 @@ package org.jamon.escaping;
 import java.io.Writer;
 import java.io.IOException;
 
-public class JavascriptEscaping
-    extends AbstractCharacterEscaping
-{
+public class JavascriptEscaping extends AbstractCharacterEscaping {
 
-    JavascriptEscaping()
-    {
-        // package scope constructor
+  JavascriptEscaping() {
+  // package scope constructor
+  }
+
+  @Override
+  protected void write(char p_char, Writer p_writer) throws IOException {
+    switch (p_char) {
+      // Perhaps we should escape high UNICODE
+      case '\'': p_writer.write("\\\'"); break;
+      case '"': p_writer.write("\\\""); break;
+      case '\n': p_writer.write("\\n"); break;
+      case '\t': p_writer.write("\\t"); break;
+      case '\b': p_writer.write("\\b"); break;
+      case '\f': p_writer.write("\\f"); break;
+      case '\r': p_writer.write("\\r"); break;
+      case '\\': p_writer.write("\\\\"); break;
+      default: p_writer.write(p_char);
     }
-
-    @Override protected void write(char p_char, Writer p_writer)
-        throws IOException
-    {
-        switch (p_char)
-        {
-	      // Perhaps we should escape high UNICODE
-          case '\'': p_writer.write("\\\'"); break;
-          case '"': p_writer.write("\\\""); break;
-          case '\n': p_writer.write("\\n"); break;
-          case '\t': p_writer.write("\\t"); break;
-          case '\b': p_writer.write("\\b"); break;
-          case '\f': p_writer.write("\\f"); break;
-          case '\r': p_writer.write("\\r"); break;
-          case '\\': p_writer.write("\\\\"); break;
-          default: p_writer.write(p_char);
-        }
-    }
-
+  }
 }

@@ -24,18 +24,11 @@ import java.io.Writer;
 import java.io.IOException;
 import java.net.URLEncoder;
 
-public class UrlEscaping
-    implements Escaping
-{
-    UrlEscaping()
-    {
-        // package scope constructor
-    }
+public class UrlEscaping implements Escaping {
+  UrlEscaping() {} // package scope constructor
 
-    @Override
-    public void write(String p_string, Writer p_writer)
-        throws IOException
-    {
-        p_writer.write(URLEncoder.encode(p_string, "UTF-8"));
-    }
+  @Override
+  public void write(String p_string, Writer p_writer) throws IOException {
+    p_writer.write(URLEncoder.encode(p_string, "UTF-8"));
+  }
 }

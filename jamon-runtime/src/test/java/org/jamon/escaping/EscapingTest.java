@@ -26,61 +26,40 @@ import java.io.IOException;
 
 import junit.framework.TestCase;
 
-public class EscapingTest
-    extends TestCase
-{
-    public void testNoEscaping()
-        throws IOException
-    {
-        checkEscaping(Escaping.NONE, "<& &gt; &>!\"'");
-    }
+public class EscapingTest extends TestCase {
+  public void testNoEscaping() throws IOException {
+    checkEscaping(Escaping.NONE, "<& &gt; &>!\"'");
+  }
 
-    public void testHtmlEscaping()
-        throws IOException
-    {
-        checkEscaping(Escaping.HTML, "&lt;&amp; &amp;gt; &amp;&gt;!\"'");
-    }
+  public void testHtmlEscaping() throws IOException {
+    checkEscaping(Escaping.HTML, "&lt;&amp; &amp;gt; &amp;&gt;!\"'");
+  }
 
-    public void testStrictHtmlEscaping()
-        throws IOException
-    {
-        checkEscaping(Escaping.STRICT_HTML,
-                      "&lt;&amp; &amp;gt; &amp;&gt;!&quot;&#39;");
-    }
+  public void testStrictHtmlEscaping() throws IOException {
+    checkEscaping(Escaping.STRICT_HTML, "&lt;&amp; &amp;gt; &amp;&gt;!&quot;&#39;");
+  }
 
-    public void testUrlEscaping()
-        throws IOException
-    {
-        checkEscaping(Escaping.URL, "%3C%26+%26gt%3B+%26%3E%21%22%27");
-    }
+  public void testUrlEscaping() throws IOException {
+    checkEscaping(Escaping.URL, "%3C%26+%26gt%3B+%26%3E%21%22%27");
+  }
 
-    public void testXmlEscaping()
-        throws IOException
-    {
-        checkEscaping(Escaping.XML,
-                      "&lt;&amp; &amp;gt; &amp;&gt;!&quot;&apos;");
-    }
+  public void testXmlEscaping() throws IOException {
+    checkEscaping(Escaping.XML, "&lt;&amp; &amp;gt; &amp;&gt;!&quot;&apos;");
+  }
 
-    public void testJavascriptEscaping()
-	throws IOException
-    {
-	checkEscaping(Escaping.JAVASCRIPT,
-		      "<& &gt; &>!\\\"\\'");
-    }
+  public void testJavascriptEscaping() throws IOException {
+    checkEscaping(Escaping.JAVASCRIPT, "<& &gt; &>!\\\"\\'");
+  }
 
-    private void checkEscaping(Escaping p_escaping, String p_expected)
-        throws IOException
-    {
-        check(p_escaping, "", "");
-        check(p_escaping, "hello", "hello");
-        check(p_escaping, "<& &gt; &>!\"'", p_expected);
-    }
+  private void checkEscaping(Escaping p_escaping, String p_expected) throws IOException {
+    check(p_escaping, "", "");
+    check(p_escaping, "hello", "hello");
+    check(p_escaping, "<& &gt; &>!\"'", p_expected);
+  }
 
-    private void check(Escaping p_escaping, String p_text, String p_expected)
-        throws IOException
-    {
-        Writer writer = new StringWriter();
-        p_escaping.write(p_text, writer);
-        assertEquals(p_expected, writer.toString());
-    }
+  private void check(Escaping p_escaping, String p_text, String p_expected) throws IOException {
+    Writer writer = new StringWriter();
+    p_escaping.write(p_text, writer);
+    assertEquals(p_expected, writer.toString());
+  }
 }

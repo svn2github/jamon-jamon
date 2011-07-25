@@ -28,14 +28,14 @@ import org.jamon.AbstractTemplateProxy.ImplDataCompatible;
 public interface TemplateReplacer {
   /**
    * Get the replacement for a proxy. If the proxied template is not being replaced via a
-   * <%replaces> tag in another template, simply return {@code p_proxy}. Otherwise, create the
+   * &lt;%replaces&gt; tag in another template, simply return {@code proxy}. Otherwise, create the
    * appropriate replacement proxy instance and call
    * {@link ImplDataCompatible#populateFrom(org.jamon.AbstractTemplateProxy.ImplData)} on it's
    * implData instance.
    *
-   * @param p_proxy the proxy to possibly replace.
+   * @param proxy the proxy to possibly replace.
    * @param jamonContext the jamonContext if there is one, or {@code null} otherwise.
    * @return {@code p_proxy} or a proxy instance for a template replacing p_proxy's template.
    */
-  AbstractTemplateProxy getReplacement(AbstractTemplateProxy p_proxy, Object p_jamonContext);
+  AbstractTemplateProxy getReplacement(AbstractTemplateProxy proxy, Object jamonContext);
 }

@@ -26,23 +26,20 @@ import java.io.IOException;
 /**
  * A simple interface describing that which knows how to render.
  */
-public interface Renderer
-{
-    /**
-     * Render to the given writer.
-     *
-     * @param p_writer the Writer to which to render
-     *
-     * @exception IOException if writing to the Writer throws an IOException
-     */
-    void renderTo(Writer p_writer)
-        throws IOException;
+public interface Renderer {
+  /**
+   * Render to the given writer.
+   *
+   * @param writer the Writer to which to render
+   * @exception IOException if writing to the Writer throws an IOException
+   */
+  void renderTo(Writer writer) throws IOException;
 
-    /**
-     * Render this Renderer into a String.
-     *
-     * @return a String that is the result of rendering this Renderer
-     */
-    String asString();
+  /**
+   * Render this Renderer into a String.
+   *
+   * @return a String that is the result of rendering this Renderer
+   */
+  String asString();
 
 }

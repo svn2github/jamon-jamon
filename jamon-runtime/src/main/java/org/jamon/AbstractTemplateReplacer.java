@@ -22,42 +22,35 @@ import org.jamon.AbstractTemplateProxy.ImplDataCompatible;
 import org.jamon.AbstractTemplateProxy.ReplacementConstructor;
 
 /**
- * A base class for classes wishing to define a {@code TemplateReplacer}.
- * Implementors need only define {@link #findReplacement(Class, Object)}
+ * A base class for classes wishing to define a {@code TemplateReplacer}. Implementors need only
+ * define {@link #findReplacement(Class, Object)}
  */
-public abstract class AbstractTemplateReplacer implements TemplateReplacer
-{
-    @Override
-    public AbstractTemplateProxy getReplacement(AbstractTemplateProxy p_proxy,
-        Object p_jamonContext)
-    {
-        ReplacementConstructor constructor = findReplacement(p_proxy.getClass(), p_jamonContext);
-        if (constructor != null)
-        {
-            AbstractTemplateProxy replacedProxy = constructor.makeReplacement();
-            @SuppressWarnings("unchecked")
-            ImplDataCompatible<ImplData> replacedImplData =
-                (ImplDataCompatible<ImplData>) replacedProxy.getImplData();
-            replacedImplData.populateFrom(p_proxy.getImplData());
-            return replacedProxy;
-        }
-        else
-        {
-            return p_proxy;
-        }
+public abstract class AbstractTemplateReplacer implements TemplateReplacer {
+  @Override
+  public AbstractTemplateProxy getReplacement(AbstractTemplateProxy proxy, Object jamonContext) {
+    ReplacementConstructor constructor = findReplacement(proxy.getClass(), jamonContext);
+    if (constructor != null) {
+      AbstractTemplateProxy replacedProxy = constructor.makeReplacement();
+      @SuppressWarnings("unchecked")
+      ImplDataCompatible<ImplData> replacedImplData =
+        (ImplDataCompatible<ImplData>) replacedProxy.getImplData();
+      replacedImplData.populateFrom(proxy.getImplData());
+      return replacedProxy;
     }
+    else {
+      return proxy;
+    }
+  }
 
-    /**
-     * Find an appropriate {@link ReplacementConstructor} for a template, if
-     * there is one.
-     *
-     * @param p_proxyClass the class to find a replacement for.
-     * @param p_jamonContext the jamonContext
-     * @return the {@code ReplacementConstructor} for the template which will
-     *         serve as a replacement, or {@code null} if there is to be no
-     *         replacement performed.
-     */
-    protected abstract ReplacementConstructor findReplacement(
-        Class<? extends AbstractTemplateProxy> p_proxyClass, Object p_jamonContext);
+  /**
+   * Find an appropriate {@link ReplacementConstructor} for a template, if there is one.
+   *
+   * @param proxyClass the class to find a replacement for.
+   * @param jamonContext the jamonContext
+   * @return the {@code ReplacementConstructor} for the template which will serve as a replacement,
+   *         or {@code null} if there is to be no replacement performed.
+   */
+  protected abstract ReplacementConstructor findReplacement(
+    Class<? extends AbstractTemplateProxy> proxyClass, Object jamonContext);
 
 }

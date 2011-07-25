@@ -25,13 +25,10 @@ import java.io.StringWriter;
 
 import junit.framework.TestCase;
 
-public class UrlEscapingTest
-    extends TestCase
-{
-    public void testEncoding() throws Exception
-    {
-        Writer writer = new StringWriter();
-        Escaping.URL.write("a+b c%d", writer);
-        assertEquals((Object) "a%2Bb+c%25d", writer.toString());
-    }
+public class UrlEscapingTest extends TestCase {
+  public void testEncoding() throws Exception {
+    Writer writer = new StringWriter();
+    Escaping.URL.write("a+b c%d", writer);
+    assertEquals((Object) "a%2Bb+c%25d", writer.toString());
+  }
 }

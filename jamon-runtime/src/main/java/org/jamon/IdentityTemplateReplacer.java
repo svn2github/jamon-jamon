@@ -21,16 +21,17 @@ package org.jamon;
  * A {@code TemplateReplacer} which always returns the original proxy.
  */
 public enum IdentityTemplateReplacer implements TemplateReplacer {
-    INSTANCE;
+  INSTANCE;
 
-    /**
-     * Simply return {@code p_proxy}.
-     * @return {@code p_proxy}
-     */
-    @Override
-    public AbstractTemplateProxy getReplacement(AbstractTemplateProxy p_proxy,
-        Object p_jamonContext)
-    {
-        return p_proxy;
-    }
+  /**
+   * Simply return {@code proxy}.
+   *
+   * @param proxy the proxy which will not be replaced
+   * @param jamonContext the jamonContext (ignored)
+   * @return {@code proxy}
+   */
+  @Override
+  public AbstractTemplateProxy getReplacement(AbstractTemplateProxy proxy, Object jamonContext) {
+    return proxy;
+  }
 }

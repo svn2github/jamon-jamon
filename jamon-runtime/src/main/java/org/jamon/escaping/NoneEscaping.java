@@ -23,20 +23,13 @@ package org.jamon.escaping;
 import java.io.Writer;
 import java.io.IOException;
 
-public class NoneEscaping
-    implements Escaping
-{
+public class NoneEscaping implements Escaping {
 
-    NoneEscaping()
-    {
-        // package scope constructor
-    }
+  NoneEscaping() {} // package scope constructor
 
-    @Override
-    public void write(String p_string, Writer p_writer)
-        throws IOException
-    {
-        p_writer.write(p_string);
-    }
+  @Override
+  public void write(String p_string, Writer p_writer) throws IOException {
+    p_writer.write(p_string);
+  }
 
 }

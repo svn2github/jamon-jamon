@@ -23,21 +23,15 @@ package org.jamon.escaping;
 import java.io.Writer;
 import java.io.IOException;
 
-public abstract class AbstractCharacterEscaping
-    implements Escaping
-{
+public abstract class AbstractCharacterEscaping implements Escaping {
 
-    @Override
-    public void write(String p_string, Writer p_writer)
-        throws IOException
-    {
-        for (int i = 0; i < p_string.length(); i++)
-        {
-            write(p_string.charAt(i), p_writer);
-        }
+  @Override
+  public void write(String p_string, Writer p_writer) throws IOException {
+    for (int i = 0; i < p_string.length(); i++) {
+      write(p_string.charAt(i), p_writer);
     }
+  }
 
-    protected abstract void write(char p_char, Writer p_writer)
-        throws IOException;
+  protected abstract void write(char p_char, Writer p_writer) throws IOException;
 
 }

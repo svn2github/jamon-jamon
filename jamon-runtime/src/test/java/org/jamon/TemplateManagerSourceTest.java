@@ -27,44 +27,34 @@ import org.jamon.TemplateManagerSource;
 
 import junit.framework.TestCase;
 
-public class TemplateManagerSourceTest
-    extends TestCase
-{
-    public void testSetSource()
-    {
-        final TemplateManager tm = new TestTemplateManager();
-        TemplateManagerSource.setTemplateManagerSource
-            (new TemplateManagerSource()
-                {
-                @Override public TemplateManager getTemplateManagerForPath
-                        (String p_path)
-                    {
-                        return tm;
-                    }
-                });
-        assertSame(tm, TemplateManagerSource.getTemplateManagerFor(""));
+public class TemplateManagerSourceTest extends TestCase {
+  public void testSetSource() {
+    final TemplateManager tm = new TestTemplateManager();
+    TemplateManagerSource.setTemplateManagerSource(new TemplateManagerSource() {
+      @Override
+      public TemplateManager getTemplateManagerForPath(String p_path) {
+        return tm;
+      }
+    });
+    assertSame(tm, TemplateManagerSource.getTemplateManagerFor(""));
+  }
+
+  public void testSetManager() {
+    TemplateManager tm = new TestTemplateManager();
+    TemplateManagerSource.setTemplateManager(tm);
+    assertSame(tm, TemplateManagerSource.getTemplateManagerFor(""));
+  }
+
+  private static class TestTemplateManager extends AbstractTemplateManager {
+
+    @Override
+    public AbstractTemplateProxy constructProxy(String p_path) {
+      return null;
     }
 
-    public void testSetManager()
-    {
-        TemplateManager tm = new TestTemplateManager();
-        TemplateManagerSource.setTemplateManager(tm);
-        assertSame(tm, TemplateManagerSource.getTemplateManagerFor(""));
+    @Override
+    protected Intf constructImplFromReplacedProxy(AbstractTemplateProxy p_replacedProxy) {
+      return null;
     }
-
-    private static class TestTemplateManager extends AbstractTemplateManager
-    {
-
-        @Override
-        public AbstractTemplateProxy constructProxy(String p_path)
-        {
-            return null;
-        }
-
-        @Override
-        protected Intf constructImplFromReplacedProxy(AbstractTemplateProxy p_replacedProxy)
-        {
-            return null;
-        }
-    }
+  }
 }

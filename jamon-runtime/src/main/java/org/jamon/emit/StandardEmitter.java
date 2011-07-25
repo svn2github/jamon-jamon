@@ -20,60 +20,22 @@
 
 package org.jamon.emit;
 
-public final class StandardEmitter
-{
-    private StandardEmitter()
-    {
-        // non instantiable
-    }
+public final class StandardEmitter {
+  private StandardEmitter() {} // non instantiable
 
-    public static String valueOf(Object p_obj)
-    {
-        return p_obj != null ? p_obj.toString() : "";
-    }
+  public static String valueOf(Object p_obj) {
+    return p_obj != null
+        ? p_obj.toString()
+        : "";
+  }
 
-    public static String valueOf(int p_int)
-    {
-        return String.valueOf(p_int);
-    }
-
-    public static String valueOf(double p_double)
-    {
-        return String.valueOf(p_double);
-    }
-
-    public static String valueOf(char p_char)
-    {
-        return String.valueOf(p_char);
-    }
-
-    public static String valueOf(boolean p_bool)
-    {
-        return String.valueOf(p_bool);
-    }
-
-    public static String valueOf(float p_float)
-    {
-        return String.valueOf(p_float);
-    }
-
-    public static String valueOf(short p_short)
-    {
-        return String.valueOf(p_short);
-    }
-
-    public static String valueOf(long p_long)
-    {
-        return String.valueOf(p_long);
-    }
-
-    public static String valueOf(byte p_byte)
-    {
-        return String.valueOf(p_byte);
-    }
-
-    public static String valueOf(String p_string)
-    {
-        return StrictEmitter.valueOf(p_string);
-    }
+  public static String valueOf(int p_int) { return String.valueOf(p_int);   }
+  public static String valueOf(double p_double) { return String.valueOf(p_double); }
+  public static String valueOf(char p_char) { return String.valueOf(p_char); }
+  public static String valueOf(boolean p_bool) { return String.valueOf(p_bool); }
+  public static String valueOf(float p_float) { return String.valueOf(p_float); }
+  public static String valueOf(short p_short) { return String.valueOf(p_short); }
+  public static String valueOf(long p_long) { return String.valueOf(p_long); }
+  public static String valueOf(byte p_byte) { return String.valueOf(p_byte); }
+  public static String valueOf(String p_string) { return StrictEmitter.valueOf(p_string); }
 }

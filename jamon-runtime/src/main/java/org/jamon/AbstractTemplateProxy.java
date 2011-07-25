@@ -20,65 +20,53 @@
 
 package org.jamon;
 
-public abstract class AbstractTemplateProxy
-{
-    public interface Intf
-    {
+public abstract class AbstractTemplateProxy {
+  public interface Intf {}
+
+  /**
+   * A constructor for a proxy class for a replacing template. This is used to avoid reflection
+   * after startup.
+   */
+  public interface ReplacementConstructor {
+    AbstractTemplateProxy makeReplacement();
+  }
+
+  public static class ImplData {}
+
+  public static interface ImplDataCompatible<T extends ImplData> {
+    public void populateFrom(T implData);
+  }
+
+  protected AbstractTemplateProxy(TemplateManager templateManager) {
+    this.templateManager = templateManager;
+  }
+
+  protected AbstractTemplateProxy(String path) {
+    this(TemplateManagerSource.getTemplateManagerFor(path));
+  }
+
+  protected final TemplateManager getTemplateManager() {
+    return templateManager;
+  }
+
+  private final TemplateManager templateManager;
+
+  private ImplData implData = makeImplData();
+
+  public abstract AbstractTemplateImpl constructImpl(Class<? extends AbstractTemplateImpl> clazz);
+
+  protected abstract AbstractTemplateImpl constructImpl();
+
+  protected abstract ImplData makeImplData();
+
+  protected final void reset() {
+    implData = null;
+  }
+
+  public ImplData getImplData() {
+    if (implData == null) {
+      throw new IllegalStateException("Template has been used");
     }
-
-    /**
-     * A constructor for a proxy class for a replacing template. This is used to avoid
-     * reflection after startup.
-     */
-    public interface ReplacementConstructor
-    {
-        AbstractTemplateProxy makeReplacement();
-    }
-
-    public static class ImplData
-    {
-    }
-
-    public static interface ImplDataCompatible<T extends ImplData> {
-      public void populateFrom(T implData);
-    }
-
-    protected AbstractTemplateProxy(TemplateManager p_templateManager)
-    {
-        m_templateManager = p_templateManager;
-    }
-
-    protected AbstractTemplateProxy(String p_path)
-    {
-        this(TemplateManagerSource.getTemplateManagerFor(p_path));
-    }
-
-    protected final TemplateManager getTemplateManager()
-    {
-        return m_templateManager;
-    }
-
-    private final TemplateManager m_templateManager;
-    private ImplData m_implData = makeImplData();
-
-    public abstract AbstractTemplateImpl constructImpl(
-        Class<? extends AbstractTemplateImpl> p_class);
-
-    protected abstract AbstractTemplateImpl constructImpl();
-
-    protected abstract ImplData makeImplData();
-
-    protected final void reset()
-    {
-        m_implData = null;
-    }
-
-    public ImplData getImplData()
-    {
-        if (m_implData == null)
-        {
-            throw new IllegalStateException("Template has been used");
-        }
-        return m_implData;
-    }
+    return implData;
+  }
 }

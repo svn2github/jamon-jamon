@@ -23,25 +23,18 @@ package org.jamon.escaping;
 import java.io.Writer;
 import java.io.IOException;
 
-public class StrictHtmlEscaping
-    extends HtmlEscaping
-{
+public class StrictHtmlEscaping extends HtmlEscaping {
 
-    StrictHtmlEscaping()
-    {
-        // package scope constructor
-    }
+  StrictHtmlEscaping() {} // package scope constructor
 
-    @Override protected void write(char p_char, Writer p_writer)
-        throws IOException
-    {
-        switch (p_char)
-        {
-          case '"': p_writer.write("&quot;"); break;
-          case '\'': p_writer.write("&#39;"); break;
-              // FIXME: numerically escape other chars
-          default: super.write(p_char, p_writer);
-        }
+  @Override
+  protected void write(char p_char, Writer p_writer) throws IOException {
+    switch (p_char) {
+      case '"': p_writer.write("&quot;"); break;
+      case '\'': p_writer.write("&#39;"); break;
+      // FIXME: numerically escape other chars
+      default: super.write(p_char, p_writer);
     }
+  }
 
 }

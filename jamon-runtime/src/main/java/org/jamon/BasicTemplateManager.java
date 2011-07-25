@@ -22,112 +22,87 @@ package org.jamon;
 
 import org.jamon.AbstractTemplateProxy.Intf;
 
-
 /**
- * A standard implementation of the {@link TemplateManager} interface.
- * The <code>BasicTemplateManager</code> is geared towards production
- * deployment; it is designed for performance. It will <b>NOT</b>
- * dynamically examine or recompile template sources.
- *
- * <code>BasicTemplateManager</code> instances are thread-safe.  In
- * your applications, you generally want exactly one instance of a
- * BasicTemplateManager (i.e. a singleton), so consider using {@link
- * TemplateManagerSource}
+ * A standard implementation of the {@link TemplateManager} interface. The
+ * <code>BasicTemplateManager</code> is geared towards production deployment; it is designed for
+ * performance. It will <b>NOT</b> dynamically examine or recompile template sources.
+ * <code>BasicTemplateManager</code> instances are thread-safe. In your applications, you generally
+ * want exactly one instance of a BasicTemplateManager (i.e. a singleton), so consider using
+ * {@link TemplateManagerSource}
  **/
 
-public class BasicTemplateManager extends AbstractTemplateManager
-{
-    /**
-     * Creates a new <code>BasicTemplateManager</code> using a default
-     * <code>ClassLoader</code>.
-     **/
-    public BasicTemplateManager()
-    {
-        this(null);
-    }
+public class BasicTemplateManager extends AbstractTemplateManager {
 
-    /**
-     * Creates a new <code>BasicTemplateManager</code> from a
-     * specified <code>ClassLoader</code>.
-     *
-     * @param p_classLoader the <code>ClassLoader</code> to use to
-     * load templates.
-     **/
-    public BasicTemplateManager(ClassLoader p_classLoader)
-    {
-        this(p_classLoader, IdentityTemplateReplacer.INSTANCE);
-    }
+  private final ClassLoader classLoader;
 
-    /**
-     * Creates a new <code>BasicTemplateManager</code> from a
-     * specified <code>ClassLoader</code>.
-     *
-     * @param p_classLoader the <code>ClassLoader</code> to use to
-     * load templates.
-     * @param p_templateReplacer the {@code TemplateReplacer} to use for replacing templates.
-     **/
-    public BasicTemplateManager(ClassLoader p_classLoader, TemplateReplacer p_templateReplacer)
-    {
-        super(p_templateReplacer);
-        m_classLoader = p_classLoader == null
-            ? getClass().getClassLoader()
-            : p_classLoader;
-    }
+  /**
+   * Creates a new <code>BasicTemplateManager</code> using a default <code>ClassLoader</code>.
+   **/
+  public BasicTemplateManager() {
+    this(null);
+  }
 
-    @Override
-    protected Intf constructImplFromReplacedProxy(AbstractTemplateProxy p_replacedProxy)
-    {
-        return p_replacedProxy.constructImpl();
-    }
+  /**
+   * Creates a new <code>BasicTemplateManager</code> from a specified <code>ClassLoader</code>.
+   *
+   * @param classLoader the <code>ClassLoader</code> to use to load templates.
+   **/
+  public BasicTemplateManager(ClassLoader classLoader) {
+    this(classLoader, IdentityTemplateReplacer.INSTANCE);
+  }
 
-    /**
-     * Given a template path, return a proxy for that template.
-     *
-     * @param p_path the path to the template
-     *
-     * @return a <code>Template</code> proxy instance
-     **/
-    @Override
-    public AbstractTemplateProxy constructProxy(String p_path)
-    {
-        try
-        {
-            return getProxyClass(p_path)
-                .getConstructor(new Class [] { TemplateManager.class })
-                .newInstance(new Object [] { this });
-        }
-        catch (ClassNotFoundException e)
-        {
-            throw new RuntimeException("The template at path "
-                                       + p_path
-                                       + " could not be found");
-        }
-        catch (RuntimeException e)
-        {
-            throw e;
-        }
-        catch (Exception e)
-        {
-            throw new RuntimeException(e);
-        }
-    }
+  /**
+   * Creates a new <code>BasicTemplateManager</code> from a specified <code>ClassLoader</code>.
+   *
+   * @param classLoader the <code>ClassLoader</code> to use to load templates.
+   * @param templateReplacer the {@code TemplateReplacer} to use for replacing templates.
+   **/
+  public BasicTemplateManager(ClassLoader classLoader, TemplateReplacer templateReplacer) {
+    super(templateReplacer);
+    this.classLoader = classLoader == null
+        ? getClass().getClassLoader()
+        : classLoader;
+  }
 
-    private Class<? extends AbstractTemplateProxy> getProxyClass(String p_path)
-        throws ClassNotFoundException
-    {
-        String strippedPath = stripLeadingSlashes(p_path);
-        return m_classLoader
-            .loadClass(strippedPath.replace('/', '.'))
-            .asSubclass(AbstractTemplateProxy.class);
-    }
+  @Override
+  protected Intf constructImplFromReplacedProxy(AbstractTemplateProxy replacedProxy) {
+    return replacedProxy.constructImpl();
+  }
 
-    private static String stripLeadingSlashes(String p_path) {
-      int firstNonSlash = 0;
-      while(p_path.indexOf('/', firstNonSlash) == firstNonSlash) {
-        firstNonSlash++;
-      }
-      return p_path.substring(firstNonSlash);
+  /**
+   * Given a template path, return a proxy for that template.
+   *
+   * @param path the path to the template
+   * @return a <code>Template</code> proxy instance
+   **/
+  @Override
+  public AbstractTemplateProxy constructProxy(String path) {
+    try {
+      return getProxyClass(path).getConstructor(new Class[] { TemplateManager.class })
+          .newInstance(new Object[] { this });
     }
+    catch (ClassNotFoundException e) {
+      throw new RuntimeException("The template at path " + path + " could not be found");
+    }
+    catch (RuntimeException e) {
+      throw e;
+    }
+    catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+  }
 
-    private final ClassLoader m_classLoader;
+  private Class<? extends AbstractTemplateProxy> getProxyClass(String path) throws ClassNotFoundException {
+    String strippedPath = stripLeadingSlashes(path);
+    return classLoader.loadClass(strippedPath.replace('/', '.')).asSubclass(
+      AbstractTemplateProxy.class);
+  }
+
+  private static String stripLeadingSlashes(String path) {
+    int firstNonSlash = 0;
+    while (path.indexOf('/', firstNonSlash) == firstNonSlash) {
+      firstNonSlash++;
+    }
+    return path.substring(firstNonSlash);
+  }
 }

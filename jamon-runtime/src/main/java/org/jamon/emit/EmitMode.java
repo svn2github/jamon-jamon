@@ -22,32 +22,25 @@ package org.jamon.emit;
 
 import java.util.Locale;
 
-public enum EmitMode
-{
-    STANDARD(StandardEmitter.class),
-    LIMITED(LimitedEmitter.class),
-    STRICT(StrictEmitter.class);
+public enum EmitMode {
+  STANDARD(StandardEmitter.class), LIMITED(LimitedEmitter.class), STRICT(StrictEmitter.class);
 
-    public static EmitMode fromString(String p_string)
-    {
-        return valueOf(p_string.toUpperCase(Locale.US));
-    }
+  public static EmitMode fromString(String p_string) {
+    return valueOf(p_string.toUpperCase(Locale.US));
+  }
 
-    public String getEmitterClassName()
-    {
-        return m_class.getName();
-    }
+  public String getEmitterClassName() {
+    return m_class.getName();
+  }
 
-    @Override public String toString()
-    {
-        return "EmitMode{" + m_class.getName() + "}";
-    }
+  @Override
+  public String toString() {
+    return "EmitMode{" + m_class.getName() + "}";
+  }
 
+  private EmitMode(Class<?> p_emitterClass) {
+    m_class = p_emitterClass;
+  }
 
-    private EmitMode(Class<?> p_emitterClass)
-    {
-        m_class = p_emitterClass;
-    }
-
-    private final Class<?> m_class;
+  private final Class<?> m_class;
 }
