@@ -25,7 +25,6 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
-import java.io.Writer;
 import java.util.LinkedList;
 
 
@@ -42,15 +41,6 @@ public class CodeWriter
             // us-ascii is guaranteed to be available
             throw new RuntimeException(e);
         }
-    }
-
-    /**
-     * @deprecated only use the Stream constructor
-     */
-    @Deprecated
-    public CodeWriter(Writer p_writer)
-    {
-        m_writer = new PrintWriter(p_writer);
     }
 
     private final PrintWriter m_writer;
