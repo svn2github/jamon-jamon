@@ -25,134 +25,107 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ExternalJavaCompiler
-    implements JavaCompiler
-{
-    private final List<String> m_compilerCommand;
+public class ExternalJavaCompiler implements JavaCompiler {
+  private final List<String> compilerCommand;
 
-    public ExternalJavaCompiler(String p_javac, List<String> p_compilerArgs)
-    {
-        m_compilerCommand = new ArrayList<String>(p_compilerArgs.size() + 1);
-        m_compilerCommand.add(p_javac);
-        m_compilerCommand.addAll(p_compilerArgs);
+  public ExternalJavaCompiler(String javac, List<String> compilerArgs) {
+    compilerCommand = new ArrayList<String>(compilerArgs.size() + 1);
+    compilerCommand.add(javac);
+    compilerCommand.addAll(compilerArgs);
+  }
+
+  @Override
+  public String compile(String[] javaFiles) {
+    String[] cmdline = new String[javaFiles.length + compilerCommand.size()];
+    compilerCommand.toArray(cmdline);
+    System.arraycopy(javaFiles, 0, cmdline, compilerCommand.size(), javaFiles.length);
+
+    Process p;
+    try {
+      p = Runtime.getRuntime().exec(cmdline);
+    }
+    catch (IOException e) {
+      return e.getMessage();
+    }
+    StreamConsumer stderr = new StreamConsumer(p.getErrorStream());
+    try {
+      Thread errThread = new Thread(stderr);
+      errThread.start();
+      int code = -1;
+      try {
+        code = p.waitFor();
+      }
+      catch (InterruptedException e) {
+        errThread.interrupt();
+      }
+
+      try {
+        errThread.join();
+      }
+      catch (InterruptedException e) {
+        // just ignore it
+      }
+      return code == 0
+          ? null
+          : stderr.getContents();
+    }
+    finally {
+      try {
+        stderr.close();
+      }
+      catch (IOException e) {
+        return e.getMessage();
+      }
+    }
+  }
+
+  private static class StreamConsumer implements Runnable {
+    StreamConsumer(InputStream stream) {
+      this.stream = stream;
+    }
+
+    private final InputStream stream;
+    private final StringBuilder buffer = new StringBuilder();
+
+    private void close() throws IOException {
+      stream.close();
+    }
+
+    synchronized String getContents() {
+      return buffer.toString();
     }
 
     @Override
-    public String compile(String [] p_javaFiles)
-    {
-        String [] cmdline = new String[p_javaFiles.length + m_compilerCommand.size()];
-        m_compilerCommand.toArray(cmdline);
-        System.arraycopy(p_javaFiles,0,cmdline, m_compilerCommand.size(), p_javaFiles.length);
-
-        Process p;
-        try
-        {
-            p = Runtime.getRuntime().exec(cmdline);
+    public void run() {
+      final byte[] buf = new byte[1024];
+      boolean eof = false;
+      while (!eof) {
+        try {
+          int read = stream.read(buf);
+          if (read == -1) {
+            eof = true;
+          }
+          else if (read == 0) {
+            try {
+              Thread.sleep(100);
+            }
+            catch (InterruptedException e) {
+              // FIXME: really?
+              eof = true;
+            }
+          }
+          else {
+            synchronized (buffer) {
+              buffer.append(new String(buf, 0, read));
+            }
+          }
         }
-        catch (IOException e)
-        {
-            return e.getMessage();
+        catch (IOException e) {
+          // FIXME: what here?
+          eof = true;
         }
-        StreamConsumer stderr = new StreamConsumer(p.getErrorStream());
-        try
-        {
-            Thread errThread = new Thread(stderr);
-            errThread.start();
-            int code = -1;
-            try
-            {
-                code = p.waitFor();
-            }
-            catch (InterruptedException e)
-            {
-                errThread.interrupt();
-            }
-
-            try
-            {
-                errThread.join();
-            }
-            catch (InterruptedException e)
-            {
-                // just ignore it
-            }
-            return code == 0 ? null : stderr.getContents();
-        }
-        finally
-        {
-            try
-            {
-                stderr.close();
-            }
-            catch (IOException e)
-            {
-                return e.getMessage();
-            }
-        }
+      }
     }
-
-    private static class StreamConsumer
-        implements Runnable
-    {
-        StreamConsumer(InputStream p_stream)
-        {
-            m_stream = p_stream;
-        }
-        private final InputStream m_stream;
-        private final StringBuilder m_buffer = new StringBuilder();
-
-        private void close()
-            throws IOException
-        {
-            m_stream.close();
-        }
-
-        synchronized String getContents()
-        {
-            return m_buffer.toString();
-        }
-
-        @Override
-        public void run()
-        {
-            final byte [] buf = new byte[1024];
-            boolean eof = false;
-            while (! eof)
-            {
-                try
-                {
-                    int read = m_stream.read(buf);
-                    if (read == -1)
-                    {
-                        eof = true;
-                    }
-                    else if (read == 0)
-                    {
-                        try
-                        {
-                            Thread.sleep(100);
-                        }
-                        catch (InterruptedException e)
-                        {
-                            // FIXME: really?
-                            eof = true;
-                        }
-                    }
-                    else
-                    {
-                        synchronized (m_buffer)
-                        {
-                            m_buffer.append(new String(buf,0,read));
-                        }
-                    }
-                }
-                catch (IOException e)
-                {
-                    // FIXME: what here?
-                    eof = true;
-                }
-            }
-        }
-    }
+  }
 
 }

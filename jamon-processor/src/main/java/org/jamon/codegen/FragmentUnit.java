@@ -24,96 +24,79 @@ import org.jamon.api.Location;
 import org.jamon.compiler.ParserErrorsImpl;
 import org.jamon.node.OptionalArgNode;
 
-public class FragmentUnit extends AbstractInnerUnit
-{
-    public FragmentUnit(
-        String p_name,
-        StatementBlock p_parent,
-        GenericParams p_genericParams,
-        ParserErrorsImpl p_errors,
-        Location p_location)
-    {
-        super(p_name, p_parent, p_errors, p_location);
-        m_genericParams = p_genericParams;
-    }
+public class FragmentUnit extends AbstractInnerUnit {
+  public FragmentUnit(
+    String name,
+    StatementBlock parent,
+    GenericParams genericParams,
+    ParserErrorsImpl errors,
+    Location location) {
+    super(name, parent, errors, location);
+    this.genericParams = genericParams;
+  }
 
-    public String getFragmentInterfaceName(boolean p_makeGeneric)
-    {
-        String genericParamsClause = p_makeGeneric
-            ? m_genericParams.generateGenericParamsList()
-            : "";
-        if(getParent() instanceof AbstractInnerUnit)
-        {
-            return "Fragment_" + getParentUnit().getName()
-                + "__jamon__" + getName() + genericParamsClause;
-        }
-        else
-        {
-            return "Fragment_" + getName() + genericParamsClause;
-        }
+  public String getFragmentInterfaceName(boolean makeGeneric) {
+    String genericParamsClause = makeGeneric
+        ? genericParams.generateGenericParamsList()
+        : "";
+    if (getParent() instanceof AbstractInnerUnit) {
+      return "Fragment_" + getParentUnit().getName() + "__jamon__" + getName()
+        + genericParamsClause;
     }
+    else {
+      return "Fragment_" + getName() + genericParamsClause;
+    }
+  }
 
-    @Override
-    public void addOptionalArg(OptionalArgNode p_node)
-    {
-        getErrors().addError(
-            "Fragments cannot have optional arguments",
-            p_node.getValue().getLocation());
-    }
+  @Override
+  public void addOptionalArg(OptionalArgNode node) {
+    getErrors().addError("Fragments cannot have optional arguments", node.getValue().getLocation());
+  }
 
-    @Override
-    public void addOptionalArg(OptionalArgument p_arg)
-    {
-        throw new UnsupportedOperationException();
-    }
+  @Override
+  public void addOptionalArg(OptionalArgument arg) {
+    throw new UnsupportedOperationException();
+  }
 
-    @Override
-    protected void addFragmentArg(FragmentArgument p_arg)
-    {
-        getErrors().addError("Fragments cannot have fragment arguments",
-                             p_arg.getLocation());
-    }
+  @Override
+  protected void addFragmentArg(FragmentArgument arg) {
+    getErrors().addError("Fragments cannot have fragment arguments", arg.getLocation());
+  }
 
-    @Override
-    public FragmentUnit getFragmentUnitIntf(String p_path)
-    {
-        return getParent().getFragmentUnitIntf(p_path);
-    }
+  @Override
+  public FragmentUnit getFragmentUnitIntf(String path) {
+    return getParent().getFragmentUnitIntf(path);
+  }
 
-    public void printInterface(CodeWriter p_writer,
-                               String p_interfaceModifiers,
-                               boolean p_isCopy)
-    {
-        p_writer.println(p_interfaceModifiers + " static interface "
-                         + getFragmentInterfaceName(true));
-        if (p_isCopy)
-        {
-            p_writer.println("  extends Intf." + getFragmentInterfaceName(true));
-        }
-        p_writer.openBlock();
-        if (! p_isCopy)
-        {
-            p_writer.print("void renderNoFlush");
-            p_writer.openList();
-            p_writer.printListElement(ArgNames.WRITER_DECL);
-            printRenderArgsDecl(p_writer);
-            p_writer.closeList();
-            p_writer.println();
-            p_writer.println("  throws java.io.IOException;");
-            p_writer.print(ClassNames.RENDERER + " makeRenderer");
-            p_writer.openList();
-            printRenderArgsDecl(p_writer);
-            p_writer.closeList();
-            p_writer.println(";");
-        }
-        p_writer.closeBlock();
-        p_writer.println();
+  public void printInterface(CodeWriter writer, String interfaceModifiers, boolean isCopy) {
+    writer.println(interfaceModifiers + " static interface " + getFragmentInterfaceName(true));
+    if (isCopy) {
+      writer.println("  extends Intf." + getFragmentInterfaceName(true));
     }
+    writer.openBlock();
+    if (!isCopy) {
+      writer.print("void renderNoFlush");
+      writer.openList();
+      writer.printListElement(ArgNames.WRITER_DECL);
+      printRenderArgsDecl(writer);
+      writer.closeList();
+      writer.println();
+      writer.println("  throws java.io.IOException;");
+      writer.print(ClassNames.RENDERER + " makeRenderer");
+      writer.openList();
+      printRenderArgsDecl(writer);
+      writer.closeList();
+      writer.println(";");
+    }
+    writer.closeBlock();
+    writer.println();
+  }
 
-    public void generateThrowsIOExceptionIfNecessary(CodeWriter p_writer) {
-        if (doesIO()) {
-            p_writer.println(" throws "+ ClassNames.IOEXCEPTION);
-        }
+  public void generateThrowsIOExceptionIfNecessary(CodeWriter writer) {
+    if (doesIO()) {
+      writer.println(" throws " + ClassNames.IOEXCEPTION);
     }
-    private final GenericParams m_genericParams;
+  }
+
+  private final GenericParams genericParams;
 }

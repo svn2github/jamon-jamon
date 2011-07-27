@@ -22,64 +22,53 @@ package org.jamon.codegen;
 
 import java.util.Collection;
 
+import org.jamon.api.Location;
 import org.jamon.compiler.ParserErrorsImpl;
 
-public class DeclaredMethodUnit
-    extends AbstractInnerUnit
-    implements MethodUnit
-{
-    public DeclaredMethodUnit(String p_name,
-                              TemplateUnit p_parent,
-                              ParserErrorsImpl p_errors,
-                              org.jamon.api.Location p_location,
-                              boolean p_isAbstract)
-    {
-        super(p_name, p_parent, p_errors, p_location);
-        m_isAbstract = p_isAbstract;
-    }
+public class DeclaredMethodUnit extends AbstractInnerUnit implements MethodUnit {
+  public DeclaredMethodUnit(
+    String name, TemplateUnit parent,
+    ParserErrorsImpl errors,
+    Location location,
+    boolean isAbstract) {
+    super(name, parent, errors, location);
+    this.isAbstract = isAbstract;
+  }
 
-    public DeclaredMethodUnit(
-        String p_name, TemplateUnit p_parent, ParserErrorsImpl p_errors, org.jamon.api.Location p_location)
-    {
-        this(p_name, p_parent, p_errors, p_location, false);
-    }
+  public DeclaredMethodUnit(
+    String name, TemplateUnit parent, ParserErrorsImpl errors, Location location) {
+    this(name, parent, errors, location, false);
+  }
 
-    @Override
-    public String getOptionalArgDefaultMethod(OptionalArgument p_arg)
-    {
-        return "__jamon__get_Method_Opt_" + p_arg.getName() + "_default";
-    }
+  @Override
+  public String getOptionalArgDefaultMethod(OptionalArgument arg) {
+    return "__jamon__get_Method_Opt_" + arg.getName() + "_default";
+  }
 
-    @Override
-    public boolean isAbstract()
-    {
-        return m_isAbstract;
-    }
+  @Override
+  public boolean isAbstract() {
+    return isAbstract;
+  }
 
-    @Override public boolean doesIO()
-    {
-        return m_isAbstract
-        || super.doesIO()
-        || ((TemplateUnit) getParentUnit()).isParent();
-    }
+  @Override
+  public boolean doesIO() {
+    return isAbstract || super.doesIO() || ((TemplateUnit) getParentUnit()).isParent();
+  }
 
-    private final boolean m_isAbstract;
+  private final boolean isAbstract;
 
-    @Override
-    public Collection<OptionalArgument> getOptionalArgsWithDefaults()
-    {
-        return getSignatureOptionalArgs();
-    }
+  @Override
+  public Collection<OptionalArgument> getOptionalArgsWithDefaults() {
+    return getSignatureOptionalArgs();
+  }
 
-    @Override
-    public String getDefaultForArg(OptionalArgument p_arg)
-    {
-        return p_arg.getDefault();
-    }
+  @Override
+  public String getDefaultForArg(OptionalArgument arg) {
+    return arg.getDefault();
+  }
 
-    @Override
-    public boolean isOverride()
-    {
-        return false;
-    }
+  @Override
+  public boolean isOverride() {
+    return false;
+  }
 }

@@ -26,174 +26,151 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeMap;
 
+import org.jamon.api.Location;
 import org.jamon.compiler.ParserErrorImpl;
 import org.jamon.compiler.ParserErrorsImpl;
 import org.jamon.node.ArgNode;
 import org.jamon.node.FragmentArgsNode;
 import org.jamon.node.OptionalArgNode;
 
-public abstract class AbstractUnit
-    extends AbstractStatementBlock
-    implements Unit
-{
-    public AbstractUnit(
-        String p_name, StatementBlock p_parent, ParserErrorsImpl p_errors, org.jamon.api.Location p_location)
-    {
-        super(p_parent, p_location);
-        m_name = p_name;
-        m_errors = p_errors;
+public abstract class AbstractUnit extends AbstractStatementBlock implements Unit {
+  public AbstractUnit(
+    String name, StatementBlock parent, ParserErrorsImpl errors, Location location) {
+    super(parent, location);
+    this.name = name;
+    this.errors = errors;
+  }
+
+  @Override
+  public final String getName() {
+    return name;
+  }
+
+  @Override
+  public final Unit getParentUnit() {
+    return (Unit) getParent();
+  }
+
+  protected final ParserErrorsImpl getErrors() {
+    return errors;
+  }
+
+  protected abstract void addFragmentArg(FragmentArgument arg);
+
+  @Override
+  public abstract List<FragmentArgument> getFragmentArgs();
+
+  @Override
+  public FragmentUnit getFragmentUnitIntf(String path) {
+    for (FragmentArgument arg : getFragmentArgs()) {
+      if (path.equals(arg.getName())) {
+        return arg.getFragmentUnit();
+      }
     }
+    return null;
+  }
 
-    @Override
-    public final String getName()
-    {
-        return m_name;
+  @Override
+  public void generateRenderBody(CodeWriter writer, TemplateDescriber describer)
+  throws ParserErrorImpl {
+    writer.openBlock();
+    printStatements(writer, describer);
+    writer.closeBlock();
+  }
+
+  public abstract void addRequiredArg(RequiredArgument arg);
+
+  public abstract void addOptionalArg(OptionalArgument arg);
+
+  @Override
+  public abstract List<RequiredArgument> getSignatureRequiredArgs();
+
+  @Override
+  public abstract Collection<OptionalArgument> getSignatureOptionalArgs();
+
+  public abstract Collection<AbstractArgument> getVisibleArgs();
+
+  private final String name;
+
+  private final ParserErrorsImpl errors;
+
+  private final Set<String> argNames = new HashSet<String>();
+
+  @Override
+  public FragmentUnit addFragment(FragmentArgsNode node, GenericParams genericParams) {
+    checkArgName(node.getFragmentName(), node.getLocation());
+    FragmentUnit frag = new FragmentUnit(node.getFragmentName(), this, genericParams, errors,
+        node.getLocation());
+    addFragmentArg(new FragmentArgument(frag, node.getLocation()));
+    return frag;
+  }
+
+  @Override
+  public void addRequiredArg(ArgNode node) {
+    checkArgName(node.getName().getName(), node.getName().getLocation());
+    addRequiredArg(new RequiredArgument(node));
+  }
+
+  @Override
+  public void addOptionalArg(OptionalArgNode node) {
+    checkArgName(node.getName().getName(), node.getName().getLocation());
+    addOptionalArg(new OptionalArgument(node));
+  }
+
+  protected void addArgName(AbstractArgument arg) {
+    argNames.add(arg.getName());
+  }
+
+  private void checkArgName(String name, org.jamon.api.Location location) {
+    if (!argNames.add(name)) {
+      getErrors().addError("multiple arguments named " + name, location);
     }
+  }
 
-    @Override public final Unit getParentUnit()
-    {
-        return (Unit) getParent();
+  public List<AbstractArgument> getRenderArgs() {
+    return new SequentialList<AbstractArgument>(getSignatureRequiredArgs(), getFragmentArgs());
+  }
+
+  @Override
+  public void printRenderArgsDecl(CodeWriter writer) {
+    printArgsDecl(writer, getRenderArgs());
+  }
+
+  public void printRenderArgs(CodeWriter writer) {
+    printArgs(writer, getRenderArgs());
+  }
+
+  protected static void printArgsDecl(
+    CodeWriter writer, Iterable<? extends AbstractArgument> i) {
+    for (AbstractArgument arg : i) {
+      writer.printListElement("final " + arg.getFullyQualifiedType() + " " + arg.getName());
     }
+  }
 
-    protected final ParserErrorsImpl getErrors()
-    {
-        return m_errors;
+  protected static void printArgs(CodeWriter writer, Iterable<? extends AbstractArgument> args) {
+    for (AbstractArgument arg : args) {
+      writer.printListElement(arg.getName());
     }
+  }
 
-    protected abstract void addFragmentArg(FragmentArgument p_arg);
-    @Override
-    public abstract List<FragmentArgument> getFragmentArgs();
-
-    @Override public FragmentUnit getFragmentUnitIntf(String p_path)
-    {
-        for (FragmentArgument arg: getFragmentArgs())
-        {
-            if (p_path.equals(arg.getName()))
-            {
-                return arg.getFragmentUnit();
-            }
-        }
-        return null;
+  protected void generateInterfaceSummary(StringBuilder buf) {
+    buf.append("Required\n");
+    for (AbstractArgument arg : getSignatureRequiredArgs()) {
+      buf.append(arg.getName());
+      buf.append(":");
+      buf.append(arg.getType());
+      buf.append("\n");
     }
-
-    @Override
-    public void generateRenderBody(CodeWriter p_writer,
-                                   TemplateDescriber p_describer) throws ParserErrorImpl
-    {
-        p_writer.openBlock();
-        printStatements(p_writer, p_describer);
-        p_writer.closeBlock();
+    buf.append("Optional\n");
+    TreeMap<String, OptionalArgument> optArgs = new TreeMap<String, OptionalArgument>();
+    for (OptionalArgument arg : getSignatureOptionalArgs()) {
+      optArgs.put(arg.getName(), arg);
     }
-
-    public abstract void addRequiredArg(RequiredArgument p_arg);
-    public abstract void addOptionalArg(OptionalArgument p_arg);
-    @Override
-    public abstract List<RequiredArgument> getSignatureRequiredArgs();
-    @Override
-    public abstract Collection<OptionalArgument> getSignatureOptionalArgs();
-    public abstract Collection<AbstractArgument> getVisibleArgs();
-
-    private final String m_name;
-    private final ParserErrorsImpl m_errors;
-    private final Set<String> m_argNames = new HashSet<String>();
-    @Override public FragmentUnit addFragment(
-        FragmentArgsNode p_node, GenericParams p_genericParams)
-    {
-        checkArgName(p_node.getFragmentName(), p_node.getLocation());
-        FragmentUnit frag = new FragmentUnit(
-            p_node.getFragmentName(), this, p_genericParams, m_errors, p_node.getLocation());
-        addFragmentArg(new FragmentArgument(frag, p_node.getLocation()));
-        return frag;
+    for (OptionalArgument arg : optArgs.values()) {
+      buf.append(arg.getName());
+      buf.append(":");
+      buf.append(arg.getType());
+      buf.append("\n");
     }
-
-    @Override public void addRequiredArg(ArgNode p_node)
-    {
-        checkArgName(p_node.getName().getName(),
-                     p_node.getName().getLocation());
-        addRequiredArg(new RequiredArgument(p_node));
-    }
-
-    @Override public void addOptionalArg(OptionalArgNode p_node)
-    {
-        checkArgName(p_node.getName().getName(),
-            p_node.getName().getLocation());
-        addOptionalArg(new OptionalArgument(p_node));
-    }
-
-    protected void addArgName(AbstractArgument p_arg)
-    {
-        m_argNames.add(p_arg.getName());
-    }
-
-    private void checkArgName(String p_name, org.jamon.api.Location p_location)
-    {
-        if (! m_argNames.add(p_name))
-        {
-            getErrors().addError(
-                "multiple arguments named " + p_name,
-                p_location);
-        }
-    }
-
-    public List<AbstractArgument> getRenderArgs()
-    {
-        return new SequentialList<AbstractArgument>(
-                getSignatureRequiredArgs(),
-                getFragmentArgs());
-    }
-
-    @Override
-    public void printRenderArgsDecl(CodeWriter p_writer)
-    {
-        printArgsDecl(p_writer, getRenderArgs());
-    }
-
-    public void printRenderArgs(CodeWriter p_writer)
-    {
-        printArgs(p_writer, getRenderArgs());
-    }
-
-    protected static void printArgsDecl(
-        CodeWriter p_writer, Iterable<? extends AbstractArgument> i)
-    {
-        for (AbstractArgument arg: i)
-        {
-            p_writer.printListElement("final " + arg.getFullyQualifiedType() + " " + arg.getName());
-        }
-    }
-
-    protected static void printArgs(
-        CodeWriter p_writer, Iterable<? extends AbstractArgument> p_args)
-    {
-        for (AbstractArgument arg: p_args)
-        {
-            p_writer.printListElement(arg.getName());
-        }
-    }
-
-    protected void generateInterfaceSummary(StringBuilder p_buf)
-    {
-        p_buf.append("Required\n");
-        for (AbstractArgument arg: getSignatureRequiredArgs())
-        {
-            p_buf.append(arg.getName());
-            p_buf.append(":");
-            p_buf.append(arg.getType());
-            p_buf.append("\n");
-        }
-        p_buf.append("Optional\n");
-        TreeMap<String, OptionalArgument> optArgs =
-            new TreeMap<String, OptionalArgument>();
-        for (OptionalArgument arg: getSignatureOptionalArgs())
-        {
-            optArgs.put(arg.getName(), arg);
-        }
-        for (OptionalArgument arg : optArgs.values())
-        {
-            p_buf.append(arg.getName());
-            p_buf.append(":");
-            p_buf.append(arg.getType());
-            p_buf.append("\n");
-        }
-    }
+  }
 }

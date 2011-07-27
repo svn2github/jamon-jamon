@@ -30,99 +30,80 @@ import org.jamon.api.TemplateLocation;
 import org.jamon.api.TemplateSource;
 
 /**
- * An implementation of {@link TemplateSource} which retrieves
- * templates from Java resources.
+ * An implementation of {@link TemplateSource} which retrieves templates from Java resources.
  */
-public class ResourceTemplateSource
-    implements TemplateSource
-{
-    public ResourceTemplateSource(ClassLoader p_classLoader, String p_templateSourceDir)
-    {
-        this(p_classLoader, p_templateSourceDir, "jamon");
-    }
+public class ResourceTemplateSource implements TemplateSource {
+  public ResourceTemplateSource(ClassLoader classLoader, String templateSourceDir) {
+    this(classLoader, templateSourceDir, "jamon");
+  }
 
-    /**
-     * Construct a ResourceTemplateSource, specifying a filename extension
-     * for templates. If the supplied extension is null or empty, no
-     * extension is expected, otherwise the extension should
-     * <emph>NOT</emph> include a leading ".".
-     *
-     * @param p_classLoader the classloader to use to load resources
-     * @param p_templateSourceDir the source directory
-     * @param p_extension the filename extension for templates
-     */
-    public ResourceTemplateSource(ClassLoader p_classLoader, String p_templateSourceDir, String p_extension)
-    {
-        m_classLoader = p_classLoader;
-        m_templateSourceDir = p_templateSourceDir;
-        m_extension = p_extension == null || p_extension.length() == 0
-            ? ""
-            : "." + p_extension;
-    }
+  /**
+   * Construct a ResourceTemplateSource, specifying a filename extension for templates. If the
+   * supplied extension is null or empty, no extension is expected, otherwise the extension should
+   * <emph>NOT</emph> include a leading ".".
+   *
+   * @param classLoader the classloader to use to load resources
+   * @param templateSourceDir the source directory
+   * @param extension the filename extension for templates
+   */
+  public ResourceTemplateSource(
+    ClassLoader classLoader, String templateSourceDir, String extension) {
+    this.classLoader = classLoader;
+    this.templateSourceDir = templateSourceDir;
+    this.extension = extension == null || extension.length() == 0
+        ? ""
+        : "." + extension;
+  }
 
-    @Override
-    public long lastModified(String p_templatePath)
-        throws IOException
-    {
-        return getTemplate(p_templatePath).getLastModified();
-    }
+  @Override
+  public long lastModified(String templatePath) throws IOException {
+    return getTemplate(templatePath).getLastModified();
+  }
 
-    @Override
-    public boolean available(String p_templatePath)
-    {
-        // FIXME: is this the way to implement this?
-        return getUrl(p_templatePath) != null;
-    }
+  @Override
+  public boolean available(String templatePath) {
+    // FIXME: is this the way to implement this?
+    return getUrl(templatePath) != null;
+  }
 
-    @Override
-    public InputStream getStreamFor(String p_templatePath)
-        throws IOException
-    {
-        return getTemplate(p_templatePath).getInputStream();
-    }
+  @Override
+  public InputStream getStreamFor(String templatePath) throws IOException {
+    return getTemplate(templatePath).getInputStream();
+  }
 
-    @Override
-    public String getExternalIdentifier(String p_templatePath)
-    {
-        // return getUrl(p_templatePath).toExternalForm();
-        return p_templatePath;
-    }
+  @Override
+  public String getExternalIdentifier(String templatePath) {
+    // return getUrl(templatePath).toExternalForm();
+    return templatePath;
+  }
 
-    private URL getUrl(String p_templatePath)
-    {
-        return m_classLoader.getResource(resourceName(p_templatePath));
-    }
+  private URL getUrl(String templatePath) {
+    return classLoader.getResource(resourceName(templatePath));
+  }
 
-    private String resourceName(String p_templatePath)
-    {
-        return m_templateSourceDir + p_templatePath + m_extension;
-    }
+  private String resourceName(String templatePath) {
+    return templateSourceDir + templatePath + extension;
+  }
 
-    private URLConnection getTemplate(String p_templatePath)
-        throws IOException
-    {
-        return getUrl(p_templatePath).openConnection();
-    }
+  private URLConnection getTemplate(String templatePath) throws IOException {
+    return getUrl(templatePath).openConnection();
+  }
 
-    private final ClassLoader m_classLoader;
-    private final String m_templateSourceDir;
-    private final String m_extension;
+  private final ClassLoader classLoader;
+  private final String templateSourceDir;
+  private final String extension;
 
-    @Override
-    public TemplateLocation getTemplateLocation(String p_templatePath)
-    {
-        return new TemplateResourceLocation(resourceName(p_templatePath));
-    }
+  @Override
+  public TemplateLocation getTemplateLocation(String templatePath) {
+    return new TemplateResourceLocation(resourceName(templatePath));
+  }
 
-    @Override
-    public void loadProperties(String p_dirPath, Properties p_properties)
-        throws IOException
-    {
-        InputStream inputStream = m_classLoader.getResourceAsStream(
-            m_templateSourceDir + p_dirPath + "/jamon.properties");
-        if (inputStream != null)
-        {
-            p_properties.load(inputStream);
-        }
+  @Override
+  public void loadProperties(String dirPath, Properties properties) throws IOException {
+    InputStream inputStream =
+      classLoader.getResourceAsStream(templateSourceDir + dirPath + "/jamon.properties");
+    if (inputStream != null) {
+      properties.load(inputStream);
     }
+  }
 }

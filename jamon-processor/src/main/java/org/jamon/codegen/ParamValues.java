@@ -24,15 +24,12 @@ import java.util.List;
 
 import org.jamon.compiler.ParserErrorImpl;
 
-public interface ParamValues
-{
-    void generateRequiredArgs(
-        List<RequiredArgument> p_args, CodeWriter p_writer)
-        throws ParserErrorImpl;
+public interface ParamValues {
+  void generateRequiredArgs(List<RequiredArgument> args, CodeWriter writer) throws ParserErrorImpl;
 
-    String getOptionalArgValue(String p_argName);
+  String getOptionalArgValue(String argName);
 
-    boolean hasUnusedParams();
+  boolean hasUnusedParams();
 
-    Iterable<String> getUnusedParams();
+  Iterable<String> getUnusedParams();
 }

@@ -21,18 +21,14 @@
 package org.jamon.util;
 
 /**
- * A <code>JavaCompiler</code> is an object which knows how to compile
- * Java source files.
+ * A <code>JavaCompiler</code> is an object which knows how to compile Java source files.
  */
-public interface JavaCompiler
-{
-    /**
-     * Compile the specified java source files.
-     *
-     * @param p_javaFiles the source files to compile
-     *
-     * @return null if the compilation was successful, otherwise a
-     * description of the failure
-     */
-    String compile(String [] p_javaFiles);
+public interface JavaCompiler {
+  /**
+   * Compile the specified java source files.
+   *
+   * @param javaFiles the source files to compile
+   * @return null if the compilation was successful, otherwise a description of the failure
+   */
+  String compile(String[] javaFiles);
 }

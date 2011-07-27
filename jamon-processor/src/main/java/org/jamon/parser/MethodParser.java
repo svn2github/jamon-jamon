@@ -20,27 +20,22 @@
 
 package org.jamon.parser;
 
+import org.jamon.api.Location;
 import org.jamon.compiler.ParserErrorsImpl;
 import org.jamon.node.MethodNode;
 
-public class MethodParser extends SubcomponentParser<MethodNode>
-{
-    /**
-     * @param p_reader
-     * @param p_errors
-     */
-    public MethodParser(
-        String p_name,
-        org.jamon.api.Location p_tagLocation,
-        PositionalPushbackReader p_reader,
-        ParserErrorsImpl p_errors)
-    {
-        super(new MethodNode(p_tagLocation, p_name), p_reader, p_errors);
-    }
+public class MethodParser extends SubcomponentParser<MethodNode> {
+  /**
+   * @param reader
+   * @param errors
+   */
+  public MethodParser(
+    String name, Location tagLocation, PositionalPushbackReader reader, ParserErrorsImpl errors) {
+    super(new MethodNode(tagLocation, name), reader, errors);
+  }
 
-    @Override protected String tagName()
-    {
-        return "method";
-    }
+  @Override
+  protected String tagName() {
+    return "method";
+  }
 }
-

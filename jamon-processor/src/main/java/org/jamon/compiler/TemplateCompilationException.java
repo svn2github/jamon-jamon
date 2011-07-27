@@ -20,14 +20,10 @@
 
 package org.jamon.compiler;
 
+public class TemplateCompilationException extends RuntimeException {
+  public TemplateCompilationException(String msg) {
+    super(msg);
+  }
 
-public class TemplateCompilationException
-    extends RuntimeException
-{
-    public TemplateCompilationException(String p_msg)
-    {
-        super(p_msg);
-    }
-
-    private static final long serialVersionUID = 2006091701L;
+  private static final long serialVersionUID = 2006091701L;
 }

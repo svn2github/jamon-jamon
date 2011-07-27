@@ -22,152 +22,125 @@ package org.jamon.codegen;
 
 import java.util.List;
 
+import org.jamon.api.Location;
 import org.jamon.compiler.ParserErrorImpl;
 import org.jamon.node.GenericCallParam;
 
-public class ComponentCallStatement
-    extends AbstractCallStatement
-{
-    ComponentCallStatement(String p_path,
-                           ParamValues p_params,
-                           org.jamon.api.Location p_location,
-                           String p_templateIdentifier,
-                           List<GenericCallParam> p_genericParams,
-                           String p_callingTemplateJamonContextType)
-    {
-        super(p_path, p_params, p_location, p_templateIdentifier);
-        m_genericParams = p_genericParams;
-        m_callingTemplateJamonContextType = p_callingTemplateJamonContextType;
+public class ComponentCallStatement extends AbstractCallStatement {
+  ComponentCallStatement(
+    String path,
+    ParamValues params,
+    Location location,
+    String templateIdentifier,
+    List<GenericCallParam> genericParams,
+    String callingTemplateJamonContextType) {
+    super(path, params, location, templateIdentifier);
+    this.genericParams = genericParams;
+    this.callingTemplateJamonContextType = callingTemplateJamonContextType;
+  }
+
+  @Override
+  protected String getFragmentIntfName(FragmentUnit fragmentUnitIntf) {
+    return getComponentProxyClassName() + "." + fragmentUnitIntf.getFragmentInterfaceName(false)
+      + getGenericParams();
+  }
+
+  @Override
+  public void generateSource(CodeWriter writer, TemplateDescriber describer)
+  throws ParserErrorImpl {
+    generateSourceLine(writer);
+    writer.openBlock();
+    TemplateDescription desc;
+    try {
+      desc = describer.getTemplateDescription(getPath(), getLocation());
+    }
+    catch (java.io.IOException e) {
+      throw new RuntimeException(e);
     }
 
-    @Override
-    protected String getFragmentIntfName(FragmentUnit p_fragmentUnitIntf)
-    {
-        return getComponentProxyClassName()
-            + "." + p_fragmentUnitIntf.getFragmentInterfaceName(false)
-            + getGenericParams();
+    if (desc.getJamonContextType() != null && callingTemplateJamonContextType == null) {
+      throw new ParserErrorImpl(
+        getLocation(),
+        "Calling component does not have a jamonContext, but called component " + getPath()
+        + " expects one of type " + desc.getJamonContextType());
+    }
+    if (hasGenericParams()) {
+      if (desc.getGenericParamsCount() != getGenericParamCount()) {
+        throw new ParserErrorImpl(
+          getLocation(),
+          "Call to component " + getPath() + " provides "
+          + getGenericParamCount() + " generic params, but " + getPath() + " only expects "
+          + desc.getGenericParamsCount());
+      }
     }
 
-    @Override
-    public void generateSource(CodeWriter p_writer,
-                               TemplateDescriber p_describer) throws ParserErrorImpl
-    {
-        generateSourceLine(p_writer);
-        p_writer.openBlock();
-        TemplateDescription desc;
-        try
-        {
-            desc = p_describer.getTemplateDescription(getPath(),
-                                                      getLocation());
-        }
-        catch (java.io.IOException e)
-        {
-            throw new RuntimeException(e);
-        }
+    makeFragmentImplClasses(desc.getFragmentInterfaces(), writer, describer);
+    String instanceVar = getUniqueName();
+    writer
+        .println(
+          getComponentProxyClassName() + getGenericParams() + " " + instanceVar + " = new "
+          + getComponentProxyClassName() + getGenericParams() + "(this.getTemplateManager());");
 
-        if (desc.getJamonContextType() != null
-            && m_callingTemplateJamonContextType == null)
-        {
-            throw new ParserErrorImpl(
-                getLocation(),
-                "Calling component does not have a jamonContext, but called " +
-                "component " + getPath() + " expects one of type " +
-                desc.getJamonContextType());
-        }
-        if (hasGenericParams())
-        {
-            if (desc.getGenericParamsCount() != getGenericParamCount())
-            {
-                throw new ParserErrorImpl(
-                    getLocation(),
-                    "Call to component " + getPath() + " provides "
-                    + getGenericParamCount() + " generic params, but "
-                    + getPath() + " only expects "
-                    + desc.getGenericParamsCount());
-            }
-        }
-
-        makeFragmentImplClasses(desc.getFragmentInterfaces(),
-                                p_writer,
-                                p_describer);
-        String instanceVar = getUniqueName();
-        p_writer.println(
-            getComponentProxyClassName() + getGenericParams() + " "
-            + instanceVar + " = "
-            + "new " + getComponentProxyClassName() + getGenericParams()
-            +"(this.getTemplateManager());");
-
-        if (desc.getJamonContextType() != null)
-        {
-            p_writer.println(instanceVar + ".setJamonContext(jamonContext);");
-        }
-
-        for (OptionalArgument arg: desc.getOptionalArgs())
-        {
-            String value = getParams().getOptionalArgValue(arg.getName());
-            if (value != null)
-            {
-                p_writer.println(instanceVar + "." + arg.getSetterName()
-                                 + "(" + value + ");");
-            }
-        }
-        p_writer.print(instanceVar + ".renderNoFlush");
-        p_writer.openList();
-        p_writer.printListElement(ArgNames.WRITER);
-        getParams().generateRequiredArgs(desc.getRequiredArgs(), p_writer);
-        generateFragmentParams(p_writer, desc.getFragmentInterfaces());
-        p_writer.closeList();
-        p_writer.println(";");
-        checkSuppliedParams();
-        p_writer.closeBlock();
+    if (desc.getJamonContextType() != null) {
+      writer.println(instanceVar + ".setJamonContext(jamonContext);");
     }
 
-    protected boolean hasGenericParams()
-    {
-        return !m_genericParams.isEmpty();
+    for (OptionalArgument arg : desc.getOptionalArgs()) {
+      String value = getParams().getOptionalArgValue(arg.getName());
+      if (value != null) {
+        writer.println(instanceVar + "." + arg.getSetterName() + "(" + value + ");");
+      }
     }
+    writer.print(instanceVar + ".renderNoFlush");
+    writer.openList();
+    writer.printListElement(ArgNames.WRITER);
+    getParams().generateRequiredArgs(desc.getRequiredArgs(), writer);
+    generateFragmentParams(writer, desc.getFragmentInterfaces());
+    writer.closeList();
+    writer.println(";");
+    checkSuppliedParams();
+    writer.closeBlock();
+  }
 
-    protected int getGenericParamCount()
-    {
-        return m_genericParams.size();
-    }
+  protected boolean hasGenericParams() {
+    return !genericParams.isEmpty();
+  }
 
-    protected String getGenericParams()
-    {
-        if (hasGenericParams())
-        {
-            StringBuilder builder = new StringBuilder();
-            builder.append('<');
-            boolean paramsAdded = false;
-            for (GenericCallParam param : m_genericParams)
-            {
-                if (paramsAdded)
-                {
-                    builder.append(", ");
-                }
-                builder.append(param.getClassName());
-                paramsAdded = true;
-            }
-            builder.append('>');
-            return builder.toString();
+  protected int getGenericParamCount() {
+    return genericParams.size();
+  }
+
+  protected String getGenericParams() {
+    if (hasGenericParams()) {
+      StringBuilder builder = new StringBuilder();
+      builder.append('<');
+      boolean paramsAdded = false;
+      for (GenericCallParam param : genericParams) {
+        if (paramsAdded) {
+          builder.append(", ");
         }
-        else
-        {
-            return "";
-        }
+        builder.append(param.getClassName());
+        paramsAdded = true;
+      }
+      builder.append('>');
+      return builder.toString();
     }
-
-    private String getComponentProxyClassName()
-    {
-        return PathUtils.getFullyQualifiedIntfClassName(getPath());
+    else {
+      return "";
     }
+  }
 
-    private static String getUniqueName()
-    {
-        return "__jamon__var_" + m_uniqueId++;
-    }
+  private String getComponentProxyClassName() {
+    return PathUtils.getFullyQualifiedIntfClassName(getPath());
+  }
 
-    private static int m_uniqueId = 0;
-    private final List<GenericCallParam> m_genericParams;
-    private final String m_callingTemplateJamonContextType;
+  private static String getUniqueName() {
+    return "__jamon__var_" + uniqueId++;
+  }
+
+  private static int uniqueId = 0;
+
+  private final List<GenericCallParam> genericParams;
+
+  private final String callingTemplateJamonContextType;
 }

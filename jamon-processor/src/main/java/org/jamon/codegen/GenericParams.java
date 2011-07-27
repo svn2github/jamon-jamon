@@ -26,74 +26,58 @@ import java.util.List;
 import org.jamon.node.GenericsBoundNode;
 import org.jamon.node.GenericsParamNode;
 
-public class GenericParams
-{
-    public void addParam(GenericsParamNode p_node)
-    {
-        m_genericsParamNodes.add(p_node);
-    }
+public class GenericParams {
+  public void addParam(GenericsParamNode node) {
+    genericsParamNodes.add(node);
+  }
 
-    public String generateGenericsDeclaration()
-    {
-        return generateGenericsSpecifiers(true);
-    }
+  public String generateGenericsDeclaration() {
+    return generateGenericsSpecifiers(true);
+  }
 
-    public String generateGenericParamsList()
-    {
-        return generateGenericsSpecifiers(false);
-    }
+  public String generateGenericParamsList() {
+    return generateGenericsSpecifiers(false);
+  }
 
-    public int getCount()
-    {
-        return m_genericsParamNodes.size();
-    }
+  public int getCount() {
+    return genericsParamNodes.size();
+  }
 
-    private String generateGenericsSpecifiers(boolean p_forDeclaration)
-    {
-        if (m_genericsParamNodes.isEmpty())
-        {
-            return "";
+  private String generateGenericsSpecifiers(boolean forDeclaration) {
+    if (genericsParamNodes.isEmpty()) {
+      return "";
+    }
+    else {
+      StringBuilder builder = new StringBuilder();
+      builder.append('<');
+      boolean paramsPrinted = false;
+      for (GenericsParamNode genericsParamNode : genericsParamNodes) {
+        if (paramsPrinted) {
+          builder.append(", ");
         }
-        else
-        {
-            StringBuilder builder = new StringBuilder();
-            builder.append('<');
-            boolean paramsPrinted = false;
-            for (GenericsParamNode genericsParamNode : m_genericsParamNodes)
-            {
-                if (paramsPrinted)
-                {
-                    builder.append(", ");
-                }
-                else
-                {
-                    paramsPrinted = true;
-                }
-                builder.append(genericsParamNode.getName());
-                if (p_forDeclaration)
-                {
-                    boolean boundsPrinted = false;
-                    for (GenericsBoundNode bound : genericsParamNode.getBounds())
-                    {
-                        if (! boundsPrinted)
-                        {
-                            builder.append(" extends ");
-                            boundsPrinted = true;
-                        }
-                        else
-                        {
-                            builder.append(" & ");
-                        }
-                        builder.append(bound.getClassName());
-                    }
-                }
+        else {
+          paramsPrinted = true;
+        }
+        builder.append(genericsParamNode.getName());
+        if (forDeclaration) {
+          boolean boundsPrinted = false;
+          for (GenericsBoundNode bound : genericsParamNode.getBounds()) {
+            if (!boundsPrinted) {
+              builder.append(" extends ");
+              boundsPrinted = true;
             }
-            builder.append('>');
-            return builder.toString();
+            else {
+              builder.append(" & ");
+            }
+            builder.append(bound.getClassName());
+          }
         }
-
+      }
+      builder.append('>');
+      return builder.toString();
     }
 
-    private final List<GenericsParamNode> m_genericsParamNodes =
-        new LinkedList<GenericsParamNode>();
+  }
+
+  private final List<GenericsParamNode> genericsParamNodes = new LinkedList<GenericsParamNode>();
 }

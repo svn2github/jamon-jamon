@@ -19,24 +19,24 @@
  */
 package org.jamon.parser;
 
+import org.jamon.api.Location;
 import org.jamon.compiler.ParserErrorImpl;
 
+class OptionalValueTagEndDetector implements TagEndDetector {
+  public static final String NEED_SEMI_OR_ARROW = "Expecting a ';', '=' or '=>'";
 
-class OptionalValueTagEndDetector implements TagEndDetector
-{
-    public static final String NEED_SEMI_OR_ARROW =
-        "Expecting a ';', '=' or '=>'";
+  @Override
+  public int checkEnd(char character) {
+    return character == ';'
+        ? 1
+        : 0;
+  }
 
-    @Override
-    public int checkEnd(char p_char)
-       { return p_char == ';' ? 1 : 0; }
+  @Override
+  public ParserErrorImpl getEofError(Location startLocation) {
+    return new ParserErrorImpl(startLocation, ArgsParser.EOF_LOOKING_FOR_SEMI);
+  }
 
-    @Override
-    public ParserErrorImpl getEofError(org.jamon.api.Location p_startLocation)
-    {
-        return new ParserErrorImpl(p_startLocation, ArgsParser.EOF_LOOKING_FOR_SEMI);
-    }
-
-    @Override
-    public void resetEndMatch() {}
+  @Override
+  public void resetEndMatch() {}
 }

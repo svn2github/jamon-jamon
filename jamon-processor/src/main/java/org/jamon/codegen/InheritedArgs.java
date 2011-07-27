@@ -31,105 +31,92 @@ import org.jamon.node.ArgValueNode;
 import org.jamon.node.ParentArgNode;
 import org.jamon.node.ParentArgWithDefaultNode;
 
-public class InheritedArgs
-{
-    public InheritedArgs(String p_parentName,
-                         Collection<RequiredArgument> p_requiredArgs,
-                         Collection<OptionalArgument> p_optionalArgs,
-                         Collection<FragmentArgument> p_fragmentArgs,
-                         ParserErrorsImpl p_errors)
-    {
-        m_parentName = p_parentName;
-        m_errors = p_errors;
-        m_requiredArgs = p_requiredArgs;
-        m_optionalArgs = p_optionalArgs;
-        m_fragmentArgs = p_fragmentArgs;
-    }
+public class InheritedArgs {
+  public InheritedArgs(
+    String parentName,
+    Collection<RequiredArgument> requiredArgs,
+    Collection<OptionalArgument> optionalArgs,
+    Collection<FragmentArgument> fragmentArgs,
+    ParserErrorsImpl errors) {
+    this.parentName = parentName;
+    this.errors = errors;
+    this.requiredArgs = requiredArgs;
+    this.optionalArgs = optionalArgs;
+    this.fragmentArgs = fragmentArgs;
+  }
 
-    private final String m_parentName;
-    private final ParserErrorsImpl m_errors;
-    private final Set<AbstractArgument> m_visibleArgs =
-        new HashSet<AbstractArgument>();
-    private final Collection<RequiredArgument> m_requiredArgs;
-    private final Collection<OptionalArgument> m_optionalArgs;
-    private final Collection<FragmentArgument> m_fragmentArgs;
-    private final Map<OptionalArgument, String> m_defaultOverrides =
-        new HashMap<OptionalArgument, String>();
+  private final String parentName;
 
-    public Collection<AbstractArgument> getVisibleArgs()
-    {
-        return m_visibleArgs;
-    }
+  private final ParserErrorsImpl errors;
 
-    public boolean isArgVisible(AbstractArgument p_arg)
-    {
-        return m_visibleArgs.contains(p_arg);
-    }
+  private final Set<AbstractArgument> visibleArgs = new HashSet<AbstractArgument>();
 
-    public void addParentArg(ParentArgNode p_node)
-    {
-        String name = p_node.getName().getName();
-        ArgValueNode value = (p_node instanceof ParentArgWithDefaultNode)
-            ? ((ParentArgWithDefaultNode) p_node).getValue()
-            : null;
-        for (RequiredArgument arg : m_requiredArgs)
-        {
-            if(arg.getName().equals(name))
-            {
-                if (value == null)
-                {
-                    m_visibleArgs.add(arg);
-                }
-                else
-                {
-                    m_errors.addError(
-                        name + " is an inherited required argument, and may not be given a default value",
-                        value.getLocation());
-                }
-                return;
-            }
+  private final Collection<RequiredArgument> requiredArgs;
+
+  private final Collection<OptionalArgument> optionalArgs;
+
+  private final Collection<FragmentArgument> fragmentArgs;
+
+  private final Map<OptionalArgument, String> defaultOverrides =
+    new HashMap<OptionalArgument, String>();
+
+  public Collection<AbstractArgument> getVisibleArgs() {
+    return visibleArgs;
+  }
+
+  public boolean isArgVisible(AbstractArgument arg) {
+    return visibleArgs.contains(arg);
+  }
+
+  public void addParentArg(ParentArgNode node) {
+    String name = node.getName().getName();
+    ArgValueNode value = (node instanceof ParentArgWithDefaultNode)
+        ? ((ParentArgWithDefaultNode) node).getValue()
+        : null;
+    for (RequiredArgument arg : requiredArgs) {
+      if (arg.getName().equals(name)) {
+        if (value == null) {
+          visibleArgs.add(arg);
         }
-        for (OptionalArgument arg : m_optionalArgs)
-        {
-            if(arg.getName().equals(name))
-            {
-                if (value != null)
-                {
-                    m_defaultOverrides.put(arg, value.getValue().trim());
-                }
-                m_visibleArgs.add(arg);
-                return;
-            }
+        else {
+          errors.addError(name
+            + " is an inherited required argument, and may not be given a default value", value
+              .getLocation());
         }
-        for (FragmentArgument arg : m_fragmentArgs)
-        {
-            if(arg.getName().equals(name))
-            {
-                if (value == null)
-                {
-                    m_visibleArgs.add(arg);
-                }
-                else
-                {
-                    m_errors.addError(
-                        name + " is an inherited fragment argument, and may not be given a default value",
-                        value.getLocation());
-                }
-                return;
-            }
+        return;
+      }
+    }
+    for (OptionalArgument arg : optionalArgs) {
+      if (arg.getName().equals(name)) {
+        if (value != null) {
+          defaultOverrides.put(arg, value.getValue().trim());
         }
-        m_errors.addError(
-            m_parentName + " does not have an arg named " + name,
-             p_node.getName().getLocation());
+        visibleArgs.add(arg);
+        return;
+      }
     }
+    for (FragmentArgument arg : fragmentArgs) {
+      if (arg.getName().equals(name)) {
+        if (value == null) {
+          visibleArgs.add(arg);
+        }
+        else {
+          errors.addError(name
+            + " is an inherited fragment argument, and may not be given a default value", value
+              .getLocation());
+        }
+        return;
+      }
+    }
+    errors.addError(parentName + " does not have an arg named " + name, node.getName()
+        .getLocation());
+  }
 
-    public String getDefaultValue(OptionalArgument p_arg)
-    {
-        return m_defaultOverrides.get(p_arg);
-    }
+  public String getDefaultValue(OptionalArgument arg) {
+    return defaultOverrides.get(arg);
+  }
 
-    public Collection<OptionalArgument> getOptionalArgsWithNewDefaultValues()
-    {
-        return m_defaultOverrides.keySet();
-    }
+  public Collection<OptionalArgument> getOptionalArgsWithNewDefaultValues() {
+    return defaultOverrides.keySet();
+  }
 }

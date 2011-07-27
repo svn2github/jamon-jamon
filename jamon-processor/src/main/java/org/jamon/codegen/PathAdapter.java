@@ -29,86 +29,74 @@ import org.jamon.node.PathElementNode;
 import org.jamon.node.RootAliasPathNode;
 import org.jamon.node.UpdirNode;
 
+class PathAdapter extends DepthFirstAnalysisAdapter {
+  public PathAdapter(String templateDir, final Map<String, String> aliases,
+      ParserErrorsImpl errors) {
+    this.templateDir = templateDir;
+    this.aliases = aliases;
+    this.errors = errors;
+  }
 
-class PathAdapter extends DepthFirstAnalysisAdapter
-{
-    public PathAdapter(String p_templateDir,
-                       final Map<String, String> p_aliases,
-                       ParserErrorsImpl p_errors)
-    {
-        m_templateDir = p_templateDir;
-        m_aliases = p_aliases;
-        m_errors = p_errors;
+  private final String templateDir;
+
+  private final Map<String, String> aliases;
+
+  private final ParserErrorsImpl errors;
+
+  private final StringBuilder path = new StringBuilder();
+
+  private boolean absolutePath = false;
+
+  public String getPath() {
+    return path.substring(0, path.length() - 1);
+  }
+
+  @Override
+  public void inAbsolutePathNode(AbsolutePathNode node) {
+    absolutePath = true;
+    path.append('/');
+  }
+
+  @Override
+  public void inUpdirNode(UpdirNode updir) {
+    if (!absolutePath) {
+      path.insert(0, templateDir);
+      absolutePath = true;
     }
-
-    private final String m_templateDir;
-    private final Map<String, String> m_aliases;
-    private final ParserErrorsImpl m_errors;
-    private final StringBuilder m_path = new StringBuilder();
-    private boolean m_absolutePath = false;
-
-    public String getPath()
-    {
-        return m_path.substring(0, m_path.length() - 1);
+    int lastSlash = path.toString().lastIndexOf('/', path.length() - 2);
+    if (lastSlash < 0) {
+      errors.addError("Cannot reference templates above the root", updir.getLocation());
     }
+    path.delete(lastSlash + 1, path.length());
+  }
 
+  @Override
+  public void inPathElementNode(PathElementNode relativePath) {
+    path.append(relativePath.getName());
+    path.append('/');
+  }
 
-    @Override public void inAbsolutePathNode(AbsolutePathNode p_node)
-    {
-        m_absolutePath = true;
-        m_path.append('/');
+  @Override
+  public void inNamedAliasPathNode(NamedAliasPathNode node) {
+    String alias = aliases.get(node.getAlias());
+    if (alias == null) {
+      errors.addError("Unknown alias " + node.getAlias(), node.getLocation());
     }
-
-    @Override public void inUpdirNode(UpdirNode p_updir)
-    {
-        if (! m_absolutePath)
-        {
-            m_path.insert(0, m_templateDir);
-            m_absolutePath = true;
-        }
-        int lastSlash = m_path.toString().lastIndexOf('/', m_path.length() - 2 );
-        if (lastSlash < 0)
-        {
-            m_errors.addError(
-                "Cannot reference templates above the root",
-                p_updir.getLocation());
-        }
-        m_path.delete(lastSlash + 1, m_path.length());
+    else {
+      path.append(alias);
+      path.append('/');
     }
+  }
 
-
-    @Override public void inPathElementNode(PathElementNode p_relativePath)
-    {
-        m_path.append(p_relativePath.getName());
-        m_path.append('/');
+  @Override
+  public void inRootAliasPathNode(RootAliasPathNode node) {
+    String alias = aliases.get("/");
+    if (alias == null) {
+      errors.addError("No root alias", node.getLocation());
     }
-
-    @Override public void inNamedAliasPathNode(NamedAliasPathNode p_node)
-    {
-        String alias = m_aliases.get(p_node.getAlias());
-        if (alias == null)
-        {
-            m_errors.addError(
-               "Unknown alias " + p_node.getAlias(), p_node.getLocation());
-        }
-        else
-        {
-            m_path.append(alias);
-            m_path.append('/');
-        }
+    else {
+      path.append(alias);
+      path.append('/');
     }
-
-    @Override public void inRootAliasPathNode(RootAliasPathNode p_node)
-    {
-        String alias = m_aliases.get("/");
-        if (alias == null)
-        {
-            m_errors.addError("No root alias", p_node.getLocation());
-        }
-        else
-        {
-            m_path.append(alias);
-            m_path.append('/');
-        }
-    }
+  }
 }

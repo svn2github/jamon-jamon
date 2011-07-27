@@ -24,62 +24,59 @@ import java.util.AbstractCollection;
 import java.util.Collection;
 import java.util.Iterator;
 
-class Concatenation<T> extends AbstractCollection<T>
-{
-    private final Collection<? extends T>[] m_collections;
-    private final int m_size;
+class Concatenation<T> extends AbstractCollection<T> {
+  private final Collection<? extends T>[] collections;
 
-    private Concatenation(Collection<? extends T>... p_collections)
-    {
-        m_collections = p_collections;
-        int size = 0;
-        for (Collection<?> collection: p_collections)
-        {
-            size += collection.size();
-        }
-        m_size = size;
+  private final int size;
+
+  private Concatenation(Collection<? extends T>... collections) {
+    this.collections = collections;
+    size = totalSize(collections);
+  }
+
+  private static int totalSize(Collection<?>... collections) {
+    int size = 0;
+    for (Collection<?> collection : collections) {
+      size += collection.size();
     }
+    return size;
+  }
 
+  @SuppressWarnings("unchecked")
+  public Concatenation(Collection<? extends T> collection1, Collection<? extends T> collection2) {
+    this(new Collection[] { collection1, collection2 });
+  }
+
+  @SuppressWarnings("unchecked")
+  public Concatenation(
+    Collection<? extends T> collection1,
+    Collection<? extends T> collection2,
+    Collection<? extends T> collection3) {
+    this(new Collection[] { collection1, collection2, collection3 });
+  }
+
+  @Override
+  public Iterator<T> iterator() {
     @SuppressWarnings("unchecked")
-    public Concatenation(Collection<? extends T> p_collection1, Collection<? extends T> p_collection2)
-    {
-        this(new Collection[] {p_collection1, p_collection2});
+    Iterator<? extends T>[] iters = new Iterator[collections.length];
+    for (int i = 0; i < collections.length; i++) {
+      iters[i] = collections[i].iterator();
     }
+    return new SequentialIterator<T>(iters);
+  }
 
-    @SuppressWarnings("unchecked")
-    public Concatenation(
-        Collection<? extends T> p_collection1,
-        Collection<? extends T> p_collection2,
-        Collection<? extends T> p_collection3)
-    {
-        this(new Collection[] {p_collection1, p_collection2, p_collection3});
-    }
+  @Override
+  public int size() {
+    return size;
+  }
 
-    @Override public Iterator<T> iterator()
-    {
-        @SuppressWarnings("unchecked") Iterator<? extends T>[] iters =
-            new Iterator[m_collections.length];
-        for (int i = 0; i < m_collections.length; i++)
-        {
-            iters[i] = m_collections[i].iterator();
-        }
-        return new SequentialIterator<T>(iters);
+  @Override
+  public boolean contains(Object o) {
+    for (Collection<? extends T> collection : collections) {
+      if (collection.contains(o)) {
+        return true;
+      }
     }
-
-    @Override public int size()
-    {
-        return m_size;
-    }
-
-    @Override public boolean contains(Object o)
-    {
-        for (Collection<? extends T> collection: m_collections)
-        {
-            if (collection.contains(o))
-            {
-                return true;
-            }
-        }
-        return false;
-    }
+    return false;
+  }
 }

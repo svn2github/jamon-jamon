@@ -20,21 +20,16 @@
 
 package org.jamon.codegen;
 
+import org.jamon.api.Location;
 
-public class DefCallStatement
-    extends AbstractInnerUnitCallStatement
-{
-    DefCallStatement(String p_path,
-                     ParamValues p_params,
-                     DefUnit p_defUnit,
-                     org.jamon.api.Location p_location,
-                     String p_templateIdentifier)
-    {
-        super(p_path, p_params, p_defUnit, p_location, p_templateIdentifier);
-    }
+public class DefCallStatement extends AbstractInnerUnitCallStatement {
+  DefCallStatement(
+    String path, ParamValues params, DefUnit defUnit, Location location, String templateIdentifier) {
+    super(path, params, defUnit, location, templateIdentifier);
+  }
 
-    @Override protected String getDefault(OptionalArgument p_arg)
-    {
-        return p_arg.getDefault();
-    }
+  @Override
+  protected String getDefault(OptionalArgument arg) {
+    return arg.getDefault();
+  }
 }

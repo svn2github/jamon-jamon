@@ -22,36 +22,25 @@ package org.jamon.codegen;
 
 import org.jamon.emit.EmitMode;
 
-public class WriteStatement
-    extends AbstractStatement
-{
-    WriteStatement(String p_expr,
-                   EscapingDirective p_escapingDirective,
-                   org.jamon.api.Location p_location,
-                   String p_templateIdentifier,
-                   EmitMode p_emitMode)
-    {
-        super(p_location, p_templateIdentifier);
-        m_expr = p_expr.trim();
-        m_escapingDirective = p_escapingDirective;
-        m_emitMode = p_emitMode;
-    }
+public class WriteStatement extends AbstractStatement {
+  WriteStatement(String expr, EscapingDirective escapingDirective,
+      org.jamon.api.Location location, String templateIdentifier, EmitMode emitMode) {
+    super(location, templateIdentifier);
+    this.expr = expr.trim();
+    this.escapingDirective = escapingDirective;
+    this.emitMode = emitMode;
+  }
 
-    @Override
-    public void generateSource(CodeWriter p_writer,
-                               TemplateDescriber p_describer)
-    {
-        if (! "\"\"".equals(m_expr))
-        {
-            generateSourceLine(p_writer);
-            p_writer.println(m_escapingDirective.toJava() + ".write("
-                             + m_emitMode.getEmitterClassName()
-                             + ".valueOf(" + m_expr + ")"
-                             + ", " + ArgNames.WRITER + ");");
-        }
+  @Override
+  public void generateSource(CodeWriter writer, TemplateDescriber describer) {
+    if (!"\"\"".equals(expr)) {
+      generateSourceLine(writer);
+      writer.println(escapingDirective.toJava() + ".write(" + emitMode.getEmitterClassName()
+        + ".valueOf(" + expr + ")" + ", " + ArgNames.WRITER + ");");
     }
+  }
 
-    private final String m_expr;
-    private final EscapingDirective m_escapingDirective;
-    private final EmitMode m_emitMode;
+  private final String expr;
+  private final EscapingDirective escapingDirective;
+  private final EmitMode emitMode;
 }

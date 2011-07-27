@@ -21,81 +21,73 @@
 package org.jamon.codegen;
 
 import org.jamon.util.StringUtils;
+import org.jamon.api.Location;
 import org.jamon.node.ArgNode;
 
-public abstract class AbstractArgument
-{
-    public AbstractArgument(String p_name, String p_type, org.jamon.api.Location p_location)
-    {
-        m_name = p_name;
-        m_type = p_type;
-        m_location = p_location;
-    }
+public abstract class AbstractArgument {
+  public AbstractArgument(String name, String type, Location location) {
+    this.name = name;
+    this.type = type;
+    this.location = location;
+  }
 
-    public AbstractArgument(ArgNode p_arg)
-    {
-        this(p_arg.getName().getName(),
-             p_arg.getType().getType(),
-             p_arg.getLocation());
-    }
+  public AbstractArgument(ArgNode arg) {
+    this(arg.getName().getName(), arg.getType().getType(), arg.getLocation());
+  }
 
-    public String getName()
-    {
-        return m_name;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public String getType()
-    {
-        return m_type;
-    }
+  public String getType() {
+    return type;
+  }
 
-    /**
-     * Return the fully qualified type. This will always be the same as the result of
-     * {@link #getType()}, except for top-level fragement arguments.
-     * @return the type, or for a top-level fragment argument, the fully qualified type.
-     */
-    public String getFullyQualifiedType() {
-      return getType();
-    }
+  /**
+   * Return the fully qualified type. This will always be the same as the result of
+   * {@link #getType()}, except for top-level fragement arguments.
+   *
+   * @return the type, or for a top-level fragment argument, the fully qualified type.
+   */
+  public String getFullyQualifiedType() {
+    return getType();
+  }
 
-    public org.jamon.api.Location getLocation()
-    {
-        return m_location;
-    }
+  public org.jamon.api.Location getLocation() {
+    return location;
+  }
 
-    public String getSetterName()
-    {
-        return "set" + StringUtils.capitalize(getName());
-    }
+  public String getSetterName() {
+    return "set" + StringUtils.capitalize(getName());
+  }
 
-    public String getGetterName()
-    {
-        return "get" + StringUtils.capitalize(getName());
-    }
+  public String getGetterName() {
+    return "get" + StringUtils.capitalize(getName());
+  }
 
-    public void generateImplDataCode(CodeWriter p_writer)
-    {
-        p_writer.printLocation(getLocation());
-        p_writer.println( "public void " + getSetterName()
-                          + "(" + getFullyQualifiedType() + " " + getName() + ")");
-        p_writer.openBlock();
-        generateImplDataSetterCode(p_writer);
-        p_writer.closeBlock();
+  public void generateImplDataCode(CodeWriter writer) {
+    writer.printLocation(getLocation());
+    writer.println("public void " + getSetterName() + "(" + getFullyQualifiedType() + " "
+      + getName() + ")");
+    writer.openBlock();
+    generateImplDataSetterCode(writer);
+    writer.closeBlock();
 
-        p_writer.println("public " + getFullyQualifiedType() + " " + getGetterName() + "()");
-        p_writer.openBlock();
-        p_writer.println("return m_" + getName() + ";");
-        p_writer.closeBlock();
-        p_writer.println("private " + getFullyQualifiedType() + " m_" + getName() + ";");
-    }
+    writer.println("public " + getFullyQualifiedType() + " " + getGetterName() + "()");
+    writer.openBlock();
+    writer.println("return m_" + getName() + ";");
+    writer.closeBlock();
+    writer.println("private " + getFullyQualifiedType() + " m_" + getName() + ";");
+  }
 
-    protected void generateImplDataSetterCode(CodeWriter p_writer)
-    {
-        p_writer.printLocation(getLocation());
-        p_writer.println("m_" + getName() + " = " + getName() + ";");
-    }
+  protected void generateImplDataSetterCode(CodeWriter writer) {
+    writer.printLocation(getLocation());
+    writer.println("m_" + getName() + " = " + getName() + ";");
+  }
 
-    private final String m_name;
-    private final String m_type;
-    private final org.jamon.api.Location m_location;
+  private final String name;
+
+  private final String type;
+
+  private final org.jamon.api.Location location;
 }

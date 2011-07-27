@@ -4,19 +4,18 @@ import org.jamon.node.ArgNode;
 import org.jamon.node.FragmentArgsNode;
 import org.jamon.node.OptionalArgNode;
 
-public interface StatementBlock
-{
-    FragmentUnit getFragmentUnitIntf(String p_path);
+public interface StatementBlock {
+  FragmentUnit getFragmentUnitIntf(String path);
 
-    void addStatement(Statement p_statement);
+  void addStatement(Statement statement);
 
-    FragmentUnit addFragment(
-        FragmentArgsNode p_node, GenericParams p_genericParams);
+  FragmentUnit addFragment(FragmentArgsNode node, GenericParams genericParams);
 
-    void addRequiredArg(ArgNode p_node);
+  void addRequiredArg(ArgNode node);
 
-    void addOptionalArg(OptionalArgNode p_node);
+  void addOptionalArg(OptionalArgNode node);
 
-    Unit getParentUnit();
-    StatementBlock getParent();
+  Unit getParentUnit();
+
+  StatementBlock getParent();
 }

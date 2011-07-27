@@ -23,76 +23,61 @@ package org.jamon.codegen;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-public class SequentialIterator<T>
-    implements Iterator<T>
-{
-    public SequentialIterator(Iterator<? extends T>[] p_iters)
-    {
-        m_iters = p_iters.clone();
-    }
+public class SequentialIterator<T> implements Iterator<T> {
+  public SequentialIterator(Iterator<? extends T>[] iters) {
+    this.iters = iters.clone();
+  }
 
-    @SuppressWarnings("unchecked")
-    public SequentialIterator(Iterator<? extends T> p_iter1, 
-                              Iterator<? extends T> p_iter2)
-    {
-        this(new Iterator[] {p_iter1, p_iter2});
-    }
+  @SuppressWarnings("unchecked")
+  public SequentialIterator(Iterator<? extends T> iter1, Iterator<? extends T> iter2) {
+    this(new Iterator[] { iter1, iter2 });
+  }
 
-    @SuppressWarnings("unchecked")
-    public SequentialIterator(Iterator<? extends T> p_iter1,
-                              Iterator<? extends T> p_iter2,
-                              Iterator<? extends T> p_iter3)
-    {
-        this(new Iterator[] {p_iter1, p_iter2, p_iter3});
-    }
+  @SuppressWarnings("unchecked")
+  public SequentialIterator(
+    Iterator<? extends T> iter1, Iterator<? extends T> iter2, Iterator<? extends T> iter3) {
+    this(new Iterator[] { iter1, iter2, iter3 });
+  }
 
-    @SuppressWarnings("unchecked")
-    public SequentialIterator(Iterator<? extends T> p_iter1,
-                              Iterator<? extends T> p_iter2,
-                              Iterator<? extends T> p_iter3,
-                              Iterator<? extends T> p_iter4)
-    {
-        this(new Iterator[] {p_iter1, p_iter2, p_iter3, p_iter4});
-    }
+  @SuppressWarnings("unchecked")
+  public SequentialIterator(
+    Iterator<? extends T> iter1,
+    Iterator<? extends T> iter2,
+    Iterator<? extends T> iter3,
+    Iterator<? extends T> iter4) {
+    this(new Iterator[] { iter1, iter2, iter3, iter4 });
+  }
 
-    private final Iterator<? extends T>[] m_iters;
-    private int currentIter = 0;
+  private final Iterator<? extends T>[] iters;
 
-    @Override
-    public boolean hasNext()
-    {
-        if(currentIter >= m_iters.length)
-        {
-            return false;
-        }
-        else if(m_iters[currentIter].hasNext())
-        {
-            return true;
-        }
-        else
-        {
-            currentIter++;
-            return hasNext();
-        }
-    }
+  private int currentIter = 0;
 
-    @Override
-    public T next()
-        throws NoSuchElementException
-    {
-        if(hasNext())
-        {
-            return m_iters[currentIter].next();
-        }
-        else
-        {
-            throw new NoSuchElementException();
-        }
+  @Override
+  public boolean hasNext() {
+    if (currentIter >= iters.length) {
+      return false;
     }
+    else if (iters[currentIter].hasNext()) {
+      return true;
+    }
+    else {
+      currentIter++;
+      return hasNext();
+    }
+  }
 
-    @Override
-    public void remove()
-    {
-        throw new UnsupportedOperationException();
+  @Override
+  public T next() throws NoSuchElementException {
+    if (hasNext()) {
+      return iters[currentIter].next();
     }
+    else {
+      throw new NoSuchElementException();
+    }
+  }
+
+  @Override
+  public void remove() {
+    throw new UnsupportedOperationException();
+  }
 }

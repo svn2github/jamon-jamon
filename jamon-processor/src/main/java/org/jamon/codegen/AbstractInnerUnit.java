@@ -27,96 +27,83 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import org.jamon.api.Location;
 import org.jamon.compiler.ParserErrorsImpl;
 
-public abstract class AbstractInnerUnit extends AbstractUnit
-{
-    public AbstractInnerUnit(
-        String p_name, StatementBlock p_parent, ParserErrorsImpl p_errors, org.jamon.api.Location p_location)
-    {
-        super(p_name, p_parent, p_errors, p_location);
-    }
+public abstract class AbstractInnerUnit extends AbstractUnit {
+  public AbstractInnerUnit(
+    String name, StatementBlock parent, ParserErrorsImpl errors, Location location) {
+    super(name, parent, errors, location);
+  }
 
-    @Override public void addOptionalArg(OptionalArgument p_arg)
-    {
-        m_optionalArgs.add(p_arg);
-    }
+  @Override
+  public void addOptionalArg(OptionalArgument arg) {
+    optionalArgs.add(arg);
+  }
 
-    public Collection<OptionalArgument> getOptionalArgs()
-    {
-        return m_optionalArgs;
-    }
+  public Collection<OptionalArgument> getOptionalArgs() {
+    return optionalArgs;
+  }
 
-    public boolean hasOptionalArgs()
-    {
-        return !m_optionalArgs.isEmpty();
-    }
+  public boolean hasOptionalArgs() {
+    return !optionalArgs.isEmpty();
+  }
 
-    @Override public void addRequiredArg(RequiredArgument p_arg)
-    {
-        m_requiredArgs.add(p_arg);
-    }
+  @Override
+  public void addRequiredArg(RequiredArgument arg) {
+    requiredArgs.add(arg);
+  }
 
-    public Set<OptionalArgument> getOptionalArgsSet()
-    {
-        return m_optionalArgs;
-    }
+  public Set<OptionalArgument> getOptionalArgsSet() {
+    return optionalArgs;
+  }
 
-    public List<RequiredArgument> getRequiredArgs()
-    {
-        return m_requiredArgs;
-    }
+  public List<RequiredArgument> getRequiredArgs() {
+    return requiredArgs;
+  }
 
-    public List<RequiredArgument> getDeclaredRequiredArgs()
-    {
-        return m_requiredArgs;
-    }
+  public List<RequiredArgument> getDeclaredRequiredArgs() {
+    return requiredArgs;
+  }
 
-    public boolean hasRequiredArgs()
-    {
-        return ! m_requiredArgs.isEmpty();
-    }
+  public boolean hasRequiredArgs() {
+    return !requiredArgs.isEmpty();
+  }
 
-    @Override protected void addFragmentArg(
-        FragmentArgument p_arg)
-    {
-        m_fragmentArgs.add(p_arg);
-    }
+  @Override
+  protected void addFragmentArg(FragmentArgument arg) {
+    fragmentArgs.add(arg);
+  }
 
-    @Override public List<FragmentArgument> getFragmentArgs()
-    {
-        return m_fragmentArgs;
-    }
+  @Override
+  public List<FragmentArgument> getFragmentArgs() {
+    return fragmentArgs;
+  }
 
-    @Override public List<AbstractArgument> getRenderArgs()
-    {
-        return new SequentialList<AbstractArgument>(
-                getDeclaredRequiredArgs(),
-                new ArrayList<AbstractArgument>(getOptionalArgs()),
-                getFragmentArgs());
-    }
+  @Override
+  public List<AbstractArgument> getRenderArgs() {
+    return new SequentialList<AbstractArgument>(getDeclaredRequiredArgs(),
+        new ArrayList<AbstractArgument>(getOptionalArgs()), getFragmentArgs());
+  }
 
-    @Override public Collection<AbstractArgument> getVisibleArgs()
-    {
-        return getRenderArgs();
-    }
+  @Override
+  public Collection<AbstractArgument> getVisibleArgs() {
+    return getRenderArgs();
+  }
 
-    @Override public List<RequiredArgument> getSignatureRequiredArgs()
-    {
-        return getRequiredArgs();
-    }
+  @Override
+  public List<RequiredArgument> getSignatureRequiredArgs() {
+    return getRequiredArgs();
+  }
 
-    @Override public Collection<OptionalArgument> getSignatureOptionalArgs()
-    {
-        return getOptionalArgs();
-    }
+  @Override
+  public Collection<OptionalArgument> getSignatureOptionalArgs() {
+    return getOptionalArgs();
+  }
 
+  private final List<RequiredArgument> requiredArgs = new LinkedList<RequiredArgument>();
 
+  private final Set<OptionalArgument> optionalArgs = new HashSet<OptionalArgument>();
 
-    private final List<RequiredArgument> m_requiredArgs =
-        new LinkedList<RequiredArgument>();
-    private final Set<OptionalArgument> m_optionalArgs =
-        new HashSet<OptionalArgument>();
-    private final List<FragmentArgument> m_fragmentArgs =
-        new LinkedList<FragmentArgument>();
+  private final List<FragmentArgument> fragmentArgs = new LinkedList<FragmentArgument>();
 }

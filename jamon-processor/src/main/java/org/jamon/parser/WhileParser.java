@@ -3,19 +3,15 @@ package org.jamon.parser;
 import org.jamon.compiler.ParserErrorsImpl;
 import org.jamon.node.WhileNode;
 
-public class WhileParser extends AbstractFlowControlBlockParser<WhileNode>
-{
+public class WhileParser extends AbstractFlowControlBlockParser<WhileNode> {
 
-    public WhileParser(WhileNode p_node,
-                       PositionalPushbackReader p_reader,
-                       ParserErrorsImpl p_errors)
-    {
-        super(p_node, p_reader, p_errors);
-    }
+  public WhileParser(WhileNode node, PositionalPushbackReader reader, ParserErrorsImpl errors) {
+    super(node, reader, errors);
+  }
 
-    @Override protected String tagName()
-    {
-        return "while";
-    }
+  @Override
+  protected String tagName() {
+    return "while";
+  }
 
 }

@@ -19,32 +19,28 @@
 
 package org.jamon.codegen;
 
+import org.jamon.api.Location;
 
-public abstract class AbstractStatement
-    implements Statement
-{
-    protected AbstractStatement(org.jamon.api.Location p_location, String p_templateIdentifier)
-    {
-        m_location = p_location;
-        m_templateIdentifier = p_templateIdentifier;
-    }
+public abstract class AbstractStatement implements Statement {
+  protected AbstractStatement(Location location, String templateIdentifier) {
+    this.location = location;
+    this.templateIdentifier = templateIdentifier;
+  }
 
-    private final org.jamon.api.Location m_location;
-    private final String m_templateIdentifier;
+  private final Location location;
 
-    protected final org.jamon.api.Location getLocation()
-    {
-        return m_location;
-    }
+  private final String templateIdentifier;
 
-    protected final String getTemplateIdentifier()
-    {
-        return m_templateIdentifier;
-    }
+  protected final Location getLocation() {
+    return location;
+  }
 
-    protected final void generateSourceLine(CodeWriter p_writer)
-    {
-        p_writer.printLocation(m_location);
-    }
+  protected final String getTemplateIdentifier() {
+    return templateIdentifier;
+  }
+
+  protected final void generateSourceLine(CodeWriter writer) {
+    writer.printLocation(location);
+  }
 
 }

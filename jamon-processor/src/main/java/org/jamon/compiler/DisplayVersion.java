@@ -20,11 +20,9 @@
 
 package org.jamon.compiler;
 
-public class DisplayVersion
-{
-    public static void main(String [] args)
-    {
-        System.out.println(DisplayVersion.class.getPackage().getSpecificationVersion());
-    }
+public class DisplayVersion {
+  public static void main(String[] args) {
+    System.out.println(DisplayVersion.class.getPackage().getSpecificationVersion());
+  }
 
 }

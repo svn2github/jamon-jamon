@@ -6,60 +6,53 @@ import org.jamon.api.TemplateLocation;
 /**
  * @author ian
  **/
-public final class LocationImpl implements Location
-{
-    public LocationImpl(
-        TemplateLocation p_templateLocation, int p_line, int p_column)
-    {
-        m_templateLocation = p_templateLocation;
-        m_line = p_line;
-        m_column = p_column;
-    }
+public final class LocationImpl implements Location {
+  public LocationImpl(TemplateLocation templateLocation, int line, int column) {
+    this.templateLocation = templateLocation;
+    this.line = line;
+    this.column = column;
+  }
 
-    @Override
-    public TemplateLocation getTemplateLocation()
-    {
-        return m_templateLocation;
-    }
+  @Override
+  public TemplateLocation getTemplateLocation() {
+    return templateLocation;
+  }
 
-    @Override
-    public int getColumn()
-    {
-        return m_column;
-    }
+  @Override
+  public int getColumn() {
+    return column;
+  }
 
-    @Override
-    public int getLine()
-    {
-        return m_line;
-    }
+  @Override
+  public int getLine() {
+    return line;
+  }
 
-    private final TemplateLocation m_templateLocation;
-    private final int m_line;
-    private final int m_column;
+  private final TemplateLocation templateLocation;
 
-    @Override public boolean equals(Object p_obj)
-    {
-        if (p_obj instanceof LocationImpl)
-        {
-            Location loc = (Location) p_obj;
-            return loc.getTemplateLocation().equals(m_templateLocation)
-                && loc.getLine() == m_line
-                && loc.getColumn() == m_column;
-        }
-        else
-        {
-            return false;
-        }
-    }
+  private final int line;
 
-    @Override public int hashCode()
-    {
-        return (m_line * 160 + m_column) ^ m_templateLocation.hashCode();
-    }
+  private final int column;
 
-    @Override public String toString()
-    {
-        return "Location{" + m_templateLocation + ": ("+ m_line + ":" + m_column + ")}";
+  @Override
+  public boolean equals(Object obj) {
+    if (obj instanceof LocationImpl) {
+      Location loc = (Location) obj;
+      return loc.getTemplateLocation().equals(templateLocation) && loc.getLine() == line
+        && loc.getColumn() == column;
     }
+    else {
+      return false;
+    }
+  }
+
+  @Override
+  public int hashCode() {
+    return (line * 160 + column) ^ templateLocation.hashCode();
+  }
+
+  @Override
+  public String toString() {
+    return "Location{" + templateLocation + ": (" + line + ":" + column + ")}";
+  }
 }

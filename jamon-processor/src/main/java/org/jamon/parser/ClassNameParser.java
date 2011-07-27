@@ -21,110 +21,89 @@ package org.jamon.parser;
 
 import java.io.IOException;
 
+import org.jamon.api.Location;
 import org.jamon.compiler.ParserErrorImpl;
 import org.jamon.compiler.ParserErrorsImpl;
 
-public class ClassNameParser extends AbstractTypeParser
-{
-    public ClassNameParser(
-        org.jamon.api.Location p_location,
-        PositionalPushbackReader p_reader,
-        ParserErrorsImpl p_errors) throws IOException, ParserErrorImpl
-    {
-        super(p_location, p_reader, p_errors);
-    }
+public class ClassNameParser extends AbstractTypeParser {
+  public ClassNameParser(
+    Location location, PositionalPushbackReader reader, ParserErrorsImpl errors)
+  throws IOException, ParserErrorImpl {
+    super(location, reader, errors);
+  }
 
-    private void readGenericsParameter() 
-        throws IOException, NotAnIdentifierException, ParserErrorImpl
-    {
-        boolean boundsAllowed;
-        if (readAndAppendChar('?', m_type))
-        {
-            boundsAllowed = true;
-        }
-        else
-        {
-            //FIXME - check for errors
-            String type = new TypeNameParser(
-                m_reader.getLocation(), m_reader, m_errors).getType();
-            m_type.append(type);
-            boundsAllowed = (type.indexOf('.') < 0);
-        }
-        if (boundsAllowed && soakWhitespace())
-        {
-            readBoundingType();
-        }
+  private void readGenericsParameter() throws IOException,
+    NotAnIdentifierException,
+    ParserErrorImpl {
+    boolean boundsAllowed;
+    if (readAndAppendChar('?', typeBuilder)) {
+      boundsAllowed = true;
     }
-    
-    @Override
-    protected void parseTypeElaborations()
-        throws IOException, NotAnIdentifierException, ParserErrorImpl
-    {
-        int c = m_reader.read();
-        if (c != '<')
-        {
-            m_reader.unread(c);
-        }
-        else
-        {
-            c = m_reader.read();
-            m_reader.unread(c);
-            if (c == '/' || c == '%') // looks like a jamon tag
-            {
-                m_reader.unread('<');
-            }
-            else
-            {
-                m_type.append('<');
-                soakWhitespace();
-                readGenericsParameter();
-                soakWhitespace();
-                while(readAndAppendChar(',', m_type))
-                {
-                    soakWhitespace();
-                    readGenericsParameter();
-                    soakWhitespace();
-                }
-                if (!readAndAppendChar('>', m_type))
-                {
-                    throw new NotAnIdentifierException();
-                }
-            }
-        }
+    else {
+      // FIXME - check for errors
+      String type = new TypeNameParser(reader.getLocation(), reader, errors).getType();
+      typeBuilder.append(type);
+      boundsAllowed = (type.indexOf('.') < 0);
     }
+    if (boundsAllowed && soakWhitespace()) {
+      readBoundingType();
+    }
+  }
 
-    protected void readBoundingType()
-        throws IOException, NotAnIdentifierException, ParserErrorImpl
-    {
-        boolean needBoundingType = false;
-        if (readChar('e'))
-        {
-            if (checkToken("xtends") && soakWhitespace())
-            {
-                m_type.append(" extends ");
-                needBoundingType = true;
-            }
-            else
-            {
-                throw new NotAnIdentifierException();
-            }
-        }
-        else if (readChar('s'))
-        {
-            if (checkToken("uper") && soakWhitespace())
-            {
-                m_type.append(" super ");
-                needBoundingType = true;
-            }
-            else
-            {
-                throw new NotAnIdentifierException();
-            }
-        }
-        if (needBoundingType)
-        {
-            m_type.append(new TypeNameParser(
-                m_reader.getLocation(), m_reader, m_errors).getType());
-        }
+  @Override
+  protected void parseTypeElaborations() throws IOException,
+    NotAnIdentifierException,
+    ParserErrorImpl {
+    int c = reader.read();
+    if (c != '<') {
+      reader.unread(c);
     }
+    else {
+      c = reader.read();
+      reader.unread(c);
+      if (c == '/' || c == '%') // looks like a jamon tag
+      {
+        reader.unread('<');
+      }
+      else {
+        typeBuilder.append('<');
+        soakWhitespace();
+        readGenericsParameter();
+        soakWhitespace();
+        while (readAndAppendChar(',', typeBuilder)) {
+          soakWhitespace();
+          readGenericsParameter();
+          soakWhitespace();
+        }
+        if (!readAndAppendChar('>', typeBuilder)) {
+          throw new NotAnIdentifierException();
+        }
+      }
+    }
+  }
+
+  protected void readBoundingType() throws IOException, NotAnIdentifierException, ParserErrorImpl {
+    boolean needBoundingType = false;
+    if (readChar('e')) {
+      if (checkToken("xtends") && soakWhitespace()) {
+        typeBuilder.append(" extends ");
+        needBoundingType = true;
+      }
+      else {
+        throw new NotAnIdentifierException();
+      }
+    }
+    else if (readChar('s')) {
+      if (checkToken("uper") && soakWhitespace()) {
+        typeBuilder.append(" super ");
+        needBoundingType = true;
+      }
+      else {
+        throw new NotAnIdentifierException();
+      }
+    }
+    if (needBoundingType) {
+      typeBuilder.append(new TypeNameParser(reader.getLocation(), reader, errors).getType());
+    }
+  }
 }

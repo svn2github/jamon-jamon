@@ -5,34 +5,29 @@ import java.util.Collection;
 import org.jamon.api.ParsedTemplate;
 import org.jamon.api.SourceGenerator;
 
-public class ParsedTemplateImpl implements ParsedTemplate
-{
-    private final TemplateDescriber m_templateDescriber;
-    private final TemplateUnit m_templateUnit;
+public class ParsedTemplateImpl implements ParsedTemplate {
+  private final TemplateDescriber templateDescriber;
 
-    public ParsedTemplateImpl(TemplateDescriber p_templateDescriber, TemplateUnit p_templateUnit)
-    {
-        m_templateDescriber = p_templateDescriber;
-        m_templateUnit = p_templateUnit;
-    }
+  private final TemplateUnit templateUnit;
 
-    @Override
-    public SourceGenerator getImplGenerator()
-    {
-        return new ImplGenerator(m_templateDescriber, m_templateUnit);
-    }
+  public ParsedTemplateImpl(TemplateDescriber templateDescriber, TemplateUnit templateUnit) {
+    this.templateDescriber = templateDescriber;
+    this.templateUnit = templateUnit;
+  }
 
-    @Override
-    public SourceGenerator getProxyGenerator()
-    {
-        return new ProxyGenerator(m_templateDescriber, m_templateUnit);
-    }
+  @Override
+  public SourceGenerator getImplGenerator() {
+    return new ImplGenerator(templateDescriber, templateUnit);
+  }
 
-    @Override
-    public Collection<String> getTemplateDependencies()
-    {
-        return m_templateUnit.getTemplateDependencies();
-    }
+  @Override
+  public SourceGenerator getProxyGenerator() {
+    return new ProxyGenerator(templateDescriber, templateUnit);
+  }
 
+  @Override
+  public Collection<String> getTemplateDependencies() {
+    return templateUnit.getTemplateDependencies();
+  }
 
 }

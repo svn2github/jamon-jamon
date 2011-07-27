@@ -21,66 +21,54 @@ package org.jamon.parser;
 
 import java.io.IOException;
 
+import org.jamon.api.Location;
 import org.jamon.compiler.ParserErrorImpl;
 import org.jamon.compiler.ParserErrorsImpl;
 
-public class AbstractTypeParser extends AbstractParser
-{
-    public static final String UNEXPECTED_ARRAY_ERROR =
-        "Arrays not allowed in this context";
+public class AbstractTypeParser extends AbstractParser {
+  public static final String UNEXPECTED_ARRAY_ERROR = "Arrays not allowed in this context";
 
-    public AbstractTypeParser(
-        org.jamon.api.Location p_location,
-        PositionalPushbackReader p_reader,
-        ParserErrorsImpl p_errors) throws IOException, ParserErrorImpl
-    {
-        super(p_reader, p_errors);
-        try
-        {
-            parseComponent();
-            while (readAndAppendChar('.', m_type))
-            {
-                soakWhitespace();
-                parseComponent();
-            }
-        }
-        catch (NotAnIdentifierException e)
-        {
-            throw new ParserErrorImpl(p_location, BAD_JAVA_TYPE_SPECIFIER);
-        }
-        checkForArrayBrackets();
-    }
-
-    private void parseComponent()
-        throws IOException, NotAnIdentifierException, ParserErrorImpl
-    {
-        m_type.append(readIdentifierOrThrow());
+  public AbstractTypeParser(
+    Location location, PositionalPushbackReader reader, ParserErrorsImpl errors)
+  throws IOException, ParserErrorImpl {
+    super(reader, errors);
+    try {
+      parseComponent();
+      while (readAndAppendChar('.', typeBuilder)) {
         soakWhitespace();
-        parseTypeElaborations();
+        parseComponent();
+      }
     }
-
-    /**
-     * @throws IOException
-     * @throws NotAnIdentifierException
-     * @throws ParserErrorImpl
-     */
-    protected void parseTypeElaborations()
-        throws IOException, NotAnIdentifierException, ParserErrorImpl
-    {
+    catch (NotAnIdentifierException e) {
+      throw new ParserErrorImpl(location, BAD_JAVA_TYPE_SPECIFIER);
     }
+    checkForArrayBrackets();
+  }
 
-    protected void checkForArrayBrackets() throws IOException, ParserErrorImpl
-    {
-        if (readChar('['))
-        {
-            throw new ParserErrorImpl(m_reader.getLocation(), UNEXPECTED_ARRAY_ERROR);
-        }
+  private void parseComponent() throws IOException, NotAnIdentifierException, ParserErrorImpl {
+    typeBuilder.append(readIdentifierOrThrow());
+    soakWhitespace();
+    parseTypeElaborations();
+  }
+
+  /**
+   * @throws IOException
+   * @throws NotAnIdentifierException
+   * @throws ParserErrorImpl
+   */
+  protected void parseTypeElaborations() throws IOException,
+    NotAnIdentifierException,
+    ParserErrorImpl {}
+
+  protected void checkForArrayBrackets() throws IOException, ParserErrorImpl {
+    if (readChar('[')) {
+      throw new ParserErrorImpl(reader.getLocation(), UNEXPECTED_ARRAY_ERROR);
     }
+  }
 
-    public String getType()
-    {
-        return m_type.toString();
-    }
+  public String getType() {
+    return typeBuilder.toString();
+  }
 
-    protected final StringBuilder m_type = new StringBuilder();
+  protected final StringBuilder typeBuilder = new StringBuilder();
 }

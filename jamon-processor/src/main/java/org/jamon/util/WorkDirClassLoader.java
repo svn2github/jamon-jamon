@@ -28,136 +28,106 @@ import java.security.PrivilegedAction;
 import java.util.Map;
 import java.util.HashMap;
 
-public class WorkDirClassLoader
-    extends ClassLoader
-{
-    public WorkDirClassLoader(ClassLoader p_parent, String p_workDir)
-    {
-        super(p_parent);
-        m_workDir = p_workDir;
-    }
+public class WorkDirClassLoader extends ClassLoader {
+  public WorkDirClassLoader(ClassLoader parent, String workDir) {
+    super(parent);
+    this.workDir = workDir;
+  }
 
-    private final String m_workDir;
+  private final String workDir;
 
-    private File getFileForClass(String p_name)
-    {
-        return new File(m_workDir,
-                        StringUtils.classNameToFilePath(p_name)
-                        + ".class");
-    }
+  private File getFileForClass(String name) {
+    return new File(workDir, StringUtils.classNameToFilePath(name) + ".class");
+  }
 
-    public synchronized void invalidate()
-    {
-        m_loader = null;
-    }
+  public synchronized void invalidate() {
+    loader = null;
+  }
 
-
-    private class Loader extends ClassLoader
-    {
-        Loader()
-        {
-            super(WorkDirClassLoader.this);
-        }
-
-        @Override public String toString()
-        {
-            return super.toString() + " { " + " parent: " + getParent() + " }";
-        }
-
-        private final Map<String, Class<?>> m_cache = new HashMap<String, Class<?>>();
-
-        private byte [] readBytesForClass(String p_name)
-            throws IOException
-        {
-            FileInputStream s =
-                new FileInputStream(getFileForClass(p_name));
-            try
-            {
-                final byte [] buf = new byte[1024];
-                byte [] bytes = new byte[0];
-                while (true)
-                {
-                    int i = s.read(buf);
-                    if (i <= 0)
-                    {
-                        break;
-                    }
-                    byte [] newbytes = new byte[bytes.length + i];
-                    System.arraycopy(bytes,0,newbytes,0,bytes.length);
-                    System.arraycopy(buf,0,newbytes,bytes.length,i);
-                    bytes = newbytes;
-                }
-                return bytes;
-            }
-            finally
-            {
-                s.close();
-            }
-        }
-
-        @Override protected Class<?> loadClass(String p_name, boolean p_resolve)
-            throws ClassNotFoundException
-        {
-            if (! getFileForClass(p_name).exists())
-            {
-                return super.loadClass(p_name, p_resolve);
-            }
-            else
-            {
-                Class<?> c = m_cache.get(p_name);
-                if (c == null)
-                {
-                    try
-                    {
-                        byte [] code = readBytesForClass(p_name);
-                        c = this.defineClass(p_name, code, 0, code.length);
-                        if (p_resolve)
-                        {
-                            this.resolveClass(c);
-                        }
-                        m_cache.put(p_name, c);
-                    }
-                    catch (IOException e)
-                    {
-                        throw new ClassNotFoundException(e.getMessage());
-                    }
-                }
-                return c;
-            }
-        }
-
+  private class Loader extends ClassLoader {
+    Loader() {
+      super(WorkDirClassLoader.this);
     }
 
     @Override
-    protected synchronized Class<?> loadClass(String p_name, boolean p_resolve)
-        throws ClassNotFoundException
-    {
-        if (! getFileForClass(p_name).exists())
-        {
-            return super.loadClass(p_name, p_resolve);
+    public String toString() {
+      return super.toString() + " { " + " parent: " + getParent() + " }";
+    }
+
+    private final Map<String, Class<?>> cache = new HashMap<String, Class<?>>();
+
+    private byte[] readBytesForClass(String name) throws IOException {
+      FileInputStream s = new FileInputStream(getFileForClass(name));
+      try {
+        final byte[] buf = new byte[1024];
+        byte[] bytes = new byte[0];
+        while (true) {
+          int i = s.read(buf);
+          if (i <= 0) {
+            break;
+          }
+          byte[] newbytes = new byte[bytes.length + i];
+          System.arraycopy(bytes, 0, newbytes, 0, bytes.length);
+          System.arraycopy(buf, 0, newbytes, bytes.length, i);
+          bytes = newbytes;
         }
-        else
-        {
-            if (m_loader == null)
-            {
-                AccessController.doPrivileged(new PrivilegedAction<Void>() {
-                    @Override
-                    public Void run()
-                    {
-                        m_loader = new Loader();
-                        return null;
-                    }
-                });
+        return bytes;
+      }
+      finally {
+        s.close();
+      }
+    }
+
+    @Override
+    protected Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
+      if (!getFileForClass(name).exists()) {
+        return super.loadClass(name, resolve);
+      }
+      else {
+        Class<?> c = cache.get(name);
+        if (c == null) {
+          try {
+            byte[] code = readBytesForClass(name);
+            c = this.defineClass(name, code, 0, code.length);
+            if (resolve) {
+              this.resolveClass(c);
             }
-            return m_loader.loadClass(p_name, p_resolve);
+            cache.put(name, c);
+          }
+          catch (IOException e) {
+            throw new ClassNotFoundException(e.getMessage());
+          }
         }
+        return c;
+      }
     }
 
-    @Override public String toString()
-    {
-        return super.toString() + " { workDir: " + m_workDir
-            + "; parent: " + getParent() + " }";
-    }
+  }
 
-    private Loader m_loader;
+  @Override
+  protected synchronized Class<?> loadClass(String name, boolean resolve)
+  throws ClassNotFoundException {
+    if (!getFileForClass(name).exists()) {
+      return super.loadClass(name, resolve);
+    }
+    else {
+      if (loader == null) {
+        AccessController.doPrivileged(new PrivilegedAction<Void>() {
+          @Override
+          public Void run() {
+            loader = new Loader();
+            return null;
+          }
+        });
+      }
+      return loader.loadClass(name, resolve);
+    }
+  }
+
+  @Override
+  public String toString() {
+    return super.toString() + " { workDir: " + workDir + "; parent: " + getParent() + " }";
+  }
+
+  private Loader loader;
 }

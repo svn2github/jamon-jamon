@@ -25,94 +25,78 @@ import org.jamon.api.Location;
 /**
  * The base class for nodes in the syntax tree of a parsed Jamon document.
  */
-public abstract class AbstractNode
-{
-    /**
-     * @param p_location The location of this node
-     **/
+public abstract class AbstractNode {
+  /**
+   * @param location The location of this node
+   **/
 
-    protected AbstractNode(Location p_location)
-    {
-        if ((m_location = p_location) == null)
-            throw new NullPointerException();
+  protected AbstractNode(Location location) {
+    if ((this.location = location) == null)
+      throw new NullPointerException();
+  }
+
+  public final Location getLocation() {
+    return location;
+  }
+
+  private final Location location;
+
+  @Override
+  public boolean equals(Object obj) {
+    return obj instanceof AbstractNode && getClass().isInstance(obj)
+      && location.equals(((AbstractNode) obj).location);
+  }
+
+  @Override
+  public int hashCode() {
+    return location.hashCode();
+  }
+
+  public abstract void apply(Analysis analysis);
+
+  protected void propertiesToString(StringBuilder buffer) {
+    buffer.append(location.toString());
+  }
+
+  @Override
+  final public String toString() {
+    StringBuilder buffer = new StringBuilder(getClass().getName());
+    buffer.append("{");
+    propertiesToString(buffer);
+    buffer.append("}");
+    return buffer.toString();
+  }
+
+  protected static void addProperty(StringBuilder buffer, String label, char character) {
+    buffer.append(", ");
+    buffer.append(label);
+    buffer.append(": ");
+    buffer.append(character);
+  }
+
+  protected static void addProperty(StringBuilder buffer, String label, Object obj) {
+    buffer.append(", ");
+    buffer.append(label);
+    buffer.append(": ");
+    buffer.append(obj.toString());
+  }
+
+  protected static void addPropertyList(
+    StringBuilder buffer, String name, Iterable<? extends AbstractNode> properties) {
+    buffer.append(", ");
+    buffer.append(name);
+    buffer.append(": [");
+    boolean seenElement = false;
+    for (AbstractNode node : properties) {
+      if (seenElement) {
+        buffer.append(", ");
+      }
+      else {
+        seenElement = true;
+      }
+      buffer.append(node.toString());
     }
-
-    public final Location getLocation() { return m_location; }
-
-    private final Location m_location;
-
-    @Override public boolean equals(Object p_obj)
-    {
-        return p_obj instanceof AbstractNode
-            && getClass().isInstance(p_obj)
-            && m_location.equals(((AbstractNode) p_obj).m_location);
-    }
-
-    @Override public int hashCode()
-    {
-        return m_location.hashCode();
-    }
-
-    public abstract void apply(Analysis p_analysis);
-
-    protected void propertiesToString(StringBuilder p_buffer)
-    {
-        p_buffer.append(m_location.toString());
-    }
-
-    @Override final public String toString()
-    {
-        StringBuilder buffer = new StringBuilder(getClass().getName());
-        buffer.append("{");
-        propertiesToString(buffer);
-        buffer.append("}");
-        return buffer.toString();
-    }
-
-    protected static void addProperty(
-        StringBuilder p_buffer,
-        String p_label,
-        char p_char)
-    {
-        p_buffer.append(", ");
-        p_buffer.append(p_label);
-        p_buffer.append(": ");
-        p_buffer.append(p_char);
-    }
-
-    protected static void addProperty(
-        StringBuilder p_buffer,
-        String p_label,
-        Object p_obj)
-    {
-        p_buffer.append(", ");
-        p_buffer.append(p_label);
-        p_buffer.append(": ");
-        p_buffer.append(p_obj.toString());
-    }
-
-    protected static void addPropertyList(
-        StringBuilder p_buffer,
-        String p_name,
-        Iterable<? extends AbstractNode> p_properties)
-    {
-        p_buffer.append(", ");
-        p_buffer.append(p_name);
-        p_buffer.append(": [");
-        boolean seenElement = false;
-        for (AbstractNode node: p_properties)
-        {
-            if (seenElement)
-            {
-                p_buffer.append(", ");
-            }
-            else
-            {
-                seenElement = true;
-            }
-            p_buffer.append(node.toString());
-        }
-        p_buffer.append("]");
-    }
+    buffer.append("]");
+  }
 
 }

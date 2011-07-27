@@ -22,12 +22,11 @@ package org.jamon.codegen;
 
 import java.util.Collection;
 
-public interface MethodUnit extends Unit
-{
-    String getOptionalArgDefaultMethod(OptionalArgument p_arg);
-    Collection<OptionalArgument> getOptionalArgsWithDefaults();
-    String getDefaultForArg(OptionalArgument p_arg);
-    boolean isAbstract();
-    boolean isOverride();
-    org.jamon.api.Location getLocation();
+public interface MethodUnit extends Unit {
+  String getOptionalArgDefaultMethod(OptionalArgument arg);
+  Collection<OptionalArgument> getOptionalArgsWithDefaults();
+  String getDefaultForArg(OptionalArgument arg);
+  boolean isAbstract();
+  boolean isOverride();
+  org.jamon.api.Location getLocation();
 }

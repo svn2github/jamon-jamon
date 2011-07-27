@@ -165,7 +165,7 @@ public class AnalyzerTest extends TestCase
 
     private Object getDefaultEscaping(WriteStatement statement) throws NoSuchFieldException, IllegalAccessException
     {
-        Field field = WriteStatement.class.getDeclaredField("m_escapingDirective");
+        Field field = WriteStatement.class.getDeclaredField("escapingDirective");
         field.setAccessible(true);
         Object object = field.get(statement);
         return object;

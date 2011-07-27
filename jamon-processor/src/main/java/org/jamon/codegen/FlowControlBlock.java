@@ -1,33 +1,27 @@
 package org.jamon.codegen;
 
+import org.jamon.api.Location;
 import org.jamon.compiler.ParserErrorImpl;
 
-public class FlowControlBlock
-    extends AbstractStatementBlock implements Statement
-{
-    public FlowControlBlock(
-        StatementBlock p_parent, String p_header, org.jamon.api.Location p_location)
-    {
-        super(p_parent, p_location);
-        m_header = p_header;
-    }
+public class FlowControlBlock extends AbstractStatementBlock implements Statement {
+  public FlowControlBlock(StatementBlock parent, String header, Location location) {
+    super(parent, location);
+    this.header = header;
+  }
 
-    protected void printOpening(CodeWriter p_writer)
-    {
-        p_writer.printLocation(getLocation());
-        p_writer.println(m_header);
-    }
+  protected void printOpening(CodeWriter writer) {
+    writer.printLocation(getLocation());
+    writer.println(header);
+  }
 
-    @Override
-    public void generateSource(
-        CodeWriter p_writer, TemplateDescriber p_describer)
-        throws ParserErrorImpl
-    {
-        printOpening(p_writer);
-        p_writer.openBlock();
-        printStatements(p_writer, p_describer);
-        p_writer.closeBlock();
-    }
+  @Override
+  public void generateSource(CodeWriter writer, TemplateDescriber describer)
+  throws ParserErrorImpl {
+    printOpening(writer);
+    writer.openBlock();
+    printStatements(writer, describer);
+    writer.closeBlock();
+  }
 
-    private final String m_header;
+  private final String header;
 }

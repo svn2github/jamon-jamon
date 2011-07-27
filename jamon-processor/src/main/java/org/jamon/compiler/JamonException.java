@@ -20,25 +20,20 @@
 
 package org.jamon.compiler;
 
-public abstract class JamonException
-    extends Exception
-{
-    
-    private static final long serialVersionUID = 20090706L;
+public abstract class JamonException extends Exception {
 
-    public JamonException(String p_msg)
-    {
-        super(p_msg);
-    }
+  private static final long serialVersionUID = 20090706L;
 
-    public JamonException(String p_msg, Throwable p_rootCause)
-    {
-        super(p_msg, p_rootCause);
-    }
+  public JamonException(String msg) {
+    super(msg);
+  }
 
-    public JamonException(Throwable p_rootCause)
-    {
-        super(p_rootCause);
-    }
+  public JamonException(String msg, Throwable rootCause) {
+    super(msg, rootCause);
+  }
+
+  public JamonException(Throwable rootCause) {
+    super(rootCause);
+  }
 
 }

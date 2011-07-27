@@ -24,78 +24,66 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import org.jamon.api.Location;
 import org.jamon.compiler.ParserErrorImpl;
 
-public class NamedParamValues implements ParamValues
-{
-    public NamedParamValues(Map<String, String> p_params, org.jamon.api.Location p_location)
-    {
-        if (p_params == null)
-        {
-            m_params = Collections.emptyMap();
+public class NamedParamValues implements ParamValues {
+  public NamedParamValues(Map<String, String> params, Location location) {
+    if (params == null) {
+      this.params = Collections.emptyMap();
+    }
+    else {
+      this.params = params;
+    }
+    this.location = location;
+  }
+
+  @Override
+  public void generateRequiredArgs(List<RequiredArgument> args, CodeWriter writer)
+  throws ParserErrorImpl {
+    boolean multipleArgsAreMissing = false;
+    StringBuilder missingArgs = null;
+    for (RequiredArgument arg : args) {
+      String name = arg.getName();
+      String expr = params.remove(name);
+      if (expr == null) {
+        if (missingArgs == null) {
+          missingArgs = new StringBuilder(name);
         }
-        else
-        {
-            m_params = p_params;
+        else {
+          multipleArgsAreMissing = true;
+          missingArgs.append(", " + name);
         }
-        m_location = p_location;
+      }
+      writer.printListElement(expr);
     }
-
-    @Override
-    public void generateRequiredArgs(
-        List<RequiredArgument> p_args, CodeWriter p_writer)
-        throws ParserErrorImpl
-    {
-        boolean multipleArgsAreMissing= false;
-        StringBuilder missingArgs = null;
-        for (RequiredArgument arg: p_args)
-        {
-            String name = arg.getName();
-            String expr = m_params.remove(name);
-            if (expr == null)
-            {
-                if (missingArgs == null)
-                {
-                    missingArgs = new StringBuilder(name);
-                }
-                else
-                {
-                    multipleArgsAreMissing = true;
-                    missingArgs.append(", " + name);
-                }
-            }
-            p_writer.printListElement(expr);
-        }
-        if (missingArgs != null)
-        {
-            String plural = multipleArgsAreMissing ? "s" : "";
-            throw new ParserErrorImpl(
-                m_location,
-                "No value" + plural + " supplied for required argument" + plural
-                + " " + missingArgs.toString());
-        }
+    if (missingArgs != null) {
+      String plural = multipleArgsAreMissing
+          ? "s"
+          : "";
+      throw new ParserErrorImpl(
+        location,
+        "No value" + plural + " supplied for required argument"
+        + plural + " " + missingArgs.toString());
     }
+  }
 
+  @Override
+  public String getOptionalArgValue(String argName) {
+    return params.remove(argName);
+  }
 
-    @Override
-    public String getOptionalArgValue(String p_argName)
-    {
-        return m_params.remove(p_argName);
-    }
+  @Override
+  public boolean hasUnusedParams() {
+    return !params.isEmpty();
+  }
 
-    @Override
-    public boolean hasUnusedParams()
-    {
-        return ! m_params.isEmpty();
-    }
+  @Override
+  public Iterable<String> getUnusedParams() {
+    return params.keySet();
+  }
 
-    @Override
-    public Iterable<String> getUnusedParams()
-    {
-        return m_params.keySet();
-    }
+  private final Map<String, String> params;
 
-
-    private final Map<String, String> m_params;
-    private final org.jamon.api.Location m_location;
+  private final Location location;
 }

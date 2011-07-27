@@ -25,18 +25,17 @@ import java.util.List;
 
 import org.jamon.compiler.ParserErrorImpl;
 
-public interface Unit extends StatementBlock
-{
-    String getName();
-    List<FragmentArgument> getFragmentArgs();
-    List<RequiredArgument> getSignatureRequiredArgs();
-    Collection<OptionalArgument> getSignatureOptionalArgs();
+public interface Unit extends StatementBlock {
+  String getName();
+  List<FragmentArgument> getFragmentArgs();
+  List<RequiredArgument> getSignatureRequiredArgs();
+  Collection<OptionalArgument> getSignatureOptionalArgs();
+  void printRenderArgsDecl(CodeWriter writer);
 
-    void printRenderArgsDecl(CodeWriter p_writer);
-    void generateRenderBody(CodeWriter p_writer,
-                            TemplateDescriber p_describer) throws ParserErrorImpl;
-    /**
-     * @return {@code true} if this unit does IO, or an extension of this unit could do IO.
-     */
-    boolean doesIO();
+  void generateRenderBody(CodeWriter writer, TemplateDescriber describer) throws ParserErrorImpl;
+
+  /**
+   * @return {@code true} if this unit does IO, or an extension of this unit could do IO.
+   */
+  boolean doesIO();
 }

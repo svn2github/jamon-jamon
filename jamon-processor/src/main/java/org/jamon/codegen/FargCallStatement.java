@@ -20,50 +20,44 @@
 
 package org.jamon.codegen;
 
+import org.jamon.api.Location;
 import org.jamon.compiler.ParserErrorImpl;
 import org.jamon.compiler.ParserErrorsImpl;
 
-public class FargCallStatement
-    extends AbstractCallStatement
-{
-    FargCallStatement(String p_path,
-                      ParamValues p_params,
-                      FragmentUnit p_fragmentUnit,
-                      org.jamon.api.Location p_location,
-                      String p_templateIdentifier)
-    {
-        super(p_path, p_params, p_location, p_templateIdentifier);
-        m_fragmentUnit = p_fragmentUnit;
-    }
+public class FargCallStatement extends AbstractCallStatement {
+  FargCallStatement(
+    String path,
+    ParamValues params,
+    FragmentUnit fragmentUnit,
+    Location location,
+    String templateIdentifier) {
+    super(path, params, location, templateIdentifier);
+    this.fragmentUnit = fragmentUnit;
+  }
 
-    private final FragmentUnit m_fragmentUnit;
+  private final FragmentUnit fragmentUnit;
 
-    @Override
-    public void addFragmentImpl(FragmentUnit p_unit, ParserErrorsImpl p_errors)
-    {
-        p_errors.addError("Fragment args for fragments not implemented",
-                          getLocation());
-    }
+  @Override
+  public void addFragmentImpl(FragmentUnit unit, ParserErrorsImpl errors) {
+    errors.addError("Fragment args for fragments not implemented", getLocation());
+  }
 
-    @Override
-    protected String getFragmentIntfName(FragmentUnit p_fragmentUnitIntf)
-    {
-        throw new UnsupportedOperationException();
-    }
+  @Override
+  protected String getFragmentIntfName(FragmentUnit fragmentUnitIntf) {
+    throw new UnsupportedOperationException();
+  }
 
-    @Override
-    public void generateSource(CodeWriter p_writer,
-                               TemplateDescriber p_describer) throws ParserErrorImpl
-    {
-        generateSourceLine(p_writer);
-        String tn = getPath();
-        p_writer.print  (tn + ".renderNoFlush");
-        p_writer.openList();
-        p_writer.printListElement(ArgNames.WRITER);
-        getParams().generateRequiredArgs(m_fragmentUnit.getRequiredArgs(),
-                                         p_writer);
-        p_writer.closeList();
-        p_writer.println(";");
-        checkSuppliedParams();
-    }
+  @Override
+  public void generateSource(CodeWriter writer, TemplateDescriber describer)
+  throws ParserErrorImpl {
+    generateSourceLine(writer);
+    String tn = getPath();
+    writer.print(tn + ".renderNoFlush");
+    writer.openList();
+    writer.printListElement(ArgNames.WRITER);
+    getParams().generateRequiredArgs(fragmentUnit.getRequiredArgs(), writer);
+    writer.closeList();
+    writer.println(";");
+    checkSuppliedParams();
+  }
 }

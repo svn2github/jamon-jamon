@@ -20,34 +20,28 @@
 
 package org.jamon.codegen;
 
+import org.jamon.api.Location;
 
-public class FragmentArgument extends RequiredArgument
-{
-    public FragmentArgument(FragmentUnit p_fragmentUnit, org.jamon.api.Location p_location)
-    {
-        super(p_fragmentUnit.getName(),
-              p_fragmentUnit.getFragmentInterfaceName(true),
-              p_location);
-        m_fragmentUnit = p_fragmentUnit;
+public class FragmentArgument extends RequiredArgument {
+  public FragmentArgument(FragmentUnit fragmentUnit, Location location) {
+    super(fragmentUnit.getName(), fragmentUnit.getFragmentInterfaceName(true), location);
+    this.fragmentUnit = fragmentUnit;
+  }
+
+  public FragmentUnit getFragmentUnit() {
+    return fragmentUnit;
+  }
+
+  private final FragmentUnit fragmentUnit;
+
+  @Override
+  public String getFullyQualifiedType() {
+    if (getFragmentUnit().getParent() instanceof TemplateUnit) {
+      String templateName = ((TemplateUnit) getFragmentUnit().getParent()).getName();
+      return PathUtils.getFullyQualifiedIntfClassName(templateName) + "." + getType();
     }
-
-    public FragmentUnit getFragmentUnit()
-    {
-        return m_fragmentUnit;
+    else {
+      return getType();
     }
-
-
-    private final FragmentUnit m_fragmentUnit;
-
-    @Override
-    public String getFullyQualifiedType() {
-        if (getFragmentUnit().getParent() instanceof TemplateUnit)
-        {
-            String templateName = ((TemplateUnit) getFragmentUnit().getParent()).getName();
-            return PathUtils.getFullyQualifiedIntfClassName(templateName) + "." + getType();
-        }
-        else {
-            return getType();
-        }
-    }
+  }
 }

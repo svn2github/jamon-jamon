@@ -22,7 +22,6 @@ package org.jamon.codegen;
 
 import org.jamon.node.ParentArgNode;
 
-public interface InheritedUnit
-{
-    void addParentArg(ParentArgNode p_arg);
+public interface InheritedUnit {
+  void addParentArg(ParentArgNode arg);
 }

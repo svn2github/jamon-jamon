@@ -24,73 +24,68 @@ import java.util.AbstractList;
 import java.util.Iterator;
 import java.util.List;
 
-public class SequentialList<T> extends AbstractList<T>
-{
+public class SequentialList<T> extends AbstractList<T> {
+  @SuppressWarnings("unchecked")
+  private SequentialList(@SuppressWarnings("rawtypes") List[] lists) {
+    this.lists = lists;
+    this.size = totalSize(lists);
+  }
+
+  private int totalSize(List<?>[] lists) {
+    int size = 0;
+    for (List<?> list : lists) {
+      size += list.size();
+    }
+    return size;
+  }
+
+  public SequentialList(List<? extends T> list1) {
+    this(new List[] { list1 });
+  }
+
+  public SequentialList(List<? extends T> list1, List<? extends T> list2) {
+    this(new List[] { list1, list2 });
+  }
+
+  public SequentialList(
+    List<? extends T> list1, List<? extends T> list2, List<? extends T> list3) {
+    this(new List[] { list1, list2, list3 });
+  }
+
+  private final List<? extends T>[] lists;
+
+  private final int size;
+
+  @Override
+  public T get(final int index) {
+    if (index < 0) {
+      throw new IndexOutOfBoundsException();
+    }
+    int listIndex = index;
+    for (List<? extends T> list : lists) {
+      if (listIndex >= list.size()) {
+        listIndex -= list.size();
+      }
+      else {
+        return list.get(listIndex);
+      }
+    }
+    throw new IndexOutOfBoundsException();
+  }
+
+  @Override
+  public int size() {
+    return size;
+  }
+
+  @Override
+  public Iterator<T> iterator() {
     @SuppressWarnings("unchecked")
-    private SequentialList(@SuppressWarnings("rawtypes") List[] p_lists)
-    {
-        m_lists = p_lists;
-        int size = 0;
-        for (List<? extends T> list: p_lists)
-        {
-            size += list.size();
-        }
-        m_size = size;
+    Iterator<? extends T>[] iters = new Iterator[lists.length];
+    for (int i = 0; i < lists.length; i++) {
+      iters[i] = lists[i].iterator();
     }
-
-    public SequentialList(List<? extends T> p_list1)
-    {
-        this(new List[] { p_list1 });
-    }
-
-    public SequentialList(List<? extends T> p_list1, List<? extends T> p_list2)
-    {
-        this(new List[] { p_list1, p_list2 });
-    }
-
-    public SequentialList(
-        List<? extends T> p_list1, List<? extends T> p_list2, List<? extends T> p_list3)
-    {
-        this(new List[] { p_list1, p_list2, p_list3 });
-    }
-
-    private final List<? extends T>[] m_lists;
-    private final int m_size;
-
-    @Override public T get(final int p_index)
-    {
-        if (p_index < 0)
-        {
-            throw new IndexOutOfBoundsException();
-        }
-        int index = p_index;
-        for (List<? extends T> list: m_lists)
-        {
-            if (index >= list.size())
-            {
-                index -= list.size();
-            }
-            else
-            {
-                return list.get(index);
-            }
-        }
-        throw new IndexOutOfBoundsException();
-    }
-
-    @Override public int size()
-    {
-        return m_size;
-    }
-
-    @Override public Iterator<T> iterator()
-    {
-        @SuppressWarnings("unchecked") Iterator<? extends T>[] iters = new Iterator[m_lists.length];
-        for (int i = 0; i < m_lists.length; i++)
-        {
-            iters[i] = m_lists[i].iterator();
-        }
-        return new SequentialIterator<T>(iters);
-    }
+    return new SequentialIterator<T>(iters);
+  }
 
 }

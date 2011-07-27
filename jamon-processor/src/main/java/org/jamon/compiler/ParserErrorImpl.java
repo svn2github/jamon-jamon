@@ -1,61 +1,55 @@
 package org.jamon.compiler;
 
+import org.jamon.api.Location;
 import org.jamon.api.ParserError;
 
 /**
  * @author ian
  **/
-public class ParserErrorImpl extends Exception implements ParserError
-{
-    public ParserErrorImpl(org.jamon.api.Location p_location, String p_message)
-    {
-        if ((m_location = p_location) == null
-            || (m_message = p_message) == null)
-        {
-            throw new NullPointerException();
-        }
+public class ParserErrorImpl extends Exception implements ParserError {
+  public ParserErrorImpl(Location location, String message) {
+    if ((this.location = location) == null || (this.message = message) == null) {
+      throw new NullPointerException();
     }
+  }
 
-    /**
-     * @return The location of the error
-     */
-    @Override
-    public org.jamon.api.Location getLocation()
-    {
-        return m_location;
-    }
+  /**
+   * @return The location of the error
+   */
+  @Override
+  public Location getLocation() {
+    return location;
+  }
 
-    /**
-     * @return The error message
-     */
-    @Override public String getMessage()
-    {
-        return m_message;
-    }
+  /**
+   * @return The error message
+   */
+  @Override
+  public String getMessage() {
+    return message;
+  }
 
-    private final org.jamon.api.Location m_location;
-    private final String m_message;
+  private final Location location;
 
-    @Override public boolean equals(Object p_obj)
-    {
-        return p_obj != null
-            && p_obj instanceof ParserErrorImpl
-            && m_location.equals(((ParserErrorImpl) p_obj).m_location)
-            && m_message.equals(((ParserErrorImpl) p_obj).m_message);
-    }
+  private final String message;
 
-    @Override public int hashCode()
-    {
-        return m_location.hashCode() ^ m_message.hashCode();
-    }
+  @Override
+  public boolean equals(Object obj) {
+    return obj != null && obj instanceof ParserErrorImpl
+      && location.equals(((ParserErrorImpl) obj).location)
+      && message.equals(((ParserErrorImpl) obj).message);
+  }
 
-    @Override public String toString()
-    {
-        return getLocation().getTemplateLocation() + ":"
-               + getLocation().getLine() + ":"
-               + getLocation().getColumn() + ": "
-               + getMessage();
-    }
+  @Override
+  public int hashCode() {
+    return location.hashCode() ^ message.hashCode();
+  }
 
-    private static final long serialVersionUID = 2006091701L;
+  @Override
+  public String toString() {
+    return getLocation().getTemplateLocation() + ":" + getLocation().getLine() + ":"
+      + getLocation().getColumn() + ": " + getMessage();
+  }
+
+  private static final long serialVersionUID = 2006091701L;
 }

@@ -21,31 +21,26 @@ package org.jamon.parser;
 
 import java.io.IOException;
 
+import org.jamon.api.Location;
 import org.jamon.compiler.ParserErrorImpl;
 import org.jamon.compiler.ParserErrorsImpl;
 
-public class TypeNameParser extends ClassNameParser
-{
-    public TypeNameParser(org.jamon.api.Location p_location,
-                          PositionalPushbackReader p_reader,
-                          ParserErrorsImpl p_errors) throws IOException, ParserErrorImpl
-    {
-        super(p_location, p_reader, p_errors);
-    }
+public class TypeNameParser extends ClassNameParser {
+  public TypeNameParser(Location location, PositionalPushbackReader reader, ParserErrorsImpl errors)
+  throws IOException, ParserErrorImpl {
+    super(location, reader, errors);
+  }
 
-    @Override protected void checkForArrayBrackets() throws IOException
-    {
-        while (readChar('['))
-        {
-            soakWhitespace();
-            if (!readChar(']'))
-            {
-                addError(m_reader.getNextLocation(),
-                         INCOMPLETE_ARRAY_SPECIFIER_ERROR);
-                return;
-            }
-            m_type.append("[]");
-            soakWhitespace();
-        }
+  @Override
+  protected void checkForArrayBrackets() throws IOException {
+    while (readChar('[')) {
+      soakWhitespace();
+      if (!readChar(']')) {
+        addError(reader.getNextLocation(), INCOMPLETE_ARRAY_SPECIFIER_ERROR);
+        return;
+      }
+      typeBuilder.append("[]");
+      soakWhitespace();
     }
+  }
 }

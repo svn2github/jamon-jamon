@@ -21,82 +21,68 @@ package org.jamon.parser;
 
 import java.io.IOException;
 
+import org.jamon.api.Location;
 import org.jamon.compiler.ParserErrorImpl;
 import org.jamon.compiler.ParserErrorsImpl;
 import org.jamon.node.AbstractImportNode;
 import org.jamon.node.ImportNode;
 import org.jamon.node.StaticImportNode;
 
-public class ImportParser extends AbstractParser
-{
+public class ImportParser extends AbstractParser {
 
-    public static final String MISSING_WHITESPACE_AFTER_STATIC_DECLARATION =
-        "missing whitespace after static declaration";
-    public ImportParser(org.jamon.api.Location p_location,
-                        PositionalPushbackReader p_reader,
-                        ParserErrorsImpl p_errors)
-    {
-        super(p_reader, p_errors);
-        m_location = p_location;
-    }
+  public static final String MISSING_WHITESPACE_AFTER_STATIC_DECLARATION =
+    "missing whitespace after static declaration";
 
-    public ImportParser(
-        PositionalPushbackReader p_reader, ParserErrorsImpl p_errors)
-    {
-        super(p_reader, p_errors);
-        m_location = m_reader.getNextLocation();
-    }
+  public ImportParser(Location location, PositionalPushbackReader reader, ParserErrorsImpl errors) {
+    super(reader, errors);
+    this.location = location;
+  }
 
-    public ImportParser parse() throws IOException, ParserErrorImpl
-    {
-        StringBuilder builder = new StringBuilder();
-        try
-        {
-            String firstComponent = readIdentifierOrThrow();
-            if ("static".equals(firstComponent))
-            {
-                m_isStatic = true;
-                if (!soakWhitespace())
-                {
-                    throw new ParserErrorImpl(
-                        m_location, MISSING_WHITESPACE_AFTER_STATIC_DECLARATION);
-                }
-                firstComponent = readIdentifierOrThrow();
-            }
-            soakWhitespace();
-            builder.append(firstComponent);
-            while (readAndAppendChar('.', builder))
-            {
-                soakWhitespace();
-                if (readAndAppendChar('*', builder))
-                {
-                    break;
-                }
-                builder.append(readIdentifierOrThrow());
-                soakWhitespace();
-            }
-            m_import = builder.toString();
-            return this;
+  public ImportParser(PositionalPushbackReader reader, ParserErrorsImpl errors) {
+    super(reader, errors);
+    location = reader.getNextLocation();
+  }
+
+  public ImportParser parse() throws IOException, ParserErrorImpl {
+    StringBuilder builder = new StringBuilder();
+    try {
+      String firstComponent = readIdentifierOrThrow();
+      if ("static".equals(firstComponent)) {
+        isStatic = true;
+        if (!soakWhitespace()) {
+          throw new ParserErrorImpl(location, MISSING_WHITESPACE_AFTER_STATIC_DECLARATION);
         }
-        catch (NotAnIdentifierException e)
-        {
-            throw new ParserErrorImpl(m_location, BAD_JAVA_TYPE_SPECIFIER);
+        firstComponent = readIdentifierOrThrow();
+      }
+      soakWhitespace();
+      builder.append(firstComponent);
+      while (readAndAppendChar('.', builder)) {
+        soakWhitespace();
+        if (readAndAppendChar('*', builder)) {
+          break;
         }
+        builder.append(readIdentifierOrThrow());
+        soakWhitespace();
+      }
+      importText = builder.toString();
+      return this;
     }
-
-    public AbstractImportNode getNode()
-    {
-        return m_isStatic
-            ? new StaticImportNode(m_location, m_import)
-            : new ImportNode(m_location, m_import);
+    catch (NotAnIdentifierException e) {
+      throw new ParserErrorImpl(location, BAD_JAVA_TYPE_SPECIFIER);
     }
+  }
 
-    public boolean isStatic()
-    {
-        return m_isStatic;
-    }
+  public AbstractImportNode getNode() {
+    return isStatic
+        ? new StaticImportNode(location, importText)
+        : new ImportNode(location, importText);
+  }
 
-    private final org.jamon.api.Location m_location;
-    private String m_import;
-    private boolean m_isStatic = false;
+  public boolean isStatic() {
+    return isStatic;
+  }
+
+  private final Location location;
+  private String importText;
+  private boolean isStatic = false;
 }

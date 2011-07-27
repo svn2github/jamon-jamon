@@ -20,23 +20,20 @@
 
 package org.jamon.codegen;
 
+import org.jamon.api.Location;
 import org.jamon.node.ArgNode;
 
-public class RequiredArgument extends AbstractArgument
-{
-    public RequiredArgument(ArgNode p_arg)
-    {
-        super(p_arg);
-    }
+public class RequiredArgument extends AbstractArgument {
+  public RequiredArgument(ArgNode arg) {
+    super(arg);
+  }
 
-    public RequiredArgument(String p_name, String p_type, org.jamon.api.Location p_location)
-    {
-        super(p_name, p_type, p_location);
-    }
+  public RequiredArgument(String name, String type, Location location) {
+    super(name, type, location);
+  }
 
-    @Override public String toString()
-    {
-        return "RequiredArg: {name => " +getName()
-            + ", type => " + getType() + "}";
-    }
+  @Override
+  public String toString() {
+    return "RequiredArg: {name => " + getName() + ", type => " + getType() + "}";
+  }
 }

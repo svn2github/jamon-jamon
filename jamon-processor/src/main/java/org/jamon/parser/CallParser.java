@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jamon.api.Location;
 import org.jamon.compiler.ParserErrorImpl;
 import org.jamon.compiler.ParserErrorsImpl;
 import org.jamon.node.AbsolutePathNode;
@@ -45,384 +46,270 @@ import org.jamon.node.SimpleCallNode;
 import org.jamon.node.UnnamedFragmentNode;
 import org.jamon.node.UnnamedParamsNode;
 
-public class CallParser extends AbstractParser
-{
-    public static final String INVALID_CALL_TARGET_ERROR = "Invalid call target";
-    public static final String MISSING_CALL_CLOSE_ERROR = "Expecting '&>'";
-    public static final String UNEXPECTED_IN_MULTI_FRAG_ERROR =
-        "Expecting either '<|identifier>' or '</&>'";
-    public static final String MISSING_ARG_ARROW_ERROR =
-        "Expecting '=' or '=>' to separate param name and value";
-    public static final String GENERIC_ERROR = "Malformed call tag";
-    public static final String PARAM_VALUE_EOF_ERROR =
-        "Reached end of file while reading parameter value";
-    public static final String FRAGMENTS_EOF_ERROR =
-        "Reached end of file while reading call fragments; '</&>' Expected";
-    public static final String MISSING_GENERIC_PARAM_CLOSE_ERROR =
-        "Expecing ',' or '>'";
+public class CallParser extends AbstractParser {
+  public static final String INVALID_CALL_TARGET_ERROR = "Invalid call target";
+  public static final String MISSING_CALL_CLOSE_ERROR = "Expecting '&>'";
+  public static final String UNEXPECTED_IN_MULTI_FRAG_ERROR =
+    "Expecting either '<|identifier>' or '</&>'";
+  public static final String MISSING_ARG_ARROW_ERROR =
+    "Expecting '=' or '=>' to separate param name and value";
+  public static final String GENERIC_ERROR = "Malformed call tag";
+  public static final String PARAM_VALUE_EOF_ERROR =
+    "Reached end of file while reading parameter value";
+  public static final String FRAGMENTS_EOF_ERROR =
+    "Reached end of file while reading call fragments; '</&>' Expected";
+  public static final String MISSING_GENERIC_PARAM_CLOSE_ERROR = "Expecing ',' or '>'";
 
-    public CallParser(
-        PositionalPushbackReader p_reader,
-        ParserErrorsImpl p_errors,
-        org.jamon.api.Location p_callStartLocation)
-        throws IOException
-    {
-        super(p_reader, p_errors);
-        try
-        {
-            if (readChar('|'))
-            {
-                if (readChar('|'))
-                {
-                    m_callNode = parseNamedFragmentCall(p_callStartLocation);
-                }
-                else
-                {
-                    m_callNode = parseUnnamedFragmentCall(p_callStartLocation);
-                }
-                addGenericParams();
-            }
-            else
-            {
-                soakWhitespace();
-                if (readChar('*'))
-                {
-                    parseChildCall(p_callStartLocation);
-                }
-                else
-                {
-                    AbstractPathNode path = parsePath();
-                    parseGenericParams();
-                    m_callNode = new SimpleCallNode(
-                        p_callStartLocation, path, parseParams());
-                    addGenericParams();
-                }
-            }
+  public CallParser(
+    PositionalPushbackReader reader, ParserErrorsImpl errors, Location callStartLocation)
+  throws IOException {
+    super(reader, errors);
+    try {
+      if (readChar('|')) {
+        if (readChar('|')) {
+          callNode = parseNamedFragmentCall(callStartLocation);
         }
-        catch (ParserErrorImpl e)
-        {
-            addError(e);
-            m_callNode =
-                new SimpleCallNode(
-                    p_callStartLocation,
-                    new AbsolutePathNode(p_callStartLocation),
-                    new NoParamsNode(m_reader.getLocation()));
+        else {
+          callNode = parseUnnamedFragmentCall(callStartLocation);
         }
-    }
-
-    private void parseChildCall(org.jamon.api.Location p_callStartLocation)
-        throws IOException, ParserErrorImpl
-    {
-        org.jamon.api.Location callTargetLocation = m_reader.getLocation();
-        if (checkToken("CHILD"))
-        {
-            soakWhitespace();
-            org.jamon.api.Location endLocation = m_reader.getNextLocation();
-            if (checkToken("&>"))
-            {
-                m_callNode = new ChildCallNode(p_callStartLocation);
-            }
-            else
-            {
-                throw new ParserErrorImpl(
-                    endLocation, MISSING_CALL_CLOSE_ERROR);
-            }
-        }
-        else
-        {
-            throw new ParserErrorImpl(
-                callTargetLocation, INVALID_CALL_TARGET_ERROR);
-        }
-    }
-
-    private AbstractComponentCallNode parseNamedFragmentCall(
-        org.jamon.api.Location p_callStartLocation)
-        throws IOException, ParserErrorImpl
-    {
+        addGenericParams();
+      }
+      else {
         soakWhitespace();
-        AbstractPathNode path = parsePath();
-        parseGenericParams();
-        MultiFragmentCallNode callNode =
-            new MultiFragmentCallNode(p_callStartLocation, path, parseParams());
-        org.jamon.api.Location fragmentsStart = m_reader.getNextLocation();
-        while (true)
-        {
-            soakWhitespace();
-            org.jamon.api.Location fragmentStart = m_reader.getNextLocation();
-            int c = m_reader.read();
-            if (c == '<')
-            {
-                switch (m_reader.read())
-                {
-                    case '|' :
-                        String name = readIdentifier(true);
-                        if (readChar('>'))
-                        {
-                            NamedFragmentNode fragmentNode =
-                                new NamedFragmentNode(fragmentStart, name);
-                            new NamedFragmentParser(
-                                fragmentNode,
-                                m_reader,
-                                m_errors)
-                                .parse();
-                            callNode.addFragment(fragmentNode);
-                        }
-                        else
-                        {
-                            throw new ParserErrorImpl(
-                                m_reader.getLocation(),
-                                UNEXPECTED_IN_MULTI_FRAG_ERROR);
-                        }
-                        break;
-                    case '/' :
-                        if (readChar('&') && readChar('>'))
-                        {
-                            return callNode;
-                        }
-                        else
-                        {
-                            throw new ParserErrorImpl(
-                                m_reader.getLocation(),
-                                UNEXPECTED_IN_MULTI_FRAG_ERROR);
-                        }
-                    default :
-                        throw new ParserErrorImpl(
-                            m_reader.getLocation(),
-                            UNEXPECTED_IN_MULTI_FRAG_ERROR);
-                }
-            }
-            else if (c >= 0)
-            {
-                throw new ParserErrorImpl(
-                    m_reader.getLocation(),
-                    UNEXPECTED_IN_MULTI_FRAG_ERROR);
-            }
-            else
-            {
-                throw new ParserErrorImpl(fragmentsStart, FRAGMENTS_EOF_ERROR);
-            }
+        if (readChar('*')) {
+          parseChildCall(callStartLocation);
         }
+        else {
+          AbstractPathNode path = parsePath();
+          parseGenericParams();
+          callNode = new SimpleCallNode(callStartLocation, path, parseParams());
+          addGenericParams();
+        }
+      }
     }
-
-    private FragmentCallNode parseUnnamedFragmentCall(org.jamon.api.Location p_callStartLocation)
-        throws IOException, ParserErrorImpl
-    {
-        soakWhitespace();
-        AbstractPathNode path = parsePath();
-        parseGenericParams();
-        AbstractParamsNode params = parseParams();
-        return new FragmentCallNode(
-            p_callStartLocation,
-            path,
-            params,
-            new UnnamedFragmentParser(
-            new UnnamedFragmentNode(m_reader.getNextLocation()),
-            m_reader,
-            m_errors)
-            .parse()
-            .getRootNode());
+    catch (ParserErrorImpl e) {
+      addError(e);
+      callNode = new SimpleCallNode(callStartLocation,
+          new AbsolutePathNode(callStartLocation), new NoParamsNode(reader.getLocation()));
     }
+  }
 
-    private AbstractParamsNode parseParams() throws IOException, ParserErrorImpl
-    {
-        soakWhitespace();
-        m_reader.markNodeEnd();
-        int c = m_reader.read();
-        switch (c)
-        {
-            case '&' :
-                if (m_reader.read() == '>')
-                {
-                    return new NoParamsNode(m_reader.getCurrentNodeLocation());
-                }
-                else
-                {
-                    throw new ParserErrorImpl(
-                        m_reader.getLocation(),
-                        GENERIC_ERROR);
-                }
-            case ';' :
-                return parseNamedParams();
-            case ':' :
-                return parseUnnamedParams();
-            default :
-                throw new ParserErrorImpl(m_reader.getLocation(), GENERIC_ERROR);
-        }
+  private void parseChildCall(Location callStartLocation) throws IOException, ParserErrorImpl {
+    Location callTargetLocation = reader.getLocation();
+    if (checkToken("CHILD")) {
+      soakWhitespace();
+      Location endLocation = reader.getNextLocation();
+      if (checkToken("&>")) {
+        callNode = new ChildCallNode(callStartLocation);
+      }
+      else {
+        throw new ParserErrorImpl(endLocation, MISSING_CALL_CLOSE_ERROR);
+      }
     }
-
-    private static class ParamValueEndDetector implements TagEndDetector
-    {
-        public boolean noMoreParams()
-        {
-            return m_noMoreParams;
-        }
-
-        @Override
-        public int checkEnd(final char p_char)
-        {
-            if (p_char == '&')
-            {
-                m_seenAmpersand = true;
-                return 0;
-            }
-            else if (p_char == '>' && m_seenAmpersand)
-            {
-                m_noMoreParams = true;
-                return 2;
-            }
-            else if (p_char == ';')
-            {
-                return 1;
-            }
-            else
-            {
-                m_seenAmpersand = false;
-                return 0;
-            }
-        }
-
-        @Override
-        public ParserErrorImpl getEofError(org.jamon.api.Location p_startLocation)
-        {
-            return new ParserErrorImpl(p_startLocation, PARAM_VALUE_EOF_ERROR);
-        }
-
-        @Override
-        public void resetEndMatch()
-        {
-            m_seenAmpersand = false;
-        }
-
-        private boolean m_noMoreParams = false;
-        private boolean m_seenAmpersand = false;
+    else {
+      throw new ParserErrorImpl(callTargetLocation, INVALID_CALL_TARGET_ERROR);
     }
+  }
 
-    private NamedParamsNode parseNamedParams() throws ParserErrorImpl, IOException
-    {
-        NamedParamsNode params = new NamedParamsNode(m_reader.getLocation());
-        ParamValueEndDetector endDetector = new ParamValueEndDetector();
-        while (true)
-        {
-            soakWhitespace();
-            if (readChar('&'))
-            {
-                if (readChar('>'))
-                {
-                    return params;
-                }
-                else
-                {
-                    throw new ParserErrorImpl(
-                        m_reader.getCurrentNodeLocation(),
-                        GENERIC_ERROR);
-                }
-            }
-            org.jamon.api.Location nameLoc = m_reader.getNextLocation();
+  private AbstractComponentCallNode parseNamedFragmentCall(Location callStartLocation)
+  throws IOException, ParserErrorImpl {
+    soakWhitespace();
+    AbstractPathNode path = parsePath();
+    parseGenericParams();
+    MultiFragmentCallNode callNode = new MultiFragmentCallNode(callStartLocation, path,
+        parseParams());
+    Location fragmentsStart = reader.getNextLocation();
+    while (true) {
+      soakWhitespace();
+      Location fragmentStart = reader.getNextLocation();
+      int c = reader.read();
+      if (c == '<') {
+        switch (reader.read()) {
+          case '|':
             String name = readIdentifier(true);
-            readArrow();
-            org.jamon.api.Location javaLoc = m_reader.getNextLocation();
-            params.addParam(
-                new NamedParamNode(
-                    nameLoc,
-                    new ParamNameNode(nameLoc, name),
-                    new ParamValueNode(
-                        javaLoc,
-                        readJava(javaLoc, endDetector))));
-            if (endDetector.noMoreParams())
-            {
-                return params;
+            if (readChar('>')) {
+              NamedFragmentNode fragmentNode = new NamedFragmentNode(fragmentStart, name);
+              new NamedFragmentParser(fragmentNode, reader, errors).parse();
+              callNode.addFragment(fragmentNode);
             }
+            else {
+              throw new ParserErrorImpl(reader.getLocation(), UNEXPECTED_IN_MULTI_FRAG_ERROR);
+            }
+            break;
+          case '/':
+            if (readChar('&') && readChar('>')) {
+              return callNode;
+            }
+            else {
+              throw new ParserErrorImpl(reader.getLocation(), UNEXPECTED_IN_MULTI_FRAG_ERROR);
+            }
+          default:
+            throw new ParserErrorImpl(reader.getLocation(), UNEXPECTED_IN_MULTI_FRAG_ERROR);
         }
+      }
+      else if (c >= 0) {
+        throw new ParserErrorImpl(reader.getLocation(), UNEXPECTED_IN_MULTI_FRAG_ERROR);
+      }
+      else {
+        throw new ParserErrorImpl(fragmentsStart, FRAGMENTS_EOF_ERROR);
+      }
+    }
+  }
+
+  private FragmentCallNode parseUnnamedFragmentCall(Location callStartLocation) throws IOException,
+    ParserErrorImpl {
+    soakWhitespace();
+    AbstractPathNode path = parsePath();
+    parseGenericParams();
+    AbstractParamsNode params = parseParams();
+    return new FragmentCallNode(callStartLocation, path, params, new UnnamedFragmentParser(
+        new UnnamedFragmentNode(reader.getNextLocation()), reader, errors).parse().getRootNode());
+  }
+
+  private AbstractParamsNode parseParams() throws IOException, ParserErrorImpl {
+    soakWhitespace();
+    reader.markNodeEnd();
+    int c = reader.read();
+    switch (c) {
+      case '&':
+        if (reader.read() == '>') {
+          return new NoParamsNode(reader.getCurrentNodeLocation());
+        }
+        else {
+          throw new ParserErrorImpl(reader.getLocation(), GENERIC_ERROR);
+        }
+      case ';':
+        return parseNamedParams();
+      case ':':
+        return parseUnnamedParams();
+      default:
+        throw new ParserErrorImpl(reader.getLocation(), GENERIC_ERROR);
+    }
+  }
+
+  private static class ParamValueEndDetector implements TagEndDetector {
+    public boolean noMoreParams() {
+      return noMoreParams;
     }
 
-    private UnnamedParamsNode parseUnnamedParams()
-        throws ParserErrorImpl, IOException
-    {
-        UnnamedParamsNode params =
-            new UnnamedParamsNode(m_reader.getLocation());
-        ParamValueEndDetector endDetector = new ParamValueEndDetector();
-        while (true)
-        {
-            soakWhitespace();
-            if (readChar('&'))
-            {
-                if (readChar('>'))
-                {
-                    return params;
-                }
-                else
-                {
-                    throw new ParserErrorImpl(
-                        m_reader.getCurrentNodeLocation(),
-                        GENERIC_ERROR);
-                }
-            }
-            org.jamon.api.Location javaLoc = m_reader.getNextLocation();
-            params.addValue(
-                new ParamValueNode(javaLoc, readJava(javaLoc, endDetector)));
-            if (endDetector.noMoreParams())
-            {
-                return params;
-            }
-        }
+    @Override
+    public int checkEnd(final char character) {
+      if (character == '&') {
+        seenAmpersand = true;
+        return 0;
+      }
+      else if (character == '>' && seenAmpersand) {
+        noMoreParams = true;
+        return 2;
+      }
+      else if (character == ';') {
+        return 1;
+      }
+      else {
+        seenAmpersand = false;
+        return 0;
+      }
     }
 
-    private void parseGenericParams() throws ParserErrorImpl, IOException
-    {
-        m_genericParams = new ArrayList<GenericCallParam>();
-        if (readChar('<'))
-        {
-            do
-            {
-               soakWhitespace();
-               org.jamon.api.Location location = m_reader.getNextLocation();
-               m_genericParams.add(
-                   new GenericCallParam(
-                       location,
-                       new ClassNameParser(location, m_reader, m_errors)
-                       .getType()));
-               soakWhitespace();
-            }
-            while(readChar(','));
-            if (!readChar('>'))
-            {
-                throw new ParserErrorImpl(m_reader.getNextLocation(),
-                                      MISSING_GENERIC_PARAM_CLOSE_ERROR);
-            }
-        }
+    @Override
+    public ParserErrorImpl getEofError(Location startLocation) {
+      return new ParserErrorImpl(startLocation, PARAM_VALUE_EOF_ERROR);
     }
 
-    private void addGenericParams()
-    {
-        AbstractComponentCallNode callNode =
-            (AbstractComponentCallNode) m_callNode;
-        for (GenericCallParam param : m_genericParams)
-        {
-            callNode.addGenericParam(param);
-        }
+    @Override
+    public void resetEndMatch() {
+      seenAmpersand = false;
     }
 
-    private void readArrow() throws ParserErrorImpl, IOException
-    {
+    private boolean noMoreParams = false;
+    private boolean seenAmpersand = false;
+  }
+
+  private NamedParamsNode parseNamedParams() throws ParserErrorImpl, IOException {
+    NamedParamsNode params = new NamedParamsNode(reader.getLocation());
+    ParamValueEndDetector endDetector = new ParamValueEndDetector();
+    while (true) {
+      soakWhitespace();
+      if (readChar('&')) {
+        if (readChar('>')) {
+          return params;
+        }
+        else {
+          throw new ParserErrorImpl(reader.getCurrentNodeLocation(), GENERIC_ERROR);
+        }
+      }
+      Location nameLoc = reader.getNextLocation();
+      String name = readIdentifier(true);
+      readArrow();
+      Location javaLoc = reader.getNextLocation();
+      params.addParam(new NamedParamNode(nameLoc, new ParamNameNode(nameLoc, name),
+          new ParamValueNode(javaLoc, readJava(javaLoc, endDetector))));
+      if (endDetector.noMoreParams()) {
+        return params;
+      }
+    }
+  }
+
+  private UnnamedParamsNode parseUnnamedParams() throws ParserErrorImpl, IOException {
+    UnnamedParamsNode params = new UnnamedParamsNode(reader.getLocation());
+    ParamValueEndDetector endDetector = new ParamValueEndDetector();
+    while (true) {
+      soakWhitespace();
+      if (readChar('&')) {
+        if (readChar('>')) {
+          return params;
+        }
+        else {
+          throw new ParserErrorImpl(reader.getCurrentNodeLocation(), GENERIC_ERROR);
+        }
+      }
+      Location javaLoc = reader.getNextLocation();
+      params.addValue(new ParamValueNode(javaLoc, readJava(javaLoc, endDetector)));
+      if (endDetector.noMoreParams()) {
+        return params;
+      }
+    }
+  }
+
+  private void parseGenericParams() throws ParserErrorImpl, IOException {
+    genericParams = new ArrayList<GenericCallParam>();
+    if (readChar('<')) {
+      do {
         soakWhitespace();
-        if (!readChar('='))
-        {
-            throw new ParserErrorImpl(
-                m_reader.getNextLocation(),
-                MISSING_ARG_ARROW_ERROR);
-        }
-        readChar('>'); // support old-style syntax
+        Location location = reader.getNextLocation();
+        genericParams.add(new GenericCallParam(location, new ClassNameParser(location, reader,
+            errors).getType()));
         soakWhitespace();
+      }
+      while (readChar(','));
+      if (!readChar('>')) {
+        throw new ParserErrorImpl(reader.getNextLocation(), MISSING_GENERIC_PARAM_CLOSE_ERROR);
+      }
     }
+  }
 
-    public static void main(String[] args)
-    {}
-
-    public AbstractCallNode getCallNode()
-    {
-        return m_callNode;
+  private void addGenericParams() {
+    AbstractComponentCallNode componentCallNode = (AbstractComponentCallNode) callNode;
+    for (GenericCallParam param : genericParams) {
+      componentCallNode.addGenericParam(param);
     }
+  }
 
-    private AbstractCallNode m_callNode;
-    private List<GenericCallParam> m_genericParams = null;
+  private void readArrow() throws ParserErrorImpl, IOException {
+    soakWhitespace();
+    if (!readChar('=')) {
+      throw new ParserErrorImpl(reader.getNextLocation(), MISSING_ARG_ARROW_ERROR);
+    }
+    readChar('>'); // support old-style syntax
+    soakWhitespace();
+  }
+
+  public static void main(String[] args) {}
+
+  public AbstractCallNode getCallNode() {
+    return callNode;
+  }
+
+  private AbstractCallNode callNode;
+  private List<GenericCallParam> genericParams = null;
 }

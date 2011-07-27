@@ -20,22 +20,15 @@
 
 package org.jamon.codegen;
 
+public class ChildCallStatement implements Statement {
+  ChildCallStatement(int depth) {
+    this.depth = depth;
+  }
 
-public class ChildCallStatement
-    implements Statement
-{
-    ChildCallStatement(int p_depth)
-    {
-        m_depth = p_depth;
-    }
+  @Override
+  public void generateSource(CodeWriter writer, TemplateDescriber describer) {
+    writer.println("child_render_" + depth + "(" + ArgNames.WRITER + ");");
+  }
 
-    @Override
-    public void generateSource(CodeWriter p_writer,
-                               TemplateDescriber p_describer)
-    {
-        p_writer.println(
-            "child_render_" + m_depth + "(" + ArgNames.WRITER + ");");
-    }
-
-    private final int m_depth;
+  private final int depth;
 }

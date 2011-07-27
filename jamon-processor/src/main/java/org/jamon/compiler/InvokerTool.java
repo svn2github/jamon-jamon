@@ -27,248 +27,183 @@ import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
 
-public class InvokerTool
-{
+public class InvokerTool {
 
-    /**
-     * An <code>ObjectParser</code> describes how to convert string
-     * values to objects.
-     */
-    public static interface ObjectParser
-    {
-        Object parseObject(Class<?> p_type, String p_value)
-            throws TemplateArgumentException;
+  /**
+   * An <code>ObjectParser</code> describes how to convert string values to objects.
+   */
+  public static interface ObjectParser {
+    Object parseObject(Class<?> p_type, String p_value) throws TemplateArgumentException;
+  }
+
+  public static class DefaultObjectParser implements ObjectParser {
+    @Override
+    public Object parseObject(Class<?> type, String string) throws TemplateArgumentException {
+      try {
+        if (string == null) {
+          if (type.isPrimitive()) {
+            throw new TemplateArgumentException("primitive types cannot be null");
+          }
+          else {
+            return null;
+          }
+        }
+        else if (type == String.class) {
+          return string;
+        }
+        else if (type == Boolean.class || type == Boolean.TYPE) {
+          return Boolean.valueOf(string);
+        }
+        else if (type == Integer.class || type == Integer.TYPE) {
+          return Integer.valueOf(string);
+        }
+        else if (type == Float.class || type == Float.TYPE) {
+          return Float.valueOf(string);
+        }
+        else if (type == Double.class || type == Double.TYPE) {
+          return Double.valueOf(string);
+        }
+        else if (type == Short.class || type == Short.TYPE) {
+          return Short.valueOf(string);
+        }
+        else if (type == Byte.class || type == Byte.TYPE) {
+          return Byte.valueOf(string);
+        }
+        else {
+          return type.getConstructor(new Class[] { String.class }).newInstance(
+            new Object[] { string });
+        }
+      }
+      catch (RuntimeException e) {
+        throw e;
+      }
+      catch (Exception e) {
+        throw new TemplateArgumentException(e);
+      }
+    }
+  }
+
+  public static class TemplateArgumentException extends JamonException {
+    public TemplateArgumentException(Throwable t) {
+      super(t);
     }
 
-    public static class DefaultObjectParser
-        implements ObjectParser
-    {
-        @Override
-        public Object parseObject(Class<?> p_type, String p_string)
-            throws TemplateArgumentException
-        {
-            try
-            {
-                if (p_string == null)
-                {
-                    if (p_type.isPrimitive())
-                    {
-                        throw new TemplateArgumentException
-                            ("primitive types cannot be null");
-                    }
-                    else
-                    {
-                        return null;
-                    }
-                }
-                else if (p_type == String.class)
-                {
-                    return p_string;
-                }
-                else if (p_type == Boolean.class || p_type == Boolean.TYPE )
-                {
-                    return Boolean.valueOf(p_string);
-                }
-                else if (p_type == Integer.class || p_type == Integer.TYPE)
-                {
-                    return Integer.valueOf(p_string);
-                }
-                else if (p_type == Float.class || p_type == Float.TYPE)
-                {
-                    return Float.valueOf(p_string);
-                }
-                else if (p_type == Double.class || p_type == Double.TYPE)
-                {
-                    return Double.valueOf(p_string);
-                }
-                else if (p_type == Short.class || p_type == Short.TYPE)
-                {
-                    return Short.valueOf(p_string);
-                }
-                else if (p_type == Byte.class || p_type == Byte.TYPE)
-                {
-                    return Byte.valueOf(p_string);
-                }
-                else
-                {
-                    return p_type
-                        .getConstructor(new Class[] { String.class })
-                        .newInstance(new Object[] { p_string });
-                }
-            }
-            catch (RuntimeException e)
-            {
-                throw e;
-            }
-            catch (Exception e)
-            {
-                throw new TemplateArgumentException(e);
-            }
-        }
+    public TemplateArgumentException(String msg) {
+      super(msg);
     }
 
-    public static class TemplateArgumentException
-        extends JamonException
-    {
-        public TemplateArgumentException(Throwable t)
-        {
-            super(t);
-        }
+    private static final long serialVersionUID = 2006091701L;
+  }
 
-        public TemplateArgumentException(String p_msg)
-        {
-            super(p_msg);
-        }
-
-        private static final long serialVersionUID = 2006091701L;
+  public static class UsageException extends Exception {
+    @Override
+    public String toString() {
+      return "java " + InvokerTool.class.getName() + " [-o outputfile] "
+        + " [-s templatesourcedir]" + " [-w workdir]" + " template-path [[arg1=val1] ...]";
     }
 
-    public static class UsageException
-        extends Exception
-    {
-        @Override public String toString()
-        {
-            return "java "
-                + InvokerTool.class.getName()
-                + " [-o outputfile] "
-                + " [-s templatesourcedir]"
-                + " [-w workdir]"
-                + " template-path [[arg1=val1] ...]";
-        }
+    private static final long serialVersionUID = 2006091701L;
+  }
 
-        private static final long serialVersionUID = 2006091701L;
+  public InvokerTool(ObjectParser objectParser) {
+    this.objectParser = objectParser;
+  }
+
+  private final ObjectParser objectParser;
+
+  public InvokerTool() {
+    this(new DefaultObjectParser());
+  }
+
+  private void parseArgString(
+    TemplateInspector inspector, Map<String, Object> argMap, String arg)
+  throws UsageException, TemplateArgumentException {
+    int i = arg.indexOf("=");
+    if (i <= 0) {
+      throw new UsageException();
+    }
+    String name = arg.substring(0, i);
+    argMap.put(name, objectParser.parseObject(inspector.getArgumentType(name), arg
+        .substring(i + 1)));
+  }
+
+  protected void invoke(String[] args) throws UsageException,
+    IOException,
+    TemplateArgumentException,
+    TemplateInspector.UnknownArgumentsException,
+    TemplateInspector.InvalidTemplateException {
+    int a = 0;
+    RecompilingTemplateManager.Data data = new RecompilingTemplateManager.Data();
+    String outFile = null;
+    while (a < args.length && args[a].startsWith("-")) {
+      if (args[a].startsWith("--workdir=")) {
+        data.setWorkDir(args[a].substring(10));
+      }
+      else if (args[a].equals("-w")) {
+        a++;
+        if (a < args.length) {
+          data.setWorkDir(args[a]);
+        }
+        else {
+          throw new UsageException();
+        }
+      }
+      else if (args[a].startsWith("--srcdir=")) {
+        data.setSourceDir(args[a].substring(9));
+      }
+      else if (args[a].equals("-s")) {
+        a++;
+        if (a < args.length) {
+          data.setSourceDir(args[a]);
+        }
+        else {
+          throw new UsageException();
+        }
+      }
+      else if (args[a].startsWith("--output=")) {
+        outFile = args[a].substring(9);
+      }
+      else if (args[a].equals("-o")) {
+        a++;
+        if (a < args.length) {
+          outFile = args[a];
+        }
+        else {
+          throw new UsageException();
+        }
+      }
+      else {
+        throw new UsageException();
+      }
+      a++;
+    }
+    if (a >= args.length) {
+      throw new UsageException();
     }
 
-    public InvokerTool(ObjectParser p_objectParser)
-    {
-        m_objectParser = p_objectParser;
+    String templateName = args[a++];
+
+    TemplateInspector inspector =
+      new TemplateInspector(new RecompilingTemplateManager(data), templateName);
+
+    HashMap<String, Object> argMap = new HashMap<String, Object>();
+    while (a < args.length) {
+      parseArgString(inspector, argMap, args[a++]);
     }
 
-    private final ObjectParser m_objectParser;
+    Writer writer = outFile == null
+        ? new OutputStreamWriter(System.out)
+        : new FileWriter(outFile);
 
-    public InvokerTool()
-    {
-        this(new DefaultObjectParser());
+    inspector.render(writer, argMap);
+  }
+
+  public static void main(String[] args) throws Exception {
+    try {
+      new InvokerTool().invoke(args);
     }
-
-    private void parseArgString(TemplateInspector p_inspector,
-                                Map<String, Object> p_argMap,
-                                String p_arg)
-        throws UsageException, TemplateArgumentException
-    {
-        int i = p_arg.indexOf("=");
-        if (i <= 0)
-        {
-            throw new UsageException();
-        }
-        String name = p_arg.substring(0,i);
-        p_argMap.put(name,
-                     m_objectParser.parseObject
-                     (p_inspector.getArgumentType(name),
-                      p_arg.substring(i+1)));
+    catch (UsageException e) {
+      System.err.println("Usage: " + e);
     }
-
-    protected void invoke(String[] args)
-        throws UsageException,
-               IOException,
-               TemplateArgumentException,
-               TemplateInspector.UnknownArgumentsException,
-               TemplateInspector.InvalidTemplateException
-    {
-        int a = 0;
-        RecompilingTemplateManager.Data data =
-            new RecompilingTemplateManager.Data();
-        String outFile = null;
-        while (a < args.length && args[a].startsWith("-"))
-        {
-            if (args[a].startsWith("--workdir="))
-            {
-                data.setWorkDir(args[a].substring(10));
-            }
-            else if (args[a].equals("-w"))
-            {
-                a++;
-                if (a < args.length)
-                {
-                    data.setWorkDir(args[a]);
-                }
-                else
-                {
-                    throw new UsageException();
-                }
-            }
-            else if (args[a].startsWith("--srcdir="))
-            {
-                data.setSourceDir(args[a].substring(9));
-            }
-            else if (args[a].equals("-s"))
-            {
-                a++;
-                if (a < args.length)
-                {
-                    data.setSourceDir(args[a]);
-                }
-                else
-                {
-                    throw new UsageException();
-                }
-            }
-            else if (args[a].startsWith("--output="))
-            {
-                outFile = args[a].substring(9);
-            }
-            else if (args[a].equals("-o"))
-            {
-                a++;
-                if (a < args.length)
-                {
-                    outFile = args[a];
-                }
-                else
-                {
-                    throw new UsageException();
-                }
-            }
-            else
-            {
-                throw new UsageException();
-            }
-            a++;
-        }
-        if (a >= args.length)
-        {
-            throw new UsageException();
-        }
-
-        String templateName = args[a++];
-
-        TemplateInspector inspector =
-            new TemplateInspector(new RecompilingTemplateManager(data),
-                                  templateName);
-
-        HashMap<String, Object> argMap = new HashMap<String, Object>();
-        while (a < args.length)
-        {
-            parseArgString(inspector, argMap, args[a++]);
-        }
-
-        Writer writer = outFile == null
-            ? new OutputStreamWriter(System.out)
-            : new FileWriter(outFile);
-
-        inspector.render(writer, argMap);
-    }
-
-    public static void main(String[] args)
-        throws Exception
-    {
-        try
-        {
-            new InvokerTool().invoke(args);
-        }
-        catch (UsageException e)
-        {
-            System.err.println("Usage: " + e);
-        }
-    }
+  }
 }

@@ -22,35 +22,27 @@ package org.jamon.parser;
 
 import java.io.IOException;
 
+import org.jamon.api.Location;
 import org.jamon.compiler.ParserErrorsImpl;
 import org.jamon.node.OverrideNode;
 
-public class OverrideParser extends SubcomponentParser<OverrideNode>
-{
-    /**
-     * @param p_reader
-     * @param p_errors
-     */
-    public OverrideParser(
-        String p_name,
-        org.jamon.api.Location p_tagLocation,
-        PositionalPushbackReader p_reader,
-        ParserErrorsImpl p_errors)
-    {
-        super(new OverrideNode(p_tagLocation, p_name), p_reader, p_errors);
-    }
+public class OverrideParser extends SubcomponentParser<OverrideNode> {
+  /**
+   * @param reader
+   * @param errors
+   */
+  public OverrideParser(
+    String name, Location tagLocation, PositionalPushbackReader reader, ParserErrorsImpl errors) {
+    super(new OverrideNode(tagLocation, name), reader, errors);
+  }
 
-    @Override protected String tagName()
-    {
-        return "override";
-    }
+  @Override
+  protected String tagName() {
+    return "override";
+  }
 
-    @Override protected void handleParentArgsNode(org.jamon.api.Location p_tagLocation)
-        throws IOException
-    {
-        m_root.addSubNode(
-            new ParentArgsParser(m_reader, m_errors, p_tagLocation)
-                .getParentArgsNode());
-    }
+  @Override
+  protected void handleParentArgsNode(Location tagLocation) throws IOException {
+    root.addSubNode(new ParentArgsParser(reader, errors, tagLocation).getParentArgsNode());
+  }
 }
-

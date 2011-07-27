@@ -29,124 +29,96 @@ import java.util.List;
 
 import org.jamon.compiler.RecompilingTemplateManager;
 
-public class JavaCompilerFactory
-{
-    public static JavaCompiler makeCompiler(
-        RecompilingTemplateManager.Data p_data,
-        String p_workDir,
-        ClassLoader p_classLoader)
-    {
-        String javac = p_data.getJavaCompiler();
-        List<String> compilerArgs = getCompilerArgs(p_data, p_workDir, p_classLoader);
-        if (javac == null)
-        {
-            try
-            {
-                return new Java6Compiler(compilerArgs);
-            }
-            catch (Exception e1)
-            {
-                // well, we tried
-                javac = getDefaultJavac();
-            }
+public class JavaCompilerFactory {
+  public static JavaCompiler makeCompiler(
+    RecompilingTemplateManager.Data data, String workDir, ClassLoader classLoader) {
+    String javac = data.getJavaCompiler();
+    List<String> compilerArgs = getCompilerArgs(data, workDir, classLoader);
+    if (javac == null) {
+      try {
+        return new Java6Compiler(compilerArgs);
+      }
+      catch (Exception e1) {
+        // well, we tried
+        javac = getDefaultJavac();
+      }
+    }
+    return new ExternalJavaCompiler(javac, compilerArgs);
+  }
+
+  private static List<String> getCompilerArgs(
+    RecompilingTemplateManager.Data data, String workDir, ClassLoader classLoader) {
+    return Collections.unmodifiableList(Arrays.asList(
+      "-classpath", getClasspath(workDir, data.getClasspath(), classLoader)));
+  }
+
+  /**
+   * Get the default location for javaC. Package scoped for unit testing.
+   */
+  static String getDefaultJavac() {
+    // FIXME: does this work on windows?
+    // FIXME: should we just use the javac in the default path?
+    String bindir;
+    if ("Mac OS X".equals(System.getProperty("os.name"))) {
+      bindir = "Commands";
+    }
+    else {
+      bindir = "bin";
+    }
+    String javaHomeParent = new File(System.getProperty("java.home")).getParent();
+    return new File(new File(javaHomeParent, bindir), "javac").getAbsolutePath();
+  }
+
+  private static void extractClasspath(ClassLoader classLoader, StringBuilder classpath) {
+    if (classLoader instanceof URLClassLoader) {
+      URL[] urls = ((URLClassLoader) classLoader).getURLs();
+      for (int i = 0; i < urls.length; ++i) {
+        String url = urls[i].toExternalForm();
+        if (url.startsWith("file:")) {
+          classpath.append(File.pathSeparator);
+          classpath.append(url.substring(5));
         }
-        return new ExternalJavaCompiler(javac, compilerArgs);
+      }
+    }
+    if (classLoader.getParent() != null) {
+      extractClasspath(classLoader.getParent(), classpath);
+    }
+  }
+
+  private static String getClasspath(String start, String classpath, ClassLoader classLoader) {
+    StringBuilder cp = new StringBuilder(start);
+    if (classpath != null) {
+      cp.append(File.pathSeparator);
+      cp.append(classpath);
     }
 
-    private static List<String> getCompilerArgs(RecompilingTemplateManager.Data p_data,
-        String p_workDir,
-        ClassLoader p_classLoader)
-    {
-        return Collections.unmodifiableList(
-            Arrays.asList(
-                "-classpath", getClasspath(p_workDir, p_data.getClasspath(), p_classLoader)));
+    extractClasspath(classLoader, cp);
+    cp.append(File.pathSeparator);
+    cp.append(System.getProperty("sun.boot.class.path"));
+    cp.append(File.pathSeparator);
+    cp.append(System.getProperty("java.class.path"));
+
+    JavaCompilerFactory.pruneJniLibs(cp);
+
+    if (RecompilingTemplateManager.TRACE) {
+      RecompilingTemplateManager.trace("Jamon compilation CLASSPATH is " + cp);
     }
 
-    /**
-     * Get the default location for javaC.  Package scoped for unit testing.
-     */
-    static String getDefaultJavac()
-    {
-        // FIXME: does this work on windows?
-        // FIXME: should we just use the javac in the default path?
-        String bindir;
-        if( "Mac OS X".equals( System.getProperty( "os.name" ) ) )
-        {
-            bindir = "Commands";
+    return cp.toString();
+  }
+
+  private static void pruneJniLibs(StringBuilder cp) {
+    String[] components = cp.toString().split(File.pathSeparator);
+    cp.delete(0, cp.length());
+    boolean first = true;
+    for (String c : components) {
+      if (!c.endsWith(".jnilib") && !c.endsWith(".dylib")) {
+        if (!first) {
+          cp.append(File.pathSeparator);
         }
-        else
-        {
-            bindir = "bin";
-        }
-        String javaHomeParent = new File(System.getProperty("java.home")).getParent();
-        return new File(new File(javaHomeParent, bindir), "javac").getAbsolutePath();
+        first = false;
+        cp.append(c);
+      }
     }
-
-    private static void extractClasspath(ClassLoader p_classLoader,
-                                           StringBuilder p_classpath)
-    {
-        if (p_classLoader instanceof URLClassLoader)
-        {
-            URL[] urls = ((URLClassLoader)p_classLoader).getURLs();
-            for (int i = 0; i < urls.length; ++i)
-            {
-                String url = urls[i].toExternalForm();
-                if (url.startsWith("file:"))
-                {
-                    p_classpath.append(File.pathSeparator);
-                    p_classpath.append(url.substring(5));
-                }
-            }
-        }
-        if (p_classLoader.getParent() != null)
-        {
-            extractClasspath(p_classLoader.getParent(), p_classpath);
-        }
-    }
-
-    private static String getClasspath(String p_start,
-                                        String p_classpath,
-                                        ClassLoader p_classLoader)
-    {
-        StringBuilder cp = new StringBuilder(p_start);
-        if (p_classpath != null)
-        {
-            cp.append(File.pathSeparator);
-            cp.append(p_classpath);
-        }
-
-        extractClasspath(p_classLoader, cp);
-        cp.append(File.pathSeparator);
-        cp.append(System.getProperty("sun.boot.class.path"));
-        cp.append(File.pathSeparator);
-        cp.append(System.getProperty("java.class.path"));
-
-        JavaCompilerFactory.pruneJniLibs(cp);
-
-        if (RecompilingTemplateManager.TRACE)
-        {
-            RecompilingTemplateManager.trace("Jamon compilation CLASSPATH is " + cp);
-        }
-
-        return cp.toString();
-    }
-
-    private static void pruneJniLibs(StringBuilder cp)
-    {
-        String[] components = cp.toString().split(File.pathSeparator);
-        cp.delete(0, cp.length());
-        boolean first = true;
-        for (String c : components)
-        {
-            if (! c.endsWith(".jnilib") && ! c.endsWith(".dylib"))
-            {
-                if (!first)
-                {
-                    cp.append(File.pathSeparator);
-                }
-                first = false;
-                cp.append(c);
-            }
-        }
-    }
+  }
 }

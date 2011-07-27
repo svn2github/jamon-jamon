@@ -19,57 +19,51 @@
  */
 
 package org.jamon.codegen;
+
 import org.jamon.node.OptionalArgNode;
 import org.jamon.util.StringUtils;
 
-public class OptionalArgument extends AbstractArgument
-{
-    public OptionalArgument(OptionalArgNode p_arg)
-    {
-        super(p_arg);
-        m_default = p_arg.getValue().getValue();
-    }
+public class OptionalArgument extends AbstractArgument {
+  public OptionalArgument(OptionalArgNode arg) {
+    super(arg);
+    defaultValue = arg.getValue().getValue();
+  }
 
-    public OptionalArgument(
-        String p_name, String p_type, String p_default)
-    {
-        super(p_name, p_type, null);
-        m_default = p_default;
-    }
+  public OptionalArgument(String name, String type, String defaultValue) {
+    super(name, type, null);
+    this.defaultValue = defaultValue;
+  }
 
-    public void setDefault(String p_default)
-    {
-        m_default = p_default;
-    }
+  public void setDefault(String defaultValue) {
+    this.defaultValue = defaultValue;
+  }
 
-    public String getDefault()
-    {
-        return m_default;
-    }
+  public String getDefault() {
+    return defaultValue;
+  }
 
-    public String getIsNotDefaultName()
-    {
-        return "get" + StringUtils.capitalize(getName()) + "__IsNotDefault";
-    }
+  public String getIsNotDefaultName() {
+    return "get" + StringUtils.capitalize(getName()) + "__IsNotDefault";
+  }
 
-    @Override public void generateImplDataCode(CodeWriter p_writer)
-    {
-        super.generateImplDataCode(p_writer);
+  @Override
+  public void generateImplDataCode(CodeWriter writer) {
+    super.generateImplDataCode(writer);
 
-        p_writer.println("public boolean " + getIsNotDefaultName() + "()");
-        p_writer.openBlock();
-        p_writer.println("return m_" + getName() + "__IsNotDefault;");
-        p_writer.closeBlock();
+    writer.println("public boolean " + getIsNotDefaultName() + "()");
+    writer.openBlock();
+    writer.println("return m_" + getName() + "__IsNotDefault;");
+    writer.closeBlock();
 
-        p_writer.println("private boolean m_" + getName() + "__IsNotDefault;");
-    }
+    writer.println("private boolean m_" + getName() + "__IsNotDefault;");
+  }
 
-    @Override protected void generateImplDataSetterCode(CodeWriter p_writer)
-    {
-        super.generateImplDataSetterCode(p_writer);
-        p_writer.println("m_" + getName() + "__IsNotDefault = true;");
+  @Override
+  protected void generateImplDataSetterCode(CodeWriter writer) {
+    super.generateImplDataSetterCode(writer);
+    writer.println("m_" + getName() + "__IsNotDefault = true;");
 
-    }
+  }
 
-    private String m_default;
+  private String defaultValue;
 }

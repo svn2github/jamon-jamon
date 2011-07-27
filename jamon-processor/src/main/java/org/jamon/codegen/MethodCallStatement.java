@@ -20,23 +20,20 @@
 
 package org.jamon.codegen;
 
+import org.jamon.api.Location;
 
-public class MethodCallStatement
-    extends AbstractInnerUnitCallStatement
-{
-    MethodCallStatement(String p_path,
-                        ParamValues p_params,
-                        MethodUnit p_methodUnit,
-                        org.jamon.api.Location p_location,
-                        String p_templateIdentifier)
-    {
-        super(p_path, p_params, p_methodUnit, p_location, p_templateIdentifier);
-    }
+public class MethodCallStatement extends AbstractInnerUnitCallStatement {
+  MethodCallStatement(
+    String path,
+    ParamValues params,
+    MethodUnit methodUnit,
+    Location location,
+    String templateIdentifier) {
+    super(path, params, methodUnit, location, templateIdentifier);
+  }
 
-    @Override protected String getDefault(OptionalArgument p_arg)
-    {
-        return ((MethodUnit) getUnit())
-            .getOptionalArgDefaultMethod(p_arg)
-            + "()";
-    }
+  @Override
+  protected String getDefault(OptionalArgument arg) {
+    return ((MethodUnit) getUnit()).getOptionalArgDefaultMethod(arg) + "()";
+  }
 }

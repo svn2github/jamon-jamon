@@ -23,136 +23,113 @@ package org.jamon.codegen;
 import org.jamon.util.StringUtils;
 
 /**
- * Provides methods to translate template paths to the corresponding
- * interface class name, implementation class name, and the package
- * name for each.
+ * Provides methods to translate template paths to the corresponding interface class name,
+ * implementation class name, and the package name for each.
  **/
 
-public class PathUtils
-{
-    private PathUtils() {}
+public class PathUtils {
+  private PathUtils() {}
 
-    /**
-     * Given a template path, return the name of the interface class
-     * for that template.
-     *
-     * @param p_path the template path
-     *
-     * @return the name of the interface class
-     **/
+  /**
+   * Given a template path, return the name of the interface class for that template.
+   *
+   * @param path the template path
+   * @return the name of the interface class
+   **/
 
-    public static String getIntfClassName(final String p_path)
-    {
-        int i = p_path.lastIndexOf('/');
-        return i < 0 ? p_path : p_path.substring(i+1);
+  public static String getIntfClassName(final String path) {
+    int i = path.lastIndexOf('/');
+    return i < 0
+        ? path
+        : path.substring(i + 1);
+  }
+
+  /**
+   * Given a template path, return the name of the implementation class for that template.
+   *
+   * @param p_path the template path
+   * @return the name of the implementation class
+   **/
+
+  public static String getImplClassName(final String path) {
+    return getIntfClassName(path) + "Impl";
+  }
+
+  /**
+   * Given a template path, return the name of the package in which the interface class for that
+   * template lives.
+   *
+   * @param path the template path
+   * @return the name of the interface class package
+   **/
+
+  public static String getIntfPackageName(final String path) {
+    int i = path.lastIndexOf('/');
+    if (i > 0) {
+      return StringUtils.templatePathToClassName(path.substring(0, i));
     }
-
-    /**
-     * Given a template path, return the name of the implementation
-     * class for that template.
-     *
-     * @param p_path the template path
-     *
-     * @return the name of the implementation class
-     **/
-
-    public static String getImplClassName(final String p_path)
-    {
-        return getIntfClassName(p_path) + "Impl";
+    else {
+      return "";
     }
+  }
 
+  /**
+   * Given a template path, return the name of the package in which the implementation class for
+   * that template lives.
+   *
+   * @param path the template path
+   * @return the name of the implementation class package
+   **/
 
-    /**
-     * Given a template path, return the name of the package in which
-     * the interface class for that template lives.
-     *
-     * @param p_path the template path
-     *
-     * @return the name of the interface class package
-     **/
+  public static String getImplPackageName(final String path) {
+    return getIntfPackageName(path);
+  }
 
-    public static String getIntfPackageName(final String p_path)
-    {
-        int i = p_path.lastIndexOf('/');
-        if (i > 0)
-        {
-            return StringUtils.templatePathToClassName
-                (p_path.substring(0,i));
-        }
-        else
-        {
-            return "";
-        }
-    }
+  /**
+   * Given a template path, return the fully qualified name of the interface class for that
+   * template.
+   *
+   * @param path the template path
+   * @return the fully qualified name of the interface class
+   **/
 
+  public static String getFullyQualifiedIntfClassName(final String path) {
+    return fullyQualify(getIntfPackageName(path), getIntfClassName(path));
+  }
 
-    /**
-     * Given a template path, return the name of the package in which
-     * the implementation class for that template lives.
-     *
-     * @param p_path the template path
-     *
-     * @return the name of the implementation class package
-     **/
+  /**
+   * Given a template path, return the fully qualified name of the implementation class for that
+   * template.
+   *
+   * @param path the template path
+   * @return the fully qualified name of the implementation class
+   **/
 
-    public static String getImplPackageName(final String p_path)
-    {
-        return getIntfPackageName(p_path);
-    }
+  public static String getFullyQualifiedImplClassName(final String path) {
+    return fullyQualify(getImplPackageName(path), getImplClassName(path));
+  }
 
-    /**
-     * Given a template path, return the fully qualified name of the
-     * interface class for that template.
-     *
-     * @param p_path the template path
-     *
-     * @return the fully qualified name of the interface class
-     **/
+  /**
+   * Given a proxy class, return the corresponding template path.
+   *
+   * @param class the proxy class
+   * @return the corresponding template path
+   */
+  public static String getPathForProxyClass(Class<?> clazz) {
+    return clazz.getName().replace(".", "/");
+  }
 
-    public static String getFullyQualifiedIntfClassName(final String p_path)
-    {
-        return fullyQualify(getIntfPackageName(p_path),
-                            getIntfClassName(p_path));
-    }
+  /**
+   * Fully qualify a class name given a package name and class name.
+   *
+   * @param pkgName the name of the package
+   * @param className the name of the class
+   * @return the fully qualified name of the class
+   **/
 
-    /**
-     * Given a template path, return the fully qualified name of the
-     * implementation class for that template.
-     *
-     * @param p_path the template path
-     *
-     * @return the fully qualified name of the implementation class
-     **/
-
-    public static String getFullyQualifiedImplClassName(final String p_path)
-    {
-        return fullyQualify(getImplPackageName(p_path),
-                            getImplClassName(p_path));
-    }
-
-    /**
-     * Given a proxy class, return the corresponding template path.
-     * @param p_class the proxy class
-     * @return the corresponding template path
-     */
-    public static String getPathForProxyClass(Class<?> p_class) {
-      return p_class.getName().replace(".", "/");
-    }
-
-    /**
-     * Fully qualify a class name given a package name and class name.
-     *
-     * @param p_pkgName the name of the package
-     * @param p_className the name of the class
-     *
-     * @return the fully qualified name of the class
-     **/
-
-    private static String fullyQualify(final String p_pkgName,
-                                       final String p_className)
-    {
-        return "".equals(p_pkgName)
-            ? p_className
-            : (p_pkgName + "." + p_className);
-    }
+  private static String fullyQualify(final String pkgName, final String className) {
+    return "".equals(pkgName)
+        ? className
+        : (pkgName + "." + className);
+  }
 }

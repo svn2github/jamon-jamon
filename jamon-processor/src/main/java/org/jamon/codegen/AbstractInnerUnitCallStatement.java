@@ -20,62 +20,56 @@
 
 package org.jamon.codegen;
 
+import org.jamon.api.Location;
 import org.jamon.compiler.ParserErrorImpl;
 
-public abstract class AbstractInnerUnitCallStatement
-    extends AbstractCallStatement
-{
-    AbstractInnerUnitCallStatement(String p_path,
-                                   ParamValues p_params,
-                                   Unit p_unit,
-                                   org.jamon.api.Location p_location,
-                                   String p_templateIdentifier)
-    {
-        super(p_path, p_params, p_location, p_templateIdentifier);
-        m_unit = p_unit;
+public abstract class AbstractInnerUnitCallStatement extends AbstractCallStatement {
+  AbstractInnerUnitCallStatement(
+    String path,
+    ParamValues params,
+    Unit unit,
+    Location location,
+    String templateIdentifier) {
+    super(path, params, location, templateIdentifier);
+    this.unit = unit;
+  }
+
+  private final Unit unit;
+
+  protected Unit getUnit() {
+    return unit;
+  }
+
+  @Override
+  protected String getFragmentIntfName(FragmentUnit fragmentUnitIntf) {
+    return fragmentUnitIntf.getFragmentInterfaceName(true);
+  }
+
+  @Override
+  public void generateSource(CodeWriter writer, TemplateDescriber describer)
+  throws ParserErrorImpl {
+    generateSourceLine(writer);
+    writer.openBlock();
+    makeFragmentImplClasses(unit.getFragmentArgs(), writer, describer);
+    generateSourceLine(writer);
+    writer.print("__jamon_innerUnit__" + getPath());
+    writer.openList();
+    writer.printListElement(ArgNames.WRITER);
+    // FIXME - do we need to surround args with parens?
+    getParams().generateRequiredArgs(unit.getSignatureRequiredArgs(), writer);
+    for (OptionalArgument arg : unit.getSignatureOptionalArgs()) {
+      String name = arg.getName();
+      String expr = getParams().getOptionalArgValue(name);
+      writer.printListElement(expr == null
+          ? getDefault(arg)
+          : expr);
     }
+    generateFragmentParams(writer, unit.getFragmentArgs());
+    writer.closeList();
+    writer.println(";");
+    checkSuppliedParams();
+    writer.closeBlock();
+  }
 
-    private final Unit m_unit;
-
-    protected Unit getUnit()
-    {
-        return m_unit;
-    }
-
-    @Override
-    protected String getFragmentIntfName(FragmentUnit p_fragmentUnitIntf)
-    {
-        return p_fragmentUnitIntf.getFragmentInterfaceName(true);
-    }
-
-    @Override
-    public void generateSource(CodeWriter p_writer,
-                               TemplateDescriber p_describer) throws ParserErrorImpl
-    {
-        generateSourceLine(p_writer);
-        p_writer.openBlock();
-        makeFragmentImplClasses(m_unit.getFragmentArgs(),
-                                p_writer,
-                                p_describer);
-        generateSourceLine(p_writer);
-        p_writer.print("__jamon_innerUnit__" + getPath());
-        p_writer.openList();
-        p_writer.printListElement(ArgNames.WRITER);
-        //FIXME - do we need to surround args with parens?
-        getParams().generateRequiredArgs(m_unit.getSignatureRequiredArgs(),
-                                         p_writer);
-        for (OptionalArgument arg: m_unit.getSignatureOptionalArgs())
-        {
-            String name = arg.getName();
-            String expr = getParams().getOptionalArgValue(name);
-            p_writer.printListElement(expr == null ? getDefault(arg) : expr);
-        }
-        generateFragmentParams(p_writer, m_unit.getFragmentArgs());
-        p_writer.closeList();
-        p_writer.println(";");
-        checkSuppliedParams();
-        p_writer.closeBlock();
-    }
-
-    protected abstract String getDefault(OptionalArgument p_arg);
+  protected abstract String getDefault(OptionalArgument arg);
 }

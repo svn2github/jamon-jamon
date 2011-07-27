@@ -23,176 +23,152 @@ package org.jamon.parser;
 import java.io.IOException;
 import java.io.Reader;
 
+import org.jamon.api.Location;
 import org.jamon.api.TemplateLocation;
 import org.jamon.node.LocationImpl;
 
 /**
- * A "pushback reader" which also tracks the current position in the file.
- * Unlike {@link java.io.PushbackReader}, this class allows pushing back an EOF
- * marker as well
+ * A "pushback reader" which also tracks the current position in the file. Unlike
+ * {@link java.io.PushbackReader}, this class allows pushing back an EOF marker as well
+ *
  * @author ian
  **/
 
-public class PositionalPushbackReader
-{
-    private static class Position
-    {
-        void assign(Position p_position)
-        {
-            m_row = p_position.m_row;
-            m_column = p_position.m_column;
-        }
-
-        public void nextColumn()
-        {
-            m_column++;
-        }
-
-        public void nextRow()
-        {
-            m_row++;
-            m_column = 1;
-        }
-
-        public org.jamon.api.Location location(TemplateLocation p_templateLocation)
-        {
-            return new LocationImpl(p_templateLocation, m_row, m_column);
-        }
-
-        public boolean isLineStart()
-        {
-            return m_column == 1;
-        }
-
-        private int m_row = 1;
-        private int m_column = 1;
+public class PositionalPushbackReader {
+  private static class Position {
+    void assign(Position position) {
+      row = position.row;
+      column = position.column;
     }
 
-    /**
-     * @param p_templateLocation The path to the resource being read.
-     * @param p_reader The underlying reader to use
-     */
-    public PositionalPushbackReader(
-        TemplateLocation p_templateLocation, Reader p_reader)
-    {
-        this(p_templateLocation, p_reader, 1);
+    public void nextColumn() {
+      column++;
     }
 
-    public PositionalPushbackReader(TemplateLocation p_templateLocation,
-                                    Reader p_reader,
-                                    int p_pushbackBufferSize)
-    {
-        m_reader = p_reader;
-        m_templateLocation = p_templateLocation;
-        m_positions = new Position[p_pushbackBufferSize + 2];
-        {
-            for (int i = 0; i < m_positions.length; i++)
-            {
-                m_positions[i] = new Position();
-            }
-        }
-        m_pushedbackChars = new int[p_pushbackBufferSize];
+    public void nextRow() {
+      row++;
+      column = 1;
     }
 
-    public int read() throws IOException
-    {
-        int c;
-        if (m_pushedbackCharsPending > 0)
-        {
-            c = m_pushedbackChars[--m_pushedbackCharsPending];
-        }
-        else
-        {
-            c = m_reader.read();
-        }
-        for (int i = m_positions.length - 1; i > 0; i--)
-        {
-            m_positions[i].assign(m_positions[i-1]);
-        }
-
-        if (c == '\n')
-        {
-            m_positions[0].nextRow();
-        }
-        else
-        {
-            m_positions[0].nextColumn();
-        }
-        return c;
+    public org.jamon.api.Location location(TemplateLocation templateLocation) {
+      return new LocationImpl(templateLocation, row, column);
     }
 
-    public void unread(int c) throws IOException
-    {
-        if (m_pushedbackCharsPending >= m_pushedbackChars.length)
-        {
-            throw new IOException("Trying to push back characters than allowed");
-        }
-        m_pushedbackChars[m_pushedbackCharsPending++] = c;
-
-        for (int i = 0; i < m_positions.length - 1; i++)
-        {
-            m_positions[i].assign(m_positions[i+1]);
-        }
+    public boolean isLineStart() {
+      return column == 1;
     }
 
-    /**
-     * Get the location of the character just read.
-     * @return The current location (line and column numbers starting at 1)
-     */
-    public org.jamon.api.Location getLocation()
+    private int row = 1;
+
+    private int column = 1;
+  }
+
+  /**
+   * @param templateLocation The path to the resource being read.
+   * @param reader The underlying reader to use
+   */
+  public PositionalPushbackReader(TemplateLocation templateLocation, Reader reader) {
+    this(templateLocation, reader, 1);
+  }
+
+  public PositionalPushbackReader(
+    TemplateLocation templateLocation, Reader reader, int pushbackBufferSize) {
+    this.reader = reader;
+    this.templateLocation = templateLocation;
+    positions = new Position[pushbackBufferSize + 2];
     {
-        return m_positions[1].location(m_templateLocation);
+      for (int i = 0; i < positions.length; i++) {
+        positions[i] = new Position();
+      }
+    }
+    pushedbackChars = new int[pushbackBufferSize];
+  }
+
+  public int read() throws IOException {
+    int c;
+    if (pushedbackCharsPending > 0) {
+      c = pushedbackChars[--pushedbackCharsPending];
+    }
+    else {
+      c = reader.read();
+    }
+    for (int i = positions.length - 1; i > 0; i--) {
+      positions[i].assign(positions[i - 1]);
     }
 
-    /**
-     * Get the location of the next character to be read (if there is one).
-     * @return The location of the next character
-     */
-    public org.jamon.api.Location getNextLocation()
-    {
-        return m_positions[0].location(m_templateLocation);
+    if (c == '\n') {
+      positions[0].nextRow();
     }
-
-    /**
-     * @return True if the character just read was at the begining of a line
-     */
-    public boolean isLineStart()
-    {
-        return m_positions[1].isLineStart();
+    else {
+      positions[0].nextColumn();
     }
+    return c;
+  }
 
-    /**
-     * Mark that we are just starting a node.
-     **/
-    public void markNodeBeginning()
-    {
-        m_currentNodePosition.assign(m_positions[1]);
+  public void unread(int c) throws IOException {
+    if (pushedbackCharsPending >= pushedbackChars.length) {
+      throw new IOException("Trying to push back characters than allowed");
     }
+    pushedbackChars[pushedbackCharsPending++] = c;
 
-    /**
-     * Mark that we have just finished a node
-     **/
-    public void markNodeEnd()
-    {
-        m_currentNodePosition.assign(m_positions[0]);
+    for (int i = 0; i < positions.length - 1; i++) {
+      positions[i].assign(positions[i + 1]);
     }
+  }
 
-    /**
-     * Get the location of the current node, as set by
-     * {@link #markNodeBeginning()} or {@link #markNodeEnd()}
-     *
-     * @return The location of the current node
-     */
-    public org.jamon.api.Location getCurrentNodeLocation()
-    {
-        return m_currentNodePosition.location(m_templateLocation);
-    }
+  /**
+   * Get the location of the character just read.
+   *
+   * @return The current location (line and column numbers starting at 1)
+   */
+  public org.jamon.api.Location getLocation() {
+    return positions[1].location(templateLocation);
+  }
 
-    private final Reader m_reader;
-    private final TemplateLocation m_templateLocation;
-    int m_pushedbackCharsPending = 0;
-    final int m_pushedbackChars[];
+  /**
+   * Get the location of the next character to be read (if there is one).
+   *
+   * @return The location of the next character
+   */
+  public Location getNextLocation() {
+    return positions[0].location(templateLocation);
+  }
 
-    private final Position[] m_positions;
-    private Position m_currentNodePosition = new Position();
+  /**
+   * @return True if the character just read was at the begining of a line
+   */
+  public boolean isLineStart() {
+    return positions[1].isLineStart();
+  }
+
+  /**
+   * Mark that we are just starting a node.
+   **/
+  public void markNodeBeginning() {
+    currentNodePosition.assign(positions[1]);
+  }
+
+  /**
+   * Mark that we have just finished a node
+   **/
+  public void markNodeEnd() {
+    currentNodePosition.assign(positions[0]);
+  }
+
+  /**
+   * Get the location of the current node, as set by {@link #markNodeBeginning()} or
+   * {@link #markNodeEnd()}
+   *
+   * @return The location of the current node
+   */
+  public org.jamon.api.Location getCurrentNodeLocation() {
+    return currentNodePosition.location(templateLocation);
+  }
+
+  private final Reader reader;
+  private final TemplateLocation templateLocation;
+  int pushedbackCharsPending = 0;
+  final int pushedbackChars[];
+  private final Position[] positions;
+  private Position currentNodePosition = new Position();
 }

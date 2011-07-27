@@ -27,26 +27,26 @@ import org.jamon.api.TemplateLocation;
 
 public class TemplateFileLocation implements TemplateLocation
 {
-    public TemplateFileLocation(String p_location)
+    public TemplateFileLocation(String location)
     {
-        m_location = p_location;
+      this.location = location;
     }
-    
-    @Override public String toString() 
-    { 
-        return m_location; 
+
+    @Override public String toString()
+    {
+        return location;
     }
-    
+
     @Override public boolean equals(Object p_obj)
     {
         return p_obj instanceof TemplateFileLocation
-            && m_location.equals(((TemplateFileLocation) p_obj).m_location);
+            && location.equals(((TemplateFileLocation) p_obj).location);
     }
-    
+
     @Override public int hashCode()
     {
-        return m_location.hashCode();
+        return location.hashCode();
     }
-    
-    private final String m_location;
+
+    private final String location;
 }

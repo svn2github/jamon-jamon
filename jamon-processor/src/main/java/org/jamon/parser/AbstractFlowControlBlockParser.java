@@ -3,18 +3,13 @@ package org.jamon.parser;
 import org.jamon.compiler.ParserErrorsImpl;
 import org.jamon.node.AbstractBodyNode;
 
-public abstract class AbstractFlowControlBlockParser<Node extends AbstractBodyNode>
-    extends SubcomponentParser<Node>
-{
-    public AbstractFlowControlBlockParser(
-        Node p_node,
-        PositionalPushbackReader p_reader,
-        ParserErrorsImpl p_errors)
-    {
-        super(p_node, p_reader, p_errors);
-    }
+public abstract class AbstractFlowControlBlockParser<Node extends AbstractBodyNode> extends
+    SubcomponentParser<Node> {
+  public AbstractFlowControlBlockParser(
+    Node node, PositionalPushbackReader reader, ParserErrorsImpl errors) {
+    super(node, reader, errors);
+  }
 
-    @Override protected void handlePostTag()
-    {
-    }
+  @Override
+  protected void handlePostTag() {}
 }

@@ -23,112 +23,102 @@ package org.jamon.codegen;
 import java.util.Collection;
 import java.util.List;
 
+import org.jamon.api.Location;
 import org.jamon.compiler.ParserErrorsImpl;
 import org.jamon.node.ParentArgNode;
 
-public class OverriddenMethodUnit
-    extends AbstractUnit
-    implements MethodUnit, InheritedUnit
-{
-    public OverriddenMethodUnit(DeclaredMethodUnit p_declaredMethodUnit,
-                                Unit p_parent,
-                                ParserErrorsImpl p_errors,
-                                org.jamon.api.Location p_location)
-    {
-        super(p_declaredMethodUnit.getName(), p_parent, p_errors, p_location);
-        m_declaredMethodUnit = p_declaredMethodUnit;
-        m_inheritedArgs =
-            new InheritedArgs(getName(),
-                              p_declaredMethodUnit.getRequiredArgs(),
-                              p_declaredMethodUnit.getOptionalArgsSet(),
-                              p_declaredMethodUnit.getFragmentArgs(),
-                              p_errors);
+public class OverriddenMethodUnit extends AbstractUnit implements MethodUnit, InheritedUnit {
+  public OverriddenMethodUnit(
+    DeclaredMethodUnit declaredMethodUnit,
+    Unit parent,
+    ParserErrorsImpl errors,
+    Location location) {
+    super(declaredMethodUnit.getName(), parent, errors, location);
+    this.declaredMethodUnit = declaredMethodUnit;
+    inheritedArgs = new InheritedArgs(
+      getName(),
+      declaredMethodUnit.getRequiredArgs(),
+      declaredMethodUnit.getOptionalArgsSet(),
+      declaredMethodUnit.getFragmentArgs(),
+      errors);
 
+  }
+
+  @Override
+  public void addParentArg(ParentArgNode node) {
+    inheritedArgs.addParentArg(node);
+  }
+
+  @Override
+  public Collection<AbstractArgument> getVisibleArgs() {
+    return inheritedArgs.getVisibleArgs();
+  }
+
+  private final DeclaredMethodUnit declaredMethodUnit;
+
+  private final InheritedArgs inheritedArgs;
+
+  @Override
+  public List<FragmentArgument> getFragmentArgs() {
+    return declaredMethodUnit.getFragmentArgs();
+  }
+
+  @Override
+  public List<RequiredArgument> getSignatureRequiredArgs() {
+    return declaredMethodUnit.getSignatureRequiredArgs();
+  }
+
+  @Override
+  public Collection<OptionalArgument> getSignatureOptionalArgs() {
+    return declaredMethodUnit.getSignatureOptionalArgs();
+  }
+
+  @Override
+  public String getOptionalArgDefaultMethod(OptionalArgument arg) {
+    return declaredMethodUnit.getOptionalArgDefaultMethod(arg);
+  }
+
+  @Override
+  public void printRenderArgsDecl(CodeWriter writer) {
+    for (AbstractArgument arg : declaredMethodUnit.getRenderArgs()) {
+      writer.printListElement(
+        "final " + arg.getType() + " "
+        + (inheritedArgs.isArgVisible(arg) ? "" : "p__jamon__") + arg.getName());
     }
+  }
 
-    @Override
-    public void addParentArg(ParentArgNode p_node)
-    {
-        m_inheritedArgs.addParentArg(p_node);
-    }
+  @Override
+  public boolean isAbstract() {
+    return false;
+  }
 
-    @Override public Collection<AbstractArgument> getVisibleArgs()
-    {
-        return m_inheritedArgs.getVisibleArgs();
-    }
+  @Override
+  public void addFragmentArg(org.jamon.codegen.FragmentArgument arg) {
+    throw new UnsupportedOperationException();
+  }
 
-    private final DeclaredMethodUnit m_declaredMethodUnit;
-    private final InheritedArgs m_inheritedArgs;
+  @Override
+  public void addRequiredArg(org.jamon.codegen.RequiredArgument arg) {
+    throw new UnsupportedOperationException();
+  }
 
-    @Override public List<FragmentArgument> getFragmentArgs()
-    {
-        return m_declaredMethodUnit.getFragmentArgs();
-    }
+  @Override
+  public void addOptionalArg(org.jamon.codegen.OptionalArgument arg) {
+    throw new UnsupportedOperationException();
+  }
 
-    @Override public List<RequiredArgument> getSignatureRequiredArgs()
-    {
-        return m_declaredMethodUnit.getSignatureRequiredArgs();
-    }
+  @Override
+  public Collection<OptionalArgument> getOptionalArgsWithDefaults() {
+    return inheritedArgs.getOptionalArgsWithNewDefaultValues();
+  }
 
-    @Override public Collection<OptionalArgument> getSignatureOptionalArgs()
-    {
-        return m_declaredMethodUnit.getSignatureOptionalArgs();
-    }
+  @Override
+  public String getDefaultForArg(OptionalArgument arg) {
+    return inheritedArgs.getDefaultValue(arg);
+  }
 
-    @Override
-    public String getOptionalArgDefaultMethod(OptionalArgument p_arg)
-    {
-        return m_declaredMethodUnit.getOptionalArgDefaultMethod(p_arg);
-    }
-
-    @Override public void printRenderArgsDecl(CodeWriter p_writer)
-    {
-        for (AbstractArgument arg: m_declaredMethodUnit.getRenderArgs())
-        {
-            p_writer.printListElement("final " + arg.getType() + " "
-                              + (m_inheritedArgs.isArgVisible(arg)
-                                 ? "" : "p__jamon__" )
-                              + arg.getName());
-        }
-    }
-
-    @Override
-    public boolean isAbstract()
-    {
-        return false;
-    }
-
-
-    @Override public void addFragmentArg(org.jamon.codegen.FragmentArgument p_arg)
-    {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override public void addRequiredArg(org.jamon.codegen.RequiredArgument p_arg)
-    {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override public void addOptionalArg(org.jamon.codegen.OptionalArgument p_arg)
-    {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public Collection<OptionalArgument> getOptionalArgsWithDefaults()
-    {
-        return m_inheritedArgs.getOptionalArgsWithNewDefaultValues();
-    }
-
-    @Override
-    public String getDefaultForArg(OptionalArgument p_arg)
-    {
-        return m_inheritedArgs.getDefaultValue(p_arg);
-    }
-
-    @Override
-    public boolean isOverride()
-    {
-        return true;
-    }
+  @Override
+  public boolean isOverride() {
+    return true;
+  }
 }

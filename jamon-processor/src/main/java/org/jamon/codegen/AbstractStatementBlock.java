@@ -3,100 +3,84 @@ package org.jamon.codegen;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.jamon.api.Location;
 import org.jamon.compiler.ParserErrorImpl;
 import org.jamon.node.ArgNode;
 import org.jamon.node.FragmentArgsNode;
 import org.jamon.node.OptionalArgNode;
 
-public abstract class AbstractStatementBlock implements StatementBlock
-{
-    public AbstractStatementBlock(StatementBlock p_parent, org.jamon.api.Location p_location)
-    {
-        m_parent = p_parent;
-        m_location = p_location;
-    }
+public abstract class AbstractStatementBlock implements StatementBlock {
+  public AbstractStatementBlock(StatementBlock parent, Location location) {
+    this.parent = parent;
+    this.location = location;
+  }
 
-    protected void printStatements(
-        CodeWriter p_writer, TemplateDescriber p_describer)
-        throws ParserErrorImpl
-    {
-        for (Statement statement : getStatements())
-        {
-            statement.generateSource(p_writer, p_describer);
-        }
+  protected void printStatements(CodeWriter writer, TemplateDescriber describer)
+  throws ParserErrorImpl {
+    for (Statement statement : getStatements()) {
+      statement.generateSource(writer, describer);
     }
+  }
 
-    @Override
-    public FragmentUnit getFragmentUnitIntf(String p_path)
-    {
-        return getParentUnit().getFragmentUnitIntf(p_path);
+  @Override
+  public FragmentUnit getFragmentUnitIntf(String path) {
+    return getParentUnit().getFragmentUnitIntf(path);
+  }
+
+  @Override
+  public void addStatement(Statement statement) {
+    if (statement instanceof LiteralStatement && !statements.isEmpty()
+      && statements.get(statements.size() - 1) instanceof LiteralStatement) {
+      ((LiteralStatement) statements.get(statements.size() - 1))
+          .appendText(((LiteralStatement) statement).getText());
     }
-
-    @Override
-    public void addStatement(Statement p_statement)
-    {
-        if (p_statement instanceof LiteralStatement
-            && !m_statements.isEmpty()
-            && m_statements.get(m_statements.size() - 1)
-                instanceof LiteralStatement)
-        {
-            ((LiteralStatement) m_statements.get(m_statements.size() - 1))
-                .appendText(((LiteralStatement) p_statement).getText());
-        }
-        else
-        {
-            m_statements.add(p_statement);
-        }
+    else {
+      statements.add(statement);
     }
+  }
 
-    public List<Statement> getStatements()
-    {
-        return m_statements;
-    }
+  public List<Statement> getStatements() {
+    return statements;
+  }
 
-    public boolean doesIO()
-    {
-        return ! m_statements.isEmpty();
-    }
+  public boolean doesIO() {
+    return !statements.isEmpty();
+  }
 
-    @Override
-    public FragmentUnit addFragment(FragmentArgsNode p_node, GenericParams p_genericParams)
-    {
-        throw new UnsupportedOperationException();
-    }
+  @Override
+  public FragmentUnit addFragment(FragmentArgsNode node, GenericParams genericParams) {
+    throw new UnsupportedOperationException();
+  }
 
-    @Override
-    public void addRequiredArg(ArgNode p_node)
-    {
-        throw new UnsupportedOperationException();
-    }
+  @Override
+  public void addRequiredArg(ArgNode node) {
+    throw new UnsupportedOperationException();
+  }
 
-    @Override
-    public void addOptionalArg(OptionalArgNode p_node)
-    {
-        throw new UnsupportedOperationException();
-    }
+  @Override
+  public void addOptionalArg(OptionalArgNode node) {
+    throw new UnsupportedOperationException();
+  }
 
-    @Override
-    public Unit getParentUnit()
-    {
-        return m_parent instanceof Unit
-            ? (Unit) m_parent
-            : m_parent.getParentUnit();
-    }
+  @Override
+  public Unit getParentUnit() {
+    return parent instanceof Unit
+        ? (Unit) parent
+        : parent.getParentUnit();
+  }
 
-    @Override
-    public StatementBlock getParent()
-    {
-        return m_parent;
-    }
+  @Override
+  public StatementBlock getParent() {
+    return parent;
+  }
 
-    public org.jamon.api.Location getLocation()
-    {
-        return m_location;
-    }
+  public org.jamon.api.Location getLocation() {
+    return location;
+  }
 
-    private final List<Statement> m_statements = new LinkedList<Statement>();
-    private final StatementBlock m_parent;
-    private final org.jamon.api.Location m_location;
+  private final List<Statement> statements = new LinkedList<Statement>();
+
+  private final StatementBlock parent;
+
+  private final Location location;
 }

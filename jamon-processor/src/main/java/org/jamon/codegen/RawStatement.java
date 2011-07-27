@@ -20,25 +20,19 @@
 
 package org.jamon.codegen;
 
+import org.jamon.api.Location;
 
-public class RawStatement
-    extends AbstractStatement
-{
-    RawStatement(String p_code,
-                 org.jamon.api.Location p_token,
-                 String p_templateIdentifier)
-    {
-        super(p_token, p_templateIdentifier);
-        m_code = p_code;
-    }
+public class RawStatement extends AbstractStatement {
+  RawStatement(String code, Location token, String templateIdentifier) {
+    super(token, templateIdentifier);
+    this.code = code;
+  }
 
-    @Override
-    public void generateSource(CodeWriter p_writer,
-                               TemplateDescriber p_describer)
-    {
-        generateSourceLine(p_writer);
-        p_writer.println(m_code);
-    }
+  @Override
+  public void generateSource(CodeWriter writer, TemplateDescriber describer) {
+    generateSourceLine(writer);
+    writer.println(code);
+  }
 
-    private final String m_code;
+  private final String code;
 }
