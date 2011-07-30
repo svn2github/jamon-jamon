@@ -7,9 +7,6 @@ import java.io.IOException;
 import org.jamon.compiler.ParserErrorImpl;
 import org.jamon.compiler.ParserErrorsImpl;
 import org.jamon.node.AbstractNode;
-import org.jamon.node.ArgNameNode;
-import org.jamon.node.ArgNode;
-import org.jamon.node.ArgTypeNode;
 import org.jamon.node.FragmentArgsNode;
 import org.junit.Test;
 
