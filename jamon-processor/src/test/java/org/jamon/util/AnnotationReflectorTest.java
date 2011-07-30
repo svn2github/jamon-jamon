@@ -7,20 +7,19 @@ import org.jamon.annotations.Fragment;
 import org.jamon.annotations.Template;
 import org.junit.Test;
 
-
 public class AnnotationReflectorTest {
 
   @Template(
     signature = "123",
     inheritanceDepth = 5,
-    abstractMethodNames = {"a", "b"},
+    abstractMethodNames = { "a", "b" },
     requiredArguments = { @Argument(name = "i", type = "int") },
-    fragmentArguments = { @Fragment(
-      name = "f", requiredArguments = { @Argument(name = "x", type = "float") } ) }
-    )
+    fragmentArguments = {
+        @Fragment(name = "f", requiredArguments = { @Argument(name = "x", type = "float") }) })
   private static class SampleTemplate {}
 
-  @Test public void testReflection() {
+  @Test
+  public void testReflection() {
     AnnotationReflector reflector = new AnnotationReflector(SampleTemplate.class);
     Template templateAnnotation = reflector.getAnnotation(Template.class);
     assertEquals("123", templateAnnotation.signature());

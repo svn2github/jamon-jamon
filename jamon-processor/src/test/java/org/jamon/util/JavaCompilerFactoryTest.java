@@ -36,100 +36,92 @@ import org.junit.matchers.JUnitMatchers;
 import com.google.common.io.Files;
 import com.google.common.io.Resources;
 
+public class JavaCompilerFactoryTest {
+  private static final String JAVA_CLASS_NAME = "DummyFileToCompile";
 
-public class JavaCompilerFactoryTest
-{
-    private static final String JAVA_CLASS_NAME = "DummyFileToCompile";
-    private static final String JAVA_FILE = JAVA_CLASS_NAME + ".java";
+  private static final String JAVA_FILE = JAVA_CLASS_NAME + ".java";
 
-    private RecompilingTemplateManager.Data m_data;
-    private File m_workDir;
-    private ClassLoader m_workClassLoader;
-    private JavaCompiler m_compiler;
+  private RecompilingTemplateManager.Data data;
+  private File workDir;
+  private ClassLoader workClassLoader;
+  private JavaCompiler compiler;
 
-    @Before
-    public void setUp() throws Exception
-    {
-        m_data = new RecompilingTemplateManager.Data();
-        m_data.setSourceDir(
-            new File(getClass().getClassLoader().getResource(JAVA_FILE).toURI()).getParent());
-        m_workDir = Files.createTempDir();
-        m_data.setWorkDir(m_workDir.getPath());
-        m_workClassLoader = new URLClassLoader(new URL[] { m_workDir.toURI().toURL() });
+  @Before
+  public void setUp() throws Exception {
+    data = new RecompilingTemplateManager.Data();
+    data.setSourceDir(
+      new File(getClass().getClassLoader().getResource(JAVA_FILE).toURI()).getParent());
+    workDir = Files.createTempDir();
+    data.setWorkDir(workDir.getPath());
+    workClassLoader = new URLClassLoader(new URL[] { workDir.toURI().toURL() });
+  }
+
+  @After
+  public void tearDown() throws Exception {
+    if (workDir != null) {
+      Files.deleteRecursively(workDir);
     }
+  }
 
-    @After
-    public void tearDown() throws Exception
-    {
-        if (m_workDir != null) {
-            Files.deleteRecursively(m_workDir);
-        }
-    }
+  @Test
+  public void testJava6Compiler() throws Exception {
+    initializeJava6Compiler();
+    compileAndVerifyDummyFile();
+  }
 
-    @Test
-    public void testJava6Compiler() throws Exception
-    {
-        initializeJava6Compiler();
-        compileAndVerifyDummyFile();
-    }
+  @Test
+  public void testJava6CompilerWithError() throws Exception {
+    initializeJava6Compiler();
+    compileFileWithError();
+  }
 
-    @Test
-    public void testJava6CompilerWithError() throws Exception
-    {
-        initializeJava6Compiler();
-        compileFileWithError();
-    }
+  @Test
+  public void testExternalJavaCompiler() throws Exception {
+    initializeExternalJavaCompiler();
+    compileAndVerifyDummyFile();
+  }
 
-    @Test
-    public void testExternalJavaCompiler() throws Exception
-    {
-        initializeExternalJavaCompiler();
-        compileAndVerifyDummyFile();
-    }
+  @Test
+  public void testExternalJavaCompilerWithError() throws Exception {
+    initializeExternalJavaCompiler();
+    compileFileWithError();
+  }
 
-    @Test
-    public void testExternalJavaCompilerWithError() throws Exception
-    {
-        initializeExternalJavaCompiler();
-        compileFileWithError();
-    }
+  private void initializeJava6Compiler() {
+    compiler = JavaCompilerFactory.makeCompiler(
+      data,
+      workDir.getAbsolutePath(),
+      getClass().getClassLoader());
+    assertEquals(Java6Compiler.class, compiler.getClass());
+  }
 
-    private void initializeJava6Compiler()
-    {
-        m_compiler =
-            JavaCompilerFactory.makeCompiler(m_data, m_workDir.getAbsolutePath(), getClass().getClassLoader());
-        assertEquals(Java6Compiler.class, m_compiler.getClass());
-    }
+  private void initializeExternalJavaCompiler() {
+    data.setJavaCompiler(JavaCompilerFactory.getDefaultJavac());
+    compiler = JavaCompilerFactory.makeCompiler(
+      data,
+      workDir.getAbsolutePath(),
+      getClass().getClassLoader());
+    assertEquals(ExternalJavaCompiler.class, compiler.getClass());
+  }
 
-    private void initializeExternalJavaCompiler()
-    {
-        m_data.setJavaCompiler(JavaCompilerFactory.getDefaultJavac());
-        m_compiler =
-            JavaCompilerFactory.makeCompiler(m_data, m_workDir.getAbsolutePath(), getClass().getClassLoader());
-        assertEquals(ExternalJavaCompiler.class, m_compiler.getClass());
-    }
+  private void compileFileWithError() throws Exception {
+    String errors = compiler.compile(toJavaFileList("WithError.java"));
+    assertThat(errors, JUnitMatchers.containsString("missing return statement"));
+  }
 
-    private void compileFileWithError() throws Exception
-    {
-        String errors = m_compiler.compile(toJavaFileList("WithError.java"));
-        assertThat(errors, JUnitMatchers.containsString("missing return statement"));
-    }
+  private void compileAndVerifyDummyFile() throws Exception {
+    String errors = compiler.compile(toJavaFileList(JAVA_FILE));
+    assertNull(errors, errors);
 
-    private void compileAndVerifyDummyFile() throws Exception
-    {
-        String errors = m_compiler.compile(toJavaFileList(JAVA_FILE));
-        assertNull(errors, errors);
+    Class<?> clazz = workClassLoader.loadClass(JAVA_CLASS_NAME);
+    assertEquals("success", clazz.getDeclaredMethod("foo").invoke(null));
+  }
 
-        Class<?> clazz = m_workClassLoader.loadClass(JAVA_CLASS_NAME);
-        assertEquals("success", clazz.getDeclaredMethod("foo").invoke(null));
-    }
-
-    private String[] toJavaFileList(String javaFile) throws IOException
-    {
-        File destFile = new File(m_workDir, javaFile);
-        Files.copy(
-            Resources.newInputStreamSupplier(getClass().getClassLoader().getResource(javaFile)),
-            destFile);
-        return new String[] { destFile.getAbsolutePath() };
-    }
+  private String[] toJavaFileList(String javaFile) throws IOException {
+    File destFile = new File(workDir, javaFile);
+    Files.copy(
+      Resources.newInputStreamSupplier(getClass().getClassLoader().getResource(javaFile)),
+      destFile);
+    return new String[] { destFile.getAbsolutePath() };
+  }
 }

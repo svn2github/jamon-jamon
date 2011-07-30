@@ -30,43 +30,40 @@ import java.util.Set;
 
 import org.junit.Test;
 
+public class ConcatenationTest {
+  @Test
+  public void twoEmpyCollections() {
+    assertCollectionsEqual(new Concatenation<Integer>(make(), make()));
+  }
 
-public class ConcatenationTest
-{
-    @Test public void twoEmpyCollections() {
-        assertCollectionsEqual(new Concatenation<Integer>(make(), make()));
+  @Test
+  public void twoCollections() {
+    assertCollectionsEqual(new Concatenation<Integer>(make(1, 2), make(3, 4)), 1, 2, 3, 4);
+  }
+
+  @Test
+  public void threeCollections() {
+    assertCollectionsEqual(
+      new Concatenation<Integer>(make(1, 2), make(5, 6), make(3, 4)),
+      1, 2, 3, 4, 5, 6);
+  }
+
+  private static List<Integer> make(Integer... ints) {
+    return Arrays.asList(ints);
+  }
+
+  private static void assertCollectionsEqual(Collection<Integer> actual, int... expected) {
+    assertEquals(expected.length, actual.size());
+    assertFalse(actual.contains(-1));
+    Set<Integer> expectedElement = new HashSet<Integer>();
+    for (int num : expected) {
+      expectedElement.add(num);
+      assertTrue(actual.contains(num));
     }
+    assertEquals(expectedElement, new HashSet<Integer>(actual));
+  }
 
-    @Test public void twoCollections() {
-        assertCollectionsEqual(new Concatenation<Integer>(make(1, 2), make(3, 4)), 1, 2, 3, 4);
-    }
-
-    @Test public void threeCollections() {
-        assertCollectionsEqual(
-            new Concatenation<Integer>(make(1, 2), make(5, 6), make(3, 4)),
-            1, 2, 3, 4, 5, 6);
-    }
-
-    private static List<Integer> make(Integer... p_ints)
-    {
-        return Arrays.asList(p_ints);
-    }
-
-
-    private static void assertCollectionsEqual(Collection<Integer> p_actual, int... p_expected)
-    {
-        assertEquals(p_expected.length, p_actual.size());
-        assertFalse(p_actual.contains(-1));
-        Set<Integer> expected = new HashSet<Integer>();
-        for (int num: p_expected)
-        {
-            expected.add(num);
-            assertTrue(p_actual.contains(num));
-        }
-        assertEquals(expected, new HashSet<Integer>(p_actual));
-    }
-
-    public static junit.framework.Test suite() {
-        return new junit.framework.JUnit4TestAdapter(ConcatenationTest.class);
-    }
+  public static junit.framework.Test suite() {
+    return new junit.framework.JUnit4TestAdapter(ConcatenationTest.class);
+  }
 }

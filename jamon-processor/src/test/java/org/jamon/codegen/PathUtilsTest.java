@@ -4,13 +4,11 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-public class PathUtilsTest
-{
+public class PathUtilsTest {
 
-    @Test
-    public void testGetPathForProxyClass()
-    {
-        assertEquals("org/jamon/codegen/PathUtilsTest", PathUtils.getPathForProxyClass(getClass()));
-    }
+  @Test
+  public void testGetPathForProxyClass() {
+    assertEquals("org/jamon/codegen/PathUtilsTest", PathUtils.getPathForProxyClass(getClass()));
+  }
 
 }

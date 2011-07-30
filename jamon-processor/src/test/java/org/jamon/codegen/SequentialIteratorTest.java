@@ -25,84 +25,69 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-public class SequentialIteratorTest
-    extends TestCase
-{
-    public void testNoIters()
-    {
-        assertIterEquals(constructIterator(new String[0]),
-                     new SequentialIterator<Object>(new Iterator<?>[0]));
-    }
+public class SequentialIteratorTest extends TestCase {
+  public void testNoIters() {
+    assertIterEquals(constructIterator(new String[0]), new SequentialIterator<Object>(
+        new Iterator<?>[0]));
+  }
 
-    public void testOneEmptyIter()
-    {
-        Iterator<String> i1 = constructIterator(new String[0]);
-        assertIterEquals(i1, new SequentialIterator<Object>(new Iterator<?>[] {i1}));
-    }
+  public void testOneEmptyIter() {
+    Iterator<String> i1 = constructIterator(new String[0]);
+    assertIterEquals(i1, new SequentialIterator<Object>(new Iterator<?>[] { i1 }));
+  }
 
-    public void testOneIter()
-    {
-        Iterator<String> i1 = constructIterator(new String[] {"one", "two"});
-        assertIterEquals(i1, new SequentialIterator<Object>
-            (new Iterator<?>[] {constructIterator(new String[] {"one", "two"})}));
-    }
+  public void testOneIter() {
+    Iterator<String> i1 = constructIterator(new String[] { "one", "two" });
+    assertIterEquals(
+      i1,
+      new SequentialIterator<Object>(new Iterator<?>[] {
+          constructIterator(new String[] { "one", "two" }) }));
+  }
 
-    public void testTwoIters()
-    {
-        Iterator<String> i1 = constructIterator(new String[] {"one", "two"});
-        Iterator<String> i2 = constructIterator(new String[] {"three", "four"});
-        Iterator<String> combined = constructIterator
-            (new String[] {"one", "two", "three", "four"});
-        assertIterEquals(combined, new SequentialIterator<String>(i1, i2));
-    }
+  public void testTwoIters() {
+    Iterator<String> i1 = constructIterator(new String[] { "one", "two" });
+    Iterator<String> i2 = constructIterator(new String[] { "three", "four" });
+    Iterator<String> combined = constructIterator(new String[] { "one", "two", "three", "four" });
+    assertIterEquals(combined, new SequentialIterator<String>(i1, i2));
+  }
 
-    public void testTwoItersFirstEmpty()
-    {
-        Iterator<String> i1 = constructIterator(new String[0]);
-        Iterator<String> i2 = constructIterator(new String[] {"three", "four"});
-        Iterator<String> combined = constructIterator(new String[] {"three", "four"});
-        assertIterEquals(combined, new SequentialIterator<String>(i1, i2));
-    }
+  public void testTwoItersFirstEmpty() {
+    Iterator<String> i1 = constructIterator(new String[0]);
+    Iterator<String> i2 = constructIterator(new String[] { "three", "four" });
+    Iterator<String> combined = constructIterator(new String[] { "three", "four" });
+    assertIterEquals(combined, new SequentialIterator<String>(i1, i2));
+  }
 
-    public void testTwoItersSecondEmpty()
-    {
-        Iterator<String> i1 = constructIterator(new String[] {"one", "two"});
-        Iterator<String> i2 = constructIterator(new String[0]);
-        Iterator<String> combined = constructIterator(new String[] {"one", "two"});
-        assertIterEquals(combined, new SequentialIterator<String>(i1, i2));
-    }
+  public void testTwoItersSecondEmpty() {
+    Iterator<String> i1 = constructIterator(new String[] { "one", "two" });
+    Iterator<String> i2 = constructIterator(new String[0]);
+    Iterator<String> combined = constructIterator(new String[] { "one", "two" });
+    assertIterEquals(combined, new SequentialIterator<String>(i1, i2));
+  }
 
-    public void testThreeItersSecondEmpty()
-    {
-        Iterator<String> i1 = constructIterator(new String[] {"one", "two"});
-        Iterator<String> i2 = constructIterator(new String[0]);
-        Iterator<String> i3 = constructIterator(new String[] {"three", "four"});
-        Iterator<String> combined = constructIterator
-            (new String[] {"one", "two", "three", "four"});
-        assertIterEquals(combined, new SequentialIterator<String>(i1, i2, i3));
-    }
+  public void testThreeItersSecondEmpty() {
+    Iterator<String> i1 = constructIterator(new String[] { "one", "two" });
+    Iterator<String> i2 = constructIterator(new String[0]);
+    Iterator<String> i3 = constructIterator(new String[] { "three", "four" });
+    Iterator<String> combined = constructIterator(new String[] { "one", "two", "three", "four" });
+    assertIterEquals(combined, new SequentialIterator<String>(i1, i2, i3));
+  }
 
-    private static Iterator<String> constructIterator(String[] p_objs)
-    {
-        return Arrays.asList(p_objs).iterator();
-    }
+  private static Iterator<String> constructIterator(String[] objs) {
+    return Arrays.asList(objs).iterator();
+  }
 
-    private void assertIterEquals(Iterator<? extends Object> p_expected,
-                                  Iterator<? extends Object> p_actual)
-    {
-        while(p_expected.hasNext())
-        {
-            assertTrue(p_actual.hasNext());
-            assertEquals(p_expected.next(),
-                         p_actual.next());
-        }
-        assertTrue(! p_actual.hasNext());
-        try
-        {
-            p_actual.next();
-            fail("next should have thrown an exception");
-        }
-        catch(NoSuchElementException e)
-        {}
+  private void assertIterEquals(
+    Iterator<? extends Object> expected, Iterator<? extends Object> actual) {
+    while (expected.hasNext()) {
+      assertTrue(actual.hasNext());
+      assertEquals(expected.next(), actual.next());
     }
+    assertTrue(!actual.hasNext());
+    try {
+      actual.next();
+      fail("next should have thrown an exception");
+    }
+    catch (NoSuchElementException e) {}
+  }
 }

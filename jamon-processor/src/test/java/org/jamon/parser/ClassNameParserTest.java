@@ -22,27 +22,25 @@ package org.jamon.parser;
 
 import java.io.IOException;
 
+import org.jamon.api.Location;
 import org.jamon.compiler.ParserErrorImpl;
 import org.jamon.compiler.ParserErrorsImpl;
 import org.junit.Test;
 
-public class ClassNameParserTest extends AbstractClassNameParserTest
-{
-    @Test public void testUnexpectedArray() throws Exception
-    {
-        assertError("foo[]", 1, 4, AbstractTypeParser.UNEXPECTED_ARRAY_ERROR);
-    }
+public class ClassNameParserTest extends AbstractClassNameParserTest {
+  @Test
+  public void testUnexpectedArray() throws Exception {
+    assertError("foo[]", 1, 4, AbstractTypeParser.UNEXPECTED_ARRAY_ERROR);
+  }
 
-    @Override
-    protected ClassNameParser makeParser(org.jamon.api.Location p_location,
-        PositionalPushbackReader p_reader,
-        ParserErrorsImpl p_errors) throws IOException, ParserErrorImpl
-    {
-        return new ClassNameParser(p_location, p_reader, p_errors);
-    }
+  @Override
+  protected ClassNameParser makeParser(
+    Location location, PositionalPushbackReader reader, ParserErrorsImpl errors) throws IOException,
+    ParserErrorImpl {
+    return new ClassNameParser(location, reader, errors);
+  }
 
-    public static junit.framework.Test suite()
-    {
-        return new junit.framework.JUnit4TestAdapter(ClassNameParserTest.class);
-    }
+  public static junit.framework.Test suite() {
+    return new junit.framework.JUnit4TestAdapter(ClassNameParserTest.class);
+  }
 }

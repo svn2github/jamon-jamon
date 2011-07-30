@@ -24,33 +24,31 @@ import static org.junit.Assert.*;
 
 import java.io.IOException;
 
+import org.jamon.api.Location;
 import org.jamon.compiler.ParserErrorImpl;
 import org.jamon.compiler.ParserErrorsImpl;
 import org.junit.Test;
 
-public class TypeNameParserTest extends AbstractClassNameParserTest
-{
+public class TypeNameParserTest extends AbstractClassNameParserTest {
 
-    @Test public void testParseArray() throws Exception
-    {
-        assertEquals("foo.bar[]", parseTypeName("foo . bar [ ]"));
-    }
+  @Test
+  public void testParseArray() throws Exception {
+    assertEquals("foo.bar[]", parseTypeName("foo . bar [ ]"));
+  }
 
-    @Test public void testParseDoubleArray() throws Exception
-    {
-        assertEquals("foo.bar[][]", parseTypeName("foo . bar [ ] [ ]"));
-    }
+  @Test
+  public void testParseDoubleArray() throws Exception {
+    assertEquals("foo.bar[][]", parseTypeName("foo . bar [ ] [ ]"));
+  }
 
-    @Override
-    protected ClassNameParser makeParser(org.jamon.api.Location p_location,
-        PositionalPushbackReader p_reader,
-        ParserErrorsImpl p_errors) throws IOException, ParserErrorImpl
-    {
-        return new TypeNameParser(p_location, p_reader, p_errors);
-    }
+  @Override
+  protected ClassNameParser makeParser(
+    Location location, PositionalPushbackReader reader, ParserErrorsImpl errors)
+  throws IOException, ParserErrorImpl {
+    return new TypeNameParser(location, reader, errors);
+  }
 
-    public static junit.framework.Test suite()
-    {
-        return new junit.framework.JUnit4TestAdapter(TypeNameParserTest.class);
-    }
+  public static junit.framework.Test suite() {
+    return new junit.framework.JUnit4TestAdapter(TypeNameParserTest.class);
+  }
 }

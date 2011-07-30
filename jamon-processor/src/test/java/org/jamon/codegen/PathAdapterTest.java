@@ -37,92 +37,85 @@ import org.jamon.node.UpdirNode;
 
 import junit.framework.TestCase;
 
-public class PathAdapterTest extends TestCase
-{
-    private static final String s_templateDir = "/templateDir";
-    private static final TemplateLocation s_templateLocation =
-        new TemplateFileLocation("/foobar");
-    private static final org.jamon.api.Location s_location =
-        new LocationImpl(s_templateLocation, 1,1);
-    private PathAdapter m_adapter;
-    private ParserErrorsImpl m_errors;
+public class PathAdapterTest extends TestCase {
+  private static final String TEMPLATE_DIR = "/templateDir";
 
-    @Override protected void setUp() throws Exception
-    {
-        Map<String, String> aliases = new HashMap<String, String>();
-        aliases.put("/", "/root/dir");
-        aliases.put("foo", "/foo/dir");
-        m_errors = new ParserErrorsImpl();
-        m_adapter = new PathAdapter(s_templateDir + "/", aliases, m_errors);
-    }
+  private static final TemplateLocation TEMPLATE_LOCATION = new TemplateFileLocation("/foobar");
 
-    public void testAbsolutePath() throws Exception
-    {
-        new AbsolutePathNode(s_location)
-            .addPathElement(new PathElementNode(s_location, "baz"))
-            .apply(m_adapter);
-        assertEquals("/baz", m_adapter.getPath());
-    }
+  private static final org.jamon.api.Location LOCATION =
+    new LocationImpl(TEMPLATE_LOCATION, 1, 1);
 
-    public void testRelativePath() throws Exception
-    {
-        new RelativePathNode(s_location)
-            .addPathElement(new PathElementNode(s_location, "baz"))
-            .apply(m_adapter);
-        assertEquals("baz", m_adapter.getPath());
-    }
+  private PathAdapter adapter;
 
-    public void testNamedAliasedPath() throws Exception
-    {
-        new NamedAliasPathNode(s_location, "foo")
-            .addPathElement(new PathElementNode(s_location, "baz"))
-            .apply(m_adapter);
-        assertEquals("/foo/dir/baz", m_adapter.getPath());
-    }
+  private ParserErrorsImpl errors;
 
-    public void testRootAliasPath() throws Exception
-    {
-        new RootAliasPathNode(s_location)
-            .addPathElement(new PathElementNode(s_location, "baz"))
-            .apply(m_adapter);
-        assertEquals("/root/dir/baz", m_adapter.getPath());
-    }
+  @Override
+  protected void setUp() throws Exception {
+    Map<String, String> aliases = new HashMap<String, String>();
+    aliases.put("/", "/root/dir");
+    aliases.put("foo", "/foo/dir");
+    errors = new ParserErrorsImpl();
+    adapter = new PathAdapter(TEMPLATE_DIR + "/", aliases, errors);
+  }
 
-    public void testUpdirAtFrontPath() throws Exception
-    {
-        new RelativePathNode(s_location)
-            .addPathElement(new UpdirNode(s_location))
-            .addPathElement(new PathElementNode(s_location, "baz"))
-            .apply(m_adapter);
-        assertEquals("/baz", m_adapter.getPath());
-    }
+  public void testAbsolutePath() throws Exception {
+    new AbsolutePathNode(LOCATION)
+      .addPathElement(new PathElementNode(LOCATION, "baz"))
+      .apply(adapter);
+    assertEquals("/baz", adapter.getPath());
+  }
 
-    public void testUpdirOutOfRoot() throws Exception
-    {
-        org.jamon.api.Location location2 = new LocationImpl(s_templateLocation, 2,2);
-        new RelativePathNode(s_location)
-            .addPathElement(new UpdirNode(s_location))
-            .addPathElement(new UpdirNode(location2))
-            .apply(m_adapter);
-        assertEquals(
-            Arrays.asList(new ParserErrorImpl(
-                location2, "Cannot reference templates above the root")),
-            m_errors.getErrors());
-    }
+  public void testRelativePath() throws Exception {
+    new RelativePathNode(LOCATION)
+      .addPathElement(new PathElementNode(LOCATION, "baz"))
+      .apply(adapter);
+    assertEquals("baz", adapter.getPath());
+  }
 
-    public void testUpdirInMiddleOfPath() throws Exception
-    {
-        new RelativePathNode(s_location)
-            .addPathElement(new PathElementNode(s_location, "baz"))
-            .addPathElement(new UpdirNode(s_location))
-            .addPathElement(new PathElementNode(s_location, "bar"))
-            .apply(m_adapter);
-        assertEquals(s_templateDir + "/bar", m_adapter.getPath());
-    }
+  public void testNamedAliasedPath() throws Exception {
+    new NamedAliasPathNode(LOCATION, "foo")
+      .addPathElement(new PathElementNode(LOCATION, "baz"))
+      .apply(adapter);
+    assertEquals("/foo/dir/baz", adapter.getPath());
+  }
 
-    public PathAdapterTest(String p_name)
-    {
-        super(p_name);
-    }
+  public void testRootAliasPath() throws Exception {
+    new RootAliasPathNode(LOCATION)
+      .addPathElement(new PathElementNode(LOCATION, "baz"))
+      .apply(adapter);
+    assertEquals("/root/dir/baz", adapter.getPath());
+  }
+
+  public void testUpdirAtFrontPath() throws Exception {
+    new RelativePathNode(LOCATION)
+      .addPathElement(new UpdirNode(LOCATION))
+      .addPathElement(new PathElementNode(LOCATION, "baz"))
+      .apply(adapter);
+    assertEquals("/baz", adapter.getPath());
+  }
+
+  public void testUpdirOutOfRoot() throws Exception {
+    org.jamon.api.Location location2 = new LocationImpl(TEMPLATE_LOCATION, 2, 2);
+    new RelativePathNode(LOCATION)
+      .addPathElement(new UpdirNode(LOCATION))
+      .addPathElement(new UpdirNode(location2))
+      .apply(adapter);
+    assertEquals(Arrays.asList(
+      new ParserErrorImpl(location2, "Cannot reference templates above the root")),
+      errors.getErrors());
+  }
+
+  public void testUpdirInMiddleOfPath() throws Exception {
+    new RelativePathNode(LOCATION)
+      .addPathElement(new PathElementNode(LOCATION, "baz"))
+      .addPathElement(new UpdirNode(LOCATION))
+      .addPathElement(new PathElementNode(LOCATION, "bar"))
+      .apply(adapter);
+    assertEquals(TEMPLATE_DIR + "/bar", adapter.getPath());
+  }
+
+  public PathAdapterTest(String name) {
+    super(name);
+  }
 
 }
