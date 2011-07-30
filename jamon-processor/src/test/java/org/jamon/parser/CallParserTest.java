@@ -253,7 +253,7 @@ public class CallParserTest extends AbstractParserTest {
 
   private static RelativePathNode relPathNode(int line, int column, String pathElement) {
     return (RelativePathNode) new RelativePathNode(location(line, column))
-      .addPathElement(new PathElementNode(location(line, column), "foo"));
+      .addPathElement(new PathElementNode(location(line, column), pathElement));
   }
 
   private static AbsolutePathNode absPathNode(int line, int column, String pathElement) {
