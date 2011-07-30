@@ -29,128 +29,90 @@ import junit.framework.AssertionFailedError;
 
 import test.jamon.JUnitTemplate;
 
-public class JUnitTemplateManagerTest
-    extends TestCase
-{
-    private JUnitTemplate m_template;
-    private JUnitTemplateManager m_manager;
-    private StringWriter m_writer;
+public class JUnitTemplateManagerTest extends TestCase {
+  private JUnitTemplate template;
+  private JUnitTemplateManager manager;
+  private StringWriter writer;
 
-    private void prepareTemplate(Integer p_iValue)
-        throws Exception
-    {
-        HashMap<String, Object> optMap = new HashMap<String, Object>();
-        if (p_iValue != null)
-        {
-            optMap.put("i", p_iValue);
-        }
-        m_manager =
-            new JUnitTemplateManager(JUnitTemplate.class,
-                                     optMap,
-                                     new Object[] { Boolean.TRUE, "hello" });
-        m_template = new JUnitTemplate(m_manager);
-        m_writer = new StringWriter();
+  private void prepareTemplate(Integer iValue) throws Exception {
+    HashMap<String, Object> optMap = new HashMap<String, Object>();
+    if (iValue != null) {
+      optMap.put("i", iValue);
     }
+    manager = new JUnitTemplateManager(
+      JUnitTemplate.class, optMap, new Object[] { Boolean.TRUE, "hello" });
+    template = new JUnitTemplate(manager);
+    writer = new StringWriter();
+  }
 
-    private void checkSuccess()
-        throws Exception
-    {
-        assertTrue(m_manager.getWasRendered());
-        assertEquals("", m_writer.toString());
+  private void checkSuccess() throws Exception {
+    assertTrue(manager.getWasRendered());
+    assertEquals("", writer.toString());
+  }
+
+  public void testSuccess1() throws Exception {
+    prepareTemplate(null);
+    template.render(writer, true, "hello");
+    checkSuccess();
+  }
+
+  public void testSuccess2() throws Exception {
+    prepareTemplate(new Integer(4));
+    template.setI(4).render(writer, true, "hello");
+    checkSuccess();
+  }
+
+  public void testMissingOptionalArg() throws Exception {
+    prepareTemplate(new Integer(4));
+    try {
+      template.render(writer, true, "hello");
+      throw new Exception("all optional arguments not set not caught");
     }
-
-    public void testSuccess1()
-        throws Exception
-    {
-        prepareTemplate(null);
-        m_template.render(m_writer, true,"hello");
-        checkSuccess();
+    catch (AssertionFailedError e) {
+      assertEquals("optional argument i not set", e.getMessage());
     }
+  }
 
-    public void testSuccess2()
-        throws Exception
-    {
-        prepareTemplate(new Integer(4));
-        m_template
-            .setI(4)
-            .render(m_writer, true,"hello");
-        checkSuccess();
+  public void testUnexpectedOptionalArg() throws Exception {
+    prepareTemplate(null);
+    try {
+      template.setI(3).render(writer, true, "hello");
+      throw new Exception("unexpected optional argument i not caught");
     }
-
-    public void testMissingOptionalArg()
-        throws Exception
-    {
-        prepareTemplate(new Integer(4));
-        try
-        {
-            m_template.render(m_writer, true,"hello");
-            throw new Exception("all optional arguments not set not caught");
-        }
-        catch( AssertionFailedError e )
-        {
-            assertEquals("optional argument i not set",
-                         e.getMessage());
-        }
+    catch (AssertionFailedError e) {
+      assertEquals("optional argument i set", e.getMessage());
     }
+  }
 
-    public void testUnexpectedOptionalArg()
-        throws Exception
-    {
-        prepareTemplate(null);
-        try
-        {
-            m_template.setI(3).render(m_writer, true, "hello");
-            throw new Exception("unexpected optional argument i not caught");
-        }
-        catch( AssertionFailedError e )
-        {
-            assertEquals("optional argument i set",
-                         e.getMessage());
-        }
+  public void testMismatchRequiredArg() throws Exception {
+    prepareTemplate(null);
+    try {
+      template.render(writer, false, "hello");
+      throw new Exception("mismatch required argument b not caught");
     }
-
-    public void testMismatchRequiredArg()
-        throws Exception
-    {
-        prepareTemplate(null);
-        try
-        {
-            m_template.render(m_writer, false,"hello");
-            throw new Exception("mismatch required argument b not caught");
-        }
-        catch( AssertionFailedError e )
-        {
-            assertEquals("required argument b expected:<true> but was:<false>",
-                         e.getMessage());
-        }
+    catch (AssertionFailedError e) {
+      assertEquals("required argument b expected:<true> but was:<false>", e.getMessage());
     }
+  }
 
-
-    public void testMismatchOptionalArg()
-        throws Exception
-    {
-        prepareTemplate(new Integer(4));
-        try
-        {
-            m_template.setI(3).render(m_writer, true,"hello");
-            throw new Exception("mismatch optional argument i not caught");
-        }
-        catch( AssertionFailedError e )
-        {
-            assertEquals("optional argument i expected:<4> but was:<3>",
-                         e.getMessage());
-        }
+  public void testMismatchOptionalArg() throws Exception {
+    prepareTemplate(new Integer(4));
+    try {
+      template.setI(3).render(writer, true, "hello");
+      throw new Exception("mismatch optional argument i not caught");
     }
-
-    public void testConstructProxy()
-        throws Exception
-    {
-        assertEquals(
-            JUnitTemplate.class,
-            new JUnitTemplateManager(JUnitTemplate.class,
-                                     Collections.<String, Object>emptyMap(),
-                                     new Object[0])
-                         .constructProxy("/test/jamon/JUnitTemplate")
-                         .getClass());
+    catch (AssertionFailedError e) {
+      assertEquals("optional argument i expected:<4> but was:<3>", e.getMessage());
     }
+  }
+
+  public void testConstructProxy() throws Exception {
+    assertEquals(
+      JUnitTemplate.class,
+      new JUnitTemplateManager(
+        JUnitTemplate.class,
+        Collections.<String, Object> emptyMap(),
+        new Object[0])
+        .constructProxy("/test/jamon/JUnitTemplate").getClass());
+  }
 }

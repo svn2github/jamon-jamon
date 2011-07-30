@@ -37,13 +37,11 @@ import org.jamon.annotations.Argument;
 import org.jamon.annotations.Template;
 
 /**
- * A <code>TemplateManager</code> implementation suitable for use in
- * constructing unit tests via JUnit.
- *
- * A <code>JUnitTemplateManager<code> instance is not reusable, but
+ * A <code>TemplateManager</code> implementation suitable for use in constructing unit tests via
+ * JUnit. A <code>JUnitTemplateManager<code> instance is not reusable, but
  * instead allows the "rendering" of the one template specified at
- * construction. For example, suppose the <code>/com/bar/FooTemplate</code>
- * is declared as follows:
+ * construction. For example, suppose the <code>/com/bar/FooTemplate</code> is declared as follows:
+ *
  * <pre>
  *   &lt;%args&gt;
  *     int x;
@@ -51,296 +49,222 @@ import org.jamon.annotations.Template;
  *   &lt;/%args&gt;
  * </pre>
  *
- * To test that the method <code>showPage()</code> attempts to render
- * the <code>FooTemplate</code> with arguements <code>7</code> and
- * <code>"bye"</code>, use something like the following code:
+ * To test that the method <code>showPage()</code> attempts to render the <code>FooTemplate</code>
+ * with arguements <code>7</code> and <code>"bye"</code>, use something like the following code:
  *
  * <pre>
- *    Map optArgs = new HashMap();
- *    optArgs.put("s", "bye");
- *    JUnitTemplateManager jtm =
- *       new JUnitTemplateManager("/com/bar/FooTemplate",
- *                                optArgs,
- *                                new Object[] { new Integer(7) });
+ * Map optArgs = new HashMap();
+ * optArgs.put(&quot;s&quot;, &quot;bye&quot;);
+ * JUnitTemplateManager jtm = new JUnitTemplateManager(&quot;/com/bar/FooTemplate&quot;, optArgs,
+ *     new Object[] { new Integer(7) });
  *
- *    TemplateManagerSource.setTemplateManager(jtm);
- *    someObj.showPage();
- *    assertTrue(jtm.getWasRendered());
+ * TemplateManagerSource.setTemplateManager(jtm);
+ * someObj.showPage();
+ * assertTrue(jtm.getWasRendered());
  * </pre>
  */
 
-public class JUnitTemplateManager extends AbstractTemplateManager
-  implements InvocationHandler
-{
-    /**
-     * Construct a <code>JUnitTemplateManager</code>.
-     *
-     * @param p_path the template path
-     * @param p_optionalArgs the expect optional arguments
-     * @param p_requiredArgs the expected required argument values
-     */
-    public JUnitTemplateManager(String p_path,
-                                Map<String, Object> p_optionalArgs,
-                                Object[] p_requiredArgs)
-    {
-        m_path = p_path;
-        m_optionalArgs = new HashMap<String, Object>(p_optionalArgs);
-        m_requiredArgs =
-            p_requiredArgs == null ? null : p_requiredArgs.clone();
+public class JUnitTemplateManager extends AbstractTemplateManager implements InvocationHandler {
+  /**
+   * Construct a <code>JUnitTemplateManager</code>.
+   *
+   * @param path the template path
+   * @param optionalArgs the expect optional arguments
+   * @param requiredArgs the expected required argument values
+   */
+  public JUnitTemplateManager(
+    String path, Map<String, Object> optionalArgs, Object[] requiredArgs) {
+    this.path = path;
+    this.optionalArgs = new HashMap<String, Object>(optionalArgs);
+    this.requiredArgs = requiredArgs == null
+        ? null
+        : requiredArgs.clone();
+  }
+
+  /**
+   * Construct a <code>JUnitTemplateManager</code>.
+   *
+   * @param clazz the template class
+   * @param optionalArgs the expect optional arguments
+   * @param requiredArgs the expected required argument values
+   */
+  public JUnitTemplateManager(
+    Class<? extends AbstractTemplateProxy> clazz,
+    Map<String, Object> optionalArgs,
+    Object[] requiredArgs) {
+    this(classToTemplatePath(clazz), optionalArgs, requiredArgs);
+  }
+
+  /**
+   * Determine if the template was successfully "rendered".
+   *
+   * @return whether the specified template was rendered with the specified arguments
+   */
+  public boolean getWasRendered() {
+    return rendered;
+  }
+
+  private final Map<String, Object> optionalArgs;
+  private final Object[] requiredArgs;
+  private final String path;
+  private boolean rendered;
+  private AbstractTemplateProxy.ImplData implData;
+  private String[] requiredArgNames;
+  private String[] optionalArgNames;
+
+  @Override
+  public AbstractTemplateProxy.Intf constructImpl(
+    AbstractTemplateProxy proxy, Object jamonContext) {
+    Assert.assertTrue(m_impl == null);
+    String tempatePath = classToTemplatePath(proxy.getClass());
+    if (tempatePath.equals(path)) {
+
+      String className = templatePathToClassName(tempatePath) + "$Intf";
+      Class<? extends AbstractTemplateProxy.Intf> intfClass;
+      try {
+        intfClass = Class.forName(className).asSubclass(AbstractTemplateProxy.Intf.class);
+      }
+      catch (ClassNotFoundException e) {
+        throw new RuntimeException("couldn't find class for template " + tempatePath);
+      }
+      catch (ClassCastException e) {
+        throw new RuntimeException(
+          "Impl class for template " + tempatePath + " does not extend "
+          + AbstractTemplateImpl.class.getName());
+      }
+      Template templateAnnotation = proxy.getClass().getAnnotation(Template.class);
+      requiredArgNames = getArgNames(templateAnnotation.requiredArguments());
+      optionalArgNames = getArgNames(templateAnnotation.optionalArguments());
+
+      implData = proxy.getImplData();
+      m_impl = (AbstractTemplateProxy.Intf) Proxy.newProxyInstance(
+        getClass().getClassLoader(),
+        new Class[] { intfClass, AbstractTemplateProxy.Intf.class },
+        this);
+      return m_impl;
     }
-
-    /**
-     * Construct a <code>JUnitTemplateManager</code>.
-     *
-     * @param p_class the template class
-     * @param p_optionalArgs the expect optional arguments
-     * @param p_requiredArgs the expected required argument values
-     */
-    public JUnitTemplateManager(Class<? extends AbstractTemplateProxy> p_class,
-                                Map<String, Object> p_optionalArgs,
-                                Object[] p_requiredArgs)
-    {
-        this(classToTemplatePath(p_class),
-             p_optionalArgs,
-             p_requiredArgs);
+    else {
+      throw new RuntimeException("No template registered for " + tempatePath);
     }
+  }
 
-    /**
-     * Determine if the template was successfully "rendered".
-     *
-     * @return whether the specified template was rendered with the
-     * specified arguments
-     */
-    public boolean getWasRendered()
-    {
-        return m_rendered;
+  @Override
+  protected Intf constructImplFromReplacedProxy(AbstractTemplateProxy replacedProxy) {
+    // for now, let's not worry about template replacement.
+    throw new IllegalStateException();
+  }
+
+  @Override
+  public AbstractTemplateProxy constructProxy(String path) {
+    try {
+      return (AbstractTemplateProxy) Class.forName(templatePathToClassName(path))
+        .getConstructor(new Class[] { TemplateManager.class })
+        .newInstance(new Object[] { this });
     }
-
-
-    private final Map<String, Object> m_optionalArgs;
-    private final Object[] m_requiredArgs;
-    private final String m_path;
-    private boolean m_rendered;
-    private AbstractTemplateProxy.ImplData m_implData;
-    private String[] m_requiredArgNames;
-    private String[] m_optionalArgNames;
-
-    @Override
-    public AbstractTemplateProxy.Intf constructImpl(
-        AbstractTemplateProxy p_proxy, Object p_jamonContext)
-    {
-        Assert.assertTrue( m_impl == null );
-        String path = classToTemplatePath(p_proxy.getClass());
-        if (path.equals(m_path))
-        {
-
-            String className = templatePathToClassName(path)
-                + "$Intf";
-            Class<? extends AbstractTemplateProxy.Intf> intfClass;
-            try
-            {
-                intfClass = Class.forName(className)
-                    .asSubclass(AbstractTemplateProxy.Intf.class);
-            }
-            catch (ClassNotFoundException e)
-            {
-                throw new RuntimeException
-                    ("couldn't find class for template " + path);
-            }
-            catch (ClassCastException e)
-            {
-                throw new RuntimeException(
-                    "Impl class for template " + path
-                    + " does not extend "
-                    + AbstractTemplateImpl.class.getName());
-            }
-            Template templateAnnotation =
-                p_proxy.getClass().getAnnotation(Template.class);
-            m_requiredArgNames =
-                getArgNames(templateAnnotation.requiredArguments());
-            m_optionalArgNames =
-                getArgNames(templateAnnotation.optionalArguments());
-
-            m_implData = p_proxy.getImplData();
-            m_impl = (AbstractTemplateProxy.Intf)
-                Proxy.newProxyInstance
-                (getClass().getClassLoader(),
-                 new Class[] { intfClass, AbstractTemplateProxy.Intf.class },
-                 this);
-            return m_impl;
-        }
-        else
-        {
-            throw new RuntimeException
-                ("No template registered for " + path);
-        }
+    catch (RuntimeException e) {
+      throw e;
     }
-
-    @Override
-    protected Intf constructImplFromReplacedProxy(AbstractTemplateProxy p_replacedProxy)
-    {
-        // for now, let's not worry about template replacement.
-        throw new IllegalStateException();
+    catch (Exception e) {
+      throw new RuntimeException(e);
     }
+  }
 
-    @Override
-    public AbstractTemplateProxy constructProxy(String p_path)
-    {
-        try
-        {
-            return (AbstractTemplateProxy)
-                Class.forName(templatePathToClassName(p_path))
-                .getConstructor(new Class[] { TemplateManager.class })
-                .newInstance(new Object[] { this });
-        }
-        catch (RuntimeException e)
-        {
-            throw e;
-        }
-        catch (Exception e)
-        {
-            throw new RuntimeException(e);
-        }
+  private AbstractTemplateProxy.Intf m_impl;
+
+  private void checkArgsLength(Method method, Object[] args, int expected) {
+    Assert.assertEquals(method.getName() + " arg length", expected, args.length);
+  }
+
+  private static final Object[] EMPTY_ARGS = new Object[0];
+
+  @Override
+  public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+    // sanity:
+    Assert.assertTrue(m_impl == proxy);
+
+    final Object[] nonNullArgs = args == null
+        ? EMPTY_ARGS
+        : args;
+
+    // from the generated template Intf
+    if ("render".equals(method.getName()) || "renderNoFlush".equals(method.getName())) {
+      checkArgsLength(method, nonNullArgs, 1);
+      checkArgValues();
+      rendered = true;
+      return null;
     }
-
-    private AbstractTemplateProxy.Intf m_impl;
-
-    private void checkArgsLength(Method p_method,
-                                 Object[] p_args,
-                                 int p_expected)
-    {
-        Assert.assertEquals(p_method.getName() + " arg length",
-                            p_expected,
-                            p_args.length);
+    else {
+      // ?
+      throw new IllegalArgumentException("Unexpected method " + method);
     }
+  }
 
-    private static final Object[] EMPTY_ARGS = new Object[0];
-
-    @Override
-    public Object invoke(Object p_proxy, Method p_method, Object[] p_args)
-        throws Throwable
-    {
-        // sanity:
-        Assert.assertTrue(m_impl == p_proxy);
-
-        final Object[] args = p_args == null ? EMPTY_ARGS : p_args;
-
-        // from the generated template Intf
-        if ("render".equals(p_method.getName())
-                 || "renderNoFlush".equals(p_method.getName()))
-        {
-            checkArgsLength(p_method, args, 1);
-            checkArgValues();
-            m_rendered = true;
-            return null;
-        }
-        else
-        {
-            // ?
-            throw new IllegalArgumentException("Unexpected method "
-                                               + p_method);
-        }
+  private void checkArgValues() throws Exception {
+    Assert.assertEquals("required arg length mismatch", requiredArgNames.length,
+      requiredArgs.length);
+    for (int i = 0; i < requiredArgNames.length; i++) {
+      Assert.assertEquals("required argument " + requiredArgNames[i], requiredArgs[i],
+        getArgValue(requiredArgNames[i]));
     }
-
-    private void checkArgValues()
-        throws Exception
-    {
-        Assert.assertEquals("required arg length mismatch",
-                            m_requiredArgNames.length, m_requiredArgs.length);
-        for (int i = 0; i < m_requiredArgNames.length; i++)
-        {
-             Assert.assertEquals("required argument " + m_requiredArgNames[i],
-                                 m_requiredArgs[i],
-                                 getArgValue(m_requiredArgNames[i]));
-        }
-        for (int i = 0; i < m_optionalArgNames.length; i++)
-        {
-            checkOptionalArgument(m_optionalArgNames[i],
-                                  m_optionalArgs.containsKey(
-                                      m_optionalArgNames[i]));
-        }
+    for (int i = 0; i < optionalArgNames.length; i++) {
+      checkOptionalArgument(optionalArgNames[i], optionalArgs
+          .containsKey(optionalArgNames[i]));
     }
+  }
 
-    private void checkOptionalArgument(String p_name,
-                                       boolean p_defaultNotExpected)
-        throws Exception
-    {
-        Assert.assertTrue("optional argument " + p_name
-                          + (p_defaultNotExpected ? " not" : "")
-                          + " set",
-                          Boolean.valueOf(p_defaultNotExpected)
-                              .equals(getIsNotDefault(p_name)));
-        if(p_defaultNotExpected)
-        {
-            Assert.assertEquals("optional argument " + p_name,
-                                m_optionalArgs.get(p_name),
-                                getArgValue(p_name));
-        }
+  private void checkOptionalArgument(String name, boolean defaultNotExpected) throws Exception {
+    Assert.assertTrue("optional argument " + name + (defaultNotExpected
+        ? " not"
+        : "") + " set", Boolean.valueOf(defaultNotExpected).equals(getIsNotDefault(name)));
+    if (defaultNotExpected) {
+      Assert.assertEquals("optional argument " + name, optionalArgs.get(name),
+        getArgValue(name));
     }
+  }
 
-    private Object getIsNotDefault(String p_name)
-        throws Exception
-    {
-        return m_implData.getClass()
-            .getMethod("get"
-                       + capitalize(p_name)
-                       + "__IsNotDefault",new Class[0])
-            .invoke(m_implData,new Object[0]);
-    }
+  private Object getIsNotDefault(String name) throws Exception {
+    return implData.getClass().getMethod("get" + capitalize(name) + "__IsNotDefault", new Class[0])
+      .invoke(implData, new Object[0]);
+  }
 
-    private Object getArgValue(String p_name)
-        throws Exception
-    {
-        return m_implData.getClass()
-            .getMethod("get"
-                       + capitalize(p_name),
-                       new Class[0])
-            .invoke(m_implData, new Object[0]);
-    }
+  private Object getArgValue(String name) throws Exception {
+    return implData.getClass().getMethod("get" + capitalize(name), new Class[0])
+      .invoke(implData, new Object[0]);
+  }
 
-    private static String[] getArgNames(Argument[] p_arguments)
-    {
-        String[] names = new String[p_arguments.length];
-        for (int i = 0; i < p_arguments.length; i++)
-        {
-            names[i] = p_arguments[i].name();
-        }
-        return names;
+  private static String[] getArgNames(Argument[] arguments) {
+    String[] names = new String[arguments.length];
+    for (int i = 0; i < arguments.length; i++) {
+      names[i] = arguments[i].name();
     }
+    return names;
+  }
 
-    private static String capitalize(String p_string)
-    {
-        if (p_string == null)
-        {
-            return null;
-        }
-        else
-        {
-            char [] chars = p_string.toCharArray();
-            if (chars.length == 0)
-            {
-                return p_string;
-            }
-            else
-            {
-                chars[0] = Character.toUpperCase(chars[0]);
-                return new String(chars);
-            }
-        }
+  private static String capitalize(String string) {
+    if (string == null) {
+      return null;
     }
+    else {
+      char[] chars = string.toCharArray();
+      if (chars.length == 0) {
+        return string;
+      }
+      else {
+        chars[0] = Character.toUpperCase(chars[0]);
+        return new String(chars);
+      }
+    }
+  }
 
-    private static String templatePathToClassName(String p_string)
-    {
-        int i = 0;
-        while (i < p_string.length() && p_string.charAt(i) == '/')
-        {
-            i++;
-        }
-        return p_string.substring(i).replace('/','.');
+  private static String templatePathToClassName(String string) {
+    int i = 0;
+    while (i < string.length() && string.charAt(i) == '/') {
+      i++;
     }
+    return string.substring(i).replace('/', '.');
+  }
 
-    private static String classToTemplatePath(Class<?> p_class)
-    {
-        return p_class.getName().replace('.','/');
-    }
+  private static String classToTemplatePath(Class<?> clazz) {
+    return clazz.getName().replace('.', '/');
+  }
 }
