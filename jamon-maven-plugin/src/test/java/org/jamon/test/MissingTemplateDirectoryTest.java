@@ -10,7 +10,6 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.jamon.maven.JamonMojo;
 import org.junit.Test;
 
-
 public class MissingTemplateDirectoryTest {
   @Test
   public void missingDirectory() throws Exception {
@@ -20,7 +19,7 @@ public class MissingTemplateDirectoryTest {
       jamonMojo.execute();
       fail("exception expected");
     }
-    catch(MojoExecutionException e) {
+    catch (MojoExecutionException e) {
       assertEquals("templateSourceDir /no/such/directory does not exist", e.getMessage());
     }
   }
@@ -28,15 +27,15 @@ public class MissingTemplateDirectoryTest {
   @Test
   public void templateDirectoryIsFile() throws Exception {
     JamonMojo jamonMojo = new JamonMojo();
-    URL resource =
-      getClass().getClassLoader().getResource(getClass().getName().replace('.', '/') + ".class");
+    URL resource = getClass().getClassLoader().getResource(
+      getClass().getName().replace('.', '/') + ".class");
     String filePath = new File(resource.toURI()).getAbsolutePath();
     setTemplateSourceDir(jamonMojo, filePath);
     try {
       jamonMojo.execute();
       fail("exception expected");
     }
-    catch(MojoExecutionException e) {
+    catch (MojoExecutionException e) {
       assertEquals("templateSourceDir " + filePath + " is not a directory", e.getMessage());
     }
   }

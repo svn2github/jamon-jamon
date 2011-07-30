@@ -12,35 +12,29 @@ import org.apache.maven.plugin.MojoExecutionException;
  * @threadSafe
  * @requiresDependencyResolution test
  */
-public class JamonTestMojo
-    extends AbstractJamonMojo
-{
-    /**
-     * @parameter expression="${project.basedir}/src/test/templates"
-     */
-    private File templateSourceDir;
+public class JamonTestMojo extends AbstractJamonMojo {
+  /**
+   * @parameter expression="${project.basedir}/src/test/templates"
+   */
+  private File templateSourceDir;
 
-    /**
-     * @parameter expression="${project.build.directory}/generated-test-sources/jamon"
-     */
-    private File templateOutputDir;
+  /**
+   * @parameter expression="${project.build.directory}/generated-test-sources/jamon"
+   */
+  private File templateOutputDir;
 
-    @Override
-    public File getTemplateOutputDir()
-    {
-      return templateOutputDir;
-    }
+  @Override
+  public File getTemplateOutputDir() {
+    return templateOutputDir;
+  }
 
-    @Override
-    public File getTemplateSourceDir()
-    {
-      return templateSourceDir;
-    }
+  @Override
+  public File getTemplateSourceDir() {
+    return templateSourceDir;
+  }
 
-    public void execute()
-        throws MojoExecutionException
-    {
-      doExecute();
-      getProject().addTestCompileSourceRoot(templateOutputDir.getAbsolutePath());
-    }
+  public void execute() throws MojoExecutionException {
+    doExecute();
+    getProject().addTestCompileSourceRoot(templateOutputDir.getAbsolutePath());
+  }
 }
