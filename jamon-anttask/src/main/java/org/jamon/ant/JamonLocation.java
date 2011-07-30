@@ -22,26 +22,21 @@ package org.jamon.ant;
 
 import org.apache.tools.ant.Location;
 
-public class JamonLocation extends Location
-{
-    public JamonLocation(org.jamon.api.Location p_location)
-    {
-        super(p_location.getTemplateLocation().toString(),
-              p_location.getLine(),
-              p_location.getColumn());
-        m_columnNumber = p_location.getColumn();
-    }
+public class JamonLocation extends Location {
+  public JamonLocation(org.jamon.api.Location location) {
+    super(location.getTemplateLocation().toString(), location.getLine(), location.getColumn());
+    columnNumber = location.getColumn();
+  }
 
-    @Override
-    public String toString()
-    {
-        StringBuilder buf = new StringBuilder(super.toString());
-        buf.insert(buf.length() - 2, ":");
-        buf.insert(buf.length() - 2, m_columnNumber);
-        return buf.toString();
-    }
+  @Override
+  public String toString() {
+    StringBuilder buf = new StringBuilder(super.toString());
+    buf.insert(buf.length() - 2, ":");
+    buf.insert(buf.length() - 2, columnNumber);
+    return buf.toString();
+  }
 
-    private final int m_columnNumber;
-    
-    private static final long serialVersionUID = 2007052301L;
+  private final int columnNumber;
+
+  private static final long serialVersionUID = 2007052301L;
 }
