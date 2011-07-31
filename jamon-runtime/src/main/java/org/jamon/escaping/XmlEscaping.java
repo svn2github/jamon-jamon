@@ -28,15 +28,15 @@ public class XmlEscaping extends AbstractCharacterEscaping {
   XmlEscaping() {} // package scope constructor
 
   @Override
-  protected void write(char p_char, Writer p_writer) throws IOException {
-    switch (p_char) {
-      case '<': p_writer.write("&lt;"); break;
-      case '>': p_writer.write("&gt;"); break;
-      case '&': p_writer.write("&amp;"); break;
-      case '"': p_writer.write("&quot;"); break;
-      case '\'': p_writer.write("&apos;"); break;
+  protected void write(char character, Writer writer) throws IOException {
+    switch (character) {
+      case '<': writer.write("&lt;"); break;
+      case '>': writer.write("&gt;"); break;
+      case '&': writer.write("&amp;"); break;
+      case '"': writer.write("&quot;"); break;
+      case '\'': writer.write("&apos;"); break;
         // FIXME: numerically escape other chars outside ASCII
-      default: p_writer.write(p_char);
+      default: writer.write(character);
     }
   }
 }

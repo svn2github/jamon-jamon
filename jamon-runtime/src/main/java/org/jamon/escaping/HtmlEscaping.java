@@ -28,12 +28,12 @@ public class HtmlEscaping extends AbstractCharacterEscaping {
   HtmlEscaping() {} // package scope constructor
 
   @Override
-  protected void write(char p_char, Writer p_writer) throws IOException {
-    switch (p_char) {
-      case '<': p_writer.write("&lt;"); break;
-      case '>': p_writer.write("&gt;"); break;
-      case '&': p_writer.write("&amp;"); break;
-      default: p_writer.write(p_char);
+  protected void write(char character, Writer writer) throws IOException {
+    switch (character) {
+      case '<': writer.write("&lt;"); break;
+      case '>': writer.write("&gt;"); break;
+      case '&': writer.write("&amp;"); break;
+      default: writer.write(character);
     }
   }
 

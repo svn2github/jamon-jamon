@@ -26,7 +26,7 @@ public abstract class AbstractTemplateImpl implements AbstractTemplateProxy.Intf
   }
 
   protected AbstractTemplateImpl(TemplateManager templateManager,
-      @SuppressWarnings("unused") AbstractTemplateProxy.ImplData implData) {
+    @SuppressWarnings("unused") AbstractTemplateProxy.ImplData implData) {
     this(templateManager);
   }
 

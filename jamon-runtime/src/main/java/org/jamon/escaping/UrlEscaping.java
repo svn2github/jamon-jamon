@@ -28,7 +28,7 @@ public class UrlEscaping implements Escaping {
   UrlEscaping() {} // package scope constructor
 
   @Override
-  public void write(String p_string, Writer p_writer) throws IOException {
-    p_writer.write(URLEncoder.encode(p_string, "UTF-8"));
+  public void write(String string, Writer writer) throws IOException {
+    writer.write(URLEncoder.encode(string, "UTF-8"));
   }
 }

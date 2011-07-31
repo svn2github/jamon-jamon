@@ -30,18 +30,18 @@ public class JavascriptEscaping extends AbstractCharacterEscaping {
   }
 
   @Override
-  protected void write(char p_char, Writer p_writer) throws IOException {
-    switch (p_char) {
+  protected void write(char character, Writer writer) throws IOException {
+    switch (character) {
       // Perhaps we should escape high UNICODE
-      case '\'': p_writer.write("\\\'"); break;
-      case '"': p_writer.write("\\\""); break;
-      case '\n': p_writer.write("\\n"); break;
-      case '\t': p_writer.write("\\t"); break;
-      case '\b': p_writer.write("\\b"); break;
-      case '\f': p_writer.write("\\f"); break;
-      case '\r': p_writer.write("\\r"); break;
-      case '\\': p_writer.write("\\\\"); break;
-      default: p_writer.write(p_char);
+      case '\'': writer.write("\\\'"); break;
+      case '"': writer.write("\\\""); break;
+      case '\n': writer.write("\\n"); break;
+      case '\t': writer.write("\\t"); break;
+      case '\b': writer.write("\\b"); break;
+      case '\f': writer.write("\\f"); break;
+      case '\r': writer.write("\\r"); break;
+      case '\\': writer.write("\\\\"); break;
+      default: writer.write(character);
     }
   }
 }

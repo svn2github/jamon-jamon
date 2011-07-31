@@ -38,7 +38,7 @@ import java.io.IOException;
  **/
 
 public interface Escaping {
-  void write(String p_string, Writer p_writer) throws IOException;
+  void write(String string, Writer writer) throws IOException;
 
   /**
    * An escaping mechanism which escapes suitable for inclusion in HTML documents.

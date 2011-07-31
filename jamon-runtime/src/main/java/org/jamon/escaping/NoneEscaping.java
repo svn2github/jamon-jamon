@@ -28,8 +28,8 @@ public class NoneEscaping implements Escaping {
   NoneEscaping() {} // package scope constructor
 
   @Override
-  public void write(String p_string, Writer p_writer) throws IOException {
-    p_writer.write(p_string);
+  public void write(String string, Writer writer) throws IOException {
+    writer.write(string);
   }
 
 }
