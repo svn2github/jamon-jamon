@@ -51,15 +51,15 @@ public class EscapingTest extends TestCase {
     checkEscaping(Escaping.JAVASCRIPT, "<& &gt; &>!\\\"\\'");
   }
 
-  private void checkEscaping(Escaping p_escaping, String p_expected) throws IOException {
-    check(p_escaping, "", "");
-    check(p_escaping, "hello", "hello");
-    check(p_escaping, "<& &gt; &>!\"'", p_expected);
+  private void checkEscaping(Escaping escaping, String expected) throws IOException {
+    check(escaping, "", "");
+    check(escaping, "hello", "hello");
+    check(escaping, "<& &gt; &>!\"'", expected);
   }
 
-  private void check(Escaping p_escaping, String p_text, String p_expected) throws IOException {
+  private void check(Escaping escaping, String text, String expected) throws IOException {
     Writer writer = new StringWriter();
-    p_escaping.write(p_text, writer);
-    assertEquals(p_expected, writer.toString());
+    escaping.write(text, writer);
+    assertEquals(expected, writer.toString());
   }
 }

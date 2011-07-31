@@ -32,7 +32,7 @@ public class TemplateManagerSourceTest extends TestCase {
     final TemplateManager tm = new TestTemplateManager();
     TemplateManagerSource.setTemplateManagerSource(new TemplateManagerSource() {
       @Override
-      public TemplateManager getTemplateManagerForPath(String p_path) {
+      public TemplateManager getTemplateManagerForPath(String path) {
         return tm;
       }
     });
@@ -48,12 +48,12 @@ public class TemplateManagerSourceTest extends TestCase {
   private static class TestTemplateManager extends AbstractTemplateManager {
 
     @Override
-    public AbstractTemplateProxy constructProxy(String p_path) {
+    public AbstractTemplateProxy constructProxy(String path) {
       return null;
     }
 
     @Override
-    protected Intf constructImplFromReplacedProxy(AbstractTemplateProxy p_replacedProxy) {
+    protected Intf constructImplFromReplacedProxy(AbstractTemplateProxy replacedProxy) {
       return null;
     }
   }

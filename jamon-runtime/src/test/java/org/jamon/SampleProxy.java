@@ -7,12 +7,12 @@ public class SampleProxy extends AbstractTemplateProxy {
     }
   }
 
-  public SampleProxy(String p_path) {
-    super(p_path);
+  public SampleProxy(String path) {
+    super(path);
   }
 
-  public SampleProxy(TemplateManager p_templateManager) {
-    super(p_templateManager);
+  public SampleProxy(TemplateManager templateManager) {
+    super(templateManager);
   }
 
   @Override

@@ -10,12 +10,10 @@ import org.junit.Test;
 public class AbstractRendererTest {
 
   private static class HelloRenderer extends AbstractRenderer {
-
     @Override
-    public void renderTo(Writer p_writer) throws IOException {
-      p_writer.write("Hello");
+    public void renderTo(Writer writer) throws IOException {
+      writer.write("Hello");
     }
-
   }
 
   @Test
