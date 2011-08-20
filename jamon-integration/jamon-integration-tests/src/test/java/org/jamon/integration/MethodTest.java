@@ -24,43 +24,27 @@ import test.jamon.Method;
 import test.jamon.MethodChild;
 import test.jamon.MethodOverride;
 
-public class MethodTest
-    extends TestBase
-{
-    public void testSimpleMethod()
-        throws Exception
-    {
-        new Method().render(getWriter());
-        checkOutput("{foo: req1, po1} {foo: req1, po2} {bar: passed 1}");
-    }
+public class MethodTest extends TestBase {
+  public void testSimpleMethod() throws Exception {
+    new Method().render(getWriter());
+    checkOutput("{foo: req1, po1} {foo: req1, po2} {bar: passed 1}");
+  }
 
-    public void testInheritedMethod()
-        throws Exception
-    {
-        new MethodChild().render(getWriter());
-        final String methodsOutput =
-            "{foo: req1, po1} {foo: req1, po2} {bar: passed 1}";
-        checkOutput("{ parent: " + methodsOutput + " }{ child: "
-                    + methodsOutput + " }");
-    }
+  public void testInheritedMethod() throws Exception {
+    new MethodChild().render(getWriter());
+    final String methodsOutput = "{foo: req1, po1} {foo: req1, po2} {bar: passed 1}";
+    checkOutput("{ parent: " + methodsOutput + " }{ child: " + methodsOutput + " }");
+  }
 
-    public void testOverriddenMethod()
-        throws Exception
-    {
-        new MethodOverride().render(getWriter());
-        final String methodsOutput =
-            "{fooOverride: req1, co3} {fooOverride: req1, po2}"
-            + " {barOverride: passed 2}";
-        checkOutput("{ parent: " + methodsOutput + " }{ child: "
-                    + methodsOutput + " }");
-    }
+  public void testOverriddenMethod() throws Exception {
+    new MethodOverride().render(getWriter());
+    final String methodsOutput =
+      "{fooOverride: req1, co3} {fooOverride: req1, po2} {barOverride: passed 2}";
+    checkOutput("{ parent: " + methodsOutput + " }{ child: " + methodsOutput + " }");
+  }
 
-    public void testOverrideNonexistentMethod()
-        throws Exception
-    {
-        expectParserError(
-            "OverrideNonexistentMethod",
-            "There is no such method noSuchMethod to override",
-            2, 1);
-    }
+  public void testOverrideNonexistentMethod() throws Exception {
+    expectParserError(
+      "OverrideNonexistentMethod", "There is no such method noSuchMethod to override", 2, 1);
+  }
 }

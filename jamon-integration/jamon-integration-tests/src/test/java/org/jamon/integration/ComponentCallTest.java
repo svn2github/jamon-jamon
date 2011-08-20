@@ -20,15 +20,9 @@
 
 package org.jamon.integration;
 
-public class ComponentCallTest
-    extends TestBase
-{
-    public void testCallToNonexistantTemplate()
-        throws Exception
-    {
-        expectParserError(
-            "CallToNonexistantTemplate",
-            "Unable to find template or class for /foo/bar",
-            1, 1);
-    }
+public class ComponentCallTest extends TestBase {
+  public void testCallToNonexistantTemplate() throws Exception {
+    expectParserError(
+      "CallToNonexistantTemplate", "Unable to find template or class for /foo/bar", 1, 1);
+  }
 }

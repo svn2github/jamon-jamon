@@ -27,19 +27,14 @@ import test.jamon.aliasProperties.PropertiesAlias;
  * Test Jamon's aliases.
  **/
 
-public class AliasTest
-    extends TestBase
-{
-    public void testAliasesFromTemplate()
-        throws Exception
-    {
-        new Alias().render(getWriter());
-        checkOutput("simple simple simple");
-    }
+public class AliasTest extends TestBase {
+  public void testAliasesFromTemplate() throws Exception {
+    new Alias().render(getWriter());
+    checkOutput("simple simple simple");
+  }
 
-    public void testAliasesFromProperties() throws Exception
-    {
-        new PropertiesAlias().render(getWriter());
-        checkOutput("simple simple");
-    }
+  public void testAliasesFromProperties() throws Exception {
+    new PropertiesAlias().render(getWriter());
+    checkOutput("simple simple");
+  }
 }

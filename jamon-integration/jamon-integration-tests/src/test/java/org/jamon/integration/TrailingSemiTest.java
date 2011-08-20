@@ -22,15 +22,11 @@ package org.jamon.integration;
 
 import test.jamon.TrailingSemi;
 
-public class TrailingSemiTest
-    extends TestBase
-{
+public class TrailingSemiTest extends TestBase {
 
-    public void testExercise()
-        throws Exception
-    {
-        new TrailingSemi().render(getWriter());
-        checkOutput("1truesanonFragnamedFrag");
-    }
+  public void testExercise() throws Exception {
+    new TrailingSemi().render(getWriter());
+    checkOutput("1truesanonFragnamedFrag");
+  }
 
 }

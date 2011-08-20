@@ -26,15 +26,11 @@ import test.jamon.RenderTo;
  * Test Jamon's renderTo() method.
  **/
 
-public class RenderToTest
-    extends TestBase
-{
+public class RenderToTest extends TestBase {
 
-    public void testExercise()
-        throws Exception
-    {
-        new RenderTo().render(getWriter());
-        checkOutput("x1AaXbB2\n");
-    }
+  public void testExercise() throws Exception {
+    new RenderTo().render(getWriter());
+    checkOutput("x1AaXbB2\n");
+  }
 
 }

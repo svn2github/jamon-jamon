@@ -23,18 +23,14 @@ package org.jamon.integration;
 import test.jamon.PrivateMethods;
 
 /**
- * Test Jamon's private methods.  See "Jamon User's Guide", section 6.
+ * Test Jamon's private methods. See "Jamon User's Guide", section 6.
  **/
 
-public class PrivateMethodTest
-    extends TestBase
-{
+public class PrivateMethodTest extends TestBase {
 
-    public void testExercise()
-        throws Exception
-    {
-        new PrivateMethods().render(getWriter());
-        checkOutput("7=1111111");
-    }
+  public void testExercise() throws Exception {
+    new PrivateMethods().render(getWriter());
+    checkOutput("7=1111111");
+  }
 
 }

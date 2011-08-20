@@ -22,13 +22,9 @@ package org.jamon.integration;
 
 import test.jamon.ArgumentVisibility;
 
-public class ArgumentVisibilityTest
-    extends TestBase
-{
-    public void testVisibility()
-        throws Exception
-    {
-        new ArgumentVisibility().render(getWriter());
-        checkOutput("5 5 5 7 8");
-    }
+public class ArgumentVisibilityTest extends TestBase {
+  public void testVisibility() throws Exception {
+    new ArgumentVisibility().render(getWriter());
+    checkOutput("5 5 5 7 8");
+  }
 }

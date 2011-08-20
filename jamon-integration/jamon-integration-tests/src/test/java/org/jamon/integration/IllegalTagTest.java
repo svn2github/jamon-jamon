@@ -20,12 +20,8 @@
 
 package org.jamon.integration;
 
-public class IllegalTagTest
-    extends TestBase
-{
-    public void testBadTag()
-        throws Exception
-    {
-        expectParserError("BadTag", "Unknown tag <%bad>", 5, 7);
-    }
+public class IllegalTagTest extends TestBase {
+  public void testBadTag() throws Exception {
+    expectParserError("BadTag", "Unknown tag <%bad>", 5, 7);
+  }
 }

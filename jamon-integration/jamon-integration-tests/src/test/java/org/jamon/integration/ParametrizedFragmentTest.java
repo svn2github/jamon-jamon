@@ -23,20 +23,14 @@ package org.jamon.integration;
 import test.jamon.ParametrizedFragment;
 
 /**
- * Test Jamon's parametrized template fragments.  See "Jamon User's
- * Guide", section 9.
+ * Test Jamon's parametrized template fragments. See "Jamon User's Guide", section 9.
  **/
 
-public class ParametrizedFragmentTest
-    extends TestBase
-{
+public class ParametrizedFragmentTest extends TestBase {
 
-    public void testExercise()
-        throws Exception
-    {
-        new ParametrizedFragment()
-            .render(getWriter(), new int[] { -2, 0, 15 });
-        checkOutput("-0+");
-    }
+  public void testExercise() throws Exception {
+    new ParametrizedFragment().render(getWriter(), new int[] { -2, 0, 15 });
+    checkOutput("-0+");
+  }
 
 }

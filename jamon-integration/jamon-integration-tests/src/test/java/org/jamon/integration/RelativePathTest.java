@@ -22,21 +22,13 @@ package org.jamon.integration;
 
 import test.jamon.subdir.RelativePath;
 
-public class RelativePathTest
-    extends TestBase
-{
-    public void testRelativePath()
-        throws Exception
-    {
-        new RelativePath().render(getWriter());
-        checkOutput("simple");
-    }
+public class RelativePathTest extends TestBase {
+  public void testRelativePath() throws Exception {
+    new RelativePath().render(getWriter());
+    checkOutput("simple");
+  }
 
-    public void testToManyDotDots()
-        throws Exception
-    {
-        expectParserError("TooManyDotDots",
-                          "Cannot reference templates above the root",
-                          1, 13);
-    }
+  public void testToManyDotDots() throws Exception {
+    expectParserError("TooManyDotDots", "Cannot reference templates above the root", 1, 13);
+  }
 }

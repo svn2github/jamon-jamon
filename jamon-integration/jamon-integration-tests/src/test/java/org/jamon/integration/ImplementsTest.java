@@ -26,26 +26,20 @@ import test.jamon.Implements;
  * Test Jamon's implements.
  **/
 
-public class ImplementsTest
-    extends TestBase
-{
-    public void testImplements()
-        throws Exception
-    {
-        Implements i = new Implements();
-        i.setX(INT);
-        SomeInterface x = i;
-        x.render(getWriter(), STRING);
-        checkOutput("" + INT + STRING);
+public class ImplementsTest extends TestBase {
+  private static final int INT = 3;
+  private static final String STRING = "foobar";
 
+  public void testImplements() throws Exception {
+    Implements i = new Implements();
+    i.setX(INT);
+    SomeInterface x = i;
+    x.render(getWriter(), STRING);
+    checkOutput("" + INT + STRING);
 
-        // FIXME: want to do
+    // FIXME: want to do
 
-        // SomeInterface x = new Implements();
-        // x.writeTo(getWriter()).setX(INT).render(STRING);
-    }
-
-    private static final int INT = 3;
-    private static final String STRING = "foobar";
-
+    // SomeInterface x = new Implements();
+    // x.writeTo(getWriter()).setX(INT).render(STRING);
+  }
 }

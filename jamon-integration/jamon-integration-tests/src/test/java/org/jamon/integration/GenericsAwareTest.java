@@ -21,12 +21,9 @@ package org.jamon.integration;
 
 import test.jamon.GenericsAware;
 
-public class GenericsAwareTest extends TestBase
-{
-    public void testExercise()
-        throws Exception
-    {
-        new GenericsAware().render(getWriter());
-        checkOutput("bc");
-    }
+public class GenericsAwareTest extends TestBase {
+  public void testExercise() throws Exception {
+    new GenericsAware().render(getWriter());
+    checkOutput("bc");
+  }
 }

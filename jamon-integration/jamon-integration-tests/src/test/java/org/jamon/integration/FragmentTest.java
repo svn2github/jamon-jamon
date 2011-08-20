@@ -26,56 +26,39 @@ import test.jamon.RenderedFragment;
 import test.jamon.RepeatedFragmentName;
 
 /**
- * Test Jamon's template fragments.  See "Jamon User's Guide", section 8.
+ * Test Jamon's template fragments. See "Jamon User's Guide", section 8.
  **/
 
-public class FragmentTest
-    extends TestBase
-{
+public class FragmentTest extends TestBase {
 
-    public void testExercise()
-        throws Exception
-    {
-        new Fragment().render(getWriter(), 1);
-        checkOutput("1(2)1");
-    }
+  public void testExercise() throws Exception {
+    new Fragment().render(getWriter(), 1);
+    checkOutput("1(2)1");
+  }
 
-    public void testMakeRenderer()
-        throws Exception
-    {
-        new RenderedFragment().render(getWriter());
-        checkOutput("<");
-    }
+  public void testMakeRenderer() throws Exception {
+    new RenderedFragment().render(getWriter());
+    checkOutput("<");
+  }
 
-    public void testEscaping()
-        throws Exception
-    {
-        new EscapedFragment().render(getWriter());
-        checkOutput("<&lt;");
-    }
+  public void testEscaping() throws Exception {
+    new EscapedFragment().render(getWriter());
+    checkOutput("<&lt;");
+  }
 
-    public void testRepeatedFragmentNameExercise()
-        throws Exception
-    {
-        new RepeatedFragmentName().render(getWriter());
-        checkOutput("d1:d1,d2:d2,d3:d3 - 7");
-    }
+  public void testRepeatedFragmentNameExercise() throws Exception {
+    new RepeatedFragmentName().render(getWriter());
+    checkOutput("d1:d1,d2:d2,d3:d3 - 7");
+  }
 
-    public void testFragmentArgInNamedFragmentImpl()
-        throws Exception
-    {
-        expectParserError("FragmentArgInNamedFragmentImpl",
-                          "Fragment args for fragments not implemented",
-                          3, 3);
-    }
+  public void testFragmentArgInNamedFragmentImpl() throws Exception {
+    expectParserError("FragmentArgInNamedFragmentImpl",
+      "Fragment args for fragments not implemented", 3, 3);
+  }
 
-    public void testFragmentArgInAnonFragmentImpl()
-        throws Exception
-    {
-        expectParserError("FragmentArgInAnonFragmentImpl",
-                          "Fragment args for fragments not implemented",
-                          3, 3);
-    }
-
+  public void testFragmentArgInAnonFragmentImpl() throws Exception {
+    expectParserError("FragmentArgInAnonFragmentImpl",
+      "Fragment args for fragments not implemented", 3, 3);
+  }
 
 }

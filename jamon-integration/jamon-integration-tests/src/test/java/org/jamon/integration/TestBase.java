@@ -41,192 +41,161 @@ import org.jamon.compiler.TemplateFileLocation;
 import org.jamon.compiler.TemplateProcessor;
 import org.jamon.node.LocationImpl;
 
-public abstract class TestBase
-    extends TestCase
-{
-    @Override public void setUp() throws Exception
-    {
-        m_recompilingTemplateManager = null;
-        resetWriter();
+public abstract class TestBase extends TestCase {
+  @Override
+  public void setUp() throws Exception {
+    recompilingTemplateManager = null;
+    resetWriter();
+  }
+
+  private static final File TEMPLATE_SOURCE_DIR = getTemplateSourceFile();
+
+  protected static final String SOURCE_DIR = TEMPLATE_SOURCE_DIR.getAbsolutePath();
+
+  protected static final String WORK_DIR =
+    TEMPLATE_SOURCE_DIR.getParentFile().getParent() + "/workdir";
+
+  private static File getTemplateSourceFile() {
+    try {
+      return new File(
+        new File(TestBase.class.getProtectionDomain().getCodeSource().getLocation() .toURI()),
+        "templates");
     }
+    catch (URISyntaxException e) {
+      throw new RuntimeException(e);
+    }
+  }
 
-    private static final File TEMPLATE_SOURCE_DIR = getTemplateSourceFile();
-    protected static final String SOURCE_DIR = TEMPLATE_SOURCE_DIR.getAbsolutePath();
-    protected static final String WORK_DIR =
-      TEMPLATE_SOURCE_DIR.getParentFile().getParent() + "/workdir";
+  protected void resetWriter() {
+    writer = new StringWriter();
+  }
 
-    private static File getTemplateSourceFile() {
-      try {
-        return new File(new File(
-          TestBase.class.getProtectionDomain().getCodeSource().getLocation().toURI()), "templates");
+  protected Writer getWriter() {
+    return writer;
+  }
+
+  protected void checkOutputContains(String expected) {
+    assertTrue("output doesn't contain: \"" + expected + "\"", getOutput().indexOf(expected) >= 0);
+  }
+
+  protected void checkOutput(String expected) {
+    assertEquals(expected, getOutput());
+  }
+
+  protected void checkOutput(Renderer renderer, String expected) throws IOException {
+    renderer.renderTo(getWriter());
+    assertEquals(expected, getOutput());
+  }
+
+  protected void checkOutput(String message, String expected) {
+    assertEquals(message, expected, getOutput());
+  }
+
+  protected TemplateManager getRecompilingTemplateManager() {
+    if (recompilingTemplateManager == null) {
+      recompilingTemplateManager = constructRecompilingTemplateManager();
+    }
+    return recompilingTemplateManager;
+  }
+
+  private TemplateManager constructRecompilingTemplateManager() {
+    return new RecompilingTemplateManager(
+      new RecompilingTemplateManager.Data().setSourceDir(SOURCE_DIR).setWorkDir(WORK_DIR));
+  }
+
+  protected void clearWorkDir() throws IOException {
+    FileUtils.cleanDirectory(new File(WORK_DIR));
+  }
+
+  private String removeCrs(CharSequence string) {
+    StringBuilder buffer = new StringBuilder(string.length());
+    for (int i = 0; i < string.length(); ++i) {
+      char c = string.charAt(i);
+      if (c != '\r') {
+        buffer.append(c);
       }
-      catch (URISyntaxException e) {
-        throw new RuntimeException(e);
+    }
+    return buffer.toString();
+  }
+
+  protected String getOutput() {
+    writer.flush();
+    return removeCrs(writer.getBuffer());
+  }
+
+  /**
+   * Run the processor on a template file present in the classpath; this is typically used for
+   * processing templates which are expected to have an error in them.
+   *
+   * @param path
+   * @throws Exception
+   */
+  protected void generateSource(String path) throws Exception {
+    new TemplateProcessor(
+      new File(WORK_DIR + File.separator + "src"),
+      TEMPLATE_SOURCE_DIR,
+      getClass().getClassLoader())
+    .generateSource(path);
+  }
+
+  protected static class PartialError {
+    private final String message;
+
+    private final int line, column;
+
+    public PartialError(final String message, final int line, final int column) {
+      this.message = message;
+      this.line = line;
+      this.column = column;
+    }
+
+    public ParserErrorImpl makeError(String path) {
+      return new ParserErrorImpl(
+        new LocationImpl(new TemplateFileLocation(getTemplateFilePath(path)), line, column),
+        message);
+    }
+  }
+
+  protected void expectParserErrors(String path, PartialError... partialErrors) throws Exception {
+    String fullPath = "test/jamon/broken/" + path;
+    try {
+      generateSource(fullPath);
+      fail();
+    }
+    catch (ParserErrorsImpl e) {
+      List<ParserErrorImpl> expected = new ArrayList<ParserErrorImpl>(partialErrors.length);
+      for (PartialError partialError : partialErrors) {
+        expected.add(partialError.makeError(fullPath));
       }
+
+      assertEquals(expected, e.getErrors());
     }
 
-    protected void resetWriter()
-    {
-        m_writer = new StringWriter();
+  }
+
+  protected void expectParserError(String path, String message, int line, int column)
+  throws Exception {
+    expectParserErrors(path, new PartialError(message, line, column));
+  }
+
+  private static String getTemplateFilePath(String path) {
+    return TEMPLATE_SOURCE_DIR.getAbsolutePath() + "/" + path + ".jamon";
+  }
+
+  public static void assertEquals(String first, String second) {
+    if (showFullContextWhenStringEqualityFails()) {
+      assertEquals((Object) first, (Object) second);
     }
-
-    protected Writer getWriter()
-    {
-        return m_writer;
+    else {
+      Assert.assertEquals(first, second);
     }
+  }
 
-    protected void checkOutputContains(String p_expected)
-    {
-        assertTrue("output doesn't contain: \"" + p_expected + "\"",
-                   getOutput().indexOf(p_expected) >= 0);
-    }
+  private static boolean showFullContextWhenStringEqualityFails() {
+    return Boolean.valueOf(System.getProperty("org.jamon.integration.verbose", "false"))
+        .booleanValue();
+  }
 
-    protected void checkOutput(String p_expected)
-    {
-        assertEquals(p_expected, getOutput());
-    }
-
-    protected void checkOutput(Renderer p_renderer, String p_expected) throws IOException
-    {
-        p_renderer.renderTo(getWriter());
-        assertEquals(p_expected, getOutput());
-    }
-
-    protected void checkOutput(String p_message, String p_expected)
-    {
-        assertEquals(p_message, p_expected, getOutput());
-    }
-
-    protected TemplateManager getRecompilingTemplateManager()
-    {
-        if(m_recompilingTemplateManager == null)
-        {
-            m_recompilingTemplateManager =
-                constructRecompilingTemplateManager();
-        }
-        return m_recompilingTemplateManager;
-    }
-
-    private TemplateManager constructRecompilingTemplateManager()
-    {
-        return new RecompilingTemplateManager(
-            new RecompilingTemplateManager.Data()
-                .setSourceDir(SOURCE_DIR)
-                .setWorkDir(WORK_DIR));
-    }
-
-    protected void clearWorkDir() throws IOException {
-      FileUtils.cleanDirectory(new File(WORK_DIR));
-    }
-
-    private String removeCrs(CharSequence p_string)
-    {
-        StringBuilder buffer = new StringBuilder(p_string.length());
-        for (int i = 0; i < p_string.length(); ++i)
-        {
-            char c = p_string.charAt(i);
-            if (c != '\r')
-            {
-                buffer.append(c);
-            }
-        }
-        return buffer.toString();
-    }
-
-    protected String getOutput()
-    {
-        m_writer.flush();
-        return removeCrs(m_writer.getBuffer());
-    }
-
-    /**
-     * Run the processor on a template file present in the classpath; this is typically used for
-     * processing templates which are expected to have an error in them.
-     * @param p_path
-     * @throws Exception
-     */
-    protected void generateSource(String p_path)
-        throws Exception
-    {
-        new TemplateProcessor(new File(WORK_DIR + File.separator + "src"),
-                              TEMPLATE_SOURCE_DIR,
-                              getClass().getClassLoader())
-            .generateSource(p_path);
-    }
-
-    protected static class PartialError
-    {
-        private final String m_message;
-        private final int m_line, m_column;
-        public PartialError(final String p_message, final int p_line, final int p_column)
-        {
-            m_message = p_message;
-            m_line = p_line;
-            m_column = p_column;
-        }
-
-        public ParserErrorImpl makeError(String p_path)
-        {
-            return new ParserErrorImpl(
-                new LocationImpl(
-                    new TemplateFileLocation(getTemplateFilePath(p_path)), m_line, m_column),
-                m_message);
-        }
-    }
-
-    protected void expectParserErrors(String p_path, PartialError... p_partialErrors)
-    throws Exception
-    {
-        String path = "test/jamon/broken/" + p_path;
-        try
-        {
-            generateSource(path);
-            fail();
-        }
-        catch(ParserErrorsImpl e)
-        {
-            List<ParserErrorImpl> expected = new ArrayList<ParserErrorImpl>(p_partialErrors.length);
-            for (PartialError partialError: p_partialErrors)
-            {
-                expected.add(partialError.makeError(path));
-            }
-
-            assertEquals(expected, e.getErrors());
-        }
-
-    }
-
-    protected void expectParserError(
-        String p_path, String p_message, int p_line, int p_column)
-        throws Exception
-    {
-        expectParserErrors(p_path, new PartialError(p_message, p_line, p_column));
-    }
-
-    private static String getTemplateFilePath(String p_path)
-    {
-      return TEMPLATE_SOURCE_DIR.getAbsolutePath() + "/" + p_path + ".jamon";
-    }
-
-    public static void assertEquals(String p_first, String p_second)
-    {
-        if( showFullContextWhenStringEqualityFails() )
-        {
-            assertEquals((Object) p_first, (Object) p_second);
-        }
-        else
-        {
-            Assert.assertEquals(p_first, p_second);
-        }
-    }
-
-    private static boolean showFullContextWhenStringEqualityFails()
-    {
-        return Boolean.valueOf
-            (System.getProperty
-             ("org.jamon.integration.verbose","false")).booleanValue();
-    }
-
-    private TemplateManager m_recompilingTemplateManager;
-    private StringWriter m_writer;
+  private TemplateManager recompilingTemplateManager;
+  private StringWriter writer;
 }

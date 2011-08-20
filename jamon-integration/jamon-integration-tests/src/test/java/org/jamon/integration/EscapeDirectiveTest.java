@@ -24,32 +24,18 @@ package org.jamon.integration;
  * Test Jamon's escaping directive.
  **/
 
-public class EscapeDirectiveTest
-    extends TestBase
-{
-    public void testExercise()
-        throws Exception
-    {
-        new test.jamon.EscapeDirective().render(getWriter());
-        checkOutput("+%25x");
-    }
+public class EscapeDirectiveTest extends TestBase {
+  public void testExercise() throws Exception {
+    new test.jamon.EscapeDirective().render(getWriter());
+    checkOutput("+%25x");
+  }
 
-    public void testBadDirective()
-        throws Exception
-    {
-        expectParserError(
-            "BadEscaping",
-            "Unknown escaping directive 'Q'",
-            1, 6);
-    }
+  public void testBadDirective() throws Exception {
+    expectParserError("BadEscaping", "Unknown escaping directive 'Q'", 1, 6);
+  }
 
-    public void testBadDefault()
-        throws Exception
-    {
-        expectParserError(
-            "BadDefaultEscaping",
-            "Unknown escaping directive 'Z'",
-            1, 1);
-    }
+  public void testBadDefault() throws Exception {
+    expectParserError("BadDefaultEscaping", "Unknown escaping directive 'Z'", 1, 1);
+  }
 
 }

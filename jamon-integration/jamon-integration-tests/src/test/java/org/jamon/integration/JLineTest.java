@@ -26,14 +26,10 @@ import test.jamon.JLine;
  * Test Jamon's one-line java code "blocks".
  **/
 
-public class JLineTest
-    extends TestBase
-{
-    public void testExercise()
-        throws Exception
-    {
-        new JLine().render(getWriter(),3);
-        checkOutput(" % j is 3");
-    }
+public class JLineTest extends TestBase {
+  public void testExercise() throws Exception {
+    new JLine().render(getWriter(), 3);
+    checkOutput(" % j is 3");
+  }
 
 }

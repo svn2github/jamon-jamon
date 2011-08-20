@@ -24,23 +24,14 @@ import java.math.BigDecimal;
 
 import test.jamon.TestTemplate;
 
-public class FirstTest
-    extends TestBase
-{
+public class FirstTest extends TestBase {
 
-    public void testExercise()
-        throws Exception
-    {
-        new TestTemplate()
-            .setX(57)
-            .render(getWriter(), new BigDecimal("34.5324"));
+  public void testExercise() throws Exception {
+    new TestTemplate().setX(57).render(getWriter(), new BigDecimal("34.5324"));
 
-        checkOutputContains("An external template with a "
-                            + "parameterized fragment parameter (farg)"
-                            + "\n\n  \n"
-                            + "  i is 3 and s is yes."
-                            + "\n\n  \n"
-                            + "  i is 7 and s is no");
-    }
+    checkOutputContains(
+      "An external template with a parameterized fragment parameter (farg)\n\n  \n"
+      + "  i is 3 and s is yes.\n\n  \n  i is 7 and s is no");
+  }
 
 }

@@ -20,30 +20,17 @@
 
 package org.jamon.integration;
 
-public class DuplicateCallNameTest
-    extends TestBase
-{
-    public void testDefAndMethod()
-        throws Exception
-    {
-        expectParserError("LikeNamedDefAndMethod",
-                          "multiple defs and/or methods named foo",
-                          2, 1);
-    }
+public class DuplicateCallNameTest extends TestBase {
+  public void testDefAndMethod() throws Exception {
+    expectParserError("LikeNamedDefAndMethod", "multiple defs and/or methods named foo", 2, 1);
+  }
 
-    public void testDefAndDef()
-        throws Exception
-    {
-        expectParserError("LikeNamedDefAndDef",
-                          "multiple defs and/or methods named foo",
-                          2, 1);
-    }
+  public void testDefAndDef() throws Exception {
+    expectParserError("LikeNamedDefAndDef", "multiple defs and/or methods named foo", 2, 1);
+  }
 
-    public void testDefAndInheritedMethod()
-        throws Exception
-    {
-        expectParserError("LikeNamedDefAndInheritedMethod",
-                          "multiple defs and/or methods named foo",
-                          2, 1);
-    }
+  public void testDefAndInheritedMethod() throws Exception {
+    expectParserError("LikeNamedDefAndInheritedMethod", "multiple defs and/or methods named foo",
+      2, 1);
+  }
 }

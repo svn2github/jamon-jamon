@@ -26,14 +26,10 @@ import test.jamon.SingleQuotes;
  * Test single quoted emit expressions
  **/
 
-public class SingleQuoteTest
-    extends TestBase
-{
+public class SingleQuoteTest extends TestBase {
 
-    public void testExercise()
-        throws Exception
-    {
-        new SingleQuotes().render(getWriter());
-    }
+  public void testExercise() throws Exception {
+    new SingleQuotes().render(getWriter());
+  }
 
 }
