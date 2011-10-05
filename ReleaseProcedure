@@ -31,7 +31,8 @@ General points:
 ** Trial deploy: mvn -s ~/.m2jamon/settings.xml site:deploy goes to www-stg.jamon.org.
 ** Release as for other maven modules.
 
-* Update versions in jamon-dist, run jamon-package.
+* Update versions in jamon-dist, run
+  mvn -s ~/.m2jamon/settings.xml package
 * Upload dist files to sourceforge:
 ** Log into sourceforge.
 ** Navigate to https://sourceforge.net/projects/jamon/files/jamon/
@@ -43,30 +44,26 @@ General points:
 
 TYCHO RELEASE
 
-* If an update for the parent pom is necessary:
+* If an update for the parent pom is necessary. For some reason, -N doesn't work well in release:prepare,
+  so go old school:
   svn copy \
-    https://jamon.svn.sourceforge.net/svnroot/jamon/trunk/jamon-eclipse
+    https://jamon.svn.sourceforge.net/svnroot/jamon/trunk/jamon-eclipse \
     https://jamon.svn.sourceforge.net/svnroot/jamon/releases/jamon-eclipse/jamon-eclipse-${VERSION} \
     -m "tag for release ${VERSION}"
   svn co https://jamon.svn.sourceforge.net/svnroot/jamon/releases/jamon-eclipse/jamon-eclipse-${VERSION}
 
-  echo -n "password: "; read -s password; \
-  mvn -s ~/.m2jamon/settings.xml -Dusername=$SOURCEFORGE_USERNAME -Dpassword=$password -N release:prepare; \
-  unset password
-** Run
-  mvn -s ~/.m2jamon/settings.xml -N release:perform
-** Run
-  svn revert pom.xml
+  cd jamon-eclipse-${VERSION}
+* edit version number in pom.
+* commit.
+* deploy:
+  mvn3 -s ~/.m2jamon/settings.xml -N deploy;
 
-* Because tycho is still in a half-baked state, the maven release plugin will not work.
-  Instead, do the following, where ${VERSION} is the release version and ${COMPONENT}
-  is the component (jamon-editor, jamon-processor or jamon-maven-configurator):
-
+* To release a component, set COMPONENT and VERSION appropriately, and:
 * Note that we copy all of jamon-eclipse in the tag; we'll need the update site available during
   the build.
 
   svn copy \
-    https://jamon.svn.sourceforge.net/svnroot/jamon/trunk/jamon-eclipse/ \
+    https://jamon.svn.sourceforge.net/svnroot/jamon/trunk/jamon-eclipse/${COMPONENT} \
     https://jamon.svn.sourceforge.net/svnroot/jamon/releases/${COMPONENT}/${COMPONENT}-${VERSION} \
     -m "tag for release ${VERSION}"
 
@@ -85,6 +82,13 @@ TYCHO RELEASE
   mvn3 -s ~/.m2jamon/settings.xml clean package
 
 * Copy the updated files into updateSite/p2:
+  rsync -av target/site/ p2
+
+* update the site on jamon.maven.org:
+
+  ssh jamon@maven.jamon.org
+  cd www/eclipse/updates
+  svn up
 
   rsync -a target/site/ p2
 
@@ -95,5 +99,6 @@ TYCHO RELEASE
 * Copy to the jamon update site:
 
   rsync -va --exclude='.svn' p2/ jamon@jamon.org:www/eclipse/updates/
+
 
 * Email release mailing list.
