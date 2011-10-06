@@ -120,14 +120,10 @@ public abstract class AbstractJamonMojo extends AbstractMojo {
 
     final Set<File> staleFiles = new LinkedHashSet<File>();
 
-    for (File f : templateSourceDir.listFiles()) {
-      if (!f.isDirectory()) {
-        continue;
-      }
-
+    if (templateSourceDir.isDirectory()) {
       try {
         @SuppressWarnings("unchecked")
-        Set<File> includedSources = scanner.getIncludedSources(f.getParentFile(),
+        Set<File> includedSources = scanner.getIncludedSources(templateSourceDir,
           getTemplateOutputDir());
         staleFiles.addAll(includedSources);
       }

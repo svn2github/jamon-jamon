@@ -6,6 +6,14 @@
   <properties><title>Changes in Jamon Processor</title></properties>
   <body>
     <section name="Changes in Jamon Maven Plugin">
+      <subsection name="Release 2.4.?? (???)">
+        <ul>
+          <li>
+            Projects which only have templates at the top level are now handled properly. Fixes
+            <a href="http://sourceforge.net/support/tracker.php?aid=3253413">3253413</a>
+          </li>
+        </ul>
+      </subsection>
       <subsection name="Release 2.4.0 (2011-07-07)">
         <ul>
           <li>This plugin is now marked as thread safe.</li>
