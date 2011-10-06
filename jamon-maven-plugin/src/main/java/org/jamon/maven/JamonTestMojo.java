@@ -33,6 +33,7 @@ public class JamonTestMojo extends AbstractJamonMojo {
     return templateSourceDir;
   }
 
+  @Override
   public void execute() throws MojoExecutionException {
     doExecute();
     getProject().addTestCompileSourceRoot(templateOutputDir.getAbsolutePath());
