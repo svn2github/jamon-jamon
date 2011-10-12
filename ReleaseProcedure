@@ -81,16 +81,16 @@ TYCHO RELEASE
 
   mvn3 -s ~/.m2jamon/settings.xml clean package
 
-* Copy the updated files into updateSite/p2:
+* Copy the updated files into updateSite/p2, and explode the content/artifact.jar files
   rsync -av target/site/ p2
+  (cd p2; for i in content.jar artifacts.jar; do jar xf $i; rm $i; done)
+  svn commit p2
 
 * update the site on jamon.maven.org:
 
   ssh jamon@maven.jamon.org
   cd www/eclipse/updates
   svn up
-
-  rsync -a target/site/ p2
 
   cp target/org.jamon.site-1.0.0-site.zip jamon-updateSite-`date +%Y-%m-%d`.zip
 
