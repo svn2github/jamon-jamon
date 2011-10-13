@@ -6,11 +6,15 @@
   <properties><title>Changes in Jamon Processor</title></properties>
   <body>
     <section name="Changes in Jamon Maven Plugin">
-      <subsection name="Release 2.4.?? (???)">
+      <subsection name="Release 2.4.0.1 (2011-10-13)">
         <ul>
           <li>
             Projects which only have templates at the top level are now handled properly. Fixes
             <a href="http://sourceforge.net/support/tracker.php?aid=3253413">3253413</a>
+          </li>
+          <li>
+            This plugin inadvertently had a compile-scoped dependency on junit; this has
+            been changed to test scope.
           </li>
         </ul>
       </subsection>
