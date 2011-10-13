@@ -63,7 +63,7 @@ TYCHO RELEASE
   the build.
 
   svn copy \
-    https://jamon.svn.sourceforge.net/svnroot/jamon/trunk/jamon-eclipse/${COMPONENT} \
+    https://jamon.svn.sourceforge.net/svnroot/jamon/trunk/jamon-eclipse/ \
     https://jamon.svn.sourceforge.net/svnroot/jamon/releases/${COMPONENT}/${COMPONENT}-${VERSION} \
     -m "tag for release ${VERSION}"
 
@@ -71,7 +71,15 @@ TYCHO RELEASE
 
   cd ${COMPONENT}-${VERSION}/${COMPONENT}
 
-  mvn3 -s ~/.m2jamon/settings.xml org.sonatype.tycho:tycho-versions-plugin:set-version -DnewVersion=${VERSION}
+* The following no longer seems to work:
+--  mvn3 -s ~/.m2jamon/settings.xml org.eclipse.tycho:tycho-versions-plugin:set-version -DnewVersion=${VERSION}
+
+* So instead,try something like:
+rgrep -l "$VERSION\(-SNAPSHOT\|.qualifier\)" | xargs \
+ perl -pi -e '$version = "'$VERSION'";
+ $escapedVersion = $version;
+ $escapedVersion =~ s/\./\\./g;
+ s/$escapedVersion(\.qualifier|-SNAPSHOT)/$version/; '
 
   svn commit -m "prepare for release of version ${VERSION}"
 
@@ -84,6 +92,7 @@ TYCHO RELEASE
 * Copy the updated files into updateSite/p2, and explode the content/artifact.jar files
   rsync -av target/site/ p2
   (cd p2; for i in content.jar artifacts.jar; do jar xf $i; rm $i; done)
+* add any new artifacts (svn status)
   svn commit p2
 
 * update the site on jamon.maven.org:
@@ -94,11 +103,7 @@ TYCHO RELEASE
 
   cp target/org.jamon.site-1.0.0-site.zip jamon-updateSite-`date +%Y-%m-%d`.zip
 
-* Upload that file to sourceforge via https://sourceforge.net/projects/jamon/files/jamon-eclipse-plugin/
-
-* Copy to the jamon update site:
-
-  rsync -va --exclude='.svn' p2/ jamon@jamon.org:www/eclipse/updates/
-
+* Upload that file to sourceforge via
+  https://sourceforge.net/projects/jamon/files/jamon-eclipse-plugin/
 
 * Email release mailing list.
