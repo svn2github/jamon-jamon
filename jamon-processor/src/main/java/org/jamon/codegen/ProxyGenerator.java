@@ -25,6 +25,10 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.jamon.compiler.ParserErrorImpl;
+import org.jamon.compiler.ParserErrorsImpl;
+import org.jamon.node.LocationImpl;
+
 public class ProxyGenerator extends AbstractSourceGenerator {
   public ProxyGenerator(TemplateDescriber describer, TemplateUnit templateUnit) {
     super(describer, templateUnit);
@@ -372,7 +376,7 @@ public class ProxyGenerator extends AbstractSourceGenerator {
     writer.println();
   }
 
-  private void generateImplData() {
+  private void generateImplData() throws ParserErrorsImpl {
     writer.println("public static class ImplData"
       + templateUnit.getGenericParams().generateGenericsDeclaration());
     writer.print("  extends ");
@@ -434,8 +438,9 @@ public class ProxyGenerator extends AbstractSourceGenerator {
   /**
    * Generate the populateFrom method, which is used in replacement templates to populate the
    * template's ImplData instance with an instance of ImplData for the replaced template.
+   * @throws ParserErrorsImpl
    */
-  private void generatePopulateFrom() {
+  private void generatePopulateFrom() throws ParserErrorsImpl {
     for (FragmentArgument farg : templateUnit.getFragmentArgs()) {
       generateFragmentDelegator(farg);
     }
@@ -456,6 +461,19 @@ public class ProxyGenerator extends AbstractSourceGenerator {
       }
       else {
         writer.println(arg.getSetterName() + "(implData." + arg.getGetterName() + "());");
+      }
+    }
+    if (templateUnit.getJamonContextType() != null) {
+      if (replacedTemplateDescription.getJamonContextType() == null) {
+        throw new ParserErrorsImpl(new ParserErrorImpl(
+          templateTopLocation(),
+          "Replaced component does not have a jamonContext, but replacing component has a " +
+          "jamonContext of type " + templateUnit.getJamonContextType()));
+
+      }
+      else {
+        writer.printLocation(templateTopLocation());
+        writer.println("setJamonContext(implData.getJamonContext());");
       }
     }
     for (FragmentArgument farg : templateUnit.getFragmentArgs()) {
@@ -747,5 +765,14 @@ public class ProxyGenerator extends AbstractSourceGenerator {
 
   private String genericParamsList() {
     return templateUnit.getGenericParams().generateGenericParamsList();
+  }
+
+
+  /**
+   * @return a location representing the top of the template. Useful for constructs which don't
+   * relate to any specific point in the template.
+   */
+  private LocationImpl templateTopLocation() {
+    return new LocationImpl(describer.getTemplateLocation(templateUnit.getName()), 1, 1);
   }
 }

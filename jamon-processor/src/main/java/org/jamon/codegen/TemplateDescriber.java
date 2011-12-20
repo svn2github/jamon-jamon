@@ -30,6 +30,7 @@ import java.util.Set;
 import java.util.StringTokenizer;
 
 import org.jamon.api.Location;
+import org.jamon.api.TemplateLocation;
 import org.jamon.api.TemplateSource;
 import org.jamon.compiler.ParserErrorImpl;
 import org.jamon.compiler.ParserErrorsImpl;
@@ -115,6 +116,10 @@ public class TemplateDescriber {
     finally {
       stream.close();
     }
+  }
+
+  public TemplateLocation getTemplateLocation(String path) {
+    return templateSource.getTemplateLocation(path);
   }
 
   public String getExternalIdentifier(String path) {

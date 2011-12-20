@@ -43,9 +43,10 @@ import test.jamon.replacement.ApiReplacementChild;
 import test.jamon.replacement.ApiWithFargsCaller;
 import test.jamon.replacement.ApiWithFargsReplacementChild;
 import test.jamon.replacement.GenericApiCaller;
+import test.jamon.replacement.context.ApiWithContext;
 import test.jamon.replacement.i18n.GreetingCaller;
 
-public class ReplacementTest {
+public class ReplacementTest extends TestBase {
   private final static TemplateReplacer TEMPLATE_REPLACER = new AbstractTemplateReplacer() {
     @Override
     protected ReplacementConstructor findReplacement(
@@ -152,6 +153,25 @@ public class ReplacementTest {
       "Guten Tag, Jamon tester",
       new GreetingCaller(manager(I18N_TEMPLATE_REPLACER))
         .setJamonContext(Locale.GERMAN).makeRenderer().asString());
+  }
+
+  @Test
+  public void testReplacementContext() throws Exception {
+    assertEquals(
+      "foo",
+      new ApiWithContext(manager(TEMPLATE_REPLACER))
+        .setJamonContext("foo")
+        .makeRenderer()
+        .asString());
+  }
+
+  @Test
+  public void testReplacementWithoutContext() throws Exception {
+    expectParserError(
+      "replacement/ApiReplacementWithContext",
+      "Replaced component does not have a jamonContext, but replacing component has a " +
+      "jamonContext of type String",
+      1, 1);
   }
 
   @Test
