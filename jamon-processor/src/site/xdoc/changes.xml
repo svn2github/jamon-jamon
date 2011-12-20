@@ -6,6 +6,14 @@
   <properties><title>Changes in Jamon Processor</title></properties>
   <body>
     <section name="Changes in Jamon Processor">
+      <subsection name="Release 2.4.1 (2011-12-20)">
+        <ul>
+          <li>
+            Replacement Templacements which expect a jamonContext will now receive one.
+            Fixes <a href="http://sourceforge.net/support/tracker.php?aid=3462561">3462561</a>.
+          </li>
+        </ul>
+      </subsection>
       <subsection name="Release 2.4.0 (2011-07-07)">
         <ul>
           <li>
