@@ -65,5 +65,10 @@ public class OptionalArgument extends AbstractArgument {
 
   }
 
+  @Override
+  public String toString() {
+    return "OptionalArg: {name => " + getName() + ", type => " + getType() + ", defualt => " + getDefault() + "}";
+  }
+
   private String defaultValue;
 }

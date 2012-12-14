@@ -24,12 +24,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 import org.jamon.util.AnnotationReflector;
 import org.jamon.annotations.Argument;
@@ -66,14 +66,14 @@ public class TemplateDescription {
   public TemplateDescription(TemplateUnit templateUnit) {
     requiredArgs = new LinkedList<RequiredArgument>();
     requiredArgs.addAll(templateUnit.getSignatureRequiredArgs());
-    optionalArgs = new HashSet<OptionalArgument>();
+    optionalArgs = new TreeSet<OptionalArgument>();
     optionalArgs.addAll(templateUnit.getSignatureOptionalArgs());
     for (OptionalArgument arg : optionalArgs) {
       arg.setDefault(null);
     }
     signature = templateUnit.getSignature();
     fragmentInterfaces = templateUnit.getFragmentArgs();
-    methodUnits = new HashMap<String, MethodUnit>();
+    methodUnits = new TreeMap<String, MethodUnit>();
     for (MethodUnit methodUnit : templateUnit.getSignatureMethodUnits()) {
       methodUnits.put(methodUnit.getName(), methodUnit);
     }
@@ -96,7 +96,7 @@ public class TemplateDescription {
 
     fragmentInterfaces = getFragmentArguments(templateAnnotation.fragmentArguments(),
       new TemplateUnit(PathUtils.getPathForProxyClass(proxy), null));
-    methodUnits = new HashMap<String, MethodUnit>();
+    methodUnits = new TreeMap<String, MethodUnit>();
     for (Method methodAnnotation : templateAnnotation.methods()) {
       DeclaredMethodUnit method = new DeclaredMethodUnit(methodAnnotation.name(), null, null, null);
       for (Argument argument : methodAnnotation.requiredArguments()) {
@@ -133,7 +133,7 @@ public class TemplateDescription {
   }
 
   private static Set<OptionalArgument> getOptionalArgs(Argument[] arguments) {
-    Set<OptionalArgument> args = new HashSet<OptionalArgument>();
+    Set<OptionalArgument> args = new TreeSet<OptionalArgument>();
     for (Argument argument : arguments) {
       args.add(makeOptionalArg(argument));
     }

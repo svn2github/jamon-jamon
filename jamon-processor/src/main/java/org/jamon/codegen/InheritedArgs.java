@@ -21,10 +21,10 @@
 package org.jamon.codegen;
 
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 import org.jamon.compiler.ParserErrorsImpl;
 import org.jamon.node.ArgValueNode;
@@ -49,7 +49,7 @@ public class InheritedArgs {
 
   private final ParserErrorsImpl errors;
 
-  private final Set<AbstractArgument> visibleArgs = new HashSet<AbstractArgument>();
+  private final Set<AbstractArgument> visibleArgs = new TreeSet<AbstractArgument>();
 
   private final Collection<RequiredArgument> requiredArgs;
 
@@ -58,7 +58,7 @@ public class InheritedArgs {
   private final Collection<FragmentArgument> fragmentArgs;
 
   private final Map<OptionalArgument, String> defaultOverrides =
-    new HashMap<OptionalArgument, String>();
+    new TreeMap<OptionalArgument, String>();
 
   public Collection<AbstractArgument> getVisibleArgs() {
     return visibleArgs;

@@ -22,10 +22,10 @@ package org.jamon.codegen;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
 import org.jamon.api.Location;
 import org.jamon.compiler.ParserErrorsImpl;
@@ -103,7 +103,7 @@ public abstract class AbstractInnerUnit extends AbstractUnit {
 
   private final List<RequiredArgument> requiredArgs = new LinkedList<RequiredArgument>();
 
-  private final Set<OptionalArgument> optionalArgs = new HashSet<OptionalArgument>();
+  private final Set<OptionalArgument> optionalArgs = new TreeSet<OptionalArgument>();
 
   private final List<FragmentArgument> fragmentArgs = new LinkedList<FragmentArgument>();
 }

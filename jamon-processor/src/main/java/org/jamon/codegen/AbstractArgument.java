@@ -24,7 +24,7 @@ import org.jamon.util.StringUtils;
 import org.jamon.api.Location;
 import org.jamon.node.ArgNode;
 
-public abstract class AbstractArgument {
+public abstract class AbstractArgument implements Comparable<AbstractArgument> {
   public AbstractArgument(String name, String type, Location location) {
     this.name = name;
     this.type = type;
@@ -53,7 +53,7 @@ public abstract class AbstractArgument {
     return getType();
   }
 
-  public org.jamon.api.Location getLocation() {
+  public Location getLocation() {
     return location;
   }
 
@@ -80,6 +80,15 @@ public abstract class AbstractArgument {
     writer.println("private " + getFullyQualifiedType() + " m_" + getName() + ";");
   }
 
+  @Override
+  public int compareTo(AbstractArgument other) {
+    int result = name.compareTo(other.name);
+    if (result == 0) {
+      result = type.compareTo(other.type);
+    }
+    return result;
+  }
+
   protected void generateImplDataSetterCode(CodeWriter writer) {
     writer.printLocation(getLocation());
     writer.println("m_" + getName() + " = " + getName() + ";");
@@ -89,5 +98,5 @@ public abstract class AbstractArgument {
 
   private final String type;
 
-  private final org.jamon.api.Location location;
+  private final Location location;
 }

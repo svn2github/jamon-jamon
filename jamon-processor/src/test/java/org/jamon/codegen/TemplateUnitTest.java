@@ -63,7 +63,7 @@ public class TemplateUnitTest extends TestCase {
     RequiredArgument cr3 = new RequiredArgument("cr2", "int", null);
     OptionalArgument po1 = new OptionalArgument("po1", "int", "op1");
     OptionalArgument po2 = new OptionalArgument("po2", "int", "op2");
-    OptionalArgument co3 = new OptionalArgument("co2", "int", "oc3");
+    OptionalArgument co2 = new OptionalArgument("co2", "int", "oc3");
 
     parent.addRequiredArg(pr1);
     parent.addRequiredArg(pr2);
@@ -77,25 +77,25 @@ public class TemplateUnitTest extends TestCase {
     child.addParentArg(
       new ParentArgWithDefaultNode(loc, new ArgNameNode(loc, "po2"), new ArgValueNode(loc, "oc2")));
     child.addRequiredArg(cr3);
-    child.addOptionalArg(co3);
+    child.addOptionalArg(co2);
 
     checkArgList(new RequiredArgument[] { pr1, pr2, cr3 }, child.getSignatureRequiredArgs());
     checkArgList(new RequiredArgument[] { cr3 }, child.getDeclaredRenderArgs());
-    checkArgSet(new AbstractArgument[] { pr2, cr3, po2, co3 }, child.getVisibleArgs());
-    checkArgSet(new OptionalArgument[] { po1, po2, co3 }, child.getSignatureOptionalArgs());
-    checkArgSet(new OptionalArgument[] { co3 }, child.getDeclaredOptionalArgs());
+    checkArgList(new AbstractArgument[] { po2, pr2, cr3, co2 }, child.getVisibleArgs());
+    checkArgList(new OptionalArgument[] { po1, po2, co2 }, child.getSignatureOptionalArgs());
+    checkArgList(new OptionalArgument[] { co2 }, child.getDeclaredOptionalArgs());
 
     FragmentArgument f = new FragmentArgument(
       new FragmentUnit("f", child, new GenericParams(), null, null), null);
     child.addFragmentArg(f);
-    checkArgSet(new AbstractArgument[] { pr2, cr3, po2, co3, f }, child.getVisibleArgs());
+    checkArgList(new AbstractArgument[] { po2, pr2, cr3, f, co2 }, child.getVisibleArgs());
 
     grandchild.setParentDescription(new TemplateDescription(child));
     checkArgList(new RequiredArgument[] { pr1, pr2, cr3 }, grandchild.getSignatureRequiredArgs());
     checkArgList(new RequiredArgument[0], grandchild.getDeclaredRenderArgs());
-    checkArgSet(new AbstractArgument[] {}, grandchild.getVisibleArgs());
-    checkArgSet(new OptionalArgument[] { po1, po2, co3 }, grandchild.getSignatureOptionalArgs());
-    checkArgSet(new OptionalArgument[0], grandchild.getDeclaredOptionalArgs());
+    checkArgList(new AbstractArgument[] {}, grandchild.getVisibleArgs());
+    checkArgList(new OptionalArgument[] { co2, po1, po2}, grandchild.getSignatureOptionalArgs());
+    checkArgList(new OptionalArgument[0], grandchild.getDeclaredOptionalArgs());
   }
 
   public void testSignature() throws Exception {
@@ -213,10 +213,4 @@ public class TemplateUnitTest extends TestCase {
     assertEquals(Arrays.asList(expected), new ArrayList<AbstractArgument>(actual));
   }
 
-  private void checkArgSet(AbstractArgument[] expected,
-    Collection<? extends AbstractArgument> actual) {
-    assertEquals(
-      new HashSet<AbstractArgument>(Arrays.asList(expected)),
-      new HashSet<AbstractArgument>(actual));
-  }
 }

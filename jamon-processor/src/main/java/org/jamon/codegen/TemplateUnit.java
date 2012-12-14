@@ -22,12 +22,13 @@ package org.jamon.codegen;
 
 import java.security.MessageDigest;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 import org.jamon.api.Location;
 import org.jamon.compiler.ParserErrorsImpl;
@@ -44,10 +45,10 @@ public class TemplateUnit extends AbstractUnit implements InheritedUnit {
   private TemplateDescription parentDescription = TemplateDescription.EMPTY;
   private final List<RequiredArgument> declaredRequiredArgs = new LinkedList<RequiredArgument>();
   private final List<FragmentArgument> fragmentArgs = new LinkedList<FragmentArgument>();
-  private final Set<OptionalArgument> declaredOptionalArgs = new HashSet<OptionalArgument>();
-  private final Set<FragmentArgument> declaredFragmentArgs = new HashSet<FragmentArgument>();
-  private final Map<String, DefUnit> defs = new HashMap<String, DefUnit>();
-  private final Map<String, MethodUnit> methods = new HashMap<String, MethodUnit>();
+  private final Set<OptionalArgument> declaredOptionalArgs = new TreeSet<OptionalArgument>();
+  private final Set<FragmentArgument> declaredFragmentArgs = new TreeSet<FragmentArgument>();
+  private final Map<String, DefUnit> defs = new TreeMap<String, DefUnit>();
+  private final Map<String, MethodUnit> methods = new TreeMap<String, MethodUnit>();
   private final List<OverriddenMethodUnit> overrides = new LinkedList<OverriddenMethodUnit>();
   private final List<ImportNode> imports = new LinkedList<ImportNode>();
   private final List<StaticImportNode> staticImports = new LinkedList<StaticImportNode>();
@@ -61,7 +62,7 @@ public class TemplateUnit extends AbstractUnit implements InheritedUnit {
   private final List<ClassNode> classContent = new LinkedList<ClassNode>();
   private final Set<String> dependencies = new HashSet<String>();
   private final Set<String> callNames = new HashSet<String>();
-  private final Collection<String> abstractMethodNames = new HashSet<String>();
+  private final Collection<String> abstractMethodNames = new TreeSet<String>();
   private final GenericParams genericParams = new GenericParams();
   private String jamonContextType;
   private final List<AnnotationNode> annotations = new LinkedList<AnnotationNode>();

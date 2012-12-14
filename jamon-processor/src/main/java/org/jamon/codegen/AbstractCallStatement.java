@@ -22,7 +22,7 @@ package org.jamon.codegen;
 
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
+import java.util.TreeMap;
 
 import org.jamon.api.Location;
 import org.jamon.compiler.ParserErrorImpl;
@@ -46,11 +46,11 @@ public abstract class AbstractCallStatement extends AbstractStatement implements
 
   private final ParamValues params;
 
-  private final Map<String, FragmentUnit> fragParams = new HashMap<String, FragmentUnit>();
+  private final Map<String, FragmentUnit> fragParams = new TreeMap<String, FragmentUnit>();
 
   private final static String FRAGMENT_IMPL_PREFIX = "__jamon__instanceOf__";
 
-  private final Map<FragmentUnit, String> m_fragmentImplNames = new HashMap<FragmentUnit, String>();
+  private final Map<FragmentUnit, String> m_fragmentImplNames = new TreeMap<FragmentUnit, String>();
 
   protected abstract String getFragmentIntfName(FragmentUnit p_fragmentUnitIntf);
 
