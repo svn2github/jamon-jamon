@@ -25,6 +25,8 @@ import org.jamon.compiler.ParserErrorsImpl;
 import org.jamon.node.OptionalArgNode;
 
 public class FragmentUnit extends AbstractInnerUnit {
+  static final String DEFAULT_FRAGMENT_NAME = "";
+
   public FragmentUnit(
     String name,
     StatementBlock parent,

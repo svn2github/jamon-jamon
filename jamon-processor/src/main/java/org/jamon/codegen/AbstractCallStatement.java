@@ -117,7 +117,7 @@ public abstract class AbstractCallStatement extends AbstractStatement implements
   protected void makeFragmentImplClasses(
     List<FragmentArgument> fragmentInterfaces, CodeWriter writer, TemplateDescriber describer)
   throws ParserErrorImpl {
-    if (fragParams.size() == 1 && fragParams.keySet().iterator().next() == null) {
+    if (fragParams.size() == 1 && fragParams.keySet().iterator().next().equals(FragmentUnit.DEFAULT_FRAGMENT_NAME)) {
       if (fragmentInterfaces.size() == 0) {
         throw new ParserErrorImpl(getLocation(), "Call provides a fragment, but none are expected");
       }

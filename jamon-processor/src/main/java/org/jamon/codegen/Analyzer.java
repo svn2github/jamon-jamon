@@ -526,7 +526,7 @@ public class Analyzer {
     public void inFragmentCallNode(FragmentCallNode node) {
       CallStatement s = makeCallStatement(node);
       addStatement(s);
-      s.addFragmentImpl(pushFragmentUnitImpl(null, node.getLocation()), errors);
+      s.addFragmentImpl(pushFragmentUnitImpl(FragmentUnit.DEFAULT_FRAGMENT_NAME, node.getLocation()), errors);
     }
 
     @Override

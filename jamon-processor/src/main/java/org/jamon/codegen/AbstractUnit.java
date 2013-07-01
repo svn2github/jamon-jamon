@@ -33,10 +33,13 @@ import org.jamon.node.ArgNode;
 import org.jamon.node.FragmentArgsNode;
 import org.jamon.node.OptionalArgNode;
 
-public abstract class AbstractUnit extends AbstractStatementBlock implements Unit {
+public abstract class AbstractUnit extends AbstractStatementBlock implements Unit, Comparable<AbstractUnit> {
   public AbstractUnit(
     String name, StatementBlock parent, ParserErrorsImpl errors, Location location) {
     super(parent, location);
+    if (name == null) {
+      throw new NullPointerException();
+    }
     this.name = name;
     this.errors = errors;
   }
@@ -53,6 +56,11 @@ public abstract class AbstractUnit extends AbstractStatementBlock implements Uni
 
   protected final ParserErrorsImpl getErrors() {
     return errors;
+  }
+
+  @Override
+  public int compareTo(AbstractUnit o) {
+    return getName().compareTo(o.getName());
   }
 
   protected abstract void addFragmentArg(FragmentArgument arg);
