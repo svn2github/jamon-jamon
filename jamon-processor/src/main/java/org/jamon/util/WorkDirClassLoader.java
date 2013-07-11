@@ -35,13 +35,17 @@ public class WorkDirClassLoader extends ClassLoader {
   }
 
   private final String workDir;
+  private final Object loaderMutex = new Object();
+  private Loader loader;
 
   private File getFileForClass(String name) {
     return new File(workDir, StringUtils.classNameToFilePath(name) + ".class");
   }
 
-  public synchronized void invalidate() {
-    loader = null;
+  public void invalidate() {
+    synchronized (loaderMutex) {
+      loader = null;
+    }
   }
 
   private class Loader extends ClassLoader {
@@ -105,7 +109,7 @@ public class WorkDirClassLoader extends ClassLoader {
   }
 
   @Override
-  protected synchronized Class<?> loadClass(String name, boolean resolve)
+  protected Class<?> loadClass(String name, boolean resolve)
   throws ClassNotFoundException {
     if (!getFileForClass(name).exists()) {
       return super.loadClass(name, resolve);
@@ -115,7 +119,11 @@ public class WorkDirClassLoader extends ClassLoader {
         AccessController.doPrivileged(new PrivilegedAction<Void>() {
           @Override
           public Void run() {
-            loader = new Loader();
+            synchronized (loaderMutex) {
+              if (loader == null) {
+                loader = new Loader();
+              }
+            }
             return null;
           }
         });
@@ -128,6 +136,4 @@ public class WorkDirClassLoader extends ClassLoader {
   public String toString() {
     return super.toString() + " { workDir: " + workDir + "; parent: " + getParent() + " }";
   }
-
-  private Loader loader;
 }
