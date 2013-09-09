@@ -20,7 +20,8 @@ public class MissingTemplateDirectoryTest {
       fail("exception expected");
     }
     catch (MojoExecutionException e) {
-      assertEquals("templateSourceDir /no/such/directory does not exist", e.getMessage());
+      String filePath = File.separator + "no" + File.separator + "such" + File.separator + "directory";
+      assertEquals("templateSourceDir " + filePath + " does not exist", e.getMessage());
     }
   }
 
