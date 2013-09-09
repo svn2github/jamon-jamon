@@ -29,6 +29,7 @@ public class CodeWriterTest extends TestCase {
   private ByteArrayOutputStream bytes;
 
   private CodeWriter codeWriter;
+  private String nl = System.getProperty("line.separator");
 
   @Override
   public void setUp() throws Exception {
@@ -48,7 +49,6 @@ public class CodeWriterTest extends TestCase {
     codeWriter.closeBlock();
     codeWriter.closeBlock("suffix");
     codeWriter.println("line9");
-    String nl = System.getProperty("line.separator");
     checkOutput(
       "line1" + nl + "{" + nl + "  line3" + nl + "  {" + nl + "    line5" + nl
       + "      line6" + nl + "  }" + nl + "}suffix" + nl + "line9" + nl);
@@ -138,7 +138,7 @@ public class CodeWriterTest extends TestCase {
     codeWriter.closeList("}");
     codeWriter.printListElement("outer3");
     codeWriter.closeList();
-    checkOutput("(outer1={}, outer2={\n  mid1=[inner1, inner2],\n  mid2}, outer3)");
+    checkOutput("(outer1={}, outer2={" + nl + "  mid1=[inner1, inner2]," + nl + "  mid2}, outer3)");
   }
 
   private void checkOutput(String expected) throws IOException {

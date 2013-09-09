@@ -19,6 +19,7 @@ public class LiteralStatementTest extends TestCase {
   }
 
   public void testEscaping() throws Exception {
+    String nl = System.getProperty("line.separator");
     LiteralStatement statement =  new LiteralStatement(
       "\n \r \t \" \\ \u1234",
       new LocationImpl(null, 1, 1),
@@ -28,7 +29,7 @@ public class LiteralStatementTest extends TestCase {
     statement.generateSource(codeWriter, null);
     codeWriter.finish();
     assertEquals(
-      "// 1, 1\n" + "jamonWriter.write(\"\\n \\r \\t \\\" \\\\ \\u1234\");\n",
+      "// 1, 1" + nl + "jamonWriter.write(\"\\n \\r \\t \\\" \\\\ \\u1234\");" + nl,
       bos.toString());
   }
 }
