@@ -107,7 +107,7 @@
               <artifactId>maven-release-plugin</artifactId>
               <version>2.4.2</version>
               <configuration>
-                <tagBase>https://svn.code.sf.net/p/jamon/code/trunk/jamon/releases/${project.artifactId}</tagBase>
+                <tagBase>https://svn.code.sf.net/p/jamon/code/releases/${project.artifactId}</tagBase>
                 <!-- don't have maven replace our DRY svn urls with
                      hard-coded ones.  Requires running svn revert
                      pom.xml after a release, but otherwise is good. -->
