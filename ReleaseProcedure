@@ -5,6 +5,7 @@ General points:
 * Since maven cannot ask for passwords during release:perform,
   you'll need an ssh-agent set up that has credentials to reach jamon@maven.jamon.org.
 * For hygene purposes, you should have a settings file in ~/.m2jamon/settings.xml:
+* Set SOURCEFORGE_USERNAME to be, well, your sourceforge username.
 
 <?xml version="1.0" encoding="UTF-8"?>
 <settings>
@@ -16,6 +17,7 @@ General points:
 * Update docs to reflect release.
 * Run svn up to get latest version number set
 * For each maven module being released:
+
 ** Update all SNAPSHOT versions to the latest released version.
 ** Run (in zsh):
   echo -n "password: "; read -s password; \
@@ -23,8 +25,7 @@ General points:
   unset password
 ** Run
   mvn -s ~/.m2jamon/settings.xml release:perform
-** Run
-  svn revert pom.xml
+
 * If necessary, build jamonStdLib
 * generate new site docs
 ** Docs can be viewed via mvn -s ~/.m2jamon/settings.xml package and looking in target/www.
