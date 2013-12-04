@@ -50,9 +50,9 @@
         <url>http://www.jamon.org/</url>
     </organization>
     <scm>
-        <url>http://jamon.svn.sourceforge.net/viewvc/jamon/trunk/jamon/${project.artifactId}/</url>
-        <connection>scm:svn:https://jamon.svn.sourceforge.net/svnroot/jamon/trunk/jamon/${project.artifactId}/</connection>
-        <developerConnection>scm:svn:https://jamon.svn.sourceforge.net/svnroot/jamon/trunk/jamon/${project.artifactId}/</developerConnection>
+        <url>https://sourceforge.net/p/jamon/code/HEAD/tree/trunk/jamon/${project.artifactId}/</url>
+        <connection>scm:svn:https://svn.code.sf.net/p/jamon/code/trunk/jamon/${project.artifactId}/</connection>
+        <developerConnection>scm:svn:https://svn.code.sf.net/p/jamon/code/trunk/jamon/${project.artifactId}/</developerConnection>
     </scm>
     <distributionManagement>
         <repository>
@@ -107,7 +107,7 @@
               <artifactId>maven-release-plugin</artifactId>
               <version>2.1</version>
               <configuration>
-                <tagBase>https://jamon.svn.sourceforge.net/svnroot/jamon/releases/${project.artifactId}</tagBase>
+                <tagBase>https://svn.code.sf.net/p/jamon/code/trunk/jamon/releases/${project.artifactId}</tagBase>
                 <!-- don't have maven replace our DRY svn urls with
                      hard-coded ones.  Requires running svn revert
                      pom.xml after a release, but otherwise is good. -->
