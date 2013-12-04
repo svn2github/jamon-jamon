@@ -9,7 +9,7 @@
     <description>Jamon base pom</description>
     <url>http://www.jamon.org/</url>
     <issueManagement>
-        <url>http://sourceforge.net/tracker/?group_id=138569</url>
+        <url>https://sourceforge.net/p/jamon/bugs/</url>
         <system>SourceForge</system>
     </issueManagement>
     <inceptionYear>2003</inceptionYear>
