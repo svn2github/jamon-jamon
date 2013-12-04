@@ -74,17 +74,6 @@
             <url>http://maven.jamon.org/</url>
         </repository>
     </repositories>
-
-    <build>
-      <extensions>
-        <extension>
-          <groupId>org.apache.maven.wagon</groupId>
-           <artifactId>wagon-ssh-external</artifactId>
-           <version>2.5</version>
-        </extension>
-      </extensions>
-    </build>
-
     <developers>
         <developer>
             <name>Jay Sachs</name>
@@ -110,6 +99,13 @@
     </pluginRepositories>
 
     <build>
+       <extensions>
+           <extension>
+               <groupId>org.apache.maven.wagon</groupId>
+               <artifactId>wagon-ssh-external</artifactId>
+               <version>2.5</version>
+           </extension>
+       </extensions>
         <pluginManagement>
           <plugins>
             <plugin>
