@@ -60,26 +60,6 @@
         <connection>scm:svn:https://svn.code.sf.net/p/jamon/code/trunk/jamon/${project.artifactId}/</connection>
         <developerConnection>scm:svn:https://svn.code.sf.net/p/jamon/code/trunk/jamon/${project.artifactId}/</developerConnection>
     </scm>
-    <distributionManagement>
-        <repository>
-            <id>jamon</id>
-            <name>Jamon</name>
-            <url>scpexe://jamon@maven.jamon.org/home/jamon/maven2</url>
-            <uniqueVersion>false</uniqueVersion>
-        </repository>
-        <site>
-            <id>jamon</id>
-            <name>Jamon</name>
-            <url>scpexe://jamon@maven.jamon.org/home/jamon/maven2-projects/${project.artifactId}/${project.version}</url>
-        </site>
-    </distributionManagement>
-    <repositories>
-        <repository>
-            <id>jamon</id>
-            <name>Jamon</name>
-            <url>http://maven.jamon.org/</url>
-        </repository>
-    </repositories>
     <developers>
         <developer>
             <name>Jay Sachs</name>
