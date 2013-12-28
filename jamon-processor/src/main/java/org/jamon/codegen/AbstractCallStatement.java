@@ -109,7 +109,7 @@ public abstract class AbstractCallStatement extends AbstractStatement implements
         throw new ParserErrorImpl(getLocation(), "Call must provide multiple fragments");
       }
       else {
-        fragParams.put(fragmentInterfaces.get(0).getName(), fragParams.remove(null));
+        fragParams.put(fragmentInterfaces.get(0).getName(), fragParams.remove(FragmentUnit.DEFAULT_FRAGMENT_NAME));
       }
     }
     for (FragmentArgument arg : fragmentInterfaces) {
