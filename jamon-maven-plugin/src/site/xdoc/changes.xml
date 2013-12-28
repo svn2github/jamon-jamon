@@ -6,7 +6,15 @@
   <properties><title>Changes in Jamon Processor</title></properties>
   <body>
     <section name="Changes in Jamon Maven Plugin">
-      <subsection name="Release 2.4.0.1 (2011-10-13)">
+      <subsection name="Release 2.4.2 (2013-12-28)">
+        <ul>
+          <li>
+            Upgrade project license to
+            the <a href="http://www.mozilla.org/MPL/2.0/">Mozilla Public License Version 2.0</a>
+          </li>
+        </ul>
+      </subsection>
+      <subsection name="Release 2.4.1 (2011-10-13)">
         <ul>
           <li>
             Projects which only have templates at the top level are now handled properly. Fixes
