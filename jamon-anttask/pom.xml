@@ -4,7 +4,7 @@
     <parent>
         <groupId>org.jamon</groupId>
         <artifactId>jamon-java-parent</artifactId>
-        <version>2.4.0</version>
+        <version>2.4.1</version>
         <relativePath>../jamon-java-parent</relativePath>
     </parent>
     <artifactId>jamon-anttask</artifactId>
@@ -17,18 +17,11 @@
         <connection>scm:svn:https://jamon.svn.sourceforge.net/svnroot/jamon/trunk/jamon/${artifactId}/</connection>
         <developerConnection>scm:svn:https://jamon.svn.sourceforge.net/svnroot/jamon/trunk/jamon/${artifactId}/</developerConnection>
     </scm>
-    <distributionManagement>
-        <site>
-            <id>jamon</id>
-            <name>Jamon</name>
-            <url>scpexe://jamon@maven.jamon.org/home/jamon/maven2-projects/${artifactId}/${version}</url>
-        </site>
-    </distributionManagement>
     <dependencies>
         <dependency>
             <groupId>org.jamon</groupId>
             <artifactId>jamon-processor</artifactId>
-            <version>2.4.0</version>
+            <version>2.4.2</version>
         </dependency>
         <dependency>
             <groupId>ant</groupId>
