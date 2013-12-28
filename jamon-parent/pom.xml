@@ -5,6 +5,12 @@
     <artifactId>jamon-parent</artifactId>
     <name>Jamon Parent</name>
     <version>trunk-SNAPSHOT</version>
+    <parent>
+      <groupId>org.sonatype.oss</groupId>
+      <artifactId>oss-parent</artifactId>
+      <version>7</version>
+      <relativePath />
+    </parent>
     <packaging>pom</packaging>
     <description>Jamon base pom</description>
     <url>http://www.jamon.org/</url>
