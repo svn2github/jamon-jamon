@@ -4,32 +4,47 @@ General points:
   User jamon
 * Since maven cannot ask for passwords during release:perform,
   you'll need an ssh-agent set up that has credentials to reach jamon@maven.jamon.org.
+* You'll need a gpg key registered at http://pool.sks-keyservers.net
 * For hygene purposes, you should have a settings file in ~/.m2jamon/settings.xml:
-* Set SOURCEFORGE_USERNAME to be, well, your sourceforge username.
 
 <?xml version="1.0" encoding="UTF-8"?>
 <settings>
   <localRepository>${user.home}/.m2jamon/repository</localRepository>
+  <servers>
+    <server>
+      <id>sonatype-nexus-snapshots</id>
+      <username>irobertson</username>
+      <password>???</password>
+    </server>
+    <server>
+      <id>sonatype-nexus-staging</id>
+      <username>irobertson</username>
+      <password>???</password>
+    </server>
+  </servers>
 </settings>
 
-  Prior to any release, rm -rf ~/.m2jamon/repository
+* Note: due to an oversight on my part, currently only irobertson can
+  perform releases. I believe it is possible to have more than one
+  account authorized to make a release
+
+Prior to any release, rm -rf ~/.m2jamon/repository
 
 * Update docs to reflect release.
 * Run svn up to get latest version number set
 * For each maven module being released:
 
 ** Update all SNAPSHOT versions to the latest released version.
-** Run (in zsh):
-  echo -n "password: "; read -s password; \
-  mvn -s ~/.m2jamon/settings.xml -Dusername=$SOURCEFORGE_USERNAME -Dpassword=$password release:prepare; \
-  unset password
 ** Run
-  mvn -s ~/.m2jamon/settings.xml release:perform
+   mvn -s ~/.m2jamon/settings.xml clean release:prepare release:perform
 
 * If necessary, build jamonStdLib
+
 * generate new site docs
 ** Docs can be viewed via mvn -s ~/.m2jamon/settings.xml package and looking in target/www.
 ** Trial deploy: mvn -s ~/.m2jamon/settings.xml site:deploy goes to www-stg.jamon.org.
+** Real deploy: mvn -s ~/.m2jamon/settings.xml -DstageDir= site:deploy goes to www-stg.jamon.org.
+
 ** Release as for other maven modules.
 
 * Update versions in jamon-dist, run
@@ -48,32 +63,32 @@ TYCHO RELEASE
 * If an update for the parent pom is necessary. For some reason, -N doesn't work well in release:prepare,
   so go old school:
   svn copy \
-    https://jamon.svn.sourceforge.net/svnroot/jamon/trunk/jamon-eclipse \
-    https://jamon.svn.sourceforge.net/svnroot/jamon/releases/jamon-eclipse/jamon-eclipse-${VERSION} \
+    https://svn.code.sf.net/p/jamon/code/trunk/jamon-eclipse \
+    https://svn.code.sf.net/p/jamon/code/releases/jamon-eclipse/jamon-eclipse-${VERSION} \
     -m "tag for release ${VERSION}"
-  svn co https://jamon.svn.sourceforge.net/svnroot/jamon/releases/jamon-eclipse/jamon-eclipse-${VERSION}
+  svn co https://svn.code.sf.net/p/jamon/code/releases/jamon-eclipse/jamon-eclipse-${VERSION}
 
   cd jamon-eclipse-${VERSION}
 * edit version number in pom.
 * commit.
-* deploy:
-  mvn3 -s ~/.m2jamon/settings.xml -N deploy;
+* install:
+  mvn -s ~/.m2jamon/settings.xml -N clean install;
 
 * To release a component, set COMPONENT and VERSION appropriately, and:
 * Note that we copy all of jamon-eclipse in the tag; we'll need the update site available during
   the build.
 
   svn copy \
-    https://jamon.svn.sourceforge.net/svnroot/jamon/trunk/jamon-eclipse/ \
-    https://jamon.svn.sourceforge.net/svnroot/jamon/releases/${COMPONENT}/${COMPONENT}-${VERSION} \
+    https://svn.code.sf.net/p/jamon/code/trunk/jamon-eclipse/ \
+    https://svn.code.sf.net/p/jamon/code/releases/${COMPONENT}/${COMPONENT}-${VERSION} \
     -m "tag for release ${VERSION}"
 
-  svn co https://jamon.svn.sourceforge.net/svnroot/jamon/releases/${COMPONENT}/${COMPONENT}-${VERSION}
+  svn co https://svn.code.sf.net/p/jamon/code/releases/${COMPONENT}/${COMPONENT}-${VERSION}
 
   cd ${COMPONENT}-${VERSION}/${COMPONENT}
 
 * The following no longer seems to work:
---  mvn3 -s ~/.m2jamon/settings.xml org.eclipse.tycho:tycho-versions-plugin:set-version -DnewVersion=${VERSION}
+--  mvn -s ~/.m2jamon/settings.xml org.eclipse.tycho:tycho-versions-plugin:set-version -DnewVersion=${VERSION}
 
 * So instead,try something like:
 rgrep -l "$VERSION\(-SNAPSHOT\|.qualifier\)" | xargs \
@@ -84,11 +99,11 @@ rgrep -l "$VERSION\(-SNAPSHOT\|.qualifier\)" | xargs \
 
   svn commit -m "prepare for release of version ${VERSION}"
 
-  mvn3 -s ~/.m2jamon/settings.xml clean install
+  mvn -s ~/.m2jamon/settings.xml clean install
 
   Then in a checked-out version of update-site, run
 
-  mvn3 -s ~/.m2jamon/settings.xml clean package
+  mvn -s ~/.m2jamon/settings.xml clean package
 
 * Copy the updated files into updateSite/p2, and explode the content/artifact.jar files
   rsync -av target/site/ p2
